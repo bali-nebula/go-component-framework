@@ -8,39 +8,26 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package strings_test
+package elements_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/strings"
+	"github.com/craterdog-bali/go-bali-document-notation/elements"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestBadSymbol(t *testing.T) {
-	var _, ok = strings.SymbolFromString(`bad`)
+	var _, ok = elements.SymbolFromString(`bad`)
 	assert.False(t, ok)
 }
 
 func TestEmptySymbol(t *testing.T) {
-	var _, ok = strings.SymbolFromString(`$`)
+	var _, ok = elements.SymbolFromString(`$`)
 	assert.False(t, ok)
 }
 
 func TestSymbol(t *testing.T) {
-	var v, ok = strings.SymbolFromString("$foobar")
+	var v, ok = elements.SymbolFromString("$foobar")
 	assert.True(t, ok)
 	assert.Equal(t, "$foobar", v.AsString())
-	assert.False(t, v.IsEmpty())
-	assert.Equal(t, 6, v.GetSize())
-	assert.Equal(t, 'f', v.GetItem(1))
-	assert.Equal(t, 'r', v.GetItem(-1))
-	assert.Equal(t, v.String(), strings.SymbolFromRunes(v.AsArray()).AsString())
-	assert.Equal(t, "$foo", strings.SymbolFromRunes(v.GetItems(1, 3)).AsString())
-	assert.Equal(t, 4, v.GetIndex('b'))
-}
-
-func TestSymbolsLibrary(t *testing.T) {
-	var v1, _ = strings.SymbolFromString("$foo")
-	var v2, _ = strings.SymbolFromString("$bar")
-	assert.Equal(t, "$foobar", strings.Symbols.Concatenate(v1, v2).AsString())
 }

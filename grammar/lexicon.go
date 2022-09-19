@@ -11,7 +11,7 @@
 package grammar
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/strings"
+	"github.com/craterdog-bali/go-bali-document-notation/elements"
 )
 
 // This map captures the syntax rules for the Bali Document Notation™ (BDN)
@@ -26,7 +26,7 @@ var Grammar = map[string]string{
 	// Components
 	"component": `body context? NOTE?`,
 
-	"body": `element | string | sequence | procedure`,
+	"body": `primitive | sequence | procedure`,
 
 	"context": `'(' parameters ')'`,
 
@@ -34,6 +34,18 @@ var Grammar = map[string]string{
 
 	"parameter": `symbol ':' primitive`,
 
+	// Primitives
+	"primitive": `element | string`,
+
+	"element": `ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
+
+	"string": `BINARY | NAME | NARRATIVE | QUOTE | VERSION`,
+
+	"value": `primitive | variable`,
+
+	"variable": `IDENTIFIER`,
+
+	// Collections
 	"sequence": `'[' collection ']'`,
 
 	"collection": `slice | list | catalog`,
@@ -44,22 +56,7 @@ var Grammar = map[string]string{
 
 	"catalog": `association (',' association)* | EOL (association EOL)* | ':' /* no associations */`,
 
-	"association": `primitive ':' value`,
-
-	"procedure": `'{' statements '}'`,
-
-	"statements": `statement (';' statement)* | EOL (statement EOL)* | /* no statements */`,
-
-	// Values
-	"primitive": `element | string`,
-
-	"element": `ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE | PROBABILITY | RESOURCE | TAG`,
-
-	"string": `BINARY | NAME | NARRATIVE | QUOTE | SYMBOL | VERSION`,
-
-	"value": `variable | element | string`,
-
-	"variable": `IDENTIFIER`,
+	"association": `primitive ':' component`,
 
 	// Expressions
 	"expression": "" +
@@ -117,6 +114,10 @@ var Grammar = map[string]string{
 	"indices": `expression (',' expression)*`,
 
 	// Statements
+	"procedure": `'{' statements '}'`,
+
+	"statements": `statement (';' statement)* | EOL (statement EOL)* | /* no statements */`,
+
 	"statement": `documentation | mainClause handleClause?`,
 
 	"documentation": `NOTE | COMMENT`,
@@ -198,8 +199,8 @@ type Component struct {
 // This type defines the node structure associated with a name-value pair. It is
 // used by a component to maintain its parameters.
 type Parameter struct {
-	Name  strings.Symbol // The name of the parameter.
-	Value any            // The value of the parameter.
+	Name  elements.Symbol // The name of the parameter.
+	Value any             // The value of the parameter.
 }
 
 // This type defines the node structure associated with a procedure that
@@ -246,7 +247,7 @@ type IfClause struct {
 // a statement block for each item in a sequence. Each item may be optionally
 // assigned to a symbol that is referenced in the statement block.
 type WithClause struct {
-	Item     strings.Symbol
+	Item     elements.Symbol
 	Sequence any
 	Block    *Block
 }
@@ -348,7 +349,7 @@ type RejectClause struct {
 // This type defines the node structure associated with a clause that handles
 // an exception.
 type HandleClause struct {
-	Exception strings.Symbol
+	Exception elements.Symbol
 	Patterns  []any // Each pattern is any expression.
 	Blocks    []*Block
 }

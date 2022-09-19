@@ -138,7 +138,7 @@ func TestParserWithStringTypes(t *testing.T) {
 	// Symbol
 	component, ok = grammar.ParseSource(s)
 	assert.True(t, ok)
-	var symbol strings.Symbol = component.Value.(strings.Symbol)
+	var symbol elements.Symbol = component.Value.(elements.Symbol)
 	assert.Equal(t, s, symbol.AsString())
 
 	// Version

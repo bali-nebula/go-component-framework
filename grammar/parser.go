@@ -134,7 +134,7 @@ func (v *parser) parseAssociation() (abstractions.AssociationLike[any, any], boo
 		return nil, false
 	}
 	// This must be an association.
-	value, ok = v.parseValue()
+	value, ok = v.parseComponent()
 	if !ok {
 		panic("Expected a value after the ':' character.")
 	}
@@ -625,7 +625,7 @@ func (v *parser) parsePattern() (elements.Pattern, bool) {
 // whether or not the parameter was successfully parsed.
 func (v *parser) parseParameter() (*Parameter, bool) {
 	var ok bool
-	var symbol strings.Symbol
+	var symbol elements.Symbol
 	var primitive any
 	symbol, ok = v.parseSymbol()
 	if !ok {
@@ -940,15 +940,15 @@ func (v *parser) parseString() (any, bool) {
 // successfully parsed.
 // This method attempts to parse a symbol string. It returns the symbol
 // string and whether or not the symbol string was successfully parsed.
-func (v *parser) parseSymbol() (strings.Symbol, bool) {
+func (v *parser) parseSymbol() (elements.Symbol, bool) {
 	var ok bool
-	var symbol strings.Symbol
+	var symbol elements.Symbol
 	var token = v.nextToken()
 	if token.typ != tokenSymbol {
 		v.backupOne()
 		return symbol, false
 	}
-	symbol, ok = strings.SymbolFromString(token.val)
+	symbol, ok = elements.SymbolFromString(token.val)
 	if !ok {
 		panic(fmt.Sprintf("An invalid symbol token was found: %v", token))
 	}
