@@ -402,51 +402,51 @@ func (v *parser) parseExpression() (any, bool) {
 	var expression any
 	expression, ok = v.parseComponent()
 	/*
-	if !ok {
-		expression, ok = v.parseVariable()
-	}
-	if !ok {
-		expression, ok = v.parseFunctionExpression()
-	}
-	if !ok {
-		expression, ok = v.parsePrecedenceExpression()
-	}
-	if !ok {
-		expression, ok = v.parseDereferenceExpression()
-	}
-	if !ok {
-		expression, ok = v.parseMessageExpression()
-	}
-	if !ok {
-		expression, ok = v.parseAttributeExpression()
-	}
-	if !ok {
-		expression, ok = v.parseChainExpression()
-	}
-	if !ok {
-		expression, ok = v.parsePowerExpression()
-	}
-	if !ok {
-		expression, ok = v.parseInversionExpression()
-	}
-	if !ok {
-		expression, ok = v.parseArithmeticExpression()
-	}
-	if !ok {
-		expression, ok = v.parseMagnitudeExpression()
-	}
-	if !ok {
-		expression, ok = v.parseComparisonExpression()
-	}
-	if !ok {
-		expression, ok = v.parseComplementExpression()
-	}
-	if !ok {
-		expression, ok = v.parseLogicalExpression()
-	}
-	if !ok {
-		expression, ok = v.parseDefaultExpression()
-	}
+		if !ok {
+			expression, ok = v.parseVariable()
+		}
+		if !ok {
+			expression, ok = v.parseFunctionExpression()
+		}
+		if !ok {
+			expression, ok = v.parsePrecedenceExpression()
+		}
+		if !ok {
+			expression, ok = v.parseDereferenceExpression()
+		}
+		if !ok {
+			expression, ok = v.parseMessageExpression()
+		}
+		if !ok {
+			expression, ok = v.parseAttributeExpression()
+		}
+		if !ok {
+			expression, ok = v.parseChainExpression()
+		}
+		if !ok {
+			expression, ok = v.parsePowerExpression()
+		}
+		if !ok {
+			expression, ok = v.parseInversionExpression()
+		}
+		if !ok {
+			expression, ok = v.parseArithmeticExpression()
+		}
+		if !ok {
+			expression, ok = v.parseMagnitudeExpression()
+		}
+		if !ok {
+			expression, ok = v.parseComparisonExpression()
+		}
+		if !ok {
+			expression, ok = v.parseComplementExpression()
+		}
+		if !ok {
+			expression, ok = v.parseLogicalExpression()
+		}
+		if !ok {
+			expression, ok = v.parseDefaultExpression()
+		}
 	*/
 	return expression, ok
 }
@@ -625,9 +625,9 @@ func (v *parser) parsePattern() (elements.Pattern, bool) {
 // whether or not the parameter was successfully parsed.
 func (v *parser) parseParameter() (*Parameter, bool) {
 	var ok bool
-	var symbol elements.Symbol
-	var primitive any
-	symbol, ok = v.parseSymbol()
+	var name elements.Symbol
+	var value any
+	name, ok = v.parseSymbol()
 	if !ok {
 		return nil, false
 	}
@@ -635,11 +635,11 @@ func (v *parser) parseParameter() (*Parameter, bool) {
 	if !ok {
 		panic("Expected a ':' character.")
 	}
-	primitive, ok = v.parsePrimitive()
+	value, ok = v.parseComponent()
 	if !ok {
-		panic("Expected a primitive following the ':' character.")
+		panic("Expected a component following the ':' character.")
 	}
-	var parameter = &Parameter{symbol, primitive}
+	var parameter = &Parameter{name, value}
 	return parameter, true
 }
 

@@ -32,7 +32,7 @@ var Grammar = map[string]string{
 
 	"parameters": `parameter (',' parameter)* | EOL (parameter EOL)+`,
 
-	"parameter": `symbol ':' primitive`,
+	"parameter": `symbol ':' component`,
 
 	// Primitives
 	"primitive": `element | string`,
