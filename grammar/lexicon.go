@@ -24,9 +24,13 @@ import (
 // This map is useful when creating parser error messages.
 var Grammar = map[string]string{
 	// Components
-	"component": `body context? NOTE?`,
+	"component": `entity context? NOTE?`,
 
-	"body": `primitive | sequence | procedure`,
+	"entity": `primitive | sequence | procedure`,
+
+	"sequence": `'[' collection ']'`,
+
+	"procedure": `'{' statements '}'`,
 
 	"context": `'(' parameters ')'`,
 
@@ -41,22 +45,20 @@ var Grammar = map[string]string{
 
 	"string": `BINARY | NAME | NARRATIVE | QUOTE | VERSION`,
 
-	"value": `primitive | variable`,
-
-	"variable": `IDENTIFIER`,
-
 	// Collections
-	"sequence": `'[' collection ']'`,
-
 	"collection": `catalog | slice | list`,
 
 	"catalog": `association (',' association)* | EOL (association EOL)* | ':' /* no associations */`,
 
+	"association": `primitive ':' component`,
+
 	"slice": `value? ('..' | '..<' | '<..<' | '<..') value?`,
 
-	"list": `component (',' component)* | EOL (component EOL)* | /* no items */`,
+	"value": `primitive | variable`,
 
-	"association": `primitive ':' component`,
+	"variable": `IDENTIFIER`,
+
+	"list": `component (',' component)* | EOL (component EOL)* | /* no items */`,
 
 	// Expressions
 	"expression": "" +
@@ -114,8 +116,6 @@ var Grammar = map[string]string{
 	"indices": `expression (',' expression)*`,
 
 	// Statements
-	"procedure": `'{' statements '}'`,
-
 	"statements": `statement (';' statement)* | EOL (statement EOL)* | /* no statements */`,
 
 	"statement": `documentation | mainClause handleClause?`,

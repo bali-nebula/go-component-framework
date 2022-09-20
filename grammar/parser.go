@@ -159,22 +159,22 @@ func (v *parser) parseBinary() (strings.Binary, bool) {
 	return binary, true
 }
 
-// This method attempts to parse a component body. It returns the component
-// body and whether or not the component body was successfully parsed.
-func (v *parser) parseBody() (any, bool) {
+// This method attempts to parse a component entity. It returns the component
+// entity and whether or not the component entity was successfully parsed.
+func (v *parser) parseEntity() (any, bool) {
 	var ok bool
-	var body any
-	body, ok = v.parseElement()
+	var entity any
+	entity, ok = v.parseElement()
 	if !ok {
-		body, ok = v.parseString()
+		entity, ok = v.parseString()
 	}
 	if !ok {
-		body, ok = v.parseSequence()
+		entity, ok = v.parseSequence()
 	}
 	if !ok {
-		body, ok = v.parseProcedure()
+		entity, ok = v.parseProcedure()
 	}
-	return body, ok
+	return entity, ok
 }
 
 // This method attempts to parse a boolean element. It returns the boolean
@@ -273,11 +273,11 @@ func (v *parser) parseComponent() (*Component, bool) {
 	var context []*Parameter
 	var note string
 	var component *Component
-	var body, ok = v.parseBody()
+	var entity, ok = v.parseEntity()
 	if ok {
 		context, _ = v.parseContext() // The context is optional.
 		note, _ = v.parseNote()       // The note is optional.
-		component = &Component{body, context, note}
+		component = &Component{entity, context, note}
 	}
 	return component, ok
 }
