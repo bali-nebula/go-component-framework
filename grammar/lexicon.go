@@ -48,13 +48,13 @@ var Grammar = map[string]string{
 	// Collections
 	"sequence": `'[' collection ']'`,
 
-	"collection": `slice | list | catalog`,
+	"collection": `catalog | slice | list`,
+
+	"catalog": `association (',' association)* | EOL (association EOL)* | ':' /* no associations */`,
 
 	"slice": `value? ('..' | '..<' | '<..<' | '<..') value?`,
 
-	"list": `value (',' value)* | EOL (value EOL)* | /* no items */`,
-
-	"catalog": `association (',' association)* | EOL (association EOL)* | ':' /* no associations */`,
+	"list": `component (',' component)* | EOL (component EOL)* | /* no items */`,
 
 	"association": `primitive ':' component`,
 

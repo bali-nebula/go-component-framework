@@ -257,12 +257,12 @@ func (v *parser) parseCatalog() (abstractions.CatalogLike[any, any], bool) {
 func (v *parser) parseCollection() (any, bool) {
 	var ok bool
 	var collection any
-	collection, ok = v.parseSlice()
+	collection, ok = v.parseCatalog()
 	if !ok {
-		collection, ok = v.parseCatalog()
+		collection, ok = v.parseSlice()
 	}
 	if !ok {
-		collection, ok = v.parseList()
+		collection, ok = v.parseList() // The list must be last.
 	}
 	return collection, ok
 }
@@ -464,59 +464,58 @@ func (v *parser) parseIdentifier() (string, bool) {
 	return identifier, true
 }
 
-// This method attempts to parse a list of values. It returns the
-// list of values and whether or not the list of values was
+// This method attempts to parse a list of items. It returns the
+// list of items and whether or not the list of items was
 // successfully parsed.
 func (v *parser) parseList() (abstractions.ListLike[any], bool) {
 	var ok bool
-	var value any
+	var item any
 	var list = collections.List[any]()
 	_, ok = v.parseEOL()
 	if !ok {
-		// The values are on a single line.
+		// The items are on a single line.
 		_, ok = v.parseDelimiter("]")
 		if ok {
 			// This is an empty list.
 			v.backupOne() // Put back the ']' token.
 			return list, true
 		}
-		value, ok = v.parseValue()
+		item, ok = v.parseComponent()
 		if !ok {
-			// A non-empty list must have at least one value.
-			return nil, false
+			// A non-empty list must have at least one item.
+			panic("Expected an item after the '[' character.")
 		}
 		for {
-			list.AddItem(value)
-			// Every subsequent value must be preceded by a ','.
+			list.AddItem(item)
+			// Every subsequent item must be preceded by a ','.
 			_, ok = v.parseDelimiter(",")
 			if !ok {
-				// No more values.
+				// No more items.
 				break
 			}
-			value, ok = v.parseValue()
+			item, ok = v.parseComponent()
 			if !ok {
-				panic("Expected a value after the ',' character.")
+				panic("Expected an item after the ',' character.")
 			}
 		}
 		return list, true
 	}
-	// The values are on separate lines.
-	value, ok = v.parseValue()
+	// The items are on separate lines.
+	item, ok = v.parseComponent()
 	if !ok {
-		// A non-empty list must have at least one value.
-		v.backupOne() // Put back the EOL token.
-		return nil, false
+		// A non-empty list must have at least one item.
+		panic("Expected an item after the '[' character.")
 	}
 	for {
-		list.AddItem(value)
-		// Every value must be followed by an EOL.
+		list.AddItem(item)
+		// Every item must be followed by an EOL.
 		_, ok = v.parseEOL()
 		if !ok {
-			panic("Expected an EOL character following the value.")
+			panic("Expected an EOL character following the item.")
 		}
-		value, ok = v.parseValue()
+		item, ok = v.parseComponent()
 		if !ok {
-			// No more values.
+			// No more items.
 			break
 		}
 	}

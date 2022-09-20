@@ -182,9 +182,9 @@ func ScanDelimiter(v []byte) []string {
 const DurationSyntax = `
 	TSPAN    = ZERO | ORDINAL FRACTION?
 	WEEKS    = TSPAN 'W'
-	DATES    = (TSPAN 'y')? (TSPAN 'm')? (TSPAN 'D')?
-	TIMES    = 't' (TSPAN 'h')? (TSPAN 'm')? (TSPAN 'S')?
-	DURATION = '~' SIGN? 'p' (WEEKS | DATES TIMES?)
+	DATES    = (TSPAN 'Y')? (TSPAN 'M')? (TSPAN 'D')?
+	TIMES    = 't' (TSPAN 'H')? (TSPAN 'M')? (TSPAN 'S')?
+	DURATION = '~' SIGN? 'P' (WEEKS | DATES TIMES?)
 `
 
 // These constants are used to form a regular expression for valid duration
