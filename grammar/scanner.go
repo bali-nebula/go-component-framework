@@ -62,7 +62,7 @@ func (v *scanner) scanToken() bool {
 	case v.foundPercentage():
 	case v.foundNumber():
 	case v.foundPattern():
-	case v.foundName():
+	case v.foundMoniker():
 	case v.foundTag():
 	case v.foundVersion():
 	case v.foundBinary():
@@ -330,14 +330,14 @@ func (v *scanner) foundMoment() bool {
 	return false
 }
 
-// This method adds a name string token with the current token information to
-// the token channel. It returns true if a name token was found.
-func (v *scanner) foundName() bool {
+// This method adds a moniker string token with the current token information to
+// the token channel. It returns true if a moniker token was found.
+func (v *scanner) foundMoniker() bool {
 	s := v.source[v.current:]
-	matches := abstractions.ScanName(s)
+	matches := abstractions.ScanMoniker(s)
 	if len(matches) > 0 {
 		v.acceptToken(matches[0])
-		v.emitToken(tokenName)
+		v.emitToken(tokenMoniker)
 		return true
 	}
 	return false

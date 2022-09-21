@@ -29,7 +29,7 @@ const (
 	tokenIdentifier
 	tokenKeyword
 	tokenMoment
-	tokenName
+	tokenMoniker
 	tokenNarrative
 	tokenNote
 	tokenNumber

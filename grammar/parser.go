@@ -539,21 +539,21 @@ func (v *parser) parseMoment() (elements.Moment, bool) {
 	return moment, true
 }
 
-// This method attempts to parse a name string. It returns the name string
-// and whether or not the name string was successfully parsed.
-func (v *parser) parseName() (strings.Name, bool) {
+// This method attempts to parse a moniker string. It returns the moniker string
+// and whether or not the moniker string was successfully parsed.
+func (v *parser) parseMoniker() (strings.Moniker, bool) {
 	var ok bool
-	var name strings.Name
+	var moniker strings.Moniker
 	var token = v.nextToken()
-	if token.typ != tokenName {
+	if token.typ != tokenMoniker {
 		v.backupOne()
-		return name, false
+		return moniker, false
 	}
-	name, ok = strings.NameFromString(token.val)
+	moniker, ok = strings.MonikerFromString(token.val)
 	if !ok {
-		panic(fmt.Sprintf("An invalid name token was found: %v", token))
+		panic(fmt.Sprintf("An invalid moniker token was found: %v", token))
 	}
-	return name, true
+	return moniker, true
 }
 
 // This method attempts to parse a narrative string. It returns the narrative
@@ -914,7 +914,7 @@ func (v *parser) parseString() (any, bool) {
 	var str any
 	str, ok = v.parseBinary()
 	if !ok {
-		str, ok = v.parseName()
+		str, ok = v.parseMoniker()
 	}
 	if !ok {
 		str, ok = v.parseNarrative()

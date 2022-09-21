@@ -295,33 +295,33 @@ func ScanMoment(v []byte) []string {
 	return bytesToStrings(momentScanner.FindSubmatch(v))
 }
 
-// NAME STRING SYNTAX
+// MONIKER STRING SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a name string. It is useful to include in parsing error messages.
-const NameSyntax = `
+// a moniker string. It is useful to include in parsing error messages.
+const MonikerSyntax = `
 	LETTER    = {unicode letter}
 	DIGIT     = {unicode digit}
 	SEPARATOR = [-+.]
-	LABEL     = LETTER (SEPARATOR? (LETTER | DIGIT))*
-	NAME      = ('/' LABEL)+
+	NAME      = LETTER (SEPARATOR? (LETTER | DIGIT))*
+	MONIKER   = ('/' NAME)+
 `
 
-// These constants are used to form a regular expression for valid name strings.
+// These constants are used to form a regular expression for valid moniker strings.
 const (
 	separator = `[-+.]`
-	label     = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
-	name      = `((?:/` + label + `)+)` // Cannot capture each label...
+	name      = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
+	moniker   = `((?:/` + name + `)+)` // Cannot capture each name...
 )
 
-// This scanner is used for matching name strings.
-var nameScanner = regexp.MustCompile(`^` + name)
+// This scanner is used for matching moniker strings.
+var monikerScanner = regexp.MustCompile(`^` + moniker)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a name string. The first item in the array is the entire
+// subgroups for a moniker string. The first item in the array is the entire
 // matched string.
-func ScanName(v []byte) []string {
-	return bytesToStrings(nameScanner.FindSubmatch(v))
+func ScanMoniker(v []byte) []string {
+	return bytesToStrings(monikerScanner.FindSubmatch(v))
 }
 
 // NARRATIVE STRING SYNTAX

@@ -36,14 +36,16 @@ var Grammar = map[string]string{
 
 	"parameters": `parameter (',' parameter)* | EOL (parameter EOL)+`,
 
-	"parameter": `symbol ':' component`,
+	"parameter": `name ':' component`,
+
+	"name": `SYMBOL`,
 
 	// Primitives
 	"primitive": `element | string`,
 
 	"element": `ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
 
-	"string": `BINARY | NAME | NARRATIVE | QUOTE | VERSION`,
+	"string": `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 
 	// Collections
 	"collection": `catalog | slice | list`,
@@ -59,61 +61,6 @@ var Grammar = map[string]string{
 	"variable": `IDENTIFIER`,
 
 	"list": `component (',' component)* | EOL (component EOL)* | /* no items */`,
-
-	// Expressions
-	"expression": "" +
-		"component | " +
-		"variable | " +
-		"functionExpression | " +
-		"precedenceExpression | " +
-		"dereferenceExpression | " +
-		"messageExpression | " +
-		"attributeExpression | " +
-		"chainExpression | " +
-		"powerExpression | " +
-		"inversionExpression | " +
-		"arithmeticExpression | " +
-		"magnitudeExpression | " +
-		"comparisonExpression | " +
-		"complementExpression | " +
-		"logicalExpression | " +
-		"defaultExpression",
-
-	"functionExpression": `function '(' arguments? ')'`,
-
-	"precedenceExpression": `'(' expression ')'`,
-
-	"dereferenceExpression": `'@' expression`,
-
-	"messageExpression": `expression ('.' | '<-') message '(' arguments? ')'`,
-
-	"attributeExpression": `expression '[' indices ']'`,
-
-	"chainExpression": `expression '&' expression`,
-
-	"powerExpression": `expression '^' expression {right associative}`,
-
-	"inversionExpression": `('-' | '/' | '*') expression`,
-
-	"arithmeticExpression": `expression ('*' | '/' | '//' | '+' | '-') expression`,
-
-	"magnitudeExpression": `'|' expression '|'`,
-
-	"comparisonExpression": `expression ('<' | '=' | '>' | 'IS' | 'MATCHES') expression`,
-
-	"complementExpression": `'NOT' expression`,
-
-	"logicalExpression": `expression ('AND' | 'SANS' | 'XOR' | 'OR') expression`,
-
-	"defaultExpression": `expression '?' expression`,
-
-	"function": `IDENTIFIER`,
-
-	"message": `IDENTIFIER`,
-
-	"arguments": `expression (',' expression)*`,
-
-	"indices": `expression (',' expression)*`,
 
 	// Statements
 	"statements": `statement (';' statement)* | EOL (statement EOL)* | /* no statements */`,
@@ -144,11 +91,21 @@ var Grammar = map[string]string{
 
 	"evaluateClause": `(recipient (':=' | '+=' | '-=' | '*='))? expression`,
 
+	"recipient": `name | attribute`,
+
+	"attribute": `variable '[' indices ']'`,
+
+	"indices": `expression (',' expression)*`,
+
 	"onClause": `'on' expression ('matching' expression 'do' block)+`,
+
+	"block": `'{' statements '}'`,
 
 	"ifClause": `'if' (expression 'do' block)+`,
 
-	"withClause": `'with' ('each' symbol 'in')? expression 'do' block`,
+	"withClause": `'with' ('each' item 'in')? expression 'do' block`,
+
+	"item": `SYMBOL`,
 
 	"whileClause": `'while' expression 'do' block`,
 
@@ -178,13 +135,62 @@ var Grammar = map[string]string{
 
 	"rejectClause": `'reject' expression`,
 
-	"handleClause": `'handle' symbol ('matching' expression 'with' block)+`,
+	"handleClause": `'handle' exception ('matching' expression 'with' block)+`,
 
-	"block": `'{' statements '}'`,
+	"exception": `SYMBOL`,
 
-	"recipient": `symbol | attribute`,
+	// Expressions
+	"expression": "" +
+		"component | " +
+		"variable | " +
+		"functionExpression | " +
+		"precedenceExpression | " +
+		"dereferenceExpression | " +
+		"messageExpression | " +
+		"attributeExpression | " +
+		"chainExpression | " +
+		"powerExpression | " +
+		"inversionExpression | " +
+		"arithmeticExpression | " +
+		"magnitudeExpression | " +
+		"comparisonExpression | " +
+		"complementExpression | " +
+		"logicalExpression | " +
+		"defaultExpression",
 
-	"attribute": `variable '[' indices ']'`,
+	"functionExpression": `function '(' arguments? ')'`,
+
+	"function": `IDENTIFIER`,
+
+	"arguments": `expression (',' expression)*`,
+
+	"precedenceExpression": `'(' expression ')'`,
+
+	"dereferenceExpression": `'@' expression`,
+
+	"messageExpression": `expression ('.' | '<-') message '(' arguments? ')'`,
+
+	"message": `IDENTIFIER`,
+
+	"attributeExpression": `expression '[' indices ']'`,
+
+	"chainExpression": `expression '&' expression`,
+
+	"powerExpression": `expression '^' expression {right associative}`,
+
+	"inversionExpression": `('-' | '/' | '*') expression`,
+
+	"arithmeticExpression": `expression ('*' | '/' | '//' | '+' | '-') expression`,
+
+	"magnitudeExpression": `'|' expression '|'`,
+
+	"comparisonExpression": `expression ('<' | '=' | '>' | 'IS' | 'MATCHES') expression`,
+
+	"complementExpression": `'NOT' expression`,
+
+	"logicalExpression": `expression ('AND' | 'SANS' | 'XOR' | 'OR') expression`,
+
+	"defaultExpression": `expression '?' expression`,
 }
 
 // COMPONENT NODES

@@ -117,11 +117,11 @@ func TestParserWithStringTypes(t *testing.T) {
 	var binary strings.Binary = component.Value.(strings.Binary)
 	assert.Equal(t, []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, binary.AsArray())
 
-	// Name
+	// Moniker
 	component, ok = grammar.ParseSource("/bali/types/Number/v1.2.3")
 	assert.True(t, ok)
-	var name strings.Name = component.Value.(strings.Name)
-	assert.Equal(t, []string{"bali", "types", "Number", "v1.2.3"}, name.AsArray())
+	var moniker strings.Moniker = component.Value.(strings.Moniker)
+	assert.Equal(t, []string{"bali", "types", "Number", "v1.2.3"}, moniker.AsArray())
 
 	// Narrative
 	component, ok = grammar.ParseSource(n + c)
