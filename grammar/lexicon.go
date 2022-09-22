@@ -26,11 +26,20 @@ var Grammar = map[string]string{
 	// Components
 	"component": `entity context? NOTE?`,
 
-	"entity": `primitive | sequence | procedure`,
+	"entity": `primitive | collection | procedure`,
 
-	"sequence": `'[' collection ']'`,
+	"primitive": `element | string`,
+
+	"collection": `'[' sequence ']'`,
+
+	"sequence": `catalog | slice | list`,
 
 	"procedure": `'{' statements '}'`,
+
+	"statements": "" +
+		`statement (';' statement)* | ` +
+		`EOL ((NOTE | COMMENT | statement) EOL)* | ` +
+		`/* no statements */`,
 
 	"context": `'(' parameters ')'`,
 
@@ -41,14 +50,12 @@ var Grammar = map[string]string{
 	"name": `SYMBOL`,
 
 	// Primitives
-	"primitive": `element | string`,
-
 	"element": `ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
 
 	"string": `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 
 	// Collections
-	"collection": `catalog | slice | list`,
+	"list": `component (',' component)* | EOL (component EOL)* | /* no items */`,
 
 	"catalog": `association (',' association)* | EOL (association EOL)* | ':' /* no associations */`,
 
@@ -60,14 +67,8 @@ var Grammar = map[string]string{
 
 	"variable": `IDENTIFIER`,
 
-	"list": `component (',' component)* | EOL (component EOL)* | /* no items */`,
-
 	// Statements
-	"statements": `statement (';' statement)* | EOL (statement EOL)* | /* no statements */`,
-
-	"statement": `documentation | mainClause handleClause?`,
-
-	"documentation": `NOTE | COMMENT`,
+	"statement": `mainClause handleClause?`,
 
 	"mainClause": "" +
 		"evaluateClause | " +
@@ -197,7 +198,7 @@ var Grammar = map[string]string{
 
 // This type defines the node structure associated with a component.
 type Component struct {
-	Value      any // A value is an primitive, sequence or procedure.
+	Value      any // A value is a primitive, collection or procedure.
 	Parameters []*Parameter
 	Note       string
 }
@@ -210,9 +211,9 @@ type Parameter struct {
 }
 
 // This type defines the node structure associated with a procedure that
-// contains Bali Document Notation (BDN) procedural statements.
+// contains Bali Document Notation™ (BDN) procedural statements.
 type Procedure struct {
-	Statements []any // A statement can be a comment or a statement.
+	Statements []any
 }
 
 // STATEMENT NODES
@@ -221,7 +222,7 @@ type Procedure struct {
 // Notation (BDN) statement containing a main clause and an optional
 // exception handling clause.
 type Statement struct {
-	MainClause   any // The main clause is any non-handle clause.
+	MainClause   any
 	HandleClause *HandleClause
 }
 
@@ -237,31 +238,31 @@ type EvaluateClause struct {
 // This type defines the node structure associated with a clause that selects a
 // statement block to be executed based on the pattern of a control expression.
 type OnClause struct {
-	Control  any   // The control is any expression.
-	Patterns []any // Each pattern is any expression.
+	Control  any
+	Patterns []any
 	Blocks   []*Block
 }
 
 // This type defines the node structure associated with a clause that selects a
 // statement block to be executed based on the value of a conditional expression.
 type IfClause struct {
-	Conditions []any // Each condition is any boolean expression.
+	Conditions []any
 	Blocks     []*Block
 }
 
 // This type defines the node structure associated with a clause that executes
-// a statement block for each item in a sequence. Each item may be optionally
+// a statement block for each item in a collection. Each item may be optionally
 // assigned to a symbol that is referenced in the statement block.
 type WithClause struct {
-	Item     elements.Symbol
-	Sequence any
-	Block    *Block
+	Item       elements.Symbol
+	Collection any
+	Block      *Block
 }
 
 // This type defines the node structure associated with a clause that executes
 // a statement block while a condition is true.
 type WhileClause struct {
-	Condition any // The condition is any boolean expression.
+	Condition any
 	Block     *Block
 }
 
@@ -305,8 +306,8 @@ type DiscardClause struct {
 // This type defines the node structure associated with a clause that notarizes
 // a draft document as a named released document in the document repository.
 type NotarizeClause struct {
-	Draft any
-	Name  any
+	Draft   any
+	Moniker any
 }
 
 // This type defines the node structure associated with a clause that checks out
@@ -315,7 +316,7 @@ type NotarizeClause struct {
 type CheckoutClause struct {
 	Recipient any // The recipient is a symbol or attribute.
 	Level     any
-	Name      any
+	Moniker   any
 }
 
 // This type defines the node structure associated with a clause that publishes
@@ -356,17 +357,18 @@ type RejectClause struct {
 // an exception.
 type HandleClause struct {
 	Exception elements.Symbol
-	Patterns  []any // Each pattern is any expression.
+	Patterns  []any
 	Blocks    []*Block
 }
 
 // This type defines the node structure associated with a block of statements
 // that contains Bali Document Notation (BDN) procedural statements.
 type Block struct {
-	Statements []any // A statement can be a comment or a statement.
+	Statements []any
 }
 
-// This type defines the node structure associated with an indexed attribute.
+// This type defines the node structure associated with an indexed attribute
+// within a composite component.
 type Attribute struct {
 	Variable string
 	Indices  []any
@@ -416,7 +418,7 @@ type MessageExpression struct {
 }
 
 // This type defines the node structure associated with an expression that
-// returns the value of an attribute at an indexed location.
+// returns an indexed attribute from within a composite component.
 type AttributeExpression struct {
 	Composite any
 	Indices   []any

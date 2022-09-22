@@ -169,7 +169,7 @@ func (v *parser) parseEntity() (any, bool) {
 		entity, ok = v.parseString()
 	}
 	if !ok {
-		entity, ok = v.parseSequence()
+		entity, ok = v.parseCollection()
 	}
 	if !ok {
 		entity, ok = v.parseProcedure()
@@ -252,19 +252,19 @@ func (v *parser) parseCatalog() (abstractions.CatalogLike[any, any], bool) {
 	return catalog, true
 }
 
-// This method attempts to parse a collection of items. It returns the
-// collection and whether or not the collection was successfully parsed.
-func (v *parser) parseCollection() (any, bool) {
+// This method attempts to parse a sequence of items. It returns the
+// sequence and whether or not the sequence was successfully parsed.
+func (v *parser) parseSequence() (any, bool) {
 	var ok bool
-	var collection any
-	collection, ok = v.parseCatalog()
+	var sequence any
+	sequence, ok = v.parseCatalog()
 	if !ok {
-		collection, ok = v.parseSlice()
+		sequence, ok = v.parseSlice()
 	}
 	if !ok {
-		collection, ok = v.parseList() // The list must be last.
+		sequence, ok = v.parseList() // The list must be last.
 	}
-	return collection, ok
+	return sequence, ok
 }
 
 // This method attempts to parse a component. It returns the component and
@@ -884,25 +884,25 @@ func (v *parser) parseResource() (elements.Resource, bool) {
 	return resource, true
 }
 
-// This method attempts to parse a sequence of items. It returns the
-// sequence and whether or not the sequence was successfully parsed.
-func (v *parser) parseSequence() (any, bool) {
+// This method attempts to parse a collection of items. It returns the
+// collection and whether or not the collection was successfully parsed.
+func (v *parser) parseCollection() (any, bool) {
 	var ok bool
 	var bad *token
-	var collection any
+	var sequence any
 	_, ok = v.parseDelimiter("[")
 	if !ok {
 		return nil, false
 	}
-	collection, ok = v.parseCollection()
+	sequence, ok = v.parseSequence()
 	if !ok {
-		panic("Expected a collection following the '[' character.")
+		panic("Expected a sequence following the '[' character.")
 	}
 	bad, ok = v.parseDelimiter("]")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ']' character following the collection and received: %v", *bad))
+		panic(fmt.Sprintf("Expected a ']' character following the sequence and received: %v", *bad))
 	}
-	return collection, true
+	return sequence, true
 }
 
 // This method attempts to parse a string primitive. It returns the
