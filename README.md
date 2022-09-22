@@ -1,10 +1,15 @@
-## The Bali Document Notation™
+## Bali Document Notation™ (BDN)
 <img src="https://craterdog.com/images/CraterDogLogo.png" width="50%">
 
-### **_NOTICE_**
+### _NOTICE_
 _This project is still under development and is for reference purposes only. If
 you are interested in this project or have suggestions on how to improve it feel
 free to contact us at [craterdog@gmail.com](mailto:craterdog@gmail.com)._
+
+### Overview
+This project is a Go language binding for Bali Document Notation™ (BDN for short).
+It allows round-trip transformations between the Go based parse tree for a Bali
+component and the corresponding BDN document.
 
 ### Quick Links
 For more information on this project click on the following links:
