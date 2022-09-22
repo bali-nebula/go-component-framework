@@ -30,28 +30,28 @@ var Grammar = map[string]string{
 
 	"$primitive": `element | string`,
 
-	"$collection": `'[' sequence ']'`,
+	"$collection": `"[" sequence "]"`,
 
 	"$sequence": `catalog | slice | list`,
 
-	"$procedure": `'{' statements '}'`,
+	"$procedure": `"{" statements "}"`,
 
 	"$statements": `
-		statement (';' statement)* |
+		statement (";" statement)* |
 		EOL ((documentation | statement) EOL)* |
-		/* no statements */
+		! No statements.
 `,
 
 	"$documentation": `NOTE | COMMENT`,
 
-	"$context": `'(' parameters ')'`,
+	"$context": `"(" parameters ")"`,
 
 	"$parameters": `
-		parameter (',' parameter)* |
+		parameter ("," parameter)* |
 		EOL (parameter EOL)+
 `,
 
-	"$parameter": `name ':' component`,
+	"$parameter": `name ":" component`,
 
 	"$name": `SYMBOL`,
 
@@ -67,19 +67,19 @@ var Grammar = map[string]string{
 
 	// Collections
 	"$list": `
-		component (',' component)* |
+		component ("," component)* |
 		EOL (component NOTE? EOL)* |
-		/* no items */`,
+		! No items.`,
 
 	"$catalog": `
-		association (',' association)* |
+		association ("," association)* |
 		EOL (association NOTE? EOL)* |
-		':' /* no associations */
+		":" ! No associations.
 `,
 
-	"$association": `primitive ':' component`,
+	"$association": `primitive ":" component`,
 
-	"$slice": `value? ('..' | '..<' | '<..<' | '<..') value?`,
+	"$slice": `value? (".." | "..<" | "<..<" | "<..") value?`,
 
 	"$value": `primitive | variable`,
 
@@ -109,53 +109,53 @@ var Grammar = map[string]string{
 		rejectClause
 `,
 
-	"$evaluateClause": `(recipient (':=' | '+=' | '-=' | '*='))? expression`,
+	"$evaluateClause": `(recipient (":=" | "+=" | "-=" | "*=" | "/="))? expression`,
 
 	"$recipient": `name | attribute`,
 
-	"$attribute": `variable '[' indices ']'`,
+	"$attribute": `variable "[" indices "]"`,
 
-	"$indices": `expression (',' expression)*`,
+	"$indices": `expression ("," expression)*`,
 
-	"$onClause": `'on' expression ('matching' expression 'do' block)+`,
+	"$onClause": `"on" expression ("matching" expression "do" block)+`,
 
-	"$block": `'{' statements '}'`,
+	"$block": `"{" statements "}"`,
 
-	"$ifClause": `'if' (expression 'do' block)+`,
+	"$ifClause": `"if" (expression "do" block)+`,
 
-	"$withClause": `'with' ('each' item 'in')? expression 'do' block`,
+	"$withClause": `"with" ("each" item "in")? expression "do" block`,
 
 	"$item": `SYMBOL`,
 
-	"$whileClause": `'while' expression 'do' block`,
+	"$whileClause": `"while" expression "do" block`,
 
-	"$continueClause": `'continue' 'loop'`,
+	"$continueClause": `"continue" "loop"`,
 
-	"$breakClause": `'break' 'loop'`,
+	"$breakClause": `"break" "loop"`,
 
-	"$returnClause": `'return' expression?`,
+	"$returnClause": `"return" expression?`,
 
-	"$throwClause": `'throw' expression`,
+	"$throwClause": `"throw" expression`,
 
-	"$saveClause": `'save' expression ('as' recipient)?`,
+	"$saveClause": `"save" expression ("as" recipient)?`,
 
-	"$discardClause": `'discard' expression`,
+	"$discardClause": `"discard" expression`,
 
-	"$notarizeClause": `'notarize' expression 'as' expression`,
+	"$notarizeClause": `"notarize" expression "as" expression`,
 
-	"$checkoutClause": `'checkout' recipient ('at' 'level' expression)? 'from' expression`,
+	"$checkoutClause": `"checkout" recipient ("at" "level" expression)? "from" expression`,
 
-	"$publishClause": `'publish' expression`,
+	"$publishClause": `"publish" expression`,
 
-	"$postClause": `'post' expression 'to' expression`,
+	"$postClause": `"post" expression "to" expression`,
 
-	"$retrieveClause": `'retrieve' recipient 'from' expression`,
+	"$retrieveClause": `"retrieve" recipient "from" expression`,
 
-	"$acceptClause": `'accept' expression`,
+	"$acceptClause": `"accept" expression`,
 
-	"$rejectClause": `'reject' expression`,
+	"$rejectClause": `"reject" expression`,
 
-	"$handleClause": `'handle' exception ('matching' expression 'with' block)+`,
+	"$handleClause": `"handle" exception ("matching" expression "with" block)+`,
 
 	"$exception": `SYMBOL`,
 
@@ -179,39 +179,39 @@ var Grammar = map[string]string{
 		defaultExpression
 `,
 
-	"$functionExpression": `function '(' arguments? ')'`,
+	"$functionExpression": `function "(" arguments? ")"`,
 
 	"$function": `IDENTIFIER`,
 
-	"$arguments": `expression (',' expression)*`,
+	"$arguments": `expression ("," expression)*`,
 
-	"$precedenceExpression": `'(' expression ')'`,
+	"$precedenceExpression": `"(" expression ")"`,
 
-	"$dereferenceExpression": `'@' expression`,
+	"$dereferenceExpression": `"@" expression`,
 
-	"$messageExpression": `expression ('.' | '<-') message '(' arguments? ')'`,
+	"$messageExpression": `expression ("." | "<-") message "(" arguments? ")"`,
 
 	"$message": `IDENTIFIER`,
 
-	"$attributeExpression": `expression '[' indices ']'`,
+	"$attributeExpression": `expression "[" indices "]"`,
 
-	"$chainExpression": `expression '&' expression`,
+	"$chainExpression": `expression "&" expression`,
 
-	"$powerExpression": `expression '^' expression {right associative}`,
+	"$powerExpression": `expression "^" expression {right associative}`,
 
-	"$inversionExpression": `('-' | '/' | '*') expression`,
+	"$inversionExpression": `("-" | "/" | "*") expression`,
 
-	"$arithmeticExpression": `expression ('*' | '/' | '//' | '+' | '-') expression`,
+	"$arithmeticExpression": `expression ("*" | "/" | "//" | "+" | "-") expression`,
 
-	"$magnitudeExpression": `'|' expression '|'`,
+	"$magnitudeExpression": `"|" expression "|"`,
 
-	"$comparisonExpression": `expression ('<' | '=' | '>' | 'IS' | 'MATCHES') expression`,
+	"$comparisonExpression": `expression ("<" | "=" | ">" | "IS" | "MATCHES") expression`,
 
-	"$complementExpression": `'NOT' expression`,
+	"$complementExpression": `"NOT" expression`,
 
-	"$logicalExpression": `expression ('AND' | 'SANS' | 'XOR' | 'OR') expression`,
+	"$logicalExpression": `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 
-	"$defaultExpression": `expression '?' expression`,
+	"$defaultExpression": `expression "?" expression`,
 }
 
 // COMPONENT NODES
