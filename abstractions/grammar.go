@@ -27,29 +27,35 @@ type Lexical interface {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // an angle element. It is useful to include in parsing error messages.
 const AngleSyntax = `
+	E        = "e"
+	PI       = "pi" | "π"
+	PHI      = "phi" | "φ"
+	TAU      = "tau" | "τ"
+	CONSTANT = E | PI | PHI | TAU
 	SIGN     = [+-]
 	ZERO     = "0"
 	ORDINAL  = [1-9][0-9]*
 	FRACTION = .[0-9]+
 	EXPONENT = "E" SIGN? ORDINAL
 	SCALAR   = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	PI       = "pi" | "π"
-	TAU      = "tau" | "τ"
-	ANGLE    = "~" (SCALAR | ZERO | PI | TAU)
+	ANGLE    = "~" (CONSTANT | SCALAR | ZERO)
 `
 
 // These constants are used to form a regular expression for valid angle
 // entities.
 const (
+	e        = `e`
+	pi       = `pi|π`
+	phi      = `phi|φ`
+	tau      = `tau|τ`
+	constant = e + `|` + pi + `|` + phi + `|` + tau
 	sign     = `[+-]`
 	zero     = `0`
 	ordinal  = `[1-9][0-9]*`
 	fraction = `\.[0-9]+`
 	exponent = `E` + sign + `?` + ordinal
 	scalar   = `(?:(?:` + ordinal + `(?:` + fraction + `)?)|(?:` + zero + fraction + `))(?:` + exponent + `)?`
-	pi       = `pi|π`
-	tau      = `tau|τ`
-	angle    = `~(` + scalar + `|` + zero + `|` + pi + `|` + tau + `)`
+	angle    = `~(` + constant + `|` + scalar + `|` + zero + `)`
 )
 
 // This scanner is used for matching angle entities.
@@ -406,13 +412,18 @@ func ScanNote(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a number element. It is useful to include in parsing error messages.
 const NumberSyntax = `
+	E        = "e"
+	PI       = "pi" | "π"
+	PHI      = "phi" | "φ"
+	TAU      = "tau" | "τ"
+	CONSTANT = E | PI | PHI | TAU
 	SIGN      = [+-]
 	ZERO      = "0"
 	ORDINAL   = [1-9][0-9]*
 	FRACTION  = .[0-9]+
 	EXPONENT  = "E" SIGN? ORDINAL
 	SCALAR    = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	SIGNED    = SIGN? SCALAR
+	SIGNED    = SIGN? (CONSTANT | SCALAR)
 	INFINITY  = "infinity" | "∞"
 	UNDEFINED = "undefined"
 	NUMBER    = SIGNED "i"? | ZERO | INFINITY | UNDEFINED | "(" SIGNED ", " (SIGNED | ANGLE) "i" ")"
@@ -421,7 +432,7 @@ const NumberSyntax = `
 // These constants are used to form a regular expression for valid number
 // entities.
 const (
-	signed    = sign + `?` + scalar
+	signed    = sign + `?(?:` + constant + `|` + scalar + `)`
 	infinity  = `infinity|∞`
 	undefined = `undefined`
 	number    = `(` +
@@ -487,20 +498,25 @@ func ScanPattern(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a percentage element. It is useful to include in parsing error messages.
 const PercentageSyntax = `
+	E        = "e"
+	PI       = "pi" | "π"
+	PHI      = "phi" | "φ"
+	TAU      = "tau" | "τ"
+	CONSTANT = E | PI | PHI | TAU
 	SIGN       = [+-]
 	ZERO       = "0"
 	ORDINAL    = [1-9][0-9]*
 	FRACTION   = .[0-9]+
 	EXPONENT   = "E" SIGN? ORDINAL
 	SCALAR     = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	SIGNED     = SIGN? SCALAR
-	PERCENTAGE = (ZERO | SIGNED) "%"
+	SIGNED     = SIGN? (CONSTANT | SCALAR)
+	PERCENTAGE = (SIGNED | ZERO) "%"
 `
 
 // These constants are used to form a regular expression for valid percentage
 // entities.
 const (
-	percentage = `(` + zero + `|` + signed + `)%`
+	percentage = `(` + signed + `|` + zero + `)%`
 )
 
 // This scanner is used for matching percentage entities.
