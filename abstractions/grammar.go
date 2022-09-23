@@ -28,13 +28,14 @@ type Lexical interface {
 // an angle element. It is useful to include in parsing error messages.
 const AngleSyntax = `
 	SIGN     = [+-]
-	ZERO     = '0'
+	ZERO     = "0"
 	ORDINAL  = [1-9][0-9]*
 	FRACTION = .[0-9]+
-	EXPONENT = 'E' SIGN? ORDINAL
+	EXPONENT = "E" SIGN? ORDINAL
 	SCALAR   = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	PI       = 'pi' | 'π'
-	ANGLE    = '~' (SCALAR | PI | ZERO)
+	PI       = "pi" | "π"
+	TAU      = "tau" | "τ"
+	ANGLE    = "~" (SCALAR | ZERO | PI | TAU)
 `
 
 // These constants are used to form a regular expression for valid angle
@@ -47,7 +48,8 @@ const (
 	exponent = `E` + sign + `?` + ordinal
 	scalar   = `(?:(?:` + ordinal + `(?:` + fraction + `)?)|(?:` + zero + fraction + `))(?:` + exponent + `)?`
 	pi       = `pi|π`
-	angle    = `~(` + scalar + `|` + pi + `|` + zero + `)`
+	tau      = `tau|τ`
+	angle    = `~(` + scalar + `|` + zero + `|` + pi + `|` + tau + `)`
 )
 
 // This scanner is used for matching angle entities.
@@ -93,8 +95,8 @@ func ScanBinary(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a boolean element. It is useful to include in parsing error messages.
 const BooleanSyntax = `
-	FALSE   = 'false'
-	TRUE    = 'true'
+	FALSE   = "false"
+	TRUE    = "true"
 	BOOLEAN = FALSE | TRUE
 `
 
@@ -119,10 +121,10 @@ func ScanBoolean(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a comment. It is useful to include in parsing error messages.
 const CommentSyntax = `
-	EOL       = '\n'
-	TAB       = '\t'
+	EOL       = "\n"
+	TAB       = "\t"
 	CHARACTER = .*
-	COMMENT = '!*' EOL (COMMENT | CHARACTER)*? EOL TAB* '*!'
+	COMMENT = "!*" EOL (COMMENT | CHARACTER)*? EOL TAB* "*!"
 `
 
 // This function returns for the specified string an array of the matching
@@ -159,7 +161,7 @@ func ScanComment(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a delimiter. It is useful to include in parsing error messages.
 const DelimiterSyntax = `
-	DELIMITER = '&' | '(' | ... | '}'
+	DELIMITER = "&" | "(" | ... | "}"
 `
 
 // This function returns for the specified string an array of the matching
@@ -181,10 +183,10 @@ func ScanDelimiter(v []byte) []string {
 // a duration element. It is useful to include in parsing error messages.
 const DurationSyntax = `
 	TSPAN    = ZERO | ORDINAL FRACTION?
-	WEEKS    = TSPAN 'W'
-	DATES    = (TSPAN 'Y')? (TSPAN 'M')? (TSPAN 'D')?
-	TIMES    = 't' (TSPAN 'H')? (TSPAN 'M')? (TSPAN 'S')?
-	DURATION = '~' SIGN? 'P' (WEEKS | DATES TIMES?)
+	WEEKS    = TSPAN "W"
+	DATES    = (TSPAN "Y")? (TSPAN "M")? (TSPAN "D")?
+	TIMES    = "t" (TSPAN "H")? (TSPAN "M")? (TSPAN "S")?
+	DURATION = "~" SIGN? "P" (WEEKS | DATES TIMES?)
 `
 
 // These constants are used to form a regular expression for valid duration
@@ -239,7 +241,7 @@ func ScanIdentifier(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a keyword. It is useful to include in parsing error messages.
 const KeywordSyntax = `
-	KEYWORD = 'accept' | 'any' | ... | 'with'
+	KEYWORD = "accept" | "any" | ... | "with"
 `
 
 // This function returns for the specified string an array of the matching
@@ -269,7 +271,7 @@ const MomentSyntax = `
 	MINUTE   = [0-5][0-9]
 	SECOND   = [0-5][0-9] | [6][01]
 	FRACTION = .[0-9]+
-	MOMENT   = '<' YEAR ('-' MONTH ('-' DAY ('T' HOUR (':' MINUTE (':' SECOND FRACTION?)?)?)?)?)? '>'
+	MOMENT   = "<" YEAR ("-" MONTH ("-" DAY ("T" HOUR (":" MINUTE (":" SECOND FRACTION?)?)?)?)?)? ">"
 `
 
 // These constants are used to form a regular expression for valid moment
@@ -304,7 +306,7 @@ const MonikerSyntax = `
 	DIGIT     = {unicode digit}
 	SEPARATOR = [-+.]
 	NAME      = LETTER (SEPARATOR? (LETTER | DIGIT))*
-	MONIKER   = ('/' NAME)+
+	MONIKER   = ("/" NAME)+
 `
 
 // These constants are used to form a regular expression for valid moniker strings.
@@ -329,8 +331,8 @@ func ScanMoniker(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a narrative string. It is useful to include in parsing error messages.
 const NarrativeSyntax = `
-	EOL       = '\n'
-	TAB       = '\t'
+	EOL       = "\n"
+	TAB       = "\t"
 	CHARACTER = .*
 	NARRATIVE = '"' EOL (NARRATIVE | CHARACTER)* EOL TAB* '"'
 `
@@ -380,8 +382,8 @@ func ScanNarrative(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a note. It is useful to include in parsing error messages.
 const NoteSyntax = `
-	EOL       = '\n'
-	NOTE: '! ' !EOL*
+	EOL       = "\n"
+	NOTE: "! " !EOL*
 `
 
 // These constants are used to form a regular expression for valid notes.
@@ -405,15 +407,15 @@ func ScanNote(v []byte) []string {
 // a number element. It is useful to include in parsing error messages.
 const NumberSyntax = `
 	SIGN      = [+-]
-	ZERO      = '0'
+	ZERO      = "0"
 	ORDINAL   = [1-9][0-9]*
 	FRACTION  = .[0-9]+
-	EXPONENT  = 'E' SIGN? ORDINAL
+	EXPONENT  = "E" SIGN? ORDINAL
 	SCALAR    = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
 	SIGNED    = SIGN? SCALAR
-	INFINITY  = 'infinity' | '∞'
-	UNDEFINED = 'undefined'
-	NUMBER    = SIGNED 'i'? | ZERO | INFINITY | UNDEFINED | '(' SIGNED ', ' (SIGNED | ANGLE) 'i' ')'
+	INFINITY  = "infinity" | "∞"
+	UNDEFINED = "undefined"
+	NUMBER    = SIGNED "i"? | ZERO | INFINITY | UNDEFINED | "(" SIGNED ", " (SIGNED | ANGLE) "i" ")"
 `
 
 // These constants are used to form a regular expression for valid number
@@ -450,12 +452,12 @@ func ScanNumber(v []byte) []string {
 // a pattern element. It is useful to include in parsing error messages.
 const PatternSyntax = `
 	BASE16  = [0-9a-f]
-	UNICODE = 'u' BASE16{4}
-	ESCAPE  = '\' (UNICODE | [bfrnt\])
+	UNICODE = "u" BASE16{4}
+	ESCAPE  = "\" (UNICODE | [bfrnt\])
 	RUNE    = ESCAPE | '\"' | !["\r\n]
 	REGEX   = '"' RUNE+ '"?'
-	NONE    = 'none'
-	ANY     = 'any'
+	NONE    = "none"
+	ANY     = "any"
 	PATTERN = NONE | REGEX | ANY
 `
 
@@ -486,13 +488,13 @@ func ScanPattern(v []byte) []string {
 // a percentage element. It is useful to include in parsing error messages.
 const PercentageSyntax = `
 	SIGN       = [+-]
-	ZERO       = '0'
+	ZERO       = "0"
 	ORDINAL    = [1-9][0-9]*
 	FRACTION   = .[0-9]+
-	EXPONENT   = 'E' SIGN? ORDINAL
+	EXPONENT   = "E" SIGN? ORDINAL
 	SCALAR     = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
 	SIGNED     = SIGN? SCALAR
-	PERCENTAGE = (ZERO | SIGNED) '%'
+	PERCENTAGE = (ZERO | SIGNED) "%"
 `
 
 // These constants are used to form a regular expression for valid percentage
@@ -517,7 +519,7 @@ func ScanPercentage(v []byte) []string {
 // a probability element. It is useful to include in parsing error messages.
 const ProbabilitySyntax = `
 	FRACTION    = .[0-9]+
-	ONE         = '1.'
+	ONE         = "1."
 	PROBABILITY = FRACTION | ONE
 `
 
@@ -543,8 +545,8 @@ func ScanProbability(v []byte) []string {
 // a quoted string. It is useful to include in parsing error messages.
 const QuoteSyntax = `
 	BASE16  = [0-9a-f]
-	UNICODE = 'u' BASE16{4}
-	ESCAPE  = '\' (UNICODE | [bfrnt\])
+	UNICODE = "u" BASE16{4}
+	ESCAPE  = "\" (UNICODE | [bfrnt\])
 	RUNE    = ESCAPE | '\"' | !["\r\n]
 	QUOTE   = '"' RUNE* '"'
 `
@@ -575,7 +577,7 @@ const ResourceSyntax = `
 	PATH      = ![?#]*
 	QUERY     = ![#>]*
 	FRAGMENT  = ![>]+
-	RESOURCE  = '<' SCHEME ':' ('//' AUTHORITY)? '/' PATH ('?' QUERY)? ('#' FRAGMENT)? '>'
+	RESOURCE  = "<" SCHEME ":" ("//" AUTHORITY)? "/" PATH ("?" QUERY)? ("#" FRAGMENT)? ">"
 `
 
 // These constants are used to form a regular expression for valid resource
@@ -614,7 +616,7 @@ const SymbolSyntax = `
 	DIGIT     = {unicode digit}
 	IDENTIFIER = LETTER (LETTER | DIGIT)*
 	ORDINAL = [1-9][0-9]*
-	SYMBOL  = '$' IDENTIFIER+ ('-' ORDINAL)?
+	SYMBOL  = "$" IDENTIFIER+ ("-" ORDINAL)?
 `
 
 // These constants are used to form a regular expression for valid symbol
@@ -639,13 +641,13 @@ func ScanSymbol(v []byte) []string {
 // a tag element. It is useful to include in parsing error messages.
 const TagSyntax = `
 	BASE32 = [0-9A-DF-HJ-NP-TV-Z]
-	TAG    = '#' BASE32+
+	TAG    = "#" BASE32+
 `
 
 // These constants are used to form a regular expression for valid tag
 // entities.
 const (
-	base32 = `[0-9A-DF-HJ-NP-TV-Z]` // 'E', 'I', 'O', and 'U' have been removed.
+	base32 = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
 	tag    = `#(` + base32 + `+)`
 )
 
@@ -665,7 +667,7 @@ func ScanTag(v []byte) []string {
 // a version string. It is useful to include in parsing error messages.
 const VersionSyntax = `
 	ORDINAL = [1-9][0-9]*
-	VERSION = 'v' ORDINAL ('.' ORDINAL)*
+	VERSION = "v" ORDINAL ("." ORDINAL)*
 `
 
 // These constants are used to form a regular expression for valid version
