@@ -977,12 +977,12 @@ func (v *parser) parseTag() (elements.Tag, bool) {
 func (v *parser) parseValue() (any, bool) {
 	var ok bool
 	var value any
-	value, ok = v.parseIdentifier()
-	if !ok {
-		value, ok = v.parseElement()
-	}
+	value, ok = v.parseElement()
 	if !ok {
 		value, ok = v.parseString()
+	}
+	if !ok {
+		value, ok = v.parseIdentifier()
 	}
 	if !ok {
 		value = nil

@@ -27,18 +27,18 @@ type Lexical interface {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // an angle element. It is useful to include in parsing error messages.
 const AngleSyntax = `
-	E        = "e"
-	PI       = "pi" | "π"
-	PHI      = "phi" | "φ"
-	TAU      = "tau" | "τ"
-	CONSTANT = E | PI | PHI | TAU
-	SIGN     = [+-]
-	ZERO     = "0"
-	ORDINAL  = [1-9][0-9]*
-	FRACTION = .[0-9]+
-	EXPONENT = "E" SIGN? ORDINAL
-	SCALAR   = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	ANGLE    = "~" (CONSTANT | SCALAR | ZERO)
+	$E: "e"
+	$PI: "pi" | "π"
+	$PHI: "phi" | "φ"
+	$TAU: "tau" | "τ"
+	$CONSTANT: E | PI | PHI | TAU
+	$SIGN: [+-]
+	$ZERO: "0"
+	$ORDINAL: [1-9][0-9]*
+	$FRACTION: .[0-9]+
+	$EXPONENT: "E" SIGN? ORDINAL
+	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
+	$ANGLE: "~" (CONSTANT | SCALAR | ZERO)
 `
 
 // These constants are used to form a regular expression for valid angle
@@ -73,9 +73,9 @@ func ScanAngle(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a binary string. It is useful to include in parsing error messages.
 const BinarySyntax = `
-	WHITESPACE = \s
-	BASE64     = [A-Za-z0-9+/]
-	BINARY     = "'" (BASE64 | WHITESPACE)* "'"
+	$WHITESPACE: \s{Separator}
+	$BASE64: [A-Za-z0-9+/]
+	$BINARY: "'" (BASE64 | WHITESPACE)* "'"
 `
 
 // These constants are used to form a regular expression for valid binary
@@ -101,9 +101,9 @@ func ScanBinary(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a boolean element. It is useful to include in parsing error messages.
 const BooleanSyntax = `
-	FALSE   = "false"
-	TRUE    = "true"
-	BOOLEAN = FALSE | TRUE
+	$FALSE: "false"
+	$TRUE: "true"
+	$BOOLEAN: FALSE | TRUE
 `
 
 // These constants are used to form a regular expression for valid boolean
@@ -127,10 +127,10 @@ func ScanBoolean(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a comment. It is useful to include in parsing error messages.
 const CommentSyntax = `
-	EOL       = "\n"
-	TAB       = "\t"
-	CHARACTER = .*
-	COMMENT = "!*" EOL (COMMENT | CHARACTER)*? EOL TAB* "*!"
+	$EOL: "\n"
+	$TAB: "\t"
+	$CHARACTER: .*
+	$COMMENT: "!*" EOL (COMMENT | CHARACTER)*? EOL TAB* "*!"
 `
 
 // This function returns for the specified string an array of the matching
@@ -167,7 +167,7 @@ func ScanComment(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a delimiter. It is useful to include in parsing error messages.
 const DelimiterSyntax = `
-	DELIMITER = "&" | "(" | ... | "}"
+	$DELIMITER: "&" | "(" | ... | "}"
 `
 
 // This function returns for the specified string an array of the matching
@@ -188,11 +188,11 @@ func ScanDelimiter(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a duration element. It is useful to include in parsing error messages.
 const DurationSyntax = `
-	TSPAN    = ZERO | ORDINAL FRACTION?
-	WEEKS    = TSPAN "W"
-	DATES    = (TSPAN "Y")? (TSPAN "M")? (TSPAN "D")?
-	TIMES    = "t" (TSPAN "H")? (TSPAN "M")? (TSPAN "S")?
-	DURATION = "~" SIGN? "P" (WEEKS | DATES TIMES?)
+	$TSPAN: ZERO | ORDINAL FRACTION?
+	$WEEKS: TSPAN "W"
+	$DATES: (TSPAN "Y")? (TSPAN "M")? (TSPAN "D")?
+	$TIMES: "T" (TSPAN "H")? (TSPAN "M")? (TSPAN "S")?
+	$DURATION: "~" SIGN? "P" (WEEKS | DATES TIMES?)
 `
 
 // These constants are used to form a regular expression for valid duration
@@ -220,9 +220,9 @@ func ScanDuration(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // an identifier. It is useful to include in parsing error messages.
 const IdentifierSyntax = `
-	LETTER    = {unicode letter}
-	DIGIT     = {unicode digit}
-	IDENTIFIER = LETTER (LETTER | DIGIT)*
+	$LETTER: \p{Letter}
+	$DIGIT: \p{Number}
+	$IDENTIFIER: LETTER (LETTER | DIGIT)*
 `
 
 // These constants are used to form a regular expression for valid identifiers.
@@ -247,7 +247,7 @@ func ScanIdentifier(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a keyword. It is useful to include in parsing error messages.
 const KeywordSyntax = `
-	KEYWORD = "accept" | "any" | ... | "with"
+	$KEYWORD: "accept" | "any" | ... | "with"
 `
 
 // This function returns for the specified string an array of the matching
@@ -268,16 +268,16 @@ func ScanKeyword(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a moment element. It is useful to include in parsing error messages.
 const MomentSyntax = `
-	SIGN     = [+-]
-	ORDINAL  = [1-9][0-9]*
-	YEAR     = SIGN? ORDINAL
-	MONTH    = [0][1-9] | [1][012]
-	DAY      = [012][1-9] | [3][01]
-	HOUR     = [01][0-9] | [2][0-3]
-	MINUTE   = [0-5][0-9]
-	SECOND   = [0-5][0-9] | [6][01]
-	FRACTION = .[0-9]+
-	MOMENT   = "<" YEAR ("-" MONTH ("-" DAY ("T" HOUR (":" MINUTE (":" SECOND FRACTION?)?)?)?)?)? ">"
+	$SIGN: [+-]
+	$ORDINAL: [1-9][0-9]*
+	$YEAR: SIGN? ORDINAL
+	$MONTH: [0][1-9] | [1][012]
+	$DAY: [012][1-9] | [3][01]
+	$HOUR: [01][0-9] | [2][0-3]
+	$MINUTE: [0-5][0-9]
+	$SECOND: [0-5][0-9] | [6][01]
+	$FRACTION: .[0-9]+
+	$MOMENT: "<" YEAR ("-" MONTH ("-" DAY ("T" HOUR (":" MINUTE (":" SECOND FRACTION?)?)?)?)?)? ">"
 `
 
 // These constants are used to form a regular expression for valid moment
@@ -308,11 +308,11 @@ func ScanMoment(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a moniker string. It is useful to include in parsing error messages.
 const MonikerSyntax = `
-	LETTER    = {unicode letter}
-	DIGIT     = {unicode digit}
-	SEPARATOR = [-+.]
-	NAME      = LETTER (SEPARATOR? (LETTER | DIGIT))*
-	MONIKER   = ("/" NAME)+
+	$LETTER: \p{Letter}
+	$DIGIT: \p(Number}
+	$SEPARATOR: [-+.]
+	$NAME: LETTER (SEPARATOR? (LETTER | DIGIT))*
+	$MONIKER: ("/" NAME)+
 `
 
 // These constants are used to form a regular expression for valid moniker strings.
@@ -337,10 +337,10 @@ func ScanMoniker(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a narrative string. It is useful to include in parsing error messages.
 const NarrativeSyntax = `
-	EOL       = "\n"
-	TAB       = "\t"
-	CHARACTER = .*
-	NARRATIVE = '"' EOL (NARRATIVE | CHARACTER)* EOL TAB* '"'
+	$EOL: "\n"
+	$TAB: "\t"
+	$CHARACTER: .*
+	$NARRATIVE: '"' EOL (NARRATIVE | CHARACTER)* EOL TAB* '"'
 `
 
 // This function returns for the specified string an array of the matching
@@ -388,8 +388,8 @@ func ScanNarrative(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a note. It is useful to include in parsing error messages.
 const NoteSyntax = `
-	EOL       = "\n"
-	NOTE: "! " !EOL*
+	$EOL: "\n"
+	$NOTE: "! " (!EOL)*
 `
 
 // These constants are used to form a regular expression for valid notes.
@@ -412,21 +412,21 @@ func ScanNote(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a number element. It is useful to include in parsing error messages.
 const NumberSyntax = `
-	E        = "e"
-	PI       = "pi" | "π"
-	PHI      = "phi" | "φ"
-	TAU      = "tau" | "τ"
-	CONSTANT = E | PI | PHI | TAU
-	SIGN      = [+-]
-	ZERO      = "0"
-	ORDINAL   = [1-9][0-9]*
-	FRACTION  = .[0-9]+
-	EXPONENT  = "E" SIGN? ORDINAL
-	SCALAR    = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	SIGNED    = SIGN? (CONSTANT | SCALAR)
-	INFINITY  = "infinity" | "∞"
-	UNDEFINED = "undefined"
-	NUMBER    = SIGNED "i"? | ZERO | INFINITY | UNDEFINED | "(" SIGNED ", " (SIGNED | ANGLE) "i" ")"
+	$E: "e"
+	$PI: "pi" | "π"
+	$PHI: "phi" | "φ"
+	$TAU: "tau" | "τ"
+	$CONSTANT: E | PI | PHI | TAU
+	$SIGN: [+-]
+	$ZERO: "0"
+	$ORDINAL: [1-9][0-9]*
+	$FRACTION: .[0-9]+
+	$EXPONENT: "E" SIGN? ORDINAL
+	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
+	$SIGNED: SIGN? (CONSTANT | SCALAR)
+	$INFINITY: "infinity" | "∞"
+	$UNDEFINED: "undefined"
+	$NUMBER: SIGNED "i"? | ZERO | INFINITY | UNDEFINED | "(" SIGNED ", " (SIGNED | ANGLE) "i" ")"
 `
 
 // These constants are used to form a regular expression for valid number
@@ -462,14 +462,14 @@ func ScanNumber(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a pattern element. It is useful to include in parsing error messages.
 const PatternSyntax = `
-	BASE16  = [0-9a-f]
-	UNICODE = "u" BASE16{4}
-	ESCAPE  = "\" (UNICODE | [bfrnt\])
-	RUNE    = ESCAPE | '\"' | !["\r\n]
-	REGEX   = '"' RUNE+ '"?'
-	NONE    = "none"
-	ANY     = "any"
-	PATTERN = NONE | REGEX | ANY
+	$BASE16: [0-9a-f]
+	$UNICODE: "u" BASE16{4}
+	$ESCAPE: "\" (UNICODE | [bfrnt\])
+	$RUNE: ESCAPE | '\"' | !["\r\n]
+	$REGEX: '"' RUNE+ '"?'
+	$NONE: "none"
+	$ANY: "any"
+	$PATTERN: NONE | REGEX | ANY
 `
 
 // These constants are used to form a regular expression for valid pattern
@@ -498,19 +498,19 @@ func ScanPattern(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a percentage element. It is useful to include in parsing error messages.
 const PercentageSyntax = `
-	E        = "e"
-	PI       = "pi" | "π"
-	PHI      = "phi" | "φ"
-	TAU      = "tau" | "τ"
-	CONSTANT = E | PI | PHI | TAU
-	SIGN       = [+-]
-	ZERO       = "0"
-	ORDINAL    = [1-9][0-9]*
-	FRACTION   = .[0-9]+
-	EXPONENT   = "E" SIGN? ORDINAL
-	SCALAR     = (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	SIGNED     = SIGN? (CONSTANT | SCALAR)
-	PERCENTAGE = (SIGNED | ZERO) "%"
+	$E: "e"
+	$PI: "pi" | "π"
+	$PHI: "phi" | "φ"
+	$TAU: "tau" | "τ"
+	$CONSTANT: E | PI | PHI | TAU
+	$SIGN: [+-]
+	$ZERO: "0"
+	$ORDINAL: [1-9][0-9]*
+	$FRACTION: .[0-9]+
+	$EXPONENT: "E" SIGN? ORDINAL
+	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
+	$SIGNED: SIGN? (CONSTANT | SCALAR)
+	$PERCENTAGE: (SIGNED | ZERO) "%"
 `
 
 // These constants are used to form a regular expression for valid percentage
@@ -534,9 +534,9 @@ func ScanPercentage(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a probability element. It is useful to include in parsing error messages.
 const ProbabilitySyntax = `
-	FRACTION    = .[0-9]+
-	ONE         = "1."
-	PROBABILITY = FRACTION | ONE
+	$FRACTION: .[0-9]+
+	$ONE: "1."
+	$PROBABILITY: FRACTION | ONE
 `
 
 // These constants are used to form a regular expression for valid probability
@@ -560,11 +560,11 @@ func ScanProbability(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a quoted string. It is useful to include in parsing error messages.
 const QuoteSyntax = `
-	BASE16  = [0-9a-f]
-	UNICODE = "u" BASE16{4}
-	ESCAPE  = "\" (UNICODE | [bfrnt\])
-	RUNE    = ESCAPE | '\"' | !["\r\n]
-	QUOTE   = '"' RUNE* '"'
+	$BASE16: [0-9a-f]
+	$UNICODE: "u" BASE16{4}
+	$ESCAPE: "\" (UNICODE | [bfrnt\])
+	$RUNE: ESCAPE | '\"' | !["\r\n]
+	$QUOTE: '"' RUNE* '"'
 `
 
 // These constants are used to form a regular expression for valid quoted
@@ -588,12 +588,12 @@ func ScanQuote(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a resource element. It is useful to include in parsing error messages.
 const ResourceSyntax = `
-	SCHEME    = [a-zA-Z][0-9a-zA-Z+-.]*
-	AUTHORITY = ![/]+
-	PATH      = ![?#]*
-	QUERY     = ![#>]*
-	FRAGMENT  = ![>]+
-	RESOURCE  = "<" SCHEME ":" ("//" AUTHORITY)? "/" PATH ("?" QUERY)? ("#" FRAGMENT)? ">"
+	$SCHEME: [a-zA-Z][0-9a-zA-Z+-.]*
+	$AUTHORITY: (![/])+
+	$PATH: (![?#>])*
+	$QUERY: (![#>])*
+	$FRAGMENT: (![>])+
+	$RESOURCE: "<" SCHEME ":" ("//" AUTHORITY)? "/" PATH ("?" QUERY)? ("#" FRAGMENT)? ">"
 `
 
 // These constants are used to form a regular expression for valid resource
@@ -601,7 +601,7 @@ const ResourceSyntax = `
 const (
 	scheme    = `[a-zA-Z][0-9a-zA-Z+-.]*`
 	authority = `[^/]+`
-	path      = `[^?#]*`
+	path      = `[^?#>]*`
 	query     = `[^#>]*`
 	fragment  = `[^>]+`
 	resource  = `<(` +
@@ -628,11 +628,11 @@ func ScanResource(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a symbol string. It is useful to include in parsing error messages.
 const SymbolSyntax = `
-	LETTER    = {unicode letter}
-	DIGIT     = {unicode digit}
-	IDENTIFIER = LETTER (LETTER | DIGIT)*
-	ORDINAL = [1-9][0-9]*
-	SYMBOL  = "$" IDENTIFIER+ ("-" ORDINAL)?
+	$LETTER: \p{Letter}
+	$DIGIT: \p(Number}
+	$IDENTIFIER: LETTER (LETTER | DIGIT)*
+	$ORDINAL: [1-9][0-9]*
+	$SYMBOL: "$" IDENTIFIER+ ("-" ORDINAL)?
 `
 
 // These constants are used to form a regular expression for valid symbol
@@ -656,8 +656,8 @@ func ScanSymbol(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a tag element. It is useful to include in parsing error messages.
 const TagSyntax = `
-	BASE32 = [0-9A-DF-HJ-NP-TV-Z]
-	TAG    = "#" BASE32+
+	$BASE32: [0-9A-DF-HJ-NP-TV-Z]
+	$TAG: "#" BASE32+
 `
 
 // These constants are used to form a regular expression for valid tag
@@ -682,8 +682,8 @@ func ScanTag(v []byte) []string {
 // This raw string captures the pseudo-grammar used to define the syntax of
 // a version string. It is useful to include in parsing error messages.
 const VersionSyntax = `
-	ORDINAL = [1-9][0-9]*
-	VERSION = "v" ORDINAL ("." ORDINAL)*
+	$ORDINAL: [1-9][0-9]*
+	$VERSION: "v" ORDINAL ("." ORDINAL)*
 `
 
 // These constants are used to form a regular expression for valid version
