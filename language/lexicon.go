@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package grammar
+package language
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/elements"
@@ -19,7 +19,7 @@ import (
 // the UPPERCASE identifiers represent tokens returned by the scanner. The token
 // definitions and their associated regular expressions can be found here:
 //
-//	../abstractions/grammar.go
+//	../abstractions/language.go
 //
 // This map is useful when creating parser error messages.
 var Grammar = map[string]string{

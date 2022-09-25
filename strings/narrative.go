@@ -38,7 +38,7 @@ func NarrativeFromString(v string) (Narrative, bool) {
 // This constructor attempts to create a new narrative string from the specified
 // array of runes. It returns the corresponding narrative string.
 func NarrativeFromRunes(v []rune) Narrative {
-	var narrative, ok = NarrativeFromString(`"` + "\n" + string(v) + "\n" + `"`)
+	var narrative, ok = NarrativeFromString(`">` + "\n" + string(v) + "\n" + `<"`)
 	if !ok {
 		panic(fmt.Sprintf("The runes contain an illegal character: %v", string(v)))
 	}
@@ -66,7 +66,7 @@ func (v Narrative) String() string {
 
 // This method determines whether or not this string is empty.
 func (v Narrative) IsEmpty() bool {
-	return len(v) == 4 // The empty narrative string is: '"' EOL EOL '"'.
+	return len(v) == 6 // The empty narrative string is: '">' EOL EOL '<"'.
 }
 
 // This method returns the number of runes contained in this string.
@@ -77,7 +77,7 @@ func (v Narrative) GetSize() int {
 // This method returns all the runes in this string. The runes retrieved
 // are in the same order as they are in the string.
 func (v Narrative) AsArray() []rune {
-	return []rune(v[2 : len(v)-2])
+	return []rune(v[3 : len(v)-3])
 }
 
 // INDEXED INTERFACE
@@ -116,16 +116,16 @@ func (v Narrative) GetIndex(b rune) int {
 }
 
 func trimTabs(v string) string {
-	var result = `"` + "\n"
+	var result = `">` + "\n"
 	var lines = strings.Split(v, "\n")
 	var size = len(lines)
 	var last = lines[size-1]  // The last line of the narrative should only be tabs.
-	var tabs = len(last) - 1  // A count of the number of tabs in the last line.
+	var tabs = len(last) - 2  // A count of the number of tabs in the last line.
 	lines = lines[1 : size-1] // Trim off the first and last lines.
 	for _, line := range lines {
 		result += line[tabs:] + "\n" // Strip off the leading tabs.
 	}
-	result += `"`
+	result += `<"`
 	return result
 }
 
@@ -145,6 +145,6 @@ type narratives struct{}
 // narrative strings.
 func (l *narratives) Concatenate(first Narrative, second Narrative) Narrative {
 	// TODO: This might need tweaking due to tabs before last double quote.
-	var narrative = first[:len(first)-2] + second[2:]
+	var narrative = first[:len(first)-3] + second[3:]
 	return Narrative(narrative)
 }

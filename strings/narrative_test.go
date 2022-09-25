@@ -16,28 +16,28 @@ import (
 	"testing"
 )
 
-const bad = `"
-"`
+const bad = `">
+<"`
 
-const n0 = `"
+const n0 = `">
 
-"`
+<"`
 
-const n1 = `"
+const n1 = `">
 	abcd本1234
-"`
+<"`
 
-const n2 = `"
+const n2 = `">
 d本1
-"`
+<"`
 
-const n3 = `"
+const n3 = `">
 	abcd本
-"`
+<"`
 
-const n4 = `"
+const n4 = `">
 1234
-"`
+<"`
 
 func TestBadNarrative(t *testing.T) {
 	var _, ok = strings.NarrativeFromString(bad)

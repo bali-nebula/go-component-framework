@@ -150,10 +150,10 @@ func ScanComment(v []byte) []string {
 		case len(s) == 0:
 			return result
 		case bytes.HasPrefix(s, bangAngle):
-			current++ // Skip the ">" character.
+			current++ // Skip the "!" character.
 			level++   // Start a nested comment.
 		case bytes.HasPrefix(s, angleBang):
-			current++ // Skip the "!" character.
+			current++ // Skip the "<" character.
 			level--   // Terminate the current comment.
 		}
 		current++ // Accept the next character.
@@ -340,7 +340,7 @@ const NarrativeSyntax = `
 	$EOL: "\n"
 	$TAB: "\t"
 	$CHARACTER: .*
-	$NARRATIVE: '"' EOL (NARRATIVE | CHARACTER)* EOL TAB* '"'
+	$NARRATIVE: '">' EOL (NARRATIVE | CHARACTER)* EOL TAB* '<"'
 `
 
 // This function returns for the specified string an array of the matching
@@ -349,37 +349,27 @@ const NarrativeSyntax = `
 // not used in this implementation.
 func ScanNarrative(v []byte) []string {
 	var result []string
-	if !bytes.HasPrefix(v, doubleQuoteEOL) {
+	if !bytes.HasPrefix(v, quoteAngle) {
 		return result
 	}
-	var endPossible = false
-	var current = 2 // Skip the double quote and EOL.
+	var current = 3 // Skip the leading '">\n' characters.
 	var level = 1
 	for level > 0 {
 		s := v[current:]
 		switch {
 		case len(s) == 0:
 			return result
-		case !endPossible && bytes.HasPrefix(s, doubleQuoteEOL):
-			// Start nested narrative.
-			current++ // Skip the double quote.
-			level++
-		case bytes.HasPrefix(s, eol):
-			// A closing double quote may be pending.
-			endPossible = true
-		case endPossible && bytes.HasPrefix(s, tab):
-			// Ignore any tabs before the closing double quote.
-		case endPossible && bytes.HasPrefix(s, doubleQuote):
-			// Terminate this narrative.
-			level--
-			endPossible = false
-		default:
-			// A closing double quote did not appear.
-			endPossible = false
+		case bytes.HasPrefix(s, quoteAngle):
+			current++ // Skip the '"' character.
+			current++ // Skip the '>' character.
+			level++   // Start a nested comment.
+		case bytes.HasPrefix(s, angleQuote):
+			current++ // Skip the "<" character.
+			level--   // Terminate the current comment.
 		}
 		current++ // Accept the next character.
 	}
-	result = append(result, string(v[:current])) // Includes double quote delimeters.
+	result = append(result, string(v[:current])) // Includes quote delimeters.
 	return result
 }
 
@@ -706,12 +696,13 @@ func ScanVersion(v []byte) []string {
 
 // The following constants define some important byte sequences.
 var (
-	eol            = []byte("\n")
-	tab            = []byte("\t")
-	doubleQuote    = []byte(`"`)
-	doubleQuoteEOL = []byte(`"` + "\n")
-	bangAngle      = []byte("!>")
-	angleBang      = []byte("<!")
+	eol         = []byte("\n")
+	tab         = []byte("\t")
+	doubleQuote = []byte(`"`)
+	quoteAngle  = []byte(`">` + "\n")
+	angleQuote  = []byte(`<"`)
+	bangAngle   = []byte("!>" + "\n")
+	angleBang   = []byte("<!")
 )
 
 // This array contains the full set of keywords used by the Bali Document
