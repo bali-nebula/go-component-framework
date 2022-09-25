@@ -130,7 +130,7 @@ const CommentSyntax = `
 	$EOL: "\n"
 	$TAB: "\t"
 	$CHARACTER: .*
-	$COMMENT: "!*" EOL (COMMENT | CHARACTER)*? EOL TAB* "*!"
+	$COMMENT: "!>" EOL (COMMENT | CHARACTER)*? EOL TAB* "<!"
 `
 
 // This function returns for the specified string an array of the matching
@@ -139,20 +139,20 @@ const CommentSyntax = `
 // this implementation.
 func ScanComment(v []byte) []string {
 	var result []string
-	if !bytes.HasPrefix(v, bangStar) {
+	if !bytes.HasPrefix(v, bangAngle) {
 		return result
 	}
-	var current = 2 // Skip the leading "!*" characters.
+	var current = 2 // Skip the leading "!>" characters.
 	var level = 1
 	for level > 0 {
 		s := v[current:]
 		switch {
 		case len(s) == 0:
 			return result
-		case bytes.HasPrefix(s, bangStar):
-			current++ // Skip the "*" character.
+		case bytes.HasPrefix(s, bangAngle):
+			current++ // Skip the ">" character.
 			level++   // Start a nested comment.
-		case bytes.HasPrefix(s, starBang):
+		case bytes.HasPrefix(s, angleBang):
 			current++ // Skip the "!" character.
 			level--   // Terminate the current comment.
 		}
@@ -710,8 +710,8 @@ var (
 	tab            = []byte("\t")
 	doubleQuote    = []byte(`"`)
 	doubleQuoteEOL = []byte(`"` + "\n")
-	bangStar       = []byte("!*")
-	starBang       = []byte("*!")
+	bangAngle      = []byte("!>")
+	angleBang      = []byte("<!")
 )
 
 // This array contains the full set of keywords used by the Bali Document
