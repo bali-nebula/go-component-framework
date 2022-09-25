@@ -142,7 +142,7 @@ func ScanComment(v []byte) []string {
 	if !bytes.HasPrefix(v, bangAngle) {
 		return result
 	}
-	var current = 2 // Skip the leading "!>" characters.
+	var current = 3 // Skip the leading '!>\n' characters.
 	var level = 1
 	for level > 0 {
 		s := v[current:]
@@ -150,7 +150,8 @@ func ScanComment(v []byte) []string {
 		case len(s) == 0:
 			return result
 		case bytes.HasPrefix(s, bangAngle):
-			current++ // Skip the "!" character.
+			current++ // Skip the '!' character.
+			current++ // Skip the '>' character.
 			level++   // Start a nested comment.
 		case bytes.HasPrefix(s, angleBang):
 			current++ // Skip the "<" character.
@@ -362,10 +363,10 @@ func ScanNarrative(v []byte) []string {
 		case bytes.HasPrefix(s, quoteAngle):
 			current++ // Skip the '"' character.
 			current++ // Skip the '>' character.
-			level++   // Start a nested comment.
+			level++   // Start a nested narrative.
 		case bytes.HasPrefix(s, angleQuote):
 			current++ // Skip the "<" character.
-			level--   // Terminate the current comment.
+			level--   // Terminate the current narrative.
 		}
 		current++ // Accept the next character.
 	}
