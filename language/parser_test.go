@@ -71,10 +71,10 @@ func TestParserWithElementTypes(t *testing.T) {
 	assert.Equal(t, m, moment.AsString())
 
 	// Number
-	component, ok = language.ParseSource("(3, 4i)")
+	component, ok = language.ParseSource("(3, -i)")
 	assert.True(t, ok)
 	var number elements.Number = component.Entity.(elements.Number)
-	assert.Equal(t, "(3, 4i)", number.AsString())
+	assert.Equal(t, "(3, -i)", number.AsString())
 
 	// Pattern
 	component, ok = language.ParseSource(p)

@@ -11,6 +11,7 @@
 package elements
 
 import (
+	"fmt"
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	"math"
 	"math/cmplx"
@@ -118,14 +119,25 @@ type Number complex128
 
 // This method returns the canonical string for this element.
 func (v Number) AsString() string {
+	if v.IsZero() {
+		return "0"
+	}
 	if v.IsInfinite() {
 		return "∞"
 	}
 	if v.IsUndefined() {
 		return "undefined"
 	}
-	var realPart = strconv.FormatFloat(real(v), 'G', -1, 64)
-	var imagPart = strconv.FormatFloat(imag(v), 'G', -1, 64) + "i"
+	var realPart = floatToString(real(v))
+	var imagPart string
+	switch imag(v) {
+	case 1:
+		imagPart = "i"
+	case -1:
+		imagPart = "-i"
+	default:
+		imagPart = floatToString(imag(v)) + "i"
+	}
 	if imag(v) == 0 {
 		return realPart
 	}
@@ -169,17 +181,17 @@ func (v Number) AsReal() float64 {
 
 // This method determines whether or not this number is infinite.
 func (v Number) IsZero() bool {
-	return cmplx.Abs(complex128(v)) == 0
+	return real(v) == 0 && imag(v) == 0
 }
 
 // This method determines whether or not this number is infinite.
 func (v Number) IsInfinite() bool {
-	return cmplx.IsInf(complex128(v))
+	return math.IsInf(real(v), 0) || math.IsInf(imag(v), 0)
 }
 
 // This method determines whether or not this number is undefined.
 func (v Number) IsUndefined() bool {
-	return cmplx.IsNaN(complex128(v))
+	return math.IsNaN(real(v)) || math.IsNaN(imag(v))
 }
 
 // This method returns the real part of this complex component.
@@ -360,36 +372,107 @@ func stringToNumber(v string) (complex128, bool) {
 	case matches[1] == "infinity" || matches[1] == "∞":
 		// The value is infinity.
 		number = infinity
-	case matches[1][0] == '(':
-		// The value is complex.
-		var realPart, err = strconv.ParseFloat(matches[2], 64)
-		if err != nil {
-		}
-		if matches[3][0] == '~' {
-			// The complex number is in polar form.
-			var imaginaryPart, err = strconv.ParseFloat(matches[3][1:], 64)
-			if err != nil {
-			}
-			number = cmplx.Rect(realPart, imaginaryPart)
-		} else {
-			// The complex number is in rectangular form.
-			var imaginaryPart, err = strconv.ParseFloat(matches[3], 64)
-			if err != nil {
-			}
-			number = complex(realPart, imaginaryPart)
-		}
+	case matches[1] == "pi", matches[1] == "-pi", matches[1] == "phi", matches[1] == "-phi":
+		var realPart = constantToValue(matches[1])
+		number = complex(realPart, 0)
 	case matches[1][len(matches[1])-1] == 'i':
 		// The value is pure imaginary.
 		var imaginaryPart, err = strconv.ParseFloat(matches[1][:len(matches[1])-1], 64)
 		if err != nil {
+			imaginaryPart = constantToValue(matches[1][:len(matches[1])-1])
 		}
 		number = complex(0, imaginaryPart)
+	case matches[1][0] == '(':
+		// The value is complex.
+		var realPart, err = strconv.ParseFloat(matches[2], 64)
+		if err != nil {
+			realPart = constantToValue(matches[2])
+		}
+		var imaginaryPart float64
+		switch {
+		case len(matches[3]) == 0:
+			imaginaryPart = 1
+			number = complex(realPart, imaginaryPart)
+		case matches[3][0] == '~':
+			// The complex number is in polar form.
+			imaginaryPart, err = strconv.ParseFloat(matches[3][1:], 64)
+			if err != nil {
+				imaginaryPart = constantToValue(matches[3][1:])
+			}
+			number = cmplx.Rect(realPart, imaginaryPart)
+		default:
+			// The complex number is in rectangular form.
+			var imaginaryPart, err = strconv.ParseFloat(matches[3], 64)
+			if err != nil {
+				imaginaryPart = constantToValue(matches[3])
+			}
+			number = complex(realPart, imaginaryPart)
+		}
 	default:
 		// The value is pure real.
 		var realPart, err = strconv.ParseFloat(matches[1], 64)
 		if err != nil {
+			realPart = constantToValue(matches[1])
 		}
 		number = complex(realPart, 0)
 	}
 	return number, ok
+}
+
+// This function parses a number constant string and returns the corresponding
+// real number.
+func constantToValue(v string) float64 {
+	var value float64
+	switch v {
+	case "":
+		value = 1
+	case "-":
+		value = -1
+	case "e":
+		value = math.E
+	case "-e":
+		value = -math.E
+	case "pi", "π":
+		value = math.Pi
+	case "-pi", "-π":
+		value = -math.Pi
+	case "phi", "φ":
+		value = math.Phi
+	case "-phi", "-φ":
+		value = -math.Phi
+	case "tau", "τ":
+		value = math.Pi * 2.0
+	case "-tau", "-τ":
+		value = -math.Pi * 2.0
+	default:
+		panic(fmt.Sprintf("An invalid constant was used in a complex number: %v", v))
+	}
+	return value
+}
+
+// This function parses a number constant string and returns the corresponding
+// real number.
+func floatToString(v float64) string {
+	var value string
+	switch v {
+	case math.E:
+		value = "e"
+	case -math.E:
+		value = "-e"
+	case math.Pi:
+		value = "π"
+	case -math.Pi:
+		value = "-π"
+	case math.Phi:
+		value = "φ"
+	case -math.Phi:
+		value = "-φ"
+	case math.Pi * 2.0:
+		value = "τ"
+	case -math.Pi * 2.0:
+		value = "-τ"
+	default:
+		value = strconv.FormatFloat(v, 'G', -1, 64)
+	}
+	return value
 }

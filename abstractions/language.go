@@ -31,14 +31,14 @@ const AngleSyntax = `
 	$PI: "pi" | "π"
 	$PHI: "phi" | "φ"
 	$TAU: "tau" | "τ"
-	$CONSTANT: E | PI | PHI | TAU
 	$SIGN: [+-]
 	$ZERO: "0"
 	$ORDINAL: [1-9][0-9]*
 	$FRACTION: .[0-9]+
 	$EXPONENT: "E" SIGN? ORDINAL
 	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	$ANGLE: "~" (CONSTANT | SCALAR | ZERO)
+	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
+	$ANGLE: "~" (REAL | ZERO)
 `
 
 // These constants are used to form a regular expression for valid angle
@@ -48,14 +48,14 @@ const (
 	pi       = `pi|π`
 	phi      = `phi|φ`
 	tau      = `tau|τ`
-	constant = e + `|` + pi + `|` + phi + `|` + tau
 	sign     = `[+-]`
 	zero     = `0`
 	ordinal  = `[1-9][0-9]*`
 	fraction = `\.[0-9]+`
 	exponent = `E` + sign + `?` + ordinal
 	scalar   = `(?:(?:` + ordinal + `(?:` + fraction + `)?)|(?:` + zero + fraction + `))(?:` + exponent + `)?`
-	angle    = `~(` + constant + `|` + scalar + `|` + zero + `)`
+	reel     = sign + `?(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
+	angle    = `~(` + reel + `|` + zero + `)`
 )
 
 // This scanner is used for matching angle entities.
@@ -407,35 +407,33 @@ const NumberSyntax = `
 	$PI: "pi" | "π"
 	$PHI: "phi" | "φ"
 	$TAU: "tau" | "τ"
-	$CONSTANT: E | PI | PHI | TAU
 	$SIGN: [+-]
 	$ZERO: "0"
 	$ORDINAL: [1-9][0-9]*
 	$FRACTION: .[0-9]+
 	$EXPONENT: "E" SIGN? ORDINAL
 	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	$SIGNED: SIGN? (CONSTANT | SCALAR)
+	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
 	$INFINITY: "infinity" | "∞"
 	$UNDEFINED: "undefined"
-	$NUMBER: SIGNED "i"? | ZERO | INFINITY | UNDEFINED | "(" SIGNED ", " (SIGNED | ANGLE) "i" ")"
+	$NUMBER: SIGN? "i" | REAL "i"? | ZERO | INFINITY | UNDEFINED | "(" REAL ", " (SIGN | REAL | ANGLE)? "i)"
 `
 
 // These constants are used to form a regular expression for valid number
 // entities.
 const (
-	signed    = sign + `?(?:` + constant + `|` + scalar + `)`
 	infinity  = `infinity|∞`
 	undefined = `undefined`
 	number    = `(` +
-		signed + `i?` + `|` +
+		sign + `?i|` +
+		reel + `i?|` +
 		zero + `|` +
 		infinity + `|` +
-		undefined + `|` + `\(` +
-		`(` + signed + `)` +
+		undefined + `|\(` +
+		`(` + reel + `)` +
 		`(?:, )` +
-		`(` + signed + `|` + angle + `)i` +
-		`\)` +
-		`)`
+		`(` + sign + `|` + reel + `|` + angle + `)?i` +
+		`\))`
 )
 
 // This scanner is used for matching number entities.
@@ -493,21 +491,20 @@ const PercentageSyntax = `
 	$PI: "pi" | "π"
 	$PHI: "phi" | "φ"
 	$TAU: "tau" | "τ"
-	$CONSTANT: E | PI | PHI | TAU
 	$SIGN: [+-]
 	$ZERO: "0"
 	$ORDINAL: [1-9][0-9]*
 	$FRACTION: .[0-9]+
 	$EXPONENT: "E" SIGN? ORDINAL
 	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	$SIGNED: SIGN? (CONSTANT | SCALAR)
-	$PERCENTAGE: (SIGNED | ZERO) "%"
+	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
+	$PERCENTAGE: (REAL | ZERO) "%"
 `
 
 // These constants are used to form a regular expression for valid percentage
 // entities.
 const (
-	percentage = `(` + signed + `|` + zero + `)%`
+	percentage = `(` + reel + `|` + zero + `)%`
 )
 
 // This scanner is used for matching percentage entities.

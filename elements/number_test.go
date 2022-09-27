@@ -13,8 +13,6 @@ package elements_test
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/elements"
 	"github.com/stretchr/testify/assert"
-	"math"
-	"math/cmplx"
 	"testing"
 )
 
@@ -46,73 +44,11 @@ func TestNegativeNumbers(t *testing.T) {
 }
 
 func TestStringNumbers(t *testing.T) {
-	var v, ok = elements.NumberFromString("0")
-	assert.True(t, ok)
-	assert.Equal(t, 0+0i, complex128(v))
-	assert.False(t, v.IsNegative())
-	assert.Equal(t, 0, v.AsInteger())
-	assert.Equal(t, 0.0, v.AsReal())
-	assert.Equal(t, "0", v.AsString())
-
-	v, ok = elements.NumberFromString("0.4")
-	assert.True(t, ok)
-	assert.Equal(t, 0.4+0i, complex128(v))
-	assert.False(t, v.IsNegative())
-	assert.Equal(t, 0, v.AsInteger())
-	assert.Equal(t, 0.4, v.AsReal())
-	assert.Equal(t, "0.4", v.AsString())
-
-	v, ok = elements.NumberFromString("-0.4i")
-	assert.True(t, ok)
-	assert.Equal(t, 0-0.4i, complex128(v))
-	assert.False(t, v.IsNegative())
-	assert.Equal(t, 0, v.AsInteger())
-	assert.Equal(t, 0.0, v.AsReal())
-	assert.Equal(t, "-0.4i", v.AsString())
-
-	v, ok = elements.NumberFromString("-1.4E17i")
-	assert.True(t, ok)
-	assert.Equal(t, 0-1.4e17i, complex128(v))
-	assert.False(t, v.IsNegative())
-	assert.Equal(t, 0, v.AsInteger())
-	assert.Equal(t, 0.0, v.AsReal())
-	assert.Equal(t, "-1.4E+17i", v.AsString())
-
-	v, ok = elements.NumberFromString("(2.3, -1.4E17i)")
-	assert.True(t, ok)
-	assert.Equal(t, 2.3-1.4e17i, complex128(v))
-	assert.False(t, v.IsNegative())
-	assert.Equal(t, 2, v.AsInteger())
-	assert.Equal(t, 2.3, v.AsReal())
-	assert.Equal(t, "(2.3, -1.4E+17i)", v.AsString())
-
-	v, ok = elements.NumberFromString("(-2.3, ~1.5i)")
-	assert.True(t, ok)
-	assert.Equal(t, -0.16269556383571668-2.294238469189325i, complex128(v))
-	assert.True(t, v.IsNegative())
-	assert.Equal(t, 0, v.AsInteger())
-	assert.Equal(t, -0.16269556383571668, v.AsReal())
-	assert.Equal(t, "(-0.16269556383571668, -2.294238469189325i)", v.AsString())
-
-	v, ok = elements.NumberFromString("∞")
-	assert.True(t, ok)
-	assert.Equal(t, cmplx.Inf(), complex128(v))
-	assert.False(t, v.IsNegative())
-	assert.Equal(t, math.MaxInt, v.AsInteger())
-	assert.Equal(t, math.Inf(1), v.AsReal())
-	assert.Equal(t, "∞", v.AsString())
-
-	v, ok = elements.NumberFromString("undefined")
-	assert.True(t, ok)
-	assert.True(t, cmplx.IsNaN(complex128(v))) // NaN != NaN
-	assert.False(t, v.IsNegative())
-	assert.Equal(t, math.MinInt, v.AsInteger())
-	assert.True(t, math.IsNaN(v.AsReal())) // NaN != NaN
-	assert.Equal(t, "undefined", v.AsString())
-
-	v, ok = elements.NumberFromString("bad")
-	assert.False(t, ok)
-	assert.Equal(t, 0+0i, complex128(v))
+	for _, s := range numbers {
+		var v, ok = elements.NumberFromString(s)
+		assert.True(t, ok)
+		assert.Equal(t, s, v.AsString())
+	}
 }
 
 func TestNumbersLibrary(t *testing.T) {
@@ -215,4 +151,62 @@ func TestNumbersLibrary(t *testing.T) {
 	assert.True(t, elements.Numbers.Logarithm(infinity, zero).IsUndefined())
 	assert.Equal(t, zero, elements.Numbers.Logarithm(infinity, one))
 	assert.True(t, elements.Numbers.Logarithm(infinity, infinity).IsUndefined())
+}
+
+var numbers = []string{
+	"undefined",
+	"0",
+	"1",
+	"1.2",
+	"1.2E+30",
+	"1.2E-30",
+	"-1",
+	"-1.2",
+	"-1.2E+30",
+	"-1.2E-30",
+	"i",
+	"1.2i",
+	"1.2E+30i",
+	"1.2E-30i",
+	"-i",
+	"-1.2i",
+	"-1.2E+30i",
+	"-1.2E-30i",
+	"e",
+	"-e",
+	"ei",
+	"-ei",
+	"π",
+	"-π",
+	"πi",
+	"-πi",
+	"φ",
+	"-φ",
+	"φi",
+	"-φi",
+	"τ",
+	"-τ",
+	"τi",
+	"-τi",
+	"∞",
+	"(1, i)",
+	"(-1, i)",
+	"(1, -i)",
+	"(-1, -i)",
+	"(3, 4i)",
+	"(-3, 4i)",
+	"(3, -4i)",
+	"(-3, -4i)",
+	"(3.15, 4.15i)",
+	"(-3.15, 4.15i)",
+	"(3.15, -4.15i)",
+	"(-3.15, -4.15i)",
+	"(3.15E+12, 4.15E+12i)",
+	"(-3.15E+12, 4.15E+12i)",
+	"(3.15E+12, -4.15E+12i)",
+	"(-3.15E+12, -4.15E+12i)",
+	"(3.15E-12, 4.15E-12i)",
+	"(-3.15E-12, 4.15E-12i)",
+	"(3.15E-12, -4.15E-12i)",
+	"(-3.15E-12, -4.15E-12i)",
 }
