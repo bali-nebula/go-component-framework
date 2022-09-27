@@ -13,37 +13,230 @@ package elements_test
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/elements"
 	"github.com/stretchr/testify/assert"
+	"math"
+	"math/cmplx"
 	"testing"
 )
 
-func TestZeroNumbers(t *testing.T) {
+func TestZero(t *testing.T) {
 	var v = elements.NumberFromComplex(0 + 0i)
 	assert.Equal(t, 0+0i, complex128(v))
+	assert.True(t, v.IsZero())
+	assert.False(t, v.IsInfinite())
+	assert.False(t, v.IsUndefined())
 	assert.False(t, v.IsNegative())
 	assert.Equal(t, 0, v.AsInteger())
 	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
 	assert.Equal(t, "0", v.AsString())
 }
 
-func TestPositiveNumbers(t *testing.T) {
-	var v = elements.NumberFromComplex(0.25)
+func TestInfinity(t *testing.T) {
+	var v = elements.NumberFromComplex(cmplx.Inf())
+	assert.Equal(t, cmplx.Inf(), complex128(v))
+	assert.False(t, v.IsZero())
+	assert.True(t, v.IsInfinite())
+	assert.False(t, v.IsUndefined())
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, math.MaxInt, v.AsInteger())
+	assert.Equal(t, math.Inf(1), v.AsReal())
+	assert.Equal(t, math.Inf(1), v.GetReal())
+	assert.Equal(t, math.Inf(1), v.GetImaginary())
+	assert.Equal(t, "∞", v.AsString())
+}
+
+func TestUndefined(t *testing.T) {
+	var v = elements.NumberFromComplex(cmplx.NaN())
+	assert.True(t, cmplx.IsNaN(complex128(v)))
+	assert.False(t, v.IsZero())
+	assert.False(t, v.IsInfinite())
+	assert.True(t, v.IsUndefined())
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, math.MinInt, v.AsInteger())
+	assert.True(t, math.IsNaN(v.AsReal()))
+	assert.True(t, math.IsNaN(v.GetReal()))
+	assert.True(t, math.IsNaN(v.GetImaginary()))
+	assert.Equal(t, "undefined", v.AsString())
+}
+
+func TestPositiveReals(t *testing.T) {
+	var ok bool
+	var v elements.Number
+
+	v = elements.NumberFromComplex(0.25)
 	assert.Equal(t, 0.25+0i, complex128(v))
 	assert.False(t, v.IsNegative())
 	assert.Equal(t, 0, v.AsInteger())
 	assert.Equal(t, 0.25, v.AsReal())
+	assert.Equal(t, 0.25, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
 	assert.Equal(t, "0.25", v.AsString())
+
+	v, ok = elements.NumberFromString("pi")
+	assert.True(t, ok)
+	assert.Equal(t, math.Pi, real(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 3, v.AsInteger())
+	assert.Equal(t, math.Pi, v.AsReal())
+	assert.Equal(t, math.Pi, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
+	assert.Equal(t, "π", v.AsString())
+
+	v, ok = elements.NumberFromString("phi")
+	assert.True(t, ok)
+	assert.Equal(t, math.Phi, real(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 2, v.AsInteger())
+	assert.Equal(t, math.Phi, v.AsReal())
+	assert.Equal(t, math.Phi, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
+	assert.Equal(t, "φ", v.AsString())
+
+	v, ok = elements.NumberFromString("tau")
+	assert.True(t, ok)
+	assert.Equal(t, 2.0*math.Pi, real(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 6, v.AsInteger())
+	assert.Equal(t, 2.0*math.Pi, v.AsReal())
+	assert.Equal(t, 2.0*math.Pi, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
+	assert.Equal(t, "τ", v.AsString())
 }
 
-func TestNegativeNumbers(t *testing.T) {
-	var v = elements.NumberFromComplex(-0.75)
+func TestPositiveImaginaries(t *testing.T) {
+	var ok bool
+	var v elements.Number
+
+	v = elements.NumberFromComplex(0.25i)
+	assert.Equal(t, 0+0.25i, complex128(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, 0.25, v.GetImaginary())
+	assert.Equal(t, "0.25i", v.AsString())
+
+	v, ok = elements.NumberFromString("pii")
+	assert.True(t, ok)
+	assert.Equal(t, math.Pi, imag(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, math.Pi, v.GetImaginary())
+	assert.Equal(t, "πi", v.AsString())
+
+	v, ok = elements.NumberFromString("phii")
+	assert.True(t, ok)
+	assert.Equal(t, math.Phi, imag(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, math.Phi, v.GetImaginary())
+	assert.Equal(t, "φi", v.AsString())
+
+	v, ok = elements.NumberFromString("taui")
+	assert.True(t, ok)
+	assert.Equal(t, 2.0*math.Pi, imag(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, 2.0*math.Pi, v.GetImaginary())
+	assert.Equal(t, "τi", v.AsString())
+}
+
+func TestNegativeReals(t *testing.T) {
+	var ok bool
+	var v elements.Number
+
+	v = elements.NumberFromComplex(-0.75)
 	assert.Equal(t, -0.75+0i, complex128(v))
 	assert.True(t, v.IsNegative())
 	assert.Equal(t, -1, v.AsInteger())
 	assert.Equal(t, -0.75, v.AsReal())
+	assert.Equal(t, -0.75, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
 	assert.Equal(t, "-0.75", v.AsString())
+
+	v, ok = elements.NumberFromString("-pi")
+	assert.True(t, ok)
+	assert.Equal(t, -math.Pi, real(v))
+	assert.True(t, v.IsNegative())
+	assert.Equal(t, -3, v.AsInteger())
+	assert.Equal(t, -math.Pi, v.AsReal())
+	assert.Equal(t, -math.Pi, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
+	assert.Equal(t, "-π", v.AsString())
+
+	v, ok = elements.NumberFromString("-phi")
+	assert.True(t, ok)
+	assert.Equal(t, -math.Phi, real(v))
+	assert.True(t, v.IsNegative())
+	assert.Equal(t, -2, v.AsInteger())
+	assert.Equal(t, -math.Phi, v.AsReal())
+	assert.Equal(t, -math.Phi, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
+	assert.Equal(t, "-φ", v.AsString())
+
+	v, ok = elements.NumberFromString("-tau")
+	assert.True(t, ok)
+	assert.Equal(t, -2.0*math.Pi, real(v))
+	assert.True(t, v.IsNegative())
+	assert.Equal(t, -6, v.AsInteger())
+	assert.Equal(t, -2.0*math.Pi, v.AsReal())
+	assert.Equal(t, -2.0*math.Pi, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
+	assert.Equal(t, "-τ", v.AsString())
 }
 
-func TestStringNumbers(t *testing.T) {
+func TestNegativeImaginaries(t *testing.T) {
+	var ok bool
+	var v elements.Number
+
+	v = elements.NumberFromComplex(-0.75i)
+	assert.Equal(t, 0-0.75i, complex128(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, -0.75, v.GetImaginary())
+	assert.Equal(t, "-0.75i", v.AsString())
+
+	v, ok = elements.NumberFromString("-pii")
+	assert.True(t, ok)
+	assert.Equal(t, -math.Pi, imag(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, -math.Pi, v.GetImaginary())
+	assert.Equal(t, "-πi", v.AsString())
+
+	v, ok = elements.NumberFromString("-phii")
+	assert.True(t, ok)
+	assert.Equal(t, -math.Phi, imag(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, -math.Phi, v.GetImaginary())
+	assert.Equal(t, "-φi", v.AsString())
+
+	v, ok = elements.NumberFromString("-taui")
+	assert.True(t, ok)
+	assert.Equal(t, -2.0*math.Pi, imag(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 0, v.AsInteger())
+	assert.Equal(t, 0.0, v.AsReal())
+	assert.Equal(t, 0.0, v.GetReal())
+	assert.Equal(t, -2.0*math.Pi, v.GetImaginary())
+	assert.Equal(t, "-τi", v.AsString())
+}
+
+func TestRoundtripNumbers(t *testing.T) {
 	for _, s := range numbers {
 		var v, ok = elements.NumberFromString(s)
 		assert.True(t, ok)
