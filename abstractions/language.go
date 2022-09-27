@@ -54,8 +54,8 @@ const (
 	fraction = `\.[0-9]+`
 	exponent = `E` + sign + `?` + ordinal
 	scalar   = `(?:(?:` + ordinal + `(?:` + fraction + `)?)|(?:` + zero + fraction + `))(?:` + exponent + `)?`
-	reel     = sign + `?(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
-	angle    = `~(` + reel + `|` + zero + `)`
+	real     = sign + `?(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
+	angle    = `~(` + real + `|` + zero + `)`
 )
 
 // This scanner is used for matching angle entities.
@@ -426,13 +426,13 @@ const (
 	undefined = `undefined`
 	number    = `(` +
 		sign + `?i|` +
-		reel + `i?|` +
+		real + `i?|` +
 		zero + `|` +
 		infinity + `|` +
 		undefined + `|\(` +
-		`(` + reel + `)` +
+		`(` + real + `)` +
 		`(?:, )` +
-		`(` + sign + `|` + reel + `|` + angle + `)?i` +
+		`(` + sign + `|` + real + `|` + angle + `)?i` +
 		`\))`
 )
 
@@ -504,7 +504,7 @@ const PercentageSyntax = `
 // These constants are used to form a regular expression for valid percentage
 // entities.
 const (
-	percentage = `(` + reel + `|` + zero + `)%`
+	percentage = `(` + real + `|` + zero + `)%`
 )
 
 // This scanner is used for matching percentage entities.
