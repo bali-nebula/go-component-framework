@@ -100,7 +100,7 @@ func NumberFromComplex(v complex128) Number {
 //   - 5i
 //   - 1.23E-45
 //   - (-3.0, 4.0i) - rectangular form
-//   - (1.0, ~π)    - polar form
+//   - (1.0e^~π)    - polar form
 //   - ∞
 //   - undefined
 //
@@ -365,47 +365,53 @@ func stringToNumber(v string) (complex128, bool) {
 	var number complex128
 	var realPart float64
 	var imaginaryPart float64
+	var phasePart Angle
 	var matches = abstractions.ScanNumber([]byte(v))
 	switch {
 	case len(matches) == 0:
-		// The value is not a number.
-		ok = false
+		ok = false // The value is not a number.
 	case matches[0] == "undefined":
-		// The value is undefined.
 		number = undefined
 	case matches[0] == "infinity" || matches[0] == "∞":
-		// The value is infinity.
 		number = infinity
+	case matches[0] == "i":
+		number = complex(0, 1)
+	case matches[0] == "-i":
+		number = complex(0, -1)
 	case matches[0] == "pi", matches[0] == "-pi", matches[0] == "phi", matches[0] == "-phi":
 		// The value is a pure real constant ending in "i" so it must be handled first.
 		var realPart = constantToValue(matches[0])
 		number = complex(realPart, 0)
 	case matches[0][len(matches[0])-1] == 'i':
 		// The value is pure imaginary.
-		var imaginaryPart, err = strconv.ParseFloat(matches[0][:len(matches[0])-1], 64)
+		var match = matches[0][:len(matches[0])-1] // Strip off the trailing "i".
+		var imaginaryPart, err = strconv.ParseFloat(match, 64)
 		if err != nil {
 			// The value is a pure imaginary constant.
-			imaginaryPart = constantToValue(matches[0][:len(matches[0])-1])
+			imaginaryPart = constantToValue(match)
 		}
 		number = complex(0, imaginaryPart)
 	case matches[0][0] == '(':
 		// The value is complex.
 		switch {
-		case len(matches[2]) > 0:
+		case matches[2] == ", ":
 			// The complex number is in rectangular form.
 			realPart, err = strconv.ParseFloat(matches[1], 64)
 			if err != nil {
 				// The real part of the number is a constant.
 				realPart = constantToValue(matches[1])
 			}
-			if len(matches[3]) == 0 {
-				// The imaginary part of the number is "i".
+			if matches[3] == "i" {
 				imaginaryPart = 1
-			}
-			imaginaryPart, err = strconv.ParseFloat(matches[3], 64)
-			if err != nil {
-				// The imaginary part of the number is a constant.
-				imaginaryPart = constantToValue(matches[3])
+			} else if matches[3] == "-i" {
+				imaginaryPart = -1
+			} else {
+				var match = matches[3][:len(matches[3])-1] // Strip off the trailing "i".
+				imaginaryPart, err = strconv.ParseFloat(match, 64)
+				if err != nil {
+					// The imaginary part of the number is a constant.
+					imaginaryPart = constantToValue(match)
+				}
 			}
 			number = complex(realPart, imaginaryPart)
 		default:
@@ -415,12 +421,9 @@ func stringToNumber(v string) (complex128, bool) {
 				// The real part of the number is a constant.
 				realPart = constantToValue(matches[4])
 			}
-			imaginaryPart, err = strconv.ParseFloat(matches[6], 64)
-			if err != nil {
-				// The imaginary part of the number is a constant.
-				imaginaryPart = constantToValue(matches[6])
-			}
-			number = cmplx.Rect(realPart, imaginaryPart)
+			var match = matches[6][:len(matches[6])-1] // Strip off the trailing "i".
+			phasePart, ok = AngleFromString(match)
+			number = cmplx.Rect(realPart, float64(phasePart))
 		}
 	default:
 		// The value is pure real.

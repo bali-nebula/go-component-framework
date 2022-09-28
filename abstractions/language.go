@@ -434,11 +434,12 @@ const NumberSyntax = `
 	$EXPONENT: "E" SIGN? ORDINAL
 	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
 	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
+	$IMAGINARY: (SIGN | REAL)? "i"
 	$INFINITY: "infinity" | "∞"
 	$UNDEFINED: "undefined"
-	$RECTANGULAR: REAL ", " (SIGN | REAL)? "i"
+	$RECTANGULAR: REAL ", " IMAGINARY
 	$POLAR: REAL "e^" ANGLE "i"
-	$NUMBER: SIGN? "i" | REAL "i"? | ZERO | INFINITY | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"
+	$NUMBER: IMAGINARY | REAL | ZERO | INFINITY | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"
 `
 
 // These constants are used to form a regular expression for valid number
@@ -446,9 +447,10 @@ const NumberSyntax = `
 const (
 	infinity    = `infinity|∞`
 	undefined   = `undefined`
-	rectangular = `(` + real + `)(, )(` + sign + `|` + real + `)?i`
-	polar       = `(` + real + `)(e\^)` + angle + `i` // Note: angle cannot be in parentheses.
-	number      = `(?:` + sign + `|` + real + `)?i|` + real + `|` + zero + `|` + infinity + `|` + undefined + `|` +
+	imaginary   = `(?:` + sign + `|` + real + `)?i`
+	rectangular = `(` + real + `)(, )(` + imaginary + `)`
+	polar       = `(` + real + `)(e\^)(` + angle + `i)`
+	number      = imaginary + `|` + real + `|` + zero + `|` + infinity + `|` + undefined + `|` +
 		`\((?:` + rectangular + `|` + polar + `)\)`
 )
 
