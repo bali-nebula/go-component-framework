@@ -448,7 +448,7 @@ const (
 	undefined   = `undefined`
 	rectangular = `(` + real + `)(, )(` + sign + `|` + real + `)?i`
 	polar       = `(` + real + `)(e\^)` + angle + `i` // Note: angle cannot be in parentheses.
-	number      = sign + `?i|` + real + `i?|` + zero + `|` + infinity + `|` + undefined + `|` +
+	number      = `(?:` + sign + `|` + real + `)?i|` + real + `|` + zero + `|` + infinity + `|` + undefined + `|` +
 		`\((?:` + rectangular + `|` + polar + `)\)`
 )
 
