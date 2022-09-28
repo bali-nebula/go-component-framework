@@ -11,7 +11,6 @@
 package strings_test
 
 import (
-	"fmt"
 	"github.com/craterdog-bali/go-bali-document-notation/strings"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -63,14 +62,4 @@ func TestBinariesLibrary(t *testing.T) {
 	assert.Equal(t, or, strings.Binaries.Or(v1, v2))
 	assert.Equal(t, xor, strings.Binaries.Xor(v1, v2))
 	assert.Equal(t, sans2, strings.Binaries.Sans(v2, v1))
-}
-
-func TestBinaryOutput(t *testing.T) {
-	var bytes []byte = make([]byte, 25)
-	for i := 0; i < 25; i++ {
-		bytes[i] = byte(i+13)
-	}
-	var v = strings.BinaryFromBytes(bytes)
-	var s = v.AsString()
-	fmt.Println(s)
 }

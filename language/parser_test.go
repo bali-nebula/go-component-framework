@@ -47,13 +47,13 @@ func TestParserWithElementTypes(t *testing.T) {
 	var component *language.Component
 
 	// Angle
-	component, ok = language.ParseSource("~pi ($units: $radians) ! note")
+	component, ok = language.ParseSource("~pi($units: $radians)  ! note")
 	assert.True(t, ok)
 	var angle elements.Angle = component.Entity.(elements.Angle)
 	assert.Equal(t, elements.Pi, angle)
 
 	// Boolean
-	component, ok = language.ParseSource("true ! false")
+	component, ok = language.ParseSource("true  ! false")
 	assert.True(t, ok)
 	var boolean elements.Boolean = component.Entity.(elements.Boolean)
 	assert.True(t, boolean.AsBoolean())

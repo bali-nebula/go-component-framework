@@ -98,7 +98,7 @@ func (v *parser) backupOne() {
 	v.next.AddItem(previous)
 }
 
-// This method attempts to parse a angle element. It returns the angle element
+// This method attempts to parse an angle element. It returns the angle element
 // and whether or not the angle element was successfully parsed.
 func (v *parser) parseAngle() (elements.Angle, bool) {
 	var ok bool

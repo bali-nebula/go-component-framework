@@ -111,7 +111,7 @@ func stringToBoolean(v string) (bool, bool) {
 		ok = false
 	default:
 		var err error
-		boolean, err = strconv.ParseBool(matches[1])
+		boolean, err = strconv.ParseBool(matches[0])
 		if err != nil {
 			ok = false
 		}

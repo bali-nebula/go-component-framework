@@ -236,6 +236,19 @@ func TestNegativeImaginaries(t *testing.T) {
 	assert.Equal(t, "-τi", v.AsString())
 }
 
+func TestPolarNumbers(t *testing.T) {
+	var v, ok = elements.NumberFromString("(5e^~0.9272952180016123i)")
+	assert.True(t, ok)
+	assert.Equal(t, 3.0, real(v))
+	assert.Equal(t, 4.0, imag(v))
+	assert.False(t, v.IsNegative())
+	assert.Equal(t, 3, v.AsInteger())
+	assert.Equal(t, 3.0, v.AsReal())
+	assert.Equal(t, 3.0, v.GetReal())
+	assert.Equal(t, 4.0, v.GetImaginary())
+	assert.Equal(t, "(3, 4i)", v.AsString())
+}
+
 func TestRoundtripNumbers(t *testing.T) {
 	for _, s := range numbers {
 		var v, ok = elements.NumberFromString(s)
@@ -386,6 +399,18 @@ var numbers = []string{
 	"(-1, i)",
 	"(1, -i)",
 	"(-1, -i)",
+	"(π, πi)",
+	"(-π, πi)",
+	"(π, -πi)",
+	"(-π, -πi)",
+	"(φ, φi)",
+	"(-φ, φi)",
+	"(φ, -φi)",
+	"(-φ, -φi)",
+	"(τ, τi)",
+	"(-τ, τi)",
+	"(τ, -τi)",
+	"(-τ, -τi)",
 	"(3, 4i)",
 	"(-3, 4i)",
 	"(3, -4i)",

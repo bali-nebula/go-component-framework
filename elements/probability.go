@@ -152,14 +152,14 @@ func stringToProbability(v string) (float64, bool) {
 		ok = false
 	default:
 		var err error
-		probability, err = strconv.ParseFloat(matches[1], 64)
+		probability, err = strconv.ParseFloat(matches[0], 64)
 		if err != nil {
 			ok = false
 		}
 	}
 	// Check for mistaken floating point value.
 	matches = abstractions.ScanNumber([]byte(v))
-	if len(matches) > 0 && len(matches[1]) > 1 {
+	if len(matches) > 0 && len(matches[0]) > 1 {
 		ok = false
 		probability = 0
 	}

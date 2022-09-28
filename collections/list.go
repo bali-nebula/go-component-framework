@@ -237,9 +237,7 @@ func (v *list[T]) RemoveItems(first int, last int) []T {
 	copy(v.items[first:], v.items[last+1:])
 
 	// Remove extra space.
-	//fmt.Printf("Before: %v\n", v.items)
 	v.resize(length - size)
-	//fmt.Printf("After: %v\n", v.items)
 	return old
 }
 

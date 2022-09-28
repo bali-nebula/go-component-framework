@@ -53,13 +53,13 @@ const (
 	ordinal  = `[1-9][0-9]*`
 	fraction = `\.[0-9]+`
 	exponent = `E` + sign + `?` + ordinal
-	scalar   = `(?:(?:` + ordinal + `(?:` + fraction + `)?)|(?:` + zero + fraction + `))(?:` + exponent + `)?`
+	scalar   = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
 	real     = sign + `?(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
 	angle    = `~(` + real + `|` + zero + `)`
 )
 
 // This scanner is used for matching angle entities.
-var angleScanner = regexp.MustCompile(`^` + angle)
+var angleScanner = regexp.MustCompile(`^(?:` + angle + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for an angle element. The first item in the array is the entire
@@ -87,7 +87,7 @@ const (
 )
 
 // This scanner is used for matching binary strings.
-var binaryScanner = regexp.MustCompile(`^` + binary)
+var binaryScanner = regexp.MustCompile(`^(?:` + binary + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a binary string. The first item in the array is the entire
@@ -109,11 +109,11 @@ const BooleanSyntax = `
 // These constants are used to form a regular expression for valid boolean
 // entities.
 const (
-	boolean = `(false|true)`
+	boolean = `false|true`
 )
 
 // This scanner is used for matching boolean entities.
-var booleanScanner = regexp.MustCompile(`^` + boolean)
+var booleanScanner = regexp.MustCompile(`^(?:` + boolean + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a boolean element. The first item in the array is the entire
@@ -142,6 +142,7 @@ func ScanComment(v []byte) []string {
 	if !bytes.HasPrefix(v, bangAngle) {
 		return result
 	}
+	var angleBangAllowed = false
 	var current = 3 // Skip the leading '!>\n' characters.
 	var level = 1
 	for level > 0 {
@@ -149,15 +150,24 @@ func ScanComment(v []byte) []string {
 		switch {
 		case len(s) == 0:
 			return result
+		case bytes.HasPrefix(s, eol):
+			angleBangAllowed = true
+			current++
 		case bytes.HasPrefix(s, bangAngle):
-			current++ // Skip the '!' character.
-			current++ // Skip the '>' character.
-			level++   // Start a nested comment.
+			current += 3 // Skip the '!>\n' characters.
+			level++      // Start a nested narrative.
 		case bytes.HasPrefix(s, angleBang):
-			current++ // Skip the "<" character.
-			level--   // Terminate the current comment.
+			if !angleBangAllowed {
+				return result
+			}
+			current += 2 // Skip the '<!' characters.
+			level--      // Terminate the current narrative.
+		default:
+			if angleBangAllowed && !bytes.HasPrefix(s, tab) {
+				angleBangAllowed = false
+			}
+			current++ // Accept the next character.
 		}
-		current++ // Accept the next character.
 	}
 	result = append(result, string(v[:current])) // Includes bang delimeters.
 	return result
@@ -207,7 +217,7 @@ const (
 )
 
 // This scanner is used for matching duration entities.
-var durationScanner = regexp.MustCompile(`^` + duration)
+var durationScanner = regexp.MustCompile(`^(?:` + duration + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a duration element. The first item in the array is the entire
@@ -234,7 +244,7 @@ const (
 )
 
 // This scanner is used for matching identifiers.
-var identifierScanner = regexp.MustCompile(`^` + identifier)
+var identifierScanner = regexp.MustCompile(`^(?:` + identifier + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for an identifier. The first item in the array is the entire
@@ -295,7 +305,7 @@ const (
 )
 
 // This scanner is used for matching moment entities.
-var momentScanner = regexp.MustCompile(`^` + moment)
+var momentScanner = regexp.MustCompile(`^(?:` + moment + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a moment element. The first item in the array is the entire
@@ -320,11 +330,11 @@ const MonikerSyntax = `
 const (
 	separator = `[-+.]`
 	name      = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
-	moniker   = `((?:/` + name + `)+)` // Cannot capture each name...
+	moniker   = `(?:/` + name + `)+` // Cannot capture each name...
 )
 
 // This scanner is used for matching moniker strings.
-var monikerScanner = regexp.MustCompile(`^` + moniker)
+var monikerScanner = regexp.MustCompile(`^(?:` + moniker + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a moniker string. The first item in the array is the entire
@@ -353,6 +363,7 @@ func ScanNarrative(v []byte) []string {
 	if !bytes.HasPrefix(v, quoteAngle) {
 		return result
 	}
+	var angleQuoteAllowed = false
 	var current = 3 // Skip the leading '">\n' characters.
 	var level = 1
 	for level > 0 {
@@ -360,15 +371,24 @@ func ScanNarrative(v []byte) []string {
 		switch {
 		case len(s) == 0:
 			return result
+		case bytes.HasPrefix(s, eol):
+			angleQuoteAllowed = true
+			current++
 		case bytes.HasPrefix(s, quoteAngle):
-			current++ // Skip the '"' character.
-			current++ // Skip the '>' character.
-			level++   // Start a nested narrative.
+			current += 3 // Skip the '">\n' characters.
+			level++      // Start a nested narrative.
 		case bytes.HasPrefix(s, angleQuote):
-			current++ // Skip the "<" character.
-			level--   // Terminate the current narrative.
+			if !angleQuoteAllowed {
+				return result
+			}
+			current += 2 // Skip the '<"' characters.
+			level--      // Terminate the current narrative.
+		default:
+			if angleQuoteAllowed && !bytes.HasPrefix(s, tab) {
+				angleQuoteAllowed = false
+			}
+			current++ // Accept the next character.
 		}
-		current++ // Accept the next character.
 	}
 	result = append(result, string(v[:current])) // Includes quote delimeters.
 	return result
@@ -385,11 +405,11 @@ const NoteSyntax = `
 
 // These constants are used to form a regular expression for valid notes.
 const (
-	note = `(! [^\n]*)`
+	note = `! [^\n]*`
 )
 
 // This scanner is used for matching notes.
-var noteScanner = regexp.MustCompile(`^` + note)
+var noteScanner = regexp.MustCompile(`^(?:` + note + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a note. The first item in the array is the entire matched
@@ -427,19 +447,13 @@ const (
 	infinity    = `infinity|∞`
 	undefined   = `undefined`
 	rectangular = `(` + real + `)(, )(` + sign + `|` + real + `)?i`
-	polar       = `(` + real + `)(e^)(` + angle + `)i`
-	number      = `(` +
-		sign + `?i|` +
-		real + `i?|` +
-		zero + `|` +
-		infinity + `|` +
-		undefined + `|\((?:` +
-		rectangular + `|` + polar +
-		`)\))`
+	polar       = `(` + real + `)(e\^)` + angle + `i` // Note: angle cannot be in parentheses.
+	number      = sign + `?i|` + real + `i?|` + zero + `|` + infinity + `|` + undefined + `|` +
+		`\((?:` + rectangular + `|` + polar + `)\)`
 )
 
 // This scanner is used for matching number entities.
-var numberScanner = regexp.MustCompile(`^` + number)
+var numberScanner = regexp.MustCompile(`^(?:` + number + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a number element. The first item in the array is the entire
@@ -475,7 +489,7 @@ const (
 )
 
 // This scanner is used for matching pattern entities.
-var patternScanner = regexp.MustCompile(`^` + pattern)
+var patternScanner = regexp.MustCompile(`^(?:` + pattern + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a pattern element. The first item in the array is the entire
@@ -510,7 +524,7 @@ const (
 )
 
 // This scanner is used for matching percentage entities.
-var percentageScanner = regexp.MustCompile(`^` + percentage)
+var percentageScanner = regexp.MustCompile(`^(?:` + percentage + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a percentage element. The first item in the array is the entire
@@ -532,11 +546,11 @@ const ProbabilitySyntax = `
 // These constants are used to form a regular expression for valid probability
 // entities.
 const (
-	probability = `(` + fraction + `|1\.)`
+	probability = fraction + `|1\.`
 )
 
 // This scanner is used for matching probability entities.
-var probabilityScanner = regexp.MustCompile(`^` + probability)
+var probabilityScanner = regexp.MustCompile(`^(?:` + probability + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a probability element. The first item in the array is the
@@ -564,7 +578,7 @@ const (
 )
 
 // This scanner is used for matching quoted strings.
-var quoteScanner = regexp.MustCompile(`^` + quote)
+var quoteScanner = regexp.MustCompile(`^(?:` + quote + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a quoted string. The first item in the array is the entire
@@ -604,7 +618,7 @@ const (
 )
 
 // This scanner is used for matching resource entities.
-var resourceScanner = regexp.MustCompile(`^` + resource)
+var resourceScanner = regexp.MustCompile(`^(?:` + resource + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a resource element. The first item in the array is the entire
@@ -632,7 +646,7 @@ const (
 )
 
 // This scanner is used for matching symbol strings.
-var symbolScanner = regexp.MustCompile(`^` + symbol)
+var symbolScanner = regexp.MustCompile(`^(?:` + symbol + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a symbol string. The first item in the array is the entire
@@ -658,7 +672,7 @@ const (
 )
 
 // This scanner is used for matching tag entities.
-var tagScanner = regexp.MustCompile(`^` + tag)
+var tagScanner = regexp.MustCompile(`^(?:` + tag + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a tag element. The first item in the array is the entire
@@ -683,7 +697,7 @@ const (
 )
 
 // This scanner is used for matching version strings.
-var versionScanner = regexp.MustCompile(`^` + version)
+var versionScanner = regexp.MustCompile(`^(?:` + version + `)`)
 
 // This function returns for the specified string an array of the matching
 // subgroups for a version string. The first item in the array is the entire
