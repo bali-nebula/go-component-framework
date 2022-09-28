@@ -390,21 +390,21 @@ func stringToNumber(v string) (complex128, bool) {
 		}
 		var imaginaryPart float64
 		switch {
-		case len(matches[3]) == 0:
+		case len(matches[4]) == 0:
 			imaginaryPart = 1
 			number = complex(realPart, imaginaryPart)
-		case matches[3][0] == '~':
+		case matches[4][0] == '~':
 			// The complex number is in polar form.
-			imaginaryPart, err = strconv.ParseFloat(matches[3][1:], 64)
+			imaginaryPart, err = strconv.ParseFloat(matches[4][1:], 64)
 			if err != nil {
-				imaginaryPart = constantToValue(matches[3][1:])
+				imaginaryPart = constantToValue(matches[4][1:])
 			}
 			number = cmplx.Rect(realPart, imaginaryPart)
 		default:
 			// The complex number is in rectangular form.
-			var imaginaryPart, err = strconv.ParseFloat(matches[3], 64)
+			var imaginaryPart, err = strconv.ParseFloat(matches[4], 64)
 			if err != nil {
-				imaginaryPart = constantToValue(matches[3])
+				imaginaryPart = constantToValue(matches[4])
 			}
 			number = complex(realPart, imaginaryPart)
 		}

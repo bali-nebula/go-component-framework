@@ -416,24 +416,26 @@ const NumberSyntax = `
 	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
 	$INFINITY: "infinity" | "∞"
 	$UNDEFINED: "undefined"
-	$NUMBER: SIGN? "i" | REAL "i"? | ZERO | INFINITY | UNDEFINED | "(" REAL ", " (SIGN | REAL | ANGLE)? "i)"
+	$RECTANGULAR: REAL ", " (SIGN | REAL)? "i"
+	$POLAR: REAL "e^" ANGLE "i"
+	$NUMBER: SIGN? "i" | REAL "i"? | ZERO | INFINITY | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"
 `
 
 // These constants are used to form a regular expression for valid number
 // entities.
 const (
-	infinity  = `infinity|∞`
-	undefined = `undefined`
-	number    = `(` +
+	infinity    = `infinity|∞`
+	undefined   = `undefined`
+	rectangular = `(` + real + `)(, )(` + sign + `|` + real + `)?i`
+	polar       = `(` + real + `)(e^)(` + angle + `)i`
+	number      = `(` +
 		sign + `?i|` +
 		real + `i?|` +
 		zero + `|` +
 		infinity + `|` +
-		undefined + `|\(` +
-		`(` + real + `)` +
-		`(?:, )` +
-		`(` + sign + `|` + real + `|` + angle + `)?i` +
-		`\))`
+		undefined + `|\((?:` +
+		rectangular + `|` + polar +
+		`)\))`
 )
 
 // This scanner is used for matching number entities.
