@@ -25,7 +25,7 @@ type Lexical interface {
 // ANGLE ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// an angle element. It is useful to include in parsing error messages.
+// an angle element. It is useful to include in scanning error messages.
 const AngleSyntax = `
 	$E: "e"
 	$PI: "pi" | "π"
@@ -71,7 +71,7 @@ func ScanAngle(v []byte) []string {
 // BINARY STRING SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a binary string. It is useful to include in parsing error messages.
+// a binary string. It is useful to include in scanning error messages.
 const BinarySyntax = `
 	$WHITESPACE: \s{Separator}
 	$BASE64: [A-Za-z0-9+/]
@@ -99,7 +99,7 @@ func ScanBinary(v []byte) []string {
 // BOOLEAN ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a boolean element. It is useful to include in parsing error messages.
+// a boolean element. It is useful to include in scanning error messages.
 const BooleanSyntax = `
 	$FALSE: "false"
 	$TRUE: "true"
@@ -125,7 +125,7 @@ func ScanBoolean(v []byte) []string {
 // COMMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a comment. It is useful to include in parsing error messages.
+// a comment. It is useful to include in scanning error messages.
 const CommentSyntax = `
 	$EOL: "\n"
 	$TAB: "\t"
@@ -176,7 +176,7 @@ func ScanComment(v []byte) []string {
 // DELIMITER SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a delimiter. It is useful to include in parsing error messages.
+// a delimiter. It is useful to include in scanning error messages.
 const DelimiterSyntax = `
 	$DELIMITER: "&" | "(" | ... | "}"
 `
@@ -197,7 +197,7 @@ func ScanDelimiter(v []byte) []string {
 // DURATION ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a duration element. It is useful to include in parsing error messages.
+// a duration element. It is useful to include in scanning error messages.
 const DurationSyntax = `
 	$TSPAN: ZERO | ORDINAL FRACTION?
 	$WEEKS: TSPAN "W"
@@ -229,7 +229,7 @@ func ScanDuration(v []byte) []string {
 // IDENTIFIER SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// an identifier. It is useful to include in parsing error messages.
+// an identifier. It is useful to include in scanning error messages.
 const IdentifierSyntax = `
 	$LETTER: \p{Letter}
 	$DIGIT: \p{Number}
@@ -256,7 +256,7 @@ func ScanIdentifier(v []byte) []string {
 // KEYWORD SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a keyword. It is useful to include in parsing error messages.
+// a keyword. It is useful to include in scanning error messages.
 const KeywordSyntax = `
 	$KEYWORD: "accept" | "any" | ... | "with"
 `
@@ -277,7 +277,7 @@ func ScanKeyword(v []byte) []string {
 // MOMENT ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a moment element. It is useful to include in parsing error messages.
+// a moment element. It is useful to include in scanning error messages.
 const MomentSyntax = `
 	$SIGN: [+-]
 	$ORDINAL: [1-9][0-9]*
@@ -317,7 +317,7 @@ func ScanMoment(v []byte) []string {
 // MONIKER STRING SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a moniker string. It is useful to include in parsing error messages.
+// a moniker string. It is useful to include in scanning error messages.
 const MonikerSyntax = `
 	$LETTER: \p{Letter}
 	$DIGIT: \p(Number}
@@ -346,7 +346,7 @@ func ScanMoniker(v []byte) []string {
 // NARRATIVE STRING SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a narrative string. It is useful to include in parsing error messages.
+// a narrative string. It is useful to include in scanning error messages.
 const NarrativeSyntax = `
 	$EOL: "\n"
 	$TAB: "\t"
@@ -397,7 +397,7 @@ func ScanNarrative(v []byte) []string {
 // NOTE SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a note. It is useful to include in parsing error messages.
+// a note. It is useful to include in scanning error messages.
 const NoteSyntax = `
 	$EOL: "\n"
 	$NOTE: "! " (!EOL)*
@@ -421,7 +421,7 @@ func ScanNote(v []byte) []string {
 // NUMBER ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a number element. It is useful to include in parsing error messages.
+// a number element. It is useful to include in scanning error messages.
 const NumberSyntax = `
 	$E: "e"
 	$PI: "pi" | "π"
@@ -467,7 +467,7 @@ func ScanNumber(v []byte) []string {
 // PATTERN ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a pattern element. It is useful to include in parsing error messages.
+// a pattern element. It is useful to include in scanning error messages.
 const PatternSyntax = `
 	$BASE16: [0-9a-f]
 	$UNICODE: "u" BASE16{4}
@@ -503,7 +503,7 @@ func ScanPattern(v []byte) []string {
 // PERCENTAGE ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a percentage element. It is useful to include in parsing error messages.
+// a percentage element. It is useful to include in scanning error messages.
 const PercentageSyntax = `
 	$E: "e"
 	$PI: "pi" | "π"
@@ -538,7 +538,7 @@ func ScanPercentage(v []byte) []string {
 // PROBABILITY ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a probability element. It is useful to include in parsing error messages.
+// a probability element. It is useful to include in scanning error messages.
 const ProbabilitySyntax = `
 	$FRACTION: .[0-9]+
 	$ONE: "1."
@@ -564,7 +564,7 @@ func ScanProbability(v []byte) []string {
 // QUOTE STRING SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a quoted string. It is useful to include in parsing error messages.
+// a quoted string. It is useful to include in scanning error messages.
 const QuoteSyntax = `
 	$BASE16: [0-9a-f]
 	$UNICODE: "u" BASE16{4}
@@ -592,7 +592,7 @@ func ScanQuote(v []byte) []string {
 // RESOURCE ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a resource element. It is useful to include in parsing error messages.
+// a resource element. It is useful to include in scanning error messages.
 const ResourceSyntax = `
 	$SCHEME: [a-zA-Z][0-9a-zA-Z+-.]*
 	$AUTHORITY: (![/])+
@@ -632,7 +632,7 @@ func ScanResource(v []byte) []string {
 // SYMBOL STRING SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a symbol string. It is useful to include in parsing error messages.
+// a symbol string. It is useful to include in scanning error messages.
 const SymbolSyntax = `
 	$LETTER: \p{Letter}
 	$DIGIT: \p(Number}
@@ -660,7 +660,7 @@ func ScanSymbol(v []byte) []string {
 // TAG ELEMENT SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a tag element. It is useful to include in parsing error messages.
+// a tag element. It is useful to include in scanning error messages.
 const TagSyntax = `
 	$BASE32: [0-9A-DF-HJ-NP-TV-Z]
 	$TAG: "#" BASE32+
@@ -686,7 +686,7 @@ func ScanTag(v []byte) []string {
 // VERSION STRING SYNTAX
 
 // This raw string captures the pseudo-grammar used to define the syntax of
-// a version string. It is useful to include in parsing error messages.
+// a version string. It is useful to include in scanning error messages.
 const VersionSyntax = `
 	$ORDINAL: [1-9][0-9]*
 	$VERSION: "v" ORDINAL ("." ORDINAL)*

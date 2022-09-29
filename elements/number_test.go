@@ -237,7 +237,10 @@ func TestNegativeImaginaries(t *testing.T) {
 }
 
 func TestPolarNumbers(t *testing.T) {
-	var v, ok = elements.NumberFromString("(5e^~0.9272952180016123i)")
+	var ok bool
+	var v elements.Number
+
+	v, ok = elements.NumberFromString("(5e^~0.9272952180016123i)")
 	assert.True(t, ok)
 	assert.Equal(t, 3.0, real(v))
 	assert.Equal(t, 4.0, imag(v))
@@ -247,6 +250,19 @@ func TestPolarNumbers(t *testing.T) {
 	assert.Equal(t, 3.0, v.GetReal())
 	assert.Equal(t, 4.0, v.GetImaginary())
 	assert.Equal(t, "(3, 4i)", v.AsString())
+	assert.Equal(t, "(5e^~0.9272952180016122i)", v.AsPolar())
+
+	v, ok = elements.NumberFromString("(1e^~πi)")
+	assert.True(t, ok)
+	assert.Equal(t, -1.0, real(v))
+	assert.Equal(t, 0.0, imag(v))
+	assert.True(t, v.IsNegative())
+	assert.Equal(t, -1, v.AsInteger())
+	assert.Equal(t, -1.0, v.AsReal())
+	assert.Equal(t, -1.0, v.GetReal())
+	assert.Equal(t, 0.0, v.GetImaginary())
+	assert.Equal(t, "-1", v.AsString())
+	assert.Equal(t, "(1e^~πi)", v.AsPolar())
 }
 
 func TestRoundtripNumbers(t *testing.T) {

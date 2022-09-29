@@ -119,32 +119,7 @@ type Number complex128
 
 // This method returns the canonical string for this element.
 func (v Number) AsString() string {
-	if v.IsZero() {
-		return "0"
-	}
-	if v.IsInfinite() {
-		return "∞"
-	}
-	if v.IsUndefined() {
-		return "undefined"
-	}
-	var realPart = floatToString(real(v))
-	var imagPart string
-	switch imag(v) {
-	case 1:
-		imagPart = "i"
-	case -1:
-		imagPart = "-i"
-	default:
-		imagPart = floatToString(imag(v)) + "i"
-	}
-	if imag(v) == 0 {
-		return realPart
-	}
-	if real(v) == 0 {
-		return imagPart
-	}
-	return "(" + realPart + ", " + imagPart + ")"
+	return v.AsRectangular()
 }
 
 // This method implements the standard Go Stringer interface.
@@ -178,6 +153,55 @@ func (v Number) AsReal() float64 {
 }
 
 // COMPLEX INTERFACE
+
+// This method returns the canonical string for this element in
+// its rectangular form.
+func (v Number) AsRectangular() string {
+	if v.IsZero() {
+		return "0"
+	}
+	if v.IsInfinite() {
+		return "∞"
+	}
+	if v.IsUndefined() {
+		return "undefined"
+	}
+	var realPart = floatToString(real(v))
+	var imagPart string
+	switch imag(v) {
+	case 1:
+		imagPart = "i"
+	case -1:
+		imagPart = "-i"
+	default:
+		imagPart = floatToString(imag(v)) + "i"
+	}
+	if imag(v) == 0 {
+		return realPart
+	}
+	if real(v) == 0 {
+		return imagPart
+	}
+	return "(" + realPart + ", " + imagPart + ")"
+}
+
+// This method returns the canonical string for this element in
+// its polar form.
+func (v Number) AsPolar() string {
+	if v.IsZero() {
+		return "0"
+	}
+	if v.IsInfinite() {
+		return "∞"
+	}
+	if v.IsUndefined() {
+		return "undefined"
+	}
+	var magnitude, phase = cmplx.Polar(complex128(v))
+	var realPart = floatToString(magnitude)
+	var imagPart = AngleFromFloat(phase).AsString() + "i"
+	return "(" + realPart + "e^" + imagPart + ")"
+}
 
 // This method determines whether or not this number is infinite.
 func (v Number) IsZero() bool {

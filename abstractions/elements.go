@@ -25,8 +25,11 @@ type Continuous interface {
 
 // This interface defines the methods supported by all polar elements.
 type Complex interface {
-	IsUndefined() bool
+	AsRectangular() string
+	AsPolar() string
+	IsZero() bool
 	IsInfinite() bool
+	IsUndefined() bool
 	GetReal() float64
 	GetImaginary() float64
 	GetMagnitude() float64
