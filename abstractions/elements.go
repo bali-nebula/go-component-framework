@@ -118,7 +118,7 @@ type Numerical[T ~int | ~float64 | ~complex128] interface {
 	Product(first, second T) T
 	Quotient(first, second T) T
 	Remainder(first, second T) T
-	Exponential(base, power T) T
+	Power(base, exponent T) T
 	Logarithm(base, value T) T
 }
 

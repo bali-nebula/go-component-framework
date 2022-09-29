@@ -30,7 +30,7 @@ func AngleFromFloat(v float64) Angle {
 		// Normalize the angle to the range [0..2π).
 		v = v + twoPi
 	}
-	return Angle(v)
+	return Angle(lockPhase(v))
 }
 
 // This constructor attempts to create a new angle from the specified formatted
@@ -51,6 +51,9 @@ type Angle float64
 
 // This method returns the canonical string for this element.
 func (v Angle) AsString() string {
+	if float64(v) == math.Pi {
+		return "~π"
+	}
 	return "~" + strconv.FormatFloat(float64(v), 'G', -1, 64)
 }
 
@@ -234,4 +237,24 @@ func stringToAngle(v string) (float64, bool) {
 		}
 	}
 	return angle, ok
+}
+
+// This function uses the single precision floating point range to lock a double
+// precision phase angle onto 0, π/2, π, or 3π/2 if the angle falls outside the
+// single precision range for these values. Otherwise, the phase angle is
+// returned unchanged.
+func lockPhase(v float64) float64 {
+	var v32 float32 = float32(v)
+	switch {
+	case math.Abs(v) <= 1.2246467991473515E-16:
+		return 0
+	case v32 == float32(0.5 * math.Pi):
+		return 0.5 * math.Pi
+	case v32 == float32(math.Pi):
+		return math.Pi
+	case v32 == float32(1.5 * math.Pi):
+		return 1.5 * math.Pi
+	default:
+		return v
+	}
 }

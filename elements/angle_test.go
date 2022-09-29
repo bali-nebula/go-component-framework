@@ -27,14 +27,14 @@ func TestZeroAngles(t *testing.T) {
 func TestPositiveAngles(t *testing.T) {
 	var v = elements.AngleFromFloat(math.Pi)
 	assert.Equal(t, math.Pi, float64(v))
-	assert.Equal(t, "~3.141592653589793", v.AsString())
+	assert.Equal(t, "~π", v.AsString())
 	assert.Equal(t, math.Pi, v.AsReal())
 }
 
 func TestNegativeAngles(t *testing.T) {
 	var v1 = elements.AngleFromFloat(-math.Pi)
 	assert.Equal(t, math.Pi, float64(v1))
-	assert.Equal(t, "~3.141592653589793", v1.AsString())
+	assert.Equal(t, "~π", v1.AsString())
 	assert.Equal(t, math.Pi, v1.AsReal())
 
 	var v2 = elements.AngleFromFloat(-math.Pi / 2.0)
@@ -47,7 +47,7 @@ func TestStringAngles(t *testing.T) {
 	var v, ok = elements.AngleFromString("~π")
 	assert.True(t, ok)
 	assert.Equal(t, math.Pi, float64(v))
-	assert.Equal(t, "~3.141592653589793", v.AsString())
+	assert.Equal(t, "~π", v.AsString())
 	assert.Equal(t, math.Pi, v.AsReal())
 
 	v, ok = elements.AngleFromString("bad")

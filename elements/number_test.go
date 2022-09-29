@@ -276,100 +276,193 @@ func TestRoundtripNumbers(t *testing.T) {
 func TestNumbersLibrary(t *testing.T) {
 	var zero = elements.Zero
 	var i = elements.I
+	var half = elements.NumberFromComplex(0.5)
 	var one = elements.One
-	var five = elements.NumberFromComplex(5)
+	var two = elements.One * 2.0
 	var infinity = elements.Infinity
 	var undefined = elements.Undefined
 
+	//	-z
 	assert.Equal(t, zero, elements.Numbers.Inverse(zero))
-	assert.Equal(t, -i, elements.Numbers.Inverse(i))
+	assert.Equal(t, -half, elements.Numbers.Inverse(half))
 	assert.Equal(t, -one, elements.Numbers.Inverse(one))
+	assert.Equal(t, -i, elements.Numbers.Inverse(i))
 	assert.Equal(t, infinity, elements.Numbers.Inverse(infinity))
 	assert.True(t, elements.Numbers.Inverse(undefined).IsUndefined())
 
-	assert.Equal(t, one, elements.Numbers.Sum(zero, one))
-	assert.Equal(t, i, elements.Numbers.Sum(zero, i))
+	//	z + zero => z
+	assert.Equal(t, -i, elements.Numbers.Sum(-i, zero))
+	assert.Equal(t, -one, elements.Numbers.Sum(-one, zero))
+	assert.Equal(t, zero, elements.Numbers.Sum(zero, zero))
+	assert.Equal(t, one, elements.Numbers.Sum(one, zero))
+	assert.Equal(t, i, elements.Numbers.Sum(i, zero))
+	assert.Equal(t, infinity, elements.Numbers.Sum(infinity, zero))
+	assert.True(t, elements.Numbers.Sum(undefined, zero).IsUndefined())
+
+	//	z + infinity => infinity
+	assert.Equal(t, infinity, elements.Numbers.Sum(-i, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Sum(-one, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Sum(zero, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Sum(one, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Sum(i, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Sum(infinity, infinity))
+	assert.True(t, elements.Numbers.Sum(undefined, infinity).IsUndefined())
+
+	//	z - infinity => infinity  {z != infinity}
+	assert.Equal(t, infinity, elements.Numbers.Difference(-i, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Difference(-one, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Difference(zero, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Difference(one, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Difference(i, infinity))
+	assert.True(t, elements.Numbers.Difference(infinity, infinity).IsUndefined())
+	assert.True(t, elements.Numbers.Difference(undefined, infinity).IsUndefined())
+
+	//	infinity - z => infinity  {z != infinity}
+	assert.Equal(t, infinity, elements.Numbers.Difference(infinity, -i))
+	assert.Equal(t, infinity, elements.Numbers.Difference(infinity, -one))
+	assert.Equal(t, infinity, elements.Numbers.Difference(infinity, zero))
+	assert.Equal(t, infinity, elements.Numbers.Difference(infinity, one))
+	assert.Equal(t, infinity, elements.Numbers.Difference(infinity, i))
+	assert.True(t, elements.Numbers.Difference(infinity, undefined).IsUndefined())
+
+	//	z - z => zero  {z != infinity}
+	assert.Equal(t, zero, elements.Numbers.Difference(-i, -i))
+	assert.Equal(t, zero, elements.Numbers.Difference(-one, -one))
+	assert.Equal(t, zero, elements.Numbers.Difference(zero, zero))
 	assert.Equal(t, zero, elements.Numbers.Difference(one, one))
 	assert.Equal(t, zero, elements.Numbers.Difference(i, i))
-	assert.Equal(t, infinity, elements.Numbers.Sum(zero, infinity))
-	assert.Equal(t, infinity, elements.Numbers.Sum(i, infinity))
-	assert.Equal(t, infinity, elements.Numbers.Difference(zero, infinity))
-	assert.Equal(t, infinity, elements.Numbers.Difference(i, infinity))
-	assert.True(t, elements.Numbers.Sum(zero, undefined).IsUndefined())
-	assert.True(t, elements.Numbers.Sum(undefined, i).IsUndefined())
-	assert.True(t, elements.Numbers.Difference(undefined, zero).IsUndefined())
-	assert.True(t, elements.Numbers.Difference(i, undefined).IsUndefined())
+	assert.True(t, elements.Numbers.Difference(infinity, infinity).IsUndefined())
+	assert.True(t, elements.Numbers.Difference(undefined, undefined).IsUndefined())
 
+	//	z * r
+	assert.Equal(t, -i, elements.Numbers.Scaled(-i, 1.0))
+	assert.Equal(t, -half, elements.Numbers.Scaled(-one, 0.5))
 	assert.Equal(t, zero, elements.Numbers.Scaled(zero, 5.0))
-	assert.Equal(t, five, elements.Numbers.Scaled(one, 5.0))
+	assert.Equal(t, half, elements.Numbers.Scaled(one, 0.5))
 	assert.Equal(t, i, elements.Numbers.Scaled(i, 1.0))
 	assert.Equal(t, infinity, elements.Numbers.Scaled(infinity, 5.0))
 	assert.True(t, elements.Numbers.Scaled(undefined, 5.0).IsUndefined())
 
+	//	/z
 	assert.Equal(t, infinity, elements.Numbers.Reciprocal(zero))
+	assert.Equal(t, two, elements.Numbers.Reciprocal(half))
 	assert.Equal(t, one, elements.Numbers.Reciprocal(one))
+	assert.Equal(t, -half, elements.Numbers.Reciprocal(-two))
 	assert.Equal(t, -i, elements.Numbers.Reciprocal(i))
 	assert.Equal(t, zero, elements.Numbers.Reciprocal(infinity))
 	assert.True(t, elements.Numbers.Reciprocal(undefined).IsUndefined())
 
+	//	*z
 	assert.Equal(t, zero, elements.Numbers.Conjugate(zero))
 	assert.Equal(t, one, elements.Numbers.Conjugate(one))
 	assert.Equal(t, -i, elements.Numbers.Conjugate(i))
+	assert.Equal(t, i, elements.Numbers.Conjugate(-i))
 	assert.True(t, elements.Numbers.Conjugate(undefined).IsUndefined())
 
+	//	z * zero => zero          {z != infinity}
+	assert.Equal(t, zero, elements.Numbers.Product(zero, zero))
+	assert.Equal(t, zero, elements.Numbers.Product(one, zero))
+	assert.Equal(t, zero, elements.Numbers.Product(i, zero))
+	assert.True(t, elements.Numbers.Product(infinity, zero).IsUndefined())
+	assert.True(t, elements.Numbers.Product(undefined, zero).IsUndefined())
+
+	//	z * one => z
 	assert.Equal(t, zero, elements.Numbers.Product(zero, one))
-	assert.Equal(t, one, elements.Numbers.Quotient(one, one))
-	assert.Equal(t, zero, elements.Numbers.Product(zero, i))
-	assert.Equal(t, one, elements.Numbers.Quotient(i, i))
-	assert.Equal(t, i, elements.Numbers.Product(one, i))
-	assert.Equal(t, i, elements.Numbers.Quotient(i, one))
-	assert.Equal(t, five, elements.Numbers.Product(one, five))
-	assert.Equal(t, one, elements.Numbers.Quotient(five, five))
+	assert.Equal(t, one, elements.Numbers.Product(one, one))
+	assert.Equal(t, i, elements.Numbers.Product(i, one))
+	assert.Equal(t, infinity, elements.Numbers.Product(infinity, one))
+	assert.True(t, elements.Numbers.Product(undefined, one).IsUndefined())
+
+	//	z * infinity => infinity  {z != zero}
 	assert.True(t, elements.Numbers.Product(zero, infinity).IsUndefined())
+	assert.Equal(t, infinity, elements.Numbers.Product(one, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Product(i, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Product(infinity, infinity))
+
+	//	zero / z => zero          {z != zero}
+	assert.True(t, elements.Numbers.Quotient(zero, zero).IsUndefined())
+	assert.Equal(t, zero, elements.Numbers.Quotient(zero, one))
+	assert.Equal(t, zero, elements.Numbers.Quotient(zero, i))
 	assert.Equal(t, zero, elements.Numbers.Quotient(zero, infinity))
-	assert.True(t, elements.Numbers.Product(zero, undefined).IsUndefined())
+	assert.True(t, elements.Numbers.Quotient(zero, undefined).IsUndefined())
+
+	//	z / zero => infinity      {z != zero}
+	assert.Equal(t, infinity, elements.Numbers.Quotient(one, zero))
+	assert.Equal(t, infinity, elements.Numbers.Quotient(i, zero))
+	assert.Equal(t, infinity, elements.Numbers.Quotient(infinity, zero))
+	assert.True(t, elements.Numbers.Quotient(undefined, zero).IsUndefined())
+
+	//	z / infinity => zero      {z != infinity}
+	assert.Equal(t, zero, elements.Numbers.Quotient(one, infinity))
+	assert.Equal(t, zero, elements.Numbers.Quotient(i, infinity))
+	assert.True(t, elements.Numbers.Quotient(infinity, infinity).IsUndefined())
 	assert.True(t, elements.Numbers.Quotient(undefined, infinity).IsUndefined())
 
-	assert.Equal(t, one, elements.Numbers.Exponential(zero, zero))
-	assert.Equal(t, zero, elements.Numbers.Exponential(zero, one))
-	assert.Equal(t, zero, elements.Numbers.Exponential(zero, infinity))
-	assert.Equal(t, one, elements.Numbers.Exponential(one, zero))
-	assert.Equal(t, one, elements.Numbers.Exponential(one, one))
-	assert.Equal(t, one, elements.Numbers.Exponential(one, infinity))
-	assert.Equal(t, one, elements.Numbers.Exponential(infinity, zero))
-	assert.Equal(t, infinity, elements.Numbers.Exponential(infinity, one))
-	assert.Equal(t, infinity, elements.Numbers.Exponential(infinity, infinity))
+	//	infinity / z => infinity  {z != infinity}
+	assert.Equal(t, infinity, elements.Numbers.Quotient(infinity, zero))
+	assert.Equal(t, infinity, elements.Numbers.Quotient(infinity, one))
+	assert.Equal(t, infinity, elements.Numbers.Quotient(infinity, i))
+	assert.True(t, elements.Numbers.Quotient(infinity, undefined).IsUndefined())
 
-	assert.True(t, elements.Numbers.Exponential(undefined, zero).IsUndefined())
-	assert.True(t, elements.Numbers.Exponential(zero, undefined).IsUndefined())
-	assert.True(t, elements.Numbers.Exponential(undefined, one).IsUndefined())
-	assert.True(t, elements.Numbers.Exponential(one, undefined).IsUndefined())
-	assert.True(t, elements.Numbers.Exponential(undefined, infinity).IsUndefined())
-	assert.True(t, elements.Numbers.Exponential(infinity, undefined).IsUndefined())
+	//	y / z
+	assert.Equal(t, one, elements.Numbers.Quotient(one, one))
+	assert.Equal(t, one, elements.Numbers.Quotient(i, i))
+	assert.Equal(t, i, elements.Numbers.Quotient(i, one))
+	assert.Equal(t, two, elements.Numbers.Quotient(one, half))
+	assert.Equal(t, one, elements.Numbers.Quotient(half, half))
 
-	assert.Equal(t, zero, elements.Numbers.Exponential(zero, i))
-	assert.Equal(t, one, elements.Numbers.Exponential(one, i))
-	assert.Equal(t, infinity, elements.Numbers.Exponential(infinity, i))
+	//	z ^ zero => one           {by definition}
+	assert.Equal(t, one, elements.Numbers.Power(-i, zero))
+	assert.Equal(t, one, elements.Numbers.Power(-one, zero))
+	assert.Equal(t, one, elements.Numbers.Power(zero, zero))
+	assert.Equal(t, one, elements.Numbers.Power(one, zero))
+	assert.Equal(t, one, elements.Numbers.Power(i, zero))
+	assert.Equal(t, one, elements.Numbers.Power(infinity, zero))
+	assert.True(t, elements.Numbers.Power(undefined, zero).IsUndefined())
 
-	assert.Equal(t, one, elements.Numbers.Exponential(-one, zero))
-	assert.Equal(t, -one, elements.Numbers.Exponential(-one, one))
-	assert.True(t, elements.Numbers.Exponential(-one, infinity).IsUndefined())
+	//	zero ^ z => zero          {z != zero}
+	assert.Equal(t, zero, elements.Numbers.Power(zero, one))
+	assert.Equal(t, zero, elements.Numbers.Power(zero, i))
+	assert.Equal(t, zero, elements.Numbers.Power(zero, infinity))
+	assert.True(t, elements.Numbers.Power(zero, undefined).IsUndefined())
 
-	assert.Equal(t, one, elements.Numbers.Exponential(i, zero))
-	assert.Equal(t, i, elements.Numbers.Exponential(i, one))
-	assert.True(t, elements.Numbers.Exponential(i, infinity).IsUndefined())
+	//	z ^ infinity => zero      {|z| < one}
+	//	z ^ infinity => one       {|z| = one}
+	//	z ^ infinity => infinity  {|z| > one}
+	assert.Equal(t, infinity, elements.Numbers.Power(-two, infinity))
+	assert.Equal(t, one, elements.Numbers.Power(-i, infinity))
+	assert.Equal(t, one, elements.Numbers.Power(-one, infinity))
+	assert.Equal(t, zero, elements.Numbers.Power(-half, infinity))
+	assert.Equal(t, zero, elements.Numbers.Power(half, infinity))
+	assert.Equal(t, one, elements.Numbers.Power(one, infinity))
+	assert.Equal(t, one, elements.Numbers.Power(i, infinity))
+	assert.Equal(t, infinity, elements.Numbers.Power(two, infinity))
 
-	assert.Equal(t, one, elements.Numbers.Exponential(-i, zero))
-	assert.Equal(t, -i, elements.Numbers.Exponential(-i, one))
-	assert.True(t, elements.Numbers.Exponential(-i, infinity).IsUndefined())
+	//	infinity ^ z => infinity  {z != zero}
+	assert.Equal(t, one, elements.Numbers.Power(infinity, zero))
+	assert.Equal(t, infinity, elements.Numbers.Power(infinity, one))
+	assert.Equal(t, infinity, elements.Numbers.Power(infinity, i))
+	assert.Equal(t, infinity, elements.Numbers.Power(infinity, infinity))
+	assert.True(t, elements.Numbers.Power(infinity, undefined).IsUndefined())
 
-	assert.Equal(t, zero, elements.Numbers.Logarithm(zero, i))
+	//	one ^ z => one
+	assert.Equal(t, one, elements.Numbers.Power(one, one))
+	assert.Equal(t, one, elements.Numbers.Power(one, i))
+	assert.Equal(t, one, elements.Numbers.Power(one, -one))
+	assert.Equal(t, one, elements.Numbers.Power(one, -i))
+
+	//	log(zero, z)
 	assert.True(t, elements.Numbers.Logarithm(zero, zero).IsUndefined())
+	assert.Equal(t, zero, elements.Numbers.Logarithm(zero, i))
 	assert.Equal(t, zero, elements.Numbers.Logarithm(zero, one))
 	assert.True(t, elements.Numbers.Logarithm(zero, infinity).IsUndefined())
+
+	//	log(one, z)
 	assert.Equal(t, infinity, elements.Numbers.Logarithm(one, zero))
 	assert.True(t, elements.Numbers.Logarithm(one, one).IsUndefined())
 	assert.Equal(t, infinity, elements.Numbers.Logarithm(one, infinity))
+
+	//	log(infinity, z)
 	assert.True(t, elements.Numbers.Logarithm(infinity, zero).IsUndefined())
 	assert.Equal(t, zero, elements.Numbers.Logarithm(infinity, one))
 	assert.True(t, elements.Numbers.Logarithm(infinity, infinity).IsUndefined())

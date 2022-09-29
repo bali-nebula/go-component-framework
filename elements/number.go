@@ -27,7 +27,7 @@ import (
 // complex plane. There is only one value for zero and one value for infinity.
 // This simplifies a lot of the mathematical operations:
 //
-//	z + zero => zero
+//	z + zero => z
 //	z + infinity => infinity
 //
 //	z - infinity => infinity  {z != infinity}
@@ -42,13 +42,12 @@ import (
 //	z / infinity => zero      {z != infinity}
 //	infinity / z => infinity  {z != infinity}
 //
-//	z ^ zero => one           {definition}
+//	z ^ zero => one           {by definition}
 //	zero ^ z => zero          {z != zero}
 //
-//	one ^ z => one
-//	z ^ one => z
-//
-//	z ^ infinity => infinity  {z != zero}
+//	z ^ infinity => zero      {|z| < one}
+//	z ^ infinity => one       {|z| = one}
+//	z ^ infinity => infinity  {|z| > one}
 //	infinity ^ z => infinity  {z != zero}
 //
 // This leaves only the following operations undefined:
@@ -57,9 +56,6 @@ import (
 //	zero * infinity => undefined
 //	zero / zero => undefined
 //	infinity / infinity => undefined
-//	-one ^ z => undefined       {z != one}
-//	-i ^ z => undefined       {z != one}
-//	+i ^ z => undefined       {z != one}
 //
 // The resulting number system is easier to use for most applications. For
 // numerical analysis the ANSI plus and minus zero values are often used as a
@@ -78,17 +74,16 @@ func NumberFromComplex(v complex128) Number {
 		// Normalize any NaN's mixed with valid numbers.
 		return Undefined
 	default:
-		// Normalize real or imaginary negative zeros.
-		var r = real(v)
-		var i = imag(v)
-		if r == 0 {
-			v = complex(0, i)
-		}
-		if i == 0 {
-			v = complex(r, 0)
-		}
-		return Number(v)
+		// Lock onto 0, -1, 1, -i, i, and ∞ if necessary.
+		var r = lockMagnitude(real(v))
+		var i = lockMagnitude(imag(v))
+		return Number(complex(r, i))
 	}
+}
+
+func NumberFromPolar(m float64, p Angle) Number {
+	var v = cmplx.Rect(m, float64(p))
+	return NumberFromComplex(v)
 }
 
 // This constructor attempts to create a new number from the specified formatted
@@ -198,7 +193,7 @@ func (v Number) AsPolar() string {
 		return "undefined"
 	}
 	var magnitude, phase = cmplx.Polar(complex128(v))
-	var realPart = floatToString(magnitude)
+	var realPart = floatToString(lockMagnitude(magnitude))
 	var imagPart = AngleFromFloat(phase).AsString() + "i"
 	return "(" + realPart + "e^" + imagPart + ")"
 }
@@ -230,12 +225,12 @@ func (v Number) GetImaginary() float64 {
 
 // This method returns the magnitude of this complex component.
 func (v Number) GetMagnitude() float64 {
-	return cmplx.Abs(complex128(v))
+	return lockMagnitude(cmplx.Abs(complex128(v)))
 }
 
 // This method returns the phase angle of this complex component.
 func (v Number) GetPhase() Angle {
-	return Angle(cmplx.Phase(complex128(v)))
+	return AngleFromFloat(cmplx.Phase(complex128(v)))
 }
 
 // POLARIZED INTERFACE
@@ -309,6 +304,9 @@ func (l *numbers) Conjugate(number Number) Number {
 // This library function returns the product of the specified numbers.
 func (l *numbers) Product(first, second Number) Number {
 	switch {
+	case first.IsUndefined() || second.IsUndefined():
+		// Any undefined arguments result in an undefined result.
+		return Undefined
 	case first.IsInfinite() && !second.IsZero():
 		// Infinity times anything other than zero is infinite.
 		return Infinity
@@ -331,42 +329,44 @@ func (l *numbers) Remainder(first, second Number) Number {
 	var p1 = cmplx.Phase(complex128(first))
 	var m2 = cmplx.Abs(complex128(second))
 	var p2 = cmplx.Phase(complex128(second))
-	var magnitude = math.Remainder(m1, m2)
-	var phase = p2 - p1
-	var result = cmplx.Rect(magnitude, phase)
-	return NumberFromComplex(result)
+	var magnitude = lockMagnitude(math.Remainder(m1, m2))
+	var phase = AngleFromFloat(p2 - p1)
+	return NumberFromPolar(magnitude, phase)
 }
 
 // This library function returns the result of raising the specified base to the
-// specified power.
-func (l *numbers) Exponential(base, power Number) Number {
+// specified exponent.
+func (l *numbers) Power(base, exponent Number) Number {
 	switch {
-	case base.IsUndefined() || power.IsUndefined():
-		// Undefined values always result in undefined results.
+	case base.IsUndefined() || exponent.IsUndefined():
+		// Any undefined arguments result in an undefined result.
 		return Undefined
-	case power.IsZero():
+	case exponent.IsZero():
 		// Anything to the zero power is 1 by definition.
 		return One
-	case base == One:
-		// One to any power is still one.
-		return One
-	case power == One:
-		// Anything to the first power is stays the same.
-		return base
-	case base.GetMagnitude() == 1:
-		// The phase for any other magnitude of one is undefined.
-		return Undefined
 	case base.IsZero():
 		// Zero to any power other than zero is still zero.
 		return Zero
 	case base.IsInfinite():
 		// Infinity to any power other than zero is infinite.
 		return Infinity
-	case power.IsInfinite():
-		// Anything other than zero to an infinite power is infinite.
-		return Infinity
+	case exponent.IsInfinite():
+		var magnitude = base.GetMagnitude()
+		switch {
+		case magnitude < 1:
+			// A magnitude less than one to an infinite power is zero.
+			return Zero
+		case magnitude == 1:
+			// A magnitude equal to one to an infinite power is one.
+			return One
+		case magnitude > 1:
+			// A magnitude greater than one to an infinite power is infinite.
+			return Infinity
+		default:
+			panic(fmt.Sprintf("An impossible magnitude was encountered: %v", magnitude))
+		}
 	default:
-		return NumberFromComplex(cmplx.Pow(complex128(base), complex128(power)))
+		return NumberFromComplex(cmplx.Pow(complex128(base), complex128(exponent)))
 	}
 }
 
@@ -447,7 +447,7 @@ func stringToNumber(v string) (complex128, bool) {
 			}
 			var match = matches[6][:len(matches[6])-1] // Strip off the trailing "i".
 			phasePart, ok = AngleFromString(match)
-			number = cmplx.Rect(realPart, float64(phasePart))
+			number = complex128(NumberFromPolar(realPart, phasePart))
 		}
 	default:
 		// The value is pure real.
@@ -517,4 +517,24 @@ func floatToString(v float64) string {
 		value = strconv.FormatFloat(v, 'G', -1, 64)
 	}
 	return value
+}
+
+// This function uses the single precision floating point range to lock a double
+// precision magnitude onto 0, 1, -1, or ∞ if the magnitude falls outside the
+// single precision range for these values. Otherwise, the magnitude is returned
+// unchanged.
+func lockMagnitude(v float64) float64 {
+	var v32 float32 = float32(v)
+	switch {
+	case math.Abs(v) <= 1.2246467991473515E-16:
+		return 0
+	case v32 == -1:
+		return -1
+	case v32 == 1:
+		return 1
+	case math.IsInf(v, 0):
+		return math.Inf(1)
+	default:
+		return v
+	}
 }
