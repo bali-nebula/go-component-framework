@@ -131,19 +131,19 @@ func (l *angles) Cosine(angle Angle) float64 {
 	case 0.0:
 		return 1.0
 	case math.Pi * 0.25:
-		return math.Sqrt2 / 2.0
+		return 0.5 * math.Sqrt2
 	case math.Pi * 0.5:
 		return 0.0
 	case math.Pi * 0.75:
-		return -math.Sqrt2 / 2.0
+		return -0.5 * math.Sqrt2
 	case math.Pi:
 		return -1.0
 	case math.Pi * 1.25:
-		return -math.Sqrt2 / 2.0
+		return -0.5 * math.Sqrt2
 	case math.Pi * 1.5:
 		return 0.0
 	case math.Pi * 1.75:
-		return math.Sqrt2 / 2.0
+		return 0.5 * math.Sqrt2
 	default:
 		return math.Cos(float64(angle))
 	}
@@ -161,19 +161,19 @@ func (l *angles) Sine(angle Angle) float64 {
 	case 0.0:
 		return 0.0
 	case math.Pi * 0.25:
-		return math.Sqrt2 / 2.0
+		return 0.5 * math.Sqrt2
 	case math.Pi * 0.5:
 		return 1.0
 	case math.Pi * 0.75:
-		return math.Sqrt2 / 2.0
+		return 0.5 * math.Sqrt2
 	case math.Pi:
 		return 0.0
 	case math.Pi * 1.25:
-		return -math.Sqrt2 / 2.0
+		return -0.5 * math.Sqrt2
 	case math.Pi * 1.5:
 		return -1.0
 	case math.Pi * 1.75:
-		return -math.Sqrt2 / 2.0
+		return -0.5 * math.Sqrt2
 	default:
 		return math.Sin(float64(angle))
 	}

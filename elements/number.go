@@ -30,25 +30,34 @@ import (
 //	z + zero => z
 //	z + infinity => infinity
 //
-//	z - infinity => infinity  {z != infinity}
-//	infinity - z => infinity  {z != infinity}
+//	z - infinity => infinity     {z != infinity}
+//	infinity - z => infinity     {z != infinity}
 //
-//	z * zero => zero          {z != infinity}
-//	z * infinity => infinity  {z != zero}
+//	z * zero => zero             {z != infinity}
+//	z * infinity => infinity     {z != zero}
 //
-//	zero / z => zero          {z != zero}
-//	z / zero => infinity      {z != zero}
+//	z / zero => infinity         {z != zero}
+//	zero / z => zero             {z != zero}
 //
-//	z / infinity => zero      {z != infinity}
-//	infinity / z => infinity  {z != infinity}
+//	z / infinity => zero         {z != infinity}
+//	infinity / z => infinity     {z != infinity}
 //
-//	z ^ zero => one           {by definition}
-//	zero ^ z => zero          {z != zero}
+//	z ^ zero => one              {by definition}
+//	zero ^ z => zero             {z != zero}
 //
-//	z ^ infinity => zero      {|z| < one}
-//	z ^ infinity => one       {|z| = one}
-//	z ^ infinity => infinity  {|z| > one}
-//	infinity ^ z => infinity  {z != zero}
+//	z ^ infinity => zero         {|z| < one}
+//	z ^ infinity => one          {|z| = one}
+//	z ^ infinity => infinity     {|z| > one}
+//	infinity ^ z => infinity     {z != zero}
+//
+//	log(z, zero) => infinity     {zero < z < infinity}
+//	log(zero, z) => zero         {zero < z < infinity}
+//
+//	log(z, one) => zero          {zero < z}
+//	log(one, z) => zero          {zero < z}
+//
+//	log(z, infinity) => infinity {zero < z < infinity}
+//	log(infinity, z) => zero     {zero < z < infinity}
 //
 // This leaves only the following operations undefined:
 //
@@ -56,6 +65,10 @@ import (
 //	zero * infinity => undefined
 //	zero / zero => undefined
 //	infinity / infinity => undefined
+//	log(zero, zero) => undefined
+//	log(zero, infinity) => undefined
+//	log(infinity, zero) => undefined
+//	log(infinity, infinity) => undefined
 //
 // The resulting number system is easier to use for most applications. For
 // numerical analysis the ANSI plus and minus zero values are often used as a
