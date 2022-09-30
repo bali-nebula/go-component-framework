@@ -451,21 +451,24 @@ func TestNumbersLibrary(t *testing.T) {
 	assert.Equal(t, one, elements.Numbers.Power(one, -one))
 	assert.Equal(t, one, elements.Numbers.Power(one, -i))
 
-	//	log(zero, z)
+	//	log(zero, z) => zero
 	assert.True(t, elements.Numbers.Logarithm(zero, zero).IsUndefined())
 	assert.Equal(t, zero, elements.Numbers.Logarithm(zero, i))
 	assert.Equal(t, zero, elements.Numbers.Logarithm(zero, one))
 	assert.True(t, elements.Numbers.Logarithm(zero, infinity).IsUndefined())
+	assert.True(t, elements.Numbers.Logarithm(zero, undefined).IsUndefined())
 
-	//	log(one, z)
+	//	log(one, z) => infinity
 	assert.Equal(t, infinity, elements.Numbers.Logarithm(one, zero))
 	assert.True(t, elements.Numbers.Logarithm(one, one).IsUndefined())
 	assert.Equal(t, infinity, elements.Numbers.Logarithm(one, infinity))
+	assert.True(t, elements.Numbers.Logarithm(one, undefined).IsUndefined())
 
-	//	log(infinity, z)
+	//	log(infinity, z) => zero
 	assert.True(t, elements.Numbers.Logarithm(infinity, zero).IsUndefined())
 	assert.Equal(t, zero, elements.Numbers.Logarithm(infinity, one))
 	assert.True(t, elements.Numbers.Logarithm(infinity, infinity).IsUndefined())
+	assert.True(t, elements.Numbers.Logarithm(infinity, undefined).IsUndefined())
 }
 
 var numbers = []string{
