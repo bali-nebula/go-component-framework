@@ -19,7 +19,12 @@ import (
 )
 
 // This constructor creates a new scanner initialized with the specified array
-// of bytes.
+// of bytes. The scanner will scan in tokens matching Bali Document Notation™ as
+// defined in the language specification:
+//
+//	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
+//
+// All token types in the specification are shown in UPPERCASE.
 func Scanner(source []byte, tokens chan token) *scanner {
 	v := &scanner{source: source, tokens: tokens}
 	go v.scanTokens() // Start scanning in the background.
@@ -203,29 +208,6 @@ func (v *scanner) emitError(message string, args ...any) tokenType {
 	return tType
 }
 
-// This method adds an EOF token with the current token information to the token
-// channel. It returns true if an EOF token was found.
-func (v *scanner) foundEOF() bool {
-	if v.current == len(v.source) {
-		// Can't call v.acceptToken() here since EOF wasn't a rune.
-		v.emitToken(tokenEOF)
-		return true
-	}
-	return false
-}
-
-// This method adds an EOL token with the current token information to the token
-// channel. It returns true if an EOL token was found.
-func (v *scanner) foundEOL() bool {
-	s := v.source[v.current:]
-	if bytes.HasPrefix(s, eol) {
-		v.acceptToken("\n")
-		v.emitToken(tokenEOL)
-		return true
-	}
-	return false
-}
-
 // This method adds an angle element token with the current token information to
 // the token channel. It returns true if an angle token was found.
 func (v *scanner) foundAngle() bool {
@@ -278,6 +260,19 @@ func (v *scanner) foundComment() bool {
 	return false
 }
 
+// This method adds a delimiter token with the current token information to the
+// token channel. It returns true if a delimiter token was found.
+func (v *scanner) foundDelimiter() bool {
+	s := v.source[v.current:]
+	matches := abstractions.ScanDelimiter(s)
+	if len(matches) > 0 {
+		v.acceptToken(matches[0])
+		v.emitToken(tokenDelimiter)
+		return true
+	}
+	return false
+}
+
 // This method adds a duration element token with the current token information
 // to the token channel. It returns true if a duration token was found.
 func (v *scanner) foundDuration() bool {
@@ -286,6 +281,29 @@ func (v *scanner) foundDuration() bool {
 	if len(matches) > 0 {
 		v.acceptToken(matches[0])
 		v.emitToken(tokenDuration)
+		return true
+	}
+	return false
+}
+
+// This method adds an EOF token with the current token information to the token
+// channel. It returns true if an EOF token was found.
+func (v *scanner) foundEOF() bool {
+	if v.current == len(v.source) {
+		// Can't call v.acceptToken() here since EOF wasn't a rune.
+		v.emitToken(tokenEOF)
+		return true
+	}
+	return false
+}
+
+// This method adds an EOL token with the current token information to the token
+// channel. It returns true if an EOL token was found.
+func (v *scanner) foundEOL() bool {
+	s := v.source[v.current:]
+	if bytes.HasPrefix(s, eol) {
+		v.acceptToken("\n")
+		v.emitToken(tokenEOL)
 		return true
 	}
 	return false
@@ -483,19 +501,6 @@ func (v *scanner) foundVersion() bool {
 	if len(matches) > 0 {
 		v.acceptToken(matches[0])
 		v.emitToken(tokenVersion)
-		return true
-	}
-	return false
-}
-
-// This method adds a delimiter token with the current token information to the
-// token channel. It returns true if a delimiter token was found.
-func (v *scanner) foundDelimiter() bool {
-	s := v.source[v.current:]
-	matches := abstractions.ScanDelimiter(s)
-	if len(matches) > 0 {
-		v.acceptToken(matches[0])
-		v.emitToken(tokenDelimiter)
 		return true
 	}
 	return false

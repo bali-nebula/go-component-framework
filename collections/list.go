@@ -297,10 +297,12 @@ func (v *list[T]) resize(length int) {
 	for length < capacity/4 {
 		capacity /= 2
 	}
-	// Adjust the capacity accordingly.
-	var items = make([]T, length, capacity)
-	copy(items, v.items)
-	v.items = items
+	if capacity != cap(v.items) {
+		// Adjust the capacity accordingly.
+		var items = make([]T, length, capacity)
+		copy(items, v.items)
+		v.items = items
+	}
 	v.items = v.items[:length] // A change the length of the slice.
 }
 

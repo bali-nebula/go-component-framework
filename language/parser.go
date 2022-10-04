@@ -21,7 +21,12 @@ import (
 // PARSER INTERFACE
 
 // This function parses the specified Bali Document Notation™ (BDN) source
-// string and returns the corresponding abstract syntax tree.
+// string and returns the corresponding abstract syntax tree as defined in
+// the language specification:
+//
+//	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
+//
+// All parser rules in the specification are shown in lowerCamelCase.
 func ParseSource(source string) (*Component, bool) {
 	var ok bool
 	var component *Component
@@ -159,24 +164,6 @@ func (v *parser) parseBinary() (strings.Binary, bool) {
 	return binary, true
 }
 
-// This method attempts to parse a component entity. It returns the component
-// entity and whether or not the component entity was successfully parsed.
-func (v *parser) parseEntity() (any, bool) {
-	var ok bool
-	var entity any
-	entity, ok = v.parseElement()
-	if !ok {
-		entity, ok = v.parseString()
-	}
-	if !ok {
-		entity, ok = v.parseCollection()
-	}
-	if !ok {
-		entity, ok = v.parseProcedure()
-	}
-	return entity, ok
-}
-
 // This method attempts to parse a boolean element. It returns the boolean
 // element and whether or not the boolean element was successfully parsed.
 func (v *parser) parseBoolean() (elements.Boolean, bool) {
@@ -252,19 +239,25 @@ func (v *parser) parseCatalog() (abstractions.CatalogLike[any, any], bool) {
 	return catalog, true
 }
 
-// This method attempts to parse a sequence of items. It returns the
-// sequence and whether or not the sequence was successfully parsed.
-func (v *parser) parseSequence() (any, bool) {
+// This method attempts to parse a collection of items. It returns the
+// collection and whether or not the collection was successfully parsed.
+func (v *parser) parseCollection() (any, bool) {
 	var ok bool
+	var bad *token
 	var sequence any
-	sequence, ok = v.parseCatalog()
+	_, ok = v.parseDelimiter("[")
 	if !ok {
-		sequence, ok = v.parseSlice()
+		return nil, false
 	}
+	sequence, ok = v.parseSequence()
 	if !ok {
-		sequence, ok = v.parseList() // The list must be last.
+		panic("Expected a sequence following the '[' character.")
 	}
-	return sequence, ok
+	bad, ok = v.parseDelimiter("]")
+	if !ok {
+		panic(fmt.Sprintf("Expected a ']' character following the sequence and received: %v", *bad))
+	}
+	return sequence, true
 }
 
 // This method attempts to parse a component. It returns the component and
@@ -370,6 +363,24 @@ func (v *parser) parseElement() (any, bool) {
 		element = nil
 	}
 	return element, ok
+}
+
+// This method attempts to parse a component entity. It returns the component
+// entity and whether or not the component entity was successfully parsed.
+func (v *parser) parseEntity() (any, bool) {
+	var ok bool
+	var entity any
+	entity, ok = v.parseElement()
+	if !ok {
+		entity, ok = v.parseString()
+	}
+	if !ok {
+		entity, ok = v.parseCollection()
+	}
+	if !ok {
+		entity, ok = v.parseProcedure()
+	}
+	return entity, ok
 }
 
 // This method attempts to parse the end-of-file (EOF) marker. It returns
@@ -603,23 +614,6 @@ func (v *parser) parseNumber() (elements.Number, bool) {
 	return number, true
 }
 
-// This method attempts to parse a pattern element. It returns the pattern
-// element and whether or not the pattern element was successfully parsed.
-func (v *parser) parsePattern() (elements.Pattern, bool) {
-	var ok bool
-	var pattern elements.Pattern
-	var token = v.nextToken()
-	if token.typ != tokenPattern {
-		v.backupOne()
-		return pattern, false
-	}
-	pattern, ok = elements.PatternFromString(token.val)
-	if !ok {
-		panic(fmt.Sprintf("An invalid pattern token was found: %v", token))
-	}
-	return pattern, true
-}
-
 // This method attempts to parse a parameter. It returns the parameter and
 // whether or not the parameter was successfully parsed.
 func (v *parser) parseParameter() (*Parameter, bool) {
@@ -690,6 +684,23 @@ func (v *parser) parseParameters() ([]*Parameter, bool) {
 		panic("Expected at least one parameter in the component context.")
 	}
 	return parameters, true
+}
+
+// This method attempts to parse a pattern element. It returns the pattern
+// element and whether or not the pattern element was successfully parsed.
+func (v *parser) parsePattern() (elements.Pattern, bool) {
+	var ok bool
+	var pattern elements.Pattern
+	var token = v.nextToken()
+	if token.typ != tokenPattern {
+		v.backupOne()
+		return pattern, false
+	}
+	pattern, ok = elements.PatternFromString(token.val)
+	if !ok {
+		panic(fmt.Sprintf("An invalid pattern token was found: %v", token))
+	}
+	return pattern, true
 }
 
 // This method attempts to parse a percentage element. It returns the percentage
@@ -775,6 +786,39 @@ func (v *parser) parseQuote() (strings.Quote, bool) {
 		panic(fmt.Sprintf("An invalid quote token was found: %v", token))
 	}
 	return quote, true
+}
+
+// This method attempts to parse a resource element. It returns the
+// resource element and whether or not the resource element was
+// successfully parsed.
+func (v *parser) parseResource() (elements.Resource, bool) {
+	var ok bool
+	var resource elements.Resource
+	var token = v.nextToken()
+	if token.typ != tokenResource {
+		v.backupOne()
+		return resource, false
+	}
+	resource, ok = elements.ResourceFromString(token.val)
+	if !ok {
+		panic(fmt.Sprintf("An invalid resource token was found: %v", token))
+	}
+	return resource, true
+}
+
+// This method attempts to parse a sequence of items. It returns the
+// sequence and whether or not the sequence was successfully parsed.
+func (v *parser) parseSequence() (any, bool) {
+	var ok bool
+	var sequence any
+	sequence, ok = v.parseCatalog()
+	if !ok {
+		sequence, ok = v.parseSlice()
+	}
+	if !ok {
+		sequence, ok = v.parseList() // The list must be last.
+	}
+	return sequence, ok
 }
 
 // This method attempts to parse a slice collection. It returns the slice
@@ -864,45 +908,6 @@ func (v *parser) parseStatements() ([]*Statement, bool) {
 		panic("Expected at least one statement in the component context.")
 	}
 	return statements, true
-}
-
-// This method attempts to parse a resource element. It returns the
-// resource element and whether or not the resource element was
-// successfully parsed.
-func (v *parser) parseResource() (elements.Resource, bool) {
-	var ok bool
-	var resource elements.Resource
-	var token = v.nextToken()
-	if token.typ != tokenResource {
-		v.backupOne()
-		return resource, false
-	}
-	resource, ok = elements.ResourceFromString(token.val)
-	if !ok {
-		panic(fmt.Sprintf("An invalid resource token was found: %v", token))
-	}
-	return resource, true
-}
-
-// This method attempts to parse a collection of items. It returns the
-// collection and whether or not the collection was successfully parsed.
-func (v *parser) parseCollection() (any, bool) {
-	var ok bool
-	var bad *token
-	var sequence any
-	_, ok = v.parseDelimiter("[")
-	if !ok {
-		return nil, false
-	}
-	sequence, ok = v.parseSequence()
-	if !ok {
-		panic("Expected a sequence following the '[' character.")
-	}
-	bad, ok = v.parseDelimiter("]")
-	if !ok {
-		panic(fmt.Sprintf("Expected a ']' character following the sequence and received: %v", *bad))
-	}
-	return sequence, true
 }
 
 // This method attempts to parse a string primitive. It returns the
