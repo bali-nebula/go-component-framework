@@ -222,7 +222,6 @@ var Grammar = map[string]string{
 	`,
 	"$VERSION":    `"v" ORDINAL {"." ORDINAL}`,
 	"$WEEKS":      `TSPAN "W"`,
-	"$WHITESPACE": `" " | "\t" | "\n" | "\r"`,
 	"$YEAR":       `[SIGN] ORDINAL`,
 	"$ZERO":       `"0"`,
 }
