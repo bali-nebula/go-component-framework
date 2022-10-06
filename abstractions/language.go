@@ -24,23 +24,6 @@ type Lexical interface {
 
 // ANGLE ELEMENT SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// an angle element. It is useful to include in scanning error messages.
-const AngleSyntax = `
-	$E: "e"
-	$PI: "pi" | "π"
-	$PHI: "phi" | "φ"
-	$TAU: "tau" | "τ"
-	$SIGN: [+-]
-	$ZERO: "0"
-	$ORDINAL: [1-9][0-9]*
-	$FRACTION: .[0-9]+
-	$EXPONENT: "E" SIGN? ORDINAL
-	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
-	$ANGLE: "~" (REAL | ZERO)
-`
-
 // These constants are used to form a regular expression for valid angle
 // entities.
 const (
@@ -70,14 +53,6 @@ func ScanAngle(v []byte) []string {
 
 // BINARY STRING SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a binary string. It is useful to include in scanning error messages.
-const BinarySyntax = `
-	$WHITESPACE: \s{Separator}
-	$BASE64: [A-Za-z0-9+/]
-	$BINARY: "'" (BASE64 | WHITESPACE)* "'"
-`
-
 // These constants are used to form a regular expression for valid binary
 // strings.
 const (
@@ -98,14 +73,6 @@ func ScanBinary(v []byte) []string {
 
 // BOOLEAN ELEMENT SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a boolean element. It is useful to include in scanning error messages.
-const BooleanSyntax = `
-	$FALSE: "false"
-	$TRUE: "true"
-	$BOOLEAN: FALSE | TRUE
-`
-
 // These constants are used to form a regular expression for valid boolean
 // entities.
 const (
@@ -123,15 +90,6 @@ func ScanBoolean(v []byte) []string {
 }
 
 // COMMENT SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a comment. It is useful to include in scanning error messages.
-const CommentSyntax = `
-	$EOL: "\n"
-	$TAB: "\t"
-	$CHARACTER: .*
-	$COMMENT: "!>" EOL (COMMENT | CHARACTER)*? EOL TAB* "<!"
-`
 
 // This function returns for the specified string an array of the matching
 // subgroups for a commment. The first item in the array is the entire matched
@@ -175,12 +133,6 @@ func ScanComment(v []byte) []string {
 
 // DELIMITER SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a delimiter. It is useful to include in scanning error messages.
-const DelimiterSyntax = `
-	$DELIMITER: "&" | "(" | ... | "}"
-`
-
 // This function returns for the specified string an array of the matching
 // subgroups for a delimiter. The first item in the array is the entire
 // matched string.
@@ -195,16 +147,6 @@ func ScanDelimiter(v []byte) []string {
 }
 
 // DURATION ELEMENT SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a duration element. It is useful to include in scanning error messages.
-const DurationSyntax = `
-	$TSPAN: ZERO | ORDINAL FRACTION?
-	$WEEKS: TSPAN "W"
-	$DATES: (TSPAN "Y")? (TSPAN "M")? (TSPAN "D")?
-	$TIMES: "T" (TSPAN "H")? (TSPAN "M")? (TSPAN "S")?
-	$DURATION: "~" SIGN? "P" (WEEKS | DATES TIMES?)
-`
 
 // These constants are used to form a regular expression for valid duration
 // entities.
@@ -228,14 +170,6 @@ func ScanDuration(v []byte) []string {
 
 // IDENTIFIER SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// an identifier. It is useful to include in scanning error messages.
-const IdentifierSyntax = `
-	$LETTER: \p{Letter}
-	$DIGIT: \p{Number}
-	$IDENTIFIER: LETTER (LETTER | DIGIT)*
-`
-
 // These constants are used to form a regular expression for valid identifiers.
 const (
 	letter     = `\pL` // All unicode letters and connectors like underscores.
@@ -255,12 +189,6 @@ func ScanIdentifier(v []byte) []string {
 
 // KEYWORD SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a keyword. It is useful to include in scanning error messages.
-const KeywordSyntax = `
-	$KEYWORD: "accept" | "any" | ... | "with"
-`
-
 // This function returns for the specified string an array of the matching
 // subgroups for a keyword. The first item in the array is the entire
 // matched string.
@@ -275,21 +203,6 @@ func ScanKeyword(v []byte) []string {
 }
 
 // MOMENT ELEMENT SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a moment element. It is useful to include in scanning error messages.
-const MomentSyntax = `
-	$SIGN: [+-]
-	$ORDINAL: [1-9][0-9]*
-	$YEAR: SIGN? ORDINAL
-	$MONTH: [0][1-9] | [1][012]
-	$DAY: [012][1-9] | [3][01]
-	$HOUR: [01][0-9] | [2][0-3]
-	$MINUTE: [0-5][0-9]
-	$SECOND: [0-5][0-9] | [6][01]
-	$FRACTION: .[0-9]+
-	$MOMENT: "<" YEAR ("-" MONTH ("-" DAY ("T" HOUR (":" MINUTE (":" SECOND FRACTION?)?)?)?)?)? ">"
-`
 
 // These constants are used to form a regular expression for valid moment
 // entities.
@@ -316,16 +229,6 @@ func ScanMoment(v []byte) []string {
 
 // MONIKER STRING SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a moniker string. It is useful to include in scanning error messages.
-const MonikerSyntax = `
-	$LETTER: \p{Letter}
-	$DIGIT: \p(Number}
-	$SEPARATOR: [-+.]
-	$NAME: LETTER (SEPARATOR? (LETTER | DIGIT))*
-	$MONIKER: ("/" NAME)+
-`
-
 // These constants are used to form a regular expression for valid moniker strings.
 const (
 	separator = `[-+.]`
@@ -344,15 +247,6 @@ func ScanMoniker(v []byte) []string {
 }
 
 // NARRATIVE STRING SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a narrative string. It is useful to include in scanning error messages.
-const NarrativeSyntax = `
-	$EOL: "\n"
-	$TAB: "\t"
-	$CHARACTER: .*
-	$NARRATIVE: '">' EOL (NARRATIVE | CHARACTER)* EOL TAB* '<"'
-`
 
 // This function returns for the specified string an array of the matching
 // subgroups for a narrative string. The first item in the array is the entire
@@ -396,13 +290,6 @@ func ScanNarrative(v []byte) []string {
 
 // NOTE SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a note. It is useful to include in scanning error messages.
-const NoteSyntax = `
-	$EOL: "\n"
-	$NOTE: "! " (!EOL)*
-`
-
 // These constants are used to form a regular expression for valid notes.
 const (
 	note = `! [^\n]*`
@@ -419,28 +306,6 @@ func ScanNote(v []byte) []string {
 }
 
 // NUMBER ELEMENT SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a number element. It is useful to include in scanning error messages.
-const NumberSyntax = `
-	$E: "e"
-	$PI: "pi" | "π"
-	$PHI: "phi" | "φ"
-	$TAU: "tau" | "τ"
-	$SIGN: [+-]
-	$ZERO: "0"
-	$ORDINAL: [1-9][0-9]*
-	$FRACTION: .[0-9]+
-	$EXPONENT: "E" SIGN? ORDINAL
-	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
-	$IMAGINARY: (SIGN | REAL)? "i"
-	$INFINITY: "infinity" | "∞"
-	$UNDEFINED: "undefined"
-	$RECTANGULAR: REAL ", " IMAGINARY
-	$POLAR: REAL "e^" ANGLE "i"
-	$NUMBER: IMAGINARY | REAL | ZERO | INFINITY | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"
-`
 
 // These constants are used to form a regular expression for valid number
 // entities.
@@ -466,19 +331,6 @@ func ScanNumber(v []byte) []string {
 
 // PATTERN ELEMENT SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a pattern element. It is useful to include in scanning error messages.
-const PatternSyntax = `
-	$BASE16: [0-9a-f]
-	$UNICODE: "u" BASE16{4}
-	$ESCAPE: "\" (UNICODE | [bfrnt\])
-	$RUNE: ESCAPE | '\"' | !["\r\n]
-	$REGEX: '"' RUNE+ '"?'
-	$NONE: "none"
-	$ANY: "any"
-	$PATTERN: NONE | REGEX | ANY
-`
-
 // These constants are used to form a regular expression for valid pattern
 // entities.
 const (
@@ -502,23 +354,6 @@ func ScanPattern(v []byte) []string {
 
 // PERCENTAGE ELEMENT SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a percentage element. It is useful to include in scanning error messages.
-const PercentageSyntax = `
-	$E: "e"
-	$PI: "pi" | "π"
-	$PHI: "phi" | "φ"
-	$TAU: "tau" | "τ"
-	$SIGN: [+-]
-	$ZERO: "0"
-	$ORDINAL: [1-9][0-9]*
-	$FRACTION: .[0-9]+
-	$EXPONENT: "E" SIGN? ORDINAL
-	$SCALAR: (ORDINAL FRACTION? | ZERO FRACTION) EXPONENT?
-	$REAL: SIGN? (E | PI | PHI | TAU | SCALAR)
-	$PERCENTAGE: (REAL | ZERO) "%"
-`
-
 // These constants are used to form a regular expression for valid percentage
 // entities.
 const (
@@ -536,14 +371,6 @@ func ScanPercentage(v []byte) []string {
 }
 
 // PROBABILITY ELEMENT SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a probability element. It is useful to include in scanning error messages.
-const ProbabilitySyntax = `
-	$FRACTION: .[0-9]+
-	$ONE: "1."
-	$PROBABILITY: FRACTION | ONE
-`
 
 // These constants are used to form a regular expression for valid probability
 // entities.
@@ -563,16 +390,6 @@ func ScanProbability(v []byte) []string {
 
 // QUOTE STRING SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a quoted string. It is useful to include in scanning error messages.
-const QuoteSyntax = `
-	$BASE16: [0-9a-f]
-	$UNICODE: "u" BASE16{4}
-	$ESCAPE: "\" (UNICODE | [bfrnt\])
-	$RUNE: ESCAPE | '\"' | !["\r\n]
-	$QUOTE: '"' RUNE* '"'
-`
-
 // These constants are used to form a regular expression for valid quoted
 // strings.
 const (
@@ -590,17 +407,6 @@ func ScanQuote(v []byte) []string {
 }
 
 // RESOURCE ELEMENT SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a resource element. It is useful to include in scanning error messages.
-const ResourceSyntax = `
-	$SCHEME: [a-zA-Z][0-9a-zA-Z+-.]*
-	$AUTHORITY: (![/])+
-	$PATH: (![?#>])*
-	$QUERY: (![#>])*
-	$FRAGMENT: (![>])+
-	$RESOURCE: "<" SCHEME ":" ("//" AUTHORITY)? "/" PATH ("?" QUERY)? ("#" FRAGMENT)? ">"
-`
 
 // These constants are used to form a regular expression for valid resource
 // entities.
@@ -631,16 +437,6 @@ func ScanResource(v []byte) []string {
 
 // SYMBOL STRING SYNTAX
 
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a symbol string. It is useful to include in scanning error messages.
-const SymbolSyntax = `
-	$LETTER: \p{Letter}
-	$DIGIT: \p(Number}
-	$IDENTIFIER: LETTER (LETTER | DIGIT)*
-	$ORDINAL: [1-9][0-9]*
-	$SYMBOL: "$" IDENTIFIER+ ("-" ORDINAL)?
-`
-
 // These constants are used to form a regular expression for valid symbol
 // strings.
 const (
@@ -658,13 +454,6 @@ func ScanSymbol(v []byte) []string {
 }
 
 // TAG ELEMENT SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a tag element. It is useful to include in scanning error messages.
-const TagSyntax = `
-	$BASE32: [0-9A-DF-HJ-NP-TV-Z]
-	$TAG: "#" BASE32+
-`
 
 // These constants are used to form a regular expression for valid tag
 // entities.
@@ -684,13 +473,6 @@ func ScanTag(v []byte) []string {
 }
 
 // VERSION STRING SYNTAX
-
-// This raw string captures the pseudo-grammar used to define the syntax of
-// a version string. It is useful to include in scanning error messages.
-const VersionSyntax = `
-	$ORDINAL: [1-9][0-9]*
-	$VERSION: "v" ORDINAL ("." ORDINAL)*
-`
 
 // These constants are used to form a regular expression for valid version
 // strings.

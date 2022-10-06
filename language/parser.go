@@ -260,12 +260,25 @@ func (v *parser) parseCollection() (any, bool) {
 	return sequence, true
 }
 
+// This method attempts to parse a comment. It returns a string containing the
+// comment and whether or not the comment was successfully parsed.
+func (v *parser) parseComment() (string, bool) {
+	var comment string
+	var token = v.nextToken()
+	if token.typ != tokenComment {
+		v.backupOne()
+		return comment, false
+	}
+	comment = token.val
+	return comment, true
+}
+
 // This method attempts to parse a component. It returns the component and
 // whether or not the component was successfully parsed.
 func (v *parser) parseComponent() (*Component, bool) {
+	var component *Component
 	var context []*Parameter
 	var note string
-	var component *Component
 	var entity, ok = v.parseEntity()
 	if ok {
 		context, _ = v.parseContext() // The context is optional.
@@ -305,6 +318,18 @@ func (v *parser) parseDelimiter(delimiter string) (*token, bool) {
 		return token, false
 	}
 	return token, true
+}
+
+// This method attempts to parse documentation. It returns the documentation and
+// whether or not the documentation was successfully parsed.
+func (v *parser) parseDocumentation() (string, bool) {
+	var ok bool
+	var documentation string
+	documentation, ok = v.parseNote()
+	if !ok {
+		documentation, ok = v.parseComment()
+	}
+	return documentation, ok
 }
 
 // This method attempts to parse a duration element. It returns the duration
@@ -357,6 +382,9 @@ func (v *parser) parseElement() (any, bool) {
 		element, ok = v.parseResource()
 	}
 	if !ok {
+		element, ok = v.parseSymbol()
+	}
+	if !ok {
 		element, ok = v.parseTag()
 	}
 	if !ok {
@@ -403,6 +431,43 @@ func (v *parser) parseEOL() (*token, bool) {
 		return token, false
 	}
 	return token, true
+}
+
+// This method attempts to parse an evaluate clause. It returns the evaluate
+// clause and whether or not the evaluate clause was successfully parsed.
+func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
+	var ok bool
+	var t *token
+	var recipient any
+	var operator string
+	var expression any
+	var evaluateClause *EvaluateClause
+	recipient, ok = v.parseRecipient()
+	if ok {
+		t, ok = v.parseDelimiter(":=")
+		if !ok {
+			t, ok = v.parseDelimiter("+=")
+		}
+		if !ok {
+			t, ok = v.parseDelimiter("-=")
+		}
+		if !ok {
+			t, ok = v.parseDelimiter("*=")
+		}
+		if !ok {
+			t, ok = v.parseDelimiter("/=")
+		}
+		if !ok {
+			panic(fmt.Sprintf("Expected an assignment operator and received: %v", *t))
+		}
+		operator = t.val
+	}
+	expression, ok = v.parseExpression()
+	if !ok {
+		return evaluateClause, false
+	}
+	evaluateClause = &EvaluateClause{recipient, operator, expression}
+	return evaluateClause, true
 }
 
 // This method attempts to parse an expression. It returns the expression and
@@ -531,6 +596,68 @@ func (v *parser) parseList() (abstractions.ListLike[any], bool) {
 		}
 	}
 	return list, true
+}
+
+// This method attempts to parse a main clause. It returns the main clause and
+// whether or not the main clause was successfully parsed.
+func (v *parser) parseMainClause() (any, bool) {
+	// TODO: Reorder these based on how often each type occurs.
+	var ok bool
+	var mainClause any
+	mainClause, ok = v.parseOnClause()
+	if !ok {
+		mainClause, ok = v.parseIfClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseWithClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseWhileClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseContinueClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseBreakClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseReturnClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseThrowClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseSaveClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseDiscardClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseNotarizeClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseCheckoutClause()
+	}
+	if !ok {
+		mainClause, ok = v.parsePublishClause()
+	}
+	if !ok {
+		mainClause, ok = v.parsePostClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseRetrieveClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseAcceptClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseRejectClause()
+	}
+	if !ok {
+		// This clause should be check last as it is slower to fail.
+		mainClause, ok = v.parseEvaluateClause()
+	}
+	return mainClause, ok
 }
 
 // This method attempts to parse a moment element. It returns the moment
@@ -731,6 +858,7 @@ func (v *parser) parsePrimitive() (any, bool) {
 		primitive, ok = v.parseString()
 	}
 	if !ok {
+		// This must be explicitly set to nil since it is or type any.
 		primitive = nil
 	}
 	return primitive, ok
@@ -753,9 +881,10 @@ func (v *parser) parseProbability() (elements.Probability, bool) {
 
 // This method attempts to parse a procedure. It returns the procedure and
 // whether or not the procedure was successfully parsed.
-func (v *parser) parseProcedure() ([]*Statement, bool) {
+func (v *parser) parseProcedure() ([]any, bool) {
 	var ok bool
-	var statements []*Statement
+	var bad *token
+	var statements []any
 	_, ok = v.parseDelimiter("{")
 	if !ok {
 		return nil, false
@@ -764,9 +893,9 @@ func (v *parser) parseProcedure() ([]*Statement, bool) {
 	if !ok {
 		panic("Expected statements following the '{' character.")
 	}
-	_, ok = v.parseDelimiter("}")
+	bad, ok = v.parseDelimiter("}")
 	if !ok {
-		panic("Expected a '}' character following the statements.")
+		panic(fmt.Sprintf("Expected a '}' character following the statements and received: %v", *bad))
 	}
 	return statements, true
 }
@@ -816,6 +945,8 @@ func (v *parser) parseSequence() (any, bool) {
 		sequence, ok = v.parseSlice()
 	}
 	if !ok {
+		// The list must be attempted last since it may start with a component
+		// which cannot be put back as a single token.
 		sequence, ok = v.parseList() // The list must be last.
 	}
 	return sequence, ok
@@ -857,15 +988,22 @@ func (v *parser) parseSlice() (abstractions.SliceLike[any], bool) {
 func (v *parser) parseStatement() (*Statement, bool) {
 	var ok bool
 	var statement *Statement
+	var mainClause *MainClause
+	var handleClause *HandleClause
+	var mainClause, ok = v.parseMainClause()
+	if ok {
+		handleClause, _ = v.parseHandleClause() // The handle clause is optional.
+		statement = &Statement{mainClause, handleClause}
+	}
 	return statement, ok
 }
 
 // This method attempts to parse the statements within a procedure. It returns
 // an array of the statements and whether or not the statements were
 // successfully parsed.
-func (v *parser) parseStatements() ([]*Statement, bool) {
-	var statement *Statement
-	var statements []*Statement
+func (v *parser) parseStatements() ([]any, bool) {
+	var statement any
+	var statements []any
 	var _, ok = v.parseEOL()
 	if !ok {
 		// The statements are on a single line.
@@ -891,7 +1029,10 @@ func (v *parser) parseStatements() ([]*Statement, bool) {
 	}
 	// The statements are on separate lines.
 	for {
-		statement, ok = v.parseStatement()
+		statement, ok = v.parseDocumentation()
+		if !ok {
+			statement, ok = v.parseStatement()
+		}
 		if !ok {
 			// No more statements.
 			break
@@ -926,9 +1067,6 @@ func (v *parser) parseString() (any, bool) {
 	}
 	if !ok {
 		str, ok = v.parseQuote()
-	}
-	if !ok {
-		str, ok = v.parseSymbol()
 	}
 	if !ok {
 		str, ok = v.parseVersion()
@@ -990,6 +1128,7 @@ func (v *parser) parseValue() (any, bool) {
 		value, ok = v.parseIdentifier()
 	}
 	if !ok {
+		// This must be explicitly set to nil since it is or type any.
 		value = nil
 	}
 	return value, ok
