@@ -26,6 +26,7 @@ type Lexical interface {
 
 // These constants are used to form a regular expression for valid angle
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Angle
 const (
 	e        = `e`
@@ -56,6 +57,7 @@ func ScanAngle(v []byte) []string {
 
 // These constants are used to form a regular expression for valid binary
 // strings. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Binary
 const (
 	whitespace = `\pS` // All unicode whitespace characters.
@@ -77,6 +79,7 @@ func ScanBinary(v []byte) []string {
 
 // These constants are used to form a regular expression for valid boolean
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Boolean
 const (
 	boolean = `false|true`
@@ -153,6 +156,7 @@ func ScanDelimiter(v []byte) []string {
 
 // These constants are used to form a regular expression for valid duration
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Duration
 const (
 	tspan    = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
@@ -176,6 +180,7 @@ func ScanDuration(v []byte) []string {
 
 // These constants are used to form a regular expression for valid identifiers.
 // See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Identifier
 const (
 	letter     = `\pL` // All unicode letters and connectors like underscores.
@@ -212,6 +217,7 @@ func ScanKeyword(v []byte) []string {
 
 // These constants are used to form a regular expression for valid moment
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Moment
 const (
 	year   = sign + `?` + ordinal
@@ -238,6 +244,7 @@ func ScanMoment(v []byte) []string {
 
 // These constants are used to form a regular expression for valid moniker
 // strings. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Moniker
 const (
 	separator = `[-+.]`
@@ -301,6 +308,7 @@ func ScanNarrative(v []byte) []string {
 
 // These constants are used to form a regular expression for valid notes. See
 // the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Note
 const (
 	note = `! [^\n]*`
@@ -320,6 +328,7 @@ func ScanNote(v []byte) []string {
 
 // These constants are used to form a regular expression for valid number
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Number
 const (
 	infinity    = `infinity|∞`
@@ -345,6 +354,7 @@ func ScanNumber(v []byte) []string {
 
 // These constants are used to form a regular expression for valid pattern
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Pattern
 const (
 	base16  = `[0-9a-f]`
@@ -369,6 +379,7 @@ func ScanPattern(v []byte) []string {
 
 // These constants are used to form a regular expression for valid percentage
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Percentage
 const (
 	percentage = `(` + real + `|` + zero + `)%`
@@ -388,6 +399,7 @@ func ScanPercentage(v []byte) []string {
 
 // These constants are used to form a regular expression for valid probability
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Probability
 const (
 	probability = fraction + `|1\.`
@@ -407,6 +419,7 @@ func ScanProbability(v []byte) []string {
 
 // These constants are used to form a regular expression for valid quoted
 // strings. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Quote
 const (
 	quote = `"(` + roon + `*)"`
@@ -426,6 +439,7 @@ func ScanQuote(v []byte) []string {
 
 // These constants are used to form a regular expression for valid resource
 // entities. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Resource
 const (
 	scheme    = `[a-zA-Z][0-9a-zA-Z+-.]*`
@@ -456,6 +470,7 @@ func ScanResource(v []byte) []string {
 
 // These constants are used to form a regular expression for valid symbol
 // strings. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Symbol
 const (
 	symbol = `\$(` + identifier + `(?:-` + ordinal + `)?)`
@@ -475,6 +490,7 @@ func ScanSymbol(v []byte) []string {
 
 // These constants are used to form a regular expression for valid tag entities.
 // See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Tag
 const (
 	base32 = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
@@ -495,6 +511,7 @@ func ScanTag(v []byte) []string {
 
 // These constants are used to form a regular expression for valid version
 // strings. See the language specification for the exact grammar:
+//
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Version
 const (
 	version = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
