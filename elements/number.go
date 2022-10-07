@@ -539,7 +539,7 @@ func floatToString(v float64) string {
 func lockMagnitude(v float64) float64 {
 	var v32 float32 = float32(v)
 	switch {
-	case math.Abs(v) <= 1.2246467991473515E-16:
+	case math.Abs(v) <= 1.2246467991473515e-16:
 		return 0
 	case v32 == -1:
 		return -1

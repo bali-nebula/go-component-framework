@@ -105,10 +105,10 @@ type LIFO[T any] interface {
 // LIBRARY INTERFACES
 
 // This library interface defines the functions supported by all libraries that
-// can apply an elastic slice to another collection.
+// can apply an elastic range to another collection.
 type Spliceable[T any] interface {
-	Cut(collection StringLike[T], slice Elastic[T]) []T
-	Splice(collection ListLike[T], slice Elastic[T], items []T) []T
+	Cut(collection StringLike[T], rng Elastic[T]) []T
+	Splice(collection ListLike[T], rng Elastic[T], items []T) []T
 }
 
 // This library interface defines the functions supported by all libraries that
@@ -169,9 +169,9 @@ type SetLike[T any] interface {
 	Flexible[T]
 }
 
-// This interface consolidates all the interfaces supported by slice-like
+// This interface consolidates all the interfaces supported by range-like
 // collections.
-type SliceLike[T any] interface {
+type RangeLike[T any] interface {
 	Sequential[T]
 	Indexed[T]
 	Elastic[T]

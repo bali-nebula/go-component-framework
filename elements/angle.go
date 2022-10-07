@@ -246,13 +246,13 @@ func stringToAngle(v string) (float64, bool) {
 func lockPhase(v float64) float64 {
 	var v32 float32 = float32(v)
 	switch {
-	case math.Abs(v) <= 1.2246467991473515E-16:
+	case math.Abs(v) <= 1.2246467991473515e-16:
 		return 0
-	case v32 == float32(0.5 * math.Pi):
+	case v32 == float32(0.5*math.Pi):
 		return 0.5 * math.Pi
 	case v32 == float32(math.Pi):
 		return math.Pi
-	case v32 == float32(1.5 * math.Pi):
+	case v32 == float32(1.5*math.Pi):
 		return 1.5 * math.Pi
 	default:
 		return v

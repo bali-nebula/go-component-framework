@@ -204,7 +204,7 @@ func (v *parser) parseSequence() (any, bool) {
 	var sequence any
 	sequence, ok = v.parseCatalog()
 	if !ok {
-		sequence, ok = v.parseSlice()
+		sequence, ok = v.parseRange()
 	}
 	if !ok {
 		// The list must be attempted last since it may start with a component
@@ -214,9 +214,9 @@ func (v *parser) parseSequence() (any, bool) {
 	return sequence, ok
 }
 
-// This method attempts to parse a slice collection. It returns the slice
-// collection and whether or not the slice collection was successfully parsed.
-func (v *parser) parseSlice() (abstractions.SliceLike[any], bool) {
+// This method attempts to parse a range collection. It returns the range
+// collection and whether or not the range collection was successfully parsed.
+func (v *parser) parseRange() (abstractions.RangeLike[any], bool) {
 	var ok bool
 	var t *token
 	var first any
@@ -233,7 +233,7 @@ func (v *parser) parseSlice() (abstractions.SliceLike[any], bool) {
 		t, ok = v.parseDelimiter("..<")
 	}
 	if !ok {
-		// This is not a slice collection.
+		// This is not a range collection.
 		if first != nil {
 			v.backupOne() // Put back the Value token.
 		}
@@ -241,8 +241,8 @@ func (v *parser) parseSlice() (abstractions.SliceLike[any], bool) {
 	}
 	var connector = t.val
 	last, _ = v.parseValue() // The last value is optional.
-	var slice = collections.Slice(first, connector, last)
-	return slice, true
+	var rng = collections.Range(first, connector, last)
+	return rng, true
 }
 
 // This method attempts to parse a primitive value. It returns the primitive

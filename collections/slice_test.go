@@ -17,8 +17,8 @@ import (
 	"testing"
 )
 
-func TestSlicesWithIntegers(t *testing.T) {
-	var s = collections.Slice[int](3, "..", 7)
+func TestRangesWithIntegers(t *testing.T) {
+	var s = collections.Range[int](3, "..", 7)
 	assert.False(t, s.IsEmpty())
 	assert.Equal(t, 5, s.GetSize())
 	assert.Equal(t, 5, s.GetItem(3))
@@ -33,7 +33,7 @@ func TestSlicesWithIntegers(t *testing.T) {
 	iterator.ToEnd()
 	assert.Equal(t, 7, iterator.GetPrevious())
 
-	s = collections.Slice[int](3, "<..", 7)
+	s = collections.Range[int](3, "<..", 7)
 	assert.False(t, s.IsEmpty())
 	assert.Equal(t, 4, s.GetSize())
 	assert.Equal(t, 4, s.GetItem(1))
@@ -44,7 +44,7 @@ func TestSlicesWithIntegers(t *testing.T) {
 	assert.Equal(t, 0, s.GetIndex(8))
 	assert.Equal(t, []int{4, 5, 6, 7}, s.AsArray())
 
-	s = collections.Slice[int](3, "<..<", 7)
+	s = collections.Range[int](3, "<..<", 7)
 	assert.False(t, s.IsEmpty())
 	assert.Equal(t, 3, s.GetSize())
 	assert.Equal(t, 4, s.GetItem(1))
@@ -54,7 +54,7 @@ func TestSlicesWithIntegers(t *testing.T) {
 	assert.Equal(t, 0, s.GetIndex(7))
 	assert.Equal(t, []int{4, 5, 6}, s.AsArray())
 
-	s = collections.Slice[int](3, "..<", 7)
+	s = collections.Range[int](3, "..<", 7)
 	assert.False(t, s.IsEmpty())
 	assert.Equal(t, 4, s.GetSize())
 	assert.Equal(t, 3, s.GetItem(1))
@@ -64,8 +64,8 @@ func TestSlicesWithIntegers(t *testing.T) {
 	assert.Equal(t, []int{3, 4, 5, 6}, s.AsArray())
 }
 
-func TestSlicesWithRunes(t *testing.T) {
-	var s = collections.Slice[rune]('a', "..", 'z')
+func TestRangesWithRunes(t *testing.T) {
+	var s = collections.Range[rune]('a', "..", 'z')
 	assert.False(t, s.IsEmpty())
 	assert.Equal(t, 26, s.GetSize())
 	assert.Equal(t, 'd', s.GetItem(4))
@@ -75,12 +75,12 @@ func TestSlicesWithRunes(t *testing.T) {
 	var items = s.AsArray()
 	a.AddItems(items)
 	assert.Equal(t, items, a.AsArray())
-	s = collections.Slice[rune]('f', "..", 'm')
-	var l = collections.Slices[rune]()
+	s = collections.Range[rune]('f', "..", 'm')
+	var l = collections.Ranges[rune]()
 	var c = l.Cut(a, s)
 	assert.Equal(t, "fghijklm", string(c))
 
-	s = collections.Slice[rune]('q', "..", 'v')
+	s = collections.Range[rune]('q', "..", 'v')
 	var q = l.Splice(a, s, c)
 	assert.Equal(t, "qrstuv", string(q))
 	assert.Equal(t, "abcdenopfghijklmwxyz", string(a.AsArray()))

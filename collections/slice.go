@@ -17,27 +17,27 @@ import (
 	"reflect"
 )
 
-// SLICE IMPLEMENTATION
+// RANGE IMPLEMENTATION
 
-// This constructor creates a new slice of items covering the specified endpoints.
-func Slice[T any](first T, connector string, last T) abstractions.SliceLike[T] {
+// This constructor creates a new range of items covering the specified endpoints.
+func Range[T any](first T, connector string, last T) abstractions.RangeLike[T] {
 	switch connector {
 	case "..":
 	case "<..":
 	case "<..<":
 	case "..<":
 	default:
-		panic(fmt.Sprintf("Received an invalid slice connector: %v", connector))
+		panic(fmt.Sprintf("Received an invalid range connector: %v", connector))
 	}
-	var v = slice[T]{first: first, connector: connector, last: last}
+	var v = ranje[T]{first: first, connector: connector, last: last}
 	v.size = v.calculateSize()
 	return &v
 }
 
-// This type defines the structure and methods associated with a slice of items.
+// This type defines the structure and methods associated with a range of items.
 // This type is parameterized as follows:
 //   - T is any type of primitive item.
-type slice[T any] struct {
+type ranje[T any] struct {
 	first     T
 	connector string
 	last      T
@@ -46,19 +46,19 @@ type slice[T any] struct {
 
 // SEQUENTIAL INTERFACE
 
-// This method determines whether or not this slice is empty.
-func (v *slice[T]) IsEmpty() bool {
+// This method determines whether or not this range is empty.
+func (v *ranje[T]) IsEmpty() bool {
 	return v.size == 0
 }
 
-// This method returns the number of items contained in this slice.
-func (v *slice[T]) GetSize() int {
+// This method returns the number of items contained in this range.
+func (v *ranje[T]) GetSize() int {
 	return v.size
 }
 
-// This method returns up to the first 256 items in this slice. The items
-// retrieved are in the same order as they are in the slice.
-func (v *slice[T]) AsArray() []T {
+// This method returns up to the first 256 items in this range. The items
+// retrieved are in the same order as they are in the range.
+func (v *ranje[T]) AsArray() []T {
 	var size = v.size
 	if size > 256 {
 		size = 256
@@ -76,18 +76,18 @@ func (v *slice[T]) AsArray() []T {
 
 // INDEXED INTERFACE
 
-// This method retrieves from this slice the item that is associated with the
+// This method retrieves from this range the item that is associated with the
 // specified index.
-func (v *slice[T]) GetItem(index int) T {
+func (v *ranje[T]) GetItem(index int) T {
 	var offset = abstractions.NormalizedIndex(index, v.size)
 	var first = v.effectiveFirst()
 	var item = v.indexToItem(first + offset)
 	return item
 }
 
-// This method retrieves from this slice all items from the first index through
+// This method retrieves from this range all items from the first index through
 // the last index (inclusive).
-func (v *slice[T]) GetItems(first int, last int) []T {
+func (v *ranje[T]) GetItems(first int, last int) []T {
 	var items []T
 	for index := first; index <= last; index++ {
 		var item = v.indexToItem(index)
@@ -97,8 +97,8 @@ func (v *slice[T]) GetItems(first int, last int) []T {
 }
 
 // This method returns the index of the FIRST occurence of the specified item in
-// this slice, or zero if this slice does not contain the item.
-func (v *slice[T]) GetIndex(item T) int {
+// this range, or zero if this range does not contain the item.
+func (v *ranje[T]) GetIndex(item T) int {
 	if v.size == 0 {
 		return 0
 	}
@@ -113,44 +113,44 @@ func (v *slice[T]) GetIndex(item T) int {
 
 // ELASTIC INTERFACE
 
-// This method returns the first item in this slice.
-func (v *slice[T]) GetFirst() T {
+// This method returns the first item in this range.
+func (v *ranje[T]) GetFirst() T {
 	return v.first
 }
 
-// This method sets the first item in this slice and returns the previous value.
-func (v *slice[T]) SetFirst(item T) T {
+// This method sets the first item in this range and returns the previous value.
+func (v *ranje[T]) SetFirst(item T) T {
 	var old = v.first
 	v.first = item
 	return old
 }
 
-// This method returns the connector for this slice.
-func (v *slice[T]) GetConnector() string {
+// This method returns the connector for this range.
+func (v *ranje[T]) GetConnector() string {
 	return v.connector
 }
 
-// This method sets the connector for this slice and returns the previous value.
-func (v *slice[T]) SetConnector(connector string) string {
+// This method sets the connector for this range and returns the previous value.
+func (v *ranje[T]) SetConnector(connector string) string {
 	var old = v.connector
 	v.connector = connector
 	return old
 }
 
-// This method returns the last item in this slice.
-func (v *slice[T]) GetLast() T {
+// This method returns the last item in this range.
+func (v *ranje[T]) GetLast() T {
 	return v.last
 }
 
-// This method sets the last item in this slice and returns the previous value.
-func (v *slice[T]) SetLast(item T) T {
+// This method sets the last item in this range and returns the previous value.
+func (v *ranje[T]) SetLast(item T) T {
 	var old = v.last
 	v.last = item
 	return old
 }
 
-// This method determines whether or not this slice can be enumerated over.
-func (v *slice[T]) IsEnumerable() bool {
+// This method determines whether or not this range can be enumerated over.
+func (v *ranje[T]) IsEnumerable() bool {
 	return v.size > 0
 }
 
@@ -158,7 +158,7 @@ func (v *slice[T]) IsEnumerable() bool {
 
 // This function converts the type of the specified index to the parameterized
 // type T.
-func (v *slice[T]) indexToItem(index int) T {
+func (v *ranje[T]) indexToItem(index int) T {
 	var template T
 	var value any = template
 	switch value.(type) {
@@ -189,7 +189,7 @@ func (v *slice[T]) indexToItem(index int) T {
 }
 
 // This function converts the type of the specified item to an integer type.
-func (v *slice[T]) itemToIndex(item T) int {
+func (v *ranje[T]) itemToIndex(item T) int {
 	var value any = item
 	switch index := value.(type) {
 	case uint8:
@@ -219,10 +219,10 @@ func (v *slice[T]) itemToIndex(item T) int {
 	}
 }
 
-// This function returns the effective first item in the slice based on its
+// This function returns the effective first item in the range based on its
 // connector type. It can only be called when the parameterized item type T is
 // an integer type.
-func (v *slice[T]) effectiveFirst() int {
+func (v *ranje[T]) effectiveFirst() int {
 	var first = v.itemToIndex(v.first)
 	switch v.connector {
 	case "<..":
@@ -233,10 +233,10 @@ func (v *slice[T]) effectiveFirst() int {
 	return first
 }
 
-// This function returns the effective last item in the slice based on its
+// This function returns the effective last item in the range based on its
 // connector type. It can only be called when the parameterized item type T is
 // an integer type.
-func (v *slice[T]) effectiveLast() int {
+func (v *ranje[T]) effectiveLast() int {
 	var last = v.itemToIndex(v.last)
 	switch v.connector {
 	case "..<":
@@ -247,10 +247,10 @@ func (v *slice[T]) effectiveLast() int {
 	return last
 }
 
-// This function calulates the effective size of the slice assuming the
+// This function calulates the effective size of the range assuming the
 // parameterized type T is an integer type. If it is not an integer type
 // the effective size is zero.
-func (v *slice[T]) calculateSize() int {
+func (v *ranje[T]) calculateSize() int {
 	switch reflect.ValueOf(v.first).Kind() {
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32,
 		reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32,
@@ -269,32 +269,32 @@ func (v *slice[T]) calculateSize() int {
 
 // SLICES LIBRARY
 
-// This constructor creates a new slices library for the specified generic
+// This constructor creates a new ranges library for the specified generic
 // item type.
-func Slices[T any]() *slices[T] {
-	return &slices[T]{}
+func Ranges[T any]() *ranges[T] {
+	return &ranges[T]{}
 }
 
-// This type defines the library functions that operate on slices. Since
-// slices have a parameterized item type this library type is also
+// This type defines the library functions that operate on ranges. Since
+// ranges have a parameterized item type this library type is also
 // parameterized as follows:
 //   - T is any type of primitive item.
-type slices[T any] struct{}
+type ranges[T any] struct{}
 
 // SPLICEABLE INTERFACE
 
-// This library function removes the specified slice of items from the specified
+// This library function removes the specified range of items from the specified
 // list and returns it as an array of items.
-func (l *slices[T]) Cut(collection abstractions.ListLike[T], slice abstractions.Elastic[T]) []T {
-	var firstIndex, lastIndex = l.effectiveIndices(collection, slice)
+func (l *ranges[T]) Cut(collection abstractions.ListLike[T], rng abstractions.Elastic[T]) []T {
+	var firstIndex, lastIndex = l.effectiveIndices(collection, rng)
 	var items = collection.RemoveItems(firstIndex, lastIndex)
 	return items
 }
 
 // This library function replaces the specified splice of items in the specified
 // list with the specified items.
-func (l *slices[T]) Splice(collection abstractions.ListLike[T], slice abstractions.Elastic[T], items []T) []T {
-	var firstIndex, lastIndex = l.effectiveIndices(collection, slice)
+func (l *ranges[T]) Splice(collection abstractions.ListLike[T], rng abstractions.Elastic[T], items []T) []T {
+	var firstIndex, lastIndex = l.effectiveIndices(collection, rng)
 	var removed = collection.RemoveItems(firstIndex, lastIndex)
 	var slot = firstIndex - 1 // This is the slot before the first index.
 	collection.InsertItems(slot, items)
@@ -304,8 +304,8 @@ func (l *slices[T]) Splice(collection abstractions.ListLike[T], slice abstractio
 // PRIVATE INTERFACE
 
 // This library function returns the effective first and last indices for the
-// specified slice within the specified list.
-func (l *slices[T]) effectiveIndices(c abstractions.ListLike[T], s abstractions.Elastic[T]) (first, last int) {
+// specified range within the specified list.
+func (l *ranges[T]) effectiveIndices(c abstractions.ListLike[T], s abstractions.Elastic[T]) (first, last int) {
 	var firstItem = s.GetFirst()
 	var lastItem = s.GetLast()
 	var firstIndex = c.GetIndex(firstItem)

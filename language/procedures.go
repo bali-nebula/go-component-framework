@@ -60,11 +60,41 @@ func (v *parser) parseAttribute() (*Attribute, bool) {
 	return attribute, true
 }
 
-// This type defines the node structure associated with a block of statements
-// that contains Bali Document Notation (BDN) procedural statements.
-type Block struct {
+// This type defines the node structure associated with a do block of statements
+// that contains an expression and Bali Document Notation (BDN) procedural
+// statements.
+type DoBlock struct {
 	Expression any
 	Statements []any
+}
+
+// This method attempts to parse a do block. It returns the do block and whether
+// or not the do block was successfully parsed.
+func (v *parser) parseDoBlock() (*DoBlock, bool) {
+	var ok bool
+	var bad *token
+	var expression any
+	var statements []any
+	var doBlock *DoBlock
+	expression, ok = v.parseExpression()
+	if !ok {
+		// We know a do block is expected so time to panic...
+		panic("Expected an expression to start a do block.")
+	}
+	bad, ok = v.parseDelimiter("{")
+	if !ok {
+		panic(fmt.Sprintf("Expected a '{' character following the expression and received: %v", *bad))
+	}
+	statements, ok = v.parseStatements()
+	if !ok {
+		panic("Expected statements following the '{' character.")
+	}
+	bad, ok = v.parseDelimiter("}")
+	if !ok {
+		panic(fmt.Sprintf("Expected a '}' character following the statements and received: %v", *bad))
+	}
+	doBlock = &DoBlock{expression, statements}
+	return doBlock, true
 }
 
 // This type defines the node structure associated with a clause that causes the
@@ -142,7 +172,7 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 // an exception.
 type HandleClause struct {
 	Exception elements.Symbol
-	Blocks    []*Block
+	DoBlocks    []*DoBlock
 }
 
 // This method attempts to parse a handle clause. It returns the handle
@@ -156,7 +186,25 @@ func (v *parser) parseHandleClause() (*HandleClause, bool) {
 // This type defines the node structure associated with a clause that selects a
 // statement block to be executed based on the value of a conditional expression.
 type IfClause struct {
-	Blocks     []*Block
+	DoBlock *DoBlock
+}
+
+// This method attempts to parse an if clause. It returns the if clause and
+// whether or not the if clause was successfully parsed.
+func (v *parser) parseIfClause() (*IfClause, bool) {
+	var ok bool
+	var doBlock *DoBlock
+	var clause *IfClause
+	_, ok = v.parseKeyword("if")
+	if !ok {
+		return clause, false
+	}
+	doBlock, ok = v.parseDoBlock()
+	if !ok {
+		panic("Expected a condition expression following the 'if' keyword.")
+	}
+	clause = &IfClause{doBlock}
+	return clause, true
 }
 
 // This method attempts to parse a sequence of indices. It returns an array of
@@ -192,11 +240,11 @@ func (v *parser) parseMainClause() (any, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var mainClause any
-	mainClause, ok = v.parseOnClause()
+	mainClause, ok = v.parseIfClause()
+	if !ok {
+		mainClause, ok = v.parseSelectClause()
+	}
 	/*
-		if !ok {
-			mainClause, ok = v.parseIfClause()
-		}
 		if !ok {
 			mainClause, ok = v.parseWithClause()
 		}
@@ -255,48 +303,6 @@ func (v *parser) parseMainClause() (any, bool) {
 type NotarizeClause struct {
 	Draft   any
 	Moniker any
-}
-
-// This type defines the node structure associated with a clause that selects a
-// statement block to be executed based on the pattern of a control expression.
-type OnClause struct {
-	Control  any
-	Blocks   []*Block
-}
-
-// This method attempts to parse an on clause. It returns the on clause and
-// whether or not the on clause was successfully parsed.
-func (v *parser) parseOnClause() (*OnClause, bool) {
-	var ok bool
-	var control any
-	var pattern any
-	var statements []any
-	var blocks []*Block
-	var clause *OnClause
-	_, ok = v.parseKeyword("on")
-	if !ok {
-		return clause, false
-	}
-	control, ok = v.parseExpression()
-	if !ok {
-		panic("Expected a control expression following the 'on' keyword.")
-	}
-	for {
-		_, ok = v.parseKeyword("matching")
-		if !ok {
-			break // No more possible matches.
-		}
-		var pattern any, ok = v.parseExpression()
-		if !ok {
-			panic("Expected a pattern expression following the 'matching' keyword.")
-		}
-	}
-	// There must be at least possible matches.
-	if len(blocks) == 0 {
-		panic("Expected at least one matching block in the on clause.")
-	}
-	clause = &OnClause{control, blocks}
-	return clause, true
 }
 
 // This type defines the node structure associated with a clause that posts a
@@ -378,6 +384,48 @@ type ReturnClause struct {
 type SaveClause struct {
 	Draft     any
 	Recipient any // The recipient is a symbol or attribute.
+}
+
+// This type defines the node structure associated with a clause that selects a
+// statement block to be executed based on the pattern of a control expression.
+type SelectClause struct {
+	Control  any
+	DoBlocks   []*DoBlock
+}
+
+// This method attempts to parse an select clause. It returns the select clause
+// and whether or not the select clause was successfully parsed.
+func (v *parser) parseSelectClause() (*SelectClause, bool) {
+	var ok bool
+	var control any
+	var doBlock *DoBlock
+	var doBlocks []*DoBlock
+	var clause *SelectClause
+	_, ok = v.parseKeyword("select")
+	if !ok {
+		return clause, false
+	}
+	control, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a control expression following the 'select' keyword.")
+	}
+	for {
+		_, ok = v.parseKeyword("matching")
+		if !ok {
+			break // No more possible matches.
+		}
+		doBlock, ok = v.parseDoBlock()
+		if !ok {
+			panic("Expected a block expression following the 'matching' keyword.")
+		}
+		doBlocks = append(doBlocks, doBlock)
+	}
+	// There must be at least one block expression.
+	if len(doBlocks) == 0 {
+		panic("Expected at least one block expression in the select clause.")
+	}
+	clause = &SelectClause{control, doBlocks}
+	return clause, true
 }
 
 // This type defines the node structure associated with a Bali Document
@@ -465,7 +513,7 @@ type ThrowClause struct {
 // This type defines the node structure associated with a clause that executes
 // a statement block while a condition is true.
 type WhileClause struct {
-	Block     *Block
+	DoBlock     *DoBlock
 }
 
 // This type defines the node structure associated with a clause that executes
@@ -473,5 +521,5 @@ type WhileClause struct {
 // assigned to a symbol that is referenced in the statement block.
 type WithClause struct {
 	Item       elements.Symbol
-	Block      *Block
+	DoBlock      *DoBlock
 }
