@@ -63,6 +63,7 @@ func (v *parser) parseAttribute() (*Attribute, bool) {
 // This type defines the node structure associated with a block of statements
 // that contains Bali Document Notation (BDN) procedural statements.
 type Block struct {
+	Expression any
 	Statements []any
 }
 
@@ -141,7 +142,6 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 // an exception.
 type HandleClause struct {
 	Exception elements.Symbol
-	Patterns  []any
 	Blocks    []*Block
 }
 
@@ -156,7 +156,6 @@ func (v *parser) parseHandleClause() (*HandleClause, bool) {
 // This type defines the node structure associated with a clause that selects a
 // statement block to be executed based on the value of a conditional expression.
 type IfClause struct {
-	Conditions []any
 	Blocks     []*Block
 }
 
@@ -193,8 +192,8 @@ func (v *parser) parseMainClause() (any, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var mainClause any
+	mainClause, ok = v.parseOnClause()
 	/*
-		mainClause, ok = v.parseOnClause()
 		if !ok {
 			mainClause, ok = v.parseIfClause()
 		}
@@ -262,8 +261,42 @@ type NotarizeClause struct {
 // statement block to be executed based on the pattern of a control expression.
 type OnClause struct {
 	Control  any
-	Patterns []any
 	Blocks   []*Block
+}
+
+// This method attempts to parse an on clause. It returns the on clause and
+// whether or not the on clause was successfully parsed.
+func (v *parser) parseOnClause() (*OnClause, bool) {
+	var ok bool
+	var control any
+	var pattern any
+	var statements []any
+	var blocks []*Block
+	var clause *OnClause
+	_, ok = v.parseKeyword("on")
+	if !ok {
+		return clause, false
+	}
+	control, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a control expression following the 'on' keyword.")
+	}
+	for {
+		_, ok = v.parseKeyword("matching")
+		if !ok {
+			break // No more possible matches.
+		}
+		var pattern any, ok = v.parseExpression()
+		if !ok {
+			panic("Expected a pattern expression following the 'matching' keyword.")
+		}
+	}
+	// There must be at least possible matches.
+	if len(blocks) == 0 {
+		panic("Expected at least one matching block in the on clause.")
+	}
+	clause = &OnClause{control, blocks}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that posts a
@@ -432,7 +465,6 @@ type ThrowClause struct {
 // This type defines the node structure associated with a clause that executes
 // a statement block while a condition is true.
 type WhileClause struct {
-	Condition any
 	Block     *Block
 }
 
@@ -441,6 +473,5 @@ type WhileClause struct {
 // assigned to a symbol that is referenced in the statement block.
 type WithClause struct {
 	Item       elements.Symbol
-	Collection any
 	Block      *Block
 }

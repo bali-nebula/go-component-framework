@@ -25,7 +25,6 @@ var Lexicon = map[string]string{
 	"$association":          `primitive ":" component`,
 	"$attribute":            `variable "[" indices "]"`,
 	"$attributeExpression":  `expression "[" indices "]"`,
-	"$block":                `"{" statements "}"`,
 	"$breakClause":          `"break" "loop"`,
 	"$catalog": `
 		association {"," association} |
@@ -44,14 +43,16 @@ var Lexicon = map[string]string{
 	"$defaultExpression":     `expression "?" expression`,
 	"$dereferenceExpression": `"@" expression`,
 	"$discardClause":         `"discard" expression`,
+	"$doBlock":               `expression "do" "{" statements "}"`,
 	"$document":              `component EOL EOF`,
 	"$element": `
 		ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
 		PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG
 	`,
-	"$entity":         `element | string | collection | procedure`,
-	"$evaluateClause": `[recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression`,
-	"$exception":      `SYMBOL`,
+	"$entity":          `element | string | collection | procedure`,
+	"$evaluateClause":  `[recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression`,
+	"$exception":       `SYMBOL`,
+	"$exceptionClause": `"on" exception <"matching" doBlock>`,
 	"$expression": `
 		component |
 		variable |
@@ -72,8 +73,7 @@ var Lexicon = map[string]string{
 	`,
 	"$function":            `IDENTIFIER`,
 	"$functionExpression":  `function "(" [arguments] ")"`,
-	"$handleClause":        `"handle" exception <"matching" expression "with" block>`,
-	"$ifClause":            `"if" <expression "do" block>`,
+	"$ifClause":            `"if" doBlock`,
 	"$indices":             `expression {"," expression}`,
 	"$inversionExpression": `("-" | "/" | "*") expression`,
 	"$item":                `SYMBOL`,
@@ -85,8 +85,8 @@ var Lexicon = map[string]string{
 	"$logicalExpression":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitudeExpression": `"|" expression "|"`,
 	"$mainClause": `
-		onClause |
 		ifClause |
+		selectClause |
 		withClause |
 		whileClause |
 		continueClause |
@@ -108,7 +108,6 @@ var Lexicon = map[string]string{
 	"$messageExpression": `expression ("." | "<-") message "(" [arguments] ")"`,
 	"$name":              `SYMBOL`,
 	"$notarizeClause":    `"notarize" expression "as" expression`,
-	"$onClause":          `"on" expression <"matching" expression "do" block>`,
 	"$parameter":         `name ":" component`,
 	"$parameters": `
 		parameter {"," parameter} |
@@ -120,14 +119,15 @@ var Lexicon = map[string]string{
 	"$primitive":            `element | string`,
 	"$procedure":            `"{" statements "}"`,
 	"$publishClause":        `"publish" expression`,
+	"$range":                `[value] (".." | "..<" | "<..<" | "<..") [value]`,
 	"$recipient":            `name | attribute`,
 	"$rejectClause":         `"reject" expression`,
 	"$retrieveClause":       `"retrieve" recipient "from" expression`,
 	"$returnClause":         `"return" [expression]`,
 	"$saveClause":           `"save" expression ["as" recipient]`,
-	"$sequence":             `catalog | list | slice`,
-	"$slice":                `[value] (".." | "..<" | "<..<" | "<..") [value]`,
-	"$statement":            `mainClause [handleClause]`,
+	"$selectClause":         `"select" expression <"matching" doBlock>`,
+	"$sequence":             `catalog | list | range`,
+	"$statement":            `mainClause [exceptionClause]`,
 	"$statements": `
 		statement {";" statement} |
 		EOL {(commentary | statement) EOL} |
@@ -137,8 +137,8 @@ var Lexicon = map[string]string{
 	"$throwClause": `"throw" expression`,
 	"$value":       `element | string | variable`,
 	"$variable":    `IDENTIFIER`,
-	"$whileClause": `"while" expression "do" block`,
-	"$withClause":  `"with" ["each" item "in"] expression "do" block`,
+	"$whileClause": `"while" doBlock`,
+	"$withClause":  `"with" ["each" item "in"] doBlock`,
 	"$ANGLE":       `"~" (REAL | ZERO)`,
 	"$ANY":         `"any"`,
 	"$AUTHORITY":   `<~"/">`,
@@ -170,9 +170,9 @@ var Lexicon = map[string]string{
 	"$KEYWORD": `
 		"with" | "while" | "to" | "throw" | "select" | "save" |
 		"return" | "retrieve" | "reject" | "publish" | "post" |
-		"notarize" | "matching" | "loop" | "level" | "in" | "if" |
-		"handle" | "from" | "each" | "do" | "discard" | "continue" |
-		"checkout" | "break" | "at" | "as" | "any" | "accept" |
+		"on" | "notarize" | "matching" | "loop" | "level" | "in" |
+		"if" | "from" | "each" | "do" | "discard" | "continue" |
+		"checkout" | "break" | "at" | "as" | "accept" |
 		"XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"
 	`,
 	"$MINUTE":      `"0".."5" "0".."9"`,

@@ -240,6 +240,17 @@ func (v *parser) parseIdentifier() (string, bool) {
 	return identifier, true
 }
 
+// This method attempts to parse the specified keyword. It returns
+// the token and whether or not the keyword was found.
+func (v *parser) parseKeyword(keyword string) (*token, bool) {
+	var token = v.nextToken()
+	if token.typ == tokenKeyword || token.val != keyword {
+		v.backupOne()
+		return token, false
+	}
+	return token, true
+}
+
 // This method attempts to parse a note. It returns a string containing the
 // note and whether or not the note was successfully parsed.
 func (v *parser) parseNote() (string, bool) {
