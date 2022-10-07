@@ -18,6 +18,67 @@ import (
 	"unicode/utf8"
 )
 
+// TOKEN
+
+// This enumeration defines all possible token types including the error token.
+const (
+	// The first two token types must be first.
+	tokenError tokenType = iota
+	tokenEOF
+	tokenEOL
+	tokenAngle
+	tokenBinary
+	tokenBoolean
+	tokenComment
+	tokenDelimiter
+	tokenDuration
+	tokenIdentifier
+	tokenKeyword
+	tokenMoment
+	tokenMoniker
+	tokenNarrative
+	tokenNote
+	tokenNumber
+	tokenPattern
+	tokenPercentage
+	tokenProbability
+	tokenQuote
+	tokenRegex
+	tokenResource
+	tokenSymbol
+	tokenTag
+	tokenVersion
+)
+
+// This integer type is used as a type identifier for each token.
+type tokenType int
+
+// This type defines the structure and methods for each token returned by the
+// scanner.
+type token struct {
+	typ tokenType
+	val string
+	pos int // The byte index of the position of the token in the input.
+}
+
+// This method returns the a canonical string version of this token.
+func (v *token) String() string {
+	switch {
+	case v.typ == tokenEOF:
+		return "<EOF>"
+	case v.typ == tokenEOL:
+		return "<EOL>"
+	case v.typ == tokenError:
+		return v.val
+	case len(v.val) > 10:
+		return fmt.Sprintf("%.10q...", v.val)
+	default:
+		return fmt.Sprintf("%q", v.val)
+	}
+}
+
+// SCANNER
+
 // This constructor creates a new scanner initialized with the specified array
 // of bytes. The scanner will scan in tokens matching Bali Document Notation™ as
 // defined in the language specification:

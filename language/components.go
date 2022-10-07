@@ -52,6 +52,21 @@ func ParseDocument(document []byte) (*Component, bool) {
 	return component, ok
 }
 
+// COMPONENT NODES
+
+// This type defines the node structure associated with a component.
+type Component struct {
+	Entity  any // A entity is an element, string, collection or procedure.
+	Context []*Parameter
+}
+
+// This type defines the node structure associated with a name-value pair. It is
+// used by a component to maintain its parameters.
+type Parameter struct {
+	Name  elements.Symbol
+	Value *Component
+}
+
 // PARSER IMPLEMENTATION
 
 // This constructor creates a new parser using the specified byte array.
@@ -120,12 +135,10 @@ func (v *parser) parseComment() (string, bool) {
 func (v *parser) parseComponent() (*Component, bool) {
 	var component *Component
 	var context []*Parameter
-	var note string
 	var entity, ok = v.parseEntity()
 	if ok {
 		context, _ = v.parseContext() // The context is optional.
-		note, _ = v.parseNote()       // The note is optional.
-		component = &Component{entity, context, note}
+		component = &Component{entity, context}
 	}
 	return component, ok
 }
@@ -245,7 +258,7 @@ func (v *parser) parseNote() (string, bool) {
 func (v *parser) parseParameter() (*Parameter, bool) {
 	var ok bool
 	var name elements.Symbol
-	var value any
+	var value *Component
 	name, ok = v.parseSymbol()
 	if !ok {
 		return nil, false

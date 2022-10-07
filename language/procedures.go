@@ -12,7 +12,22 @@ package language
 
 import (
 	"fmt"
+	"github.com/craterdog-bali/go-bali-document-notation/elements"
 )
+
+// This type defines the node structure associated with a clause that accepts a
+// message that was previously retrieved from a named message bag so that it
+// cannot be retrieved by another party.
+type AcceptClause struct {
+	Message any
+}
+
+// This type defines the node structure associated with an indexed attribute
+// within a composite component.
+type Attribute struct {
+	Variable string
+	Indices  []any
+}
 
 // This method attempts to parse an attribute. It returns the attribute and
 // whether or not the attribute was successfully parsed.
@@ -43,6 +58,46 @@ func (v *parser) parseAttribute() (*Attribute, bool) {
 	}
 	attribute = &Attribute{variable, indices}
 	return attribute, true
+}
+
+// This type defines the node structure associated with a block of statements
+// that contains Bali Document Notation (BDN) procedural statements.
+type Block struct {
+	Statements []any
+}
+
+// This type defines the node structure associated with a clause that causes the
+// execution of a loop to end.
+type BreakClause struct {
+}
+
+// This type defines the node structure associated with a clause that checks out
+// a draft version of a released document at an optional release level from the
+// document repository and assigns it to a recipient.
+type CheckoutClause struct {
+	Recipient any // The recipient is a symbol or attribute.
+	Level     any
+	Moniker   any
+}
+
+// This type defines the node structure associated with a clause that causes the
+// execution of a loop to continue at the beginning.
+type ContinueClause struct {
+}
+
+// This type defines the node structure associated with a clause that discards
+// a draft document referred to by an expression from the document repository.
+type DiscardClause struct {
+	Citation any
+}
+
+// This type defines the node structure associated with a clause that evaluates
+// an expression and optionally assigns the result to a recipient. The recipient
+// must support the `Scalable` interface.
+type EvaluateClause struct {
+	Recipient  any // The recipient is a symbol or attribute.
+	Operator   string
+	Expression any
 }
 
 // This method attempts to parse an evaluate clause. It returns the evaluate
@@ -82,12 +137,27 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 	return evaluateClause, true
 }
 
+// This type defines the node structure associated with a clause that handles
+// an exception.
+type HandleClause struct {
+	Exception elements.Symbol
+	Patterns  []any
+	Blocks    []*Block
+}
+
 // This method attempts to parse a handle clause. It returns the handle
 // clause and whether or not the handle clause was successfully parsed.
 func (v *parser) parseHandleClause() (*HandleClause, bool) {
 	var ok bool
 	var clause *HandleClause
 	return clause, ok
+}
+
+// This type defines the node structure associated with a clause that selects a
+// statement block to be executed based on the value of a conditional expression.
+type IfClause struct {
+	Conditions []any
+	Blocks     []*Block
 }
 
 // This method attempts to parse a sequence of indices. It returns an array of
@@ -124,61 +194,89 @@ func (v *parser) parseMainClause() (any, bool) {
 	var ok bool
 	var mainClause any
 	/*
-	mainClause, ok = v.parseOnClause()
-	if !ok {
-		mainClause, ok = v.parseIfClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseWithClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseWhileClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseContinueClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseBreakClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseReturnClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseThrowClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseSaveClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseDiscardClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseNotarizeClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseCheckoutClause()
-	}
-	if !ok {
-		mainClause, ok = v.parsePublishClause()
-	}
-	if !ok {
-		mainClause, ok = v.parsePostClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseRetrieveClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseAcceptClause()
-	}
-	if !ok {
-		mainClause, ok = v.parseRejectClause()
-	}
+		mainClause, ok = v.parseOnClause()
+		if !ok {
+			mainClause, ok = v.parseIfClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseWithClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseWhileClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseContinueClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseBreakClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseReturnClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseThrowClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseSaveClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseDiscardClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseNotarizeClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseCheckoutClause()
+		}
+		if !ok {
+			mainClause, ok = v.parsePublishClause()
+		}
+		if !ok {
+			mainClause, ok = v.parsePostClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseRetrieveClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseAcceptClause()
+		}
+		if !ok {
+			mainClause, ok = v.parseRejectClause()
+		}
 	*/
 	if !ok {
 		// This clause should be check last as it is slower to fail.
 		mainClause, ok = v.parseEvaluateClause()
 	}
 	return mainClause, ok
+}
+
+// This type defines the node structure associated with a clause that notarizes
+// a draft document as a named released document in the document repository.
+type NotarizeClause struct {
+	Draft   any
+	Moniker any
+}
+
+// This type defines the node structure associated with a clause that selects a
+// statement block to be executed based on the pattern of a control expression.
+type OnClause struct {
+	Control  any
+	Patterns []any
+	Blocks   []*Block
+}
+
+// This type defines the node structure associated with a clause that posts a
+// message to a named message bag.
+type PostClause struct {
+	Message any
+	Bag     any
+}
+
+// This type defines the node structure associated with a procedure that
+// contains Bali Document Notation™ (BDN) procedural statements.
+type Procedure struct {
+	Statements []any // This includes statements and commentary.
 }
 
 // This method attempts to parse a procedure. It returns the procedure and
@@ -202,6 +300,12 @@ func (v *parser) parseProcedure() ([]any, bool) {
 	return statements, true
 }
 
+// This type defines the node structure associated with a clause that publishes
+// an event to be delivered to all interested parties.
+type PublishClause struct {
+	Event any
+}
+
 // This method attempts to parse a recipient. It returns the recipient and
 // whether or not the recipient was successfully parsed.
 func (v *parser) parseRecipient() (any, bool) {
@@ -212,6 +316,43 @@ func (v *parser) parseRecipient() (any, bool) {
 		recipient, ok = v.parseAttribute()
 	}
 	return recipient, ok
+}
+
+// This type defines the node structure associated with a clause that rejects a
+// message that was previously retrieved from a named message bag so that it
+// can be retrieved by another party.
+type RejectClause struct {
+	Message any
+}
+
+// This type defines the node structure associated with a clause that retrieves
+// a random message from a named message bag and assigns it to a recipient.
+type RetrieveClause struct {
+	Recipient any // The recipient is a symbol or attribute.
+	Bag       any
+}
+
+// This type defines the node structure associated with a clause that causes an
+// executing procedure to return with an optional result.
+type ReturnClause struct {
+	Result any
+}
+
+// This type defines the node structure associated with a clause that saves
+// a draft document referred to by an expression to the document repository
+// and returns a citation to the document which is optionally assigned to a
+// recipient.
+type SaveClause struct {
+	Draft     any
+	Recipient any // The recipient is a symbol or attribute.
+}
+
+// This type defines the node structure associated with a Bali Document
+// Notation (BDN) statement containing a main clause and an optional
+// exception handling clause.
+type Statement struct {
+	MainClause   any
+	HandleClause *HandleClause
 }
 
 // This method attempts to parse a statement. It returns the statement and
@@ -280,4 +421,26 @@ func (v *parser) parseStatements() ([]any, bool) {
 		panic("Expected at least one statement in the component context.")
 	}
 	return statements, true
+}
+
+// This type defines the node structure associated with a clause that causes an
+// exception to be thrown in the executing procedure.
+type ThrowClause struct {
+	Exception any
+}
+
+// This type defines the node structure associated with a clause that executes
+// a statement block while a condition is true.
+type WhileClause struct {
+	Condition any
+	Block     *Block
+}
+
+// This type defines the node structure associated with a clause that executes
+// a statement block for each item in a collection. Each item may be optionally
+// assigned to a symbol that is referenced in the statement block.
+type WithClause struct {
+	Item       elements.Symbol
+	Collection any
+	Block      *Block
 }
