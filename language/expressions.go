@@ -279,6 +279,7 @@ func (v *parser) parseExpression() (any, bool) {
 	var expression any
 	expression, ok = v.parseComponent()
 	if !ok {
+		// This must come before the parseIdentifier() for a variable.
 		expression, ok = v.parseFunctionExpression()
 	}
 	if !ok {
