@@ -22,6 +22,25 @@ type AcceptClause struct {
 	Message any
 }
 
+// This method attempts to parse an accept clause. It returns the accept
+// clause and whether or not the accept clause was successfully parsed.
+func (v *parser) parseAcceptClause() (*AcceptClause, bool) {
+	var ok bool
+	var message any
+	var clause *AcceptClause
+	_, ok = v.parseKeyword("accept")
+	if !ok {
+		// This is not a accept clause.
+		return clause, false
+	}
+	message, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a message expression following the 'accept' keyword.")
+	}
+	clause = &AcceptClause{message}
+	return clause, true
+}
+
 // This type defines the node structure associated with an indexed attribute
 // within a composite component.
 type Attribute struct {
@@ -376,19 +395,17 @@ func (v *parser) parseMainClause() (any, bool) {
 	if !ok {
 		mainClause, ok = v.parsePostClause()
 	}
-	/*
-		if !ok {
-			mainClause, ok = v.parseRetrieveClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseAcceptClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseRejectClause()
-		}
-	*/
 	if !ok {
-		// This clause should be check last as it is slower to fail.
+		mainClause, ok = v.parseRetrieveClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseAcceptClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseRejectClause()
+	}
+	if !ok {
+		// This clause should be checked last since it is slower to fail.
 		mainClause, ok = v.parseEvaluateClause()
 	}
 	return mainClause, ok
@@ -536,11 +553,58 @@ type RejectClause struct {
 	Message any
 }
 
+// This method attempts to parse a reject clause. It returns the reject
+// clause and whether or not the reject clause was successfully parsed.
+func (v *parser) parseRejectClause() (*RejectClause, bool) {
+	var ok bool
+	var message any
+	var clause *RejectClause
+	_, ok = v.parseKeyword("reject")
+	if !ok {
+		// This is not a reject clause.
+		return clause, false
+	}
+	message, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a message expression following the 'reject' keyword.")
+	}
+	clause = &RejectClause{message}
+	return clause, true
+}
+
 // This type defines the node structure associated with a clause that retrieves
 // a random message from a named message bag and assigns it to a recipient.
 type RetrieveClause struct {
 	Recipient any // The recipient is a symbol or attribute.
 	Bag       any
+}
+
+// This method attempts to parse a retrieve clause. It returns the retrieve
+// clause and whether or not the retrieve clause was successfully parsed.
+func (v *parser) parseRetrieveClause() (*RetrieveClause, bool) {
+	var ok bool
+	var recipient any
+	var bag any
+	var clause *RetrieveClause
+	_, ok = v.parseKeyword("retrieve")
+	if !ok {
+		// This is not a retrieve clause.
+		return clause, false
+	}
+	recipient, ok = v.parseRecipient()
+	if !ok {
+		panic("Expected a message recipient following the 'retrieve' keyword.")
+	}
+	_, ok = v.parseKeyword("from")
+	if !ok {
+		panic("Expected the 'from' keyword after the message recipient.")
+	}
+	bag, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a bag expression following the 'from' keyword.")
+	}
+	clause = &RetrieveClause{recipient, bag}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that causes an
