@@ -46,6 +46,41 @@ type ArithmeticExpression struct {
 	Right    any
 }
 
+// This method attempts to parse a arithmetic expression. It returns the
+// arithmetic expression and whether or not the arithmetic expression was
+// successfully parsed.
+func (v *parser) parseArithmeticExpression(left any) (*ArithmeticExpression, bool) {
+	var ok bool
+	var t *token
+	var operator string
+	var right any
+	var expression *ArithmeticExpression
+	t, ok = v.parseDelimiter("*")
+	if !ok {
+		t, ok = v.parseDelimiter("/")
+	}
+	if !ok {
+		t, ok = v.parseDelimiter("//")
+	}
+	if !ok {
+		t, ok = v.parseDelimiter("+")
+	}
+	if !ok {
+		t, ok = v.parseDelimiter("-")
+	}
+	if !ok {
+		// This is not a arithmetic expression.
+		return expression, false
+	}
+	operator = t.val
+	right, ok = v.parseExpression()
+	if !ok {
+		panic("Expected an expression following the '" + operator + "' character.")
+	}
+	expression = &ArithmeticExpression{left, operator, right}
+	return expression, true
+}
+
 // This type defines the node structure associated with an expression that
 // returns an indexed attribute from within a composite component.
 type AttributeExpression struct {
@@ -85,12 +120,70 @@ type ChainExpression struct {
 	Right any
 }
 
+// This method attempts to parse a chain expression. It returns the
+// chain expression and whether or not the chain expression was
+// successfully parsed.
+func (v *parser) parseChainExpression(left any) (*ChainExpression, bool) {
+	var ok bool
+	var right any
+	var expression *ChainExpression
+	_, ok = v.parseDelimiter("&")
+	if !ok {
+		// This is not a chain expression.
+		return expression, false
+	}
+	right, ok = v.parseExpression()
+	if !ok {
+		panic("Expected an expression following the '&' character.")
+	}
+	expression = &ChainExpression{left, right}
+	return expression, true
+}
+
 // This type defines the node structure associated with an expression that
 // returns a comparison of two values.
 type ComparisonExpression struct {
 	Left     any
 	Operator string
 	Right    any
+}
+
+// This method attempts to parse a comparison expression. It returns the
+// comparison expression and whether or not the comparison expression was
+// successfully parsed.
+func (v *parser) parseComparisonExpression(left any) (*ComparisonExpression, bool) {
+	var ok bool
+	var t *token
+	var operator string
+	var right any
+	var expression *ComparisonExpression
+	t, ok = v.parseDelimiter("<")
+	if !ok {
+		t, ok = v.parseDelimiter("=")
+	}
+	if !ok {
+		t, ok = v.parseDelimiter(">")
+	}
+	if !ok {
+		t, ok = v.parseDelimiter("≠")
+	}
+	if !ok {
+		t, ok = v.parseKeyword("IS")
+	}
+	if !ok {
+		t, ok = v.parseKeyword("MATCHES")
+	}
+	if !ok {
+		// This is not a comparison expression.
+		return expression, false
+	}
+	operator = t.val
+	right, ok = v.parseExpression()
+	if !ok {
+		panic("Expected an expression following the '" + operator + "' character.")
+	}
+	expression = &ComparisonExpression{left, operator, right}
+	return expression, true
 }
 
 // This type defines the node structure associated with an expression that
@@ -128,8 +221,28 @@ type ComponentExpression struct {
 // This type defines the node structure associated with an expression that
 // returns a value or its default value if not set.
 type DefaultExpression struct {
-	Left  any
-	Right any
+	Value  any
+	Default any
+}
+
+// This method attempts to parse a default expression. It returns the
+// default expression and whether or not the default expression was
+// successfully parsed.
+func (v *parser) parseDefaultExpression(value any) (*DefaultExpression, bool) {
+	var ok bool
+	var defaultValue any
+	var expression *DefaultExpression
+	_, ok = v.parseDelimiter("?")
+	if !ok {
+		// This is not a default expression.
+		return expression, false
+	}
+	defaultValue, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a default expression following the '?' character.")
+	}
+	expression = &DefaultExpression{value, defaultValue}
+	return expression, true
 }
 
 // This type defines the node structure associated with an expression that
@@ -314,6 +427,38 @@ type LogicalExpression struct {
 	Right    any
 }
 
+// This method attempts to parse a logical expression. It returns the
+// logical expression and whether or not the logical expression was
+// successfully parsed.
+func (v *parser) parseLogicalExpression(left any) (*LogicalExpression, bool) {
+	var ok bool
+	var t *token
+	var operator string
+	var right any
+	var expression *LogicalExpression
+	t, ok = v.parseKeyword("AND")
+	if !ok {
+		t, ok = v.parseKeyword("SANS")
+	}
+	if !ok {
+		t, ok = v.parseKeyword("XOR")
+	}
+	if !ok {
+		t, ok = v.parseKeyword("OR")
+	}
+	if !ok {
+		// This is not a logical expression.
+		return expression, false
+	}
+	operator = t.val
+	right, ok = v.parseExpression()
+	if !ok {
+		panic("Expected an expression following the '" + operator + "' character.")
+	}
+	expression = &LogicalExpression{left, operator, right}
+	return expression, true
+}
+
 // This type defines the node structure associated with an expression that
 // returns the magnitude of a value.
 type MagnitudeExpression struct {
@@ -399,6 +544,26 @@ func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 type PowerExpression struct {
 	Base     any
 	Exponent any
+}
+
+// This method attempts to parse a power expression. It returns the
+// power expression and whether or not the power expression was
+// successfully parsed.
+func (v *parser) parsePowerExpression(base any) (*PowerExpression, bool) {
+	var ok bool
+	var exponent any
+	var expression *PowerExpression
+	_, ok = v.parseDelimiter("^")
+	if !ok {
+		// This is not a power expression.
+		return expression, false
+	}
+	exponent, ok = v.parseExpression()
+	if !ok {
+		panic("Expected an exponent expression following the '^' character.")
+	}
+	expression = &PowerExpression{base, exponent}
+	return expression, true
 }
 
 // This type defines the node structure associated with an expression that
