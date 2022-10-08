@@ -258,18 +258,18 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 		t, ok = v.parseDelimiter(":=")
 		if !ok {
 			t, ok = v.parseDelimiter("+=")
-			if !ok {
-				t, ok = v.parseDelimiter("-=")
-				if !ok {
-					t, ok = v.parseDelimiter("*=")
-					if !ok {
-						t, ok = v.parseDelimiter("/=")
-						if !ok {
-							panic(fmt.Sprintf("Expected an assignment operator and received: %v", *t))
-						}
-					}
-				}
-			}
+		}
+		if !ok {
+			t, ok = v.parseDelimiter("-=")
+		}
+		if !ok {
+			t, ok = v.parseDelimiter("*=")
+		}
+		if !ok {
+			t, ok = v.parseDelimiter("/=")
+		}
+		if !ok {
+			panic(fmt.Sprintf("Expected an assignment operator and received: %v", *t))
 		}
 		operator = t.val
 	}

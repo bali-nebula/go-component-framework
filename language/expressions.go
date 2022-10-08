@@ -363,13 +363,13 @@ func (v *parser) parseInversionExpression() (*InversionExpression, bool) {
 	t, ok = v.parseDelimiter("-")
 	if !ok {
 		t, ok = v.parseDelimiter("/")
-		if !ok {
-			t, ok = v.parseDelimiter("*")
-			if !ok {
-				// This is not an inversion expression.
-				return expression, false
-			}
-		}
+	}
+	if !ok {
+		t, ok = v.parseDelimiter("*")
+	}
+	if !ok {
+		// This is not an inversion expression.
+		return expression, false
 	}
 	operator = t.val
 	numeric, ok = v.parseExpression()
