@@ -156,6 +156,25 @@ type DiscardClause struct {
 	Citation any
 }
 
+// This method attempts to parse a discard clause. It returns the discard
+// clause and whether or not the discard clause was successfully parsed.
+func (v *parser) parseDiscardClause() (*DiscardClause, bool) {
+	var ok bool
+	var citation any
+	var clause *DiscardClause
+	_, ok = v.parseKeyword("discard")
+	if !ok {
+		// This is not a discard clause.
+		return clause, false
+	}
+	citation, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a citation expression following the 'discard' keyword.")
+	}
+	clause = &DiscardClause{citation}
+	return clause, true
+}
+
 // This type defines the node structure associated with a clause that evaluates
 // an expression and optionally assigns the result to a recipient. The recipient
 // must support the `Scalable` interface.
@@ -205,16 +224,16 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 
 // This type defines the node structure associated with a clause that handles
 // an exception.
-type HandleClause struct {
+type ExceptionClause struct {
 	Exception elements.Symbol
 	DoBlocks  []*DoBlock
 }
 
-// This method attempts to parse a handle clause. It returns the handle
-// clause and whether or not the handle clause was successfully parsed.
-func (v *parser) parseHandleClause() (*HandleClause, bool) {
+// This method attempts to parse an exception clause. It returns the exception
+// clause and whether or not the exception clause was successfully parsed.
+func (v *parser) parseExceptionClause() (*ExceptionClause, bool) {
 	var ok bool
-	var clause *HandleClause
+	var clause *ExceptionClause
 	return clause, ok
 }
 
@@ -298,13 +317,13 @@ func (v *parser) parseMainClause() (any, bool) {
 	if !ok {
 		mainClause, ok = v.parseThrowClause()
 	}
+	if !ok {
+		mainClause, ok = v.parseSaveClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseDiscardClause()
+	}
 	/*
-		if !ok {
-			mainClause, ok = v.parseSaveClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseDiscardClause()
-		}
 		if !ok {
 			mainClause, ok = v.parseNotarizeClause()
 		}
@@ -351,7 +370,7 @@ type PostClause struct {
 // This type defines the node structure associated with a procedure that
 // contains Bali Document Notation™ (BDN) procedural statements.
 type Procedure struct {
-	Statements []any // This includes statements and commentary.
+	Statements []any // This includes statements and annotations.
 }
 
 // This method attempts to parse a procedure. It returns the procedure and
@@ -438,8 +457,36 @@ func (v *parser) parseReturnClause() (*ReturnClause, bool) {
 // and returns a citation to the document which is optionally assigned to a
 // recipient.
 type SaveClause struct {
-	Draft     any
-	Recipient any // The recipient is a symbol or attribute.
+	Draft    any
+	Citation any
+}
+
+// This method attempts to parse a save clause. It returns the save
+// clause and whether or not the save clause was successfully parsed.
+func (v *parser) parseSaveClause() (*SaveClause, bool) {
+	var ok bool
+	var draft any
+	var citation any
+	var clause *SaveClause
+	_, ok = v.parseKeyword("save")
+	if !ok {
+		// This is not a save clause.
+		return clause, false
+	}
+	draft, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a draft document expression following the 'save' keyword.")
+	}
+	_, ok = v.parseKeyword("as")
+	if !ok {
+		panic("Expected the 'as' keyword after the draft document expression.")
+	}
+	citation, ok = v.parseRecipient()
+	if !ok {
+		panic("Expected a citation recipient expression following the 'as' keyword.")
+	}
+	clause = &SaveClause{draft, citation}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that selects a
@@ -490,7 +537,7 @@ func (v *parser) parseSelectClause() (*SelectClause, bool) {
 // exception handling clause.
 type Statement struct {
 	MainClause   any
-	HandleClause *HandleClause
+	ExceptionClause *ExceptionClause
 }
 
 // This method attempts to parse a statement. It returns the statement and
@@ -499,12 +546,13 @@ func (v *parser) parseStatement() (*Statement, bool) {
 	var ok bool
 	var statement *Statement
 	var mainClause any
-	var handleClause *HandleClause
+	var exceptionClause *ExceptionClause
 	mainClause, ok = v.parseMainClause()
 	if ok {
-		handleClause, _ = v.parseHandleClause() // The handle clause is optional.
-		statement = &Statement{mainClause, handleClause}
+		// The exception clause is optional.
+		exceptionClause, _ = v.parseExceptionClause()
 	}
+	statement = &Statement{mainClause, exceptionClause}
 	return statement, ok
 }
 
