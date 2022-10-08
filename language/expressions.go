@@ -56,22 +56,14 @@ type AttributeExpression struct {
 // This method attempts to parse an attribute expression. It returns the
 // attribute expression and whether or not the attribute expression was
 // successfully parsed.
-func (v *parser) parseAttributeExpression() (*AttributeExpression, bool) {
+func (v *parser) parseAttributeExpression(composite any) (*AttributeExpression, bool) {
 	var ok bool
 	var bad *token
-	var composite any
 	var indices []any
 	var expression *AttributeExpression
-	composite, ok = v.parseExpression()
-	if !ok {
-		// This is not an attribute expression.
-		return expression, false
-	}
 	_, ok = v.parseDelimiter("[")
 	if !ok {
 		// This is not an attribute expression.
-		// TODO: This wont work, call stateful expression parser here...
-		v.backupOne() // Put back the variable token.
 		return expression, false
 	}
 	indices, ok = v.parseIndices()
@@ -185,41 +177,18 @@ func (v *parser) parseExpression() (any, bool) {
 	if !ok {
 		expression, ok = v.parseDereferenceExpression()
 	}
-	/*
-		if !ok {
-			expression, ok = v.parseMessageExpression()
-		}
-		if !ok {
-			expression, ok = v.parseAttributeExpression()
-		}
-		if !ok {
-			expression, ok = v.parseChainExpression()
-		}
-		if !ok {
-			expression, ok = v.parsePowerExpression()
-		}
-		if !ok {
-			expression, ok = v.parseInversionExpression()
-		}
-		if !ok {
-			expression, ok = v.parseArithmeticExpression()
-		}
-		if !ok {
-			expression, ok = v.parseMagnitudeExpression()
-		}
-		if !ok {
-			expression, ok = v.parseComparisonExpression()
-		}
-		if !ok {
-			expression, ok = v.parseComplementExpression()
-		}
-		if !ok {
-			expression, ok = v.parseLogicalExpression()
-		}
-		if !ok {
-			expression, ok = v.parseDefaultExpression()
-		}
-	*/
+	if !ok {
+		expression, ok = v.parseRecursiveExpression()
+	}
+	if !ok {
+		expression, ok = v.parseInversionExpression()
+	}
+	if !ok {
+		expression, ok = v.parseMagnitudeExpression()
+	}
+	if !ok {
+		expression, ok = v.parseComplementExpression()
+	}
 	return expression, ok
 }
 
@@ -298,6 +267,45 @@ func (v *parser) parseInversionExpression() (*InversionExpression, bool) {
 	return expression, true
 }
 
+// This method attempts to parse a left recursive expression. It returns
+// the left recursive expression and whether or not the left recursive
+// expression was successfully parsed.
+func (v *parser) parseRecursiveExpression() (any, bool) {
+	var ok bool
+	var expression any
+	expression, ok = v.parseExpression()
+	if !ok {
+		// This is not a left recursive expression.
+		return expression, false
+	}
+	expression, ok = v.parseMessageExpression(expression)
+	if !ok {
+		expression, ok = v.parseAttributeExpression(expression)
+	}
+	if !ok {
+		expression, ok = v.parseChainExpression(expression)
+	}
+	if !ok {
+		expression, ok = v.parsePowerExpression(expression)
+	}
+	if !ok {
+		expression, ok = v.parseArithmeticExpression(expression)
+	}
+	if !ok {
+		expression, ok = v.parseComparisonExpression(expression)
+	}
+	if !ok {
+		expression, ok = v.parseLogicalExpression(expression)
+	}
+	if !ok {
+		expression, ok = v.parseDefaultExpression(expression)
+	}
+	if !ok {
+		panic("Not a possible left recursive expression.")
+	}
+	return expression, true
+}
+
 // This type defines the node structure associated with an expression that
 // returns the result of a logical operation on two values.
 type LogicalExpression struct {
@@ -312,6 +320,31 @@ type MagnitudeExpression struct {
 	Numeric any
 }
 
+// This method attempts to parse a magnitude expression. It returns the
+// magnitude expression and whether or not the magnitude expression was
+// successfully parsed.
+func (v *parser) parseMagnitudeExpression() (*MagnitudeExpression, bool) {
+	var ok bool
+	var bad *token
+	var numeric any
+	var expression *MagnitudeExpression
+	_, ok = v.parseDelimiter("|")
+	if !ok {
+		// This is not an magnitude expression.
+		return expression, false
+	}
+	numeric, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a numeric expression following the '|' character.")
+	}
+	bad, ok = v.parseDelimiter("|")
+	if !ok {
+		panic(fmt.Sprintf("Expected a '|' character following the numeric expression and received: %v", *bad))
+	}
+	expression = &MagnitudeExpression{numeric}
+	return expression, true
+}
+
 // This type defines the node structure associated with an expression that
 // sends a message to a target component. The message can be sent synchronously
 // or asynchronously.
@@ -320,6 +353,45 @@ type MessageExpression struct {
 	Operator  string
 	Message   string
 	Arguments []any
+}
+
+// This method attempts to parse a message expression. It returns the
+// message expression and whether or not the message expression was
+// successfully parsed.
+func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
+	var ok bool
+	var t *token
+	var operator string
+	var message string
+	var arguments []any
+	var expression *MessageExpression
+	t, ok = v.parseDelimiter(".")
+	if !ok {
+		t, ok = v.parseDelimiter("<-")
+	}
+	if !ok {
+		// This is not an message expression.
+		return expression, false
+	}
+	operator = t.val
+	message, ok = v.parseIdentifier()
+	if !ok {
+		panic("Expected a message identifier following the '" + operator + "' character.")
+	}
+	t, ok = v.parseDelimiter("(")
+	if !ok {
+		panic("Expected a '(' character following the message identifier.")
+	}
+	arguments, ok = v.parseArguments()
+	if !ok {
+		panic("Expected arguments following the '(' character.")
+	}
+	t, ok = v.parseDelimiter(")")
+	if !ok {
+		panic(fmt.Sprintf("Expected a ')' character following the arguments and received: %v", *t))
+	}
+	expression = &MessageExpression{target, operator, message, arguments}
+	return expression, true
 }
 
 // This type defines the node structure associated with an expression that
