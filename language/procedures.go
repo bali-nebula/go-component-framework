@@ -293,8 +293,36 @@ type ExceptionClause struct {
 // clause and whether or not the exception clause was successfully parsed.
 func (v *parser) parseExceptionClause() (*ExceptionClause, bool) {
 	var ok bool
+	var exception elements.Symbol
+	var doBlock *DoBlock
+	var doBlocks []*DoBlock
 	var clause *ExceptionClause
-	return clause, ok
+	_, ok = v.parseKeyword("on")
+	if !ok {
+		// This is not an exception clause.
+		return clause, false
+	}
+	exception, ok = v.parseSymbol()
+	if !ok {
+		panic("Expected an exception symbol following the 'on' keyword.")
+	}
+	for {
+		_, ok = v.parseKeyword("matching")
+		if !ok {
+			break // No more possible matches.
+		}
+		doBlock, ok = v.parseDoBlock()
+		if !ok {
+			panic("Expected a pattern expression and statement block following the 'matching' keyword.")
+		}
+		doBlocks = append(doBlocks, doBlock)
+	}
+	// There must be at least one matching block expression.
+	if len(doBlocks) == 0 {
+		panic("Expected at least one pattern expression and statement block in the exception clause.")
+	}
+	clause = &ExceptionClause{exception, doBlocks}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that selects a
@@ -704,7 +732,7 @@ func (v *parser) parseSelectClause() (*SelectClause, bool) {
 		}
 		doBlocks = append(doBlocks, doBlock)
 	}
-	// There must be at least one block expression.
+	// There must be at least one matching block expression.
 	if len(doBlocks) == 0 {
 		panic("Expected at least one pattern expression and statement block in the select clause.")
 	}
