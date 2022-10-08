@@ -34,7 +34,7 @@ var Lexicon = map[string]string{
 	"$chainExpression":       `expression "&" expression`,
 	"$checkoutClause":        `"checkout" recipient ["at" "level" expression] "from" expression`,
 	"$collection":            `"[" sequence "]"`,
-	"$commentary":            `NOTE | COMMENT`,
+	"$annotation":            `NOTE | COMMENT`,
 	"$comparisonExpression":  `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complementExpression":  `"NOT" expression`,
 	"$component":             `entity [context]`,
@@ -43,7 +43,6 @@ var Lexicon = map[string]string{
 	"$defaultExpression":     `expression "?" expression`,
 	"$dereferenceExpression": `"@" expression`,
 	"$discardClause":         `"discard" expression`,
-	"$doBlock":               `expression "do" "{" statements "}"`,
 	"$document":              `component EOL EOF`,
 	"$element": `
 		ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
@@ -52,7 +51,7 @@ var Lexicon = map[string]string{
 	"$entity":          `element | string | collection | procedure`,
 	"$evaluateClause":  `[recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$exception":       `SYMBOL`,
-	"$exceptionClause": `"on" exception <"matching" doBlock>`,
+	"$exceptionClause": `"on" exception <"matching" expression "do" "{" statements "}">`,
 	"$expression": `
 		component |
 		variable |
@@ -73,7 +72,7 @@ var Lexicon = map[string]string{
 	`,
 	"$function":            `IDENTIFIER`,
 	"$functionExpression":  `function "(" [arguments] ")"`,
-	"$ifClause":            `"if" doBlock`,
+	"$ifClause":            `"if" expression "do" "{" statements "}"`,
 	"$indices":             `expression {"," expression}`,
 	"$inversionExpression": `("-" | "/" | "*") expression`,
 	"$item":                `SYMBOL`,
@@ -123,22 +122,22 @@ var Lexicon = map[string]string{
 	"$recipient":            `name | attribute`,
 	"$rejectClause":         `"reject" expression`,
 	"$retrieveClause":       `"retrieve" recipient "from" expression`,
-	"$returnClause":         `"return" [expression]`,
+	"$returnClause":         `"return" expression`,
 	"$saveClause":           `"save" expression ["as" recipient]`,
-	"$selectClause":         `"select" expression <"matching" doBlock>`,
+	"$selectClause":         `"select" expression <"matching" expression "do" "{" statements "}">`,
 	"$sequence":             `catalog | list | range`,
 	"$statement":            `mainClause [exceptionClause]`,
 	"$statements": `
 		statement {";" statement} |
-		EOL {(commentary | statement) EOL} |
+		EOL {(annotation | statement) EOL} |
 		! An empty procedure.
 	`,
 	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$throwClause": `"throw" expression`,
 	"$value":       `element | string | variable`,
 	"$variable":    `IDENTIFIER`,
-	"$whileClause": `"while" doBlock`,
-	"$withClause":  `"with" ["each" item "in"] doBlock`,
+	"$whileClause": `"while" expression "do" "{" statements "}"`,
+	"$withClause":  `"with" ["each" item "in"] expression "do" "{" statements "}"`,
 	"$ANGLE":       `"~" (REAL | ZERO)`,
 	"$ANY":         `"any"`,
 	"$AUTHORITY":   `<~"/">`,

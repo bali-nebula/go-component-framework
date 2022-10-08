@@ -79,7 +79,7 @@ func (v *parser) parseDoBlock() (*DoBlock, bool) {
 	expression, ok = v.parseExpression()
 	if !ok {
 		// We know a do block is expected so time to panic...
-		panic("Expected an expression to start a do block.")
+		panic("Expected an expression before a statement block.")
 	}
 	bad, ok = v.parseDelimiter("{")
 	if !ok {
@@ -102,6 +102,23 @@ func (v *parser) parseDoBlock() (*DoBlock, bool) {
 type BreakClause struct {
 }
 
+// This method attempts to parse a break clause. It returns the break
+// clause and whether or not the break clause was successfully parsed.
+func (v *parser) parseBreakClause() (*BreakClause, bool) {
+	var ok bool
+	var clause *BreakClause
+	_, ok = v.parseKeyword("break")
+	if !ok {
+		// This is not a break clause.
+		return clause, false
+	}
+	_, ok = v.parseKeyword("loop")
+	if !ok {
+		panic("Expected the 'loop' keyword following the 'break' keyword.")
+	}
+	return clause, true
+}
+
 // This type defines the node structure associated with a clause that checks out
 // a draft version of a released document at an optional release level from the
 // document repository and assigns it to a recipient.
@@ -114,6 +131,23 @@ type CheckoutClause struct {
 // This type defines the node structure associated with a clause that causes the
 // execution of a loop to continue at the beginning.
 type ContinueClause struct {
+}
+
+// This method attempts to parse a continue clause. It returns the continue
+// clause and whether or not the continue clause was successfully parsed.
+func (v *parser) parseContinueClause() (*ContinueClause, bool) {
+	var ok bool
+	var clause *ContinueClause
+	_, ok = v.parseKeyword("continue")
+	if !ok {
+		// This is not a continue clause.
+		return clause, false
+	}
+	_, ok = v.parseKeyword("loop")
+	if !ok {
+		panic("Expected the 'loop' keyword following the 'continue' keyword.")
+	}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that discards
@@ -139,7 +173,7 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 	var recipient any
 	var operator string
 	var expression any
-	var evaluateClause *EvaluateClause
+	var clause *EvaluateClause
 	recipient, ok = v.parseRecipient()
 	if ok {
 		t, ok = v.parseDelimiter(":=")
@@ -162,17 +196,18 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 	}
 	expression, ok = v.parseExpression()
 	if !ok {
-		return evaluateClause, false
+		// This is not an evaluate clause.
+		return clause, false
 	}
-	evaluateClause = &EvaluateClause{recipient, operator, expression}
-	return evaluateClause, true
+	clause = &EvaluateClause{recipient, operator, expression}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that handles
 // an exception.
 type HandleClause struct {
 	Exception elements.Symbol
-	DoBlocks    []*DoBlock
+	DoBlocks  []*DoBlock
 }
 
 // This method attempts to parse a handle clause. It returns the handle
@@ -197,6 +232,7 @@ func (v *parser) parseIfClause() (*IfClause, bool) {
 	var clause *IfClause
 	_, ok = v.parseKeyword("if")
 	if !ok {
+		// This is not an if clause.
 		return clause, false
 	}
 	doBlock, ok = v.parseDoBlock()
@@ -244,25 +280,25 @@ func (v *parser) parseMainClause() (any, bool) {
 	if !ok {
 		mainClause, ok = v.parseSelectClause()
 	}
+	if !ok {
+		mainClause, ok = v.parseWithClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseWhileClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseContinueClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseBreakClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseReturnClause()
+	}
+	if !ok {
+		mainClause, ok = v.parseThrowClause()
+	}
 	/*
-		if !ok {
-			mainClause, ok = v.parseWithClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseWhileClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseContinueClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseBreakClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseReturnClause()
-		}
-		if !ok {
-			mainClause, ok = v.parseThrowClause()
-		}
 		if !ok {
 			mainClause, ok = v.parseSaveClause()
 		}
@@ -326,7 +362,8 @@ func (v *parser) parseProcedure() ([]any, bool) {
 	var statements []any
 	_, ok = v.parseDelimiter("{")
 	if !ok {
-		return nil, false
+		// This is not a procedure.
+		return statements, false
 	}
 	statements, ok = v.parseStatements()
 	if !ok {
@@ -372,9 +409,28 @@ type RetrieveClause struct {
 }
 
 // This type defines the node structure associated with a clause that causes an
-// executing procedure to return with an optional result.
+// executing procedure to return with a result.
 type ReturnClause struct {
 	Result any
+}
+
+// This method attempts to parse a return clause. It returns the return
+// clause and whether or not the return clause was successfully parsed.
+func (v *parser) parseReturnClause() (*ReturnClause, bool) {
+	var ok bool
+	var result any
+	var clause *ReturnClause
+	_, ok = v.parseKeyword("return")
+	if !ok {
+		// This is not a return clause.
+		return clause, false
+	}
+	result, ok = v.parseExpression()
+	if !ok {
+		panic("Expected a result expression following the 'return' keyword.")
+	}
+	clause = &ReturnClause{result}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that saves
@@ -390,7 +446,7 @@ type SaveClause struct {
 // statement block to be executed based on the pattern of a control expression.
 type SelectClause struct {
 	Control  any
-	DoBlocks   []*DoBlock
+	DoBlocks []*DoBlock
 }
 
 // This method attempts to parse an select clause. It returns the select clause
@@ -403,6 +459,7 @@ func (v *parser) parseSelectClause() (*SelectClause, bool) {
 	var clause *SelectClause
 	_, ok = v.parseKeyword("select")
 	if !ok {
+		// This is not a select clause.
 		return clause, false
 	}
 	control, ok = v.parseExpression()
@@ -510,16 +567,82 @@ type ThrowClause struct {
 	Exception any
 }
 
+// This method attempts to parse a throw clause. It returns the throw
+// clause and whether or not the throw clause was successfully parsed.
+func (v *parser) parseThrowClause() (*ThrowClause, bool) {
+	var ok bool
+	var exception any
+	var clause *ThrowClause
+	_, ok = v.parseKeyword("throw")
+	if !ok {
+		// This is not a throw clause.
+		return clause, false
+	}
+	exception, ok = v.parseExpression()
+	if !ok {
+		panic("Expected an exception expression following the 'throw' keyword.")
+	}
+	clause = &ThrowClause{exception}
+	return clause, true
+}
+
 // This type defines the node structure associated with a clause that executes
 // a statement block while a condition is true.
 type WhileClause struct {
-	DoBlock     *DoBlock
+	DoBlock *DoBlock
+}
+
+// This method attempts to parse a while clause. It returns the while clause and
+// whether or not the while clause was successfully parsed.
+func (v *parser) parseWhileClause() (*WhileClause, bool) {
+	var ok bool
+	var doBlock *DoBlock
+	var clause *WhileClause
+	_, ok = v.parseKeyword("while")
+	if !ok {
+		// This is not a while clause.
+		return clause, false
+	}
+	doBlock, ok = v.parseDoBlock()
+	if !ok {
+		panic("Expected a conditional expression following the 'while' keyword.")
+	}
+	clause = &WhileClause{doBlock}
+	return clause, true
 }
 
 // This type defines the node structure associated with a clause that executes
 // a statement block for each item in a collection. Each item may be optionally
 // assigned to a symbol that is referenced in the statement block.
 type WithClause struct {
-	Item       elements.Symbol
-	DoBlock      *DoBlock
+	Item    elements.Symbol
+	DoBlock *DoBlock
+}
+
+// This method attempts to parse a with clause. It returns the with clause and
+// whether or not the with clause was successfully parsed.
+func (v *parser) parseWithClause() (*WithClause, bool) {
+	var ok bool
+	var item elements.Symbol
+	var doBlock *DoBlock
+	var clause *WithClause
+	_, ok = v.parseKeyword("with")
+	if !ok {
+		// This is not a with clause.
+		return clause, false
+	}
+	_, ok = v.parseKeyword("each")
+	if ok {
+		// There is an each item option.
+		item, ok = v.parseSymbol()
+		if !ok {
+			panic("Expected a symbol following the 'each' keyword.")
+		}
+	}
+	doBlock, ok = v.parseDoBlock()
+	if !ok {
+		panic("Expected a sequential expression following the item symbol.")
+	}
+	clause = &WithClause{item, doBlock}
+	return clause, true
 }
