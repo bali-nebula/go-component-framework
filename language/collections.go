@@ -218,19 +218,19 @@ func (v *parser) parseSequence() (any, bool) {
 // collection and whether or not the range collection was successfully parsed.
 func (v *parser) parseRange() (abstractions.RangeLike[any], bool) {
 	var ok bool
-	var t *token
+	var token *token
 	var first any
 	var last any
 	first, _ = v.parseValue() // The first value is optional.
-	t, ok = v.parseDelimiter("..")
+	token, ok = v.parseDelimiter("..")
 	if !ok {
-		t, ok = v.parseDelimiter("<..")
+		token, ok = v.parseDelimiter("<..")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter("<..<")
+		token, ok = v.parseDelimiter("<..<")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter("..<")
+		token, ok = v.parseDelimiter("..<")
 	}
 	if !ok {
 		// This is not a range collection.
@@ -239,7 +239,7 @@ func (v *parser) parseRange() (abstractions.RangeLike[any], bool) {
 		}
 		return nil, false
 	}
-	var connector = t.val
+	var connector = token.val
 	last, _ = v.parseValue() // The last value is optional.
 	var rng = collections.Range(first, connector, last)
 	return rng, true

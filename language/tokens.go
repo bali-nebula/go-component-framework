@@ -20,6 +20,9 @@ import (
 
 // TOKEN
 
+// This integer type is used as a type identifier for each token.
+type tokenType int
+
 // This enumeration defines all possible token types including the error token.
 const (
 	// The first two token types must be first.
@@ -50,15 +53,13 @@ const (
 	tokenVersion
 )
 
-// This integer type is used as a type identifier for each token.
-type tokenType int
-
 // This type defines the structure and methods for each token returned by the
 // scanner.
 type token struct {
 	typ tokenType
 	val string
 	pos int // The byte index of the position of the token in the input.
+	lin int // The line number of the token in the input.
 }
 
 // This method returns the a canonical string version of this token.
@@ -87,7 +88,7 @@ func (v *token) String() string {
 //
 // All token types in the specification are shown in UPPERCASE.
 func Scanner(source []byte, tokens chan token) *scanner {
-	v := &scanner{source: source, tokens: tokens}
+	v := &scanner{source: source, line: 1, tokens: tokens}
 	go v.scanTokens() // Start scanning in the background.
 	return v
 }
@@ -97,6 +98,7 @@ type scanner struct {
 	source  []byte
 	start   int
 	current int
+	line    int
 	width   int
 	last    int
 	tokens  chan token
@@ -121,6 +123,7 @@ func (v *scanner) scanToken() bool {
 	//
 	// Must be first in case the input buffer is empty.
 	case v.foundEOF():
+		// We are done scanning.
 		return false
 	case v.foundEOL():
 	case v.foundSymbol():
@@ -151,6 +154,7 @@ func (v *scanner) scanToken() bool {
 	// Must be after foundKeyword().
 	case v.foundIdentifier():
 	default:
+		v.foundError()
 		return false
 	}
 	return true
@@ -252,20 +256,11 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 	if tType == tokenEOF {
 		tValue = "<EOF>"
 	}
-	t := token{tType, tValue, v.start}
+	t := token{tType, tValue, v.start, v.line}
 	v.tokens <- t
 	v.start = v.current
 	v.width = 0
 	v.last = 0
-	return tType
-}
-
-// This method handles an error by adding an error token to the token channel.
-// It returns the token type of the type added to the channel.
-func (v *scanner) emitError(message string, args ...any) tokenType {
-	tType := tokenError
-	tValue := fmt.Sprintf(message, args...)
-	v.tokens <- token{tType, tValue, v.start}
 	return tType
 }
 
@@ -347,6 +342,13 @@ func (v *scanner) foundDuration() bool {
 	return false
 }
 
+// This method adds an error token with the current token information to the token
+// channel.
+func (v *scanner) foundError() {
+	var token = token{tokenError, string(v.source[v.start:v.current+1]), v.start, v.line}
+	v.tokens <- token
+}
+
 // This method adds an EOF token with the current token information to the token
 // channel. It returns true if an EOF token was found.
 func (v *scanner) foundEOF() bool {
@@ -363,6 +365,7 @@ func (v *scanner) foundEOF() bool {
 func (v *scanner) foundEOL() bool {
 	s := v.source[v.current:]
 	if bytes.HasPrefix(s, eol) {
+		v.line++
 		v.acceptToken("\n")
 		v.emitToken(tokenEOL)
 		return true

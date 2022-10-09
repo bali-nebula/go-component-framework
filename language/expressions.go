@@ -51,28 +51,28 @@ type ArithmeticExpression struct {
 // successfully parsed.
 func (v *parser) parseArithmeticExpression(left any) (*ArithmeticExpression, bool) {
 	var ok bool
-	var t *token
+	var token *token
 	var operator string
 	var right any
 	var expression *ArithmeticExpression
-	t, ok = v.parseDelimiter("*")
+	token, ok = v.parseDelimiter("*")
 	if !ok {
-		t, ok = v.parseDelimiter("/")
+		token, ok = v.parseDelimiter("/")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter("//")
+		token, ok = v.parseDelimiter("//")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter("+")
+		token, ok = v.parseDelimiter("+")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter("-")
+		token, ok = v.parseDelimiter("-")
 	}
 	if !ok {
 		// This is not a arithmetic expression.
 		return expression, false
 	}
-	operator = t.val
+	operator = token.val
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -153,31 +153,31 @@ type ComparisonExpression struct {
 // successfully parsed.
 func (v *parser) parseComparisonExpression(left any) (*ComparisonExpression, bool) {
 	var ok bool
-	var t *token
+	var token *token
 	var operator string
 	var right any
 	var expression *ComparisonExpression
-	t, ok = v.parseDelimiter("<")
+	token, ok = v.parseDelimiter("<")
 	if !ok {
-		t, ok = v.parseDelimiter("=")
+		token, ok = v.parseDelimiter("=")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter(">")
+		token, ok = v.parseDelimiter(">")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter("≠")
+		token, ok = v.parseDelimiter("≠")
 	}
 	if !ok {
-		t, ok = v.parseKeyword("IS")
+		token, ok = v.parseKeyword("IS")
 	}
 	if !ok {
-		t, ok = v.parseKeyword("MATCHES")
+		token, ok = v.parseKeyword("MATCHES")
 	}
 	if !ok {
 		// This is not a comparison expression.
 		return expression, false
 	}
-	operator = t.val
+	operator = token.val
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -357,22 +357,22 @@ type InversionExpression struct {
 // successfully parsed.
 func (v *parser) parseInversionExpression() (*InversionExpression, bool) {
 	var ok bool
-	var t *token
+	var token *token
 	var operator string
 	var numeric any
 	var expression *InversionExpression
-	t, ok = v.parseDelimiter("-")
+	token, ok = v.parseDelimiter("-")
 	if !ok {
-		t, ok = v.parseDelimiter("/")
+		token, ok = v.parseDelimiter("/")
 	}
 	if !ok {
-		t, ok = v.parseDelimiter("*")
+		token, ok = v.parseDelimiter("*")
 	}
 	if !ok {
 		// This is not an inversion expression.
 		return expression, false
 	}
-	operator = t.val
+	operator = token.val
 	numeric, ok = v.parseExpression()
 	if !ok {
 		panic(fmt.Sprintf("Expected a numeric expression following the %q operator.", operator))
@@ -433,25 +433,25 @@ type LogicalExpression struct {
 // successfully parsed.
 func (v *parser) parseLogicalExpression(left any) (*LogicalExpression, bool) {
 	var ok bool
-	var t *token
+	var token *token
 	var operator string
 	var right any
 	var expression *LogicalExpression
-	t, ok = v.parseKeyword("AND")
+	token, ok = v.parseKeyword("AND")
 	if !ok {
-		t, ok = v.parseKeyword("SANS")
+		token, ok = v.parseKeyword("SANS")
 	}
 	if !ok {
-		t, ok = v.parseKeyword("XOR")
+		token, ok = v.parseKeyword("XOR")
 	}
 	if !ok {
-		t, ok = v.parseKeyword("OR")
+		token, ok = v.parseKeyword("OR")
 	}
 	if !ok {
 		// This is not a logical expression.
 		return expression, false
 	}
-	operator = t.val
+	operator = token.val
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -506,25 +506,25 @@ type MessageExpression struct {
 // successfully parsed.
 func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 	var ok bool
-	var t *token
+	var token*token
 	var operator string
 	var message string
 	var arguments []any
 	var expression *MessageExpression
-	t, ok = v.parseDelimiter(".")
+	token, ok = v.parseDelimiter(".")
 	if !ok {
-		t, ok = v.parseDelimiter("<-")
+		token, ok = v.parseDelimiter("<-")
 	}
 	if !ok {
 		// This is not an message expression.
 		return expression, false
 	}
-	operator = t.val
+	operator = token.val
 	message, ok = v.parseIdentifier()
 	if !ok {
 		panic("Expected a message identifier following the '" + operator + "' character.")
 	}
-	t, ok = v.parseDelimiter("(")
+	token, ok = v.parseDelimiter("(")
 	if !ok {
 		panic("Expected a '(' character following the message identifier.")
 	}
@@ -532,9 +532,9 @@ func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 	if !ok {
 		panic("Expected arguments following the '(' character.")
 	}
-	t, ok = v.parseDelimiter(")")
+	token, ok = v.parseDelimiter(")")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ')' character following the arguments and received: %v", *t))
+		panic(fmt.Sprintf("Expected a ')' character following the arguments and received: %v", *token))
 	}
 	expression = &MessageExpression{target, operator, message, arguments}
 	return expression, true

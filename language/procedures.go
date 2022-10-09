@@ -248,34 +248,34 @@ type EvaluateClause struct {
 // clause and whether or not the evaluate clause was successfully parsed.
 func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 	var ok bool
-	var t *token
+	var token *token
 	var recipient any
 	var operator string
 	var expression any
 	var clause *EvaluateClause
 	recipient, ok = v.parseRecipient()
 	if ok {
-		t, ok = v.parseDelimiter(":=")
+		token, ok = v.parseDelimiter(":=")
 		if !ok {
-			t, ok = v.parseDelimiter("+=")
+			token, ok = v.parseDelimiter("+=")
 		}
 		if !ok {
-			t, ok = v.parseDelimiter("-=")
+			token, ok = v.parseDelimiter("-=")
 		}
 		if !ok {
-			t, ok = v.parseDelimiter("*=")
+			token, ok = v.parseDelimiter("*=")
 		}
 		if !ok {
-			t, ok = v.parseDelimiter("/=")
+			token, ok = v.parseDelimiter("/=")
 		}
 		if !ok {
-			panic(fmt.Sprintf("Expected an assignment operator and received: %v", *t))
+			panic(fmt.Sprintf("Expected an assignment operator and received: %v", *token))
 		}
-		operator = t.val
+		operator = token.val
 	}
 	expression, ok = v.parseExpression()
 	if !ok {
-		if t != nil {
+		if token != nil {
 			panic(fmt.Sprintf("Expected an expression after the assignment operator: %q.", operator))
 		}
 		// This is not an evaluate clause.
