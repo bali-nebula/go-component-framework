@@ -15,6 +15,7 @@ import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	"github.com/craterdog-bali/go-bali-document-notation/collections"
 	"github.com/craterdog-bali/go-bali-document-notation/elements"
+	"strings"
 )
 
 // PARSER INTERFACE
@@ -33,6 +34,9 @@ func ParseSource(source string) (*Component, bool) {
 	component, ok = v.parseComponent()
 	if ok {
 		_, ok = v.parseEOF()
+		if !ok {
+			panic("Source contained more than just a component.")
+		}
 	}
 	return component, ok
 }
@@ -46,8 +50,14 @@ func ParseDocument(document []byte) (*Component, bool) {
 	var v = Parser(document)
 	component, ok = v.parseComponent()
 	if ok {
-		v.parseEOL() // Required by POSIX.
+		_, ok = v.parseEOL() // Required by POSIX.
+		if !ok {
+			panic("Document is missing a final EOL.")
+		}
 		_, ok = v.parseEOF()
+		if !ok {
+			panic("Source contained more than just a component.")
+		}
 	}
 	return component, ok
 }
@@ -71,9 +81,10 @@ type Parameter struct {
 
 // This constructor creates a new parser using the specified byte array.
 func Parser(source []byte) *parser {
-	var tokens = make(chan token)
+	var tokens = make(chan token, 100)
 	Scanner(source, tokens) // Starts scanning in a go routine.
 	var p = &parser{
+		source: source,
 		previous: collections.Stack[*token](),
 		next:     collections.Stack[*token](),
 		tokens:   tokens}
@@ -82,6 +93,7 @@ func Parser(source []byte) *parser {
 
 // This type defines the structure and methods for the parser agent.
 type parser struct {
+	source []byte
 	previous abstractions.StackLike[*token] // The stack of the previously retrieved tokens.
 	next     abstractions.StackLike[*token] // The stack of the retrieved tokens that have been put back.
 	tokens   chan token                     // The queue of unread tokens coming from the scanner.
@@ -92,14 +104,16 @@ type parser struct {
 func (v *parser) nextToken() *token {
 	var next *token
 	if v.next.IsEmpty() {
-		var t, ok = <-v.tokens
+		var token, ok = <-v.tokens
 		if !ok {
-			panic("The token channel terminated without an EOF token.")
+			panic("The token channel terminated without an EOF or error token.")
 		}
-		if t.typ == tokenError {
-			panic(fmt.Sprintf("%s", t.val))
+		if token.typ == tokenError {
+			panic(v.formatError(
+				"An unexpected character was encountered while scanning the input: '" + token.val + "'",
+				&token))
 		}
-		next = &t
+		next = &token
 	} else {
 		next = v.next.RemoveTop()
 	}
@@ -115,6 +129,34 @@ func (v *parser) backupOne() {
 	}
 	var previous = v.previous.RemoveTop()
 	v.next.AddItem(previous)
+}
+
+// This method returns an error message containing the context for a parsing
+// error.
+func (v *parser) formatError(message string, token *token) string {
+	fmt.Printf("Token: %v\n", *token)
+	message += "\n\n"
+	var line = token.lin - 1  // Convert to zero based indexing.
+	var lines = strings.Split(string(v.source), "\n")
+
+	if line > 1 {
+		message += fmt.Sprintf("%04d: ",line-1) + string(lines[line-1]) + "\n"
+	}
+	message += fmt.Sprintf("%04d: ",line) + string(lines[line]) + "\n"
+
+	message += " >>>──"
+	var count = 0
+	for count < token.pos {
+		message += "─"
+		count++
+	}
+	message += "⌃\n\n"
+
+	if line < len(lines) {
+		message += fmt.Sprintf("%04d: ",line+1) + string(lines[line+1]) + "\n"
+	}
+
+	return message
 }
 
 // This method attempts to parse a comment. It returns a string containing the

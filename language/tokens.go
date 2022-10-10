@@ -58,8 +58,8 @@ const (
 type token struct {
 	typ tokenType
 	val string
-	pos int // The byte index of the position of the token in the input.
 	lin int // The line number of the token in the input.
+	pos int // The byte index of the position of the token in the line.
 }
 
 // This method returns the a canonical string version of this token.
@@ -95,13 +95,14 @@ func Scanner(source []byte, tokens chan token) *scanner {
 
 // This type defines the structure and methods for the scanner agent.
 type scanner struct {
-	source  []byte
-	start   int
-	current int
-	line    int
-	width   int
-	last    int
-	tokens  chan token
+	source   []byte
+	start    int
+	current  int
+	line     int
+	position int
+	width    int
+	last     int
+	tokens   chan token
 }
 
 // This method continues scanning tokens from the source array until an error
@@ -210,6 +211,7 @@ func (v *scanner) nextRune() rune {
 		v.last = v.width
 		next, v.width = utf8.DecodeRune(s)
 		v.current += v.width
+		v.position += v.width
 	}
 	return next
 }
@@ -235,6 +237,7 @@ func (v *scanner) backupOne() {
 		panic("The scanner can only backup by one rune.")
 	}
 	v.current -= v.width
+	v.position -= v.width
 	v.width = v.last
 	v.last = 0
 }
@@ -256,9 +259,10 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 	if tType == tokenEOF {
 		tValue = "<EOF>"
 	}
-	t := token{tType, tValue, v.start, v.line}
-	v.tokens <- t
+	var token = token{tType, tValue, v.line, v.position}
+	v.tokens <- token
 	v.start = v.current
+	v.position += len(tValue)
 	v.width = 0
 	v.last = 0
 	return tType
@@ -345,8 +349,8 @@ func (v *scanner) foundDuration() bool {
 // This method adds an error token with the current token information to the token
 // channel.
 func (v *scanner) foundError() {
-	var token = token{tokenError, string(v.source[v.start:v.current+1]), v.start, v.line}
-	v.tokens <- token
+	v.acceptToken(string(v.source[v.current:v.current+1]))
+	v.emitToken(tokenError)
 }
 
 // This method adds an EOF token with the current token information to the token
@@ -368,6 +372,7 @@ func (v *scanner) foundEOL() bool {
 		v.line++
 		v.acceptToken("\n")
 		v.emitToken(tokenEOL)
+		v.position = 0
 		return true
 	}
 	return false
