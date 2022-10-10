@@ -27,7 +27,7 @@ const n = `">
 
 const c = `(
     $base: 64
-    $$encoding: $utf8
+    $en_coding: $utf8
 )`
 
 const d = "~-P12Y3M4DT5H6M7.890S"
@@ -118,7 +118,7 @@ func TestParserWithStringTypes(t *testing.T) {
 	assert.Equal(t, []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, binary.AsArray())
 
 	// Moniker
-	component, ok = language.ParseSource("/bali/types/Number/v1.2.3" + c)
+	component, ok = language.ParseSource("/bali/types/Number/v1.2.3")
 	assert.True(t, ok)
 	var moniker strings.Moniker = component.Entity.(strings.Moniker)
 	assert.Equal(t, []string{"bali", "types", "Number", "v1.2.3"}, moniker.AsArray())

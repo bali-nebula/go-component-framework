@@ -14,7 +14,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"unicode"
 	"unicode/utf8"
 )
 
@@ -117,7 +116,7 @@ func (v *scanner) scanTokens() {
 // the source array. It returns true if it found a valid token or false
 // if no valid token or a tokenEOF was found.
 func (v *scanner) scanToken() bool {
-	v.skipWhiteSpace()
+	v.skipSpaces()
 	switch {
 	// The order of the cases below has been set to help optimize the
 	// performance by placing the most common token types first.
@@ -161,15 +160,15 @@ func (v *scanner) scanToken() bool {
 	return true
 }
 
-// This method scans through any non-EOL white-space in the source array and
+// This method scans through any spaces in the source array and
 // sets the current index to the next non-white-space rune.
-func (v *scanner) skipWhiteSpace() {
+func (v *scanner) skipSpaces() {
 	if v.current < len(v.source) {
 		r := v.nextRune()
-		for unicode.IsSpace(r) && r != '\n' {
-			r = v.nextRune() // Accept the whitespace rune.
+		for r == space {
+			r = v.nextRune() // Accept the space rune.
 		}
-		v.backupOne() // The last rune wasn't whitespace.
+		v.backupOne() // The last rune wasn't a space.
 		v.start = v.current
 	}
 }
@@ -211,7 +210,7 @@ func (v *scanner) nextRune() rune {
 		v.last = v.width
 		next, v.width = utf8.DecodeRune(s)
 		v.current += v.width
-		v.position += v.width
+		v.position++
 	}
 	return next
 }
@@ -237,7 +236,7 @@ func (v *scanner) backupOne() {
 		panic("The scanner can only backup by one rune.")
 	}
 	v.current -= v.width
-	v.position -= v.width
+	v.position--
 	v.width = v.last
 	v.last = 0
 }
@@ -259,10 +258,28 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 	if tType == tokenEOF {
 		tValue = "<EOF>"
 	}
+	if tType == tokenError {
+		switch tValue {
+		case "\a":
+			tValue = "<BELL>"
+		case "\b":
+			tValue = "<BKSP>"
+		case "\t":
+			tValue = "<TAB>"
+		case "\n":
+			tValue = "<EOL>"
+		case "\f":
+			tValue = "<FF>"
+		case "\r":
+			tValue = "<CR>"
+		case "\v":
+			tValue = "<VTAB>"
+		}
+	}
 	var token = token{tType, tValue, v.line, v.position}
 	v.tokens <- token
 	v.start = v.current
-	v.position += len(tValue)
+	v.position++
 	v.width = 0
 	v.last = 0
 	return tType
@@ -349,7 +366,7 @@ func (v *scanner) foundDuration() bool {
 // This method adds an error token with the current token information to the token
 // channel.
 func (v *scanner) foundError() {
-	v.acceptToken(string(v.source[v.current:v.current+1]))
+	v.nextRune()
 	v.emitToken(tokenError)
 }
 
@@ -580,5 +597,8 @@ func (v *scanner) foundVersion() bool {
 // This constant defines the pseudo-rune for the end-of-file marker.
 const eof = -1
 
-// This constant defines the pseudo-rune for the end-of-line marker.
+// This constant defines the rune for the end-of-line marker.
 var eol = []byte("\n")
+
+// This constant defines the rune for a space character.
+var space = rune(' ')

@@ -221,7 +221,7 @@ type ComponentExpression struct {
 // This type defines the node structure associated with an expression that
 // returns a value or its default value if not set.
 type DefaultExpression struct {
-	Value  any
+	Value   any
 	Default any
 }
 
@@ -506,7 +506,7 @@ type MessageExpression struct {
 // successfully parsed.
 func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 	var ok bool
-	var token*token
+	var token *token
 	var operator string
 	var message string
 	var arguments []any

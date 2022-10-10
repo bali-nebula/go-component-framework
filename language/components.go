@@ -84,7 +84,7 @@ func Parser(source []byte) *parser {
 	var tokens = make(chan token, 100)
 	Scanner(source, tokens) // Starts scanning in a go routine.
 	var p = &parser{
-		source: source,
+		source:   source,
 		previous: collections.Stack[*token](),
 		next:     collections.Stack[*token](),
 		tokens:   tokens}
@@ -93,7 +93,7 @@ func Parser(source []byte) *parser {
 
 // This type defines the structure and methods for the parser agent.
 type parser struct {
-	source []byte
+	source   []byte
 	previous abstractions.StackLike[*token] // The stack of the previously retrieved tokens.
 	next     abstractions.StackLike[*token] // The stack of the retrieved tokens that have been put back.
 	tokens   chan token                     // The queue of unread tokens coming from the scanner.
@@ -110,7 +110,7 @@ func (v *parser) nextToken() *token {
 		}
 		if token.typ == tokenError {
 			panic(v.formatError(
-				"An unexpected character was encountered while scanning the input: '" + token.val + "'",
+				"An unexpected character was encountered while scanning the input: '"+token.val+"'",
 				&token))
 		}
 		next = &token
@@ -134,26 +134,25 @@ func (v *parser) backupOne() {
 // This method returns an error message containing the context for a parsing
 // error.
 func (v *parser) formatError(message string, token *token) string {
-	fmt.Printf("Token: %v\n", *token)
 	message += "\n\n"
-	var line = token.lin - 1  // Convert to zero based indexing.
+	var line = token.lin
 	var lines = strings.Split(string(v.source), "\n")
 
 	if line > 1 {
-		message += fmt.Sprintf("%04d: ",line-1) + string(lines[line-1]) + "\n"
+		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + "\n"
 	}
-	message += fmt.Sprintf("%04d: ",line) + string(lines[line]) + "\n"
+	message += fmt.Sprintf("%04d: ", line) + string(lines[line-1]) + "\n"
 
 	message += " >>>──"
-	var count = 0
+	var count = 1
 	for count < token.pos {
 		message += "─"
 		count++
 	}
-	message += "⌃\n\n"
+	message += "⌃\n"
 
 	if line < len(lines) {
-		message += fmt.Sprintf("%04d: ",line+1) + string(lines[line+1]) + "\n"
+		message += fmt.Sprintf("%04d: ", line+1) + string(lines[line]) + "\n"
 	}
 
 	return message
