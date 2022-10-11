@@ -27,9 +27,9 @@ var Lexicon = map[string]string{
 	"$attributeExpression":  `expression "[" indices "]"`,
 	"$breakClause":          `"break" "loop"`,
 	"$catalog": `
-		association {"," association} |
-		EOL <association [NOTE] EOL> |
-		":"  ! An empty catalog.
+    association {"," association} |
+    EOL <association [NOTE] EOL> |
+    ":"  ! An empty catalog.
 	`,
 	"$chainExpression":       `expression "&" expression`,
 	"$checkoutClause":        `"checkout" recipient ["at" "level" expression] "from" expression`,
@@ -45,30 +45,30 @@ var Lexicon = map[string]string{
 	"$discardClause":         `"discard" expression`,
 	"$document":              `component EOL EOF`,
 	"$element": `
-		ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
-		PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG
+    ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
+    PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG
 	`,
 	"$entity":          `element | string | collection | procedure`,
 	"$evaluateClause":  `[recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$exception":       `SYMBOL`,
 	"$exceptionClause": `"on" exception <"matching" expression "do" "{" statements "}">`,
 	"$expression": `
-		component |
-		variable |
-		functionExpression |
-		precedenceExpression |
-		dereferenceExpression |
-		messageExpression |
-		attributeExpression |
-		chainExpression |
-		powerExpression |
-		inversionExpression |
-		arithmeticExpression |
-		magnitudeExpression |
-		comparisonExpression |
-		complementExpression |
-		logicalExpression |
-		defaultExpression
+    component |
+    variable |
+    functionExpression |
+    precedenceExpression |
+    dereferenceExpression |
+    messageExpression |
+    attributeExpression |
+    chainExpression |
+    powerExpression |
+    inversionExpression |
+    arithmeticExpression |
+    magnitudeExpression |
+    comparisonExpression |
+    complementExpression |
+    logicalExpression |
+    defaultExpression
 	`,
 	"$function":            `IDENTIFIER`,
 	"$functionExpression":  `function "(" [arguments] ")"`,
@@ -77,31 +77,31 @@ var Lexicon = map[string]string{
 	"$inversionExpression": `("-" | "/" | "*") expression`,
 	"$item":                `SYMBOL`,
 	"$list": `
-		component {"," component} |
-		EOL <component [NOTE] EOL> |
-		! An empty list.
+    component {"," component} |
+    EOL <component [NOTE] EOL> |
+    ! An empty list.
 	`,
 	"$logicalExpression":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitudeExpression": `"|" expression "|"`,
 	"$mainClause": `
-		ifClause |
-		selectClause |
-		withClause |
-		whileClause |
-		continueClause |
-		breakClause |
-		returnClause |
-		throwClause |
-		saveClause |
-		discardClause |
-		notarizeClause |
-		checkoutClause |
-		publishClause |
-		postClause |
-		retrieveClause |
-		acceptClause |
-		rejectClause |
-		evaluateClause
+    ifClause |
+    selectClause |
+    withClause |
+    whileClause |
+    continueClause |
+    breakClause |
+    returnClause |
+    throwClause |
+    saveClause |
+    discardClause |
+    notarizeClause |
+    checkoutClause |
+    publishClause |
+    postClause |
+    retrieveClause |
+    acceptClause |
+    rejectClause |
+    evaluateClause
 	`,
 	"$message":           `IDENTIFIER`,
 	"$messageExpression": `expression ("." | "<-") message "(" [arguments] ")"`,
@@ -109,8 +109,8 @@ var Lexicon = map[string]string{
 	"$notarizeClause":    `"notarize" expression "as" expression`,
 	"$parameter":         `name ":" component`,
 	"$parameters": `
-		parameter {"," parameter} |
-		EOL <parameter EOL>
+    parameter {"," parameter} |
+    EOL <parameter EOL>
 	`,
 	"$postClause":           `"post" expression "to" expression`,
 	"$powerExpression":      `expression "^" expression`,
@@ -128,9 +128,9 @@ var Lexicon = map[string]string{
 	"$sequence":             `catalog | list | range`,
 	"$statement":            `mainClause [exceptionClause]`,
 	"$statements": `
-		statement {";" statement} |
-		EOL {(annotation | statement) EOL} |
-		! An empty procedure.
+    statement {";" statement} |
+    EOL {(annotation | statement) EOL} |
+    ! An empty procedure.
 	`,
 	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$throwClause": `"throw" expression`,
@@ -147,13 +147,13 @@ var Lexicon = map[string]string{
 	"$BINARY":      `"'" {BASE64 | SPACE | EOL} "'"`,
 	"$BOOLEAN":     `"false" | "true"`,
 	"$COMMENT":     `"!>" EOL  {COMMENT | ~"<!"} EOL {SPACE} "<!"`,
-	"$DATES":       `[TSPAN "Y"] [TSPAN "M"] [TSPAN "D"]`,
+	"$DATES":       `[TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]`,
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
 	"$DELIMITER": `
-		"}" | "|" | "{" | "^" | "]" | "[" | "@" | "?" | ">" | "=" |
-		"<..<" | "<.." | "<-" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
-		"..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
-		")" | "(" | "&"
+    "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?" | ">" | "=" |
+    "<..<" | "<.." | "<-" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
+    "..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
+    ")" | "(" | "&"
 	`,
 	"$DURATION":   `"~" [SIGN] "P" (WEEKS | DATES [TIMES])`,
 	"$E":          `"e"`,
@@ -167,12 +167,12 @@ var Lexicon = map[string]string{
 	"$IMAGINARY":  ` [SIGN | REAL] "i"`,
 	"$INFINITY":   `"infinity" | "∞"`,
 	"$KEYWORD": `
-		"with" | "while" | "to" | "throw" | "select" | "save" |
-		"return" | "retrieve" | "reject" | "publish" | "post" |
-		"on" | "notarize" | "matching" | "loop" | "level" | "in" |
-		"if" | "from" | "each" | "do" | "discard" | "continue" |
-		"checkout" | "break" | "at" | "as" | "accept" |
-		"XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"
+    "with" | "while" | "to" | "throw" | "select" | "save" |
+    "return" | "retrieve" | "reject" | "publish" | "post" |
+    "on" | "notarize" | "matching" | "loop" | "level" | "in" |
+    "if" | "from" | "each" | "do" | "discard" | "continue" |
+    "checkout" | "break" | "at" | "as" | "accept" |
+    "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"
 	`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
 	"$MOMENT":      `"<" YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
@@ -208,15 +208,15 @@ var Lexicon = map[string]string{
 	"$SYMBOL":      `"$" <IDENTIFIER>`,
 	"$TAG":         `"#" <BASE32>`,
 	"$TAU":         `"tau" | "τ"`,
-	"$TIMES":       `"T" [TSPAN "H"] [TSPAN "M"] [TSPAN "S"]`,
-	"$TSPAN":       `ZERO | ORDINAL [FRACTION]`,
+	"$TIMES":       `"T" [TIMESPAN "H"] [TIMESPAN "M"] [TIMESPAN "S"]`,
+	"$TIMESPAN":       `ZERO | ORDINAL [FRACTION]`,
 	"$UNDEFINED":   `"undefined"`,
 	"$UNICODE": `
-		"u" BASE16 BASE16 BASE16 BASE16 |
-		"U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 
+    "u" BASE16 BASE16 BASE16 BASE16 |
+    "U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 
 	`,
 	"$VERSION":    `"v" ORDINAL {"." ORDINAL}`,
-	"$WEEKS":      `TSPAN "W"`,
+	"$WEEKS":      `TIMESPAN "W"`,
 	"$YEAR":       `[SIGN] ORDINAL`,
 	"$ZERO":       `"0"`,
 }
