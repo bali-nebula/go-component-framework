@@ -58,7 +58,7 @@ const (
 type token struct {
 	typ tokenType
 	val string
-	lin int // The line number of the token in the input.
+	lin int // The line number of the token in the input string.
 	pos int // The position in the line of the first rune of the token.
 }
 
@@ -96,7 +96,6 @@ func Scanner(source []byte, tokens chan token) *scanner {
 //
 //   | byte 0 | byte 1 | byte 2 | byte 3 | byte 4 | byte 5 | ... | byte N-1 |
 //   | rune 0 |      rune 1     |      rune 2     | rune 3 | ... | rune R-1 |
-//                              |<-- width = 2 -->|
 //
 // Runes can be one to eight bytes long.
 
@@ -105,9 +104,7 @@ type scanner struct {
 	firstByte     int // The zero based index of the first possible byte in the next token.
 	nextByte      int // The zero based index of the next possible byte in the next token.
 	line          int // The line number in the source string of the next rune.
-	position      int // The position of the line in the source string of the first rune in the next token.
-	currentWidth  int // The width in bytes of the current rune.
-	previousWidth int // The width in bytes of the previous rune.
+	position      int // The position in the current line of the first rune in the next token.
 	tokens        chan token
 }
 
@@ -143,16 +140,13 @@ func (v *scanner) scanToken() bool {
 	case v.foundVersion():
 	case v.foundBinary():
 	case v.foundResource():
-	// Must be before foundNote().
-	case v.foundComment():
 	case v.foundNote():
-	// Must be before foundQuote().
-	case v.foundNarrative():
+	case v.foundComment():
 	case v.foundQuote():
+	case v.foundNarrative():
 	case v.foundMoment():
-	// Must be before foundAngle().
-	case v.foundDuration():
 	case v.foundAngle():
+	case v.foundDuration():
 	case v.foundProbability():
 	case v.foundBoolean():
 	case v.foundDelimiter():
@@ -170,90 +164,22 @@ func (v *scanner) scanToken() bool {
 // This method scans through any spaces in the source array and
 // sets the next byte index to the next non-white-space rune.
 func (v *scanner) skipSpaces() {
-	var count = 0
 	if v.nextByte < len(v.source) {
-		r := v.nextRune()
-		count++
-		for r == space {
-			r = v.nextRune() // Accept the previous space rune.
-			count++
+		for {
+			if v.source[v.nextByte] != ' ' {
+				break
+			}
+			v.nextByte++
+			v.position++
 		}
-		v.backupOne() // The last rune wasn't a space.
-		count--
 		v.firstByte = v.nextByte
-		v.position += count
 	}
-}
-
-// This method returns the next rune in the source array without advancing
-// the next byte index.
-func (v *scanner) peekRune() rune {
-	var nextRune rune = eof
-	if v.nextByte < len(v.source) {
-		var bytes = v.source[v.nextByte:]
-		nextRune, _ = utf8.DecodeRune(bytes)
-	}
-	return nextRune
-}
-
-// This method returns the next rune in the source byte array and advances the
-// next byte index.
-//
-//	Before: |     rune n     |    rune n+1    |    rune n+2    |
-//	                         ^
-//	                      nextByte
-//	        |--currentWidth--|
-//
-//	After:  |     rune n     |    rune n+1    |    rune n+2    |
-//	                                          ^
-//	                                       nextByte
-//	        |--previousWidth-|--currentWidth--|
-//
-//	EOF:    |     rune n     |       EOF
-//	                         ^
-//	                      nextByte
-//	        |--currentWidth--|
-//
-// The next rune, which may be EOF, is returned.
-func (v *scanner) nextRune() rune {
-	var nextRune rune = eof
-	if v.nextByte < len(v.source) {
-		var bytes = v.source[v.nextByte:]
-		v.previousWidth = v.currentWidth
-		nextRune, v.currentWidth = utf8.DecodeRune(bytes)
-		v.nextByte += v.currentWidth
-	}
-	return nextRune
-}
-
-// This method backs up the next byte index by one rune.
-//
-//	Before: |     rune n     |    rune n+1    |    rune n+2    |
-//	                                          ^
-//	                                       nextByte
-//	        |--previousWidth-|--currentWidth--|
-//
-//	After:  |     rune n     |    rune n+1    |    rune n+2    |
-//	                         ^
-//	                      nextByte
-//	        |--currentWidth--|
-//
-// The previous rune is returned.
-func (v *scanner) backupOne() {
-	if v.currentWidth == 0 {
-		panic("The scanner can only backup by one rune.")
-	}
-	v.nextByte -= v.currentWidth
-	v.currentWidth = v.previousWidth
-	v.previousWidth = 0
 }
 
 // This method accepts the specified string as a valid token and updates the
 // state of the scanner accordingly.
 func (v *scanner) acceptToken(s string) {
 	v.nextByte += len(s)
-	v.currentWidth = 0
-	v.previousWidth = 0
 }
 
 // This method adds a token of the specified type with the current scanner
@@ -286,8 +212,6 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 	v.tokens <- token
 	v.firstByte = v.nextByte
 	v.position += strings.Count(tValue, "") - 1  // Add the number of runes in the token.
-	v.currentWidth = 0
-	v.previousWidth = 0
 	return tType
 }
 
@@ -374,8 +298,9 @@ func (v *scanner) foundDuration() bool {
 // This method adds an error token with the current scanner information to the token
 // channel.
 func (v *scanner) foundError() {
-	var r = v.peekRune()
-	v.acceptToken(string(r))
+	var bytes = v.source[v.nextByte:]
+	var nextRune, _ = utf8.DecodeRune(bytes)
+	v.acceptToken(string(nextRune))
 	v.emitToken(tokenError)
 }
 
