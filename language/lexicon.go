@@ -205,7 +205,7 @@ var Lexicon = map[string]string{
 	"$SEPARATOR":   `"-" | "+" | "."`,
 	"$SIGN":        `"+" | "-"`,
 	"$SPACE":       `" "`,
-	"$SYMBOL":      `"$" <IDENTIFIER>`,
+	"$SYMBOL":      `"$" IDENTIFIER`,
 	"$TAG":         `"#" <BASE32>`,
 	"$TAU":         `"tau" | "τ"`,
 	"$TIMES":       `"T" [TIMESPAN "H"] [TIMESPAN "M"] [TIMESPAN "S"]`,
