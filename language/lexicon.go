@@ -209,14 +209,14 @@ var Lexicon = map[string]string{
 	"$TAG":         `"#" <BASE32>`,
 	"$TAU":         `"tau" | "τ"`,
 	"$TIMES":       `"T" [TIMESPAN "H"] [TIMESPAN "M"] [TIMESPAN "S"]`,
-	"$TIMESPAN":       `ZERO | ORDINAL [FRACTION]`,
+	"$TIMESPAN":    `ZERO | ORDINAL [FRACTION]`,
 	"$UNDEFINED":   `"undefined"`,
 	"$UNICODE": `
     "u" BASE16 BASE16 BASE16 BASE16 |
     "U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 
 	`,
-	"$VERSION":    `"v" ORDINAL {"." ORDINAL}`,
-	"$WEEKS":      `TIMESPAN "W"`,
-	"$YEAR":       `[SIGN] ORDINAL`,
-	"$ZERO":       `"0"`,
+	"$VERSION": `"v" ORDINAL {"." ORDINAL}`,
+	"$WEEKS":   `TIMESPAN "W"`,
+	"$YEAR":    `[SIGN] ORDINAL`,
+	"$ZERO":    `"0"`,
 }

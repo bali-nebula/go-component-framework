@@ -20,14 +20,14 @@ import (
 )
 
 const n = `">
-	This is a narrative... it
-	contains a " character and
-	spans multiple lines.
+    This is a narrative... it
+    contains a " character and
+    spans multiple lines.
 <"`
 
 const c = `(
     $base: 64
-    $en_coding: $utf8
+    $e⚠n_coding: $utf8
 )`
 
 const d = "~-P12Y3M4DT5H6M7.890S"
@@ -59,7 +59,7 @@ func TestParserWithElementTypes(t *testing.T) {
 	assert.True(t, boolean.AsBoolean())
 
 	// Duration
-	component, ok = language.ParseSource(d)
+	component, ok = language.ParseSource(d + c)
 	assert.True(t, ok)
 	var duration elements.Duration = component.Entity.(elements.Duration)
 	assert.Equal(t, d, duration.AsString())

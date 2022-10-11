@@ -143,8 +143,8 @@ func (v *parser) formatError(message string, token *token) string {
 	}
 	message += fmt.Sprintf("%04d: ", line) + string(lines[line-1]) + "\n"
 
-	message += " >>>──"
-	var count = 1
+	message += " >>>─"
+	var count = 0
 	for count < token.pos {
 		message += "─"
 		count++
