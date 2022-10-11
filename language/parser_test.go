@@ -27,7 +27,7 @@ const n = `">
 
 const c = `(
     $base: 64
-    $e⚠n_coding: $utf8
+    $encoding: $utf8
 )`
 
 const d = "~-P12Y3M4DT5H6M7.890S"
@@ -59,7 +59,7 @@ func TestParserWithElementTypes(t *testing.T) {
 	assert.True(t, boolean.AsBoolean())
 
 	// Duration
-	component, ok = language.ParseSource(d + c)
+	component, ok = language.ParseSource(d)
 	assert.True(t, ok)
 	var duration elements.Duration = component.Entity.(elements.Duration)
 	assert.Equal(t, d, duration.AsString())
@@ -149,14 +149,14 @@ func TestParserWithStringTypes(t *testing.T) {
 }
 
 const l = `[
-	$foo
-	$bar
-	$baz
+    $foo
+    $bar
+    $baz
 ]`
 
 const k = `[
-	0: false
-	1: true
+    0: false
+    1: true
 ]`
 
 func TestParserWithSequenceTypes(t *testing.T) {

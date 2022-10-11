@@ -168,20 +168,25 @@ func (v *scanner) scanToken() bool {
 }
 
 // This method scans through any spaces in the source array and
-// sets the current index to the next non-white-space rune.
+// sets the next byte index to the next non-white-space rune.
 func (v *scanner) skipSpaces() {
+	var count = 0
 	if v.nextByte < len(v.source) {
 		r := v.nextRune()
+		count++
 		for r == space {
 			r = v.nextRune() // Accept the previous space rune.
+			count++
 		}
 		v.backupOne() // The last rune wasn't a space.
+		count--
 		v.firstByte = v.nextByte
+		v.position += count
 	}
 }
 
 // This method returns the next rune in the source array without advancing
-// the current index.
+// the next byte index.
 func (v *scanner) peekRune() rune {
 	var nextRune rune = eof
 	if v.nextByte < len(v.source) {
@@ -217,7 +222,6 @@ func (v *scanner) nextRune() rune {
 		v.previousWidth = v.currentWidth
 		nextRune, v.currentWidth = utf8.DecodeRune(bytes)
 		v.nextByte += v.currentWidth
-		v.position++
 	}
 	return nextRune
 }
@@ -242,7 +246,6 @@ func (v *scanner) backupOne() {
 	v.nextByte -= v.currentWidth
 	v.currentWidth = v.previousWidth
 	v.previousWidth = 0
-	v.position--
 }
 
 // This method accepts the specified string as a valid token and updates the
@@ -253,9 +256,9 @@ func (v *scanner) acceptToken(s string) {
 	v.previousWidth = 0
 }
 
-// This method adds a token of the specified type with the current token
-// information to the token channel. It then resets the first index to the
-// next index position. It returns the token type of the type added to the
+// This method adds a token of the specified type with the current scanner
+// information to the token channel. It then resets the first byte index to the
+// next byte index position. It returns the token type of the type added to the
 // channel.
 func (v *scanner) emitToken(tType tokenType) tokenType {
 	tValue := string(v.source[v.firstByte:v.nextByte])
@@ -279,7 +282,7 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 		}
 	}
 	var token = token{tType, tValue, v.line, v.position}
-	fmt.Printf("Token [type: %2d, line: %2d, position: %2d]: %q\n", tType, v.line, v.position, tValue)
+	//fmt.Printf("Token [type: %2d, line: %2d, position: %2d]: %q\n", tType, v.line, v.position, tValue)
 	v.tokens <- token
 	v.firstByte = v.nextByte
 	v.position += strings.Count(tValue, "") - 1  // Add the number of runes in the token.
@@ -288,7 +291,7 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 	return tType
 }
 
-// This method adds an angle element token with the current token information to
+// This method adds an angle element token with the current scanner information to
 // the token channel. It returns true if an angle token was found.
 func (v *scanner) foundAngle() bool {
 	s := v.source[v.nextByte:]
@@ -301,7 +304,7 @@ func (v *scanner) foundAngle() bool {
 	return false
 }
 
-// This method adds a boolean element token with the current token information
+// This method adds a boolean element token with the current scanner information
 // to the token channel. It returns true if a boolean token was found.
 func (v *scanner) foundBoolean() bool {
 	s := v.source[v.nextByte:]
@@ -314,7 +317,7 @@ func (v *scanner) foundBoolean() bool {
 	return false
 }
 
-// This method adds a binary string token with the current token information to
+// This method adds a binary string token with the current scanner information to
 // the token channel. It returns true if a binary token was found.
 func (v *scanner) foundBinary() bool {
 	s := v.source[v.nextByte:]
@@ -328,7 +331,7 @@ func (v *scanner) foundBinary() bool {
 	return false
 }
 
-// This method adds a comment token with the current token information to the
+// This method adds a comment token with the current scanner information to the
 // token channel. It returns true if a comment token was found.
 func (v *scanner) foundComment() bool {
 	s := v.source[v.nextByte:]
@@ -342,7 +345,7 @@ func (v *scanner) foundComment() bool {
 	return false
 }
 
-// This method adds a delimiter token with the current token information to the
+// This method adds a delimiter token with the current scanner information to the
 // token channel. It returns true if a delimiter token was found.
 func (v *scanner) foundDelimiter() bool {
 	s := v.source[v.nextByte:]
@@ -355,7 +358,7 @@ func (v *scanner) foundDelimiter() bool {
 	return false
 }
 
-// This method adds a duration element token with the current token information
+// This method adds a duration element token with the current scanner information
 // to the token channel. It returns true if a duration token was found.
 func (v *scanner) foundDuration() bool {
 	s := v.source[v.nextByte:]
@@ -368,7 +371,7 @@ func (v *scanner) foundDuration() bool {
 	return false
 }
 
-// This method adds an error token with the current token information to the token
+// This method adds an error token with the current scanner information to the token
 // channel.
 func (v *scanner) foundError() {
 	var r = v.peekRune()
@@ -376,7 +379,7 @@ func (v *scanner) foundError() {
 	v.emitToken(tokenError)
 }
 
-// This method adds an EOF token with the current token information to the token
+// This method adds an EOF token with the current scanner information to the token
 // channel. It returns true if an EOF token was found.
 func (v *scanner) foundEOF() bool {
 	if v.nextByte == len(v.source) {
@@ -387,7 +390,7 @@ func (v *scanner) foundEOF() bool {
 	return false
 }
 
-// This method adds an EOL token with the current token information to the token
+// This method adds an EOL token with the current scanner information to the token
 // channel. It returns true if an EOL token was found.
 func (v *scanner) foundEOL() bool {
 	s := v.source[v.nextByte:]
@@ -401,7 +404,7 @@ func (v *scanner) foundEOL() bool {
 	return false
 }
 
-// This method adds an identifier token with the current token information to
+// This method adds an identifier token with the current scanner information to
 // the token channel. It returns true if an identifier token was found.
 func (v *scanner) foundIdentifier() bool {
 	s := v.source[v.nextByte:]
@@ -414,7 +417,7 @@ func (v *scanner) foundIdentifier() bool {
 	return false
 }
 
-// This method adds a keyword token with the current token information to the
+// This method adds a keyword token with the current scanner information to the
 // token channel. It returns true if a keyword token was found.
 func (v *scanner) foundKeyword() bool {
 	s := v.source[v.nextByte:]
@@ -427,7 +430,7 @@ func (v *scanner) foundKeyword() bool {
 	return false
 }
 
-// This method adds a moment element token with the current token information to
+// This method adds a moment element token with the current scanner information to
 // the token channel. It returns true if a moment token was found.
 func (v *scanner) foundMoment() bool {
 	s := v.source[v.nextByte:]
@@ -440,7 +443,7 @@ func (v *scanner) foundMoment() bool {
 	return false
 }
 
-// This method adds a moniker string token with the current token information to
+// This method adds a moniker string token with the current scanner information to
 // the token channel. It returns true if a moniker token was found.
 func (v *scanner) foundMoniker() bool {
 	s := v.source[v.nextByte:]
@@ -453,7 +456,7 @@ func (v *scanner) foundMoniker() bool {
 	return false
 }
 
-// This method adds a narrative string token with the current token information
+// This method adds a narrative string token with the current scanner information
 // to the token channel. It returns true if a narrative token was found.
 func (v *scanner) foundNarrative() bool {
 	s := v.source[v.nextByte:]
@@ -467,7 +470,7 @@ func (v *scanner) foundNarrative() bool {
 	return false
 }
 
-// This method adds a note token with the current token information to the token
+// This method adds a note token with the current scanner information to the token
 // channel. It returns true if a note token was found.
 func (v *scanner) foundNote() bool {
 	s := v.source[v.nextByte:]
@@ -480,7 +483,7 @@ func (v *scanner) foundNote() bool {
 	return false
 }
 
-// This method adds a number element token with the current token information to
+// This method adds a number element token with the current scanner information to
 // the token channel. It returns true if a number token was found.
 func (v *scanner) foundNumber() bool {
 	s := v.source[v.nextByte:]
@@ -493,7 +496,7 @@ func (v *scanner) foundNumber() bool {
 	return false
 }
 
-// This method adds a pattern element token with the current token information
+// This method adds a pattern element token with the current scanner information
 // to the token channel. It returns true if a pattern token was found.
 func (v *scanner) foundPattern() bool {
 	s := v.source[v.nextByte:]
@@ -506,7 +509,7 @@ func (v *scanner) foundPattern() bool {
 	return false
 }
 
-// This method adds a percentage element token with the current token
+// This method adds a percentage element token with the current scanner
 // information to the token channel. It returns true if a percentage token was
 // found.
 func (v *scanner) foundPercentage() bool {
@@ -520,7 +523,7 @@ func (v *scanner) foundPercentage() bool {
 	return false
 }
 
-// This method adds a probability element token with the current token
+// This method adds a probability element token with the current scanner
 // information to the token channel. It returns true if a probability token was
 // found.
 func (v *scanner) foundProbability() bool {
@@ -534,7 +537,7 @@ func (v *scanner) foundProbability() bool {
 	return false
 }
 
-// This method adds a quoted string token with the current token information to
+// This method adds a quoted string token with the current scanner information to
 // the token channel. It returns true if a quote token was found.
 func (v *scanner) foundQuote() bool {
 	s := v.source[v.nextByte:]
@@ -547,7 +550,7 @@ func (v *scanner) foundQuote() bool {
 	return false
 }
 
-// This method adds a resource element token with the current token information
+// This method adds a resource element token with the current scanner information
 // the token channel. It returns true if a resource token was found.
 func (v *scanner) foundResource() bool {
 	s := v.source[v.nextByte:]
@@ -560,7 +563,7 @@ func (v *scanner) foundResource() bool {
 	return false
 }
 
-// This method adds a symbol string token with the current token information to
+// This method adds a symbol string token with the current scanner information to
 // the token channel. It returns true if a symbol token was found.
 func (v *scanner) foundSymbol() bool {
 	s := v.source[v.nextByte:]
@@ -573,7 +576,7 @@ func (v *scanner) foundSymbol() bool {
 	return false
 }
 
-// This method adds a tag element token with the current token information to
+// This method adds a tag element token with the current scanner information to
 // the token channel. It returns true if a tag token was found.
 func (v *scanner) foundTag() bool {
 	s := v.source[v.nextByte:]
@@ -586,7 +589,7 @@ func (v *scanner) foundTag() bool {
 	return false
 }
 
-// This method adds a version string token with the current token information to
+// This method adds a version string token with the current scanner information to
 // the token channel. It returns true if a version token was found.
 func (v *scanner) foundVersion() bool {
 	s := v.source[v.nextByte:]
