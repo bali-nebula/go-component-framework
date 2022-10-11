@@ -513,7 +513,7 @@ func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 	var expression *MessageExpression
 	token, ok = v.parseDelimiter(".")
 	if !ok {
-		token, ok = v.parseDelimiter("<-")
+		token, ok = v.parseDelimiter("<~")
 	}
 	if !ok {
 		// This is not an message expression.

@@ -104,7 +104,7 @@ var Lexicon = map[string]string{
     evaluateClause
 	`,
 	"$message":           `IDENTIFIER`,
-	"$messageExpression": `expression ("." | "<-") message "(" [arguments] ")"`,
+	"$messageExpression": `expression ("." | "<~") message "(" [arguments] ")"`,
 	"$name":              `SYMBOL`,
 	"$notarizeClause":    `"notarize" expression "as" expression`,
 	"$parameter":         `name ":" component`,
@@ -151,7 +151,7 @@ var Lexicon = map[string]string{
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
 	"$DELIMITER": `
     "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?" | ">" | "=" |
-    "<..<" | "<.." | "<-" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
+    "<..<" | "<.." | "<~" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
     "..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
     ")" | "(" | "&"
 	`,

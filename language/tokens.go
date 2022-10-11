@@ -46,7 +46,6 @@ const (
 	tokenPercentage
 	tokenProbability
 	tokenQuote
-	tokenRegex
 	tokenResource
 	tokenSymbol
 	tokenTag
@@ -100,12 +99,12 @@ func Scanner(source []byte, tokens chan token) *scanner {
 // Runes can be one to eight bytes long.
 
 type scanner struct {
-	source        []byte
-	firstByte     int // The zero based index of the first possible byte in the next token.
-	nextByte      int // The zero based index of the next possible byte in the next token.
-	line          int // The line number in the source string of the next rune.
-	position      int // The position in the current line of the first rune in the next token.
-	tokens        chan token
+	source    []byte
+	firstByte int // The zero based index of the first possible byte in the next token.
+	nextByte  int // The zero based index of the next possible byte in the next token.
+	line      int // The line number in the source string of the next rune.
+	position  int // The position in the current line of the first rune in the next token.
+	tokens    chan token
 }
 
 // This method continues scanning tokens from the source array until an error
@@ -126,34 +125,31 @@ func (v *scanner) scanToken() bool {
 	// performance by placing the most common token types first.
 	//
 	// Must be first in case the input buffer is empty.
+	case v.foundEOL():
+	case v.foundSymbol():
+	case v.foundPercentage(): // Must be before foundNumber().
+	case v.foundNumber():
+	case v.foundVersion():
+	case v.foundBoolean():
+	case v.foundKeyword():
+	case v.foundIdentifier(): // Must be after foundVersion(), foundBoolean() and foundKeyword().
+	case v.foundNote():
+	case v.foundComment():
+	case v.foundPattern():
+	case v.foundQuote(): // Must be after foundPattern().
+	case v.foundNarrative():
+	case v.foundTag():
+	case v.foundMoniker():
+	case v.foundBinary():
+	case v.foundResource():
+	case v.foundMoment():
+	case v.foundDuration():
+	case v.foundAngle():
+	case v.foundProbability():
+	case v.foundDelimiter(): // Must be after all element and string types.
 	case v.foundEOF():
 		// We are done scanning.
 		return false
-	case v.foundEOL():
-	case v.foundSymbol():
-	// Must be before foundNumber().
-	case v.foundPercentage():
-	case v.foundNumber():
-	case v.foundPattern():
-	case v.foundMoniker():
-	case v.foundTag():
-	case v.foundVersion():
-	case v.foundBinary():
-	case v.foundResource():
-	case v.foundNote():
-	case v.foundComment():
-	case v.foundQuote():
-	case v.foundNarrative():
-	case v.foundMoment():
-	case v.foundAngle():
-	case v.foundDuration():
-	case v.foundProbability():
-	case v.foundBoolean():
-	case v.foundDelimiter():
-	// Must be after all element and string types.
-	case v.foundKeyword():
-	// Must be after foundKeyword().
-	case v.foundIdentifier():
 	default:
 		v.foundError()
 		return false
@@ -211,7 +207,7 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 	//fmt.Printf("Token [type: %2d, line: %2d, position: %2d]: %q\n", tType, v.line, v.position, tValue)
 	v.tokens <- token
 	v.firstByte = v.nextByte
-	v.position += strings.Count(tValue, "") - 1  // Add the number of runes in the token.
+	v.position += strings.Count(tValue, "") - 1 // Add the number of runes in the token.
 	return tType
 }
 

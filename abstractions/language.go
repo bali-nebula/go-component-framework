@@ -595,7 +595,7 @@ var delimiters = [][]byte{
 	[]byte("="),
 	[]byte("<..<"),
 	[]byte("<.."),
-	[]byte("<-"),
+	[]byte("<~"),
 	[]byte("<"),
 	[]byte(";"),
 	[]byte(":="),
