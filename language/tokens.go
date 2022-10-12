@@ -55,23 +55,23 @@ const (
 // This type defines the structure and methods for each token returned by the
 // scanner.
 type token struct {
-	typ tokenType
-	val string
-	lin int // The line number of the token in the input string.
-	pos int // The position in the line of the first rune of the token.
+	tType    tokenType
+	value    string
+	line     int // The line number of the token in the input string.
+	position int // The position in the line of the first rune of the token.
 }
 
 // This method returns the a canonical string version of this token.
 func (v *token) String() string {
 	switch {
-	case v.typ == tokenEOF:
+	case v.tType == tokenEOF:
 		return "<EOF>"
-	case v.typ == tokenEOL:
+	case v.tType == tokenEOL:
 		return "<EOL>"
-	case len(v.val) > 10:
-		return fmt.Sprintf("%.10q...", v.val)
+	case len(v.value) > 10:
+		return fmt.Sprintf("%.10q...", v.value)
 	default:
-		return fmt.Sprintf("%q", v.val)
+		return fmt.Sprintf("%q", v.value)
 	}
 }
 

@@ -21,11 +21,11 @@ func (v *parser) parseBinary() (strings.Binary, bool) {
 	var ok bool
 	var binary strings.Binary
 	var token = v.nextToken()
-	if token.typ != tokenBinary {
+	if token.tType != tokenBinary {
 		v.backupOne()
 		return binary, false
 	}
-	binary, ok = strings.BinaryFromString(token.val)
+	binary, ok = strings.BinaryFromString(token.value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid binary token was found: %v", token))
 	}
@@ -38,11 +38,11 @@ func (v *parser) parseMoniker() (strings.Moniker, bool) {
 	var ok bool
 	var moniker strings.Moniker
 	var token = v.nextToken()
-	if token.typ != tokenMoniker {
+	if token.tType != tokenMoniker {
 		v.backupOne()
 		return moniker, false
 	}
-	moniker, ok = strings.MonikerFromString(token.val)
+	moniker, ok = strings.MonikerFromString(token.value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid moniker token was found: %v", token))
 	}
@@ -55,11 +55,11 @@ func (v *parser) parseNarrative() (strings.Narrative, bool) {
 	var ok bool
 	var narrative strings.Narrative
 	var token = v.nextToken()
-	if token.typ != tokenNarrative {
+	if token.tType != tokenNarrative {
 		v.backupOne()
 		return narrative, false
 	}
-	narrative, ok = strings.NarrativeFromString(token.val)
+	narrative, ok = strings.NarrativeFromString(token.value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid narrative token was found: %v", token))
 	}
@@ -72,11 +72,11 @@ func (v *parser) parseQuote() (strings.Quote, bool) {
 	var ok bool
 	var quote strings.Quote
 	var token = v.nextToken()
-	if token.typ != tokenQuote {
+	if token.tType != tokenQuote {
 		v.backupOne()
 		return quote, false
 	}
-	quote, ok = strings.QuoteFromString(token.val)
+	quote, ok = strings.QuoteFromString(token.value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid quote token was found: %v", token))
 	}
@@ -115,11 +115,11 @@ func (v *parser) parseVersion() (strings.Version, bool) {
 	var ok bool
 	var version strings.Version
 	var token = v.nextToken()
-	if token.typ != tokenVersion {
+	if token.tType != tokenVersion {
 		v.backupOne()
 		return version, false
 	}
-	version, ok = strings.VersionFromString(token.val)
+	version, ok = strings.VersionFromString(token.value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid version token was found: %v", token))
 	}

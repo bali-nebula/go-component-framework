@@ -108,9 +108,9 @@ func (v *parser) nextToken() *token {
 		if !ok {
 			panic("The token channel terminated without an EOF or error token.")
 		}
-		if token.typ == tokenError {
+		if token.tType == tokenError {
 			panic(v.formatError(
-				"An unexpected character was encountered while scanning the input: '"+token.val+"'",
+				"An unexpected character was encountered while scanning the input: '"+token.value+"'",
 				&token))
 		}
 		next = &token
@@ -135,7 +135,7 @@ func (v *parser) backupOne() {
 // error.
 func (v *parser) formatError(message string, token *token) string {
 	message += "\n\n"
-	var line = token.lin
+	var line = token.line
 	var lines = strings.Split(string(v.source), "\n")
 
 	if line > 1 {
@@ -145,7 +145,7 @@ func (v *parser) formatError(message string, token *token) string {
 
 	message += " >>>─"
 	var count = 0
-	for count < token.pos {
+	for count < token.position {
 		message += "─"
 		count++
 	}
@@ -163,11 +163,11 @@ func (v *parser) formatError(message string, token *token) string {
 func (v *parser) parseComment() (string, bool) {
 	var comment string
 	var token = v.nextToken()
-	if token.typ != tokenComment {
+	if token.tType != tokenComment {
 		v.backupOne()
 		return comment, false
 	}
-	comment = token.val
+	comment = token.value
 	return comment, true
 }
 
@@ -209,7 +209,7 @@ func (v *parser) parseContext() ([]*Parameter, bool) {
 // the token and whether or not the delimiter was found.
 func (v *parser) parseDelimiter(delimiter string) (*token, bool) {
 	var token = v.nextToken()
-	if token.typ == tokenEOF || token.val != delimiter {
+	if token.tType == tokenEOF || token.value != delimiter {
 		v.backupOne()
 		return token, false
 	}
@@ -250,7 +250,7 @@ func (v *parser) parseEntity() (any, bool) {
 // the token and whether or not an EOL token was found.
 func (v *parser) parseEOF() (*token, bool) {
 	var token = v.nextToken()
-	if token.typ != tokenEOF {
+	if token.tType != tokenEOF {
 		v.backupOne()
 		return token, false
 	}
@@ -261,7 +261,7 @@ func (v *parser) parseEOF() (*token, bool) {
 // the token and whether or not an EOF token was found.
 func (v *parser) parseEOL() (*token, bool) {
 	var token = v.nextToken()
-	if token.typ != tokenEOL {
+	if token.tType != tokenEOL {
 		v.backupOne()
 		return token, false
 	}
@@ -273,11 +273,11 @@ func (v *parser) parseEOL() (*token, bool) {
 func (v *parser) parseIdentifier() (string, bool) {
 	var identifier string = "<UNKNOWN>"
 	var token = v.nextToken()
-	if token.typ != tokenIdentifier {
+	if token.tType != tokenIdentifier {
 		v.backupOne()
 		return identifier, false
 	}
-	identifier = token.val
+	identifier = token.value
 	return identifier, true
 }
 
@@ -285,7 +285,7 @@ func (v *parser) parseIdentifier() (string, bool) {
 // the token and whether or not the keyword was found.
 func (v *parser) parseKeyword(keyword string) (*token, bool) {
 	var token = v.nextToken()
-	if token.typ == tokenKeyword || token.val != keyword {
+	if token.tType == tokenKeyword || token.value != keyword {
 		v.backupOne()
 		return token, false
 	}
@@ -297,11 +297,11 @@ func (v *parser) parseKeyword(keyword string) (*token, bool) {
 func (v *parser) parseNote() (string, bool) {
 	var note string
 	var token = v.nextToken()
-	if token.typ != tokenNote {
+	if token.tType != tokenNote {
 		v.backupOne()
 		return note, false
 	}
-	note = token.val
+	note = token.value
 	return note, true
 }
 

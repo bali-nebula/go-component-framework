@@ -239,7 +239,7 @@ func (v *parser) parseRange() (abstractions.RangeLike[any], bool) {
 		}
 		return nil, false
 	}
-	var connector = token.val
+	var connector = token.value
 	last, _ = v.parseValue() // The last value is optional.
 	var rng = collections.Range(first, connector, last)
 	return rng, true

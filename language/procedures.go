@@ -271,7 +271,7 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 		if !ok {
 			panic(fmt.Sprintf("Expected an assignment operator and received: %v", *token))
 		}
-		operator = token.val
+		operator = token.value
 	}
 	expression, ok = v.parseExpression()
 	if !ok {

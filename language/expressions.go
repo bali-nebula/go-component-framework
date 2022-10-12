@@ -72,7 +72,7 @@ func (v *parser) parseArithmeticExpression(left any) (*ArithmeticExpression, boo
 		// This is not a arithmetic expression.
 		return expression, false
 	}
-	operator = token.val
+	operator = token.value
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -177,7 +177,7 @@ func (v *parser) parseComparisonExpression(left any) (*ComparisonExpression, boo
 		// This is not a comparison expression.
 		return expression, false
 	}
-	operator = token.val
+	operator = token.value
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -372,7 +372,7 @@ func (v *parser) parseInversionExpression() (*InversionExpression, bool) {
 		// This is not an inversion expression.
 		return expression, false
 	}
-	operator = token.val
+	operator = token.value
 	numeric, ok = v.parseExpression()
 	if !ok {
 		panic(fmt.Sprintf("Expected a numeric expression following the %q operator.", operator))
@@ -451,7 +451,7 @@ func (v *parser) parseLogicalExpression(left any) (*LogicalExpression, bool) {
 		// This is not a logical expression.
 		return expression, false
 	}
-	operator = token.val
+	operator = token.value
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -519,7 +519,7 @@ func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 		// This is not an message expression.
 		return expression, false
 	}
-	operator = token.val
+	operator = token.value
 	message, ok = v.parseIdentifier()
 	if !ok {
 		panic("Expected a message identifier following the '" + operator + "' character.")
