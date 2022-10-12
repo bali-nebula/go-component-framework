@@ -11,14 +11,12 @@
 package language
 
 import (
-	"fmt"
 	"github.com/craterdog-bali/go-bali-document-notation/elements"
 )
 
 // This method attempts to parse an angle element. It returns the angle element
 // and whether or not the angle element was successfully parsed.
 func (v *parser) parseAngle() (elements.Angle, *Token, bool) {
-	var ok bool
 	var token *Token
 	var angle elements.Angle
 	token = v.nextToken()
@@ -26,17 +24,13 @@ func (v *parser) parseAngle() (elements.Angle, *Token, bool) {
 		v.backupOne()
 		return angle, token, false
 	}
-	angle, ok = elements.AngleFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid angle token was found: %v", token))
-	}
+	angle, _ = elements.AngleFromString(token.Value)
 	return angle, token, true
 }
 
 // This method attempts to parse a boolean element. It returns the boolean
 // element and whether or not the boolean element was successfully parsed.
 func (v *parser) parseBoolean() (elements.Boolean, *Token, bool) {
-	var ok bool
 	var token *Token
 	var boolean elements.Boolean
 	token = v.nextToken()
@@ -44,17 +38,13 @@ func (v *parser) parseBoolean() (elements.Boolean, *Token, bool) {
 		v.backupOne()
 		return boolean, token, false
 	}
-	boolean, ok = elements.BooleanFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid boolean token was found: %v", token))
-	}
+	boolean, _ = elements.BooleanFromString(token.Value)
 	return boolean, token, true
 }
 
 // This method attempts to parse a duration element. It returns the duration
 // element and whether or not the duration element was successfully parsed.
 func (v *parser) parseDuration() (elements.Duration, *Token, bool) {
-	var ok bool
 	var token *Token
 	var duration elements.Duration
 	token = v.nextToken()
@@ -62,10 +52,7 @@ func (v *parser) parseDuration() (elements.Duration, *Token, bool) {
 		v.backupOne()
 		return duration, token, false
 	}
-	duration, ok = elements.DurationFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid duration token was found: %v", token))
-	}
+	duration, _ = elements.DurationFromString(token.Value)
 	return duration, token, true
 }
 
@@ -109,6 +96,7 @@ func (v *parser) parseElement() (any, *Token, bool) {
 		element, token, ok = v.parseTag()
 	}
 	if !ok {
+		// Override any zero values returned from failed parsing attempts.
 		element = nil
 	}
 	return element, token, ok
@@ -117,7 +105,6 @@ func (v *parser) parseElement() (any, *Token, bool) {
 // This method attempts to parse a moment element. It returns the moment
 // element and whether or not the moment element was successfully parsed.
 func (v *parser) parseMoment() (elements.Moment, *Token, bool) {
-	var ok bool
 	var token *Token
 	var moment elements.Moment
 	token = v.nextToken()
@@ -125,17 +112,13 @@ func (v *parser) parseMoment() (elements.Moment, *Token, bool) {
 		v.backupOne()
 		return moment, token, false
 	}
-	moment, ok = elements.MomentFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid moment token was found: %v", token))
-	}
+	moment, _ = elements.MomentFromString(token.Value)
 	return moment, token, true
 }
 
 // This method attempts to parse a number element. It returns the number
 // element and whether or not the number element was successfully parsed.
 func (v *parser) parseNumber() (elements.Number, *Token, bool) {
-	var ok bool
 	var token *Token
 	var number elements.Number
 	token = v.nextToken()
@@ -143,17 +126,13 @@ func (v *parser) parseNumber() (elements.Number, *Token, bool) {
 		v.backupOne()
 		return number, token, false
 	}
-	number, ok = elements.NumberFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid number token was found: %v", token))
-	}
+	number, _ = elements.NumberFromString(token.Value)
 	return number, token, true
 }
 
 // This method attempts to parse a pattern element. It returns the pattern
 // element and whether or not the pattern element was successfully parsed.
 func (v *parser) parsePattern() (elements.Pattern, *Token, bool) {
-	var ok bool
 	var token *Token
 	var pattern elements.Pattern
 	token = v.nextToken()
@@ -161,17 +140,13 @@ func (v *parser) parsePattern() (elements.Pattern, *Token, bool) {
 		v.backupOne()
 		return pattern, token, false
 	}
-	pattern, ok = elements.PatternFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid pattern token was found: %v", token))
-	}
+	pattern, _ = elements.PatternFromString(token.Value)
 	return pattern, token, true
 }
 
 // This method attempts to parse a percentage element. It returns the percentage
 // element and whether or not the percentage element was successfully parsed.
 func (v *parser) parsePercentage() (elements.Percentage, *Token, bool) {
-	var ok bool
 	var token *Token
 	var percentage elements.Percentage
 	token = v.nextToken()
@@ -179,15 +154,11 @@ func (v *parser) parsePercentage() (elements.Percentage, *Token, bool) {
 		v.backupOne()
 		return percentage, token, false
 	}
-	percentage, ok = elements.PercentageFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid percentage token was found: %v", token))
-	}
+	percentage, _ = elements.PercentageFromString(token.Value)
 	return percentage, token, true
 }
 
 func (v *parser) parseProbability() (elements.Probability, *Token, bool) {
-	var ok bool
 	var token *Token
 	var probability elements.Probability
 	token = v.nextToken()
@@ -195,10 +166,7 @@ func (v *parser) parseProbability() (elements.Probability, *Token, bool) {
 		v.backupOne()
 		return probability, token, false
 	}
-	probability, ok = elements.ProbabilityFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid probability token was found: %v", token))
-	}
+	probability, _ = elements.ProbabilityFromString(token.Value)
 	return probability, token, true
 }
 
@@ -206,7 +174,6 @@ func (v *parser) parseProbability() (elements.Probability, *Token, bool) {
 // resource element and whether or not the resource element was
 // successfully parsed.
 func (v *parser) parseResource() (elements.Resource, *Token, bool) {
-	var ok bool
 	var token *Token
 	var resource elements.Resource
 	token = v.nextToken()
@@ -214,10 +181,7 @@ func (v *parser) parseResource() (elements.Resource, *Token, bool) {
 		v.backupOne()
 		return resource, token, false
 	}
-	resource, ok = elements.ResourceFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid resource token was found: %v", token))
-	}
+	resource, _ = elements.ResourceFromString(token.Value)
 	return resource, token, true
 }
 
@@ -227,7 +191,6 @@ func (v *parser) parseResource() (elements.Resource, *Token, bool) {
 // This method attempts to parse a symbol string. It returns the symbol
 // string and whether or not the symbol string was successfully parsed.
 func (v *parser) parseSymbol() (elements.Symbol, *Token, bool) {
-	var ok bool
 	var token *Token
 	var symbol elements.Symbol
 	token = v.nextToken()
@@ -235,10 +198,7 @@ func (v *parser) parseSymbol() (elements.Symbol, *Token, bool) {
 		v.backupOne()
 		return symbol, token, false
 	}
-	symbol, ok = elements.SymbolFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid symbol token was found: %v", token))
-	}
+	symbol, _ = elements.SymbolFromString(token.Value)
 	return symbol, token, true
 }
 
@@ -246,7 +206,6 @@ func (v *parser) parseSymbol() (elements.Symbol, *Token, bool) {
 // tag element and whether or not the tag element was
 // successfully parsed.
 func (v *parser) parseTag() (elements.Tag, *Token, bool) {
-	var ok bool
 	var token *Token
 	var tag elements.Tag
 	token = v.nextToken()
@@ -254,9 +213,6 @@ func (v *parser) parseTag() (elements.Tag, *Token, bool) {
 		v.backupOne()
 		return tag, token, false
 	}
-	tag, ok = elements.TagFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid tag token was found: %v", token))
-	}
+	tag, _ = elements.TagFromString(token.Value)
 	return tag, token, true
 }

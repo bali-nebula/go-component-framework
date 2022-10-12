@@ -11,14 +11,12 @@
 package language
 
 import (
-	"fmt"
 	"github.com/craterdog-bali/go-bali-document-notation/strings"
 )
 
 // This method attempts to parse a binary string. It returns the binary
 // string and whether or not the binary string was successfully parsed.
 func (v *parser) parseBinary() (strings.Binary, *Token, bool) {
-	var ok bool
 	var token *Token
 	var binary strings.Binary
 	token = v.nextToken()
@@ -26,17 +24,13 @@ func (v *parser) parseBinary() (strings.Binary, *Token, bool) {
 		v.backupOne()
 		return binary, token, false
 	}
-	binary, ok = strings.BinaryFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid binary token was found: %v", token))
-	}
+	binary, _ = strings.BinaryFromString(token.Value)
 	return binary, token, true
 }
 
 // This method attempts to parse a moniker string. It returns the moniker string
 // and whether or not the moniker string was successfully parsed.
 func (v *parser) parseMoniker() (strings.Moniker, *Token, bool) {
-	var ok bool
 	var token *Token
 	var moniker strings.Moniker
 	token = v.nextToken()
@@ -44,17 +38,13 @@ func (v *parser) parseMoniker() (strings.Moniker, *Token, bool) {
 		v.backupOne()
 		return moniker, token, false
 	}
-	moniker, ok = strings.MonikerFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid moniker token was found: %v", token))
-	}
+	moniker, _ = strings.MonikerFromString(token.Value)
 	return moniker, token, true
 }
 
 // This method attempts to parse a narrative string. It returns the narrative
 // string and whether or not the narrative string was successfully parsed.
 func (v *parser) parseNarrative() (strings.Narrative, *Token, bool) {
-	var ok bool
 	var token *Token
 	var narrative strings.Narrative
 	token = v.nextToken()
@@ -62,17 +52,13 @@ func (v *parser) parseNarrative() (strings.Narrative, *Token, bool) {
 		v.backupOne()
 		return narrative, token, false
 	}
-	narrative, ok = strings.NarrativeFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid narrative token was found: %v", token))
-	}
+	narrative, _ = strings.NarrativeFromString(token.Value)
 	return narrative, token, true
 }
 
 // This method attempts to parse a quote string. It returns the quote string
 // and whether or not the quote string was successfully parsed.
 func (v *parser) parseQuote() (strings.Quote, *Token, bool) {
-	var ok bool
 	var token *Token
 	var quote strings.Quote
 	token = v.nextToken()
@@ -80,10 +66,7 @@ func (v *parser) parseQuote() (strings.Quote, *Token, bool) {
 		v.backupOne()
 		return quote, token, false
 	}
-	quote, ok = strings.QuoteFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid quote token was found: %v", token))
-	}
+	quote, _ = strings.QuoteFromString(token.Value)
 	return quote, token, true
 }
 
@@ -91,24 +74,24 @@ func (v *parser) parseQuote() (strings.Quote, *Token, bool) {
 // string primitive and whether or not the string primitive was
 // successfully parsed.
 func (v *parser) parseString() (any, *Token, bool) {
-	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
 	var str any
-	str, token, ok = v.parseBinary()
+	str, token, ok = v.parseQuote()
 	if !ok {
 		str, token, ok = v.parseMoniker()
-	}
-	if !ok {
-		str, token, ok = v.parseNarrative()
-	}
-	if !ok {
-		str, token, ok = v.parseQuote()
 	}
 	if !ok {
 		str, token, ok = v.parseVersion()
 	}
 	if !ok {
+		str, token, ok = v.parseBinary()
+	}
+	if !ok {
+		str, token, ok = v.parseNarrative()
+	}
+	if !ok {
+		// Override any empty strings returned from failed parsing attempts.
 		str = nil
 	}
 	return str, token, ok
@@ -117,7 +100,6 @@ func (v *parser) parseString() (any, *Token, bool) {
 // This method attempts to parse a version string. It returns the version
 // string and whether or not the version string was successfully parsed.
 func (v *parser) parseVersion() (strings.Version, *Token, bool) {
-	var ok bool
 	var token *Token
 	var version strings.Version
 	token = v.nextToken()
@@ -125,9 +107,6 @@ func (v *parser) parseVersion() (strings.Version, *Token, bool) {
 		v.backupOne()
 		return version, token, false
 	}
-	version, ok = strings.VersionFromString(token.Value)
-	if !ok {
-		panic(fmt.Sprintf("An invalid version token was found: %v", token))
-	}
+	version, _ = strings.VersionFromString(token.Value)
 	return version, token, true
 }
