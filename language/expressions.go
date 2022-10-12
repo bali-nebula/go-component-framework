@@ -51,7 +51,7 @@ type ArithmeticExpression struct {
 // successfully parsed.
 func (v *parser) parseArithmeticExpression(left any) (*ArithmeticExpression, bool) {
 	var ok bool
-	var token *token
+	var token *Token
 	var operator string
 	var right any
 	var expression *ArithmeticExpression
@@ -72,7 +72,7 @@ func (v *parser) parseArithmeticExpression(left any) (*ArithmeticExpression, boo
 		// This is not a arithmetic expression.
 		return expression, false
 	}
-	operator = token.value
+	operator = token.Value
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -93,7 +93,7 @@ type AttributeExpression struct {
 // successfully parsed.
 func (v *parser) parseAttributeExpression(composite any) (*AttributeExpression, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var indices []any
 	var expression *AttributeExpression
 	_, ok = v.parseDelimiter("[")
@@ -153,7 +153,7 @@ type ComparisonExpression struct {
 // successfully parsed.
 func (v *parser) parseComparisonExpression(left any) (*ComparisonExpression, bool) {
 	var ok bool
-	var token *token
+	var token *Token
 	var operator string
 	var right any
 	var expression *ComparisonExpression
@@ -177,7 +177,7 @@ func (v *parser) parseComparisonExpression(left any) (*ComparisonExpression, boo
 		// This is not a comparison expression.
 		return expression, false
 	}
-	operator = token.value
+	operator = token.Value
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -318,7 +318,7 @@ type FunctionExpression struct {
 // successfully parsed.
 func (v *parser) parseFunctionExpression() (*FunctionExpression, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var function string
 	var arguments []any
 	var expression *FunctionExpression
@@ -357,7 +357,7 @@ type InversionExpression struct {
 // successfully parsed.
 func (v *parser) parseInversionExpression() (*InversionExpression, bool) {
 	var ok bool
-	var token *token
+	var token *Token
 	var operator string
 	var numeric any
 	var expression *InversionExpression
@@ -372,7 +372,7 @@ func (v *parser) parseInversionExpression() (*InversionExpression, bool) {
 		// This is not an inversion expression.
 		return expression, false
 	}
-	operator = token.value
+	operator = token.Value
 	numeric, ok = v.parseExpression()
 	if !ok {
 		panic(fmt.Sprintf("Expected a numeric expression following the %q operator.", operator))
@@ -433,7 +433,7 @@ type LogicalExpression struct {
 // successfully parsed.
 func (v *parser) parseLogicalExpression(left any) (*LogicalExpression, bool) {
 	var ok bool
-	var token *token
+	var token *Token
 	var operator string
 	var right any
 	var expression *LogicalExpression
@@ -451,7 +451,7 @@ func (v *parser) parseLogicalExpression(left any) (*LogicalExpression, bool) {
 		// This is not a logical expression.
 		return expression, false
 	}
-	operator = token.value
+	operator = token.Value
 	right, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an expression following the '" + operator + "' character.")
@@ -471,7 +471,7 @@ type MagnitudeExpression struct {
 // successfully parsed.
 func (v *parser) parseMagnitudeExpression() (*MagnitudeExpression, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var numeric any
 	var expression *MagnitudeExpression
 	_, ok = v.parseDelimiter("|")
@@ -506,7 +506,7 @@ type MessageExpression struct {
 // successfully parsed.
 func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 	var ok bool
-	var token *token
+	var token *Token
 	var operator string
 	var message string
 	var arguments []any
@@ -519,7 +519,7 @@ func (v *parser) parseMessageExpression(target any) (*MessageExpression, bool) {
 		// This is not an message expression.
 		return expression, false
 	}
-	operator = token.value
+	operator = token.Value
 	message, ok = v.parseIdentifier()
 	if !ok {
 		panic("Expected a message identifier following the '" + operator + "' character.")
@@ -578,7 +578,7 @@ type PrecedenceExpression struct {
 // successfully parsed.
 func (v *parser) parsePrecedenceExpression() (*PrecedenceExpression, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var inner any
 	var expression *PrecedenceExpression
 	_, ok = v.parseDelimiter("(")

@@ -81,12 +81,12 @@ type Parameter struct {
 
 // This constructor creates a new parser using the specified byte array.
 func Parser(source []byte) *parser {
-	var tokens = make(chan token, 100)
+	var tokens = make(chan Token, 100)
 	Scanner(source, tokens) // Starts scanning in a go routine.
 	var p = &parser{
 		source:   source,
-		previous: collections.Stack[*token](),
-		next:     collections.Stack[*token](),
+		previous: collections.Stack[*Token](),
+		next:     collections.Stack[*Token](),
 		tokens:   tokens}
 	return p
 }
@@ -94,23 +94,23 @@ func Parser(source []byte) *parser {
 // This type defines the structure and methods for the parser agent.
 type parser struct {
 	source   []byte
-	previous abstractions.StackLike[*token] // The stack of the previously retrieved tokens.
-	next     abstractions.StackLike[*token] // The stack of the retrieved tokens that have been put back.
-	tokens   chan token                     // The queue of unread tokens coming from the scanner.
+	previous abstractions.StackLike[*Token] // The stack of the previously retrieved tokens.
+	next     abstractions.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
+	tokens   chan Token                     // The queue of unread tokens coming from the scanner.
 }
 
 // This method attempts to read the next token from the token stream and return
 // it.
-func (v *parser) nextToken() *token {
-	var next *token
+func (v *parser) nextToken() *Token {
+	var next *Token
 	if v.next.IsEmpty() {
 		var token, ok = <-v.tokens
 		if !ok {
 			panic("The token channel terminated without an EOF or error token.")
 		}
-		if token.tType == tokenError {
+		if token.Type == TokenError {
 			panic(v.formatError(
-				"An unexpected character was encountered while scanning the input: '"+token.value+"'",
+				"An unexpected character was encountered while scanning the input: '"+token.Value+"'",
 				&token))
 		}
 		next = &token
@@ -133,9 +133,9 @@ func (v *parser) backupOne() {
 
 // This method returns an error message containing the context for a parsing
 // error.
-func (v *parser) formatError(message string, token *token) string {
+func (v *parser) formatError(message string, token *Token) string {
 	message += "\n\n"
-	var line = token.line
+	var line = token.Line
 	var lines = strings.Split(string(v.source), "\n")
 
 	if line > 1 {
@@ -145,7 +145,7 @@ func (v *parser) formatError(message string, token *token) string {
 
 	message += " >>>─"
 	var count = 0
-	for count < token.position {
+	for count < token.Position {
 		message += "─"
 		count++
 	}
@@ -163,11 +163,11 @@ func (v *parser) formatError(message string, token *token) string {
 func (v *parser) parseComment() (string, bool) {
 	var comment string
 	var token = v.nextToken()
-	if token.tType != tokenComment {
+	if token.Type != TokenComment {
 		v.backupOne()
 		return comment, false
 	}
-	comment = token.value
+	comment = token.Value
 	return comment, true
 }
 
@@ -207,9 +207,9 @@ func (v *parser) parseContext() ([]*Parameter, bool) {
 
 // This method attempts to parse the specified delimiter. It returns
 // the token and whether or not the delimiter was found.
-func (v *parser) parseDelimiter(delimiter string) (*token, bool) {
+func (v *parser) parseDelimiter(delimiter string) (*Token, bool) {
 	var token = v.nextToken()
-	if token.tType == tokenEOF || token.value != delimiter {
+	if token.Type == TokenEOF || token.Value != delimiter {
 		v.backupOne()
 		return token, false
 	}
@@ -248,9 +248,9 @@ func (v *parser) parseEntity() (any, bool) {
 
 // This method attempts to parse the end-of-file (EOF) marker. It returns
 // the token and whether or not an EOL token was found.
-func (v *parser) parseEOF() (*token, bool) {
+func (v *parser) parseEOF() (*Token, bool) {
 	var token = v.nextToken()
-	if token.tType != tokenEOF {
+	if token.Type != TokenEOF {
 		v.backupOne()
 		return token, false
 	}
@@ -259,9 +259,9 @@ func (v *parser) parseEOF() (*token, bool) {
 
 // This method attempts to parse the end-of-line (EOL) marker. It returns
 // the token and whether or not an EOF token was found.
-func (v *parser) parseEOL() (*token, bool) {
+func (v *parser) parseEOL() (*Token, bool) {
 	var token = v.nextToken()
-	if token.tType != tokenEOL {
+	if token.Type != TokenEOL {
 		v.backupOne()
 		return token, false
 	}
@@ -273,19 +273,19 @@ func (v *parser) parseEOL() (*token, bool) {
 func (v *parser) parseIdentifier() (string, bool) {
 	var identifier string = "<UNKNOWN>"
 	var token = v.nextToken()
-	if token.tType != tokenIdentifier {
+	if token.Type != TokenIdentifier {
 		v.backupOne()
 		return identifier, false
 	}
-	identifier = token.value
+	identifier = token.Value
 	return identifier, true
 }
 
 // This method attempts to parse the specified keyword. It returns
 // the token and whether or not the keyword was found.
-func (v *parser) parseKeyword(keyword string) (*token, bool) {
+func (v *parser) parseKeyword(keyword string) (*Token, bool) {
 	var token = v.nextToken()
-	if token.tType == tokenKeyword || token.value != keyword {
+	if token.Type == TokenKeyword || token.Value != keyword {
 		v.backupOne()
 		return token, false
 	}
@@ -297,11 +297,11 @@ func (v *parser) parseKeyword(keyword string) (*token, bool) {
 func (v *parser) parseNote() (string, bool) {
 	var note string
 	var token = v.nextToken()
-	if token.tType != tokenNote {
+	if token.Type != TokenNote {
 		v.backupOne()
 		return note, false
 	}
-	note = token.value
+	note = token.Value
 	return note, true
 }
 

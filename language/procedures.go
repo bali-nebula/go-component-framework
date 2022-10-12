@@ -52,7 +52,7 @@ type Attribute struct {
 // whether or not the attribute was successfully parsed.
 func (v *parser) parseAttribute() (*Attribute, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var variable string
 	var indices []any
 	var attribute *Attribute
@@ -91,7 +91,7 @@ type DoBlock struct {
 // or not the do block was successfully parsed.
 func (v *parser) parseDoBlock() (*DoBlock, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var expression any
 	var statements []any
 	var doBlock *DoBlock
@@ -248,7 +248,7 @@ type EvaluateClause struct {
 // clause and whether or not the evaluate clause was successfully parsed.
 func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 	var ok bool
-	var token *token
+	var token *Token
 	var recipient any
 	var operator string
 	var expression any
@@ -271,7 +271,7 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
 		if !ok {
 			panic(fmt.Sprintf("Expected an assignment operator and received: %v", *token))
 		}
-		operator = token.value
+		operator = token.Value
 	}
 	expression, ok = v.parseExpression()
 	if !ok {
@@ -522,7 +522,7 @@ type Procedure struct {
 // whether or not the procedure was successfully parsed.
 func (v *parser) parseProcedure() ([]any, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var statements []any
 	_, ok = v.parseDelimiter("{")
 	if !ok {

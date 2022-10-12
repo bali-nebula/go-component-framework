@@ -21,58 +21,60 @@ import (
 // TOKEN
 
 // This integer type is used as a type identifier for each token.
-type tokenType int
+type TokenType int
 
 // This enumeration defines all possible token types including the error token.
 const (
 	// The first two token types must be first.
-	tokenError tokenType = iota
-	tokenEOF
-	tokenEOL
-	tokenAngle
-	tokenBinary
-	tokenBoolean
-	tokenComment
-	tokenDelimiter
-	tokenDuration
-	tokenIdentifier
-	tokenKeyword
-	tokenMoment
-	tokenMoniker
-	tokenNarrative
-	tokenNote
-	tokenNumber
-	tokenPattern
-	tokenPercentage
-	tokenProbability
-	tokenQuote
-	tokenResource
-	tokenSymbol
-	tokenTag
-	tokenVersion
+	TokenError TokenType = iota
+	TokenEOF
+	TokenEOL
+	TokenAngle
+	TokenBinary
+	TokenBoolean
+	TokenComment
+	TokenDelimiter
+	TokenDuration
+	TokenIdentifier
+	TokenKeyword
+	TokenMoment
+	TokenMoniker
+	TokenNarrative
+	TokenNote
+	TokenNumber
+	TokenPattern
+	TokenPercentage
+	TokenProbability
+	TokenQuote
+	TokenResource
+	TokenSymbol
+	TokenTag
+	TokenVersion
 )
 
 // This type defines the structure and methods for each token returned by the
 // scanner.
-type token struct {
-	tType    tokenType
-	value    string
-	line     int // The line number of the token in the input string.
-	position int // The position in the line of the first rune of the token.
+type Token struct {
+	Type     TokenType
+	Value    string
+	Line     int // The line number of the token in the input string.
+	Position int // The position in the line of the first rune of the token.
 }
 
 // This method returns the a canonical string version of this token.
-func (v *token) String() string {
+func (v Token) String() string {
+	var value string
 	switch {
-	case v.tType == tokenEOF:
-		return "<EOF>"
-	case v.tType == tokenEOL:
-		return "<EOL>"
-	case len(v.value) > 10:
-		return fmt.Sprintf("%.10q...", v.value)
+	case v.Type == TokenEOF:
+		value = "<EOF>"
+	case v.Type == TokenEOL:
+		value = "<EOL>"
+	case len(v.Value) > 60:
+		value = fmt.Sprintf("%.60q...", v.Value)
 	default:
-		return fmt.Sprintf("%q", v.value)
+		value = fmt.Sprintf("%q", v.Value)
 	}
+	return fmt.Sprintf("Token [type: %2d, line: %2d, position: %2d]: %s", v.Type, v.Line, v.Position, value)
 }
 
 // SCANNER
@@ -84,7 +86,7 @@ func (v *token) String() string {
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
 // All token types in the specification are shown in UPPERCASE.
-func Scanner(source []byte, tokens chan token) *scanner {
+func Scanner(source []byte, tokens chan Token) *scanner {
 	var v = &scanner{source: source, line: 1, position: 1, tokens: tokens}
 	go v.scanTokens() // Start scanning in the background.
 	return v
@@ -104,7 +106,7 @@ type scanner struct {
 	nextByte  int // The zero based index of the next possible byte in the next token.
 	line      int // The line number in the source string of the next rune.
 	position  int // The position in the current line of the first rune in the next token.
-	tokens    chan token
+	tokens    chan Token
 }
 
 // This method continues scanning tokens from the source array until an error
@@ -117,7 +119,7 @@ func (v *scanner) scanTokens() {
 
 // This method attempts to scan any token starting with the next rune in
 // the source array. It returns true if it found a valid token or false
-// if no valid token or a tokenEOF was found.
+// if no valid token or a TokenEOF was found.
 func (v *scanner) scanToken() bool {
 	v.skipSpaces()
 	switch {
@@ -176,12 +178,12 @@ func (v *scanner) skipSpaces() {
 // information to the token channel. It then resets the first byte index to the
 // next byte index position. It returns the token type of the type added to the
 // channel.
-func (v *scanner) emitToken(tType tokenType) tokenType {
+func (v *scanner) emitToken(tType TokenType) TokenType {
 	var tValue = string(v.source[v.firstByte:v.nextByte])
-	if tType == tokenEOF {
+	if tType == TokenEOF {
 		tValue = "<EOF>"
 	}
-	if tType == tokenError {
+	if tType == TokenError {
 		switch tValue {
 		case "\a":
 			tValue = "<BELL>"
@@ -197,8 +199,8 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 			tValue = "<VTAB>"
 		}
 	}
-	var token = token{tType, tValue, v.line, v.position}
-	//fmt.Printf("Token [type: %2d, line: %2d, position: %2d]: %q\n", tType, v.line, v.position, tValue)
+	var token = Token{tType, tValue, v.line, v.position}
+	//fmt.Println(token)
 	v.tokens <- token
 	v.firstByte = v.nextByte
 	v.position += strings.Count(tValue, "") - 1 // Add the number of runes in the token.
@@ -212,7 +214,7 @@ func (v *scanner) foundAngle() bool {
 	var matches = abstractions.ScanAngle(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenAngle)
+		v.emitToken(TokenAngle)
 		return true
 	}
 	return false
@@ -225,7 +227,7 @@ func (v *scanner) foundBoolean() bool {
 	var matches = abstractions.ScanBoolean(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenBoolean)
+		v.emitToken(TokenBoolean)
 		return true
 	}
 	return false
@@ -239,7 +241,7 @@ func (v *scanner) foundBinary() bool {
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.line += strings.Count(matches[0], "\n")
-		v.emitToken(tokenBinary)
+		v.emitToken(TokenBinary)
 		return true
 	}
 	return false
@@ -253,7 +255,7 @@ func (v *scanner) foundComment() bool {
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.line += strings.Count(matches[0], "\n")
-		v.emitToken(tokenComment)
+		v.emitToken(TokenComment)
 		return true
 	}
 	return false
@@ -266,7 +268,7 @@ func (v *scanner) foundDelimiter() bool {
 	var matches = abstractions.ScanDelimiter(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenDelimiter)
+		v.emitToken(TokenDelimiter)
 		return true
 	}
 	return false
@@ -279,7 +281,7 @@ func (v *scanner) foundDuration() bool {
 	var matches = abstractions.ScanDuration(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenDuration)
+		v.emitToken(TokenDuration)
 		return true
 	}
 	return false
@@ -291,14 +293,14 @@ func (v *scanner) foundError() {
 	var bytes = v.source[v.nextByte:]
 	var _, width = utf8.DecodeRune(bytes)
 	v.nextByte += width
-	v.emitToken(tokenError)
+	v.emitToken(TokenError)
 }
 
 // This method adds an EOF token with the current scanner information to the token
 // channel. It returns true if an EOF token was found.
 func (v *scanner) foundEOF() bool {
 	if v.nextByte == len(v.source) {
-		v.emitToken(tokenEOF)
+		v.emitToken(TokenEOF)
 		return true
 	}
 	return false
@@ -310,7 +312,7 @@ func (v *scanner) foundEOL() bool {
 	var s = v.source[v.nextByte:]
 	if bytes.HasPrefix(s, []byte("\n")) {
 		v.nextByte++
-		v.emitToken(tokenEOL)
+		v.emitToken(TokenEOL)
 		v.line++
 		v.position = 1
 		return true
@@ -325,7 +327,7 @@ func (v *scanner) foundIdentifier() bool {
 	var matches = abstractions.ScanIdentifier(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenIdentifier)
+		v.emitToken(TokenIdentifier)
 		return true
 	}
 	return false
@@ -338,7 +340,7 @@ func (v *scanner) foundKeyword() bool {
 	var matches = abstractions.ScanKeyword(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenKeyword)
+		v.emitToken(TokenKeyword)
 		return true
 	}
 	return false
@@ -351,7 +353,7 @@ func (v *scanner) foundMoment() bool {
 	var matches = abstractions.ScanMoment(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenMoment)
+		v.emitToken(TokenMoment)
 		return true
 	}
 	return false
@@ -364,7 +366,7 @@ func (v *scanner) foundMoniker() bool {
 	var matches = abstractions.ScanMoniker(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenMoniker)
+		v.emitToken(TokenMoniker)
 		return true
 	}
 	return false
@@ -378,7 +380,7 @@ func (v *scanner) foundNarrative() bool {
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.line += strings.Count(matches[0], "\n")
-		v.emitToken(tokenNarrative)
+		v.emitToken(TokenNarrative)
 		return true
 	}
 	return false
@@ -391,7 +393,7 @@ func (v *scanner) foundNote() bool {
 	var matches = abstractions.ScanNote(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenNote)
+		v.emitToken(TokenNote)
 		return true
 	}
 	return false
@@ -404,7 +406,7 @@ func (v *scanner) foundNumber() bool {
 	var matches = abstractions.ScanNumber(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenNumber)
+		v.emitToken(TokenNumber)
 		return true
 	}
 	return false
@@ -417,7 +419,7 @@ func (v *scanner) foundPattern() bool {
 	var matches = abstractions.ScanPattern(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenPattern)
+		v.emitToken(TokenPattern)
 		return true
 	}
 	return false
@@ -431,7 +433,7 @@ func (v *scanner) foundPercentage() bool {
 	var matches = abstractions.ScanPercentage(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenPercentage)
+		v.emitToken(TokenPercentage)
 		return true
 	}
 	return false
@@ -445,7 +447,7 @@ func (v *scanner) foundProbability() bool {
 	var matches = abstractions.ScanProbability(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenProbability)
+		v.emitToken(TokenProbability)
 		return true
 	}
 	return false
@@ -458,7 +460,7 @@ func (v *scanner) foundQuote() bool {
 	var matches = abstractions.ScanQuote(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenQuote)
+		v.emitToken(TokenQuote)
 		return true
 	}
 	return false
@@ -471,7 +473,7 @@ func (v *scanner) foundResource() bool {
 	var matches = abstractions.ScanResource(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenResource)
+		v.emitToken(TokenResource)
 		return true
 	}
 	return false
@@ -484,7 +486,7 @@ func (v *scanner) foundSymbol() bool {
 	var matches = abstractions.ScanSymbol(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenSymbol)
+		v.emitToken(TokenSymbol)
 		return true
 	}
 	return false
@@ -497,7 +499,7 @@ func (v *scanner) foundTag() bool {
 	var matches = abstractions.ScanTag(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenTag)
+		v.emitToken(TokenTag)
 		return true
 	}
 	return false
@@ -510,7 +512,7 @@ func (v *scanner) foundVersion() bool {
 	var matches = abstractions.ScanVersion(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.emitToken(tokenVersion)
+		v.emitToken(TokenVersion)
 		return true
 	}
 	return false

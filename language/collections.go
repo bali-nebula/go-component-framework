@@ -105,7 +105,7 @@ func (v *parser) parseCatalog() (abstractions.CatalogLike[any, any], bool) {
 // collection and whether or not the collection was successfully parsed.
 func (v *parser) parseCollection() (any, bool) {
 	var ok bool
-	var bad *token
+	var bad *Token
 	var sequence any
 	_, ok = v.parseDelimiter("[")
 	if !ok {
@@ -218,7 +218,7 @@ func (v *parser) parseSequence() (any, bool) {
 // collection and whether or not the range collection was successfully parsed.
 func (v *parser) parseRange() (abstractions.RangeLike[any], bool) {
 	var ok bool
-	var token *token
+	var token *Token
 	var first any
 	var last any
 	first, _ = v.parseValue() // The first value is optional.
@@ -239,7 +239,7 @@ func (v *parser) parseRange() (abstractions.RangeLike[any], bool) {
 		}
 		return nil, false
 	}
-	var connector = token.value
+	var connector = token.Value
 	last, _ = v.parseValue() // The last value is optional.
 	var rng = collections.Range(first, connector, last)
 	return rng, true

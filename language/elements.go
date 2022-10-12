@@ -21,11 +21,11 @@ func (v *parser) parseAngle() (elements.Angle, bool) {
 	var ok bool
 	var angle elements.Angle
 	var token = v.nextToken()
-	if token.tType != tokenAngle {
+	if token.Type != TokenAngle {
 		v.backupOne()
 		return angle, false
 	}
-	angle, ok = elements.AngleFromString(token.value)
+	angle, ok = elements.AngleFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid angle token was found: %v", token))
 	}
@@ -38,11 +38,11 @@ func (v *parser) parseBoolean() (elements.Boolean, bool) {
 	var ok bool
 	var boolean elements.Boolean
 	var token = v.nextToken()
-	if token.tType != tokenBoolean {
+	if token.Type != TokenBoolean {
 		v.backupOne()
 		return boolean, false
 	}
-	boolean, ok = elements.BooleanFromString(token.value)
+	boolean, ok = elements.BooleanFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid boolean token was found: %v", token))
 	}
@@ -55,11 +55,11 @@ func (v *parser) parseDuration() (elements.Duration, bool) {
 	var ok bool
 	var duration elements.Duration
 	var token = v.nextToken()
-	if token.tType != tokenDuration {
+	if token.Type != TokenDuration {
 		v.backupOne()
 		return duration, false
 	}
-	duration, ok = elements.DurationFromString(token.value)
+	duration, ok = elements.DurationFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid duration token was found: %v", token))
 	}
@@ -116,11 +116,11 @@ func (v *parser) parseMoment() (elements.Moment, bool) {
 	var ok bool
 	var moment elements.Moment
 	var token = v.nextToken()
-	if token.tType != tokenMoment {
+	if token.Type != TokenMoment {
 		v.backupOne()
 		return moment, false
 	}
-	moment, ok = elements.MomentFromString(token.value)
+	moment, ok = elements.MomentFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid moment token was found: %v", token))
 	}
@@ -133,11 +133,11 @@ func (v *parser) parseNumber() (elements.Number, bool) {
 	var ok bool
 	var number elements.Number
 	var token = v.nextToken()
-	if token.tType != tokenNumber {
+	if token.Type != TokenNumber {
 		v.backupOne()
 		return number, false
 	}
-	number, ok = elements.NumberFromString(token.value)
+	number, ok = elements.NumberFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid number token was found: %v", token))
 	}
@@ -150,11 +150,11 @@ func (v *parser) parsePattern() (elements.Pattern, bool) {
 	var ok bool
 	var pattern elements.Pattern
 	var token = v.nextToken()
-	if token.tType != tokenPattern {
+	if token.Type != TokenPattern {
 		v.backupOne()
 		return pattern, false
 	}
-	pattern, ok = elements.PatternFromString(token.value)
+	pattern, ok = elements.PatternFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid pattern token was found: %v", token))
 	}
@@ -167,11 +167,11 @@ func (v *parser) parsePercentage() (elements.Percentage, bool) {
 	var ok bool
 	var percentage elements.Percentage
 	var token = v.nextToken()
-	if token.tType != tokenPercentage {
+	if token.Type != TokenPercentage {
 		v.backupOne()
 		return percentage, false
 	}
-	percentage, ok = elements.PercentageFromString(token.value)
+	percentage, ok = elements.PercentageFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid percentage token was found: %v", token))
 	}
@@ -182,11 +182,11 @@ func (v *parser) parseProbability() (elements.Probability, bool) {
 	var ok bool
 	var probability elements.Probability
 	var token = v.nextToken()
-	if token.tType != tokenProbability {
+	if token.Type != TokenProbability {
 		v.backupOne()
 		return probability, false
 	}
-	probability, ok = elements.ProbabilityFromString(token.value)
+	probability, ok = elements.ProbabilityFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid probability token was found: %v", token))
 	}
@@ -200,11 +200,11 @@ func (v *parser) parseResource() (elements.Resource, bool) {
 	var ok bool
 	var resource elements.Resource
 	var token = v.nextToken()
-	if token.tType != tokenResource {
+	if token.Type != TokenResource {
 		v.backupOne()
 		return resource, false
 	}
-	resource, ok = elements.ResourceFromString(token.value)
+	resource, ok = elements.ResourceFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid resource token was found: %v", token))
 	}
@@ -220,11 +220,11 @@ func (v *parser) parseSymbol() (elements.Symbol, bool) {
 	var ok bool
 	var symbol elements.Symbol
 	var token = v.nextToken()
-	if token.tType != tokenSymbol {
+	if token.Type != TokenSymbol {
 		v.backupOne()
 		return symbol, false
 	}
-	symbol, ok = elements.SymbolFromString(token.value)
+	symbol, ok = elements.SymbolFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid symbol token was found: %v", token))
 	}
@@ -238,11 +238,11 @@ func (v *parser) parseTag() (elements.Tag, bool) {
 	var ok bool
 	var tag elements.Tag
 	var token = v.nextToken()
-	if token.tType != tokenTag {
+	if token.Type != TokenTag {
 		v.backupOne()
 		return tag, false
 	}
-	tag, ok = elements.TagFromString(token.value)
+	tag, ok = elements.TagFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid tag token was found: %v", token))
 	}
