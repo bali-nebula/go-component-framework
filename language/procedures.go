@@ -24,21 +24,22 @@ type AcceptClause struct {
 
 // This method attempts to parse an accept clause. It returns the accept
 // clause and whether or not the accept clause was successfully parsed.
-func (v *parser) parseAcceptClause() (*AcceptClause, bool) {
+func (v *parser) parseAcceptClause() (*AcceptClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var message any
 	var clause *AcceptClause
-	_, ok = v.parseKeyword("accept")
+	_, token, ok = v.parseKeyword("accept")
 	if !ok {
 		// This is not a accept clause.
-		return clause, false
+		return clause, token, false
 	}
-	message, ok = v.parseExpression()
+	message, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a message expression following the 'accept' keyword.")
 	}
 	clause = &AcceptClause{message}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with an indexed attribute
@@ -50,33 +51,33 @@ type Attribute struct {
 
 // This method attempts to parse an attribute. It returns the attribute and
 // whether or not the attribute was successfully parsed.
-func (v *parser) parseAttribute() (*Attribute, bool) {
+func (v *parser) parseAttribute() (*Attribute, *Token, bool) {
 	var ok bool
-	var bad *Token
+	var token *Token
 	var variable string
 	var indices []any
 	var attribute *Attribute
-	variable, ok = v.parseIdentifier()
+	variable, token, ok = v.parseIdentifier()
 	if !ok {
 		// This is not an attribute.
-		return attribute, false
+		return attribute, token, false
 	}
-	_, ok = v.parseDelimiter("[")
+	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		// This is not an attribute.
 		v.backupOne() // Put back the variable token.
-		return attribute, false
+		return attribute, token, false
 	}
-	indices, ok = v.parseIndices()
+	indices, token, ok = v.parseIndices()
 	if !ok {
 		panic("Expected indices following the '[' character.")
 	}
-	bad, ok = v.parseDelimiter("]")
+	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ']' character following the indices and received: %v", *bad))
+		panic(fmt.Sprintf("Expected a ']' character following the indices and received: %v", *token))
 	}
 	attribute = &Attribute{variable, indices}
-	return attribute, true
+	return attribute, token, true
 }
 
 // This type defines the node structure associated with a do block of statements
@@ -89,31 +90,31 @@ type DoBlock struct {
 
 // This method attempts to parse a do block. It returns the do block and whether
 // or not the do block was successfully parsed.
-func (v *parser) parseDoBlock() (*DoBlock, bool) {
+func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
 	var ok bool
-	var bad *Token
+	var token *Token
 	var expression any
 	var statements []any
 	var doBlock *DoBlock
-	expression, ok = v.parseExpression()
+	expression, token, ok = v.parseExpression()
 	if !ok {
 		// We know a do block is expected so time to panic...
 		panic("Expected an expression before a statement block.")
 	}
-	bad, ok = v.parseDelimiter("{")
+	_, token, ok = v.parseDelimiter("{")
 	if !ok {
-		panic(fmt.Sprintf("Expected a '{' character following the expression and received: %v", *bad))
+		panic(fmt.Sprintf("Expected a '{' character following the expression and received: %v", *token))
 	}
-	statements, ok = v.parseStatements()
+	statements, token, ok = v.parseStatements()
 	if !ok {
 		panic("Expected statements following the '{' character.")
 	}
-	bad, ok = v.parseDelimiter("}")
+	_, token, ok = v.parseDelimiter("}")
 	if !ok {
-		panic(fmt.Sprintf("Expected a '}' character following the statements and received: %v", *bad))
+		panic(fmt.Sprintf("Expected a '}' character following the statements and received: %v", *token))
 	}
 	doBlock = &DoBlock{expression, statements}
-	return doBlock, true
+	return doBlock, token, true
 }
 
 // This type defines the node structure associated with a clause that causes the
@@ -123,19 +124,20 @@ type BreakClause struct {
 
 // This method attempts to parse a break clause. It returns the break
 // clause and whether or not the break clause was successfully parsed.
-func (v *parser) parseBreakClause() (*BreakClause, bool) {
+func (v *parser) parseBreakClause() (*BreakClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var clause *BreakClause
-	_, ok = v.parseKeyword("break")
+	_, token, ok = v.parseKeyword("break")
 	if !ok {
 		// This is not a break clause.
-		return clause, false
+		return clause, token, false
 	}
-	_, ok = v.parseKeyword("loop")
+	_, token, ok = v.parseKeyword("loop")
 	if !ok {
 		panic("Expected the 'loop' keyword following the 'break' keyword.")
 	}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that checks out
@@ -149,43 +151,44 @@ type CheckoutClause struct {
 
 // This method attempts to parse a checkout clause. It returns the checkout
 // clause and whether or not the checkout clause was successfully parsed.
-func (v *parser) parseCheckoutClause() (*CheckoutClause, bool) {
+func (v *parser) parseCheckoutClause() (*CheckoutClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var recipient any
 	var level any
 	var moniker any
 	var clause *CheckoutClause
-	_, ok = v.parseKeyword("checkout")
+	_, token, ok = v.parseKeyword("checkout")
 	if !ok {
 		// This is not a checkout clause.
-		return clause, false
+		return clause, token, false
 	}
-	recipient, ok = v.parseRecipient()
+	recipient, token, ok = v.parseRecipient()
 	if !ok {
 		panic("Expected a recipient following the 'checkout' keyword.")
 	}
-	_, ok = v.parseKeyword("at")
+	_, token, ok = v.parseKeyword("at")
 	if ok {
 		// There is an at level part to this clause.
-		_, ok = v.parseKeyword("level")
+		_, token, ok = v.parseKeyword("level")
 		if !ok {
 			panic("Expected a 'level' keyword following the 'at' keyword.")
 		}
-		level, ok = v.parseExpression()
+		level, token, ok = v.parseExpression()
 		if !ok {
 			panic("Expected a level expression following the 'level' keyword.")
 		}
 	}
-	_, ok = v.parseKeyword("from")
+	_, token, ok = v.parseKeyword("from")
 	if !ok {
 		panic("Expected the 'from' keyword after the recipient and level expression.")
 	}
-	moniker, ok = v.parseExpression()
+	moniker, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a moniker expression following the 'from' keyword.")
 	}
 	clause = &CheckoutClause{recipient, level, moniker}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that causes the
@@ -195,19 +198,20 @@ type ContinueClause struct {
 
 // This method attempts to parse a continue clause. It returns the continue
 // clause and whether or not the continue clause was successfully parsed.
-func (v *parser) parseContinueClause() (*ContinueClause, bool) {
+func (v *parser) parseContinueClause() (*ContinueClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var clause *ContinueClause
-	_, ok = v.parseKeyword("continue")
+	_, token, ok = v.parseKeyword("continue")
 	if !ok {
 		// This is not a continue clause.
-		return clause, false
+		return clause, token, false
 	}
-	_, ok = v.parseKeyword("loop")
+	_, token, ok = v.parseKeyword("loop")
 	if !ok {
 		panic("Expected the 'loop' keyword following the 'continue' keyword.")
 	}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that discards
@@ -218,21 +222,22 @@ type DiscardClause struct {
 
 // This method attempts to parse a discard clause. It returns the discard
 // clause and whether or not the discard clause was successfully parsed.
-func (v *parser) parseDiscardClause() (*DiscardClause, bool) {
+func (v *parser) parseDiscardClause() (*DiscardClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var citation any
 	var clause *DiscardClause
-	_, ok = v.parseKeyword("discard")
+	_, token, ok = v.parseKeyword("discard")
 	if !ok {
 		// This is not a discard clause.
-		return clause, false
+		return clause, token, false
 	}
-	citation, ok = v.parseExpression()
+	citation, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a citation expression following the 'discard' keyword.")
 	}
 	clause = &DiscardClause{citation}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that evaluates
@@ -246,43 +251,42 @@ type EvaluateClause struct {
 
 // This method attempts to parse an evaluate clause. It returns the evaluate
 // clause and whether or not the evaluate clause was successfully parsed.
-func (v *parser) parseEvaluateClause() (*EvaluateClause, bool) {
+func (v *parser) parseEvaluateClause() (*EvaluateClause, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
 	var operator string
 	var expression any
 	var clause *EvaluateClause
-	recipient, ok = v.parseRecipient()
+	recipient, token, ok = v.parseRecipient()
 	if ok {
-		token, ok = v.parseDelimiter(":=")
+		operator, token, ok = v.parseDelimiter(":=")
 		if !ok {
-			token, ok = v.parseDelimiter("+=")
+			operator, token, ok = v.parseDelimiter("+=")
 		}
 		if !ok {
-			token, ok = v.parseDelimiter("-=")
+			operator, token, ok = v.parseDelimiter("-=")
 		}
 		if !ok {
-			token, ok = v.parseDelimiter("*=")
+			operator, token, ok = v.parseDelimiter("*=")
 		}
 		if !ok {
-			token, ok = v.parseDelimiter("/=")
+			operator, token, ok = v.parseDelimiter("/=")
 		}
 		if !ok {
 			panic(fmt.Sprintf("Expected an assignment operator and received: %v", *token))
 		}
-		operator = token.Value
 	}
-	expression, ok = v.parseExpression()
+	expression, token, ok = v.parseExpression()
 	if !ok {
 		if token != nil {
 			panic(fmt.Sprintf("Expected an expression after the assignment operator: %q.", operator))
 		}
 		// This is not an evaluate clause.
-		return clause, false
+		return clause, token, false
 	}
 	clause = &EvaluateClause{recipient, operator, expression}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that handles
@@ -294,27 +298,28 @@ type ExceptionClause struct {
 
 // This method attempts to parse an exception clause. It returns the exception
 // clause and whether or not the exception clause was successfully parsed.
-func (v *parser) parseExceptionClause() (*ExceptionClause, bool) {
+func (v *parser) parseExceptionClause() (*ExceptionClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var exception elements.Symbol
 	var doBlock *DoBlock
 	var doBlocks []*DoBlock
 	var clause *ExceptionClause
-	_, ok = v.parseKeyword("on")
+	_, token, ok = v.parseKeyword("on")
 	if !ok {
 		// This is not an exception clause.
-		return clause, false
+		return clause, token, false
 	}
-	exception, ok = v.parseSymbol()
+	exception, token, ok = v.parseSymbol()
 	if !ok {
 		panic("Expected an exception symbol following the 'on' keyword.")
 	}
 	for {
-		_, ok = v.parseKeyword("matching")
+		_, token, ok = v.parseKeyword("matching")
 		if !ok {
 			break // No more possible matches.
 		}
-		doBlock, ok = v.parseDoBlock()
+		doBlock, token, ok = v.parseDoBlock()
 		if !ok {
 			panic("Expected a pattern expression and statement block following the 'matching' keyword.")
 		}
@@ -325,7 +330,7 @@ func (v *parser) parseExceptionClause() (*ExceptionClause, bool) {
 		panic("Expected at least one pattern expression and statement block in the exception clause.")
 	}
 	clause = &ExceptionClause{exception, doBlocks}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that selects a
@@ -336,30 +341,32 @@ type IfClause struct {
 
 // This method attempts to parse an if clause. It returns the if clause and
 // whether or not the if clause was successfully parsed.
-func (v *parser) parseIfClause() (*IfClause, bool) {
+func (v *parser) parseIfClause() (*IfClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var doBlock *DoBlock
 	var clause *IfClause
-	_, ok = v.parseKeyword("if")
+	_, token, ok = v.parseKeyword("if")
 	if !ok {
 		// This is not an if clause.
-		return clause, false
+		return clause, token, false
 	}
-	doBlock, ok = v.parseDoBlock()
+	doBlock, token, ok = v.parseDoBlock()
 	if !ok {
 		panic("Expected a condition expression and statement block following the 'if' keyword.")
 	}
 	clause = &IfClause{doBlock}
-	return clause, true
+	return clause, token, true
 }
 
 // This method attempts to parse a sequence of indices. It returns an array of
 // the indices and whether or not the indices were successfully parsed.
-func (v *parser) parseIndices() ([]any, bool) {
+func (v *parser) parseIndices() ([]any, *Token, bool) {
 	var ok bool
+	var token *Token
 	var index any
 	var indices []any
-	index, ok = v.parseExpression()
+	index, token, ok = v.parseExpression()
 	// There must be at least one index.
 	if !ok {
 		panic("Expected at least one index in the sequence of indices.")
@@ -367,79 +374,80 @@ func (v *parser) parseIndices() ([]any, bool) {
 	for {
 		indices = append(indices, index)
 		// Every subsequent index must be preceded by a ','.
-		_, ok = v.parseDelimiter(",")
+		_, token, ok = v.parseDelimiter(",")
 		if !ok {
 			// No more indices.
 			break
 		}
-		index, ok = v.parseExpression()
+		index, token, ok = v.parseExpression()
 		if !ok {
 			panic("Expected an index after the ',' character.")
 		}
 	}
-	return indices, true
+	return indices, token, true
 }
 
 // This method attempts to parse a main clause. It returns the main clause and
 // whether or not the main clause was successfully parsed.
-func (v *parser) parseMainClause() (any, bool) {
+func (v *parser) parseMainClause() (any, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
+	var token *Token
 	var mainClause any
-	mainClause, ok = v.parseIfClause()
+	mainClause, token, ok = v.parseIfClause()
 	if !ok {
-		mainClause, ok = v.parseSelectClause()
+		mainClause, token, ok = v.parseSelectClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseWithClause()
+		mainClause, token, ok = v.parseWithClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseWhileClause()
+		mainClause, token, ok = v.parseWhileClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseContinueClause()
+		mainClause, token, ok = v.parseContinueClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseBreakClause()
+		mainClause, token, ok = v.parseBreakClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseReturnClause()
+		mainClause, token, ok = v.parseReturnClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseThrowClause()
+		mainClause, token, ok = v.parseThrowClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseSaveClause()
+		mainClause, token, ok = v.parseSaveClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseDiscardClause()
+		mainClause, token, ok = v.parseDiscardClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseNotarizeClause()
+		mainClause, token, ok = v.parseNotarizeClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseCheckoutClause()
+		mainClause, token, ok = v.parseCheckoutClause()
 	}
 	if !ok {
-		mainClause, ok = v.parsePublishClause()
+		mainClause, token, ok = v.parsePublishClause()
 	}
 	if !ok {
-		mainClause, ok = v.parsePostClause()
+		mainClause, token, ok = v.parsePostClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseRetrieveClause()
+		mainClause, token, ok = v.parseRetrieveClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseAcceptClause()
+		mainClause, token, ok = v.parseAcceptClause()
 	}
 	if !ok {
-		mainClause, ok = v.parseRejectClause()
+		mainClause, token, ok = v.parseRejectClause()
 	}
 	if !ok {
 		// This clause should be checked last since it is slower to fail.
-		mainClause, ok = v.parseEvaluateClause()
+		mainClause, token, ok = v.parseEvaluateClause()
 	}
-	return mainClause, ok
+	return mainClause, token, ok
 }
 
 // This type defines the node structure associated with a clause that notarizes
@@ -451,30 +459,31 @@ type NotarizeClause struct {
 
 // This method attempts to parse a notarize clause. It returns the notarize
 // clause and whether or not the notarize clause was successfully parsed.
-func (v *parser) parseNotarizeClause() (*NotarizeClause, bool) {
+func (v *parser) parseNotarizeClause() (*NotarizeClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var draft any
 	var moniker any
 	var clause *NotarizeClause
-	_, ok = v.parseKeyword("notarize")
+	_, token, ok = v.parseKeyword("notarize")
 	if !ok {
 		// This is not a notarize clause.
-		return clause, false
+		return clause, token, false
 	}
-	draft, ok = v.parseExpression()
+	draft, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a draft document expression following the 'notarize' keyword.")
 	}
-	_, ok = v.parseKeyword("as")
+	_, token, ok = v.parseKeyword("as")
 	if !ok {
 		panic("Expected the 'as' keyword after the draft document expression.")
 	}
-	moniker, ok = v.parseExpression()
+	moniker, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a moniker expression following the 'as' keyword.")
 	}
 	clause = &NotarizeClause{draft, moniker}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that posts a
@@ -486,30 +495,31 @@ type PostClause struct {
 
 // This method attempts to parse a post clause. It returns the post
 // clause and whether or not the post clause was successfully parsed.
-func (v *parser) parsePostClause() (*PostClause, bool) {
+func (v *parser) parsePostClause() (*PostClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var message any
 	var bag any
 	var clause *PostClause
-	_, ok = v.parseKeyword("post")
+	_, token, ok = v.parseKeyword("post")
 	if !ok {
 		// This is not a post clause.
-		return clause, false
+		return clause, token, false
 	}
-	message, ok = v.parseExpression()
+	message, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a message expression following the 'post' keyword.")
 	}
-	_, ok = v.parseKeyword("to")
+	_, token, ok = v.parseKeyword("to")
 	if !ok {
 		panic("Expected the 'to' keyword after the message expression.")
 	}
-	bag, ok = v.parseExpression()
+	bag, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a bag expression following the 'to' keyword.")
 	}
 	clause = &PostClause{message, bag}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a procedure that
@@ -520,24 +530,24 @@ type Procedure struct {
 
 // This method attempts to parse a procedure. It returns the procedure and
 // whether or not the procedure was successfully parsed.
-func (v *parser) parseProcedure() ([]any, bool) {
+func (v *parser) parseProcedure() ([]any, *Token, bool) {
 	var ok bool
-	var bad *Token
+	var token *Token
 	var statements []any
-	_, ok = v.parseDelimiter("{")
+	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		// This is not a procedure.
-		return statements, false
+		return statements, token, false
 	}
-	statements, ok = v.parseStatements()
+	statements, token, ok = v.parseStatements()
 	if !ok {
 		panic("Expected statements following the '{' character.")
 	}
-	bad, ok = v.parseDelimiter("}")
+	_, token, ok = v.parseDelimiter("}")
 	if !ok {
-		panic(fmt.Sprintf("Expected a '}' character following the statements and received: %v", *bad))
+		panic(fmt.Sprintf("Expected a '}' character following the statements and received: %v", *token))
 	}
-	return statements, true
+	return statements, token, true
 }
 
 // This type defines the node structure associated with a clause that publishes
@@ -548,33 +558,35 @@ type PublishClause struct {
 
 // This method attempts to parse a publish clause. It returns the publish
 // clause and whether or not the publish clause was successfully parsed.
-func (v *parser) parsePublishClause() (*PublishClause, bool) {
+func (v *parser) parsePublishClause() (*PublishClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var event any
 	var clause *PublishClause
-	_, ok = v.parseKeyword("publish")
+	_, token, ok = v.parseKeyword("publish")
 	if !ok {
 		// This is not a publish clause.
-		return clause, false
+		return clause, token, false
 	}
-	event, ok = v.parseExpression()
+	event, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an event expression following the 'publish' keyword.")
 	}
 	clause = &PublishClause{event}
-	return clause, true
+	return clause, token, true
 }
 
 // This method attempts to parse a recipient. It returns the recipient and
 // whether or not the recipient was successfully parsed.
-func (v *parser) parseRecipient() (any, bool) {
+func (v *parser) parseRecipient() (any, *Token, bool) {
 	var ok bool
+	var token *Token
 	var recipient any
-	recipient, ok = v.parseSymbol()
+	recipient, token, ok = v.parseSymbol()
 	if !ok {
-		recipient, ok = v.parseAttribute()
+		recipient, token, ok = v.parseAttribute()
 	}
-	return recipient, ok
+	return recipient, token, ok
 }
 
 // This type defines the node structure associated with a clause that rejects a
@@ -586,21 +598,22 @@ type RejectClause struct {
 
 // This method attempts to parse a reject clause. It returns the reject
 // clause and whether or not the reject clause was successfully parsed.
-func (v *parser) parseRejectClause() (*RejectClause, bool) {
+func (v *parser) parseRejectClause() (*RejectClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var message any
 	var clause *RejectClause
-	_, ok = v.parseKeyword("reject")
+	_, token, ok = v.parseKeyword("reject")
 	if !ok {
 		// This is not a reject clause.
-		return clause, false
+		return clause, token, false
 	}
-	message, ok = v.parseExpression()
+	message, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a message expression following the 'reject' keyword.")
 	}
 	clause = &RejectClause{message}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that retrieves
@@ -612,30 +625,31 @@ type RetrieveClause struct {
 
 // This method attempts to parse a retrieve clause. It returns the retrieve
 // clause and whether or not the retrieve clause was successfully parsed.
-func (v *parser) parseRetrieveClause() (*RetrieveClause, bool) {
+func (v *parser) parseRetrieveClause() (*RetrieveClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var recipient any
 	var bag any
 	var clause *RetrieveClause
-	_, ok = v.parseKeyword("retrieve")
+	_, token, ok = v.parseKeyword("retrieve")
 	if !ok {
 		// This is not a retrieve clause.
-		return clause, false
+		return clause, token, false
 	}
-	recipient, ok = v.parseRecipient()
+	recipient, token, ok = v.parseRecipient()
 	if !ok {
 		panic("Expected a message recipient following the 'retrieve' keyword.")
 	}
-	_, ok = v.parseKeyword("from")
+	_, token, ok = v.parseKeyword("from")
 	if !ok {
 		panic("Expected the 'from' keyword after the message recipient.")
 	}
-	bag, ok = v.parseExpression()
+	bag, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a bag expression following the 'from' keyword.")
 	}
 	clause = &RetrieveClause{recipient, bag}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that causes an
@@ -646,21 +660,22 @@ type ReturnClause struct {
 
 // This method attempts to parse a return clause. It returns the return
 // clause and whether or not the return clause was successfully parsed.
-func (v *parser) parseReturnClause() (*ReturnClause, bool) {
+func (v *parser) parseReturnClause() (*ReturnClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var result any
 	var clause *ReturnClause
-	_, ok = v.parseKeyword("return")
+	_, token, ok = v.parseKeyword("return")
 	if !ok {
 		// This is not a return clause.
-		return clause, false
+		return clause, token, false
 	}
-	result, ok = v.parseExpression()
+	result, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a result expression following the 'return' keyword.")
 	}
 	clause = &ReturnClause{result}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that saves
@@ -674,30 +689,31 @@ type SaveClause struct {
 
 // This method attempts to parse a save clause. It returns the save
 // clause and whether or not the save clause was successfully parsed.
-func (v *parser) parseSaveClause() (*SaveClause, bool) {
+func (v *parser) parseSaveClause() (*SaveClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var draft any
 	var citation any
 	var clause *SaveClause
-	_, ok = v.parseKeyword("save")
+	_, token, ok = v.parseKeyword("save")
 	if !ok {
 		// This is not a save clause.
-		return clause, false
+		return clause, token, false
 	}
-	draft, ok = v.parseExpression()
+	draft, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a draft document expression following the 'save' keyword.")
 	}
-	_, ok = v.parseKeyword("as")
+	_, token, ok = v.parseKeyword("as")
 	if !ok {
 		panic("Expected the 'as' keyword after the draft document expression.")
 	}
-	citation, ok = v.parseRecipient()
+	citation, token, ok = v.parseRecipient()
 	if !ok {
 		panic("Expected a citation recipient following the 'as' keyword.")
 	}
 	clause = &SaveClause{draft, citation}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that selects a
@@ -709,27 +725,28 @@ type SelectClause struct {
 
 // This method attempts to parse an select clause. It returns the select clause
 // and whether or not the select clause was successfully parsed.
-func (v *parser) parseSelectClause() (*SelectClause, bool) {
+func (v *parser) parseSelectClause() (*SelectClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var control any
 	var doBlock *DoBlock
 	var doBlocks []*DoBlock
 	var clause *SelectClause
-	_, ok = v.parseKeyword("select")
+	_, token, ok = v.parseKeyword("select")
 	if !ok {
 		// This is not a select clause.
-		return clause, false
+		return clause, token, false
 	}
-	control, ok = v.parseExpression()
+	control, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected a control expression following the 'select' keyword.")
 	}
 	for {
-		_, ok = v.parseKeyword("matching")
+		_, token, ok = v.parseKeyword("matching")
 		if !ok {
 			break // No more possible matches.
 		}
-		doBlock, ok = v.parseDoBlock()
+		doBlock, token, ok = v.parseDoBlock()
 		if !ok {
 			panic("Expected a pattern expression and statement block following the 'matching' keyword.")
 		}
@@ -740,7 +757,7 @@ func (v *parser) parseSelectClause() (*SelectClause, bool) {
 		panic("Expected at least one pattern expression and statement block in the select clause.")
 	}
 	clause = &SelectClause{control, doBlocks}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a Bali Document
@@ -753,30 +770,31 @@ type Statement struct {
 
 // This method attempts to parse a statement. It returns the statement and
 // whether or not the statement was successfully parsed.
-func (v *parser) parseStatement() (*Statement, bool) {
+func (v *parser) parseStatement() (*Statement, *Token, bool) {
 	var ok bool
+	var token *Token
 	var statement *Statement
 	var mainClause any
 	var exceptionClause *ExceptionClause
-	mainClause, ok = v.parseMainClause()
+	mainClause, token, ok = v.parseMainClause()
 	if ok {
 		// The exception clause is optional.
-		exceptionClause, _ = v.parseExceptionClause()
+		exceptionClause, token, _ = v.parseExceptionClause()
 	}
 	statement = &Statement{mainClause, exceptionClause}
-	return statement, ok
+	return statement, token, ok
 }
 
 // This method attempts to parse the statements within a procedure. It returns
 // an array of the statements and whether or not the statements were
 // successfully parsed.
-func (v *parser) parseStatements() ([]any, bool) {
+func (v *parser) parseStatements() ([]any, *Token, bool) {
 	var statement any
 	var statements []any
-	var _, ok = v.parseEOL()
+	var _, token, ok = v.parseEOL()
 	if !ok {
 		// The statements are on a single line.
-		statement, ok = v.parseStatement()
+		statement, token, ok = v.parseStatement()
 		// There must be at least one statement.
 		if !ok {
 			panic("Expected at least one statement in the component context.")
@@ -784,23 +802,23 @@ func (v *parser) parseStatements() ([]any, bool) {
 		for {
 			statements = append(statements, statement)
 			// Every subsequent statement must be preceded by a ';'.
-			_, ok = v.parseDelimiter(";")
+			_, token, ok = v.parseDelimiter(";")
 			if !ok {
 				// No more statements.
 				break
 			}
-			statement, ok = v.parseStatement()
+			statement, token, ok = v.parseStatement()
 			if !ok {
 				panic("Expected a statement after the ';' character.")
 			}
 		}
-		return statements, true
+		return statements, token, true
 	}
 	// The statements are on separate lines.
 	for {
-		statement, ok = v.parseDocumentation()
+		statement, token, ok = v.parseDocumentation()
 		if !ok {
-			statement, ok = v.parseStatement()
+			statement, token, ok = v.parseStatement()
 		}
 		if !ok {
 			// No more statements.
@@ -808,7 +826,7 @@ func (v *parser) parseStatements() ([]any, bool) {
 		}
 		statements = append(statements, statement)
 		// Every statement must be followed by an EOL.
-		_, ok = v.parseEOL()
+		_, token, ok = v.parseEOL()
 		if !ok {
 			panic("Expected an EOL character following the statement.")
 		}
@@ -817,7 +835,7 @@ func (v *parser) parseStatements() ([]any, bool) {
 	if len(statements) == 0 {
 		panic("Expected at least one statement in the component context.")
 	}
-	return statements, true
+	return statements, token, true
 }
 
 // This type defines the node structure associated with a clause that causes an
@@ -828,21 +846,22 @@ type ThrowClause struct {
 
 // This method attempts to parse a throw clause. It returns the throw
 // clause and whether or not the throw clause was successfully parsed.
-func (v *parser) parseThrowClause() (*ThrowClause, bool) {
+func (v *parser) parseThrowClause() (*ThrowClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var exception any
 	var clause *ThrowClause
-	_, ok = v.parseKeyword("throw")
+	_, token, ok = v.parseKeyword("throw")
 	if !ok {
 		// This is not a throw clause.
-		return clause, false
+		return clause, token, false
 	}
-	exception, ok = v.parseExpression()
+	exception, token, ok = v.parseExpression()
 	if !ok {
 		panic("Expected an exception expression following the 'throw' keyword.")
 	}
 	clause = &ThrowClause{exception}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that executes
@@ -853,21 +872,22 @@ type WhileClause struct {
 
 // This method attempts to parse a while clause. It returns the while clause and
 // whether or not the while clause was successfully parsed.
-func (v *parser) parseWhileClause() (*WhileClause, bool) {
+func (v *parser) parseWhileClause() (*WhileClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var doBlock *DoBlock
 	var clause *WhileClause
-	_, ok = v.parseKeyword("while")
+	_, token, ok = v.parseKeyword("while")
 	if !ok {
 		// This is not a while clause.
-		return clause, false
+		return clause, token, false
 	}
-	doBlock, ok = v.parseDoBlock()
+	doBlock, token, ok = v.parseDoBlock()
 	if !ok {
 		panic("Expected a conditional expression and statement block following the 'while' keyword.")
 	}
 	clause = &WhileClause{doBlock}
-	return clause, true
+	return clause, token, true
 }
 
 // This type defines the node structure associated with a clause that executes
@@ -880,32 +900,33 @@ type WithClause struct {
 
 // This method attempts to parse a with clause. It returns the with clause and
 // whether or not the with clause was successfully parsed.
-func (v *parser) parseWithClause() (*WithClause, bool) {
+func (v *parser) parseWithClause() (*WithClause, *Token, bool) {
 	var ok bool
+	var token *Token
 	var item elements.Symbol
 	var doBlock *DoBlock
 	var clause *WithClause
-	_, ok = v.parseKeyword("with")
+	_, token, ok = v.parseKeyword("with")
 	if !ok {
 		// This is not a with clause.
-		return clause, false
+		return clause, token, false
 	}
-	_, ok = v.parseKeyword("each")
+	_, token, ok = v.parseKeyword("each")
 	if !ok {
 		panic("Expected an 'each' keyword following the 'with' keyword.")
 	}
-	item, ok = v.parseSymbol()
+	item, token, ok = v.parseSymbol()
 	if !ok {
 		panic("Expected a symbol following the 'each' keyword.")
 	}
-	_, ok = v.parseKeyword("in")
+	_, token, ok = v.parseKeyword("in")
 	if !ok {
 		panic("Expected an 'in' keyword following the symbol.")
 	}
-	doBlock, ok = v.parseDoBlock()
+	doBlock, token, ok = v.parseDoBlock()
 	if !ok {
 		panic("Expected a sequential expression and statement block following the 'in' keyword.")
 	}
 	clause = &WithClause{item, doBlock}
-	return clause, true
+	return clause, token, true
 }

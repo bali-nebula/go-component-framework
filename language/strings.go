@@ -17,111 +17,117 @@ import (
 
 // This method attempts to parse a binary string. It returns the binary
 // string and whether or not the binary string was successfully parsed.
-func (v *parser) parseBinary() (strings.Binary, bool) {
+func (v *parser) parseBinary() (strings.Binary, *Token, bool) {
 	var ok bool
+	var token *Token
 	var binary strings.Binary
-	var token = v.nextToken()
+	token = v.nextToken()
 	if token.Type != TokenBinary {
 		v.backupOne()
-		return binary, false
+		return binary, token, false
 	}
 	binary, ok = strings.BinaryFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid binary token was found: %v", token))
 	}
-	return binary, true
+	return binary, token, true
 }
 
 // This method attempts to parse a moniker string. It returns the moniker string
 // and whether or not the moniker string was successfully parsed.
-func (v *parser) parseMoniker() (strings.Moniker, bool) {
+func (v *parser) parseMoniker() (strings.Moniker, *Token, bool) {
 	var ok bool
+	var token *Token
 	var moniker strings.Moniker
-	var token = v.nextToken()
+	token = v.nextToken()
 	if token.Type != TokenMoniker {
 		v.backupOne()
-		return moniker, false
+		return moniker, token, false
 	}
 	moniker, ok = strings.MonikerFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid moniker token was found: %v", token))
 	}
-	return moniker, true
+	return moniker, token, true
 }
 
 // This method attempts to parse a narrative string. It returns the narrative
 // string and whether or not the narrative string was successfully parsed.
-func (v *parser) parseNarrative() (strings.Narrative, bool) {
+func (v *parser) parseNarrative() (strings.Narrative, *Token, bool) {
 	var ok bool
+	var token *Token
 	var narrative strings.Narrative
-	var token = v.nextToken()
+	token = v.nextToken()
 	if token.Type != TokenNarrative {
 		v.backupOne()
-		return narrative, false
+		return narrative, token, false
 	}
 	narrative, ok = strings.NarrativeFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid narrative token was found: %v", token))
 	}
-	return narrative, true
+	return narrative, token, true
 }
 
 // This method attempts to parse a quote string. It returns the quote string
 // and whether or not the quote string was successfully parsed.
-func (v *parser) parseQuote() (strings.Quote, bool) {
+func (v *parser) parseQuote() (strings.Quote, *Token, bool) {
 	var ok bool
+	var token *Token
 	var quote strings.Quote
-	var token = v.nextToken()
+	token = v.nextToken()
 	if token.Type != TokenQuote {
 		v.backupOne()
-		return quote, false
+		return quote, token, false
 	}
 	quote, ok = strings.QuoteFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid quote token was found: %v", token))
 	}
-	return quote, true
+	return quote, token, true
 }
 
 // This method attempts to parse a string primitive. It returns the
 // string primitive and whether or not the string primitive was
 // successfully parsed.
-func (v *parser) parseString() (any, bool) {
+func (v *parser) parseString() (any, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
+	var token *Token
 	var str any
-	str, ok = v.parseBinary()
+	str, token, ok = v.parseBinary()
 	if !ok {
-		str, ok = v.parseMoniker()
+		str, token, ok = v.parseMoniker()
 	}
 	if !ok {
-		str, ok = v.parseNarrative()
+		str, token, ok = v.parseNarrative()
 	}
 	if !ok {
-		str, ok = v.parseQuote()
+		str, token, ok = v.parseQuote()
 	}
 	if !ok {
-		str, ok = v.parseVersion()
+		str, token, ok = v.parseVersion()
 	}
 	if !ok {
 		str = nil
 	}
-	return str, ok
+	return str, token, ok
 }
 
 // This method attempts to parse a version string. It returns the version
 // string and whether or not the version string was successfully parsed.
-func (v *parser) parseVersion() (strings.Version, bool) {
+func (v *parser) parseVersion() (strings.Version, *Token, bool) {
 	var ok bool
+	var token *Token
 	var version strings.Version
-	var token = v.nextToken()
+	token = v.nextToken()
 	if token.Type != TokenVersion {
 		v.backupOne()
-		return version, false
+		return version, token, false
 	}
 	version, ok = strings.VersionFromString(token.Value)
 	if !ok {
 		panic(fmt.Sprintf("An invalid version token was found: %v", token))
 	}
-	return version, true
+	return version, token, true
 }

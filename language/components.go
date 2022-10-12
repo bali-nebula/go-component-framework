@@ -27,39 +27,41 @@ import (
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
 // All parser rules in the specification are shown in lowerCamelCase.
-func ParseSource(source string) (*Component, bool) {
+func ParseSource(source string) (*Component, *Token, bool) {
 	var ok bool
+	var token *Token
 	var component *Component
 	var v = Parser([]byte(source))
-	component, ok = v.parseComponent()
+	component, token, ok = v.parseComponent()
 	if ok {
-		_, ok = v.parseEOF()
+		_, token, ok = v.parseEOF()
 		if !ok {
 			panic("Source contained more than just a component.")
 		}
 	}
-	return component, ok
+	return component, token, ok
 }
 
 // This function parses the specified Bali Document Notation™ (BDN) source
 // document and returns the corresponding abstract syntax tree. A POSIX
 // compliant source file must end with a EOL character.
-func ParseDocument(document []byte) (*Component, bool) {
+func ParseDocument(document []byte) (*Component, *Token, bool) {
 	var ok bool
+	var token *Token
 	var component *Component
 	var v = Parser(document)
-	component, ok = v.parseComponent()
+	component, token, ok = v.parseComponent()
 	if ok {
-		_, ok = v.parseEOL() // Required by POSIX.
+		_, token, ok = v.parseEOL() // Required by POSIX.
 		if !ok {
 			panic("Document is missing a final EOL.")
 		}
-		_, ok = v.parseEOF()
+		_, token, ok = v.parseEOF()
 		if !ok {
 			panic("Source contained more than just a component.")
 		}
 	}
-	return component, ok
+	return component, token, ok
 }
 
 // COMPONENT NODES
@@ -160,183 +162,191 @@ func (v *parser) formatError(message string, token *Token) string {
 
 // This method attempts to parse a comment. It returns a string containing the
 // comment and whether or not the comment was successfully parsed.
-func (v *parser) parseComment() (string, bool) {
+func (v *parser) parseComment() (string, *Token, bool) {
 	var comment string
 	var token = v.nextToken()
 	if token.Type != TokenComment {
 		v.backupOne()
-		return comment, false
+		return comment, token, false
 	}
 	comment = token.Value
-	return comment, true
+	return comment, token, true
 }
 
 // This method attempts to parse a component. It returns the component and
 // whether or not the component was successfully parsed.
-func (v *parser) parseComponent() (*Component, bool) {
+func (v *parser) parseComponent() (*Component, *Token, bool) {
 	var component *Component
 	var context []*Parameter
-	var entity, ok = v.parseEntity()
+	var entity, token, ok = v.parseEntity()
 	if ok {
-		context, _ = v.parseContext() // The context is optional.
+		context, token, _ = v.parseContext() // The context is optional.
 		component = &Component{entity, context}
 	}
-	return component, ok
+	return component, token, ok
 }
 
 // This method attempts to parse the context for a parameterized component. It
 // returns an array of parameters and whether or not the context was
 // successfully parsed.
-func (v *parser) parseContext() ([]*Parameter, bool) {
+func (v *parser) parseContext() ([]*Parameter, *Token, bool) {
 	var ok bool
+	var token *Token
 	var parameters []*Parameter
-	_, ok = v.parseDelimiter("(")
+	_, token, ok = v.parseDelimiter("(")
 	if !ok {
-		return nil, false
+		return nil, token, false
 	}
-	parameters, ok = v.parseParameters()
+	parameters, token, ok = v.parseParameters()
 	if !ok {
 		panic("Expected at least one parameter following the '(' character.")
 	}
-	_, ok = v.parseDelimiter(")")
+	_, token, ok = v.parseDelimiter(")")
 	if !ok {
 		panic("Expected a ')' character following the parameters.")
 	}
-	return parameters, true
+	return parameters, token, true
 }
 
 // This method attempts to parse the specified delimiter. It returns
 // the token and whether or not the delimiter was found.
-func (v *parser) parseDelimiter(delimiter string) (*Token, bool) {
+func (v *parser) parseDelimiter(delimiter string) (string, *Token, bool) {
+	var value string
 	var token = v.nextToken()
 	if token.Type == TokenEOF || token.Value != delimiter {
 		v.backupOne()
-		return token, false
+		return value, token, false
 	}
-	return token, true
+	value = token.Value
+	return value, token, true
 }
 
 // This method attempts to parse documentation. It returns the documentation and
 // whether or not the documentation was successfully parsed.
-func (v *parser) parseDocumentation() (string, bool) {
+func (v *parser) parseDocumentation() (string, *Token, bool) {
 	var ok bool
+	var token *Token
 	var documentation string
-	documentation, ok = v.parseNote()
+	documentation, token, ok = v.parseNote()
 	if !ok {
-		documentation, ok = v.parseComment()
+		documentation, token, ok = v.parseComment()
 	}
-	return documentation, ok
+	return documentation, token, ok
 }
 
 // This method attempts to parse a component entity. It returns the component
 // entity and whether or not the component entity was successfully parsed.
-func (v *parser) parseEntity() (any, bool) {
+func (v *parser) parseEntity() (any, *Token, bool) {
 	var ok bool
+	var token *Token
 	var entity any
-	entity, ok = v.parseElement()
+	entity, token, ok = v.parseElement()
 	if !ok {
-		entity, ok = v.parseString()
+		entity, token, ok = v.parseString()
 	}
 	if !ok {
-		entity, ok = v.parseCollection()
+		entity, token, ok = v.parseCollection()
 	}
 	if !ok {
-		entity, ok = v.parseProcedure()
+		entity, token, ok = v.parseProcedure()
 	}
-	return entity, ok
+	return entity, token, ok
 }
 
 // This method attempts to parse the end-of-file (EOF) marker. It returns
 // the token and whether or not an EOL token was found.
-func (v *parser) parseEOF() (*Token, bool) {
+func (v *parser) parseEOF() (*Token, *Token, bool) {
 	var token = v.nextToken()
 	if token.Type != TokenEOF {
 		v.backupOne()
-		return token, false
+		return token, token, false
 	}
-	return token, true
+	return token, token, true
 }
 
 // This method attempts to parse the end-of-line (EOL) marker. It returns
 // the token and whether or not an EOF token was found.
-func (v *parser) parseEOL() (*Token, bool) {
+func (v *parser) parseEOL() (*Token, *Token, bool) {
 	var token = v.nextToken()
 	if token.Type != TokenEOL {
 		v.backupOne()
-		return token, false
+		return token, token, false
 	}
-	return token, true
+	return token, token, true
 }
 
 // This method attempts to parse an identifier. It returns the identifier
 // string and whether or not the identifier was successfully parsed.
-func (v *parser) parseIdentifier() (string, bool) {
+func (v *parser) parseIdentifier() (string, *Token, bool) {
 	var identifier string = "<UNKNOWN>"
 	var token = v.nextToken()
 	if token.Type != TokenIdentifier {
 		v.backupOne()
-		return identifier, false
+		return identifier, token, false
 	}
 	identifier = token.Value
-	return identifier, true
+	return identifier, token, true
 }
 
 // This method attempts to parse the specified keyword. It returns
 // the token and whether or not the keyword was found.
-func (v *parser) parseKeyword(keyword string) (*Token, bool) {
+func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
+	var value string
 	var token = v.nextToken()
 	if token.Type == TokenKeyword || token.Value != keyword {
 		v.backupOne()
-		return token, false
+		return value, token, false
 	}
-	return token, true
+	value = token.Value
+	return value, token, true
 }
 
 // This method attempts to parse a note. It returns a string containing the
 // note and whether or not the note was successfully parsed.
-func (v *parser) parseNote() (string, bool) {
+func (v *parser) parseNote() (string, *Token, bool) {
 	var note string
 	var token = v.nextToken()
 	if token.Type != TokenNote {
 		v.backupOne()
-		return note, false
+		return note, token, false
 	}
 	note = token.Value
-	return note, true
+	return note, token, true
 }
 
 // This method attempts to parse a parameter. It returns the parameter and
 // whether or not the parameter was successfully parsed.
-func (v *parser) parseParameter() (*Parameter, bool) {
+func (v *parser) parseParameter() (*Parameter, *Token, bool) {
 	var ok bool
+	var token *Token
 	var name elements.Symbol
 	var value *Component
-	name, ok = v.parseSymbol()
+	name, token, ok = v.parseSymbol()
 	if !ok {
-		return nil, false
+		return nil, token, false
 	}
-	_, ok = v.parseDelimiter(":")
+	_, token, ok = v.parseDelimiter(":")
 	if !ok {
 		panic("Expected a ':' character.")
 	}
-	value, ok = v.parseComponent()
+	value, token, ok = v.parseComponent()
 	if !ok {
 		panic("Expected a component following the ':' character.")
 	}
 	var parameter = &Parameter{name, value}
-	return parameter, true
+	return parameter, token, true
 }
 
 // This method attempts to parse the parameters within a context. It returns an
 // array of the parameters and whether or not the parameters were successfully
 // parsed.
-func (v *parser) parseParameters() ([]*Parameter, bool) {
+func (v *parser) parseParameters() ([]*Parameter, *Token, bool) {
 	var parameter *Parameter
 	var parameters []*Parameter
-	var _, ok = v.parseEOL()
+	var _, token, ok = v.parseEOL()
 	if !ok {
 		// The parameters are on a single line.
-		parameter, ok = v.parseParameter()
+		parameter, token, ok = v.parseParameter()
 		// There must be at least one parameter.
 		if !ok {
 			panic("Expected at least one parameter in the component context.")
@@ -344,28 +354,28 @@ func (v *parser) parseParameters() ([]*Parameter, bool) {
 		for {
 			parameters = append(parameters, parameter)
 			// Every subsequent parameter must be preceded by a ','.
-			_, ok = v.parseDelimiter(",")
+			_, token, ok = v.parseDelimiter(",")
 			if !ok {
 				// No more parameters.
 				break
 			}
-			parameter, ok = v.parseParameter()
+			parameter, token, ok = v.parseParameter()
 			if !ok {
 				panic("Expected a parameter after the ',' character.")
 			}
 		}
-		return parameters, true
+		return parameters, token, true
 	}
 	// The parameters are on separate lines.
 	for {
-		parameter, ok = v.parseParameter()
+		parameter, token, ok = v.parseParameter()
 		if !ok {
 			// No more parameters.
 			break
 		}
 		parameters = append(parameters, parameter)
 		// Every parameter must be followed by an EOL.
-		_, ok = v.parseEOL()
+		_, token, ok = v.parseEOL()
 		if !ok {
 			panic("Expected an EOL character following the parameter.")
 		}
@@ -374,5 +384,5 @@ func (v *parser) parseParameters() ([]*Parameter, bool) {
 	if len(parameters) == 0 {
 		panic("Expected at least one parameter in the component context.")
 	}
-	return parameters, true
+	return parameters, token, true
 }
