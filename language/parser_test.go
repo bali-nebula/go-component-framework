@@ -166,7 +166,7 @@ func TestParserWithSequenceTypes(t *testing.T) {
 	// List
 	component, ok = language.ParseSource("[ ]")
 	assert.True(t, ok)
-	list := component.Entity.(abstractions.ListLike[any])
+	var list = component.Entity.(abstractions.ListLike[any])
 	assert.Equal(t, 0, list.GetSize())
 
 	component, ok = language.ParseSource("[$foo]")
@@ -187,7 +187,7 @@ func TestParserWithSequenceTypes(t *testing.T) {
 	// Catalog
 	component, ok = language.ParseSource("[:]")
 	assert.True(t, ok)
-	catalog := component.Entity.(abstractions.CatalogLike[any, any])
+	var catalog = component.Entity.(abstractions.CatalogLike[any, any])
 	assert.Equal(t, 0, catalog.GetSize())
 
 	component, ok = language.ParseSource("[0: false]")
@@ -208,7 +208,7 @@ func TestParserWithSequenceTypes(t *testing.T) {
 	// Range
 	component, ok = language.ParseSource("[1..1]")
 	assert.True(t, ok)
-	rng := component.Entity.(abstractions.RangeLike[any])
+	var rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 1, rng.GetSize())
 
 	component, ok = language.ParseSource("[1<..1]")

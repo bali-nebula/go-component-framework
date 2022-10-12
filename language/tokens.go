@@ -85,7 +85,7 @@ func (v *token) String() string {
 //
 // All token types in the specification are shown in UPPERCASE.
 func Scanner(source []byte, tokens chan token) *scanner {
-	v := &scanner{source: source, line: 1, position: 1, tokens: tokens}
+	var v = &scanner{source: source, line: 1, position: 1, tokens: tokens}
 	go v.scanTokens() // Start scanning in the background.
 	return v
 }
@@ -177,7 +177,7 @@ func (v *scanner) skipSpaces() {
 // next byte index position. It returns the token type of the type added to the
 // channel.
 func (v *scanner) emitToken(tType tokenType) tokenType {
-	tValue := string(v.source[v.firstByte:v.nextByte])
+	var tValue = string(v.source[v.firstByte:v.nextByte])
 	if tType == tokenEOF {
 		tValue = "<EOF>"
 	}
@@ -208,8 +208,8 @@ func (v *scanner) emitToken(tType tokenType) tokenType {
 // This method adds an angle element token with the current scanner information to
 // the token channel. It returns true if an angle token was found.
 func (v *scanner) foundAngle() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanAngle(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanAngle(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenAngle)
@@ -221,8 +221,8 @@ func (v *scanner) foundAngle() bool {
 // This method adds a boolean element token with the current scanner information
 // to the token channel. It returns true if a boolean token was found.
 func (v *scanner) foundBoolean() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanBoolean(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanBoolean(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenBoolean)
@@ -234,8 +234,8 @@ func (v *scanner) foundBoolean() bool {
 // This method adds a binary string token with the current scanner information to
 // the token channel. It returns true if a binary token was found.
 func (v *scanner) foundBinary() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanBinary(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanBinary(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.line += strings.Count(matches[0], "\n")
@@ -248,8 +248,8 @@ func (v *scanner) foundBinary() bool {
 // This method adds a comment token with the current scanner information to the
 // token channel. It returns true if a comment token was found.
 func (v *scanner) foundComment() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanComment(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanComment(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.line += strings.Count(matches[0], "\n")
@@ -262,8 +262,8 @@ func (v *scanner) foundComment() bool {
 // This method adds a delimiter token with the current scanner information to the
 // token channel. It returns true if a delimiter token was found.
 func (v *scanner) foundDelimiter() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanDelimiter(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanDelimiter(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenDelimiter)
@@ -275,8 +275,8 @@ func (v *scanner) foundDelimiter() bool {
 // This method adds a duration element token with the current scanner information
 // to the token channel. It returns true if a duration token was found.
 func (v *scanner) foundDuration() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanDuration(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanDuration(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenDuration)
@@ -307,7 +307,7 @@ func (v *scanner) foundEOF() bool {
 // This method adds an EOL token with the current scanner information to the token
 // channel. It returns true if an EOL token was found.
 func (v *scanner) foundEOL() bool {
-	s := v.source[v.nextByte:]
+	var s = v.source[v.nextByte:]
 	if bytes.HasPrefix(s, []byte("\n")) {
 		v.nextByte++
 		v.emitToken(tokenEOL)
@@ -321,8 +321,8 @@ func (v *scanner) foundEOL() bool {
 // This method adds an identifier token with the current scanner information to
 // the token channel. It returns true if an identifier token was found.
 func (v *scanner) foundIdentifier() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanIdentifier(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanIdentifier(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenIdentifier)
@@ -334,8 +334,8 @@ func (v *scanner) foundIdentifier() bool {
 // This method adds a keyword token with the current scanner information to the
 // token channel. It returns true if a keyword token was found.
 func (v *scanner) foundKeyword() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanKeyword(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanKeyword(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenKeyword)
@@ -347,8 +347,8 @@ func (v *scanner) foundKeyword() bool {
 // This method adds a moment element token with the current scanner information to
 // the token channel. It returns true if a moment token was found.
 func (v *scanner) foundMoment() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanMoment(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanMoment(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenMoment)
@@ -360,8 +360,8 @@ func (v *scanner) foundMoment() bool {
 // This method adds a moniker string token with the current scanner information to
 // the token channel. It returns true if a moniker token was found.
 func (v *scanner) foundMoniker() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanMoniker(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanMoniker(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenMoniker)
@@ -373,8 +373,8 @@ func (v *scanner) foundMoniker() bool {
 // This method adds a narrative string token with the current scanner information
 // to the token channel. It returns true if a narrative token was found.
 func (v *scanner) foundNarrative() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanNarrative(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanNarrative(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.line += strings.Count(matches[0], "\n")
@@ -387,8 +387,8 @@ func (v *scanner) foundNarrative() bool {
 // This method adds a note token with the current scanner information to the token
 // channel. It returns true if a note token was found.
 func (v *scanner) foundNote() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanNote(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanNote(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenNote)
@@ -400,8 +400,8 @@ func (v *scanner) foundNote() bool {
 // This method adds a number element token with the current scanner information to
 // the token channel. It returns true if a number token was found.
 func (v *scanner) foundNumber() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanNumber(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanNumber(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenNumber)
@@ -413,8 +413,8 @@ func (v *scanner) foundNumber() bool {
 // This method adds a pattern element token with the current scanner information
 // to the token channel. It returns true if a pattern token was found.
 func (v *scanner) foundPattern() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanPattern(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanPattern(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenPattern)
@@ -427,8 +427,8 @@ func (v *scanner) foundPattern() bool {
 // information to the token channel. It returns true if a percentage token was
 // found.
 func (v *scanner) foundPercentage() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanPercentage(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanPercentage(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenPercentage)
@@ -441,8 +441,8 @@ func (v *scanner) foundPercentage() bool {
 // information to the token channel. It returns true if a probability token was
 // found.
 func (v *scanner) foundProbability() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanProbability(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanProbability(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenProbability)
@@ -454,8 +454,8 @@ func (v *scanner) foundProbability() bool {
 // This method adds a quoted string token with the current scanner information to
 // the token channel. It returns true if a quote token was found.
 func (v *scanner) foundQuote() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanQuote(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanQuote(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenQuote)
@@ -467,8 +467,8 @@ func (v *scanner) foundQuote() bool {
 // This method adds a resource element token with the current scanner information
 // the token channel. It returns true if a resource token was found.
 func (v *scanner) foundResource() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanResource(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanResource(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenResource)
@@ -480,8 +480,8 @@ func (v *scanner) foundResource() bool {
 // This method adds a symbol string token with the current scanner information to
 // the token channel. It returns true if a symbol token was found.
 func (v *scanner) foundSymbol() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanSymbol(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanSymbol(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenSymbol)
@@ -493,8 +493,8 @@ func (v *scanner) foundSymbol() bool {
 // This method adds a tag element token with the current scanner information to
 // the token channel. It returns true if a tag token was found.
 func (v *scanner) foundTag() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanTag(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanTag(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenTag)
@@ -506,8 +506,8 @@ func (v *scanner) foundTag() bool {
 // This method adds a version string token with the current scanner information to
 // the token channel. It returns true if a version token was found.
 func (v *scanner) foundVersion() bool {
-	s := v.source[v.nextByte:]
-	matches := abstractions.ScanVersion(s)
+	var s = v.source[v.nextByte:]
+	var matches = abstractions.ScanVersion(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
 		v.emitToken(tokenVersion)
