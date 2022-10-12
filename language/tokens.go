@@ -52,6 +52,35 @@ const (
 	TokenVersion
 )
 
+// This method returns the string representation for each token type.
+func (v TokenType) String() string {
+	return [...]string{
+		"Error",
+		"EOF",
+		"EOL",
+		"Angle",
+		"Binary",
+		"Boolean",
+		"Comment",
+		"Delimiter",
+		"Duration",
+		"Identifier",
+		"Keyword",
+		"Moment",
+		"Moniker",
+		"Narrative",
+		"Note",
+		"Number",
+		"Pattern",
+		"Percentage",
+		"Probability",
+		"Quote",
+		"Resource",
+		"Symbol",
+		"Tag",
+		"Version"}[v]
+}
+
 // This type defines the structure and methods for each token returned by the
 // scanner.
 type Token struct {
@@ -74,7 +103,7 @@ func (v Token) String() string {
 	default:
 		value = fmt.Sprintf("%q", v.Value)
 	}
-	return fmt.Sprintf("Token [type: %2d, line: %2d, position: %2d]: %s", v.Type, v.Line, v.Position, value)
+	return fmt.Sprintf("Token [type: %s, line: %2d, position: %2d]: %s", v.Type, v.Line, v.Position, value)
 }
 
 // SCANNER

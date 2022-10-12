@@ -26,17 +26,30 @@ import (
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
-// All parser rules in the specification are shown in lowerCamelCase.
+// All parser rules in the specification are shown in lowerCamelCase. The
+// function returns the following results:
+//  * The component corresponding to the source string, or nil if the parsing
+//    failed.
+//  * The parsed token that caused the failure if the parsing failed.
+//  * Whether or not the parsing succeeded.
 func ParseSource(source string) (*Component, *Token, bool) {
 	var ok bool
 	var token *Token
 	var component *Component
-	var v = Parser([]byte(source))
-	component, token, ok = v.parseComponent()
+	var parser = Parser([]byte(source))
+	component, token, ok = parser.parseComponent()
 	if ok {
-		_, token, ok = v.parseEOF()
+		_, token, ok = parser.parseEOF()
 		if !ok {
-			panic("Source contained more than just a component.")
+			var message = fmt.Sprintf("Expected an EOF following the component but received this:\n%v\n\n", token)
+			message += generateGrammar(
+				"$component",
+				"$entity",
+				"$context",
+				"$parameters",
+				"$parameter",
+				"$name")
+			panic(message)
 		}
 	}
 	return component, token, ok
@@ -44,21 +57,44 @@ func ParseSource(source string) (*Component, *Token, bool) {
 
 // This function parses the specified Bali Document Notation™ (BDN) source
 // document and returns the corresponding abstract syntax tree. A POSIX
-// compliant source file must end with a EOL character.
+// compliant source file must end with a EOL character. This function returns
+// the following results:
+//  * The component corresponding to the source string, or nil if the parsing
+//    failed.
+//  * The parsed token that caused the failure if the parsing failed.
+//  * Whether or not the parsing succeeded.
 func ParseDocument(document []byte) (*Component, *Token, bool) {
 	var ok bool
 	var token *Token
 	var component *Component
-	var v = Parser(document)
-	component, token, ok = v.parseComponent()
+	var parser = Parser(document)
+	component, token, ok = parser.parseComponent()
 	if ok {
-		_, token, ok = v.parseEOL() // Required by POSIX.
+		_, token, ok = parser.parseEOL() // Required by POSIX.
 		if !ok {
-			panic("Document is missing a final EOL.")
+			var message = fmt.Sprintf("Expected an EOL following the component but received this:\n%v\n\n", token)
+			message += generateGrammar(
+				"$document",
+				"$component",
+				"$entity",
+				"$context",
+				"$parameters",
+				"$parameter",
+				"$name")
+			panic(message)
 		}
-		_, token, ok = v.parseEOF()
+		_, token, ok = parser.parseEOF()
 		if !ok {
-			panic("Source contained more than just a component.")
+			var message = fmt.Sprintf("Expected an EOF following the last EOL but received this:\n%v\n\n", token)
+			message += generateGrammar(
+				"$document",
+				"$component",
+				"$entity",
+				"$context",
+				"$parameters",
+				"$parameter",
+				"$name")
+			panic(message)
 		}
 	}
 	return component, token, ok
@@ -385,4 +421,14 @@ func (v *parser) parseParameters() ([]*Parameter, *Token, bool) {
 		panic("Expected at least one parameter in the component context.")
 	}
 	return parameters, token, true
+}
+
+// PRIVATE FUNCTIONS
+
+func generateGrammar(symbols ...string) string {
+	var grammar = "The expected grammar was:\n"
+	for _, s := range symbols {
+		grammar += fmt.Sprintf("  %v: %v\n\n", s, lexicon[s])
+	}
+	return grammar
 }

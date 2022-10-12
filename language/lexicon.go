@@ -18,7 +18,7 @@ package language
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
 // This map is useful when creating scanner and parser error messages.
-var Lexicon = map[string]string{
+var lexicon = map[string]string{
 	"$acceptClause":         `"accept" expression`,
 	"$arguments":            `expression {"," expression}`,
 	"$arithmeticExpression": `expression ("*" | "/" | "//" | "+" | "-") expression`,
@@ -29,8 +29,7 @@ var Lexicon = map[string]string{
 	"$catalog": `
     association {"," association} |
     EOL <association [NOTE] EOL> |
-    ":"  ! An empty catalog.
-	`,
+    ":"  ! An empty catalog.`,
 	"$chainExpression":       `expression "&" expression`,
 	"$checkoutClause":        `"checkout" recipient ["at" "level" expression] "from" expression`,
 	"$collection":            `"[" sequence "]"`,
@@ -46,8 +45,7 @@ var Lexicon = map[string]string{
 	"$document":              `component EOL EOF`,
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
-    PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG
-	`,
+    PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
 	"$entity":          `element | string | collection | procedure`,
 	"$evaluateClause":  `[recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$exception":       `SYMBOL`,
@@ -68,8 +66,7 @@ var Lexicon = map[string]string{
     comparisonExpression |
     complementExpression |
     logicalExpression |
-    defaultExpression
-	`,
+    defaultExpression`,
 	"$function":            `IDENTIFIER`,
 	"$functionExpression":  `function "(" [arguments] ")"`,
 	"$ifClause":            `"if" expression "do" "{" statements "}"`,
@@ -79,8 +76,7 @@ var Lexicon = map[string]string{
 	"$list": `
     component {"," component} |
     EOL <component [NOTE] EOL> |
-    ! An empty list.
-	`,
+    ! An empty list.`,
 	"$logicalExpression":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitudeExpression": `"|" expression "|"`,
 	"$mainClause": `
@@ -101,8 +97,7 @@ var Lexicon = map[string]string{
     retrieveClause |
     acceptClause |
     rejectClause |
-    evaluateClause
-	`,
+    evaluateClause`,
 	"$message":           `IDENTIFIER`,
 	"$messageExpression": `expression ("." | "<~") message "(" [arguments] ")"`,
 	"$name":              `SYMBOL`,
@@ -110,8 +105,7 @@ var Lexicon = map[string]string{
 	"$parameter":         `name ":" component`,
 	"$parameters": `
     parameter {"," parameter} |
-    EOL <parameter EOL>
-	`,
+    EOL <parameter EOL>`,
 	"$postClause":           `"post" expression "to" expression`,
 	"$powerExpression":      `expression "^" expression`,
 	"$precedenceExpression": `"(" expression ")"`,
@@ -130,8 +124,7 @@ var Lexicon = map[string]string{
 	"$statements": `
     statement {";" statement} |
     EOL {(annotation | statement) EOL} |
-    ! An empty procedure.
-	`,
+    ! An empty procedure.`,
 	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$throwClause": `"throw" expression`,
 	"$value":       `element | string | variable`,
@@ -153,8 +146,7 @@ var Lexicon = map[string]string{
     "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?" | ">" | "=" |
     "<..<" | "<.." | "<~" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
     "..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
-    ")" | "(" | "&"
-	`,
+    ")" | "(" | "&"`,
 	"$DURATION":   `"~" [SIGN] "P" (WEEKS | DATES [TIMES])`,
 	"$E":          `"e"`,
 	"$EOL":        `"\n"`,
@@ -172,8 +164,7 @@ var Lexicon = map[string]string{
     "on" | "notarize" | "matching" | "loop" | "level" | "in" |
     "if" | "from" | "each" | "do" | "discard" | "continue" |
     "checkout" | "break" | "at" | "as" | "accept" |
-    "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"
-	`,
+    "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
 	"$MOMENT":      `"<" YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
 	"$MONIKER":     `<"/" NAME>`,
@@ -213,8 +204,7 @@ var Lexicon = map[string]string{
 	"$UNDEFINED":   `"undefined"`,
 	"$UNICODE": `
     "u" BASE16 BASE16 BASE16 BASE16 |
-    "U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 
-	`,
+    "U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16`,
 	"$VERSION": `"v" ORDINAL {"." ORDINAL}`,
 	"$WEEKS":   `TIMESPAN "W"`,
 	"$YEAR":    `[SIGN] ORDINAL`,
