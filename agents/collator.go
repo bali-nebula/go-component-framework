@@ -23,13 +23,13 @@ import (
 // This function determines whether or not the specified values are equal using
 // their natural comparison criteria.
 func CompareValues(first any, second any) bool {
-	v := Collator()
+	var v = Collator()
 	return v.CompareValues(first, second)
 }
 
 // This function ranks the specified values based on their natural ordering.
 func RankValues(first any, second any) int {
-	v := Collator()
+	var v = Collator()
 	return v.RankValues(first, second)
 }
 
@@ -68,8 +68,8 @@ func (v *collator) compareValues(first reflect.Value, second reflect.Value) bool
 	}
 
 	// At this point, neither of the types are nil.
-	firstType := baseTypeName(first.Type())
-	secondType := baseTypeName(second.Type())
+	var firstType = baseTypeName(first.Type())
+	var secondType = baseTypeName(second.Type())
 	if firstType != secondType && firstType != "any" && secondType != "any" {
 		// The values have different types.
 		return false
@@ -129,7 +129,7 @@ func (v *collator) compareElements(first reflect.Value, second reflect.Value) bo
 // This private method determines whether or not the specified arrays have
 // the same value.
 func (v *collator) compareArrays(first reflect.Value, second reflect.Value) bool {
-	size := first.Len()
+	var size = first.Len()
 	if second.Len() != size {
 		// The arrays are of different lengths.
 		return false
@@ -157,12 +157,12 @@ func (v *collator) compareMaps(first reflect.Value, second reflect.Value) bool {
 	}
 
 	// Compare the keys and values for the two maps.
-	iterator := first.MapRange()
+	var iterator = first.MapRange()
 	for iterator.Next() {
 		v.state.IncrementDepth()
-		key := iterator.Key()
-		firstValue := iterator.Value()
-		secondValue := second.MapIndex(key)
+		var key = iterator.Key()
+		var firstValue = iterator.Value()
+		var secondValue = second.MapIndex(key)
 		if !v.compareValues(firstValue, secondValue) {
 			// The values don't match.
 			v.state.DecrementDepth()
@@ -179,16 +179,16 @@ func (v *collator) compareMaps(first reflect.Value, second reflect.Value) bool {
 // the same key value pair.
 func (v *collator) compareAssociations(first reflect.Value, second reflect.Value) bool {
 	// Compare the keys of the two associations.
-	firstKey := first.MethodByName("GetKey").Call([]reflect.Value{})[0]
-	secondKey := second.MethodByName("GetKey").Call([]reflect.Value{})[0]
+	var firstKey = first.MethodByName("GetKey").Call([]reflect.Value{})[0]
+	var secondKey = second.MethodByName("GetKey").Call([]reflect.Value{})[0]
 	if !v.compareValues(firstKey, secondKey) {
 		// The keys don't match.
 		return false
 	}
 
 	// The keys match so compare the values of the two associations.
-	firstValue := first.MethodByName("GetValue").Call([]reflect.Value{})[0]
-	secondValue := second.MethodByName("GetValue").Call([]reflect.Value{})[0]
+	var firstValue = first.MethodByName("GetValue").Call([]reflect.Value{})[0]
+	var secondValue = second.MethodByName("GetValue").Call([]reflect.Value{})[0]
 	return v.compareValues(firstValue, secondValue)
 }
 
@@ -196,16 +196,16 @@ func (v *collator) compareAssociations(first reflect.Value, second reflect.Value
 // have the same value.
 func (v *collator) compareCollections(first reflect.Value, second reflect.Value) bool {
 	// Compare the arrays for the two collections.
-	firstArray := first.MethodByName("AsArray").Call([]reflect.Value{})[0]
-	secondArray := second.MethodByName("AsArray").Call([]reflect.Value{})[0]
+	var firstArray = first.MethodByName("AsArray").Call([]reflect.Value{})[0]
+	var secondArray = second.MethodByName("AsArray").Call([]reflect.Value{})[0]
 	return v.compareArrays(firstArray, secondArray)
 }
 
 // PRIVATE FUNCTIONS
 
 func (v *collator) rankReflective(first any, second any) int {
-	firstValue := first.(reflect.Value)
-	secondValue := second.(reflect.Value)
+	var firstValue = first.(reflect.Value)
+	var secondValue = second.(reflect.Value)
 	return v.rankValues(firstValue, secondValue)
 }
 
@@ -225,8 +225,8 @@ func (v *collator) rankValues(first reflect.Value, second reflect.Value) int {
 	}
 
 	// At this point, neither of the values are nil.
-	firstType := baseTypeName(first.Type())
-	secondType := baseTypeName(second.Type())
+	var firstType = baseTypeName(first.Type())
+	var secondType = baseTypeName(second.Type())
 	if firstType != secondType && firstType != "any" && secondType != "any" {
 		// The values have different types.
 		return RankValues(firstType, secondType)
@@ -325,8 +325,8 @@ func (v *collator) rankValues(first reflect.Value, second reflect.Value) int {
 // a recursive descent algorithm.
 func (v *collator) rankArrays(first reflect.Value, second reflect.Value) int {
 	// Determine the smallest array.
-	firstSize := first.Len()
-	secondSize := second.Len()
+	var firstSize = first.Len()
+	var secondSize = second.Len()
 	if firstSize > secondSize {
 		// Swap the order of the arrays and reverse the sign of the result.
 		return -1 * v.rankArrays(second, first)
@@ -335,7 +335,7 @@ func (v *collator) rankArrays(first reflect.Value, second reflect.Value) int {
 	// Iterate through the smallest array.
 	for i := 0; i < firstSize; i++ {
 		v.state.IncrementDepth()
-		rank := v.rankValues(first.Index(i), second.Index(i))
+		var rank = v.rankValues(first.Index(i), second.Index(i))
 		if rank < 0 {
 			// The item in the first array comes before its matching item.
 			v.state.DecrementDepth()
@@ -369,14 +369,14 @@ func (v *collator) rankArrays(first reflect.Value, second reflect.Value) int {
 // and the sorter (i.e. rankMaps() -> SortArray() -> RankingFunction type).
 func (v *collator) rankMaps(first reflect.Value, second reflect.Value) int {
 	// Extract and sort the keys for the two maps.
-	firstKeys := first.MapKeys() // The returned keys are in random order.
+	var firstKeys = first.MapKeys() // The returned keys are in random order.
 	SortArray(firstKeys, v.rankReflective)
-	secondKeys := second.MapKeys() // The returned keys are in random order.
+	var secondKeys = second.MapKeys() // The returned keys are in random order.
 	SortArray(secondKeys, v.rankReflective)
 
 	// Determine the smallest map.
-	firstSize := len(firstKeys)
-	secondSize := len(secondKeys)
+	var firstSize = len(firstKeys)
+	var secondSize = len(secondKeys)
 	if firstSize > secondSize {
 		// Swap the order of the maps and reverse the sign of the result.
 		return -1 * v.rankMaps(second, first)
@@ -385,9 +385,9 @@ func (v *collator) rankMaps(first reflect.Value, second reflect.Value) int {
 	// Iterate through the smallest map.
 	for i := 0; i < firstSize; i++ {
 		// Rank the two keys.
-		firstKey := firstKeys[i]
-		secondKey := secondKeys[i]
-		keyRank := v.rankValues(firstKey, secondKey)
+		var firstKey = firstKeys[i]
+		var secondKey = secondKeys[i]
+		var keyRank = v.rankValues(firstKey, secondKey)
 		if keyRank < 0 {
 			// The key in the first map comes before its matching key.
 			return -1
@@ -398,9 +398,9 @@ func (v *collator) rankMaps(first reflect.Value, second reflect.Value) int {
 		}
 
 		// The two keys match so rank the corresponding values.
-		firstValue := first.MapIndex(firstKey)
-		secondValue := second.MapIndex(secondKey)
-		valueRank := v.rankValues(firstValue, secondValue)
+		var firstValue = first.MapIndex(firstKey)
+		var secondValue = second.MapIndex(secondKey)
+		var valueRank = v.rankValues(firstValue, secondValue)
 		if valueRank < 0 {
 			// The value in the first map comes before its matching value.
 			return -1
@@ -424,9 +424,9 @@ func (v *collator) rankMaps(first reflect.Value, second reflect.Value) int {
 // This private method returns the ranking order of the specified associations.
 func (v *collator) rankAssociations(first reflect.Value, second reflect.Value) int {
 	// Rank the keys of the two associations.
-	firstKey := first.MethodByName("GetKey").Call([]reflect.Value{})[0]
-	secondKey := second.MethodByName("GetKey").Call([]reflect.Value{})[0]
-	keyRank := v.rankValues(firstKey, secondKey)
+	var firstKey = first.MethodByName("GetKey").Call([]reflect.Value{})[0]
+	var secondKey = second.MethodByName("GetKey").Call([]reflect.Value{})[0]
+	var keyRank = v.rankValues(firstKey, secondKey)
 	if keyRank < 0 {
 		// The key in the first association comes before the second.
 		return -1
@@ -437,8 +437,8 @@ func (v *collator) rankAssociations(first reflect.Value, second reflect.Value) i
 	}
 
 	// The keys match so rank the values of the two associations.
-	firstValue := first.MethodByName("GetValue").Call([]reflect.Value{})[0]
-	secondValue := second.MethodByName("GetValue").Call([]reflect.Value{})[0]
+	var firstValue = first.MethodByName("GetValue").Call([]reflect.Value{})[0]
+	var secondValue = second.MethodByName("GetValue").Call([]reflect.Value{})[0]
 	return v.rankValues(firstValue, secondValue)
 }
 
@@ -446,16 +446,16 @@ func (v *collator) rankAssociations(first reflect.Value, second reflect.Value) i
 // using a recursive descent algorithm.
 func (v *collator) rankCollections(first reflect.Value, second reflect.Value) int {
 	// Rank the arrays for the two collections.
-	firstArray := first.MethodByName("AsArray").Call([]reflect.Value{})[0]
-	secondArray := second.MethodByName("AsArray").Call([]reflect.Value{})[0]
+	var firstArray = first.MethodByName("AsArray").Call([]reflect.Value{})[0]
+	var secondArray = second.MethodByName("AsArray").Call([]reflect.Value{})[0]
 	return v.rankArrays(firstArray, secondArray)
 }
 
 // This private function returns the ranking order of the specified boolean
 // values.
 func rankBooleans[T ~bool](v *collator, first reflect.Value, second reflect.Value) int {
-	firstBoolean := first.Interface().(T)
-	secondBoolean := second.Interface().(T)
+	var firstBoolean = first.Interface().(T)
+	var secondBoolean = second.Interface().(T)
 	if !firstBoolean && secondBoolean {
 		return -1
 	}
@@ -470,8 +470,8 @@ func rankBooleans[T ~bool](v *collator, first reflect.Value, second reflect.Valu
 func rankNumbers[T ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~uintptr |
 	~int8 | ~int16 | ~int32 | ~int64 | ~int |
 	~float32 | ~float64](v *collator, first reflect.Value, second reflect.Value) int {
-	firstNumber := first.Interface().(T)
-	secondNumber := second.Interface().(T)
+	var firstNumber = first.Interface().(T)
+	var secondNumber = second.Interface().(T)
 	if firstNumber < secondNumber {
 		return -1
 	}
@@ -485,8 +485,8 @@ func rankNumbers[T ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~uintptr |
 // number values.
 func rankVectors[T ~complex64 | ~complex128](v *collator, first reflect.Value, second reflect.Value) int {
 	// The cmplx library requires type complex128.
-	firstVector := (complex128)(first.Interface().(T))
-	secondVector := (complex128)(second.Interface().(T))
+	var firstVector = (complex128)(first.Interface().(T))
+	var secondVector = (complex128)(second.Interface().(T))
 	if firstVector == secondVector {
 		return 0
 	}
@@ -516,8 +516,8 @@ func rankVectors[T ~complex64 | ~complex128](v *collator, first reflect.Value, s
 // This private function returns the ranking order of the specified string
 // values.
 func rankStrings[T ~string](v *collator, first reflect.Value, second reflect.Value) int {
-	firstString := first.Interface().(T)
-	secondString := second.Interface().(T)
+	var firstString = first.Interface().(T)
+	var secondString = second.Interface().(T)
 	if firstString < secondString {
 		// The first string comes before the second string lexigraphically.
 		return -1
@@ -533,8 +533,8 @@ func rankStrings[T ~string](v *collator, first reflect.Value, second reflect.Val
 // This function removes the generics from the type string for the specified
 // type and converts an empty interface into type "any".
 func baseTypeName(t reflect.Type) string {
-	result := t.String()
-	index := strings.Index(result, "[")
+	var result = t.String()
+	var index = strings.Index(result, "[")
 	if index > -1 {
 		result = result[:index]
 	}

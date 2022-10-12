@@ -110,7 +110,7 @@ func ScanComment(v []byte) []string {
 	var current = 3 // Skip the leading '!>\n' characters.
 	var level = 1
 	for level > 0 {
-		s := v[current:]
+		var s = v[current:]
 		switch {
 		case len(s) == 0:
 			return result
@@ -277,7 +277,7 @@ func ScanNarrative(v []byte) []string {
 	var current = 3 // Skip the leading '">\n' characters.
 	var level = 1
 	for level > 0 {
-		s := v[current:]
+		var s = v[current:]
 		switch {
 		case len(s) == 0:
 			return result
@@ -620,7 +620,7 @@ var delimiters = [][]byte{
 // PRIVATE FUNCTIONS
 
 func bytesToStrings(bytes [][]byte) []string {
-	strings := make([]string, len(bytes))
+	var strings = make([]string, len(bytes))
 	for index, array := range bytes {
 		strings[index] = string(array)
 	}

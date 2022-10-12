@@ -22,7 +22,7 @@ import (
 
 // This function returns a canonical BDN string for the specified value.
 func FormatValue(value any) string {
-	v := Formatter()
+	var v = Formatter()
 	return v.FormatValue(value)
 }
 
@@ -127,29 +127,29 @@ func (v *formatter) formatNil(r reflect.Value) {
 // This private method appends the name of the specified boolean value to the
 // result.
 func (v *formatter) formatBoolean(r reflect.Value) {
-	b := r.Bool()
+	var b = r.Bool()
 	v.state.AppendString(strconv.FormatBool(b))
 }
 
 // This private method appends the base 10 string for the specified integer
 // value to the result.
 func (v *formatter) formatInteger(r reflect.Value) {
-	i := r.Int()
+	var i = r.Int()
 	v.state.AppendString(strconv.FormatInt(int64(i), 10))
 }
 
 // This private method appends the base 10 string for the specified unsigned
 // integer value to the result.
 func (v *formatter) formatUnsigned(r reflect.Value) {
-	u := r.Uint()
+	var u = r.Uint()
 	v.state.AppendString("0x" + strconv.FormatUint(uint64(u), 16))
 }
 
 // This private method appends the base 10 string for the specified floating
 // point value to the result using scientific notation if necessary.
 func (v *formatter) formatFloat(r reflect.Value) {
-	flt := r.Float()
-	str := strconv.FormatFloat(flt, 'G', -1, 64)
+	var flt = r.Float()
+	var str = strconv.FormatFloat(flt, 'G', -1, 64)
 	if !strings.Contains(str, ".") && !strings.Contains(str, "E") {
 		str += ".0"
 	}
@@ -159,28 +159,28 @@ func (v *formatter) formatFloat(r reflect.Value) {
 // This private method appends the base 10 string for the specified complex
 // number value to the result using scientific notation if necessary.
 func (v *formatter) formatComplex(r reflect.Value) {
-	c := r.Complex()
+	var c = r.Complex()
 	v.state.AppendString(strconv.FormatComplex(c, 'G', -1, 128))
 }
 
 // This private method appends the string for the specified rune value to the
 // result.
 func (v *formatter) formatRune(r reflect.Value) {
-	rn := r.Int()
+	var rn = r.Int()
 	v.state.AppendString(strconv.QuoteRune(int32(rn)))
 }
 
 // This private method appends the string for the specified string value to the
 // result.
 func (v *formatter) formatString(r reflect.Value) {
-	str := r.String()
+	var str = r.String()
 	v.state.AppendString("\"" + str + "\"")
 }
 
 // This private method appends the string for the specified array of values to
 // the result.
 func (v *formatter) formatArray(r reflect.Value, typ string) {
-	size := r.Len()
+	var size = r.Len()
 	v.state.AppendString("[")
 	if size > 0 {
 		if v.state.CurrentDepth()+1 > maximumFormattingDepth {
@@ -190,7 +190,7 @@ func (v *formatter) formatArray(r reflect.Value, typ string) {
 			for i := 0; i < size; i++ {
 				v.state.IncrementDepth()
 				v.state.AppendNewline()
-				item := r.Index(i)
+				var item = r.Index(i)
 				v.formatValue(item)
 				v.state.DecrementDepth()
 			}
@@ -209,8 +209,8 @@ func (v *formatter) formatArray(r reflect.Value, typ string) {
 // This private method appends the string for the specified map of key-value
 // pairs to the result.
 func (v *formatter) formatMap(r reflect.Value) {
-	keys := r.MapKeys()
-	size := len(keys)
+	var keys = r.MapKeys()
+	var size = len(keys)
 	v.state.AppendString("[")
 	if size > 0 {
 		if v.state.CurrentDepth()+1 > maximumFormattingDepth {
@@ -220,8 +220,8 @@ func (v *formatter) formatMap(r reflect.Value) {
 			for i := 0; i < size; i++ {
 				v.state.IncrementDepth()
 				v.state.AppendNewline()
-				key := keys[i]
-				value := r.MapIndex(key)
+				var key = keys[i]
+				var value = r.MapIndex(key)
 				v.formatValue(key)
 				v.state.AppendString(": ")
 				v.formatValue(value)
@@ -238,18 +238,18 @@ func (v *formatter) formatMap(r reflect.Value) {
 // This private method appends the string for the specified catalog of
 // key-value pairs to the result. It uses recursion to format each pair.
 func (v *formatter) formatAssociation(r reflect.Value) {
-	key := r.MethodByName("GetKey").Call([]reflect.Value{})[0]
+	var key = r.MethodByName("GetKey").Call([]reflect.Value{})[0]
 	v.formatValue(key)
 	v.state.AppendString(": ")
-	value := r.MethodByName("GetValue").Call([]reflect.Value{})[0]
+	var value = r.MethodByName("GetValue").Call([]reflect.Value{})[0]
 	v.formatValue(value)
 }
 
 // This private method appends the string for the specified collection of
 // items to the result. It uses recursion to format each item.
 func (v *formatter) formatCollection(r reflect.Value) {
-	array := r.MethodByName("AsArray").Call([]reflect.Value{})[0]
-	typ := extractType(r)
+	var array = r.MethodByName("AsArray").Call([]reflect.Value{})[0]
+	var typ = extractType(r)
 	v.formatArray(array, typ)
 }
 
@@ -258,7 +258,7 @@ func (v *formatter) formatCollection(r reflect.Value) {
 // This private function extracts the type name string from the full reflected
 // type.
 func extractType(r reflect.Value) string {
-	t := r.Type().String()
+	var t = r.Type().String()
 	switch {
 	case strings.HasPrefix(t, "[]"):
 		return "array"

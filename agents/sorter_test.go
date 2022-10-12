@@ -17,20 +17,20 @@ import (
 )
 
 func TestSortingEmpty(t *testing.T) {
-	empty := []any{}
+	var empty = []any{}
 	agents.SortArray(empty, agents.RankValues)
 }
 
 func TestSortingIntegers(t *testing.T) {
-	unsorted := []int{4, 3, 1, 5, 2}
-	sorted := []int{1, 2, 3, 4, 5}
+	var unsorted = []int{4, 3, 1, 5, 2}
+	var sorted = []int{1, 2, 3, 4, 5}
 	agents.SortArray(unsorted, agents.RankValues)
 	assert.Equal(t, sorted, unsorted)
 }
 
 func TestSortingStrings(t *testing.T) {
-	unsorted := []string{"alpha", "beta", "gamma", "delta"}
-	sorted := []string{"alpha", "beta", "delta", "gamma"}
+	var unsorted = []string{"alpha", "beta", "gamma", "delta"}
+	var sorted = []string{"alpha", "beta", "delta", "gamma"}
 	agents.SortArray(unsorted, agents.RankValues)
 	assert.Equal(t, sorted, unsorted)
 }

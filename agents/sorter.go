@@ -19,7 +19,7 @@ import (
 // This function sorts the specified array of items using the specified ranking
 // function.
 func SortArray[T any](array []T, rank abstractions.RankingFunction) {
-	v := Sorter[T](rank)
+	var v = Sorter[T](rank)
 	v.SortArray(array)
 }
 
@@ -51,8 +51,8 @@ func (v *sorter[T]) SortArray(array []T) {
 
 func (v *sorter[T]) sortArray(array []T) {
 	// Create a buffer array.
-	length := len(array)
-	buffer := make([]T, length)
+	var length = len(array)
+	var buffer = make([]T, length)
 	copy(buffer, array) // Make a copy of the original unsorted array.
 
 	// Iterate through subarray widths of 2, 4, 8, ... length.
@@ -62,13 +62,13 @@ func (v *sorter[T]) sortArray(array []T) {
 		for left := 0; left < length; left += width * 2 {
 
 			// Find the middle (it must be less than length).
-			middle := left + width
+			var middle = left + width
 			if middle > length {
 				middle = length
 			}
 
 			// Find the right side (it must be less than length).
-			right := middle + width
+			var right = middle + width
 			if right > length {
 				right = length
 			}
@@ -89,12 +89,12 @@ func (v *sorter[T]) sortArray(array []T) {
 }
 
 func (v *sorter[T]) mergeArrays(left []T, right []T, merged []T) {
-	leftIndex := 0
-	leftLength := len(left)
-	rightIndex := 0
-	rightLength := len(right)
-	mergedIndex := 0
-	mergedLength := len(merged)
+	var leftIndex = 0
+	var leftLength = len(left)
+	var rightIndex = 0
+	var rightLength = len(right)
+	var mergedIndex = 0
+	var mergedLength = len(merged)
 
 	// Work our way through filling the entire merged array.
 	for mergedIndex < mergedLength {

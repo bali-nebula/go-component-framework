@@ -31,7 +31,7 @@ func Base32Encode(bytes []byte) string {
 	}
 
 	// Encode the last 5 bit chunk.
-	index := len(bytes) - 1
+	var index = len(bytes) - 1
 	base32EncodeLast(previousByte, index, &result)
 
 	return result.String()
@@ -44,17 +44,17 @@ func Base32Decode(encoded string) []byte {
 	var buffer strings.Builder
 	for _, c := range encoded {
 		if !unicode.IsSpace(c) {
-			r := unicode.ToUpper(c)
+			var r = unicode.ToUpper(c)
 			buffer.WriteRune(r)
 		}
 	}
 	encoded = buffer.String()
 
 	// Decode each base 32 character.
-	size := len(encoded)
-	bytes := make([]byte, int(math.Trunc(float64(size)*5.0/8.0)))
+	var size = len(encoded)
+	var bytes = make([]byte, int(math.Trunc(float64(size)*5.0/8.0)))
 	for index, r := range encoded {
-		chunk := byte(strings.Index(base32LookupTable, string(r)))
+		var chunk = byte(strings.Index(base32LookupTable, string(r)))
 		if chunk < 0 {
 			panic(fmt.Sprintf("The binary string was not encoded using base 32: %s", encoded))
 		}
@@ -70,14 +70,14 @@ func Base32Decode(encoded string) []byte {
 // This function encodes the specified bytes as a base 64 encoded string using
 // standard base 64 encoding with no padding.
 func Base64Encode(bytes []byte) string {
-	encoded := base64.RawStdEncoding.EncodeToString(bytes)
+	var encoded = base64.RawStdEncoding.EncodeToString(bytes)
 	return encoded
 }
 
 // This function decodes the specified base 64 encoded string into its
 // corresponding decoded bytes.
 func Base64Decode(encoded string) []byte {
-	bytes, err := base64.RawStdEncoding.DecodeString(encoded)
+	var bytes, err = base64.RawStdEncoding.DecodeString(encoded)
 	if err != nil {
 		panic(fmt.Sprintf("The binary string was not encoded using base 64: %s", encoded))
 	}
@@ -155,7 +155,7 @@ func base32EncodeLast(last byte, index int, base32 *strings.Builder) {
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F   F8  07
  */
 func base32DecodeBytes(chunk byte, characterIndex int, bytes []byte) {
-	byteIndex := int(math.Trunc(float64(characterIndex) * 5.0 / 8.0))
+	var byteIndex = int(math.Trunc(float64(characterIndex) * 5.0 / 8.0))
 	switch characterIndex % 8 {
 	case 0:
 		bytes[byteIndex] |= chunk << 3
@@ -187,7 +187,7 @@ func base32DecodeBytes(chunk byte, characterIndex int, bytes []byte) {
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F
  */
 func base32DecodeLast(chunk byte, characterIndex int, bytes []byte) {
-	byteIndex := int(math.Trunc(float64(characterIndex) * 5.0 / 8.0))
+	var byteIndex = int(math.Trunc(float64(characterIndex) * 5.0 / 8.0))
 	switch characterIndex % 8 {
 	case 1:
 		bytes[byteIndex] |= chunk >> 2

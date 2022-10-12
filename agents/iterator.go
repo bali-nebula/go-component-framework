@@ -19,9 +19,9 @@ import (
 // This constructor creates a new instance of an iterator that can be used to
 // traverse the items in the specified array.
 func Iterator[T any](sequence abstractions.Sequential[T]) abstractions.IteratorLike[T] {
-	items := sequence.AsArray() // The returned array is immutable.
-	size := len(items)
-	slot := 0
+	var items = sequence.AsArray() // The returned array is immutable.
+	var size = len(items)
+	var slot = 0
 	return &iterator[T]{items, size, slot}
 }
 

@@ -178,8 +178,8 @@ func (v *formatterState) AppendString(s string) {
 
 // This method appends a properly indented newline to the result.
 func (v *formatterState) AppendNewline() {
-	separator := "\n"
-	levels := v.CurrentDepth() + v.GetIndentation()
+	var separator = "\n"
+	var levels = v.CurrentDepth() + v.GetIndentation()
 	for level := 0; level < levels; level++ {
 		separator += "    "
 	}
@@ -188,7 +188,7 @@ func (v *formatterState) AppendNewline() {
 
 // This method returns the canonically formatted string result.
 func (v *formatterState) GetResult() string {
-	result := v.result.String()
+	var result = v.result.String()
 	v.result.Reset()
 	return result
 }

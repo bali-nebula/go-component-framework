@@ -26,8 +26,8 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(ShouldBeNil, nil))
 
 	// Boolean
-	False := false
-	True := true
+	var False = false
+	var True = true
 	var ShouldBeFalse bool
 
 	assert.True(t, agents.CompareValues(ShouldBeFalse, False))
@@ -52,9 +52,9 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(One, One))
 
 	// Integer
-	Zilch := 0
-	Two := 2
-	Three := 3
+	var Zilch = 0
+	var Two = 2
+	var Three = 3
 	var ShouldBeZilch int
 
 	assert.True(t, agents.CompareValues(ShouldBeZilch, Zilch))
@@ -66,9 +66,9 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(Three, Three))
 
 	// Float
-	Negligible := 0.0
-	Fourth := 0.25
-	Half := 0.5
+	var Negligible = 0.0
+	var Fourth = 0.25
+	var Half = 0.5
 	var ShouldBeNegligible float64
 
 	assert.True(t, agents.CompareValues(ShouldBeNegligible, Negligible))
@@ -80,9 +80,9 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(Half, Half))
 
 	// Complex
-	Origin := 0 + 0i
-	PiOver4 := 1 + 1i
-	PiOver2 := 1 + 0i
+	var Origin = 0 + 0i
+	var PiOver4 = 1 + 1i
+	var PiOver2 = 1 + 0i
 	var ShouldBeOrigin complex128
 
 	assert.True(t, agents.CompareValues(ShouldBeOrigin, Origin))
@@ -94,9 +94,9 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(PiOver2, PiOver2))
 
 	// Rune
-	Null := rune(0)
-	Sad := '☹'
-	Happy := '☺'
+	var Null = rune(0)
+	var Sad = '☹'
+	var Happy = '☺'
 	var ShouldBeNull rune
 
 	assert.True(t, agents.CompareValues(ShouldBeNull, Null))
@@ -108,9 +108,9 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(Sad, Sad))
 
 	// String
-	Empty := ""
-	Hello := "Hello"
-	World := "World"
+	var Empty = ""
+	var Hello = "Hello"
+	var World = "World"
 	var ShouldBeEmpty string
 
 	assert.True(t, agents.CompareValues(ShouldBeEmpty, Empty))
@@ -122,10 +122,10 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(Hello, Hello))
 
 	// Array
-	Universe := "Universe"
-	a0 := []any{}
-	a1 := []any{Hello, World}
-	a2 := []any{Hello, Universe}
+	var Universe = "Universe"
+	var a0 = []any{}
+	var a1 = []any{Hello, World}
+	var a2 = []any{Hello, Universe}
 	var ShouldBeA0 []any
 
 	assert.True(t, agents.CompareValues(ShouldBeA0, a0))
@@ -137,11 +137,11 @@ func TestComparison(t *testing.T) {
 	assert.True(t, agents.CompareValues(a2, a2))
 
 	// Map
-	m0 := map[any]any{}
-	m1 := map[any]any{
+	var m0 = map[any]any{}
+	var m1 = map[any]any{
 		One: True,
 		Two: World}
-	m2 := map[any]any{
+	var m2 = map[any]any{
 		One: True,
 		Two: Hello}
 	var ShouldBeM0 map[any]any
@@ -165,8 +165,8 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(ShouldBeNil, nil))
 
 	// Boolean
-	False := false
-	True := true
+	var False = false
+	var True = true
 	var ShouldBeFalse bool
 
 	assert.Equal(t, 0, agents.RankValues(ShouldBeFalse, ShouldBeFalse))
@@ -195,9 +195,9 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(One, One))
 
 	// Integer
-	Zilch := 0
-	Two := 2
-	Three := 3
+	var Zilch = 0
+	var Two = 2
+	var Three = 3
 	var ShouldBeZilch int
 
 	assert.Equal(t, 0, agents.RankValues(ShouldBeZilch, ShouldBeZilch))
@@ -211,9 +211,9 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(Three, Three))
 
 	// Float
-	Negligible := 0.0
-	Fourth := 0.25
-	Half := 0.5
+	var Negligible = 0.0
+	var Fourth = 0.25
+	var Half = 0.5
 	var ShouldBeNegligible float64
 
 	assert.Equal(t, 0, agents.RankValues(ShouldBeNegligible, ShouldBeNegligible))
@@ -227,9 +227,9 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(Half, Half))
 
 	// Complex
-	Origin := 0 + 0i
-	PiOver4 := 1 + 1i
-	PiOver2 := 1 + 0i
+	var Origin = 0 + 0i
+	var PiOver4 = 1 + 1i
+	var PiOver2 = 1 + 0i
 	var ShouldBeOrigin complex128
 
 	assert.Equal(t, 0, agents.RankValues(ShouldBeOrigin, ShouldBeOrigin))
@@ -243,9 +243,9 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(PiOver4, PiOver4))
 
 	// Rune
-	Null := rune(0)
-	Sad := '☹'
-	Happy := '☺'
+	var Null = rune(0)
+	var Sad = '☹'
+	var Happy = '☺'
 	var ShouldBeNull rune
 
 	assert.Equal(t, 0, agents.RankValues(ShouldBeNull, ShouldBeNull))
@@ -259,9 +259,9 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(Happy, Happy))
 
 	// String
-	Empty := ""
-	Hello := "Hello"
-	World := "World"
+	var Empty = ""
+	var Hello = "Hello"
+	var World = "World"
 	var ShouldBeEmpty string
 
 	assert.Equal(t, 0, agents.RankValues(ShouldBeEmpty, ShouldBeEmpty))
@@ -275,12 +275,12 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(World, World))
 
 	// Array
-	Universe := "Universe"
-	a0 := []any{}
-	a1 := []any{Hello, World}
-	a2 := []any{Hello, Universe}
-	a3 := []any{Hello, World, Universe}
-	a4 := []any{Hello, Universe, World}
+	var Universe = "Universe"
+	var a0 = []any{}
+	var a1 = []any{Hello, World}
+	var a2 = []any{Hello, Universe}
+	var a3 = []any{Hello, World, Universe}
+	var a4 = []any{Hello, Universe, World}
 	var ShouldBeA0 []any
 
 	assert.Equal(t, 0, agents.RankValues(ShouldBeA0, ShouldBeA0))
@@ -302,18 +302,18 @@ func TestRanking(t *testing.T) {
 	assert.Equal(t, 0, agents.RankValues(a1, a1))
 
 	// Map
-	m0 := map[any]any{}
-	m1 := map[any]any{
+	var m0 = map[any]any{}
+	var m1 = map[any]any{
 		One: True,
 		Two: World}
-	m2 := map[any]any{
+	var m2 = map[any]any{
 		One: True,
 		Two: Hello}
-	m3 := map[any]any{
+	var m3 = map[any]any{
 		One:   True,
 		Two:   World,
 		Three: Universe}
-	m4 := map[any]any{
+	var m4 = map[any]any{
 		One:   True,
 		Two:   Universe,
 		Three: World}

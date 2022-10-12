@@ -20,7 +20,7 @@ func TestRandomIntegers(t *testing.T) {
 	var foundZero bool
 	var foundFive bool
 	for i := 0; i < 100; i++ {
-		random := utilities.RandomInteger(5)
+		var random = utilities.RandomInteger(5)
 		if random == 0 {
 			foundZero = true
 		}
