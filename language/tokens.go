@@ -308,7 +308,7 @@ func (v *scanner) foundEOF() bool {
 // channel. It returns true if an EOL token was found.
 func (v *scanner) foundEOL() bool {
 	s := v.source[v.nextByte:]
-	if bytes.HasPrefix(s, eol) {
+	if bytes.HasPrefix(s, []byte("\n")) {
 		v.nextByte++
 		v.emitToken(tokenEOL)
 		v.line++
@@ -515,14 +515,3 @@ func (v *scanner) foundVersion() bool {
 	}
 	return false
 }
-
-// PRIVATE CONSTANTS
-
-// This constant defines the pseudo-rune for the end-of-file marker.
-const eof = -1
-
-// This constant defines the rune for the end-of-line marker.
-var eol = []byte("\n")
-
-// This constant defines the rune for a space character.
-var space = rune(' ')
