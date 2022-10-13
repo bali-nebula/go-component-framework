@@ -26,13 +26,8 @@ import (
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
-// All parser rules in the specification are shown in lowerCamelCase. The
-// function returns the following results:
-//  * The component corresponding to the source string, or nil if the parsing
-//    failed.
-//  * The parsed token that caused the failure if the parsing failed.
-//  * Whether or not the parsing succeeded.
-func ParseSource(source string) (*Component, *Token, bool) {
+// All parser rules in the specification are shown in lowerCamelCase.
+func ParseSource(source string) *Component {
 	var ok bool
 	var token *Token
 	var component *Component
@@ -52,18 +47,13 @@ func ParseSource(source string) (*Component, *Token, bool) {
 			panic(message)
 		}
 	}
-	return component, token, ok
+	return component
 }
 
 // This function parses the specified Bali Document Notation™ (BDN) source
 // document and returns the corresponding abstract syntax tree. A POSIX
-// compliant source file must end with a EOL character. This function returns
-// the following results:
-//  * The component corresponding to the source string, or nil if the parsing
-//    failed.
-//  * The parsed token that caused the failure if the parsing failed.
-//  * Whether or not the parsing succeeded.
-func ParseDocument(document []byte) (*Component, *Token, bool) {
+// compliant source file must end with a EOL character.
+func ParseDocument(document []byte) *Component {
 	var ok bool
 	var token *Token
 	var component *Component
@@ -97,7 +87,7 @@ func ParseDocument(document []byte) (*Component, *Token, bool) {
 			panic(message)
 		}
 	}
-	return component, token, ok
+	return component
 }
 
 // COMPONENT NODES
@@ -137,64 +127,13 @@ type parser struct {
 	tokens   chan Token                     // The queue of unread tokens coming from the scanner.
 }
 
-// This method attempts to read the next token from the token stream and return
-// it.
-func (v *parser) nextToken() *Token {
-	var next *Token
-	if v.next.IsEmpty() {
-		var token, ok = <-v.tokens
-		if !ok {
-			panic("The token channel terminated without an EOF or error token.")
-		}
-		if token.Type == TokenError {
-			panic(v.formatError(
-				"An unexpected character was encountered while scanning the input: '"+token.Value+"'",
-				&token))
-		}
-		next = &token
-	} else {
-		next = v.next.RemoveTop()
-	}
-	v.previous.AddItem(next)
-	return next
-}
-
-// This method puts back the current token onto the token stream so that it can
-// be retrieved by another parsing method.
-func (v *parser) backupOne() {
-	if v.previous.IsEmpty() {
-		panic("Attempted to put back a previous token that does not exist.")
-	}
-	var previous = v.previous.RemoveTop()
-	v.next.AddItem(previous)
-}
-
-// This method returns an error message containing the context for a parsing
-// error.
-func (v *parser) formatError(message string, token *Token) string {
-	message += "\n\n"
-	var line = token.Line
-	var lines = strings.Split(string(v.source), "\n")
-
-	if line > 1 {
-		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + "\n"
-	}
-	message += fmt.Sprintf("%04d: ", line) + string(lines[line-1]) + "\n"
-
-	message += " >>>─"
-	var count = 0
-	for count < token.Position {
-		message += "─"
-		count++
-	}
-	message += "⌃\n"
-
-	if line < len(lines) {
-		message += fmt.Sprintf("%04d: ", line+1) + string(lines[line]) + "\n"
-	}
-
-	return message
-}
+// PARSING METHODS
+//
+// Each parsing method returns the following three results:
+//  * The parsed component corresponding to the source string, or nil if the
+//    parsing failed.
+//  * The parsed token that caused the failure if the parsing did fail.
+//  * Whether or not the parsing succeeded.
 
 // This method attempts to parse a comment. It returns a string containing the
 // comment and whether or not the comment was successfully parsed.
@@ -421,6 +360,67 @@ func (v *parser) parseParameters() ([]*Parameter, *Token, bool) {
 		panic("Expected at least one parameter in the component context.")
 	}
 	return parameters, token, true
+}
+
+// PRIVATE METHODS
+
+// This method attempts to read the next token from the token stream and return
+// it.
+func (v *parser) nextToken() *Token {
+	var next *Token
+	if v.next.IsEmpty() {
+		var token, ok = <-v.tokens
+		if !ok {
+			panic("The token channel terminated without an EOF or error token.")
+		}
+		if token.Type == TokenError {
+			panic(v.formatError(
+				"An unexpected character was encountered while scanning the input: '"+token.Value+"'",
+				&token))
+		}
+		next = &token
+	} else {
+		next = v.next.RemoveTop()
+	}
+	v.previous.AddItem(next)
+	return next
+}
+
+// This method puts back the current token onto the token stream so that it can
+// be retrieved by another parsing method.
+func (v *parser) backupOne() {
+	if v.previous.IsEmpty() {
+		panic("Attempted to put back a previous token that does not exist.")
+	}
+	var previous = v.previous.RemoveTop()
+	v.next.AddItem(previous)
+}
+
+// This method returns an error message containing the context for a parsing
+// error.
+func (v *parser) formatError(message string, token *Token) string {
+	message += "\n\n"
+	var line = token.Line
+	var lines = strings.Split(string(v.source), "\n")
+
+	if line > 1 {
+		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + "\n"
+	}
+	message += fmt.Sprintf("%04d: ", line) + string(lines[line-1]) + "\n"
+
+	message += " >>>─"
+	var count = 0
+	for count < token.Position {
+		message += "─"
+		count++
+	}
+	message += "⌃\n"
+
+	if line < len(lines) {
+		message += fmt.Sprintf("%04d: ", line+1) + string(lines[line]) + "\n"
+	}
+
+	return message
 }
 
 // PRIVATE FUNCTIONS

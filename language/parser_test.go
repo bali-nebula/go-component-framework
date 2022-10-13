@@ -43,107 +43,89 @@ const s = "$getItem"
 const v = "v1.2.3"
 
 func TestParserWithElementTypes(t *testing.T) {
-	var ok bool
 	var component *language.Component
 
 	// Angle
-	component, _, ok = language.ParseSource("~pi($units: $radians)")
-	assert.True(t, ok)
+	component = language.ParseSource("~pi($units: $radians)")
 	var angle elements.Angle = component.Entity.(elements.Angle)
 	assert.Equal(t, elements.Pi, angle)
 
 	// Boolean
-	component, _, ok = language.ParseSource("true")
-	assert.True(t, ok)
+	component = language.ParseSource("true")
 	var boolean elements.Boolean = component.Entity.(elements.Boolean)
 	assert.True(t, boolean.AsBoolean())
 
 	// Duration
-	component, _, ok = language.ParseSource(d)
-	assert.True(t, ok)
+	component = language.ParseSource(d)
 	var duration elements.Duration = component.Entity.(elements.Duration)
 	assert.Equal(t, d, duration.AsString())
 
 	// Moment
-	component, _, ok = language.ParseSource(m)
-	assert.True(t, ok)
+	component = language.ParseSource(m)
 	var moment elements.Moment = component.Entity.(elements.Moment)
 	assert.Equal(t, m, moment.AsString())
 
 	// Number
-	component, _, ok = language.ParseSource("(3, -i)")
-	assert.True(t, ok)
+	component = language.ParseSource("(3, -i)")
 	var number elements.Number = component.Entity.(elements.Number)
 	assert.Equal(t, "(3, -i)", number.AsString())
 
 	// Pattern
-	component, _, ok = language.ParseSource(p)
-	assert.True(t, ok)
+	component = language.ParseSource(p)
 	var pattern elements.Pattern = component.Entity.(elements.Pattern)
 	assert.Equal(t, p, pattern.AsString())
 
 	// Percentage
-	component, _, ok = language.ParseSource("50%")
-	assert.True(t, ok)
+	component = language.ParseSource("50%")
 	var percentage elements.Percentage = component.Entity.(elements.Percentage)
 	assert.Equal(t, 0.5, percentage.AsReal())
 
 	// Probability
-	component, _, ok = language.ParseSource(".75")
-	assert.True(t, ok)
+	component = language.ParseSource(".75")
 	var probability elements.Probability = component.Entity.(elements.Probability)
 	assert.Equal(t, 0.75, probability.AsReal())
 
 	// Resource
-	component, _, ok = language.ParseSource(r)
-	assert.True(t, ok)
+	component = language.ParseSource(r)
 	var resource elements.Resource = component.Entity.(elements.Resource)
 	assert.Equal(t, r, resource.AsString())
 
 	// Tag
-	component, _, ok = language.ParseSource("#ABC")
-	assert.True(t, ok)
+	component = language.ParseSource("#ABC")
 	var tag elements.Tag = component.Entity.(elements.Tag)
 	assert.Equal(t, "#ABC", tag.AsString())
 }
 
 func TestParserWithStringTypes(t *testing.T) {
-	var ok bool
 	var component *language.Component
 
 	// Binary
-	component, _, ok = language.ParseSource("'AAAAAAAA' ($base: 64, $encoding: $utf8)")
-	assert.True(t, ok)
+	component = language.ParseSource("'AAAAAAAA' ($base: 64, $encoding: $utf8)")
 	var binary strings.Binary = component.Entity.(strings.Binary)
 	assert.Equal(t, []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, binary.AsArray())
 
 	// Moniker
-	component, _, ok = language.ParseSource("/bali/types/Number/v1.2.3")
-	assert.True(t, ok)
+	component = language.ParseSource("/bali/types/Number/v1.2.3")
 	var moniker strings.Moniker = component.Entity.(strings.Moniker)
 	assert.Equal(t, []string{"bali", "types", "Number", "v1.2.3"}, moniker.AsArray())
 
 	// Narrative
-	component, _, ok = language.ParseSource(n + c)
-	assert.True(t, ok)
+	component = language.ParseSource(n + c)
 	var narrative strings.Narrative = component.Entity.(strings.Narrative)
 	assert.Equal(t, n, narrative.AsString())
 
 	// Quote
-	component, _, ok = language.ParseSource(`"Hello World!"`)
-	assert.True(t, ok)
+	component = language.ParseSource(`"Hello World!"`)
 	var quote strings.Quote = component.Entity.(strings.Quote)
 	assert.Equal(t, `"Hello World!"`, quote.AsString())
 
 	// Symbol
-	component, _, ok = language.ParseSource(s)
-	assert.True(t, ok)
+	component = language.ParseSource(s)
 	var symbol elements.Symbol = component.Entity.(elements.Symbol)
 	assert.Equal(t, s, symbol.AsString())
 
 	// Version
-	component, _, ok = language.ParseSource(v)
-	assert.True(t, ok)
+	component = language.ParseSource(v)
 	var version strings.Version = component.Entity.(strings.Version)
 	assert.Equal(t, v, version.AsString())
 }
@@ -160,109 +142,88 @@ const k = `[
 ]`
 
 func TestParserWithSequenceTypes(t *testing.T) {
-	var ok bool
 	var component *language.Component
 
 	// List
-	component, _, ok = language.ParseSource("[ ]")
-	assert.True(t, ok)
+	component = language.ParseSource("[ ]")
 	var list = component.Entity.(abstractions.ListLike[any])
 	assert.Equal(t, 0, list.GetSize())
 
-	component, _, ok = language.ParseSource("[$foo]")
-	assert.True(t, ok)
+	component = language.ParseSource("[$foo]")
 	list = component.Entity.(abstractions.ListLike[any])
 	assert.Equal(t, 1, list.GetSize())
 
-	component, _, ok = language.ParseSource("[$foo, $bar, $baz]")
-	assert.True(t, ok)
+	component = language.ParseSource("[$foo, $bar, $baz]")
 	list = component.Entity.(abstractions.ListLike[any])
 	assert.Equal(t, 3, list.GetSize())
 
-	component, _, ok = language.ParseSource(l)
-	assert.True(t, ok)
+	component = language.ParseSource(l)
 	list = component.Entity.(abstractions.ListLike[any])
 	assert.Equal(t, 3, list.GetSize())
 
 	// Catalog
-	component, _, ok = language.ParseSource("[:]")
-	assert.True(t, ok)
+	component = language.ParseSource("[:]")
 	var catalog = component.Entity.(abstractions.CatalogLike[any, any])
 	assert.Equal(t, 0, catalog.GetSize())
 
-	component, _, ok = language.ParseSource("[0: false]")
-	assert.True(t, ok)
+	component = language.ParseSource("[0: false]")
 	catalog = component.Entity.(abstractions.CatalogLike[any, any])
 	assert.Equal(t, 1, catalog.GetSize())
 
-	component, _, ok = language.ParseSource("[0: false, 1: true]")
-	assert.True(t, ok)
+	component = language.ParseSource("[0: false, 1: true]")
 	catalog = component.Entity.(abstractions.CatalogLike[any, any])
 	assert.Equal(t, 2, catalog.GetSize())
 
-	component, _, ok = language.ParseSource(k)
-	assert.True(t, ok)
+	component = language.ParseSource(k)
 	catalog = component.Entity.(abstractions.CatalogLike[any, any])
 	assert.Equal(t, 2, catalog.GetSize())
 
 	// Range
-	component, _, ok = language.ParseSource("[1..1]")
-	assert.True(t, ok)
+	component = language.ParseSource("[1..1]")
 	var rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 1, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[1<..1]")
-	assert.True(t, ok)
+	component = language.ParseSource("[1<..1]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 0, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[1<..<1]")
-	assert.True(t, ok)
+	component = language.ParseSource("[1<..<1]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 0, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[1..<1]")
-	assert.True(t, ok)
+	component = language.ParseSource("[1..<1]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 0, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[-1..5]")
-	assert.True(t, ok)
+	component = language.ParseSource("[-1..5]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 7, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[-1<..5]")
-	assert.True(t, ok)
+	component = language.ParseSource("[-1<..5]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 6, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[-1<..<5]")
-	assert.True(t, ok)
+	component = language.ParseSource("[-1<..<5]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 5, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[-1..<5]")
-	assert.True(t, ok)
+	component = language.ParseSource("[-1..<5]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 6, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[..]")
-	assert.True(t, ok)
+	component = language.ParseSource("[..]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 0, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[<..]")
-	assert.True(t, ok)
+	component = language.ParseSource("[<..]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 0, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[<..<]")
-	assert.True(t, ok)
+	component = language.ParseSource("[<..<]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 0, rng.GetSize())
 
-	component, _, ok = language.ParseSource("[..<]")
-	assert.True(t, ok)
+	component = language.ParseSource("[..<]")
 	rng = component.Entity.(abstractions.RangeLike[any])
 	assert.Equal(t, 0, rng.GetSize())
 }
