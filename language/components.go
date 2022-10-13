@@ -32,11 +32,12 @@ func ParseSource(source string) *Component {
 	var token *Token
 	var component *Component
 	var parser = Parser([]byte(source))
+	var message string
 	component, token, ok = parser.parseComponent()
 	if ok {
 		_, token, ok = parser.parseEOF()
 		if !ok {
-			var message = fmt.Sprintf("Expected an EOF following the component but received this:\n%v\n\n", token)
+			message = fmt.Sprintf("Expected an EOF following the component but received:\n%v\n\n", token)
 			message += generateGrammar(
 				"$component",
 				"$entity",
@@ -62,7 +63,7 @@ func ParseDocument(document []byte) *Component {
 	if ok {
 		_, token, ok = parser.parseEOL() // Required by POSIX.
 		if !ok {
-			var message = fmt.Sprintf("Expected an EOL following the component but received this:\n%v\n\n", token)
+			var message = fmt.Sprintf("Expected an EOL following the component but received:\n%v\n\n", token)
 			message += generateGrammar(
 				"$document",
 				"$component",
@@ -75,7 +76,7 @@ func ParseDocument(document []byte) *Component {
 		}
 		_, token, ok = parser.parseEOF()
 		if !ok {
-			var message = fmt.Sprintf("Expected an EOF following the last EOL but received this:\n%v\n\n", token)
+			var message = fmt.Sprintf("Expected an EOF following the EOL but received:\n%v\n\n", token)
 			message += generateGrammar(
 				"$document",
 				"$component",
@@ -174,11 +175,23 @@ func (v *parser) parseContext() ([]*Parameter, *Token, bool) {
 	}
 	parameters, token, ok = v.parseParameters()
 	if !ok {
-		panic("Expected at least one parameter following the '(' character.")
+		var message = fmt.Sprintf("Expected at least one parameter following the '(' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$context",
+			"$parameters",
+			"$parameter",
+			"$name")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		panic("Expected a ')' character following the parameters.")
+		var message = fmt.Sprintf("Expected a ')' character following the parameters but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$context",
+			"$parameters",
+			"$parameter",
+			"$name")
+		panic(message)
 	}
 	return parameters, token, true
 }
@@ -302,11 +315,19 @@ func (v *parser) parseParameter() (*Parameter, *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter(":")
 	if !ok {
-		panic("Expected a ':' character.")
+		var message = fmt.Sprintf("Expected a ':' character after the name but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$parameter",
+			"$name")
+		panic(message)
 	}
 	value, token, ok = v.parseComponent()
 	if !ok {
-		panic("Expected a component following the ':' character.")
+		var message = fmt.Sprintf("Expected a component following the ':' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$parameter",
+			"$name")
+		panic(message)
 	}
 	var parameter = &Parameter{name, value}
 	return parameter, token, true
@@ -324,7 +345,13 @@ func (v *parser) parseParameters() ([]*Parameter, *Token, bool) {
 		parameter, token, ok = v.parseParameter()
 		// There must be at least one parameter.
 		if !ok {
-			panic("Expected at least one parameter in the component context.")
+			var message = fmt.Sprintf("Expected at least one parameter in the component context but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$context",
+				"$parameters",
+				"$parameter",
+				"$name")
+			panic(message)
 		}
 		for {
 			parameters = append(parameters, parameter)
@@ -336,7 +363,13 @@ func (v *parser) parseParameters() ([]*Parameter, *Token, bool) {
 			}
 			parameter, token, ok = v.parseParameter()
 			if !ok {
-				panic("Expected a parameter after the ',' character.")
+				var message = fmt.Sprintf("Expected a parameter after the ',' character but received:\n%v\n\n", token)
+				message += generateGrammar(
+					"$context",
+					"$parameters",
+					"$parameter",
+					"$name")
+				panic(message)
 			}
 		}
 		return parameters, token, true
@@ -352,12 +385,24 @@ func (v *parser) parseParameters() ([]*Parameter, *Token, bool) {
 		// Every parameter must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			panic("Expected an EOL character following the parameter.")
+			var message = fmt.Sprintf("Expected an EOL character following the parameter but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$context",
+				"$parameters",
+				"$parameter",
+				"$name")
+			panic(message)
 		}
 	}
 	// There must be at least one parameter.
 	if len(parameters) == 0 {
-		panic("Expected at least one parameter in the component context.")
+		var message = fmt.Sprintf("Expected at least one parameter in the component context but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$context",
+			"$parameters",
+			"$parameter",
+			"$name")
+		panic(message)
 	}
 	return parameters, token, true
 }
@@ -421,14 +466,4 @@ func (v *parser) formatError(message string, token *Token) string {
 	}
 
 	return message
-}
-
-// PRIVATE FUNCTIONS
-
-func generateGrammar(symbols ...string) string {
-	var grammar = "The expected grammar was:\n"
-	for _, s := range symbols {
-		grammar += fmt.Sprintf("  %v: %v\n\n", s, lexicon[s])
-	}
-	return grammar
 }

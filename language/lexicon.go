@@ -10,6 +10,10 @@
 
 package language
 
+import (
+	"fmt"
+)
+
 // This map captures the syntax rules for the Bali Document Notation™ (BDN)
 // language grammar. The lowercase identifiers define rules for the grammar and
 // the UPPERCASE identifiers represent tokens returned by the scanner. The
@@ -209,4 +213,14 @@ var lexicon = map[string]string{
 	"$WEEKS":   `TIMESPAN "W"`,
 	"$YEAR":    `[SIGN] ORDINAL`,
 	"$ZERO":    `"0"`,
+}
+
+// PRIVATE FUNCTIONS
+
+func generateGrammar(symbols ...string) string {
+	var grammar = "The expected grammar was:\n"
+	for _, s := range symbols {
+		grammar += fmt.Sprintf("  %v: %v\n\n", s, lexicon[s])
+	}
+	return grammar
 }
