@@ -33,7 +33,10 @@ func (v *parser) parseArguments() ([]any, *Token, bool) {
 		}
 		argument, token, ok = v.parseExpression()
 		if !ok {
-			panic("Expected an argument after the ',' character.")
+			var message = fmt.Sprintf("Expected an argument after the ',' character but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$arguments")
+			panic(message)
 		}
 	}
 	return arguments, token, true
@@ -75,7 +78,10 @@ func (v *parser) parseArithmeticExpression(left any) (*ArithmeticExpression, *To
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected an expression following the '" + operator + "' character.")
+		var message = fmt.Sprintf("Expected an expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$arithmeticExpression")
+		panic(message)
 	}
 	expression = &ArithmeticExpression{left, operator, right}
 	return expression, token, true
@@ -103,11 +109,19 @@ func (v *parser) parseAttributeExpression(composite any) (*AttributeExpression, 
 	}
 	indices, token, ok = v.parseIndices()
 	if !ok {
-		panic("Expected indices following the '[' character.")
+		var message = fmt.Sprintf("Expected indices following the '[' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$attributeExpression",
+			"$indices")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ']' character following the indices and received: %v", *token))
+		var message = fmt.Sprintf("Expected a ']' character following the indices but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$attributeExpression",
+			"$indices")
+		panic(message)
 	}
 	expression = &AttributeExpression{composite, indices}
 	return expression, token, true
@@ -135,7 +149,10 @@ func (v *parser) parseChainExpression(left any) (*ChainExpression, *Token, bool)
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected an expression following the '&' character.")
+		var message = fmt.Sprintf("Expected an expression following the '&' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$chainExpression")
+		panic(message)
 	}
 	expression = &ChainExpression{left, right}
 	return expression, token, true
@@ -180,7 +197,10 @@ func (v *parser) parseComparisonExpression(left any) (*ComparisonExpression, *To
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected an expression following the '" + operator + "' character.")
+		var message = fmt.Sprintf("Expected an expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$comparisonExpression")
+		panic(message)
 	}
 	expression = &ComparisonExpression{left, operator, right}
 	return expression, token, true
@@ -207,7 +227,10 @@ func (v *parser) parseComplementExpression() (*ComplementExpression, *Token, boo
 	}
 	logical, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected a logical expression following the 'NOT' operator.")
+		var message = fmt.Sprintf("Expected a logical expression following the 'NOT' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$complementExpression")
+		panic(message)
 	}
 	expression = &ComplementExpression{logical}
 	return expression, token, true
@@ -241,7 +264,10 @@ func (v *parser) parseDefaultExpression(value any) (*DefaultExpression, *Token, 
 	}
 	defaultValue, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected a default expression following the '?' character.")
+		var message = fmt.Sprintf("Expected a default expression following the '?' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$defaultExpression")
+		panic(message)
 	}
 	expression = &DefaultExpression{value, defaultValue}
 	return expression, token, true
@@ -268,7 +294,10 @@ func (v *parser) parseDereferenceExpression() (*DereferenceExpression, *Token, b
 	}
 	reference, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected an expression following the '@' character.")
+		var message = fmt.Sprintf("Expected an expression following the '@' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$dereferenceExpression")
+		panic(message)
 	}
 	expression = &DereferenceExpression{reference}
 	return expression, token, true
@@ -339,11 +368,21 @@ func (v *parser) parseFunctionExpression() (*FunctionExpression, *Token, bool) {
 	}
 	arguments, token, ok = v.parseArguments()
 	if !ok {
-		panic("Expected arguments following the '(' character.")
+		var message = fmt.Sprintf("Expected arguments following the '(' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$functionExpression",
+			"$function",
+			"$arguments")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ')' character following the arguments and received: %v", *token))
+		var message = fmt.Sprintf("Expected a ')' character following the arguments but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$functionExpression",
+			"$function",
+			"$arguments")
+		panic(message)
 	}
 	expression = &FunctionExpression{function, arguments}
 	return expression, token, true
@@ -378,7 +417,10 @@ func (v *parser) parseInversionExpression() (*InversionExpression, *Token, bool)
 	}
 	numeric, token, ok = v.parseExpression()
 	if !ok {
-		panic(fmt.Sprintf("Expected a numeric expression following the %q operator.", operator))
+		var message = fmt.Sprintf("Expected a numeric expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$inversionExpression")
+		panic(message)
 	}
 	expression = &InversionExpression{operator, numeric}
 	return expression, token, true
@@ -419,7 +461,17 @@ func (v *parser) parseRecursiveExpression() (any, *Token, bool) {
 		expression, token, ok = v.parseDefaultExpression(expression)
 	}
 	if !ok {
-		panic("Not a possible left recursive expression.")
+		var message = fmt.Sprintf("Expected a valid operator after the expression but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$messageExpression",
+			"$attributeExpression",
+			"$chainExpression",
+			"$powerExpression",
+			"$arithmeticExpression",
+			"$comparisonExpression",
+			"$logicalExpression",
+			"$defaultExpression")
+		panic(message)
 	}
 	return expression, token, true
 }
@@ -457,7 +509,10 @@ func (v *parser) parseLogicalExpression(left any) (*LogicalExpression, *Token, b
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected an expression following the '" + operator + "' character.")
+		var message = fmt.Sprintf("Expected a logical expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$logicalExpression")
+		panic(message)
 	}
 	expression = &LogicalExpression{left, operator, right}
 	return expression, token, true
@@ -484,11 +539,17 @@ func (v *parser) parseMagnitudeExpression() (*MagnitudeExpression, *Token, bool)
 	}
 	numeric, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected a numeric expression following the '|' character.")
+		var message = fmt.Sprintf("Expected a numeric expression following the '|' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$magnitudeExpression")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("|")
 	if !ok {
-		panic(fmt.Sprintf("Expected a '|' character following the numeric expression and received: %v", *token))
+		var message = fmt.Sprintf("Expected a '|' operator following the numeric expression but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$magnitudeExpression")
+		panic(message)
 	}
 	expression = &MagnitudeExpression{numeric}
 	return expression, token, true
@@ -524,19 +585,39 @@ func (v *parser) parseMessageExpression(target any) (*MessageExpression, *Token,
 	}
 	message, token, ok = v.parseIdentifier()
 	if !ok {
-		panic("Expected a message identifier following the '" + operator + "' character.")
+		var message = fmt.Sprintf("Expected a message identifier following the '" + operator + "' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$messageExpression",
+			"$message",
+			"$arguments")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
-		panic("Expected a '(' character following the message identifier.")
+		var message = fmt.Sprintf("Expected a '(' character following the message identifier but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$messageExpression",
+			"$message",
+			"$arguments")
+		panic(message)
 	}
 	arguments, token, ok = v.parseArguments()
 	if !ok {
-		panic("Expected arguments following the '(' character.")
+		var message = fmt.Sprintf("Expected arguments following the '(' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$messageExpression",
+			"$message",
+			"$arguments")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ')' character following the arguments and received: %v", *token))
+		var message = fmt.Sprintf("Expected a ')' character following the arguments but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$messageExpression",
+			"$message",
+			"$arguments")
+		panic(message)
 	}
 	expression = &MessageExpression{target, operator, message, arguments}
 	return expression, token, true
@@ -564,7 +645,10 @@ func (v *parser) parsePowerExpression(base any) (*PowerExpression, *Token, bool)
 	}
 	exponent, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected an exponent expression following the '^' character.")
+		var message = fmt.Sprintf("Expected an exponent expression following the '^' operator but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$powerExpression")
+		panic(message)
 	}
 	expression = &PowerExpression{base, exponent}
 	return expression, token, true
@@ -591,18 +675,18 @@ func (v *parser) parsePrecedenceExpression() (*PrecedenceExpression, *Token, boo
 	}
 	inner, token, ok = v.parseExpression()
 	if !ok {
-		panic("Expected an expression following the '(' character.")
+		var message = fmt.Sprintf("Expected an expression following the '(' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$precedenceExpression")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ')' character following the expression and received: %v", *token))
+		var message = fmt.Sprintf("Expected a ')' character following the expression but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$precedenceExpression")
+		panic(message)
 	}
 	expression = &PrecedenceExpression{inner}
 	return expression, token, true
-}
-
-// This type defines the node structure associated with an expression that
-// returns the value of a variable.
-type VariableExpression struct {
-	Variable string
 }
