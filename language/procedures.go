@@ -377,7 +377,7 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, *Token, bool) {
 	expression, token, ok = v.parseExpression()
 	if !ok {
 		if token != nil {
-			var message = fmt.Sprintf("Expected an expression after the assignment operator '" + operator + "' but received:\n%v\n\n", token)
+			var message = fmt.Sprintf("Expected an expression after the assignment operator '"+operator+"' but received:\n%v\n\n", token)
 			message += generateGrammar(
 				"$evaluateClause",
 				"$recipient",
@@ -664,12 +664,6 @@ func (v *parser) parsePostClause() (*PostClause, *Token, bool) {
 	}
 	clause = &PostClause{message, bag}
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a procedure that
-// contains Bali Document Notation™ (BDN) procedural statements.
-type Procedure struct {
-	Statements []any // This includes statements and annotations.
 }
 
 // This method attempts to parse a procedure. It returns the procedure and

@@ -78,7 +78,7 @@ func (v *parser) parseArithmeticExpression(left any) (*ArithmeticExpression, *To
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		var message = fmt.Sprintf("Expected an expression following the '"+operator+"' operator but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$arithmeticExpression")
 		panic(message)
@@ -197,7 +197,7 @@ func (v *parser) parseComparisonExpression(left any) (*ComparisonExpression, *To
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		var message = fmt.Sprintf("Expected an expression following the '"+operator+"' operator but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$comparisonExpression")
 		panic(message)
@@ -417,7 +417,7 @@ func (v *parser) parseInversionExpression() (*InversionExpression, *Token, bool)
 	}
 	numeric, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected a numeric expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		var message = fmt.Sprintf("Expected a numeric expression following the '"+operator+"' operator but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$inversionExpression")
 		panic(message)
@@ -509,7 +509,7 @@ func (v *parser) parseLogicalExpression(left any) (*LogicalExpression, *Token, b
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected a logical expression following the '" + operator + "' operator but received:\n%v\n\n", token)
+		var message = fmt.Sprintf("Expected a logical expression following the '"+operator+"' operator but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$logicalExpression")
 		panic(message)
@@ -585,7 +585,7 @@ func (v *parser) parseMessageExpression(target any) (*MessageExpression, *Token,
 	}
 	message, token, ok = v.parseIdentifier()
 	if !ok {
-		var message = fmt.Sprintf("Expected a message identifier following the '" + operator + "' operator but received:\n%v\n\n", token)
+		var message = fmt.Sprintf("Expected a message identifier following the '"+operator+"' operator but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$messageExpression",
 			"$message",

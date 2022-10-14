@@ -127,7 +127,7 @@ func ScanComment(v []byte) []string {
 			current += 2 // Skip the '<!' characters.
 			level--      // Terminate the current narrative.
 		default:
-			if angleBangAllowed && !bytes.HasPrefix(s, tab) {
+			if angleBangAllowed && !bytes.HasPrefix(s, space) {
 				angleBangAllowed = false
 			}
 			current++ // Accept the next character.
@@ -294,7 +294,7 @@ func ScanNarrative(v []byte) []string {
 			current += 2 // Skip the '<"' characters.
 			level--      // Terminate the current narrative.
 		default:
-			if angleQuoteAllowed && !bytes.HasPrefix(s, tab) {
+			if angleQuoteAllowed && !bytes.HasPrefix(s, space) {
 				angleQuoteAllowed = false
 			}
 			current++ // Accept the next character.
@@ -532,7 +532,7 @@ func ScanVersion(v []byte) []string {
 // The following constants define some important byte sequences.
 var (
 	eol         = []byte("\n")
-	tab         = []byte("\t")
+	space       = []byte(" ")
 	doubleQuote = []byte(`"`)
 	quoteAngle  = []byte(`">` + "\n")
 	angleQuote  = []byte(`<"`)

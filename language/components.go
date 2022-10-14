@@ -18,6 +18,21 @@ import (
 	"strings"
 )
 
+// COMPONENT TYPES
+
+// This type defines the node structure associated with a component.
+type Component struct {
+	Entity  any // A entity is an element, string, collection or procedure.
+	Context []*Parameter
+}
+
+// This type defines the node structure associated with a name-value pair. It is
+// used by a component to maintain its parameters.
+type Parameter struct {
+	Name  elements.Symbol
+	Value *Component
+}
+
 // PARSER INTERFACE
 
 // This function parses the specified Bali Document Notation™ (BDN) source
@@ -89,21 +104,6 @@ func ParseDocument(document []byte) *Component {
 		}
 	}
 	return component
-}
-
-// COMPONENT NODES
-
-// This type defines the node structure associated with a component.
-type Component struct {
-	Entity  any // A entity is an element, string, collection or procedure.
-	Context []*Parameter
-}
-
-// This type defines the node structure associated with a name-value pair. It is
-// used by a component to maintain its parameters.
-type Parameter struct {
-	Name  elements.Symbol
-	Value *Component
 }
 
 // PARSER IMPLEMENTATION
