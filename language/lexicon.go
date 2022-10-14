@@ -31,8 +31,8 @@ var lexicon = map[string]string{
 	"$attributeExpression":  `expression "[" indices "]"`,
 	"$breakClause":          `"break" "loop"`,
 	"$catalog": `
-    association {"," association} |
-    EOL <association [NOTE] EOL> |
+    association {"," association} |  ! Inline, no NOTEs allowed.
+    EOL <association EOL> |
     ":"  ! An empty catalog.`,
 	"$chainExpression":       `expression "&" expression`,
 	"$checkoutClause":        `"checkout" recipient ["at" "level" expression] "from" expression`,
@@ -40,7 +40,7 @@ var lexicon = map[string]string{
 	"$annotation":            `NOTE | COMMENT`,
 	"$comparisonExpression":  `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complementExpression":  `"NOT" expression`,
-	"$component":             `entity [context]`,
+	"$component":             `entity [context] [NOTE]`,
 	"$context":               `"(" parameters ")"`,
 	"$continueClause":        `"continue" "loop"`,
 	"$defaultExpression":     `expression "?" expression`,
@@ -78,8 +78,8 @@ var lexicon = map[string]string{
 	"$inversionExpression": `("-" | "/" | "*") expression`,
 	"$item":                `SYMBOL`,
 	"$list": `
-    component {"," component} |
-    EOL <component [NOTE] EOL> |
+    component {"," component} |  ! Inline, no NOTEs allowed.
+    EOL <component EOL> |
     ! An empty list.`,
 	"$logicalExpression":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitudeExpression": `"|" expression "|"`,
@@ -108,7 +108,7 @@ var lexicon = map[string]string{
 	"$notarizeClause":    `"notarize" expression "as" expression`,
 	"$parameter":         `name ":" component`,
 	"$parameters": `
-    parameter {"," parameter} |
+    parameter {"," parameter} |  ! Inline, no NOTEs allowed.
     EOL <parameter EOL>`,
 	"$postClause":           `"post" expression "to" expression`,
 	"$powerExpression":      `expression "^" expression`,
@@ -176,7 +176,7 @@ var lexicon = map[string]string{
 	"$NAME":        `LETTER {[SEPARATOR] (LETTER | DIGIT)}`,
 	"$NARRATIVE":   `'">' EOL {NARRATIVE | ~'<"'} EOL {SPACE} '<"'`,
 	"$NONE":        `"none"`,
-	"$NOTE":        `"! " {~EOL}`,
+	"$NOTE":        `"! " <~EOL>`,
 	"$NUMBER":      `IMAGINARY | REAL | ZERO | INFINITY | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"`,
 	"$ONE":         `"1."`,
 	"$ORDINAL":     `"1".."9" {"0".."9"}`,

@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package agents
+package language
 
 import (
 	"fmt"
@@ -91,14 +91,21 @@ func (v *formatter) formatValue(value reflect.Value) {
 	case reflect.Map:
 		v.formatMap(value)
 
-	// Handle all sequential collections.
+	// Handle all structures.
+	case reflect.Struct:
+		v.formatStructure(value)
+
+	// Handle all interfaces and pointers.
 	case reflect.Interface, reflect.Pointer:
-		if value.MethodByName("AsArray").IsValid() {
-			// The value is a collection.
-			v.formatCollection(value)
+		if value.MethodByName("GetParameter").IsValid() {
+			// The value is a component.
+			v.formatComponent(value)
 		} else if value.MethodByName("GetKey").IsValid() {
 			// The value is an association.
 			v.formatAssociation(value)
+		} else if value.MethodByName("AsArray").IsValid() {
+			// The value is a collection.
+			v.formatCollection(value)
 		} else {
 			// The value is a pointer to the value to be formatted (or type 'any').
 			value = value.Elem()
@@ -116,6 +123,11 @@ func (v *formatter) formatValue(value reflect.Value) {
 				value.Kind()))
 		}
 	}
+}
+
+// This private method appends the string for the specified component to
+// the result.
+func (v *formatter) formatComponent(r reflect.Value) {
 }
 
 // This private method appends the nil string for the specified value to the
@@ -233,6 +245,11 @@ func (v *formatter) formatMap(r reflect.Value) {
 		v.state.AppendString(":") // The map is empty: [:]
 	}
 	v.state.AppendString("](map)")
+}
+
+// This private method appends the string for the specified structure to
+// the result.
+func (v *formatter) formatStructure(r reflect.Value) {
 }
 
 // This private method appends the string for the specified catalog of

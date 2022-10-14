@@ -12,6 +12,7 @@ package language
 
 import (
 	"fmt"
+	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This method attempts to parse the arguments within a call. It returns an
@@ -239,7 +240,7 @@ func (v *parser) parseComplementExpression() (*ComplementExpression, *Token, boo
 // This type defines the node structure associated with an expression made up of
 // a single component.
 type ComponentExpression struct {
-	Component *Component
+	Component abstractions.ComponentLike[any]
 }
 
 // This type defines the node structure associated with an expression that

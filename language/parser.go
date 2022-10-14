@@ -26,10 +26,10 @@ import (
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
 // All parser rules in the specification are shown in lowerCamelCase.
-func ParseSource(source string) *Component {
+func ParseSource(source string) abstractions.ComponentLike[any] {
 	var ok bool
 	var token *Token
-	var component *Component
+	var component abstractions.ComponentLike[any]
 	var parser = Parser([]byte(source))
 	var message string
 	component, token, ok = parser.parseComponent()
@@ -53,10 +53,10 @@ func ParseSource(source string) *Component {
 // This function parses the specified Bali Document Notation™ (BDN) source
 // document and returns the corresponding abstract syntax tree. A POSIX
 // compliant source file must end with a EOL character.
-func ParseDocument(document []byte) *Component {
+func ParseDocument(document []byte) abstractions.ComponentLike[any] {
 	var ok bool
 	var token *Token
-	var component *Component
+	var component abstractions.ComponentLike[any]
 	var parser = Parser(document)
 	component, token, ok = parser.parseComponent()
 	if ok {

@@ -12,6 +12,8 @@ package language
 
 import (
 	"fmt"
+	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	"github.com/craterdog-bali/go-bali-document-notation/components"
 	"github.com/craterdog-bali/go-bali-document-notation/elements"
 )
 
@@ -36,21 +38,18 @@ func (v *parser) parseComment() (string, *Token, bool) {
 	return comment, token, true
 }
 
-// This type defines the node structure associated with a component.
-type Component struct {
-	Entity  any // A entity is an element, string, collection or procedure.
-	Context []*Parameter
-}
-
 // This method attempts to parse a component. It returns the component and
 // whether or not the component was successfully parsed.
-func (v *parser) parseComponent() (*Component, *Token, bool) {
-	var component *Component
-	var context []*Parameter
+func (v *parser) parseComponent() (abstractions.ComponentLike[any], *Token, bool) {
+	var component abstractions.ComponentLike[any]
+	var context abstractions.ContextLike
+	var note string
 	var entity, token, ok = v.parseEntity()
 	if ok {
 		context, token, _ = v.parseContext() // The context is optional.
-		component = &Component{entity, context}
+		note, token, _ = v.parseNote()       // The note is optional.
+		component = components.ComponentWithContext[any](entity, context)
+		component.SetNote(note)
 	}
 	return component, token, ok
 }
@@ -58,10 +57,11 @@ func (v *parser) parseComponent() (*Component, *Token, bool) {
 // This method attempts to parse the context for a parameterized component. It
 // returns an array of parameters and whether or not the context was
 // successfully parsed.
-func (v *parser) parseContext() ([]*Parameter, *Token, bool) {
+func (v *parser) parseContext() (abstractions.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameters []*Parameter
+	var parameters []abstractions.ParameterLike
+	var context abstractions.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		return nil, token, false
@@ -86,7 +86,8 @@ func (v *parser) parseContext() ([]*Parameter, *Token, bool) {
 			"$name")
 		panic(message)
 	}
-	return parameters, token, true
+	context = components.Context(parameters)
+	return context, token, true
 }
 
 // This method attempts to parse the specified delimiter. It returns
@@ -195,21 +196,14 @@ func (v *parser) parseNote() (string, *Token, bool) {
 	return note, token, true
 }
 
-// This type defines the node structure associated with a name-value pair. It is
-// used by a component to maintain its parameters.
-type Parameter struct {
-	Name  elements.Symbol
-	Value *Component
-}
-
 // This method attempts to parse a parameter. It returns the parameter and
 // whether or not the parameter was successfully parsed.
-func (v *parser) parseParameter() (*Parameter, *Token, bool) {
+func (v *parser) parseParameter() (abstractions.ParameterLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var name elements.Symbol
-	var value *Component
-	name, token, ok = v.parseSymbol()
+	var symbol elements.Symbol
+	var value abstractions.ComponentLike[any]
+	symbol, token, ok = v.parseSymbol()
 	if !ok {
 		return nil, token, false
 	}
@@ -229,16 +223,16 @@ func (v *parser) parseParameter() (*Parameter, *Token, bool) {
 			"$name")
 		panic(message)
 	}
-	var parameter = &Parameter{name, value}
+	var parameter = components.Parameter(symbol.AsString(), value)
 	return parameter, token, true
 }
 
 // This method attempts to parse the parameters within a context. It returns an
 // array of the parameters and whether or not the parameters were successfully
 // parsed.
-func (v *parser) parseParameters() ([]*Parameter, *Token, bool) {
-	var parameter *Parameter
-	var parameters []*Parameter
+func (v *parser) parseParameters() ([]abstractions.ParameterLike, *Token, bool) {
+	var parameter abstractions.ParameterLike
+	var parameters []abstractions.ParameterLike
 	var _, token, ok = v.parseEOL()
 	if !ok {
 		// The parameters are on a single line.
