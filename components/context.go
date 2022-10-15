@@ -18,6 +18,9 @@ import (
 
 // This constructor creates a new context.
 func Context(parameters []abstractions.ParameterLike) abstractions.ContextLike {
+	if len(parameters) == 0 {
+		panic("A context must have at least one parameter.")
+	}
 	return &context{parameters}
 }
 

@@ -18,6 +18,9 @@ import (
 
 // This constructor creates a new parameter.
 func Parameter(name string, value any) abstractions.ParameterLike {
+	if len(name) == 0 || name[0] != '$' {
+		panic("A parameter name must start with '$'.")
+	}
 	return &parameter{name, value}
 }
 
