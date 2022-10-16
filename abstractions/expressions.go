@@ -26,6 +26,14 @@ type DereferenceLike interface {
 	SetExpression(expression any)
 }
 
+// This interface defines the methods supported by all exponential-like types.
+type ExponentialLike interface {
+	GetBase() any
+	SetBase(base any)
+	GetExponent() any
+	SetExponent(exponent any)
+}
+
 // This interface defines the methods supported by all intrinsic-like types.
 type IntrinsicLike interface {
 	GetFunction() string
@@ -34,6 +42,12 @@ type IntrinsicLike interface {
 	SetArgument(index int, argument any) // Ordinal based indexing.
 	GetArguments() ArrayLike[any]
 	SetArguments(arguments ArrayLike[any])
+}
+
+// This interface defines the methods supported by all inversion-like types.
+type InversionLike interface {
+	GetExpression() any
+	SetExpression(expression any)
 }
 
 // This interface defines the methods supported by all invocation-like types.
