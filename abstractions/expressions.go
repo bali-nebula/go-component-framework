@@ -10,7 +10,46 @@
 
 package abstractions
 
+// OPERATOR CONSTANTS
+
+type Operator int
+
+const (
+	INVALID Operator = iota
+	AT
+	CHAIN
+	POWER
+	INVERSE
+	RECIPROCAL
+	CONJUGATE
+	PRODUCT
+	QUOTIENT
+	REMAINDER
+	SUM
+	DIFFERENCE
+	LESS
+	EQUAL
+	MORE
+	UNEQUAL
+	IS
+	MATCHES
+	AND
+	SANS
+	OR
+	XOR
+)
+
 // EXPRESSION INTERFACES
+
+// This interface defines the methods supported by all arithmetic-like types.
+type ArithmeticLike interface {
+	GetFirst() any
+	SetFirst(first any)
+	GetOperator() Operator
+	SetOperator(operator Operator)
+	GetSecond() any
+	SetSecond(second any)
+}
 
 // This interface defines the methods supported by all chaining-like types.
 type ChainingLike interface {
@@ -46,6 +85,8 @@ type IntrinsicLike interface {
 
 // This interface defines the methods supported by all inversion-like types.
 type InversionLike interface {
+	GetOperator() Operator
+	SetOperator(operator Operator)
 	GetExpression() any
 	SetExpression(expression any)
 }
