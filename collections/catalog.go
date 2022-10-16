@@ -43,12 +43,9 @@ func (v *association[K, V]) GetValue() V {
 	return v.value
 }
 
-// This method sets the value of this association to a new value and returns the
-// old value.
-func (v *association[K, V]) SetValue(value V) V {
-	var old = v.value
+// This method sets the value of this association to a new value.
+func (v *association[K, V]) SetValue(value V) {
 	v.value = value
-	return old
 }
 
 // This constructor creates a new empty catalog.
@@ -130,21 +127,18 @@ func (v *catalog[K, V]) GetValues(keys []K) []V {
 }
 
 // This method sets the value associated with the specified key to the
-// specified value and returns the old value if one already existed in the
-// catalog.
-func (v *catalog[K, V]) SetValue(key K, value V) V {
-	var old V // Set the return value to its zero value.
+// specified value.
+func (v *catalog[K, V]) SetValue(key K, value V) {
 	var association, exists = v.keys[key]
 	if exists {
 		// Set the value of an existing association.
-		old = association.SetValue(value)
+		association.SetValue(value)
 	} else {
 		// Add a new association.
 		association = Association[K, V](key, value)
 		v.associations.AddItem(association)
 		v.keys[key] = association
 	}
-	return old
 }
 
 // This method removes the association associated with the specified key from the

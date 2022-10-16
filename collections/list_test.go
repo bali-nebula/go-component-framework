@@ -75,7 +75,7 @@ func TestListsWithStrings(t *testing.T) {
 	assert.False(t, list.ContainsAny([]string{"bax", "bez"}))    // ["foo", "bar", "baz"]
 	assert.True(t, list.ContainsAll([]string{"bar", "baz"}))     // ["foo", "bar", "baz"]
 	assert.False(t, list.ContainsAll([]string{"bax", "baz"}))    // ["foo", "bar", "baz"]
-	assert.Equal(t, "baz", string(list.SetItem(3, "bax")))       // ["foo", "bar", "bax"]
+	list.SetItem(3, "bax")                                       // ["foo", "bar", "bax"]
 
 	list.InsertItems(3, []string{"baz"})                  // ["foo", "bar", "bax", "baz"]
 	assert.Equal(t, 4, list.GetSize())                    // ["foo", "bar", "bax", "baz"]
@@ -97,7 +97,7 @@ func TestListsWithStrings(t *testing.T) {
 	assert.Equal(t, []string{"bar", "foo", "bax"}, list.GetItems(2, -4))
 	list.SetItems(2, []string{"foo", "baz", "bar"}) //       ["foo", "foo", "baz", "bar", "baz", "baz", "bar"]
 	assert.Equal(t, []string{"foo", "baz", "bar"}, list.GetItems(2, -4))
-	assert.Equal(t, []string{"bar"}, list.SetItems(-1, []string{"foz"}))
+	list.SetItems(-1, []string{"foz"})
 	assert.Equal(t, "foz", string(list.GetItem(-1))) //      ["foo", "foo", "baz", "bar", "baz", "baz", "foz"]
 	list.SortItems()                                 //      ["bar", "baz", "baz", "baz", "foo", "foo", "foz"]
 

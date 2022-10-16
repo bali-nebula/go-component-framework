@@ -23,30 +23,29 @@ import (
 //
 // This map is useful when creating scanner and parser error messages.
 var lexicon = map[string]string{
-	"$acceptClause":         `"accept" expression`,
-	"$arguments":            `expression {"," expression}`,
-	"$arithmeticExpression": `expression ("*" | "/" | "//" | "+" | "-") expression`,
-	"$association":          `primitive ":" component`,
-	"$attribute":            `variable "[" indices "]"`,
-	"$attributeExpression":  `expression "[" indices "]"`,
-	"$breakClause":          `"break" "loop"`,
+	"$acceptClause": `"accept" expression`,
+	"$annotation":   `NOTE | COMMENT`,
+	"$arguments":    `expression {"," expression}`,
+	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
+	"$association":  `primitive ":" component`,
+	"$attribute":    `variable "[" indices "]"`,
+	"$breakClause":  `"break" "loop"`,
 	"$catalog": `
     association {"," association} |  ! Inline, no NOTEs allowed.
     EOL <association EOL> |
     ":"  ! An empty catalog.`,
-	"$chainExpression":       `expression "&" expression`,
-	"$checkoutClause":        `"checkout" recipient ["at" "level" expression] "from" expression`,
-	"$collection":            `"[" sequence "]"`,
-	"$annotation":            `NOTE | COMMENT`,
-	"$comparisonExpression":  `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
-	"$complementExpression":  `"NOT" expression`,
-	"$component":             `entity [context] [NOTE]`,
-	"$context":               `"(" parameters ")"`,
-	"$continueClause":        `"continue" "loop"`,
-	"$defaultExpression":     `expression "?" expression`,
-	"$dereferenceExpression": `"@" expression`,
-	"$discardClause":         `"discard" expression`,
-	"$document":              `component EOL EOF`,
+	"$chaining":       `expression "&" expression`,
+	"$checkoutClause": `"checkout" recipient ["at" "level" expression] "from" expression`,
+	"$collection":     `"[" sequence "]"`,
+	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
+	"$complement":     `"NOT" expression`,
+	"$component":      `entity [context] [NOTE]`,
+	"$context":        `"(" parameters ")"`,
+	"$continueClause": `"continue" "loop"`,
+	"$default":        `expression "?" expression`,
+	"$dereference":    `"@" expression`,
+	"$discardClause":  `"discard" expression`,
+	"$document":       `component EOL EOF`,
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
@@ -54,35 +53,37 @@ var lexicon = map[string]string{
 	"$evaluateClause":  `[recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$exception":       `SYMBOL`,
 	"$exceptionClause": `"on" exception <"matching" expression "do" "{" statements "}">`,
+	"$exponential":     `expression "^" expression`,
 	"$expression": `
     component |
     variable |
-    functionExpression |
-    precedenceExpression |
-    dereferenceExpression |
-    messageExpression |
-    attributeExpression |
-    chainExpression |
-    powerExpression |
-    inversionExpression |
-    arithmeticExpression |
-    magnitudeExpression |
-    comparisonExpression |
-    complementExpression |
-    logicalExpression |
-    defaultExpression`,
-	"$function":            `IDENTIFIER`,
-	"$functionExpression":  `function "(" [arguments] ")"`,
-	"$ifClause":            `"if" expression "do" "{" statements "}"`,
-	"$indices":             `expression {"," expression}`,
-	"$inversionExpression": `("-" | "/" | "*") expression`,
-	"$item":                `SYMBOL`,
+    intrinsic |
+    precedence |
+    dereference |
+    invocation |
+    value |
+    chaining |
+    exponential |
+    inversion |
+    arithmetic |
+    magnitude |
+    comparison |
+    complement |
+    logical |
+    default`,
+	"$function":   `IDENTIFIER`,
+	"$ifClause":   `"if" expression "do" "{" statements "}"`,
+	"$indices":    `expression {"," expression}`,
+	"$intrinsic":  `function "(" [arguments] ")"`,
+	"$inversion":  `("-" | "/" | "*") expression`,
+	"$invocation": `expression ("." | "<~") message "(" [arguments] ")"`,
+	"$item":       `SYMBOL`,
 	"$list": `
     component {"," component} |  ! Inline, no NOTEs allowed.
     EOL <component EOL> |
     ! An empty list.`,
-	"$logicalExpression":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
-	"$magnitudeExpression": `"|" expression "|"`,
+	"$logical":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
+	"$magnitude": `"|" expression "|"`,
 	"$mainClause": `
     ifClause |
     selectClause |
@@ -102,36 +103,34 @@ var lexicon = map[string]string{
     acceptClause |
     rejectClause |
     evaluateClause`,
-	"$message":           `IDENTIFIER`,
-	"$messageExpression": `expression ("." | "<~") message "(" [arguments] ")"`,
-	"$name":              `SYMBOL`,
-	"$notarizeClause":    `"notarize" expression "as" expression`,
-	"$parameter":         `name ":" component`,
+	"$message":        `IDENTIFIER`,
+	"$name":           `SYMBOL`,
+	"$notarizeClause": `"notarize" expression "as" expression`,
+	"$parameter":      `name ":" component`,
 	"$parameters": `
     parameter {"," parameter} |  ! Inline, no NOTEs allowed.
     EOL <parameter EOL>`,
-	"$postClause":           `"post" expression "to" expression`,
-	"$powerExpression":      `expression "^" expression`,
-	"$precedenceExpression": `"(" expression ")"`,
-	"$primitive":            `element | string`,
-	"$procedure":            `"{" statements "}"`,
-	"$publishClause":        `"publish" expression`,
-	"$range":                `[value] (".." | "..<" | "<..<" | "<..") [value]`,
-	"$recipient":            `name | attribute`,
-	"$rejectClause":         `"reject" expression`,
-	"$retrieveClause":       `"retrieve" recipient "from" expression`,
-	"$returnClause":         `"return" expression`,
-	"$saveClause":           `"save" expression "as" recipient`,
-	"$selectClause":         `"select" expression <"matching" expression "do" "{" statements "}">`,
-	"$sequence":             `catalog | list | range`,
-	"$statement":            `mainClause [exceptionClause]`,
+	"$postClause":     `"post" expression "to" expression`,
+	"$precedence":     `"(" expression ")"`,
+	"$primitive":      `element | string`,
+	"$procedure":      `"{" statements "}"`,
+	"$publishClause":  `"publish" expression`,
+	"$range":          `[primitive] (".." | "..<" | "<..<" | "<..") [primitive]`,
+	"$recipient":      `name | attribute`,
+	"$rejectClause":   `"reject" expression`,
+	"$retrieveClause": `"retrieve" recipient "from" expression`,
+	"$returnClause":   `"return" expression`,
+	"$saveClause":     `"save" expression "as" recipient`,
+	"$selectClause":   `"select" expression <"matching" expression "do" "{" statements "}">`,
+	"$sequence":       `catalog | list | range`,
+	"$statement":      `mainClause [exceptionClause]`,
 	"$statements": `
     statement {";" statement} |
     EOL {(annotation | statement) EOL} |
     ! An empty procedure.`,
 	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$throwClause": `"throw" expression`,
-	"$value":       `element | string | variable`,
+	"$value":       `expression "[" indices "]"`,
 	"$variable":    `IDENTIFIER`,
 	"$whileClause": `"while" expression "do" "{" statements "}"`,
 	"$withClause":  `"with" "each" item "in" expression "do" "{" statements "}"`,

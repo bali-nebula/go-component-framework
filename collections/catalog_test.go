@@ -55,7 +55,7 @@ func TestCatalogsWithStringsAndIntegers(t *testing.T) {
 	assert.True(t, iterator.HasNext())
 	assert.Equal(t, []string{"foo", "bar", "baz"}, catalog.GetKeys())
 	assert.Equal(t, 3, int(catalog.GetValue("baz")))
-	assert.Equal(t, 2, int(catalog.SetValue("bar", 5)))
+	catalog.SetValue("bar", 5)
 	assert.Equal(t, []int{1, 5}, catalog.GetValues([]string{"foo", "bar"}))
 	catalog.SortAssociations()
 	assert.Equal(t, []string{"bar", "baz", "foo"}, catalog.GetKeys())

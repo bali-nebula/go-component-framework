@@ -165,25 +165,19 @@ func (v *list[T]) AddItems(items []T) {
 }
 
 // This method sets the item in this list that is associated with the specified
-// index to be the specified item. It returns the old value of that item.
-func (v *list[T]) SetItem(index int, item T) T {
+// index to be the specified item.
+func (v *list[T]) SetItem(index int, item T) {
 	var length = len(v.items)
 	index = abstractions.NormalizedIndex(index, length)
-	var old = v.items[index]
 	v.items[index] = item
-	return old
 }
 
 // This method sets the items in this list starting with the specified index
-// to the specified items. It returns the old values of those items.
-func (v *list[T]) SetItems(index int, items []T) []T {
+// to the specified items.
+func (v *list[T]) SetItems(index int, items []T) {
 	var length = len(v.items)
 	index = abstractions.NormalizedIndex(index, length)
-	var size = len(items)
-	var old = make([]T, size)
-	copy(old, v.items[index:])
 	copy(v.items[index:], items)
-	return old
 }
 
 // This method inserts the specified item into this list in the specified

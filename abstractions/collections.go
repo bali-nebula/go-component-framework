@@ -24,15 +24,22 @@ type Searchable[T any] interface {
 	ContainsAll(items []T) bool
 }
 
+// This interface defines the methods supported by all updatable collections of
+// items.
+type Updatable[T any] interface {
+	SetItem(index int, item T)
+	SetItems(index int, items []T)
+}
+
 // This interface defines the methods supported by all collections of items that
 // allow their endpoints to be changed.
 type Elastic[T any] interface {
 	GetFirst() T
-	SetFirst(T) T
+	SetFirst(T)
 	GetConnector() string
-	SetConnector(connector string) string
+	SetConnector(connector string)
 	GetLast() T
-	SetLast(T) T
+	SetLast(T)
 	IsEnumerable() bool
 }
 
@@ -51,8 +58,6 @@ type Flexible[T any] interface {
 type Malleable[T any] interface {
 	AddItem(item T)
 	AddItems(items []T)
-	SetItem(index int, item T) T
-	SetItems(index int, items []T) []T
 	InsertItem(slot int, item T)
 	InsertItems(slot int, items []T)
 	RemoveItem(index int) T
@@ -72,7 +77,7 @@ type Associative[K any, V any] interface {
 	GetKeys() []K
 	GetValue(key K) V
 	GetValues(keys []K) []V
-	SetValue(key K, value V) V
+	SetValue(key K, value V)
 	RemoveValue(key K) V
 	RemoveValues(keys []K) []V
 	RemoveAll()
@@ -128,12 +133,21 @@ type Routeable[T any] interface {
 
 // CONSOLIDATED INTERFACES
 
+// This interface consolidates all the interfaces supported by array-like
+// collections.
+type ArrayLike[T any] interface {
+	Sequential[T]
+	Indexed[T]
+	Searchable[T]
+	Updatable[T]
+}
+
 // This interface defines the methods supported by all association-like types.
 // An association associates a key with an setable value.
 type AssociationLike[K any, V any] interface {
 	GetKey() K
 	GetValue() V
-	SetValue(value V) V
+	SetValue(value V)
 }
 
 // This interface consolidates all the interfaces supported by catalog-like
@@ -150,6 +164,7 @@ type ListLike[T any] interface {
 	Sequential[T]
 	Indexed[T]
 	Searchable[T]
+	Updatable[T]
 	Malleable[T]
 }
 

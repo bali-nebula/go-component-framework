@@ -46,7 +46,7 @@ func (v *context) GetNames() []string {
 func (v *context) GetValue(name string) any {
 	for _, parameter := range v.parameters {
 		if parameter.GetName() == name {
-			return parameter.GetValue
+			return parameter.GetValue()
 		}
 	}
 	return nil

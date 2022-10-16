@@ -118,11 +118,9 @@ func (v *ranje[T]) GetFirst() T {
 	return v.first
 }
 
-// This method sets the first item in this range and returns the previous value.
-func (v *ranje[T]) SetFirst(item T) T {
-	var old = v.first
+// This method sets the first item in this range.
+func (v *ranje[T]) SetFirst(item T) {
 	v.first = item
-	return old
 }
 
 // This method returns the connector for this range.
@@ -130,11 +128,9 @@ func (v *ranje[T]) GetConnector() string {
 	return v.connector
 }
 
-// This method sets the connector for this range and returns the previous value.
-func (v *ranje[T]) SetConnector(connector string) string {
-	var old = v.connector
+// This method sets the connector for this range.
+func (v *ranje[T]) SetConnector(connector string) {
 	v.connector = connector
-	return old
 }
 
 // This method returns the last item in this range.
@@ -142,11 +138,9 @@ func (v *ranje[T]) GetLast() T {
 	return v.last
 }
 
-// This method sets the last item in this range and returns the previous value.
-func (v *ranje[T]) SetLast(item T) T {
-	var old = v.last
+// This method sets the last item in this range.
+func (v *ranje[T]) SetLast(item T) {
 	v.last = item
-	return old
 }
 
 // This method determines whether or not this range can be enumerated over.
