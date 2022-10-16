@@ -14,31 +14,32 @@ import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// PRECEDENCE EXPRESSION IMPLEMENTATION
+// DEREFERENCE EXPRESSION IMPLEMENTATION
 
-// This constructor creates a new precedence expression.
-func Precedence(expression any) abstractions.PrecedenceLike {
-	var v = &precedenceExpression{}
+// This constructor creates a new dereference expression.
+func Dereference(expression any) abstractions.DereferenceLike {
+	var v = &dereferenceExpression{}
 	v.SetExpression(expression)
 	return v
 }
 
-// This type defines the structure and methods associated with a precedence
+// This type defines the structure and methods associated with a dereference
 // expression.
-type precedenceExpression struct {
+type dereferenceExpression struct {
 	expression any
 }
 
-// This method returns the expression wrapped by this precedence expression.
-func (v *precedenceExpression) GetExpression() any {
+// This method returns the expression to be dereference by this dereference
+// expression.
+func (v *dereferenceExpression) GetExpression() any {
 	return v.expression
 }
 
-// This method sets the expression to be wrapped by this precedence expression
-// to the specified value.
-func (v *precedenceExpression) SetExpression(expression any) {
+// This method sets the expression to be dereferenced by this dereference
+// expression to the specified value.
+func (v *dereferenceExpression) SetExpression(expression any) {
 	if expression == nil {
-		panic("The expression wrapped by a precedence expression cannot be nil.")
+		panic("The expression to be dereferenced cannot be nil.")
 	}
 	v.expression = expression
 }
