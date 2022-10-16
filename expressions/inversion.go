@@ -46,17 +46,17 @@ func (v *inversionExpression) SetOperator(operator abstractions.Operator) {
 	v.operator = operator
 }
 
-// This method returns the expression to be inverted by this inversion
+// This method returns the expression to be operated on by this inversion
 // expression.
 func (v *inversionExpression) GetExpression() any {
 	return v.expression
 }
 
-// This method sets the expression to be inverted by this inversion
+// This method sets the expression to be operated on by this inversion
 // expression to the specified value.
 func (v *inversionExpression) SetExpression(expression any) {
 	if expression == nil {
-		panic("The expression to be inverted cannot be nil.")
+		panic("The expression to be operated on cannot be nil.")
 	}
 	v.expression = expression
 }

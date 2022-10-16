@@ -33,6 +33,7 @@ const (
 	UNEQUAL
 	IS
 	MATCHES
+	NOT
 	AND
 	SANS
 	OR
@@ -57,6 +58,22 @@ type ChainingLike interface {
 	SetFirst(first any)
 	GetSecond() any
 	SetSecond(second any)
+}
+
+// This interface defines the methods supported by all comparison-like types.
+type ComparisonLike interface {
+	GetFirst() any
+	SetFirst(first any)
+	GetOperator() Operator
+	SetOperator(operator Operator)
+	GetSecond() any
+	SetSecond(second any)
+}
+
+// This interface defines the methods supported by all complement-like types.
+type ComplementLike interface {
+	GetExpression() any
+	SetExpression(expression any)
 }
 
 // This interface defines the methods supported by all dereference-like types.
@@ -103,6 +120,12 @@ type InvocationLike interface {
 	SetArgument(index int, argument any) // Ordinal based indexing.
 	GetArguments() ArrayLike[any]
 	SetArguments(arguments ArrayLike[any])
+}
+
+// This interface defines the methods supported by all magnitude-like types.
+type MagnitudeLike interface {
+	GetExpression() any
+	SetExpression(expression any)
 }
 
 // This interface defines the methods supported by all precedence-like types.

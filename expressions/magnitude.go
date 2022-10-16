@@ -14,31 +14,31 @@ import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// DEREFERENCE EXPRESSION IMPLEMENTATION
+// MAGNITUDE EXPRESSION IMPLEMENTATION
 
-// This constructor creates a new dereference expression.
-func Dereference(expression any) abstractions.DereferenceLike {
-	var v = &dereferenceExpression{}
+// This constructor creates a new magnitude expression.
+func Magnitude(expression any) abstractions.MagnitudeLike {
+	var v = &magnitudeExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)
 	return v
 }
 
-// This type defines the structure and methods associated with a dereference
+// This type defines the structure and methods associated with a magnitude
 // expression.
-type dereferenceExpression struct {
+type magnitudeExpression struct {
 	expression any
 }
 
-// This method returns the expression to be operated on by this dereference
+// This method returns the expression to be operated on by this magnitude
 // expression.
-func (v *dereferenceExpression) GetExpression() any {
+func (v *magnitudeExpression) GetExpression() any {
 	return v.expression
 }
 
-// This method sets the expression to be operated on by this dereference
+// This method sets the expression to be operated on by this magnitude
 // expression to the specified value.
-func (v *dereferenceExpression) SetExpression(expression any) {
+func (v *magnitudeExpression) SetExpression(expression any) {
 	if expression == nil {
 		panic("The expression to be operated on cannot be nil.")
 	}

@@ -14,31 +14,31 @@ import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// DEREFERENCE EXPRESSION IMPLEMENTATION
+// COMPLEMENT EXPRESSION IMPLEMENTATION
 
-// This constructor creates a new dereference expression.
-func Dereference(expression any) abstractions.DereferenceLike {
-	var v = &dereferenceExpression{}
+// This constructor creates a new complement expression.
+func Complement(expression any) abstractions.ComplementLike {
+	var v = &complementExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)
 	return v
 }
 
-// This type defines the structure and methods associated with a dereference
+// This type defines the structure and methods associated with a complement
 // expression.
-type dereferenceExpression struct {
+type complementExpression struct {
 	expression any
 }
 
-// This method returns the expression to be operated on by this dereference
+// This method returns the expression to be operated on by this complement
 // expression.
-func (v *dereferenceExpression) GetExpression() any {
+func (v *complementExpression) GetExpression() any {
 	return v.expression
 }
 
-// This method sets the expression to be operated on by this dereference
+// This method sets the expression to be operated on by this complement
 // expression to the specified value.
-func (v *dereferenceExpression) SetExpression(expression any) {
+func (v *complementExpression) SetExpression(expression any) {
 	if expression == nil {
 		panic("The expression to be operated on cannot be nil.")
 	}
