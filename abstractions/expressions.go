@@ -12,6 +12,14 @@ package abstractions
 
 // EXPRESSION INTERFACES
 
+// This interface defines the methods supported by all chaining-like types.
+type ChainingLike interface {
+	GetFirst() any
+	SetFirst(first any)
+	GetSecond() any
+	SetSecond(second any)
+}
+
 // This interface defines the methods supported by all dereference-like types.
 type DereferenceLike interface {
 	GetExpression() any

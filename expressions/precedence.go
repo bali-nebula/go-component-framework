@@ -19,6 +19,7 @@ import (
 // This constructor creates a new precedence expression.
 func Precedence(expression any) abstractions.PrecedenceLike {
 	var v = &precedenceExpression{}
+	// Perform argument validation.
 	v.SetExpression(expression)
 	return v
 }

@@ -19,6 +19,7 @@ import (
 // This constructor creates a new dereference expression.
 func Dereference(expression any) abstractions.DereferenceLike {
 	var v = &dereferenceExpression{}
+	// Perform argument validation.
 	v.SetExpression(expression)
 	return v
 }
