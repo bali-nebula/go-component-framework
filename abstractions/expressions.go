@@ -36,8 +36,8 @@ const (
 	NOT
 	AND
 	SANS
-	OR
 	XOR
+	OR
 )
 
 // EXPRESSION INTERFACES
@@ -96,8 +96,8 @@ type IntrinsicLike interface {
 	SetFunction(function string)
 	GetArgument(index int) any           // Ordinal based indexing.
 	SetArgument(index int, argument any) // Ordinal based indexing.
-	GetArguments() ArrayLike[any]
-	SetArguments(arguments ArrayLike[any])
+	GetArguments() ListLike[any]
+	SetArguments(arguments ListLike[any])
 }
 
 // This interface defines the methods supported by all inversion-like types.
@@ -118,8 +118,18 @@ type InvocationLike interface {
 	SetMessage(message string)
 	GetArgument(index int) any           // Ordinal based indexing.
 	SetArgument(index int, argument any) // Ordinal based indexing.
-	GetArguments() ArrayLike[any]
-	SetArguments(arguments ArrayLike[any])
+	GetArguments() ListLike[any]
+	SetArguments(arguments ListLike[any])
+}
+
+// This interface defines the methods supported by all logical-like types.
+type LogicalLike interface {
+	GetFirst() any
+	SetFirst(first any)
+	GetOperator() Operator
+	SetOperator(operator Operator)
+	GetSecond() any
+	SetSecond(second any)
 }
 
 // This interface defines the methods supported by all magnitude-like types.
@@ -140,6 +150,6 @@ type ValueLike interface {
 	SetComposite(composite any)
 	GetIndex(index int) any
 	SetIndex(index int, expression any)
-	GetIndices() ArrayLike[any]
-	SetIndices(indices ArrayLike[any])
+	GetIndices() ListLike[any]
+	SetIndices(indices ListLike[any])
 }

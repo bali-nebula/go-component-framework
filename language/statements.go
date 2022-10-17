@@ -12,6 +12,7 @@ package language
 
 import (
 	"fmt"
+	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	"github.com/craterdog-bali/go-bali-document-notation/elements"
 )
 
@@ -49,7 +50,7 @@ func (v *parser) parseAcceptClause() (*AcceptClause, *Token, bool) {
 // within a composite component.
 type Attribute struct {
 	Variable string
-	Indices  []any
+	Indices  abstractions.ListLike[any]
 }
 
 // This method attempts to parse an attribute. It returns the attribute and
@@ -58,7 +59,7 @@ func (v *parser) parseAttribute() (*Attribute, *Token, bool) {
 	var ok bool
 	var token *Token
 	var variable string
-	var indices []any
+	var indices abstractions.ListLike[any]
 	var attribute *Attribute
 	variable, token, ok = v.parseIdentifier()
 	if !ok {
@@ -98,7 +99,7 @@ func (v *parser) parseAttribute() (*Attribute, *Token, bool) {
 // statements.
 type DoBlock struct {
 	Expression any
-	Statements []any
+	Statements abstractions.ListLike[any]
 }
 
 // This method attempts to parse a do block. It returns the do block and whether
@@ -107,7 +108,7 @@ func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
 	var ok bool
 	var token *Token
 	var expression any
-	var statements []any
+	var statements abstractions.ListLike[any]
 	var doBlock *DoBlock
 	expression, token, ok = v.parseExpression()
 	if !ok {
@@ -398,7 +399,7 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, *Token, bool) {
 // an exception.
 type ExceptionClause struct {
 	Exception elements.Symbol
-	DoBlocks  []*DoBlock
+	DoBlocks  abstractions.ListLike[*DoBlock]
 }
 
 // This method attempts to parse an exception clause. It returns the exception
@@ -408,7 +409,7 @@ func (v *parser) parseExceptionClause() (*ExceptionClause, *Token, bool) {
 	var token *Token
 	var exception elements.Symbol
 	var doBlock *DoBlock
-	var doBlocks []*DoBlock
+	var doBlocks abstractions.ListLike[*DoBlock]
 	var clause *ExceptionClause
 	_, token, ok = v.parseKeyword("on")
 	if !ok {
@@ -436,10 +437,10 @@ func (v *parser) parseExceptionClause() (*ExceptionClause, *Token, bool) {
 				"$exception")
 			panic(message)
 		}
-		doBlocks = append(doBlocks, doBlock)
+		doBlocks.AddItem(doBlock)
 	}
 	// There must be at least one matching block expression.
-	if len(doBlocks) == 0 {
+	if doBlocks.IsEmpty() {
 		var message = fmt.Sprintf("Expected at least one pattern expression and statement block in the exception clause but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$exceptionClause",
@@ -477,40 +478,6 @@ func (v *parser) parseIfClause() (*IfClause, *Token, bool) {
 	}
 	clause = &IfClause{doBlock}
 	return clause, token, true
-}
-
-// This method attempts to parse a sequence of indices. It returns an array of
-// the indices and whether or not the indices were successfully parsed.
-func (v *parser) parseIndices() ([]any, *Token, bool) {
-	var ok bool
-	var token *Token
-	var index any
-	var indices []any
-	index, token, ok = v.parseExpression()
-	// There must be at least one index.
-	if !ok {
-		var message = fmt.Sprintf("Expected at least one index in the sequence of indices but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$indices")
-		panic(message)
-	}
-	for {
-		indices = append(indices, index)
-		// Every subsequent index must be preceded by a ','.
-		_, token, ok = v.parseDelimiter(",")
-		if !ok {
-			// No more indices.
-			break
-		}
-		index, token, ok = v.parseExpression()
-		if !ok {
-			var message = fmt.Sprintf("Expected an index after the ',' character but received:\n%v\n\n", token)
-			message += generateGrammar(
-				"$indices")
-			panic(message)
-		}
-	}
-	return indices, token, true
 }
 
 // This method attempts to parse a main clause. It returns the main clause and
@@ -668,10 +635,10 @@ func (v *parser) parsePostClause() (*PostClause, *Token, bool) {
 
 // This method attempts to parse a procedure. It returns the procedure and
 // whether or not the procedure was successfully parsed.
-func (v *parser) parseProcedure() ([]any, *Token, bool) {
+func (v *parser) parseProcedure() (abstractions.ListLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var statements []any
+	var statements abstractions.ListLike[any]
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		// This is not a procedure.
@@ -925,7 +892,7 @@ func (v *parser) parseSaveClause() (*SaveClause, *Token, bool) {
 // statement block to be executed based on the pattern of a control expression.
 type SelectClause struct {
 	Control  any
-	DoBlocks []*DoBlock
+	DoBlocks abstractions.ListLike[*DoBlock]
 }
 
 // This method attempts to parse an select clause. It returns the select clause
@@ -935,7 +902,7 @@ func (v *parser) parseSelectClause() (*SelectClause, *Token, bool) {
 	var token *Token
 	var control any
 	var doBlock *DoBlock
-	var doBlocks []*DoBlock
+	var doBlocks abstractions.ListLike[*DoBlock]
 	var clause *SelectClause
 	_, token, ok = v.parseKeyword("select")
 	if !ok {
@@ -961,10 +928,10 @@ func (v *parser) parseSelectClause() (*SelectClause, *Token, bool) {
 				"$selectClause")
 			panic(message)
 		}
-		doBlocks = append(doBlocks, doBlock)
+		doBlocks.AddItem(doBlock)
 	}
 	// There must be at least one matching block expression.
-	if len(doBlocks) == 0 {
+	if doBlocks.IsEmpty() {
 		var message = fmt.Sprintf("Expected at least one pattern expression and statement block in the select clause but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$selectClause")
@@ -1002,9 +969,9 @@ func (v *parser) parseStatement() (*Statement, *Token, bool) {
 // This method attempts to parse the statements within a procedure. It returns
 // an array of the statements and whether or not the statements were
 // successfully parsed.
-func (v *parser) parseStatements() ([]any, *Token, bool) {
+func (v *parser) parseStatements() (abstractions.ListLike[any], *Token, bool) {
 	var statement any
-	var statements []any
+	var statements abstractions.ListLike[any]
 	var _, token, ok = v.parseEOL()
 	if !ok {
 		// The statements are on a single line.
@@ -1019,7 +986,7 @@ func (v *parser) parseStatements() ([]any, *Token, bool) {
 			panic(message)
 		}
 		for {
-			statements = append(statements, statement)
+			statements.AddItem(statement)
 			// Every subsequent statement must be preceded by a ';'.
 			_, token, ok = v.parseDelimiter(";")
 			if !ok {
@@ -1048,7 +1015,7 @@ func (v *parser) parseStatements() ([]any, *Token, bool) {
 			// No more statements.
 			break
 		}
-		statements = append(statements, statement)
+		statements.AddItem(statement)
 		// Every statement must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -1061,7 +1028,7 @@ func (v *parser) parseStatements() ([]any, *Token, bool) {
 		}
 	}
 	// There must be at least one statement.
-	if len(statements) == 0 {
+	if statements.IsEmpty() {
 		var message = fmt.Sprintf("Expected at least one statement in the component context but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$procedure",

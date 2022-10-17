@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package components
+package expressions
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"

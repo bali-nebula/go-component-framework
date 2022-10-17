@@ -227,7 +227,7 @@ func (v *parser) parseRange() (abstractions.RangeLike[any], *Token, bool) {
 	var first any
 	var connector string
 	var last any
-	first, token, _ = v.parseValue() // The first value is optional.
+	first, token, _ = v.parsePrimitive() // The first value is optional.
 	connector, token, ok = v.parseDelimiter("..")
 	if !ok {
 		connector, token, ok = v.parseDelimiter("<..")
@@ -245,27 +245,7 @@ func (v *parser) parseRange() (abstractions.RangeLike[any], *Token, bool) {
 		}
 		return nil, token, false
 	}
-	last, token, _ = v.parseValue() // The last value is optional.
+	last, token, _ = v.parsePrimitive() // The last value is optional.
 	var rng = collections.Range(first, connector, last)
 	return rng, token, true
-}
-
-// This method attempts to parse a primitive value. It returns the primitive
-// value and whether or not the primitive value was successfully parsed.
-func (v *parser) parseValue() (any, *Token, bool) {
-	var ok bool
-	var token *Token
-	var value any
-	value, token, ok = v.parseElement()
-	if !ok {
-		value, token, ok = v.parseString()
-	}
-	if !ok {
-		value, token, ok = v.parseIdentifier()
-	}
-	if !ok {
-		// This must be explicitly set to nil since it is or type any.
-		value = nil
-	}
-	return value, token, ok
 }

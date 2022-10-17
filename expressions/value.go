@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package components
+package expressions
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
@@ -17,7 +17,7 @@ import (
 // VALUE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new value expression.
-func Value(composite any, indices abstractions.ArrayLike[any]) abstractions.ValueLike {
+func Value(composite any, indices abstractions.ListLike[any]) abstractions.ValueLike {
 	var v = &valueExpression{}
 	// Perform argument validation.
 	v.SetComposite(composite)
@@ -29,7 +29,7 @@ func Value(composite any, indices abstractions.ArrayLike[any]) abstractions.Valu
 // expression.
 type valueExpression struct {
 	composite any
-	indices   abstractions.ArrayLike[any]
+	indices   abstractions.ListLike[any]
 }
 
 // This method returns the composite for this value expression.
@@ -61,12 +61,12 @@ func (v *valueExpression) SetIndex(index int, expression any) {
 }
 
 // This method returns the list of indices for this value expression.
-func (v *valueExpression) GetIndices() abstractions.ArrayLike[any] {
+func (v *valueExpression) GetIndices() abstractions.ListLike[any] {
 	return v.indices
 }
 
 // This method sets the list of indices for this value expression.
-func (v *valueExpression) SetIndices(indices abstractions.ArrayLike[any]) {
+func (v *valueExpression) SetIndices(indices abstractions.ListLike[any]) {
 	if indices == nil {
 		panic("A value expression requires an array (possibly empty) of indices.")
 	}

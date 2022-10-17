@@ -42,7 +42,6 @@ var lexicon = map[string]string{
 	"$component":      `entity [context] [NOTE]`,
 	"$context":        `"(" parameters ")"`,
 	"$continueClause": `"continue" "loop"`,
-	"$default":        `expression "?" expression`,
 	"$dereference":    `"@" expression`,
 	"$discardClause":  `"discard" expression`,
 	"$document":       `component EOL EOF`,
@@ -69,8 +68,7 @@ var lexicon = map[string]string{
     magnitude |
     comparison |
     complement |
-    logical |
-    default`,
+    logical`,
 	"$function":   `IDENTIFIER`,
 	"$ifClause":   `"if" expression "do" "{" statements "}"`,
 	"$indices":    `expression {"," expression}`,
@@ -146,7 +144,7 @@ var lexicon = map[string]string{
 	"$DATES":       `[TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]`,
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
 	"$DELIMITER": `
-    "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?" | ">" | "=" |
+    "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" |
     "<..<" | "<.." | "<~" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
     "..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
     ")" | "(" | "&"`,

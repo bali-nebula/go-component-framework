@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package components
+package expressions
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
@@ -17,7 +17,7 @@ import (
 // INTRINSIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new intrinsic expression.
-func Intrinsic(function string, arguments abstractions.ArrayLike[any]) abstractions.IntrinsicLike {
+func Intrinsic(function string, arguments abstractions.ListLike[any]) abstractions.IntrinsicLike {
 	var v = &intrinsicExpression{}
 	// Perform argument validation.
 	v.SetFunction(function)
@@ -29,7 +29,7 @@ func Intrinsic(function string, arguments abstractions.ArrayLike[any]) abstracti
 // expression.
 type intrinsicExpression struct {
 	function  string
-	arguments abstractions.ArrayLike[any]
+	arguments abstractions.ListLike[any]
 }
 
 // This method returns the function name for this intrinsic expression.
@@ -61,12 +61,12 @@ func (v *intrinsicExpression) SetArgument(index int, argument any) {
 }
 
 // This method returns the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) GetArguments() abstractions.ArrayLike[any] {
+func (v *intrinsicExpression) GetArguments() abstractions.ListLike[any] {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) SetArguments(arguments abstractions.ArrayLike[any]) {
+func (v *intrinsicExpression) SetArguments(arguments abstractions.ListLike[any]) {
 	if arguments == nil {
 		panic("An intrinsic expression requires an array (possibly empty) of arguments.")
 	}

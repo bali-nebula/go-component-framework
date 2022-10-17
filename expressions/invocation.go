@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package components
+package expressions
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
@@ -16,11 +16,26 @@ import (
 
 // INVOCATION EXPRESSION IMPLEMENTATION
 
+// This constructor creates a new asynchronous invocation expression.
+func AsynchronousInvocation(
+	target any,
+	message string,
+	arguments abstractions.ListLike[any],
+) abstractions.InvocationLike {
+	var v = &invocationExpression{}
+	// Perform argument validation.
+	v.SetSynchronous(false)
+	v.SetTarget(target)
+	v.SetMessage(message)
+	v.SetArguments(arguments)
+	return v
+}
+
 // This constructor creates a new invocation expression.
 func Invocation(
 	target any,
 	message string,
-	arguments abstractions.ArrayLike[any],
+	arguments abstractions.ListLike[any],
 ) abstractions.InvocationLike {
 	var v = &invocationExpression{}
 	// Perform argument validation.
@@ -37,7 +52,7 @@ type invocationExpression struct {
 	isSynchronous bool
 	target        any
 	message       string
-	arguments     abstractions.ArrayLike[any]
+	arguments     abstractions.ListLike[any]
 }
 
 // This method determines whether or not this invocation expression is
@@ -93,12 +108,12 @@ func (v *invocationExpression) SetArgument(index int, argument any) {
 }
 
 // This method returns the list of arguments for this invocation expression.
-func (v *invocationExpression) GetArguments() abstractions.ArrayLike[any] {
+func (v *invocationExpression) GetArguments() abstractions.ListLike[any] {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this invocation expression.
-func (v *invocationExpression) SetArguments(arguments abstractions.ArrayLike[any]) {
+func (v *invocationExpression) SetArguments(arguments abstractions.ListLike[any]) {
 	if arguments == nil {
 		panic("An invocation expression requires an array (possibly empty) of arguments.")
 	}
