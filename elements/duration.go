@@ -17,6 +17,27 @@ import (
 	"strings"
 )
 
+// DURATION CONSTANTS
+
+// These are locked to the Earth's daily revolutions.
+
+const MillisecondsPerSecond int = 1000
+const MillisecondsPerMinute int = MillisecondsPerSecond * 60
+const MillisecondsPerHour int = MillisecondsPerMinute * 60
+const MillisecondsPerDay int = MillisecondsPerHour * 24
+const MillisecondsPerWeek int = MillisecondsPerDay * 7
+
+// These are locked to the Earth's yearly orbit around the sun.
+
+const MillisecondsPerYear int = 31556952000
+const MillisecondsPerMonth int = MillisecondsPerYear / 12 // An average but exact value.
+
+// Tying the two together is where things get messy.
+
+const DaysPerMonth float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerDay)   // ~30.436875 days/month
+const WeeksPerMonth float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerWeek) // ~4.348125 weeks/month
+const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsPerDay)     // ~365.2425 days/year
+
 // DURATION INTERFACE
 
 // This constructor attempts to create a new duration from the specified
@@ -106,76 +127,76 @@ func (v Duration) AsWeeks() float64 {
 
 // This method returns the total number of months in this duration.
 func (v Duration) AsMonths() float64 {
-	return v.AsDays() / abstractions.DaysPerMonth
+	return v.AsDays() / DaysPerMonth
 }
 
 // This method returns the total number of years in this duration.
 func (v Duration) AsYears() float64 {
-	return v.AsDays() / abstractions.DaysPerYear
+	return v.AsDays() / DaysPerYear
 }
 
 // This method returns the milliseconds part of this duration.
 func (v Duration) GetMilliseconds() int {
-	var milliseconds = magnitude(int(v)) % abstractions.MillisecondsPerSecond
+	var milliseconds = magnitude(int(v)) % MillisecondsPerSecond
 	return milliseconds
 }
 
 // This method returns the seconds part of this duration.
 func (v Duration) GetSeconds() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * abstractions.MillisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * abstractions.MillisecondsPerMonth)        // Strip off the months.
-	milliseconds = milliseconds - (v.GetDays() * abstractions.MillisecondsPerDay)            // Strip off the days.
-	milliseconds = milliseconds - (v.GetHours() * abstractions.MillisecondsPerHour)          // Strip off the hours.
-	milliseconds = milliseconds - (v.GetMinutes() * abstractions.MillisecondsPerMinute)      // Strip off the minutes.
-	var seconds = milliseconds / abstractions.MillisecondsPerSecond                          // Strip off the milliseconds.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	milliseconds = milliseconds - (v.GetDays() * MillisecondsPerDay)            // Strip off the days.
+	milliseconds = milliseconds - (v.GetHours() * MillisecondsPerHour)          // Strip off the hours.
+	milliseconds = milliseconds - (v.GetMinutes() * MillisecondsPerMinute)      // Strip off the minutes.
+	var seconds = milliseconds / MillisecondsPerSecond                          // Strip off the milliseconds.
 	return seconds
 }
 
 // This method returns the minutes part of this duration.
 func (v Duration) GetMinutes() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * abstractions.MillisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * abstractions.MillisecondsPerMonth)        // Strip off the months.
-	milliseconds = milliseconds - (v.GetDays() * abstractions.MillisecondsPerDay)            // Strip off the days.
-	milliseconds = milliseconds - (v.GetHours() * abstractions.MillisecondsPerHour)          // Strip off the hours.
-	var minutes = milliseconds / abstractions.MillisecondsPerMinute                          // Strip off the seconds and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	milliseconds = milliseconds - (v.GetDays() * MillisecondsPerDay)            // Strip off the days.
+	milliseconds = milliseconds - (v.GetHours() * MillisecondsPerHour)          // Strip off the hours.
+	var minutes = milliseconds / MillisecondsPerMinute                          // Strip off the seconds and below.
 	return minutes
 }
 
 // This method returns the hours part of this duration.
 func (v Duration) GetHours() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * abstractions.MillisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * abstractions.MillisecondsPerMonth)        // Strip off the months.
-	milliseconds = milliseconds - (v.GetDays() * abstractions.MillisecondsPerDay)            // Strip off the days.
-	var hours = milliseconds / abstractions.MillisecondsPerHour                              // Strip off the minutes and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	milliseconds = milliseconds - (v.GetDays() * MillisecondsPerDay)            // Strip off the days.
+	var hours = milliseconds / MillisecondsPerHour                              // Strip off the minutes and below.
 	return hours
 }
 
 // This method returns the days part of this duration.
 func (v Duration) GetDays() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * abstractions.MillisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * abstractions.MillisecondsPerMonth)        // Strip off the months.
-	var days = milliseconds / abstractions.MillisecondsPerDay                                // Strip off the hours and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	var days = milliseconds / MillisecondsPerDay                                // Strip off the hours and below.
 	return days
 }
 
 // This method returns the weeks part of this duration.
 func (v Duration) GetWeeks() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * abstractions.MillisecondsPerYear) // Strip off the years.
-	var weeks = milliseconds / abstractions.MillisecondsPerWeek                              // Strip off the days and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	var weeks = milliseconds / MillisecondsPerWeek                              // Strip off the days and below.
 	return weeks
 }
 
 // This method returns the months part of this duration.
 func (v Duration) GetMonths() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * abstractions.MillisecondsPerYear) // Strip off the years.
-	var months = milliseconds / abstractions.MillisecondsPerMonth                            // Strip off the days and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	var months = milliseconds / MillisecondsPerMonth                            // Strip off the days and below.
 	return months
 }
 
 // This method returns the years part of this duration.
 func (v Duration) GetYears() int {
 	var milliseconds = magnitude(int(v))
-	var years = milliseconds / abstractions.MillisecondsPerYear // Slice off the months and below.
+	var years = milliseconds / MillisecondsPerYear // Slice off the months and below.
 	return years
 }
 
@@ -244,23 +265,23 @@ func stringToDuration(v string) (int, bool) {
 			case "-":
 				sign = -1
 			case "W":
-				milliseconds += value * float64(abstractions.MillisecondsPerWeek)
+				milliseconds += value * float64(MillisecondsPerWeek)
 			case "Y":
-				milliseconds += value * float64(abstractions.MillisecondsPerYear)
+				milliseconds += value * float64(MillisecondsPerYear)
 			case "M":
 				if isTime {
-					milliseconds += value * float64(abstractions.MillisecondsPerMinute)
+					milliseconds += value * float64(MillisecondsPerMinute)
 				} else {
-					milliseconds += value * float64(abstractions.MillisecondsPerMonth)
+					milliseconds += value * float64(MillisecondsPerMonth)
 				}
 			case "D":
-				milliseconds += value * float64(abstractions.MillisecondsPerDay)
+				milliseconds += value * float64(MillisecondsPerDay)
 			case "T":
 				isTime = true
 			case "H":
-				milliseconds += value * float64(abstractions.MillisecondsPerHour)
+				milliseconds += value * float64(MillisecondsPerHour)
 			case "S":
-				milliseconds += value * float64(abstractions.MillisecondsPerSecond)
+				milliseconds += value * float64(MillisecondsPerSecond)
 			}
 		}
 	}

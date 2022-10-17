@@ -49,3 +49,10 @@ func (v Symbol) AsString() string {
 func (v Symbol) String() string {
 	return v.AsString()
 }
+
+// SYMBOLIC INTERFACE
+
+// This method returns the identifier for this symbol.
+func (v Symbol) GetIdentifier() string {
+	return string(v)[1:] // Remove the leading '$'.
+}

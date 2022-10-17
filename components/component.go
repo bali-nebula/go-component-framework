@@ -12,18 +12,26 @@ package components
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	"reflect"
 )
 
 // COMPONENT IMPLEMENTATION
 
 // This constructor creates a new component.
 func Component[T any](entity T) abstractions.ComponentLike[T] {
-	return ComponentWithContext[T](entity, nil)
+	var v = &component[T]{}
+	// Perform argument validation.
+	v.SetEntity(entity)
+	return v
 }
 
 // This constructor creates a new component with the specified context.
 func ComponentWithContext[T any](entity T, context abstractions.ContextLike) abstractions.ComponentLike[T] {
-	return &component[T]{entity, context, ""}
+	var v = &component[T]{}
+	// Perform argument validation.
+	v.SetEntity(entity)
+	v.SetContext(context)
+	return v
 }
 
 // This type defines the structure and methods associated with a generic
@@ -43,9 +51,21 @@ func (v *component[T]) IsGeneric() bool {
 	return v.context != nil
 }
 
+func (v *component[T]) IsAnnotated() bool {
+	return len(v.note) > 0
+}
+
 // This method returns the entity for this component.
 func (v *component[T]) GetEntity() T {
 	return v.entity
+}
+
+// This method sets the entity for this component.
+func (v *component[T]) SetEntity(entity T) {
+	if !reflect.ValueOf(entity).IsValid() {
+		panic("A component requires an entity.")
+	}
+	v.entity = entity
 }
 
 // This method returns the context for this component.
@@ -53,12 +73,17 @@ func (v *component[T]) GetContext() abstractions.ContextLike {
 	return v.context
 }
 
+// This method sets the context for this component.
+func (v *component[T]) SetContext(context abstractions.ContextLike) {
+	v.context = context
+}
+
 // This method returns the note for this component.
 func (v *component[T]) GetNote() string {
 	return v.note
 }
 
-// This method sets the note for this component to a new value.
+// This method sets the note for this component.
 func (v *component[T]) SetNote(note string) {
 	v.note = note
 }

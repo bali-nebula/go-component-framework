@@ -67,8 +67,8 @@ func (v *valueExpression) GetIndices() abstractions.ListLike[any] {
 
 // This method sets the list of indices for this value expression.
 func (v *valueExpression) SetIndices(indices abstractions.ListLike[any]) {
-	if indices == nil {
-		panic("A value expression requires an array (possibly empty) of indices.")
+	if indices == nil || indices.IsEmpty() {
+		panic("A value expression requires at least one index.")
 	}
 	v.indices = indices
 }

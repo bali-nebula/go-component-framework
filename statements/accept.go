@@ -8,35 +8,37 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package components
+package statements
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// PARAMETER IMPLEMENTATION
+// ACCEPT CLAUSE IMPLEMENTATION
 
-// This constructor creates a new parameter.
-func Parameter(name string, value any) abstractions.ParameterLike {
-	if len(name) == 0 || name[0] != '$' {
-		panic("A parameter name must start with '$'.")
+// This constructor creates a new accept clause.
+func Accept(message any) abstractions.AcceptLike {
+	var v = &acceptClause{}
+	// Perform argument validation.
+	v.SetMessage(message)
+	return v
+}
+
+// This type defines the structure and methods associated with an accept
+// clause.
+type acceptClause struct {
+	message any
+}
+
+// This method returns the message expression for this accept clause.
+func (v *acceptClause) GetMessage() any {
+	return v.message
+}
+
+// This method sets the message expression for this accept clause.
+func (v *acceptClause) SetMessage(message any) {
+	if message == nil {
+		panic("An accept clause requires a message.")
 	}
-	return &parameter{name, value}
-}
-
-// This type defines the structure and methods associated with a context
-// parameter.
-type parameter struct {
-	name  string
-	value any
-}
-
-// This method returns the name of this parameter.
-func (v *parameter) GetName() string {
-	return v.name
-}
-
-// This method returns the value of this parameter.
-func (v *parameter) GetValue() any {
-	return v.value
+	v.message = message
 }

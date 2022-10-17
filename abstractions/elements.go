@@ -57,6 +57,11 @@ type Segmented interface {
 	GetFragment() string
 }
 
+// This interface defines the methods supported by all symbolic elements.
+type Symbolic interface {
+	GetIdentifier() string
+}
+
 // This interface defines the methods supported by all temporal elements.
 type Temporal interface {
 	// Return the entire time in specific units.
@@ -79,25 +84,6 @@ type Temporal interface {
 	GetMonths() int
 	GetYears() int
 }
-
-// These are locked to the Earth's daily revolutions.
-
-const MillisecondsPerSecond int = 1000
-const MillisecondsPerMinute int = MillisecondsPerSecond * 60
-const MillisecondsPerHour int = MillisecondsPerMinute * 60
-const MillisecondsPerDay int = MillisecondsPerHour * 24
-const MillisecondsPerWeek int = MillisecondsPerDay * 7
-
-// These are locked to the Earth's yearly orbit around the sun.
-
-const MillisecondsPerYear int = 31556952000
-const MillisecondsPerMonth int = MillisecondsPerYear / 12 // An average but exact value.
-
-// Tying the two together is where things get messy.
-
-const DaysPerMonth float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerDay)   // ~30.436875 days/month
-const WeeksPerMonth float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerWeek) // ~4.348125 weeks/month
-const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsPerDay)     // ~365.2425 days/year
 
 // LIBRARY INTERFACES
 

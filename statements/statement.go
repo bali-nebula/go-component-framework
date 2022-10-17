@@ -8,24 +8,16 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package abstractions
+package statements
 
-// COMPONENT INTERFACES
+import (
+	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+)
 
-// This interface defines the methods supported by all component-like types.
-type ComponentLike[T any] interface {
-	IsGeneric() bool
-	GetEntity() T
-	GetContext() ContextLike
-	GetNote() string
-	SetNote(note string)
-}
-
-// This interface defines the methods supported by all context-like types.
-type ContextLike interface {
-	GetNames() ListLike[Symbolic]
-	GetValue(name Symbolic) any
-	SetValue(name Symbolic, value any)
-	GetParameters() CatalogLike[Symbolic, any]
-	SetParameters(parameters CatalogLike[Symbolic, any])
+// This type defines the node structure associated with a Bali Document
+// Notation (BDN) statement containing a main clause and an optional
+// exception handling clause.
+type Statement struct {
+	MainClause      any
+	ExceptionClause *ExceptionClause
 }

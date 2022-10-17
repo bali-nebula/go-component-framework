@@ -16,38 +16,49 @@ import (
 
 // CONTEXT IMPLEMENTATION
 
-// This constructor creates a new context.
-func Context(parameters []abstractions.ParameterLike) abstractions.ContextLike {
-	if len(parameters) == 0 {
-		panic("A context must have at least one parameter.")
-	}
-	return &context{parameters}
+// This constructor creates a new component context.
+func Context(parameters abstractions.CatalogLike[abstractions.Symbolic, any]) abstractions.ContextLike {
+	var v = &context{}
+	// Perform argument validation.
+	v.SetParameters(parameters)
+	return v
 }
 
 // This type defines the structure and methods associated with a component
 // context.
 type context struct {
-	parameters []abstractions.ParameterLike
+	parameters abstractions.CatalogLike[abstractions.Symbolic, any]
 }
 
-// This method returns the names of the parameters in this context.
-func (v *context) GetNames() []string {
-	var names = make([]string, len(v.parameters))
-	var index = 0
-	for _, parameter := range v.parameters {
-		names[index] = parameter.GetName()
-		index++
-	}
-	return names
+// This method returns the list of parameter names from this component context.
+func (v *context) GetNames() abstractions.ListLike[abstractions.Symbolic] {
+	return v.parameters.GetKeys()
 }
 
-// This method returns the value of the specified parameter from this context
-// or nil if it does not exist.
-func (v *context) GetValue(name string) any {
-	for _, parameter := range v.parameters {
-		if parameter.GetName() == name {
-			return parameter.GetValue()
-		}
+// This method returns the parameter value with the specified name from this
+// component context.
+func (v *context) GetValue(name abstractions.Symbolic) any {
+	return v.parameters.GetValue(name)
+}
+
+// This method sets the parameter with the specified name to the specified value
+// for this component context.
+func (v *context) SetValue(name abstractions.Symbolic, value any) {
+	if value == nil {
+		panic("Each parameter for an component context requires a value.")
 	}
-	return nil
+	v.parameters.SetValue(name, value)
+}
+
+// This method returns the catalog of parameters for this component context.
+func (v *context) GetParameters() abstractions.CatalogLike[abstractions.Symbolic, any] {
+	return v.parameters
+}
+
+// This method sets the catalog of parameters for this component context.
+func (v *context) SetParameters(parameters abstractions.CatalogLike[abstractions.Symbolic, any]) {
+	if parameters == nil || parameters.IsEmpty() {
+		panic("An component context requires at least one parameter.")
+	}
+	v.parameters = parameters
 }

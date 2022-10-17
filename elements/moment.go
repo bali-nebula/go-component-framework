@@ -12,7 +12,6 @@ package elements
 
 import (
 	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	"strconv"
 	"strings"
 	"time"
@@ -123,12 +122,12 @@ func (v Moment) AsWeeks() float64 {
 
 // This method returns the total number of months since epoc in this moment.
 func (v Moment) AsMonths() float64 {
-	return v.AsDays() / abstractions.DaysPerMonth
+	return v.AsDays() / DaysPerMonth
 }
 
 // This method returns the total number of years since epoc in this moment.
 func (v Moment) AsYears() float64 {
-	return v.AsDays() / abstractions.DaysPerYear
+	return v.AsDays() / DaysPerYear
 }
 
 // This method returns the millisecond part of this moment.
