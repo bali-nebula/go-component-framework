@@ -48,11 +48,11 @@ var lexicon = map[string]string{
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
-	"$entity":          `element | string | collection | procedure`,
-	"$evaluateClause":  `[recipient (":=" | "+=" | "-=" | "*=" | "/=")] expression`,
-	"$exception":       `SYMBOL`,
-	"$exceptionClause": `"on" exception <"matching" expression "do" "{" statements "}">`,
-	"$exponential":     `expression "^" expression`,
+	"$entity":         `element | string | collection | procedure`,
+	"$evaluateClause": `[recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
+	"$exception":      `SYMBOL`,
+	"$onClause":       `"on" exception <"matching" expression "do" "{" statements "}">`,
+	"$exponential":    `expression "^" expression`,
 	"$expression": `
     component |
     variable |
@@ -121,7 +121,7 @@ var lexicon = map[string]string{
 	"$saveClause":     `"save" expression "as" recipient`,
 	"$selectClause":   `"select" expression <"matching" expression "do" "{" statements "}">`,
 	"$sequence":       `catalog | list | range`,
-	"$statement":      `mainClause [exceptionClause]`,
+	"$statement":      `mainClause [onClause]`,
 	"$statements": `
     statement {";" statement} |
     EOL {(annotation | statement) EOL} |
