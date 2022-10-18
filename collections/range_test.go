@@ -73,15 +73,6 @@ func TestRangesWithRunes(t *testing.T) {
 
 	var a = collections.List[rune]()
 	var items = s.AsArray()
-	a.AddItems(items)
+	a.AddItems(s)
 	assert.Equal(t, items, a.AsArray())
-	s = collections.Range[rune]('f', "..", 'm')
-	var l = collections.Ranges[rune]()
-	var c = l.Cut(a, s)
-	assert.Equal(t, "fghijklm", string(c))
-
-	s = collections.Range[rune]('q', "..", 'v')
-	var q = l.Splice(a, s, c)
-	assert.Equal(t, "qrstuv", string(q))
-	assert.Equal(t, "abcdenopfghijklmwxyz", string(a.AsArray()))
 }

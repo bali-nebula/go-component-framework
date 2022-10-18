@@ -19,14 +19,15 @@ import (
 )
 
 func TestCatalogsWithStringsAndIntegers(t *testing.T) {
+	var keys = collections.ListFromArray([]string{"foo", "bar"})
 	var association1 = collections.Association[string, int]("foo", 1)
 	var association2 = collections.Association[string, int]("bar", 2)
 	var association3 = collections.Association[string, int]("baz", 3)
-	var associations = []abstractions.AssociationLike[string, int]{association2, association3}
+	var associations = collections.ListFromArray([]abstractions.AssociationLike[string, int]{association2, association3})
 	var catalog = collections.Catalog[string, int]()
 	assert.True(t, catalog.IsEmpty())
 	assert.Equal(t, 0, catalog.GetSize())
-	assert.Equal(t, []string{}, catalog.GetKeys())
+	assert.Equal(t, []string{}, catalog.GetKeys().AsArray())
 	assert.Equal(t, []abstractions.AssociationLike[string, int]{}, catalog.AsArray())
 	var iterator = agents.Iterator[abstractions.AssociationLike[string, int]](catalog)
 	assert.False(t, iterator.HasNext())
@@ -42,7 +43,7 @@ func TestCatalogsWithStringsAndIntegers(t *testing.T) {
 	catalog.AddAssociations(associations)
 	assert.Equal(t, 3, catalog.GetSize())
 	assert.Equal(t, association1, catalog.GetItem(1))
-	assert.Equal(t, associations, catalog.GetItems(2, 3))
+	assert.Equal(t, associations.AsArray(), catalog.GetItems(2, 3).AsArray())
 	iterator = agents.Iterator[abstractions.AssociationLike[string, int]](catalog)
 	assert.True(t, iterator.HasNext())
 	assert.False(t, iterator.HasPrevious())
@@ -53,16 +54,16 @@ func TestCatalogsWithStringsAndIntegers(t *testing.T) {
 	assert.True(t, iterator.HasPrevious())
 	assert.Equal(t, association3, iterator.GetPrevious())
 	assert.True(t, iterator.HasNext())
-	assert.Equal(t, []string{"foo", "bar", "baz"}, catalog.GetKeys())
+	assert.Equal(t, []string{"foo", "bar", "baz"}, catalog.GetKeys().AsArray())
 	assert.Equal(t, 3, int(catalog.GetValue("baz")))
 	catalog.SetValue("bar", 5)
-	assert.Equal(t, []int{1, 5}, catalog.GetValues([]string{"foo", "bar"}))
+	assert.Equal(t, []int{1, 5}, catalog.GetValues(keys).AsArray())
 	catalog.SortAssociations()
-	assert.Equal(t, []string{"bar", "baz", "foo"}, catalog.GetKeys())
+	assert.Equal(t, []string{"bar", "baz", "foo"}, catalog.GetKeys().AsArray())
 	catalog.ReverseAssociations()
-	assert.Equal(t, []string{"foo", "baz", "bar"}, catalog.GetKeys())
+	assert.Equal(t, []string{"foo", "baz", "bar"}, catalog.GetKeys().AsArray())
 	catalog.ReverseAssociations()
-	assert.Equal(t, []int{1, 5}, catalog.RemoveValues([]string{"foo", "bar"}))
+	assert.Equal(t, []int{1, 5}, catalog.RemoveValues(keys).AsArray())
 	assert.Equal(t, 1, catalog.GetSize())
 	assert.Equal(t, 3, int(catalog.RemoveValue("baz")))
 	assert.True(t, catalog.IsEmpty())
@@ -92,6 +93,7 @@ func TestCatalogsWithMerge(t *testing.T) {
 }
 
 func TestCatalogsWithExtract(t *testing.T) {
+	var keys = collections.ListFromArray([]string{"foo", "baz"})
 	var catalogs = collections.Catalogs[string, int]()
 	var association1 = collections.Association[string, int]("foo", 1)
 	var association2 = collections.Association[string, int]("bar", 2)
@@ -100,7 +102,7 @@ func TestCatalogsWithExtract(t *testing.T) {
 	catalog1.AddAssociation(association1)
 	catalog1.AddAssociation(association2)
 	catalog1.AddAssociation(association3)
-	var catalog2 = catalogs.Extract(catalog1, []string{"foo", "baz"})
+	var catalog2 = catalogs.Extract(catalog1, keys)
 	var catalog3 = collections.Catalog[string, int]()
 	catalog3.AddAssociation(association1)
 	catalog3.AddAssociation(association3)
@@ -108,7 +110,7 @@ func TestCatalogsWithExtract(t *testing.T) {
 }
 
 func TestCatalogsWithEmptyCatalogs(t *testing.T) {
-	var keys = []int{}
+	var keys = collections.List[int]()
 	var catalogs = collections.Catalogs[int, string]()
 	var catalog1 = collections.Catalog[int, string]()
 	var catalog2 = collections.Catalog[int, string]()

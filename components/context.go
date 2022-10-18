@@ -31,7 +31,7 @@ type context struct {
 }
 
 // This method returns the list of parameter names from this component context.
-func (v *context) GetNames() abstractions.ListLike[abstractions.Symbolic] {
+func (v *context) GetNames() abstractions.Sequential[abstractions.Symbolic] {
 	return v.parameters.GetKeys()
 }
 

@@ -11,8 +11,8 @@
 package collections
 
 import (
-	"fmt"
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	"github.com/craterdog-bali/go-bali-document-notation/agents"
 	"sync"
 )
 
@@ -96,8 +96,10 @@ func (v *queue[T]) AddItem(item T) {
 }
 
 // This method adds the specified items to the top of this queue.
-func (v *queue[T]) AddItems(items []T) {
-	for _, item := range items {
+func (v *queue[T]) AddItems(items abstractions.Sequential[T]) {
+	var iterator = agents.Iterator(items)
+	for iterator.HasNext() {
+		var item = iterator.GetNext()
 		v.mutex.Lock()
 		v.items.AddItem(item)
 		v.mutex.Unlock()
@@ -151,17 +153,17 @@ type queues[T any] struct{}
 // added automatically to ALL of the output queues. This pattern is useful when
 // a set of DIFFERENT operations needs to occur for every item and each
 // operation can be done in parallel.
-func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size int) []abstractions.FIFO[T] {
+func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size int) abstractions.Sequential[abstractions.FIFO[T]] {
 	// Validate the arguments.
 	if size < 1 {
-		panic(fmt.Sprintf("The fan out size for a queue must be greater than zero: %v!", size))
+		panic("The fan out size for a queue must be greater than zero.")
 	}
 
 	// Create the new output queues.
 	var capacity = input.GetCapacity()
-	var outputs = make([]abstractions.FIFO[T], size)
-	for index, _ := range outputs {
-		outputs[index] = abstractions.FIFO[T](QueueWithCapacity[T](capacity))
+	var outputs = List[abstractions.FIFO[T]]()
+	for i := 0; i < size; i++ {
+		outputs.AddItem(abstractions.FIFO[T](QueueWithCapacity[T](capacity)))
 	}
 
 	// Connect up the input queue to the output queues in a separate goroutine.
@@ -171,16 +173,26 @@ func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size in
 		defer wg.Done()
 
 		// Write each item read from the input queue to each output queue.
-		var item, ok = input.RemoveHead() // Will block when empty.
-		for ok {
-			for _, output := range outputs {
+		var iterator = agents.Iterator[abstractions.FIFO[T]](outputs)
+		for {
+			// Read from the input queue.
+			var item, ok = input.RemoveHead() // Will block when empty.
+			if !ok {
+				break // The input queue has been closed.
+			}
+
+			// Write to all output queues.
+			iterator.ToStart()
+			for iterator.HasNext() {
+				var output = iterator.GetNext()
 				output.AddItem(item) // Will block when full.
 			}
-			item, ok = input.RemoveHead() // Will block when empty.
 		}
 
 		// Close all output queues.
-		for _, output := range outputs {
+		iterator.ToStart()
+		for iterator.HasNext() {
+			var output = iterator.GetNext()
 			output.CloseQueue()
 		}
 	}()
@@ -195,17 +207,17 @@ func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size in
 // a SINGLE operation needs to occur for each item and the operation can be done
 // on the items in parallel. The results can then be consolidated later on using
 // the Join() function.
-func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size int) []abstractions.FIFO[T] {
+func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size int) abstractions.Sequential[abstractions.FIFO[T]] {
 	// Validate the arguments.
 	if size < 1 {
-		panic(fmt.Sprintf("The size of the split must be greater than zero: %v!", size))
+		panic("The size of the split must be greater than zero.")
 	}
 
 	// Create the new output queues.
 	var capacity = input.GetCapacity()
-	var outputs = make([]abstractions.FIFO[T], size)
-	for index, _ := range outputs {
-		outputs[index] = QueueWithCapacity[T](capacity)
+	var outputs = List[abstractions.FIFO[T]]()
+	for i := 0; i < size; i++ {
+		outputs.AddItem(abstractions.FIFO[T](QueueWithCapacity[T](capacity)))
 	}
 
 	// Connect up the input queue to the output queues.
@@ -215,16 +227,26 @@ func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size i
 		defer wg.Done()
 
 		// Take turns reading from the input queue and writing to each output queue.
-		var i = 0
-		var item, ok = input.RemoveHead() // Will block when empty.
-		for ok {
-			outputs[i].AddItem(item) // Will block when full.
-			i = (i + 1) % size
-			item, ok = input.RemoveHead() // Will block when empty.
+		var iterator = agents.Iterator[abstractions.FIFO[T]](outputs)
+		for {
+			// Read from the input queue.
+			var item, ok = input.RemoveHead() // Will block when empty.
+			if !ok {
+				break // The input queue has been closed.
+			}
+
+			// Write to the next output queue.
+			var output = iterator.GetNext()
+			output.AddItem(item) // Will block when full.
+			if !iterator.HasNext() {
+				iterator.ToStart()
+			}
 		}
 
 		// Close all output queues.
-		for _, output := range outputs {
+		iterator.ToStart()
+		for iterator.HasNext() {
+			var output = iterator.GetNext()
 			output.CloseQueue()
 		}
 	}()
@@ -237,15 +259,15 @@ func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size i
 // removed from each input queue will automatically be added to the output
 // queue. This pattern is useful when the results of the processing with a
 // Split() function need to be consolicated into a single queue.
-func (l *queues[T]) Join(wg *sync.WaitGroup, inputs []abstractions.FIFO[T]) abstractions.FIFO[T] {
+func (l *queues[T]) Join(wg *sync.WaitGroup, inputs abstractions.Sequential[abstractions.FIFO[T]]) abstractions.FIFO[T] {
 	// Validate the arguments.
-	var size = len(inputs)
-	if size < 1 {
-		panic(fmt.Sprintf("The number of input queues for a join must be greater than zero: %v!", size))
+	if inputs == nil || inputs.IsEmpty() {
+		panic("The number of input queues for a join must be greater than zero.")
 	}
 
 	// Create the new output queue.
-	var capacity = inputs[0].GetCapacity()
+	var iterator = agents.Iterator(inputs)
+	var capacity = iterator.GetNext().GetCapacity()
 	var output = QueueWithCapacity[T](capacity)
 
 	// Connect up the input queues to the output queue.
@@ -255,12 +277,17 @@ func (l *queues[T]) Join(wg *sync.WaitGroup, inputs []abstractions.FIFO[T]) abst
 		defer wg.Done()
 
 		// Take turns reading from each input queue and writing to the output queue.
-		var i = 0
-		var item, ok = inputs[i].RemoveHead() // Will block when empty.
-		for ok {
+		iterator.ToStart()
+		for {
+			var input = iterator.GetNext()
+			var item, ok = input.RemoveHead() // Will block when empty.
+			if !ok {
+				break // The input queue has been closed.
+			}
 			output.AddItem(item) // Will block when full.
-			i = (i + 1) % size
-			item, ok = inputs[i].RemoveHead() // Will block when empty.
+			if !iterator.HasNext() {
+				iterator.ToStart()
+			}
 		}
 
 		// Close the output queue.

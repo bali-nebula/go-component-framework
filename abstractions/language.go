@@ -60,9 +60,10 @@ func ScanAngle(v []byte) []string {
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Binary
 const (
-	whitespace = `\pS` // All unicode whitespace characters.
-	base64     = `[A-Za-z0-9+/]`
-	binary     = `'((?:` + base64 + `|` + whitespace + `)*)'`
+	space  = ` `
+	eol    = "\n"
+	base64 = `[A-Za-z0-9+/]`
+	binary = `'((?:` + base64 + `|` + space + `|` + eol + `)*)'`
 )
 
 // This scanner is used for matching binary strings.
@@ -103,6 +104,10 @@ func ScanBoolean(v []byte) []string {
 // this implementation.
 func ScanComment(v []byte) []string {
 	var result []string
+	var space = []byte(" ")
+	var eol = []byte("\n")
+	var bangAngle = []byte("!>" + "\n")
+	var angleBang = []byte("<!")
 	if !bytes.HasPrefix(v, bangAngle) {
 		return result
 	}
@@ -270,6 +275,10 @@ func ScanMoniker(v []byte) []string {
 // not used in this implementation.
 func ScanNarrative(v []byte) []string {
 	var result []string
+	var quoteAngle = []byte(`">` + "\n")
+	var angleQuote = []byte(`<"`)
+	var space = []byte(" ")
+	var eol = []byte("\n")
 	if !bytes.HasPrefix(v, quoteAngle) {
 		return result
 	}
@@ -529,17 +538,6 @@ func ScanVersion(v []byte) []string {
 
 // PRIVATE CONSTANTS
 
-// The following constants define some important byte sequences.
-var (
-	eol         = []byte("\n")
-	space       = []byte(" ")
-	doubleQuote = []byte(`"`)
-	quoteAngle  = []byte(`">` + "\n")
-	angleQuote  = []byte(`<"`)
-	bangAngle   = []byte("!>" + "\n")
-	angleBang   = []byte("<!")
-)
-
 // This array contains the full set of keywords used by the Bali Document
 // Notation™ (BDN). They are in reverse order for proper matching.
 var keywords = [][]byte{
@@ -554,13 +552,13 @@ var keywords = [][]byte{
 	[]byte("reject"),
 	[]byte("publish"),
 	[]byte("post"),
+	[]byte("on"),
 	[]byte("notarize"),
 	[]byte("matching"),
 	[]byte("loop"),
 	[]byte("level"),
 	[]byte("in"),
 	[]byte("if"),
-	[]byte("handle"),
 	[]byte("from"),
 	[]byte("each"),
 	[]byte("do"),
@@ -590,7 +588,7 @@ var delimiters = [][]byte{
 	[]byte("]"),
 	[]byte("["),
 	[]byte("@"),
-	[]byte("?"),
+	[]byte("?="),
 	[]byte(">"),
 	[]byte("="),
 	[]byte("<..<"),

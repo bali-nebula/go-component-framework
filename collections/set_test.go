@@ -19,53 +19,61 @@ import (
 )
 
 func TestSetsWithStrings(t *testing.T) {
-	var set = collections.Set[string]()                         // [ ]
-	assert.True(t, set.IsEmpty())                               // [ ]
-	assert.Equal(t, 0, set.GetSize())                           // [ ]
-	assert.False(t, set.ContainsItem("bax"))                    // [ ]
-	assert.Equal(t, []string{}, set.AsArray())                  // [ ]
-	var iterator = agents.Iterator[string](set)                 // [ ]
-	assert.False(t, iterator.HasNext())                         // [ ]
-	assert.False(t, iterator.HasPrevious())                     // [ ]
-	iterator.ToStart()                                          // [ ]
-	iterator.ToEnd()                                            // [ ]
-	set.RemoveAll()                                             // [ ]
-	set.RemoveItem("foo")                                       // [ ]
-	set.AddItem("foo")                                          // ["foo"]
-	assert.False(t, set.IsEmpty())                              // ["foo"]
-	assert.Equal(t, 1, set.GetSize())                           // ["foo"]
-	assert.Equal(t, "foo", string(set.GetItem(1)))              // ["foo"]
-	assert.True(t, set.ContainsItem("foo"))                     // ["foo"]
-	assert.False(t, set.ContainsItem("bax"))                    // ["foo"]
-	set.AddItems([]string{"baz", "bar"})                        // ["bar", "baz", "foo"]
-	assert.Equal(t, 3, set.GetSize())                           // ["bar", "baz", "foo"]
-	assert.Equal(t, "bar", string(set.GetItem(1)))              // ["bar", "baz", "foo"]
-	assert.Equal(t, []string{"baz", "foo"}, set.GetItems(2, 3)) // ["bar", "baz", "foo"]
-	assert.Equal(t, []string{"bar"}, set.GetItems(1, 1))        // ["bar", "baz", "foo"]
-	iterator = agents.Iterator[string](set)                     // ["bar", "baz", "foo"]
-	assert.True(t, iterator.HasNext())                          // ["bar", "baz", "foo"]
-	assert.False(t, iterator.HasPrevious())                     // ["bar", "baz", "foo"]
-	assert.Equal(t, "bar", string(iterator.GetNext()))          // ["bar", "baz", "foo"]
-	assert.True(t, iterator.HasPrevious())                      // ["bar", "baz", "foo"]
-	iterator.ToEnd()                                            // ["bar", "baz", "foo"]
-	assert.False(t, iterator.HasNext())                         // ["bar", "baz", "foo"]
-	assert.True(t, iterator.HasPrevious())                      // ["bar", "baz", "foo"]
-	assert.Equal(t, "foo", string(iterator.GetPrevious()))      // ["bar", "baz", "foo"]
-	assert.True(t, iterator.HasNext())                          // ["bar", "baz", "foo"]
-	assert.True(t, set.ContainsItem("baz"))                     // ["bar", "baz", "foo"]
-	assert.False(t, set.ContainsItem("bax"))                    // ["bar", "baz", "foo"]
-	assert.True(t, set.ContainsAny([]string{"bax", "baz"}))     // ["bar", "baz", "foo"]
-	assert.False(t, set.ContainsAny([]string{"bax", "bez"}))    // ["bar", "baz", "foo"]
-	assert.True(t, set.ContainsAll([]string{"bar", "baz"}))     // ["bar", "baz", "foo"]
-	assert.False(t, set.ContainsAll([]string{"bax", "baz"}))    // ["bar", "baz", "foo"]
-	set.RemoveAll()                                             // [ ]
-	assert.True(t, set.IsEmpty())                               // [ ]
-	assert.Equal(t, 0, set.GetSize())                           // [ ]
+	var empty = []string{}
+	var bazbar = collections.ListFromArray([]string{"baz", "bar"})
+	var bazfoo = collections.ListFromArray([]string{"baz", "foo"})
+	var baxbaz = collections.ListFromArray([]string{"bax", "baz"})
+	var baxbez = collections.ListFromArray([]string{"bax", "bez"})
+	var barbaz = collections.ListFromArray([]string{"bar", "baz"})
+	var bar = collections.ListFromArray([]string{"bar"})
+	var set = collections.Set[string]()                             // [ ]
+	assert.True(t, set.IsEmpty())                                   // [ ]
+	assert.Equal(t, 0, set.GetSize())                               // [ ]
+	assert.False(t, set.ContainsItem("bax"))                        // [ ]
+	assert.Equal(t, empty, set.AsArray())                           // [ ]
+	var iterator = agents.Iterator[string](set)                     // [ ]
+	assert.False(t, iterator.HasNext())                             // [ ]
+	assert.False(t, iterator.HasPrevious())                         // [ ]
+	iterator.ToStart()                                              // [ ]
+	iterator.ToEnd()                                                // [ ]
+	set.RemoveAll()                                                 // [ ]
+	set.RemoveItem("foo")                                           // [ ]
+	set.AddItem("foo")                                              // ["foo"]
+	assert.False(t, set.IsEmpty())                                  // ["foo"]
+	assert.Equal(t, 1, set.GetSize())                               // ["foo"]
+	assert.Equal(t, "foo", string(set.GetItem(1)))                  // ["foo"]
+	assert.True(t, set.ContainsItem("foo"))                         // ["foo"]
+	assert.False(t, set.ContainsItem("bax"))                        // ["foo"]
+	set.AddItems(bazbar)                                            // ["bar", "baz", "foo"]
+	assert.Equal(t, 3, set.GetSize())                               // ["bar", "baz", "foo"]
+	assert.Equal(t, "bar", string(set.GetItem(1)))                  // ["bar", "baz", "foo"]
+	assert.Equal(t, bazfoo.AsArray(), set.GetItems(2, 3).AsArray()) // ["bar", "baz", "foo"]
+	assert.Equal(t, bar.AsArray(), set.GetItems(1, 1).AsArray())    // ["bar", "baz", "foo"]
+	iterator = agents.Iterator[string](set)                         // ["bar", "baz", "foo"]
+	assert.True(t, iterator.HasNext())                              // ["bar", "baz", "foo"]
+	assert.False(t, iterator.HasPrevious())                         // ["bar", "baz", "foo"]
+	assert.Equal(t, "bar", string(iterator.GetNext()))              // ["bar", "baz", "foo"]
+	assert.True(t, iterator.HasPrevious())                          // ["bar", "baz", "foo"]
+	iterator.ToEnd()                                                // ["bar", "baz", "foo"]
+	assert.False(t, iterator.HasNext())                             // ["bar", "baz", "foo"]
+	assert.True(t, iterator.HasPrevious())                          // ["bar", "baz", "foo"]
+	assert.Equal(t, "foo", string(iterator.GetPrevious()))          // ["bar", "baz", "foo"]
+	assert.True(t, iterator.HasNext())                              // ["bar", "baz", "foo"]
+	assert.True(t, set.ContainsItem("baz"))                         // ["bar", "baz", "foo"]
+	assert.False(t, set.ContainsItem("bax"))                        // ["bar", "baz", "foo"]
+	assert.True(t, set.ContainsAny(baxbaz))                         // ["bar", "baz", "foo"]
+	assert.False(t, set.ContainsAny(baxbez))                        // ["bar", "baz", "foo"]
+	assert.True(t, set.ContainsAll(barbaz))                         // ["bar", "baz", "foo"]
+	assert.False(t, set.ContainsAll(baxbaz))                        // ["bar", "baz", "foo"]
+	set.RemoveAll()                                                 // [ ]
+	assert.True(t, set.IsEmpty())                                   // [ ]
+	assert.Equal(t, 0, set.GetSize())                               // [ ]
 }
 
 func TestSetsWithIntegers(t *testing.T) {
+	var list = collections.ListFromArray([]int{3, 1, 4, 5, 9, 2})
 	var set = collections.Set[int]()         // [ ]
-	set.AddItems([]int{3, 1, 4, 5, 9, 2})    // [1,2,3,4,5,9]
+	set.AddItems(list)                       // [1,2,3,4,5,9]
 	assert.False(t, set.IsEmpty())           // [1,2,3,4,5,9]
 	assert.Equal(t, 6, set.GetSize())        // [1,2,3,4,5,9]
 	assert.Equal(t, 1, int(set.GetItem(1)))  // [1,2,3,4,5,9]
@@ -78,12 +86,15 @@ func TestSetsWithIntegers(t *testing.T) {
 }
 
 func TestSetsWithSets(t *testing.T) {
+	var list1 = collections.ListFromArray([]int{3, 1, 4, 5, 9, 2})
+	var list2 = collections.ListFromArray([]int{7, 1, 4, 5, 9, 2})
 	var set1 = collections.Set[int]()
-	set1.AddItems([]int{3, 1, 4, 5, 9, 2})
+	set1.AddItems(list1)
 	var set2 = collections.Set[int]()
-	set2.AddItems([]int{7, 1, 4, 5, 9, 2})
+	set2.AddItems(list2)
 	var set = collections.Set[abstractions.SetLike[int]]()
-	set.AddItems([]abstractions.SetLike[int]{set1, set2})
+	var list3 = collections.ListFromArray([]abstractions.SetLike[int]{set1, set2})
+	set.AddItems(list3)
 	assert.False(t, set.IsEmpty())
 	assert.Equal(t, 2, set.GetSize())
 	assert.Equal(t, set1, set.GetItem(1))
@@ -95,52 +106,64 @@ func TestSetsWithSets(t *testing.T) {
 }
 
 func TestSetsWithAnd(t *testing.T) {
+	var list1 = collections.ListFromArray([]int{3, 1, 2})
+	var list2 = collections.ListFromArray([]int{3, 2, 4})
+	var list3 = collections.ListFromArray([]int{3, 2})
 	var sets = collections.Sets[int]()
 	var set1 = collections.Set[int]()
-	set1.AddItems([]int{3, 1, 2})
+	set1.AddItems(list1)
 	var set2 = collections.Set[int]()
-	set2.AddItems([]int{3, 2, 4})
+	set2.AddItems(list2)
 	var set3 = sets.And(set1, set2)
 	var set4 = collections.Set[int]()
-	set4.AddItems([]int{3, 2})
+	set4.AddItems(list3)
 	assert.True(t, agents.CompareValues(set3, set4))
 }
 
 func TestSetsWithSans(t *testing.T) {
+	var list1 = collections.ListFromArray([]int{3, 1, 2})
+	var list2 = collections.ListFromArray([]int{3, 2, 4})
+	var list3 = collections.ListFromArray([]int{1})
 	var sets = collections.Sets[int]()
 	var set1 = collections.Set[int]()
-	set1.AddItems([]int{3, 1, 2})
+	set1.AddItems(list1)
 	var set2 = collections.Set[int]()
-	set2.AddItems([]int{3, 2, 4})
+	set2.AddItems(list2)
 	var set3 = sets.Sans(set1, set2)
 	var set4 = collections.Set[int]()
-	set4.AddItems([]int{1})
+	set4.AddItems(list3)
 	assert.True(t, agents.CompareValues(set3, set4))
 }
 
 func TestSetsWithOr(t *testing.T) {
+	var list1 = collections.ListFromArray([]int{3, 1, 5})
+	var list2 = collections.ListFromArray([]int{6, 2, 4})
+	var list3 = collections.ListFromArray([]int{1, 3, 5, 6, 2, 4})
 	var sets = collections.Sets[int]()
 	var set1 = collections.Set[int]()
-	set1.AddItems([]int{3, 1, 5})
+	set1.AddItems(list1)
 	var set2 = collections.Set[int]()
-	set2.AddItems([]int{6, 2, 4})
+	set2.AddItems(list2)
 	var set3 = sets.Or(set1, set2)
-	assert.True(t, set3.ContainsAll(set1.AsArray()))
-	assert.True(t, set3.ContainsAll(set2.AsArray()))
+	assert.True(t, set3.ContainsAll(set1))
+	assert.True(t, set3.ContainsAll(set2))
 	var set4 = collections.Set[int]()
-	set4.AddItems([]int{1, 3, 5, 6, 2, 4})
+	set4.AddItems(list3)
 	assert.True(t, agents.CompareValues(set3, set4))
 }
 
 func TestSetsWithXor(t *testing.T) {
+	var list1 = collections.ListFromArray([]int{2, 3, 1, 5})
+	var list2 = collections.ListFromArray([]int{6, 2, 5, 4})
+	var list3 = collections.ListFromArray([]int{1, 3, 4, 6})
 	var sets = collections.Sets[int]()
 	var set1 = collections.Set[int]()
-	set1.AddItems([]int{2, 3, 1, 5})
+	set1.AddItems(list1)
 	var set2 = collections.Set[int]()
-	set2.AddItems([]int{6, 2, 5, 4})
+	set2.AddItems(list2)
 	var set3 = sets.Xor(set1, set2)
 	var set4 = collections.Set[int]()
-	set4.AddItems([]int{1, 3, 4, 6})
+	set4.AddItems(list3)
 	assert.True(t, agents.CompareValues(set3, set4))
 }
 

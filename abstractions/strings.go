@@ -37,8 +37,9 @@ type Sequential[T any] interface {
 // Notice that because the indices are ordinal based, the positive and negative
 // indices are symmetrical.
 type Indexed[T any] interface {
+	SetComparer(compare ComparisonFunction)
 	GetItem(index int) T
-	GetItems(first int, last int) []T
+	GetItems(first int, last int) Sequential[T]
 	GetIndex(item T) int
 }
 
@@ -69,14 +70,6 @@ func NormalizedIndex(index int, length int) int {
 	}
 }
 
-// LIBRARY INTERFACES
-
-// This library interface defines the functions supported by all libraries of
-// chainable items.
-type Chainable[T any] interface {
-	Concatenate(first Sequential[T], second Sequential[T]) Sequential[T]
-}
-
 // CONSOLIDATED INTERFACES
 
 // This interface consolidates all the interfaces supported by string-like
@@ -84,4 +77,12 @@ type Chainable[T any] interface {
 type StringLike[T any] interface {
 	Sequential[T]
 	Indexed[T]
+}
+
+// LIBRARY INTERFACES
+
+// This library interface defines the functions supported by all libraries of
+// chainable items.
+type Chainable[T any] interface {
+	Concatenate(first StringLike[T], second StringLike[T]) StringLike[T]
 }

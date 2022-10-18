@@ -13,8 +13,8 @@ package language
 import (
 	"fmt"
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	"github.com/craterdog-bali/go-bali-document-notation/collections"
 	"github.com/craterdog-bali/go-bali-document-notation/components"
-	"github.com/craterdog-bali/go-bali-document-notation/elements"
 )
 
 // PARSING METHODS
@@ -60,7 +60,7 @@ func (v *parser) parseComponent() (abstractions.ComponentLike[any], *Token, bool
 func (v *parser) parseContext() (abstractions.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameters []abstractions.ParameterLike
+	var parameters abstractions.CatalogLike[abstractions.Symbolic, any]
 	var context abstractions.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
@@ -196,59 +196,55 @@ func (v *parser) parseNote() (string, *Token, bool) {
 	return note, token, true
 }
 
-// This method attempts to parse a parameter. It returns the parameter and
-// whether or not the parameter was successfully parsed.
-func (v *parser) parseParameter() (abstractions.ParameterLike, *Token, bool) {
+// This method attempts to parse a parameter containing a name and value. It
+// returns the parameter and whether or not the parameter was successfully
+// parsed.
+func (v *parser) parseParameter() (abstractions.AssociationLike[abstractions.Symbolic, any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var symbol elements.Symbol
-	var value abstractions.ComponentLike[any]
-	symbol, token, ok = v.parseSymbol()
+	var name abstractions.Symbolic
+	var value any
+	name, token, ok = v.parseSymbol()
 	if !ok {
+		// This is not a parameter.
 		return nil, token, false
 	}
 	_, token, ok = v.parseDelimiter(":")
 	if !ok {
-		var message = fmt.Sprintf("Expected a ':' character after the name but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$parameter",
-			"$name")
-		panic(message)
+		// This is not a parameter.
+		v.backupOne() // Put back the symbol token.
+		return nil, token, false
 	}
+	// This must be a parameter.
 	value, token, ok = v.parseComponent()
 	if !ok {
-		var message = fmt.Sprintf("Expected a component following the ':' character but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$parameter",
-			"$name")
-		panic(message)
+		panic("Expected a value after the ':' character.")
 	}
-	var parameter = components.Parameter(symbol.AsString(), value)
+	var parameter = collections.Association[abstractions.Symbolic, any](name, value)
 	return parameter, token, true
 }
 
-// This method attempts to parse the parameters within a context. It returns an
-// array of the parameters and whether or not the parameters were successfully
-// parsed.
-func (v *parser) parseParameters() ([]abstractions.ParameterLike, *Token, bool) {
-	var parameter abstractions.ParameterLike
-	var parameters []abstractions.ParameterLike
-	var _, token, ok = v.parseEOL()
+// This method attempts to parse context parameters. It returns the
+// context parameters and whether or not the context parameters were
+// successfully parsed.
+func (v *parser) parseParameters() (abstractions.CatalogLike[abstractions.Symbolic, any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var parameter abstractions.AssociationLike[abstractions.Symbolic, any]
+	var parameters = collections.Catalog[abstractions.Symbolic, any]()
+	_, token, ok = v.parseEOL()
 	if !ok {
 		// The parameters are on a single line.
+		_, token, ok = v.parseDelimiter(":")
+		if ok {
+			panic("There must be at least one parameter in a context.")
+		}
 		parameter, token, ok = v.parseParameter()
-		// There must be at least one parameter.
 		if !ok {
-			var message = fmt.Sprintf("Expected at least one parameter in the component context but received:\n%v\n\n", token)
-			message += generateGrammar(
-				"$context",
-				"$parameters",
-				"$parameter",
-				"$name")
-			panic(message)
+			panic("There must be at least one parameter in a context.")
 		}
 		for {
-			parameters = append(parameters, parameter)
+			parameters.AddAssociation(parameter)
 			// Every subsequent parameter must be preceded by a ','.
 			_, token, ok = v.parseDelimiter(",")
 			if !ok {
@@ -257,46 +253,28 @@ func (v *parser) parseParameters() ([]abstractions.ParameterLike, *Token, bool) 
 			}
 			parameter, token, ok = v.parseParameter()
 			if !ok {
-				var message = fmt.Sprintf("Expected a parameter after the ',' character but received:\n%v\n\n", token)
-				message += generateGrammar(
-					"$context",
-					"$parameters",
-					"$parameter",
-					"$name")
-				panic(message)
+				panic("Expected a parameter after the ',' character.")
 			}
 		}
 		return parameters, token, true
 	}
 	// The parameters are on separate lines.
+	parameter, token, ok = v.parseParameter()
+	if !ok {
+		panic("There must be at least one parameter in a context.")
+	}
 	for {
+		parameters.AddAssociation(parameter)
+		// Every parameter must be followed by an EOL.
+		_, token, ok = v.parseEOL()
+		if !ok {
+			panic("Expected an EOL character following the parameter.")
+		}
 		parameter, token, ok = v.parseParameter()
 		if !ok {
 			// No more parameters.
 			break
 		}
-		parameters = append(parameters, parameter)
-		// Every parameter must be followed by an EOL.
-		_, token, ok = v.parseEOL()
-		if !ok {
-			var message = fmt.Sprintf("Expected an EOL character following the parameter but received:\n%v\n\n", token)
-			message += generateGrammar(
-				"$context",
-				"$parameters",
-				"$parameter",
-				"$name")
-			panic(message)
-		}
-	}
-	// There must be at least one parameter.
-	if len(parameters) == 0 {
-		var message = fmt.Sprintf("Expected at least one parameter in the component context but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$context",
-			"$parameters",
-			"$parameter",
-			"$name")
-		panic(message)
 	}
 	return parameters, token, true
 }

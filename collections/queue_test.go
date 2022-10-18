@@ -12,6 +12,7 @@ package collections_test
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	"github.com/craterdog-bali/go-bali-document-notation/agents"
 	"github.com/craterdog-bali/go-bali-document-notation/collections"
 	"github.com/stretchr/testify/assert"
 	"sync"
@@ -72,8 +73,11 @@ func TestQueueWithFork(t *testing.T) {
 		}
 	}
 	wg.Add(2)
-	go readOutput(outputs[0], "zero")
-	go readOutput(outputs[1], "one")
+	var iterator = agents.Iterator(outputs)
+	for iterator.HasNext() {
+		var output = iterator.GetNext()
+		go readOutput(output, "output")
+	}
 
 	// Add items to the input queue.
 	for i := 1; i < 11; i++ {

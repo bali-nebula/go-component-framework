@@ -17,23 +17,22 @@ import (
 
 // SET IMPLEMENTATION
 
-// This constructor creates a new empty set that uses the canonical order
-// function to determine the order of the items in the set.
+// This constructor creates a new empty set that uses the canonical rank
+// function.
 func Set[T any]() abstractions.SetLike[T] {
-	return SetWithRanker[T](nil)
-}
-
-// This constructor creates a new empty set that uses the specified order
-// function to determine the order of the items in the set.
-func SetWithRanker[T any](rank abstractions.RankingFunction) abstractions.SetLike[T] {
-	// Groom the arguments.
-	if rank == nil {
-		rank = agents.RankValues
-	}
-
-	// Return a new empty set.
+	var rank = agents.RankValues
 	var items = List[T]()
 	return &set[T]{items, items, items, rank}
+}
+
+// This constructor creates a new set from the specified array that uses the
+// canonical rank function.
+func SetFromArray[T any](array []T) abstractions.SetLike[T] {
+	var v = Set[T]()
+	for _, item := range array {
+		v.AddItem(item)
+	}
+	return v
 }
 
 // This type defines the structure and methods associated with a set of items.
@@ -59,8 +58,10 @@ func (v *set[T]) ContainsItem(item T) bool {
 
 // This method determines whether or not this set contains ANY of the
 // specified items.
-func (v *set[T]) ContainsAny(items []T) bool {
-	for _, item := range items {
+func (v *set[T]) ContainsAny(items abstractions.Sequential[T]) bool {
+	var iterator = agents.Iterator(items)
+	for iterator.HasNext() {
+		var item = iterator.GetNext()
 		if v.ContainsItem(item) {
 			// This set contains at least one of the items.
 			return true
@@ -72,8 +73,10 @@ func (v *set[T]) ContainsAny(items []T) bool {
 
 // This method determines whether or not this set contains ALL of the
 // specified items.
-func (v *set[T]) ContainsAll(items []T) bool {
-	for _, item := range items {
+func (v *set[T]) ContainsAll(items abstractions.Sequential[T]) bool {
+	var iterator = agents.Iterator(items)
+	for iterator.HasNext() {
+		var item = iterator.GetNext()
 		if !v.ContainsItem(item) {
 			// This set is missing at least one of the items.
 			return false
@@ -84,6 +87,14 @@ func (v *set[T]) ContainsAll(items []T) bool {
 }
 
 // FLEXIBLE INTERFACE
+
+// This method sets the ranker function for this set.
+func (v *set[T]) SetRanker(rank abstractions.RankingFunction) {
+	if rank == nil {
+		rank = agents.RankValues
+	}
+	v.rank = rank
+}
 
 // This method adds the specified item to this set if it is not already a
 // member of the set.
@@ -97,8 +108,10 @@ func (v *set[T]) AddItem(item T) {
 
 // This method adds the specified items to this set if they are not already
 // members of the set.
-func (v *set[T]) AddItems(items []T) {
-	for _, item := range items {
+func (v *set[T]) AddItems(items abstractions.Sequential[T]) {
+	var iterator = agents.Iterator(items)
+	for iterator.HasNext() {
+		var item = iterator.GetNext()
 		v.AddItem(item)
 	}
 }
@@ -115,8 +128,10 @@ func (v *set[T]) RemoveItem(item T) {
 
 // This method removes the specified items from this set. It returns the number
 // of items that were removed.
-func (v *set[T]) RemoveItems(items []T) {
-	for _, item := range items {
+func (v *set[T]) RemoveItems(items abstractions.Sequential[T]) {
+	var iterator = agents.Iterator(items)
+	for iterator.HasNext() {
+		var item = iterator.GetNext()
 		v.RemoveItem(item)
 	}
 }
@@ -207,16 +222,16 @@ func (l *sets[T]) And(first, second abstractions.SetLike[T]) abstractions.SetLik
 // specified sets.
 func (l *sets[T]) Sans(first, second abstractions.SetLike[T]) abstractions.SetLike[T] {
 	var result = Set[T]()
-	result.AddItems(first.AsArray())
-	result.RemoveItems(second.AsArray())
+	result.AddItems(first)
+	result.RemoveItems(second)
 	return result
 }
 
 // This library function returns the logical disjunction of the specified sets.
 func (l *sets[T]) Or(first, second abstractions.SetLike[T]) abstractions.SetLike[T] {
 	var result = Set[T]()
-	result.AddItems(first.AsArray())
-	result.AddItems(second.AsArray())
+	result.AddItems(first)
+	result.AddItems(second)
 	return result
 }
 

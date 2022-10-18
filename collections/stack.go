@@ -12,6 +12,7 @@ package collections
 
 import (
 	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	"github.com/craterdog-bali/go-bali-document-notation/agents"
 )
 
 // STACK IMPLEMENTATION
@@ -61,10 +62,11 @@ func (v *stack[T]) AddItem(item T) {
 }
 
 // This method adds the specified items to the top of this stack.
-func (v *stack[T]) AddItems(items []T) {
-	for _, item := range items {
-		// We must call this explicitly to get the capacity check.
-		v.AddItem(item)
+func (v *stack[T]) AddItems(items abstractions.Sequential[T]) {
+	var iterator = agents.Iterator(items)
+	for iterator.HasNext() {
+		var item = iterator.GetNext()
+		v.AddItem(item) // We must call this explicitly to get the capacity check.
 	}
 }
 

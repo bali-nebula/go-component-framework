@@ -20,36 +20,37 @@ import (
 // items.
 type Searchable[T any] interface {
 	ContainsItem(item T) bool
-	ContainsAny(items []T) bool
-	ContainsAll(items []T) bool
+	ContainsAny(items Sequential[T]) bool
+	ContainsAll(items Sequential[T]) bool
 }
 
 // This interface defines the methods supported by all updatable collections of
 // items.
 type Updatable[T any] interface {
 	SetItem(index int, item T)
-	SetItems(index int, items []T)
+	SetItems(index int, items Sequential[T])
 }
 
 // This interface defines the methods supported by all collections of items that
 // allow their endpoints to be changed.
 type Elastic[T any] interface {
+	IsEnumerable() bool
 	GetFirst() T
 	SetFirst(T)
 	GetConnector() string
 	SetConnector(connector string)
 	GetLast() T
 	SetLast(T)
-	IsEnumerable() bool
 }
 
 // This interface defines the methods supported by all collections of items that
 // allow items to be added and removed.
 type Flexible[T any] interface {
+	SetRanker(rank RankingFunction)
 	AddItem(item T)
-	AddItems(items []T)
+	AddItems(items Sequential[T])
 	RemoveItem(item T)
-	RemoveItems(items []T)
+	RemoveItems(items Sequential[T])
 	RemoveAll()
 }
 
@@ -57,11 +58,11 @@ type Flexible[T any] interface {
 // may be modified, inserted, removed, or reordered.
 type Malleable[T any] interface {
 	AddItem(item T)
-	AddItems(items []T)
+	AddItems(items Sequential[T])
 	InsertItem(slot int, item T)
-	InsertItems(slot int, items []T)
+	InsertItems(slot int, items Sequential[T])
 	RemoveItem(index int) T
-	RemoveItems(first int, last int) []T
+	RemoveItems(first int, last int) Sequential[T]
 	RemoveAll()
 	ShuffleItems()
 	SortItems()
@@ -73,13 +74,13 @@ type Malleable[T any] interface {
 // whose items consist of key-value pair associations.
 type Associative[K any, V any] interface {
 	AddAssociation(association AssociationLike[K, V])
-	AddAssociations(associations []AssociationLike[K, V])
-	GetKeys() []K
+	AddAssociations(associations Sequential[AssociationLike[K, V]])
+	GetKeys() Sequential[K]
 	GetValue(key K) V
-	GetValues(keys []K) []V
+	GetValues(keys Sequential[K]) Sequential[V]
 	SetValue(key K, value V)
 	RemoveValue(key K) V
-	RemoveValues(keys []K) []V
+	RemoveValues(keys Sequential[K]) Sequential[V]
 	RemoveAll()
 	SortAssociations()
 	SortAssociationsWithRanker(ranker RankingFunction)
@@ -91,7 +92,7 @@ type Associative[K any, V any] interface {
 type FIFO[T any] interface {
 	GetCapacity() int
 	AddItem(item T)
-	AddItems(items []T)
+	AddItems(items Sequential[T])
 	RemoveHead() (head T, ok bool)
 	CloseQueue()
 }
@@ -101,34 +102,10 @@ type FIFO[T any] interface {
 type LIFO[T any] interface {
 	GetCapacity() int
 	AddItem(item T)
-	AddItems(items []T)
+	AddItems(items Sequential[T])
 	GetTop() T
 	RemoveTop() T
 	RemoveAll()
-}
-
-// LIBRARY INTERFACES
-
-// This library interface defines the functions supported by all libraries that
-// can apply an elastic range to another collection.
-type Spliceable[T any] interface {
-	Cut(collection StringLike[T], rng Elastic[T]) []T
-	Splice(collection ListLike[T], rng Elastic[T], items []T) []T
-}
-
-// This library interface defines the functions supported by all libraries that
-// can disect and combine associative collections.
-type Blendable[K any, V any] interface {
-	Merge(first, second Associative[K, V]) Associative[K, V]
-	Extract(catalog Associative[K, V], keys []K) Associative[K, V]
-}
-
-// This library interface defines the functions supported by all libraries that
-// can combine queue-like collections in interesting ways.
-type Routeable[T any] interface {
-	Fork(wg *sync.WaitGroup, input FIFO[T], size int) []FIFO[T]
-	Split(wg *sync.WaitGroup, input FIFO[T], size int) []FIFO[T]
-	Join(wg *sync.WaitGroup, inputs []FIFO[T]) FIFO[T]
 }
 
 // CONSOLIDATED INTERFACES
@@ -197,4 +174,21 @@ type RangeLike[T any] interface {
 type StackLike[T any] interface {
 	Sequential[T]
 	LIFO[T]
+}
+
+// LIBRARY INTERFACES
+
+// This library interface defines the functions supported by all libraries that
+// can disect and combine associative collections.
+type Blendable[K any, V any] interface {
+	Merge(first, second CatalogLike[K, V]) CatalogLike[K, V]
+	Extract(catalog CatalogLike[K, V], keys Sequential[K]) CatalogLike[K, V]
+}
+
+// This library interface defines the functions supported by all libraries that
+// can combine queue-like collections in interesting ways.
+type Routeable[T any] interface {
+	Fork(wg *sync.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
+	Split(wg *sync.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
+	Join(wg *sync.WaitGroup, inputs Sequential[FIFO[T]]) FIFO[T]
 }

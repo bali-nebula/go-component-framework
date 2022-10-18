@@ -79,23 +79,21 @@ func (v *catalog[K, V]) AddAssociation(association abstractions.AssociationLike[
 }
 
 // This method appends the specified associations to the end of this catalog.
-func (v *catalog[K, V]) AddAssociations(associations []abstractions.AssociationLike[K, V]) {
-	for _, association := range associations {
-		// Add the association to the end of this catalog
+func (v *catalog[K, V]) AddAssociations(associations abstractions.Sequential[abstractions.AssociationLike[K, V]]) {
+	var iterator = agents.Iterator(associations)
+	for iterator.HasNext() {
+		var association = iterator.GetNext()
 		v.AddAssociation(association)
 	}
 }
 
 // This method returns the keys for this catalog.
-func (v *catalog[K, V]) GetKeys() []K {
-	var keys = make([]K, v.associations.GetSize())
-	var index = 0
+func (v *catalog[K, V]) GetKeys() abstractions.Sequential[K] {
+	var keys = List[K]()
 	var iterator = agents.Iterator[abstractions.AssociationLike[K, V]](v.associations)
 	for iterator.HasNext() {
-		// Extract the key.
 		var association = iterator.GetNext()
-		keys[index] = association.GetKey()
-		index++
+		keys.AddItem(association.GetKey())
 	}
 	return keys
 }
@@ -115,13 +113,12 @@ func (v *catalog[K, V]) GetValue(key K) V {
 // This method returns the values associated with the specified keys for this
 // catalog. The values are returned in the same order as the keys in the
 // catalog.
-func (v *catalog[K, V]) GetValues(keys []K) []V {
-	var values = make([]V, len(keys))
-	var index = 0
-	for _, key := range keys {
-		// Extract the value.
-		values[index] = v.GetValue(key)
-		index++
+func (v *catalog[K, V]) GetValues(keys abstractions.Sequential[K]) abstractions.Sequential[V] {
+	var values = List[V]()
+	var iterator = agents.Iterator(keys)
+	for iterator.HasNext() {
+		var key = iterator.GetNext()
+		values.AddItem(v.GetValue(key))
 	}
 	return values
 }
@@ -157,13 +154,12 @@ func (v *catalog[K, V]) RemoveValue(key K) V {
 
 // This method removes the associations associated with the specified keys from
 // the catalog and returns the removed values.
-func (v *catalog[K, V]) RemoveValues(keys []K) []V {
-	var values = make([]V, len(keys))
-	var index = 0
-	for _, key := range keys {
-		// Remove the association associated with the key.
-		values[index] = v.RemoveValue(key)
-		index++
+func (v *catalog[K, V]) RemoveValues(keys abstractions.Sequential[K]) abstractions.Sequential[V] {
+	var values = List[V]()
+	var iterator = agents.Iterator(keys)
+	for iterator.HasNext() {
+		var key = iterator.GetNext()
+		values.AddItem(v.RemoveValue(key))
 	}
 	return values
 }
@@ -213,8 +209,8 @@ type catalogs[K any, V any] struct{}
 // catalog.
 func (l *catalogs[K, V]) Merge(first, second abstractions.CatalogLike[K, V]) abstractions.CatalogLike[K, V] {
 	var result = Catalog[K, V]()
-	result.AddAssociations(first.AsArray())
-	result.AddAssociations(second.AsArray())
+	result.AddAssociations(first)
+	result.AddAssociations(second)
 	return result
 }
 
@@ -222,9 +218,11 @@ func (l *catalogs[K, V]) Merge(first, second abstractions.CatalogLike[K, V]) abs
 // that are in the specified catalog that have the specified keys. The
 // associations in the resulting catalog will be in the same order as the
 // specified keys.
-func (l *catalogs[K, V]) Extract(catalog abstractions.CatalogLike[K, V], keys []K) abstractions.CatalogLike[K, V] {
+func (l *catalogs[K, V]) Extract(catalog abstractions.CatalogLike[K, V], keys abstractions.Sequential[K]) abstractions.CatalogLike[K, V] {
 	var result = Catalog[K, V]()
-	for _, key := range keys {
+	var iterator = agents.Iterator(keys)
+	for iterator.HasNext() {
+		var key = iterator.GetNext()
 		var value = catalog.GetValue(key)
 		result.SetValue(key, value)
 	}

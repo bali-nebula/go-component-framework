@@ -76,6 +76,12 @@ func (v *ranje[T]) AsArray() []T {
 
 // INDEXED INTERFACE
 
+// This method sets the comparer function for this list.
+func (v *ranje[T]) SetComparer(compare abstractions.ComparisonFunction) {
+	// This method does nothing since range items are either sequential or only
+	// have meaning within the context of a set. We may revisit this...
+}
+
 // This method retrieves from this range the item that is associated with the
 // specified index.
 func (v *ranje[T]) GetItem(index int) T {
@@ -87,11 +93,11 @@ func (v *ranje[T]) GetItem(index int) T {
 
 // This method retrieves from this range all items from the first index through
 // the last index (inclusive).
-func (v *ranje[T]) GetItems(first int, last int) []T {
-	var items []T
+func (v *ranje[T]) GetItems(first int, last int) abstractions.Sequential[T] {
+	var items = List[T]()
 	for index := first; index <= last; index++ {
 		var item = v.indexToItem(index)
-		items = append(items, item)
+		items.AddItem(item)
 	}
 	return items
 }
@@ -112,6 +118,11 @@ func (v *ranje[T]) GetIndex(item T) int {
 }
 
 // ELASTIC INTERFACE
+
+// This method determines whether or not this range can be enumerated over.
+func (v *ranje[T]) IsEnumerable() bool {
+	return v.size > 0
+}
 
 // This method returns the first item in this range.
 func (v *ranje[T]) GetFirst() T {
@@ -141,11 +152,6 @@ func (v *ranje[T]) GetLast() T {
 // This method sets the last item in this range.
 func (v *ranje[T]) SetLast(item T) {
 	v.last = item
-}
-
-// This method determines whether or not this range can be enumerated over.
-func (v *ranje[T]) IsEnumerable() bool {
-	return v.size > 0
 }
 
 // PRIVATE INTERFACE
@@ -259,62 +265,4 @@ func (v *ranje[T]) calculateSize() int {
 	default:
 		return 0
 	}
-}
-
-// SLICES LIBRARY
-
-// This constructor creates a new ranges library for the specified generic
-// item type.
-func Ranges[T any]() *ranges[T] {
-	return &ranges[T]{}
-}
-
-// This type defines the library functions that operate on ranges. Since
-// ranges have a parameterized item type this library type is also
-// parameterized as follows:
-//   - T is any type of primitive item.
-type ranges[T any] struct{}
-
-// SPLICEABLE INTERFACE
-
-// This library function removes the specified range of items from the specified
-// list and returns it as an array of items.
-func (l *ranges[T]) Cut(collection abstractions.ListLike[T], rng abstractions.Elastic[T]) []T {
-	var firstIndex, lastIndex = l.effectiveIndices(collection, rng)
-	var items = collection.RemoveItems(firstIndex, lastIndex)
-	return items
-}
-
-// This library function replaces the specified splice of items in the specified
-// list with the specified items.
-func (l *ranges[T]) Splice(collection abstractions.ListLike[T], rng abstractions.Elastic[T], items []T) []T {
-	var firstIndex, lastIndex = l.effectiveIndices(collection, rng)
-	var removed = collection.RemoveItems(firstIndex, lastIndex)
-	var slot = firstIndex - 1 // This is the slot before the first index.
-	collection.InsertItems(slot, items)
-	return removed
-}
-
-// PRIVATE INTERFACE
-
-// This library function returns the effective first and last indices for the
-// specified range within the specified list.
-func (l *ranges[T]) effectiveIndices(c abstractions.ListLike[T], s abstractions.Elastic[T]) (first, last int) {
-	var firstItem = s.GetFirst()
-	var lastItem = s.GetLast()
-	var firstIndex = c.GetIndex(firstItem)
-	var lastIndex = c.GetIndex(lastItem)
-	var connector = s.GetConnector()
-	switch connector {
-	case "<..":
-		firstIndex++
-	case "<..<":
-		firstIndex++
-		lastIndex--
-	case "..<":
-		lastIndex--
-	default:
-		// No changes needed.
-	}
-	return firstIndex, lastIndex
 }

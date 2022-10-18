@@ -19,8 +19,7 @@ import (
 
 func TestIteratorsWithLists(t *testing.T) {
 	var array = []int{1, 2, 3, 4, 5}
-	var list = collections.List[int]()
-	list.AddItems(array)
+	var list = collections.ListFromArray[int](array)
 	var iterator = agents.Iterator[int](list)
 	assert.False(t, iterator.HasPrevious())
 	assert.True(t, iterator.HasNext())
