@@ -118,7 +118,7 @@ func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
 			"$selectClause",
 			"$withClause",
 			"$whileClause",
-			"$exceptionClause")
+			"$onClause")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("{")
@@ -129,7 +129,7 @@ func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
 			"$selectClause",
 			"$withClause",
 			"$whileClause",
-			"$exceptionClause")
+			"$onClause")
 		panic(message)
 	}
 	statements, token, ok = v.parseStatements()
@@ -140,7 +140,7 @@ func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
 			"$selectClause",
 			"$withClause",
 			"$whileClause",
-			"$exceptionClause")
+			"$onClause")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("}")
@@ -151,7 +151,7 @@ func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
 			"$selectClause",
 			"$withClause",
 			"$whileClause",
-			"$exceptionClause")
+			"$onClause")
 		panic(message)
 	}
 	doBlock = &DoBlock{expression, statements}
@@ -397,20 +397,20 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, *Token, bool) {
 
 // This type defines the node structure associated with a clause that handles
 // an exception.
-type ExceptionClause struct {
+type OnClause struct {
 	Exception elements.Symbol
 	DoBlocks  abstractions.ListLike[*DoBlock]
 }
 
 // This method attempts to parse an exception clause. It returns the exception
 // clause and whether or not the exception clause was successfully parsed.
-func (v *parser) parseExceptionClause() (*ExceptionClause, *Token, bool) {
+func (v *parser) parseOnClause() (*OnClause, *Token, bool) {
 	var ok bool
 	var token *Token
 	var exception elements.Symbol
 	var doBlock *DoBlock
 	var doBlocks abstractions.ListLike[*DoBlock]
-	var clause *ExceptionClause
+	var clause *OnClause
 	_, token, ok = v.parseKeyword("on")
 	if !ok {
 		// This is not an exception clause.
@@ -420,7 +420,7 @@ func (v *parser) parseExceptionClause() (*ExceptionClause, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected an exception symbol following the 'on' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$exceptionClause",
+			"$onClause",
 			"$exception")
 		panic(message)
 	}
@@ -433,7 +433,7 @@ func (v *parser) parseExceptionClause() (*ExceptionClause, *Token, bool) {
 		if !ok {
 			var message = fmt.Sprintf("Expected a pattern expression and statement block following the 'matching' keyword but received:\n%v\n\n", token)
 			message += generateGrammar(
-				"$exceptionClause",
+				"$onClause",
 				"$exception")
 			panic(message)
 		}
@@ -443,11 +443,11 @@ func (v *parser) parseExceptionClause() (*ExceptionClause, *Token, bool) {
 	if doBlocks.IsEmpty() {
 		var message = fmt.Sprintf("Expected at least one pattern expression and statement block in the exception clause but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$exceptionClause",
+			"$onClause",
 			"$exception")
 		panic(message)
 	}
-	clause = &ExceptionClause{exception, doBlocks}
+	clause = &OnClause{exception, doBlocks}
 	return clause, token, true
 }
 
@@ -946,7 +946,7 @@ func (v *parser) parseSelectClause() (*SelectClause, *Token, bool) {
 // exception handling clause.
 type Statement struct {
 	MainClause      any
-	ExceptionClause *ExceptionClause
+	OnClause *OnClause
 }
 
 // This method attempts to parse a statement. It returns the statement and
@@ -956,13 +956,13 @@ func (v *parser) parseStatement() (*Statement, *Token, bool) {
 	var token *Token
 	var statement *Statement
 	var mainClause any
-	var exceptionClause *ExceptionClause
+	var onClause *OnClause
 	mainClause, token, ok = v.parseMainClause()
 	if ok {
 		// The exception clause is optional.
-		exceptionClause, token, _ = v.parseExceptionClause()
+		onClause, token, _ = v.parseOnClause()
 	}
-	statement = &Statement{mainClause, exceptionClause}
+	statement = &Statement{mainClause, onClause}
 	return statement, token, ok
 }
 

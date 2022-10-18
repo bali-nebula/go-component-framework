@@ -19,5 +19,5 @@ import (
 // exception handling clause.
 type Statement struct {
 	MainClause      any
-	ExceptionClause *ExceptionClause
+	OnClause *OnClause
 }
