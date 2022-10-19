@@ -27,7 +27,7 @@ func WhileClause(condition any, statements abs.ListLike[any]) abs.WhileClauseLik
 
 // This type defines the structure and methods associated with a while clause.
 type whileClause struct {
-	condition any
+	condition  any
 	statements abs.ListLike[any]
 }
 

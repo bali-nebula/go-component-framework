@@ -27,7 +27,7 @@ func IfClause(condition any, statements abs.ListLike[any]) abs.IfClauseLike {
 
 // This type defines the structure and methods associated with an if clause.
 type ifClause struct {
-	condition any
+	condition  any
 	statements abs.ListLike[any]
 }
 

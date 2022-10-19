@@ -28,7 +28,7 @@ func SelectClause(control any, options abs.ListLike[abs.BlockLike]) abs.SelectCl
 // This type defines the structure and methods associated with a select clause.
 type selectClause struct {
 	control any
-	options  abs.ListLike[abs.BlockLike]
+	options abs.ListLike[abs.BlockLike]
 }
 
 // This method returns the control expression for this select clause.

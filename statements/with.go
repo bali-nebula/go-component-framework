@@ -28,8 +28,8 @@ func WithClause(item abs.Symbolic, sequence any, statements abs.ListLike[any]) a
 
 // This type defines the structure and methods associated with a with clause.
 type withClause struct {
-	item abs.Symbolic
-	sequence any
+	item       abs.Symbolic
+	sequence   any
 	statements abs.ListLike[any]
 }
 

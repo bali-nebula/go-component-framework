@@ -27,7 +27,7 @@ func Block(pattern any, statements abs.ListLike[any]) abs.BlockLike {
 
 // This type defines the structure and methods associated with a block of statements.
 type block struct {
-	pattern any
+	pattern    any
 	statements abs.ListLike[any]
 }
 

@@ -28,7 +28,7 @@ func OnClause(exception abs.Symbolic, handlers abs.ListLike[abs.BlockLike]) abs.
 // This type defines the structure and methods associated with an on clause.
 type onClause struct {
 	exception abs.Symbolic
-	handlers    abs.ListLike[abs.BlockLike]
+	handlers  abs.ListLike[abs.BlockLike]
 }
 
 // This method returns the exception symbol for this on clause.
