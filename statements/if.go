@@ -17,27 +17,55 @@ import (
 // IF CLAUSE IMPLEMENTATION
 
 // This constructor creates a new if clause.
-func IfClause(block abs.BlockLike) abs.IfClauseLike {
+func IfClause(condition any, statements abs.ListLike[any]) abs.IfClauseLike {
 	var v = &ifClause{}
 	// Perform argument validation.
-	v.SetBlock(block)
+	v.SetCondition(condition)
+	v.SetStatements(statements)
 	return v
 }
 
 // This type defines the structure and methods associated with an if clause.
 type ifClause struct {
-	block abs.BlockLike
+	condition any
+	statements abs.ListLike[any]
 }
 
-// This method returns the statement block for this if clause.
-func (v *ifClause) GetBlock() abs.BlockLike {
-	return v.block
+// This method returns the condition expression for this if clause.
+func (v *ifClause) GetCondition() any {
+	return v.condition
 }
 
-// This method sets the statement block for this if clause.
-func (v *ifClause) SetBlock(block abs.BlockLike) {
-	if block == nil {
-		panic("An if clause requires a statement block.")
+// This method sets the condition expression for this if clause.
+func (v *ifClause) SetCondition(condition any) {
+	if condition == nil {
+		panic("An if clause requires a condition expression.")
 	}
-	v.block = block
+	v.condition = condition
+}
+
+// This method returns the statement at the specified index from this if clause.
+func (v *ifClause) GetStatement(index int) any {
+	return v.statements.GetItem(index)
+}
+
+// This method sets the statement at the specified index for this if clause.
+func (v *ifClause) SetStatement(index int, statement any) {
+	if statement == nil {
+		panic("Each statement in an if clause requires a value.")
+	}
+	v.statements.SetItem(index, statement)
+}
+
+// This method returns the list of statements for this if clause.
+func (v *ifClause) GetStatements() abs.ListLike[any] {
+	return v.statements
+}
+
+// This method sets the list of statements for this if clause.
+func (v *ifClause) SetStatements(statements abs.ListLike[any]) {
+	if statements == nil {
+		panic("An if clause requires a list of statements.")
+	}
+	v.statements = statements
 }

@@ -43,8 +43,8 @@ type AttributeLike interface {
 
 // This interface defines the methods supported by all block-like types.
 type BlockLike interface {
-	GetExpression() any
-	SetExpression(expression any)
+	GetPattern() any
+	SetPattern(pattern any)
 	GetStatement(index int) any
 	SetStatement(index int, statement any)
 	GetStatements() ListLike[any]
@@ -85,8 +85,12 @@ type EvaluateClauseLike interface {
 
 // This interface defines the methods supported by all if-clause-like types.
 type IfClauseLike interface {
-	GetBlock() BlockLike
-	SetBlock(block BlockLike)
+	GetCondition() any
+	SetCondition(condition any)
+	GetStatement(index int) any
+	SetStatement(index int, statement any)
+	GetStatements() ListLike[any]
+	SetStatements(statements ListLike[any])
 }
 
 // This interface defines the methods supported by all notarize-clause-like types.
@@ -101,10 +105,10 @@ type NotarizeClauseLike interface {
 type OnClauseLike interface {
 	GetException() Symbolic
 	SetException(exception Symbolic)
-	GetBlock(index int) BlockLike
-	SetBlock(index int, block BlockLike)
-	GetBlocks() ListLike[BlockLike]
-	SetBlocks(blocks ListLike[BlockLike])
+	GetHandler(index int) BlockLike
+	SetHandler(index int, handler BlockLike)
+	GetHandlers() ListLike[BlockLike]
+	SetHandlers(blocks ListLike[BlockLike])
 }
 
 // This interface defines the methods supported by all post-clause-like types.
@@ -153,10 +157,10 @@ type SaveClauseLike interface {
 type SelectClauseLike interface {
 	GetControl() any
 	SetControl(control any)
-	GetBlock(index int) BlockLike
-	SetBlock(index int, block BlockLike)
-	GetBlocks() ListLike[BlockLike]
-	SetBlocks(blocks ListLike[BlockLike])
+	GetOption(index int) BlockLike
+	SetOption(index int, option BlockLike)
+	GetOptions() ListLike[BlockLike]
+	SetOptions(blocks ListLike[BlockLike])
 }
 
 // This interface defines the methods supported by all statement-like types.
@@ -175,14 +179,22 @@ type ThrowClauseLike interface {
 
 // This interface defines the methods supported by all while-clause-like types.
 type WhileClauseLike interface {
-	GetBlock() BlockLike
-	SetBlock(block BlockLike)
+	GetCondition() any
+	SetCondition(condition any)
+	GetStatement(index int) any
+	SetStatement(index int, statement any)
+	GetStatements() ListLike[any]
+	SetStatements(statements ListLike[any])
 }
 
 // This interface defines the methods supported by all with-clause-like types.
 type WithClauseLike interface {
 	GetItem() Symbolic
 	SetItem(exception Symbolic)
-	GetBlock() BlockLike
-	SetBlock(block BlockLike)
+	GetSequence() any
+	SetSequence(sequence any)
+	GetStatement(index int) any
+	SetStatement(index int, statement any)
+	GetStatements() ListLike[any]
+	SetStatements(statements ListLike[any])
 }

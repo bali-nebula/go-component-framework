@@ -17,31 +17,31 @@ import (
 // BLOCK IMPLEMENTATION
 
 // This constructor creates a new block.
-func Block(expression any, statements abs.ListLike[any]) abs.BlockLike {
+func Block(pattern any, statements abs.ListLike[any]) abs.BlockLike {
 	var v = &block{}
 	// Perform argument validation.
-	v.SetExpression(expression)
+	v.SetPattern(pattern)
 	v.SetStatements(statements)
 	return v
 }
 
 // This type defines the structure and methods associated with a block of statements.
 type block struct {
-	expression any
+	pattern any
 	statements abs.ListLike[any]
 }
 
-// This method returns the expression for this block.
-func (v *block) GetExpression() any {
-	return v.expression
+// This method returns the pattern expression for this block.
+func (v *block) GetPattern() any {
+	return v.pattern
 }
 
-// This method sets the expression for this block.
-func (v *block) SetExpression(expression any) {
-	if expression == nil {
-		panic("A block requires an expression.")
+// This method sets the pattern expression for this block.
+func (v *block) SetPattern(pattern any) {
+	if pattern == nil {
+		panic("A block requires a pattern expression.")
 	}
-	v.expression = expression
+	v.pattern = pattern
 }
 
 // This method returns the statement at the specified index from this block.
@@ -49,7 +49,7 @@ func (v *block) GetStatement(index int) any {
 	return v.statements.GetItem(index)
 }
 
-// This method sets the expression at the specified index for this block.
+// This method sets the statement at the specified index for this block.
 func (v *block) SetStatement(index int, statement any) {
 	if statement == nil {
 		panic("Each statement in a block requires a value.")

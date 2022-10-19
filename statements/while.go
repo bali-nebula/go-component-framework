@@ -17,27 +17,56 @@ import (
 // WHILE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new while clause.
-func WhileClause(block abs.BlockLike) abs.WhileClauseLike {
+func WhileClause(condition any, statements abs.ListLike[any]) abs.WhileClauseLike {
 	var v = &whileClause{}
 	// Perform argument validation.
-	v.SetBlock(block)
+	v.SetCondition(condition)
+	v.SetStatements(statements)
 	return v
 }
 
-// This type defines the structure and methods associated with an while clause.
+// This type defines the structure and methods associated with a while clause.
 type whileClause struct {
-	block abs.BlockLike
+	condition any
+	statements abs.ListLike[any]
 }
 
-// This method returns the statement block for this while clause.
-func (v *whileClause) GetBlock() abs.BlockLike {
-	return v.block
+// This method returns the condition expression for this while clause.
+func (v *whileClause) GetCondition() any {
+	return v.condition
 }
 
-// This method sets the statement block for this while clause.
-func (v *whileClause) SetBlock(block abs.BlockLike) {
-	if block == nil {
-		panic("A while clause requires a statement block.")
+// This method sets the condition expression for this while clause.
+func (v *whileClause) SetCondition(condition any) {
+	if condition == nil {
+		panic("A while clause requires a condition expression.")
 	}
-	v.block = block
+	v.condition = condition
+}
+
+// This method returns the statement at the specified index from this while
+// clause.
+func (v *whileClause) GetStatement(index int) any {
+	return v.statements.GetItem(index)
+}
+
+// This method sets the statement at the specified index for this while clause.
+func (v *whileClause) SetStatement(index int, statement any) {
+	if statement == nil {
+		panic("Each statement in a while clause requires a value.")
+	}
+	v.statements.SetItem(index, statement)
+}
+
+// This method returns the list of statements for this while clause.
+func (v *whileClause) GetStatements() abs.ListLike[any] {
+	return v.statements
+}
+
+// This method sets the list of statements for this while clause.
+func (v *whileClause) SetStatements(statements abs.ListLike[any]) {
+	if statements == nil {
+		panic("A while clause requires a list of statements.")
+	}
+	v.statements = statements
 }
