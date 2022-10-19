@@ -36,7 +36,7 @@ func (v *parser) parseAcceptClause() (abs.AcceptClauseLike, *Token, bool) {
 			"$acceptClause")
 		panic(message)
 	}
-	clause = sta.Accept(message)
+	clause = sta.AcceptClause(message)
 	return clause, token, true
 }
 
@@ -236,7 +236,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = sta.Checkout(recipient, level, moniker)
+	clause = sta.CheckoutClause(recipient, level, moniker)
 	return clause, token, true
 }
 
@@ -280,7 +280,7 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 			"$discardClause")
 		panic(message)
 	}
-	clause = sta.Discard(citation)
+	clause = sta.DiscardClause(citation)
 	return clause, token, true
 }
 
@@ -290,23 +290,24 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
-	var operator string
+	var delimiter string
+	var operator abs.Assignment
 	var expression any
 	var clause abs.EvaluateClauseLike
 	recipient, token, ok = v.parseRecipient()
 	if ok {
-		operator, token, ok = v.parseDelimiter(":=")
+		delimiter, token, ok = v.parseDelimiter(":=")
 		if !ok {
-			operator, token, ok = v.parseDelimiter("+=")
+			delimiter, token, ok = v.parseDelimiter("+=")
 		}
 		if !ok {
-			operator, token, ok = v.parseDelimiter("-=")
+			delimiter, token, ok = v.parseDelimiter("-=")
 		}
 		if !ok {
-			operator, token, ok = v.parseDelimiter("*=")
+			delimiter, token, ok = v.parseDelimiter("*=")
 		}
 		if !ok {
-			operator, token, ok = v.parseDelimiter("/=")
+			delimiter, token, ok = v.parseDelimiter("/=")
 		}
 		if !ok {
 			var message = fmt.Sprintf("Expected an assignment operator but received:\n%v\n\n", token)
@@ -323,7 +324,7 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	expression, token, ok = v.parseExpression()
 	if !ok {
 		if token != nil {
-			var message = fmt.Sprintf("Expected an expression after the assignment operator '"+operator+"' but received:\n%v\n\n", token)
+			var message = fmt.Sprintf("Expected an expression after the assignment operator '"+delimiter+"' but received:\n%v\n\n", token)
 			message += generateGrammar(
 				"$evaluateClause",
 				"$recipient",
@@ -336,7 +337,21 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 		// This is not an evaluate clause.
 		return clause, token, false
 	}
-	clause = sta.Evaluate(recipient, operator, expression)
+	switch delimiter {
+	case ":=":
+		operator = abs.REGULAR
+	case "?=":
+		operator = abs.DEFAULT
+	case "*=":
+		operator = abs.TIMES
+	case "/=":
+		operator = abs.DIVIDE
+	case "+=":
+		operator = abs.PLUS
+	case "-=":
+		operator = abs.MINUS
+	}
+	clause = sta.EvaluateClauseWithRecipient(recipient, operator, expression)
 	return clause, token, true
 }
 
@@ -359,7 +374,7 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 			"$ifClause")
 		panic(message)
 	}
-	clause = sta.If(block)
+	clause = sta.IfClause(block.GetPattern(), block.GetStatements())
 	return clause, token, true
 }
 
@@ -460,7 +475,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 			"$notarizeClause")
 		panic(message)
 	}
-	clause = sta.Notarize(draft, moniker)
+	clause = sta.NotarizeClause(draft, moniker)
 	return clause, token, true
 }
 
@@ -509,7 +524,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 			"$exception")
 		panic(message)
 	}
-	clause = sta.On(exception, blocks)
+	clause = sta.OnClause(exception, blocks)
 	return clause, token, true
 }
 
@@ -547,7 +562,7 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 			"$postClause")
 		panic(message)
 	}
-	clause = sta.Post(message, bag)
+	clause = sta.PostClause(message, bag)
 	return clause, token, true
 }
 
@@ -602,7 +617,7 @@ func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 			"$publishClause")
 		panic(message)
 	}
-	clause = sta.Publish(event)
+	clause = sta.PublishClause(event)
 	return clause, token, true
 }
 
@@ -638,7 +653,7 @@ func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 			"$rejectClause")
 		panic(message)
 	}
-	clause = sta.Reject(message)
+	clause = sta.RejectClause(message)
 	return clause, token, true
 }
 
@@ -691,7 +706,7 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = sta.Retrieve(recipient, bag)
+	clause = sta.RetrieveClause(recipient, bag)
 	return clause, token, true
 }
 
@@ -714,7 +729,7 @@ func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 			"$returnClause")
 		panic(message)
 	}
-	clause = sta.Return(result)
+	clause = sta.ReturnClause(result)
 	return clause, token, true
 }
 
@@ -767,7 +782,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = sta.Save(draft, citation)
+	clause = sta.SaveClause(draft, citation)
 	return clause, token, true
 }
 
@@ -813,7 +828,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 			"$selectClause")
 		panic(message)
 	}
-	clause = sta.Select(control, blocks)
+	clause = sta.SelectClause(control, blocks)
 	return clause, token, true
 }
 
@@ -830,7 +845,7 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 		// The exception clause is optional.
 		onClause, token, _ = v.parseOnClause()
 	}
-	statement = sta.Statement(mainClause, onClause)
+	statement = sta.StatementWithHandler(mainClause, onClause)
 	return statement, token, ok
 }
 
@@ -926,7 +941,7 @@ func (v *parser) parseThrowClause() (abs.ThrowClauseLike, *Token, bool) {
 			"$throwClause")
 		panic(message)
 	}
-	clause = sta.Throw(exception)
+	clause = sta.ThrowClause(exception)
 	return clause, token, true
 }
 
@@ -949,7 +964,7 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 			"$whileClause")
 		panic(message)
 	}
-	clause = sta.While(block)
+	clause = sta.WhileClause(block.GetPattern(), block.GetStatements())
 	return clause, token, true
 }
 
@@ -998,6 +1013,6 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 			"$item")
 		panic(message)
 	}
-	clause = sta.With(item, block)
+	clause = sta.WithClause(item, block.GetPattern(), block.GetStatements())
 	return clause, token, true
 }

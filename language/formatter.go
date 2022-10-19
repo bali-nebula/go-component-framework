@@ -161,11 +161,11 @@ func (v *formatter) formatUnsigned(r ref.Value) {
 // point value to the result using scientific notation if necessary.
 func (v *formatter) formatFloat(r ref.Value) {
 	var flt = r.Float()
-	var str = stc.FormatFloat(flt, 'G', -1, 64)
-	if !str.Contains(str, ".") && !str.Contains(str, "E") {
-		str += ".0"
+	var s = stc.FormatFloat(flt, 'G', -1, 64)
+	if !str.Contains(s, ".") && !str.Contains(s, "E") {
+		s += ".0"
 	}
-	v.state.AppendString(str)
+	v.state.AppendString(s)
 }
 
 // This private method appends the base 10 string for the specified complex
