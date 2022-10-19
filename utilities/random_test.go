@@ -11,16 +11,16 @@
 package utilities_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/utilities"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestRandomIntegers(t *testing.T) {
+func TestRandomIntegers(t *tes.T) {
 	var foundZero bool
 	var foundFive bool
 	for i := 0; i < 100; i++ {
-		var random = utilities.RandomInteger(5)
+		var random = uti.RandomInteger(5)
 		if random == 0 {
 			foundZero = true
 		}
@@ -28,15 +28,15 @@ func TestRandomIntegers(t *testing.T) {
 			foundFive = true
 		}
 	}
-	assert.True(t, foundZero)
-	assert.True(t, foundFive)
+	ass.True(t, foundZero)
+	ass.True(t, foundFive)
 }
 
-func TestRandomProbabilities(t *testing.T) {
+func TestRandomProbabilities(t *tes.T) {
 	var total float64
 	for i := 0; i < 10000; i++ {
-		total += utilities.RandomProbability()
+		total += uti.RandomProbability()
 	}
-	assert.True(t, total > 4800)
-	assert.True(t, total < 5200)
+	ass.True(t, total > 4800)
+	ass.True(t, total < 5200)
 }

@@ -11,10 +11,10 @@
 package elements
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
-	"time"
+	fmt "fmt"
+	stc "strconv"
+	str "strings"
+	tim "time"
 )
 
 // MOMENT INTERFACE
@@ -22,13 +22,13 @@ import (
 // This constructor creates a new moment in time element for the current time
 // in the UTC timezone.
 func Now() Moment {
-	var now = time.Now().UTC().UnixMilli()
+	var now = tim.Now().UTC().UnixMilli()
 	return Moment(now)
 }
 
 // This constructor attempts to create a new moment in time from the specified
 // formatted string. It returns a moment value and whether or not the string
-// contained a valid moment in time.
+// contained a valid moment in tim.
 // For valid string formats for this type see `../abstractions/language.go`.
 func MomentFromString(v string) (Moment, bool) {
 	var moment, ok = stringToMoment(v)
@@ -37,7 +37,7 @@ func MomentFromString(v string) (Moment, bool) {
 
 // This type defines the methods associated with moment in time elements. It
 // extends the native Go int type and represents the number of milliseconds
-// after the UNIX epoc (Midnight, January 1, 1970 UTC) for a moment of time.
+// after the UNIX epoc (Midnight, January 1, 1970 UTC) for a moment of tim.
 // All moments are based on UTC.
 type Moment int
 
@@ -45,10 +45,10 @@ type Moment int
 
 // This method returns the canonical string for this element.
 func (v Moment) AsString() string {
-	var result strings.Builder
+	var result str.Builder
 	result.WriteString("<")
 	var year = v.GetYears()
-	result.WriteString(strconv.FormatInt(int64(year), 10))
+	result.WriteString(stc.FormatInt(int64(year), 10))
 	var month = v.GetMonths()
 	if month > 1 {
 		result.WriteString("-")
@@ -190,19 +190,19 @@ var Moments = &moments{}
 type moments struct{}
 
 // This library function returns the duration of time between the two specified
-// moments in time.
+// moments in tim.
 func (l *moments) Duration(first, second Moment) Duration {
 	return Duration(int(second - first))
 }
 
 // This library function returns the moment in time that is earlier than the
-// specified moment in time by the specified duration of time.
+// specified moment in time by the specified duration of tim.
 func (l *moments) Earlier(moment Moment, duration Duration) Moment {
 	return Moment(int(moment) - int(duration))
 }
 
 // This library function returns the moment in time that is later than the
-// specified moment in time by the specified duration of time.
+// specified moment in time by the specified duration of tim.
 func (l *moments) Later(moment Moment, duration Duration) Moment {
 	return Moment(int(moment) + int(duration))
 }
@@ -241,7 +241,7 @@ var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
 	"<-2006-01-02T15:04:05.000>"}
 
 // This function parses a moment string and returns the corresponding number
-// of milliseconds since UNIX epoc for that moment in time. We take advantage
+// of milliseconds since UNIX epoc for that moment in tim. We take advantage
 // of the Go time package to do the parsing and decoding of the string.
 func stringToMoment(v string) (int, bool) {
 	var result int
@@ -256,9 +256,9 @@ func stringToMoment(v string) (int, bool) {
 }
 
 // This function returns the go Time value for the specified UNIX milliseconds.
-func momentToTime(v Moment) time.Time {
+func momentToTime(v Moment) tim.Time {
 	var milliseconds int64 = int64(v)
-	return time.UnixMilli(milliseconds).UTC()
+	return tim.UnixMilli(milliseconds).UTC()
 }
 
 // This function formats the specified ordinal value to exactly two digits.
@@ -266,15 +266,15 @@ func formatOrdinal(ordinal int) string {
 	return fmt.Sprintf("%02d", ordinal)
 }
 
-// The Go time.Parse() function cannot handle negative years even though the
-// time.Time.Format() method will correctly print negative years. The Go team
+// The Go tim.Parse() function cannot handle negative years even though the
+// tim.Time.Format() method will correctly print negative years. The Go team
 // has labeled this issue as "unfortunate" and will not fix it. Alas...
-func hackedParse(layout string, value string) (time.Time, error) {
-	var date, err = time.Parse(layout, value)
+func hackedParse(layout string, value string) (tim.Time, error) {
+	var date, err = tim.Parse(layout, value)
 	if err != nil {
 		return date, err
 	}
-	if strings.HasPrefix(layout, "<-") {
+	if str.HasPrefix(layout, "<-") {
 		date = date.AddDate(-2*date.Year(), 0, 0)
 	}
 	return date, err

@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // DEREFERENCE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new dereference expression.
-func Dereference(expression any) abstractions.DereferenceLike {
+func Dereference(expression any) abs.DereferenceLike {
 	var v = &dereferenceExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)

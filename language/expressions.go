@@ -11,19 +11,19 @@
 package language
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/expressions"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	exp "github.com/craterdog-bali/go-bali-document-notation/expressions"
 )
 
 // This method attempts to parse the arguments within a call. It returns an
 // array of the arguments and whether or not the arguments were successfully
 // parsed.
-func (v *parser) parseArguments() (abstractions.ListLike[any], *Token, bool) {
+func (v *parser) parseArguments() (abs.ListLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
 	var argument any
-	var arguments abstractions.ListLike[any]
+	var arguments abs.ListLike[any]
 	argument, token, ok = v.parseExpression()
 	for ok {
 		arguments.AddItem(argument)
@@ -47,13 +47,13 @@ func (v *parser) parseArguments() (abstractions.ListLike[any], *Token, bool) {
 // This method attempts to parse a arithmetic expression. It returns the
 // arithmetic expression and whether or not the arithmetic expression was
 // successfully parsed.
-func (v *parser) parseArithmetic(left any) (abstractions.ArithmeticLike, *Token, bool) {
+func (v *parser) parseArithmetic(left any) (abs.ArithmeticLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
-	var operator abstractions.Operator
+	var operator abs.Operator
 	var right any
-	var expression abstractions.ArithmeticLike
+	var expression abs.ArithmeticLike
 	delimiter, token, ok = v.parseDelimiter("*")
 	if !ok {
 		delimiter, token, ok = v.parseDelimiter("/")
@@ -80,28 +80,28 @@ func (v *parser) parseArithmetic(left any) (abstractions.ArithmeticLike, *Token,
 	}
 	switch delimiter {
 	case "*":
-		operator = abstractions.PRODUCT
+		operator = abs.PRODUCT
 	case "/":
-		operator = abstractions.QUOTIENT
+		operator = abs.QUOTIENT
 	case "//":
-		operator = abstractions.REMAINDER
+		operator = abs.REMAINDER
 	case "+":
-		operator = abstractions.SUM
+		operator = abs.SUM
 	case "-":
-		operator = abstractions.DIFFERENCE
+		operator = abs.DIFFERENCE
 	}
-	expression = expressions.Arithmetic(left, operator, right)
+	expression = exp.Arithmetic(left, operator, right)
 	return expression, token, true
 }
 
 // This method attempts to parse a chain expression. It returns the
 // chain expression and whether or not the chain expression was
 // successfully parsed.
-func (v *parser) parseChaining(left any) (abstractions.ChainingLike, *Token, bool) {
+func (v *parser) parseChaining(left any) (abs.ChainingLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var right any
-	var expression abstractions.ChainingLike
+	var expression abs.ChainingLike
 	_, token, ok = v.parseDelimiter("&")
 	if !ok {
 		// This is not a chain expression.
@@ -114,20 +114,20 @@ func (v *parser) parseChaining(left any) (abstractions.ChainingLike, *Token, boo
 			"$chaining")
 		panic(message)
 	}
-	expression = expressions.Chaining(left, right)
+	expression = exp.Chaining(left, right)
 	return expression, token, true
 }
 
 // This method attempts to parse a comparison expression. It returns the
 // comparison expression and whether or not the comparison expression was
 // successfully parsed.
-func (v *parser) parseComparison(left any) (abstractions.ComparisonLike, *Token, bool) {
+func (v *parser) parseComparison(left any) (abs.ComparisonLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
-	var operator abstractions.Operator
+	var operator abs.Operator
 	var right any
-	var expression abstractions.ComparisonLike
+	var expression abs.ComparisonLike
 	delimiter, token, ok = v.parseDelimiter("<")
 	if !ok {
 		delimiter, token, ok = v.parseDelimiter("=")
@@ -157,30 +157,30 @@ func (v *parser) parseComparison(left any) (abstractions.ComparisonLike, *Token,
 	}
 	switch delimiter {
 	case "<":
-		operator = abstractions.LESS
+		operator = abs.LESS
 	case "=":
-		operator = abstractions.EQUAL
+		operator = abs.EQUAL
 	case ">":
-		operator = abstractions.MORE
+		operator = abs.MORE
 	case "≠":
-		operator = abstractions.UNEQUAL
+		operator = abs.UNEQUAL
 	case "IS":
-		operator = abstractions.IS
+		operator = abs.IS
 	case "MATCHES":
-		operator = abstractions.MATCHES
+		operator = abs.MATCHES
 	}
-	expression = expressions.Comparison(left, operator, right)
+	expression = exp.Comparison(left, operator, right)
 	return expression, token, true
 }
 
 // This method attempts to parse a complement expression. It returns the
 // complement expression and whether or not the complement expression was
 // successfully parsed.
-func (v *parser) parseComplement() (abstractions.ComplementLike, *Token, bool) {
+func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var logical any
-	var expression abstractions.ComplementLike
+	var expression abs.ComplementLike
 	_, token, ok = v.parseKeyword("NOT")
 	if !ok {
 		// This is not an complement expression.
@@ -193,18 +193,18 @@ func (v *parser) parseComplement() (abstractions.ComplementLike, *Token, bool) {
 			"$complement")
 		panic(message)
 	}
-	expression = expressions.Complement(logical)
+	expression = exp.Complement(logical)
 	return expression, token, true
 }
 
 // This method attempts to parse a dereference expression. It returns the
 // dereference expression and whether or not the dereference expression was
 // successfully parsed.
-func (v *parser) parseDereference() (abstractions.DereferenceLike, *Token, bool) {
+func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var reference any
-	var expression abstractions.DereferenceLike
+	var expression abs.DereferenceLike
 	_, token, ok = v.parseDelimiter("@")
 	if !ok {
 		// This is not an dereference expression.
@@ -217,18 +217,18 @@ func (v *parser) parseDereference() (abstractions.DereferenceLike, *Token, bool)
 			"$dereference")
 		panic(message)
 	}
-	expression = expressions.Dereference(reference)
+	expression = exp.Dereference(reference)
 	return expression, token, true
 }
 
 // This method attempts to parse a power expression. It returns the
 // power expression and whether or not the power expression was
 // successfully parsed.
-func (v *parser) parseExponential(base any) (abstractions.ExponentialLike, *Token, bool) {
+func (v *parser) parseExponential(base any) (abs.ExponentialLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var exponent any
-	var expression abstractions.ExponentialLike
+	var expression abs.ExponentialLike
 	_, token, ok = v.parseDelimiter("^")
 	if !ok {
 		// This is not a power expression.
@@ -241,7 +241,7 @@ func (v *parser) parseExponential(base any) (abstractions.ExponentialLike, *Toke
 			"$exponential")
 		panic(message)
 	}
-	expression = expressions.Exponential(base, exponent)
+	expression = exp.Exponential(base, exponent)
 	return expression, token, true
 }
 
@@ -283,11 +283,11 @@ func (v *parser) parseExpression() (any, *Token, bool) {
 
 // This method attempts to parse a sequence of indices. It returns an array of
 // the indices and whether or not the indices were successfully parsed.
-func (v *parser) parseIndices() (abstractions.ListLike[any], *Token, bool) {
+func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
 	var index any
-	var indices abstractions.ListLike[any]
+	var indices abs.ListLike[any]
 	index, token, ok = v.parseExpression()
 	// There must be at least one index.
 	if !ok {
@@ -318,12 +318,12 @@ func (v *parser) parseIndices() (abstractions.ListLike[any], *Token, bool) {
 // This method attempts to parse a function expression. It returns the
 // function expression and whether or not the function expression was
 // successfully parsed.
-func (v *parser) parseIntrinsic() (abstractions.IntrinsicLike, *Token, bool) {
+func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var function string
-	var arguments abstractions.ListLike[any]
-	var expression abstractions.IntrinsicLike
+	var arguments abs.ListLike[any]
+	var expression abs.IntrinsicLike
 	function, token, ok = v.parseIdentifier()
 	if !ok {
 		// This is not an function expression.
@@ -353,20 +353,20 @@ func (v *parser) parseIntrinsic() (abstractions.IntrinsicLike, *Token, bool) {
 			"$arguments")
 		panic(message)
 	}
-	expression = expressions.Intrinsic(function, arguments)
+	expression = exp.Intrinsic(function, arguments)
 	return expression, token, true
 }
 
 // This method attempts to parse a inversion expression. It returns the
 // inversion expression and whether or not the inversion expression was
 // successfully parsed.
-func (v *parser) parseInversion() (abstractions.InversionLike, *Token, bool) {
+func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
-	var operator abstractions.Operator
+	var operator abs.Operator
 	var numeric any
-	var expression abstractions.InversionLike
+	var expression abs.InversionLike
 	delimiter, token, ok = v.parseDelimiter("-")
 	if !ok {
 		delimiter, token, ok = v.parseDelimiter("/")
@@ -387,26 +387,26 @@ func (v *parser) parseInversion() (abstractions.InversionLike, *Token, bool) {
 	}
 	switch delimiter {
 	case "-":
-		operator = abstractions.INVERSE
+		operator = abs.INVERSE
 	case "/":
-		operator = abstractions.RECIPROCAL
+		operator = abs.RECIPROCAL
 	case "*":
-		operator = abstractions.CONJUGATE
+		operator = abs.CONJUGATE
 	}
-	expression = expressions.Inversion(operator, numeric)
+	expression = exp.Inversion(operator, numeric)
 	return expression, token, true
 }
 
 // This method attempts to parse a message expression. It returns the
 // message expression and whether or not the message expression was
 // successfully parsed.
-func (v *parser) parseInvocation(target any) (abstractions.InvocationLike, *Token, bool) {
+func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var message string
-	var arguments abstractions.ListLike[any]
-	var expression abstractions.InvocationLike
+	var arguments abs.ListLike[any]
+	var expression abs.InvocationLike
 	delimiter, token, ok = v.parseDelimiter(".")
 	if !ok {
 		delimiter, token, ok = v.parseDelimiter("<~")
@@ -453,9 +453,9 @@ func (v *parser) parseInvocation(target any) (abstractions.InvocationLike, *Toke
 	}
 	switch delimiter {
 	case ".":
-		expression = expressions.Invocation(target, message, arguments)
+		expression = exp.Invocation(target, message, arguments)
 	case "<~":
-		expression = expressions.AsynchronousInvocation(target, message, arguments)
+		expression = exp.AsynchronousInvocation(target, message, arguments)
 	}
 	return expression, token, true
 }
@@ -463,13 +463,13 @@ func (v *parser) parseInvocation(target any) (abstractions.InvocationLike, *Toke
 // This method attempts to parse a logical expression. It returns the
 // logical expression and whether or not the logical expression was
 // successfully parsed.
-func (v *parser) parseLogical(left any) (abstractions.LogicalLike, *Token, bool) {
+func (v *parser) parseLogical(left any) (abs.LogicalLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
-	var operator abstractions.Operator
+	var operator abs.Operator
 	var right any
-	var expression abstractions.LogicalLike
+	var expression abs.LogicalLike
 	delimiter, token, ok = v.parseKeyword("AND")
 	if !ok {
 		delimiter, token, ok = v.parseKeyword("SANS")
@@ -493,26 +493,26 @@ func (v *parser) parseLogical(left any) (abstractions.LogicalLike, *Token, bool)
 	}
 	switch delimiter {
 	case "AND":
-		operator = abstractions.AND
+		operator = abs.AND
 	case "SANS":
-		operator = abstractions.SANS
+		operator = abs.SANS
 	case "XOR":
-		operator = abstractions.XOR
+		operator = abs.XOR
 	case "OR":
-		operator = abstractions.OR
+		operator = abs.OR
 	}
-	expression = expressions.Logical(left, operator, right)
+	expression = exp.Logical(left, operator, right)
 	return expression, token, true
 }
 
 // This method attempts to parse a magnitude expression. It returns the
 // magnitude expression and whether or not the magnitude expression was
 // successfully parsed.
-func (v *parser) parseMagnitude() (abstractions.MagnitudeLike, *Token, bool) {
+func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var numeric any
-	var expression abstractions.MagnitudeLike
+	var expression abs.MagnitudeLike
 	_, token, ok = v.parseDelimiter("|")
 	if !ok {
 		// This is not an magnitude expression.
@@ -532,18 +532,18 @@ func (v *parser) parseMagnitude() (abstractions.MagnitudeLike, *Token, bool) {
 			"$magnitude")
 		panic(message)
 	}
-	expression = expressions.Magnitude(numeric)
+	expression = exp.Magnitude(numeric)
 	return expression, token, true
 }
 
 // This method attempts to parse a precedence expression. It returns the
 // precedence expression and whether or not the precedence expression was
 // successfully parsed.
-func (v *parser) parsePrecedence() (abstractions.PrecedenceLike, *Token, bool) {
+func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var inner any
-	var expression abstractions.PrecedenceLike
+	var expression abs.PrecedenceLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		// This is not an precedence expression.
@@ -563,7 +563,7 @@ func (v *parser) parsePrecedence() (abstractions.PrecedenceLike, *Token, bool) {
 			"$precedence")
 		panic(message)
 	}
-	expression = expressions.Precedence(inner)
+	expression = exp.Precedence(inner)
 	return expression, token, true
 }
 
@@ -616,11 +616,11 @@ func (v *parser) parseRecursive() (any, *Token, bool) {
 // This method attempts to parse an attribute expression. It returns the
 // attribute expression and whether or not the attribute expression was
 // successfully parsed.
-func (v *parser) parseValue(composite any) (abstractions.ValueLike, *Token, bool) {
+func (v *parser) parseValue(composite any) (abs.ValueLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var indices abstractions.ListLike[any]
-	var expression abstractions.ValueLike
+	var indices abs.ListLike[any]
+	var expression abs.ValueLike
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		// This is not an attribute expression.
@@ -642,6 +642,6 @@ func (v *parser) parseValue(composite any) (abstractions.ValueLike, *Token, bool
 			"$indices")
 		panic(message)
 	}
-	expression = expressions.Value(composite, indices)
+	expression = exp.Value(composite, indices)
 	return expression, token, true
 }

@@ -11,10 +11,10 @@
 package strings
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/utilities"
-	"strings"
-	"unicode"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
+	str "strings"
+	uni "unicode"
 )
 
 // BINARY STRING INTERFACE
@@ -26,7 +26,7 @@ import (
 func BinaryFromString(v string) (Binary, bool) {
 	var ok = true
 	var binary string
-	var matches = abstractions.ScanBinary([]byte(v))
+	var matches = abs.ScanBinary([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
@@ -39,7 +39,7 @@ func BinaryFromString(v string) (Binary, bool) {
 // This constructor attempts to create a new binary string from the specified
 // byte array. It returns the corresponding binary string.
 func BinaryFromBytes(v []byte) Binary {
-	var encoded = "'" + utilities.Base64Encode(v) + "'"
+	var encoded = "'" + uti.Base64Encode(v) + "'"
 	return Binary(encoded)
 }
 
@@ -76,7 +76,7 @@ func (v Binary) GetSize() int {
 // are in the same order as they are in the string.
 func (v Binary) AsArray() []byte {
 	var encoded = string(v[1 : len(v)-1]) // Remove the single quotes.
-	var bytes = utilities.Base64Decode(encoded)
+	var bytes = uti.Base64Decode(encoded)
 	return bytes
 }
 
@@ -87,7 +87,7 @@ func (v Binary) AsArray() []byte {
 func (v Binary) GetItem(index int) byte {
 	var bytes = v.AsArray()
 	var length = len(bytes)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	return bytes[index]
 }
 
@@ -96,8 +96,8 @@ func (v Binary) GetItem(index int) byte {
 func (v Binary) GetItems(first int, last int) []byte {
 	var bytes = v.AsArray()
 	var length = len(bytes)
-	first = abstractions.NormalizedIndex(first, length)
-	last = abstractions.NormalizedIndex(last, length)
+	first = abs.NormalizedIndex(first, length)
+	last = abs.NormalizedIndex(last, length)
 	return bytes[first : last+1]
 }
 
@@ -116,8 +116,8 @@ func (v Binary) GetIndex(b byte) int {
 }
 
 func removeWhiteSpace(s string) string {
-	return strings.Map(func(r rune) rune {
-		if unicode.IsSpace(r) {
+	return str.Map(func(r rune) rune {
+		if uni.IsSpace(r) {
 			return -1
 		}
 		return r

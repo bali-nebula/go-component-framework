@@ -11,7 +11,7 @@
 package abstractions
 
 import (
-	"sync"
+	syn "sync"
 )
 
 // COLLECTION INTERFACES
@@ -188,7 +188,7 @@ type Blendable[K any, V any] interface {
 // This library interface defines the functions supported by all libraries that
 // can combine queue-like collections in interesting ways.
 type Routeable[T any] interface {
-	Fork(wg *sync.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
-	Split(wg *sync.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
-	Join(wg *sync.WaitGroup, inputs Sequential[FIFO[T]]) FIFO[T]
+	Fork(wg *syn.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
+	Split(wg *syn.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
+	Join(wg *syn.WaitGroup, inputs Sequential[FIFO[T]]) FIFO[T]
 }

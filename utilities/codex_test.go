@@ -11,27 +11,27 @@
 package utilities_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/utilities"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestBase32EmptyRoundTrip(t *testing.T) {
+func TestBase32EmptyRoundTrip(t *tes.T) {
 	var bytes = make([]byte, 0)
 
 	// Encode as base 32.
-	var base32 = utilities.Base32Encode(bytes)
+	var base32 = uti.Base32Encode(bytes)
 
 	// Decode base 32 to bytes.
-	var decoded = utilities.Base32Decode(base32)
-	assert.Equal(t, bytes, decoded)
+	var decoded = uti.Base32Decode(base32)
+	ass.Equal(t, bytes, decoded)
 
 	// Encode as base 32 again.
-	var encoded = utilities.Base32Encode(decoded)
-	assert.Equal(t, base32, encoded)
+	var encoded = uti.Base32Encode(decoded)
+	ass.Equal(t, base32, encoded)
 }
 
-func TestBase32RoundTrip(t *testing.T) {
+func TestBase32RoundTrip(t *tes.T) {
 	// Seed the bytes.
 	var bytes = make([]byte, 256)
 	for index, _ := range bytes {
@@ -39,33 +39,33 @@ func TestBase32RoundTrip(t *testing.T) {
 	}
 
 	// Encode as base 32.
-	var base32 = utilities.Base32Encode(bytes)
+	var base32 = uti.Base32Encode(bytes)
 
 	// Decode base 32 to bytes.
-	var decoded = utilities.Base32Decode(base32)
-	assert.Equal(t, bytes, decoded)
+	var decoded = uti.Base32Decode(base32)
+	ass.Equal(t, bytes, decoded)
 
 	// Encode as base 32 again.
-	var encoded = utilities.Base32Encode(decoded)
-	assert.Equal(t, base32, encoded)
+	var encoded = uti.Base32Encode(decoded)
+	ass.Equal(t, base32, encoded)
 }
 
-func TestBase64EmptyRoundTrip(t *testing.T) {
+func TestBase64EmptyRoundTrip(t *tes.T) {
 	var bytes = make([]byte, 0)
 
 	// Encode as base 64.
-	var base64 = utilities.Base64Encode(bytes)
+	var base64 = uti.Base64Encode(bytes)
 
 	// Decode base 64 to bytes.
-	var decoded = utilities.Base64Decode(base64)
-	assert.Equal(t, bytes, decoded)
+	var decoded = uti.Base64Decode(base64)
+	ass.Equal(t, bytes, decoded)
 
 	// Encode as base 64 again.
-	var encoded = utilities.Base64Encode(decoded)
-	assert.Equal(t, base64, encoded)
+	var encoded = uti.Base64Encode(decoded)
+	ass.Equal(t, base64, encoded)
 }
 
-func TestBase64RoundTrip(t *testing.T) {
+func TestBase64RoundTrip(t *tes.T) {
 	// Seed the bytes.
 	var bytes = make([]byte, 256)
 	for index, _ := range bytes {
@@ -73,13 +73,13 @@ func TestBase64RoundTrip(t *testing.T) {
 	}
 
 	// Encode as base 64.
-	var base64 = utilities.Base64Encode(bytes)
+	var base64 = uti.Base64Encode(bytes)
 
 	// Decode base 64 to bytes.
-	var decoded = utilities.Base64Decode(base64)
-	assert.Equal(t, bytes, decoded)
+	var decoded = uti.Base64Decode(base64)
+	ass.Equal(t, bytes, decoded)
 
 	// Encode as base 64 again.
-	var encoded = utilities.Base64Encode(decoded)
-	assert.Equal(t, base64, encoded)
+	var encoded = uti.Base64Encode(decoded)
+	ass.Equal(t, base64, encoded)
 }

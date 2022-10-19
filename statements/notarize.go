@@ -11,12 +11,49 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that notarizes
-// a draft document as a named released document in the document repository.
-type NotarizeClause struct {
-	Draft   any
-	Moniker any
+// NOTARIZE CLAUSE IMPLEMENTATION
+
+// This constructor creates a new notarize clause.
+func Notarize(draft, moniker any) abs.NotarizeLike {
+	var v = &notarizeClause{}
+	// Perform argument validation.
+	v.SetDraft(draft)
+	v.SetMoniker(moniker)
+	return v
+}
+
+// This type defines the structure and methods associated with a notarize
+// clause.
+type notarizeClause struct {
+	draft   any
+	moniker any
+}
+
+// This method returns the draft expression for this notarize clause.
+func (v *notarizeClause) GetDraft() any {
+	return v.draft
+}
+
+// This method sets the draft expression for this notarize clause.
+func (v *notarizeClause) SetDraft(draft any) {
+	if draft == nil {
+		panic("A notarize clause requires a draft expression.")
+	}
+	v.draft = draft
+}
+
+// This method returns the citation moniker for this notarize clause.
+func (v *notarizeClause) GetMoniker() any {
+	return v.moniker
+}
+
+// This method sets the citation moniker for this notarize clause.
+func (v *notarizeClause) SetMoniker(moniker any) {
+	if moniker == nil {
+		panic("A notarize clause requires a citation moniker.")
+	}
+	v.moniker = moniker
 }

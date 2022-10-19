@@ -11,13 +11,13 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a Bali Document
 // Notation (BDN) statement containing a main clause and an optional
 // exception handling clause.
 type Statement struct {
-	MainClause      any
-	OnClause *OnClause
+	Main any
+	On   *On
 }

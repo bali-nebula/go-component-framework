@@ -11,8 +11,8 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/utilities"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
 )
 
 // TAG INTERFACE
@@ -23,8 +23,8 @@ func TagOfSize(size int) Tag {
 	if size < 1 {
 		panic("A tag must be at least one byte long!")
 	}
-	var bytes = utilities.RandomBytes(size)
-	var tag = "#" + utilities.Base32Encode(bytes)
+	var bytes = uti.RandomBytes(size)
+	var tag = "#" + uti.Base32Encode(bytes)
 	return Tag(tag)
 }
 
@@ -60,7 +60,7 @@ func (v Tag) String() string {
 func stringToTag(v string) (string, bool) {
 	var tag string
 	var ok = true
-	var matches = abstractions.ScanTag([]byte(v))
+	var matches = abs.ScanTag([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false

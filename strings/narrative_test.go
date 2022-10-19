@@ -11,9 +11,9 @@
 package strings_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/strings"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	str "github.com/craterdog-bali/go-bali-document-notation/strings"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
 const bad = `">
@@ -39,34 +39,34 @@ const n4 = `">
 1234
 <"`
 
-func TestBadNarrative(t *testing.T) {
-	var _, ok = strings.NarrativeFromString(bad)
-	assert.False(t, ok)
+func TestBadNarrative(t *tes.T) {
+	var _, ok = str.NarrativeFromString(bad)
+	ass.False(t, ok)
 }
 
-func TestEmptyNarrative(t *testing.T) {
-	var v, ok = strings.NarrativeFromString(n0)
-	assert.True(t, ok)
-	assert.Equal(t, n0, v.AsString())
-	assert.True(t, v.IsEmpty())
-	assert.Equal(t, 0, v.GetSize())
+func TestEmptyNarrative(t *tes.T) {
+	var v, ok = str.NarrativeFromString(n0)
+	ass.True(t, ok)
+	ass.Equal(t, n0, v.AsString())
+	ass.True(t, v.IsEmpty())
+	ass.Equal(t, 0, v.GetSize())
 }
 
-func TestNarrative(t *testing.T) {
-	var v, ok = strings.NarrativeFromString(n1)
-	assert.True(t, ok)
-	assert.Equal(t, n1, v.AsString())
-	assert.False(t, v.IsEmpty())
-	assert.Equal(t, 10, v.GetSize())
-	assert.Equal(t, 'a', v.GetItem(2))
-	assert.Equal(t, '4', v.GetItem(-1))
-	assert.Equal(t, v.String(), strings.NarrativeFromRunes(v.AsArray()).AsString())
-	assert.Equal(t, n2, strings.NarrativeFromRunes(v.GetItems(5, 7)).AsString())
-	assert.Equal(t, 6, v.GetIndex('本'))
+func TestNarrative(t *tes.T) {
+	var v, ok = str.NarrativeFromString(n1)
+	ass.True(t, ok)
+	ass.Equal(t, n1, v.AsString())
+	ass.False(t, v.IsEmpty())
+	ass.Equal(t, 10, v.GetSize())
+	ass.Equal(t, 'a', v.GetItem(2))
+	ass.Equal(t, '4', v.GetItem(-1))
+	ass.Equal(t, v.String(), str.NarrativeFromRunes(v.AsArray()).AsString())
+	ass.Equal(t, n2, str.NarrativeFromRunes(v.GetItems(5, 7)).AsString())
+	ass.Equal(t, 6, v.GetIndex('本'))
 }
 
-func TestNarrativesLibrary(t *testing.T) {
-	var v1, _ = strings.NarrativeFromString(n3)
-	var v2, _ = strings.NarrativeFromString(n4)
-	assert.Equal(t, n1, strings.Narratives.Concatenate(v1, v2).AsString())
+func TestNarrativesLibrary(t *tes.T) {
+	var v1, _ = str.NarrativeFromString(n3)
+	var v2, _ = str.NarrativeFromString(n4)
+	ass.Equal(t, n1, str.Narratives.Concatenate(v1, v2).AsString())
 }

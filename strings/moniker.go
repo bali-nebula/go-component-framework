@@ -11,9 +11,9 @@
 package strings
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"strings"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	str "strings"
 )
 
 // MONIKER STRING INTERFACE
@@ -25,7 +25,7 @@ import (
 func MonikerFromString(v string) (Moniker, bool) {
 	var ok = true
 	var moniker string
-	var matches = abstractions.ScanMoniker([]byte(v))
+	var matches = abs.ScanMoniker([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
@@ -38,7 +38,7 @@ func MonikerFromString(v string) (Moniker, bool) {
 // This constructor attempts to create a new moniker string from the specified
 // array of names. It returns the corresponding moniker value.
 func MonikerFromNames(v []string) Moniker {
-	var moniker, ok = MonikerFromString("/" + strings.Join(v, "/"))
+	var moniker, ok = MonikerFromString("/" + str.Join(v, "/"))
 	if !ok {
 		panic(fmt.Sprintf("The names contain an illegal character: %v", v))
 	}
@@ -78,7 +78,7 @@ func (v Moniker) GetSize() int {
 // This method returns all the names in this string. The names retrieved are in
 // the same order as they are in the string.
 func (v Moniker) AsArray() []string {
-	return strings.Split(string(v[1:]), "/")
+	return str.Split(string(v[1:]), "/")
 }
 
 // INDEXED INTERFACE
@@ -88,7 +88,7 @@ func (v Moniker) AsArray() []string {
 func (v Moniker) GetItem(index int) string {
 	var names = v.AsArray()
 	var length = len(names)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	return names[index]
 }
 
@@ -97,8 +97,8 @@ func (v Moniker) GetItem(index int) string {
 func (v Moniker) GetItems(first int, last int) []string {
 	var names = v.AsArray()
 	var length = len(names)
-	first = abstractions.NormalizedIndex(first, length)
-	last = abstractions.NormalizedIndex(last, length)
+	first = abs.NormalizedIndex(first, length)
+	last = abs.NormalizedIndex(last, length)
 	var size = last - first + 1
 	return names[first:size]
 }

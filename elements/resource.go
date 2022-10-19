@@ -11,7 +11,7 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // RESOURCE INTERFACE
@@ -46,34 +46,34 @@ func (v Resource) String() string {
 
 // This method returns the scheme part of this resource element.
 func (v Resource) GetScheme() string {
-	var matches = abstractions.ScanResource([]byte(v))
+	var matches = abs.ScanResource([]byte(v))
 	var scheme = matches[2]
 	return scheme
 }
 
 // This method returns the authority part of this resource element.
 func (v Resource) GetAuthority() string {
-	var matches = abstractions.ScanResource([]byte(v))
+	var matches = abs.ScanResource([]byte(v))
 	var authority = matches[3]
 	return authority
 }
 
 // This method returns the path part of this resource element.
 func (v Resource) GetPath() string {
-	var matches = abstractions.ScanResource([]byte(v))
+	var matches = abs.ScanResource([]byte(v))
 	return matches[4]
 }
 
 // This method returns the query part of this resource element.
 func (v Resource) GetQuery() string {
-	var matches = abstractions.ScanResource([]byte(v))
+	var matches = abs.ScanResource([]byte(v))
 	var query = matches[5]
 	return query
 }
 
 // This method returns the fragment part of this resource element.
 func (v Resource) GetFragment() string {
-	var matches = abstractions.ScanResource([]byte(v))
+	var matches = abs.ScanResource([]byte(v))
 	var fragment = matches[6]
 	return fragment
 }
@@ -84,7 +84,7 @@ func (v Resource) GetFragment() string {
 func stringToResource(v string) (string, bool) {
 	var resource string
 	var ok = true
-	var matches = abstractions.ScanResource([]byte(v))
+	var matches = abs.ScanResource([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false

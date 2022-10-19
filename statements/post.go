@@ -11,12 +11,12 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that posts a
 // message to a named message bag.
-type PostClause struct {
+type Post struct {
 	Message any
 	Bag     any
 }

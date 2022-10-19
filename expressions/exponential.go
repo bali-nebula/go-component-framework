@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // EXPONENTIAL EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new exponential expression.
-func Exponential(base, exponent any) abstractions.ExponentialLike {
+func Exponential(base, exponent any) abs.ExponentialLike {
 	var v = &exponentialExpression{}
 	// Perform argument validation.
 	v.SetBase(base)

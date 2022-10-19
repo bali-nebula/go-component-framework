@@ -11,62 +11,62 @@
 package language
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/strings"
+	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 )
 
 // This method attempts to parse a binary string. It returns the binary
 // string and whether or not the binary string was successfully parsed.
-func (v *parser) parseBinary() (strings.Binary, *Token, bool) {
+func (v *parser) parseBinary() (str.Binary, *Token, bool) {
 	var token *Token
-	var binary strings.Binary
+	var binary str.Binary
 	token = v.nextToken()
 	if token.Type != TokenBinary {
 		v.backupOne()
 		return binary, token, false
 	}
-	binary, _ = strings.BinaryFromString(token.Value)
+	binary, _ = str.BinaryFromString(token.Value)
 	return binary, token, true
 }
 
 // This method attempts to parse a moniker string. It returns the moniker string
 // and whether or not the moniker string was successfully parsed.
-func (v *parser) parseMoniker() (strings.Moniker, *Token, bool) {
+func (v *parser) parseMoniker() (str.Moniker, *Token, bool) {
 	var token *Token
-	var moniker strings.Moniker
+	var moniker str.Moniker
 	token = v.nextToken()
 	if token.Type != TokenMoniker {
 		v.backupOne()
 		return moniker, token, false
 	}
-	moniker, _ = strings.MonikerFromString(token.Value)
+	moniker, _ = str.MonikerFromString(token.Value)
 	return moniker, token, true
 }
 
 // This method attempts to parse a narrative string. It returns the narrative
 // string and whether or not the narrative string was successfully parsed.
-func (v *parser) parseNarrative() (strings.Narrative, *Token, bool) {
+func (v *parser) parseNarrative() (str.Narrative, *Token, bool) {
 	var token *Token
-	var narrative strings.Narrative
+	var narrative str.Narrative
 	token = v.nextToken()
 	if token.Type != TokenNarrative {
 		v.backupOne()
 		return narrative, token, false
 	}
-	narrative, _ = strings.NarrativeFromString(token.Value)
+	narrative, _ = str.NarrativeFromString(token.Value)
 	return narrative, token, true
 }
 
 // This method attempts to parse a quote string. It returns the quote string
 // and whether or not the quote string was successfully parsed.
-func (v *parser) parseQuote() (strings.Quote, *Token, bool) {
+func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 	var token *Token
-	var quote strings.Quote
+	var quote str.Quote
 	token = v.nextToken()
 	if token.Type != TokenQuote {
 		v.backupOne()
 		return quote, token, false
 	}
-	quote, _ = strings.QuoteFromString(token.Value)
+	quote, _ = str.QuoteFromString(token.Value)
 	return quote, token, true
 }
 
@@ -76,37 +76,37 @@ func (v *parser) parseQuote() (strings.Quote, *Token, bool) {
 func (v *parser) parseString() (any, *Token, bool) {
 	var ok bool
 	var token *Token
-	var str any
-	str, token, ok = v.parseQuote()
+	var s any
+	s, token, ok = v.parseQuote()
 	if !ok {
-		str, token, ok = v.parseMoniker()
+		s, token, ok = v.parseMoniker()
 	}
 	if !ok {
-		str, token, ok = v.parseVersion()
+		s, token, ok = v.parseVersion()
 	}
 	if !ok {
-		str, token, ok = v.parseBinary()
+		s, token, ok = v.parseBinary()
 	}
 	if !ok {
-		str, token, ok = v.parseNarrative()
+		s, token, ok = v.parseNarrative()
 	}
 	if !ok {
 		// Override any empty strings returned from failed parsing attempts.
-		str = nil
+		s = nil
 	}
-	return str, token, ok
+	return s, token, ok
 }
 
 // This method attempts to parse a version string. It returns the version
 // string and whether or not the version string was successfully parsed.
-func (v *parser) parseVersion() (strings.Version, *Token, bool) {
+func (v *parser) parseVersion() (str.Version, *Token, bool) {
 	var token *Token
-	var version strings.Version
+	var version str.Version
 	token = v.nextToken()
 	if token.Type != TokenVersion {
 		v.backupOne()
 		return version, token, false
 	}
-	version, _ = strings.VersionFromString(token.Value)
+	version, _ = str.VersionFromString(token.Value)
 	return version, token, true
 }

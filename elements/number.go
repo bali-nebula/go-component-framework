@@ -11,11 +11,11 @@
 package elements
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"math"
-	"math/cmplx"
-	"strconv"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	mat "math"
+	cmp "math/cmplx"
+	str "strconv"
 )
 
 // NUMBER INTERFACE
@@ -77,13 +77,13 @@ import (
 // the course of the function as it converges than to look at the final value.
 func NumberFromComplex(v complex128) Number {
 	switch {
-	case cmplx.Abs(v) == 0:
+	case cmp.Abs(v) == 0:
 		// Normalize all versions of zero.
 		return Zero
-	case cmplx.IsInf(v):
+	case cmp.IsInf(v):
 		// Normalize any negative infinities or infinite i's.
 		return Infinity
-	case cmplx.IsNaN(v):
+	case cmp.IsNaN(v):
 		// Normalize any NaN's mixed with valid numbers.
 		return Undefined
 	default:
@@ -95,7 +95,7 @@ func NumberFromComplex(v complex128) Number {
 }
 
 func NumberFromPolar(m float64, p Angle) Number {
-	var v = cmplx.Rect(m, float64(p))
+	var v = cmp.Rect(m, float64(p))
 	return NumberFromComplex(v)
 }
 
@@ -145,12 +145,12 @@ func (v Number) AsBoolean() bool {
 // This method returns an integer value for this discrete element.
 func (v Number) AsInteger() int {
 	if v.IsInfinite() {
-		return math.MaxInt
+		return mat.MaxInt
 	}
 	if v.IsUndefined() {
-		return math.MinInt
+		return mat.MinInt
 	}
-	return int(math.Round(v.AsReal()))
+	return int(mat.Round(v.AsReal()))
 }
 
 // CONTINUOUS INTERFACE
@@ -205,7 +205,7 @@ func (v Number) AsPolar() string {
 	if v.IsUndefined() {
 		return "undefined"
 	}
-	var magnitude, phase = cmplx.Polar(complex128(v))
+	var magnitude, phase = cmp.Polar(complex128(v))
 	var realPart = floatToString(lockMagnitude(magnitude))
 	var imagPart = AngleFromFloat(phase).AsString() + "i"
 	return "(" + realPart + "e^" + imagPart + ")"
@@ -218,12 +218,12 @@ func (v Number) IsZero() bool {
 
 // This method determines whether or not this number is infinite.
 func (v Number) IsInfinite() bool {
-	return math.IsInf(real(v), 0) || math.IsInf(imag(v), 0)
+	return mat.IsInf(real(v), 0) || mat.IsInf(imag(v), 0)
 }
 
 // This method determines whether or not this number is undefined.
 func (v Number) IsUndefined() bool {
-	return math.IsNaN(real(v)) || math.IsNaN(imag(v))
+	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
 }
 
 // This method returns the real part of this complex component.
@@ -238,12 +238,12 @@ func (v Number) GetImaginary() float64 {
 
 // This method returns the magnitude of this complex component.
 func (v Number) GetMagnitude() float64 {
-	return lockMagnitude(cmplx.Abs(complex128(v)))
+	return lockMagnitude(cmp.Abs(complex128(v)))
 }
 
 // This method returns the phase angle of this complex component.
 func (v Number) GetPhase() Angle {
-	return AngleFromFloat(cmplx.Phase(complex128(v)))
+	return AngleFromFloat(cmp.Phase(complex128(v)))
 }
 
 // POLARIZED INTERFACE
@@ -256,12 +256,12 @@ func (v Number) IsNegative() bool {
 // NUMBERS LIBRARY
 
 var zero = complex(0, 0)
-var infinity = cmplx.Inf()
-var undefined = cmplx.NaN()
+var infinity = cmp.Inf()
+var undefined = cmp.NaN()
 
 var I = Number(complex(0.0, 1.0))
 var One = Number(complex(1.0, 0.0))
-var Phi = Number(complex(math.Phi, 0.0))
+var Phi = Number(complex(mat.Phi, 0.0))
 var Zero = Number(zero)
 var Infinity = Number(infinity)
 var Undefined = Number(undefined)
@@ -310,7 +310,7 @@ func (l *numbers) Reciprocal(number Number) Number {
 
 // This library function returns the complex conjugate of the specified number.
 func (l *numbers) Conjugate(number Number) Number {
-	var result = cmplx.Conj(complex128(number))
+	var result = cmp.Conj(complex128(number))
 	return NumberFromComplex(result)
 }
 
@@ -338,11 +338,11 @@ func (l *numbers) Quotient(first, second Number) Number {
 
 // This library function returns the remainder of the specified numbers.
 func (l *numbers) Remainder(first, second Number) Number {
-	var m1 = cmplx.Abs(complex128(first))
-	var p1 = cmplx.Phase(complex128(first))
-	var m2 = cmplx.Abs(complex128(second))
-	var p2 = cmplx.Phase(complex128(second))
-	var magnitude = lockMagnitude(math.Remainder(m1, m2))
+	var m1 = cmp.Abs(complex128(first))
+	var p1 = cmp.Phase(complex128(first))
+	var m2 = cmp.Abs(complex128(second))
+	var p2 = cmp.Phase(complex128(second))
+	var magnitude = lockMagnitude(mat.Remainder(m1, m2))
 	var phase = AngleFromFloat(p2 - p1)
 	return NumberFromPolar(magnitude, phase)
 }
@@ -379,7 +379,7 @@ func (l *numbers) Power(base, exponent Number) Number {
 			panic(fmt.Sprintf("An impossible magnitude was encountered: %v", magnitude))
 		}
 	default:
-		return NumberFromComplex(cmplx.Pow(complex128(base), complex128(exponent)))
+		return NumberFromComplex(cmp.Pow(complex128(base), complex128(exponent)))
 	}
 }
 
@@ -388,8 +388,8 @@ func (l *numbers) Power(base, exponent Number) Number {
 func (l *numbers) Logarithm(base, number Number) Number {
 	// logB(z) => ln(z) / ln(b)
 	return l.Quotient(
-		NumberFromComplex(cmplx.Log(complex128(number))),
-		NumberFromComplex(cmplx.Log(complex128(base))))
+		NumberFromComplex(cmp.Log(complex128(number))),
+		NumberFromComplex(cmp.Log(complex128(base))))
 }
 
 // PRIVATE FUNCTIONS
@@ -403,7 +403,7 @@ func stringToNumber(v string) (complex128, bool) {
 	var realPart float64
 	var imaginaryPart float64
 	var phasePart Angle
-	var matches = abstractions.ScanNumber([]byte(v))
+	var matches = abs.ScanNumber([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false // The value is not a number.
@@ -422,7 +422,7 @@ func stringToNumber(v string) (complex128, bool) {
 	case matches[0][len(matches[0])-1] == 'i':
 		// The value is pure imaginary.
 		var match = matches[0][:len(matches[0])-1] // Strip off the trailing "i".
-		var imaginaryPart, err = strconv.ParseFloat(match, 64)
+		var imaginaryPart, err = str.ParseFloat(match, 64)
 		if err != nil {
 			// The value is a pure imaginary constant.
 			imaginaryPart = constantToValue(match)
@@ -433,7 +433,7 @@ func stringToNumber(v string) (complex128, bool) {
 		switch {
 		case matches[2] == ", ":
 			// The complex number is in rectangular form.
-			realPart, err = strconv.ParseFloat(matches[1], 64)
+			realPart, err = str.ParseFloat(matches[1], 64)
 			if err != nil {
 				// The real part of the number is a constant.
 				realPart = constantToValue(matches[1])
@@ -444,7 +444,7 @@ func stringToNumber(v string) (complex128, bool) {
 				imaginaryPart = -1
 			} else {
 				var match = matches[3][:len(matches[3])-1] // Strip off the trailing "i".
-				imaginaryPart, err = strconv.ParseFloat(match, 64)
+				imaginaryPart, err = str.ParseFloat(match, 64)
 				if err != nil {
 					// The imaginary part of the number is a constant.
 					imaginaryPart = constantToValue(match)
@@ -453,7 +453,7 @@ func stringToNumber(v string) (complex128, bool) {
 			number = complex(realPart, imaginaryPart)
 		default:
 			// The complex number is in polar form.
-			realPart, err = strconv.ParseFloat(matches[4], 64)
+			realPart, err = str.ParseFloat(matches[4], 64)
 			if err != nil {
 				// The real part of the number is a constant.
 				realPart = constantToValue(matches[4])
@@ -464,7 +464,7 @@ func stringToNumber(v string) (complex128, bool) {
 		}
 	default:
 		// The value is pure real.
-		realPart, err = strconv.ParseFloat(matches[0], 64)
+		realPart, err = str.ParseFloat(matches[0], 64)
 		if err != nil {
 			// The value is a pure real constant.
 			realPart = constantToValue(matches[0])
@@ -484,21 +484,21 @@ func constantToValue(v string) float64 {
 	case "-":
 		value = -1
 	case "e":
-		value = math.E
+		value = mat.E
 	case "-e":
-		value = -math.E
+		value = -mat.E
 	case "pi", "π":
-		value = math.Pi
+		value = mat.Pi
 	case "-pi", "-π":
-		value = -math.Pi
+		value = -mat.Pi
 	case "phi", "φ":
-		value = math.Phi
+		value = mat.Phi
 	case "-phi", "-φ":
-		value = -math.Phi
+		value = -mat.Phi
 	case "tau", "τ":
-		value = math.Pi * 2.0
+		value = mat.Pi * 2.0
 	case "-tau", "-τ":
-		value = -math.Pi * 2.0
+		value = -mat.Pi * 2.0
 	default:
 		panic(fmt.Sprintf("An invalid constant was used in a complex number: %v", v))
 	}
@@ -510,24 +510,24 @@ func constantToValue(v string) float64 {
 func floatToString(v float64) string {
 	var value string
 	switch v {
-	case math.E:
+	case mat.E:
 		value = "e"
-	case -math.E:
+	case -mat.E:
 		value = "-e"
-	case math.Pi:
+	case mat.Pi:
 		value = "π"
-	case -math.Pi:
+	case -mat.Pi:
 		value = "-π"
-	case math.Phi:
+	case mat.Phi:
 		value = "φ"
-	case -math.Phi:
+	case -mat.Phi:
 		value = "-φ"
-	case math.Pi * 2.0:
+	case mat.Pi * 2.0:
 		value = "τ"
-	case -math.Pi * 2.0:
+	case -mat.Pi * 2.0:
 		value = "-τ"
 	default:
-		value = strconv.FormatFloat(v, 'G', -1, 64)
+		value = str.FormatFloat(v, 'G', -1, 64)
 	}
 	return value
 }
@@ -539,14 +539,14 @@ func floatToString(v float64) string {
 func lockMagnitude(v float64) float64 {
 	var v32 float32 = float32(v)
 	switch {
-	case math.Abs(v) <= 1.2246467991473515e-16:
+	case mat.Abs(v) <= 1.2246467991473515e-16:
 		return 0
 	case v32 == -1:
 		return -1
 	case v32 == 1:
 		return 1
-	case math.IsInf(v, 0):
-		return math.Inf(1)
+	case mat.IsInf(v, 0):
+		return mat.Inf(1)
 	default:
 		return v
 	}

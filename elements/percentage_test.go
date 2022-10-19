@@ -11,60 +11,60 @@
 package elements_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/elements"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestZeroPercentages(t *testing.T) {
-	var v = elements.Percentage(0.0)
-	assert.Equal(t, 0.0, float64(v))
-	assert.Equal(t, 0.0, v.AsReal())
+func TestZeroPercentages(t *tes.T) {
+	var v = ele.Percentage(0.0)
+	ass.Equal(t, 0.0, float64(v))
+	ass.Equal(t, 0.0, v.AsReal())
 }
 
-func TestPositivePercentages(t *testing.T) {
-	var v = elements.Percentage(25)
-	assert.Equal(t, 25, int(v))
-	assert.Equal(t, 0.25, v.AsReal())
+func TestPositivePercentages(t *tes.T) {
+	var v = ele.Percentage(25)
+	ass.Equal(t, 25, int(v))
+	ass.Equal(t, 0.25, v.AsReal())
 }
 
-func TestNegativePercentages(t *testing.T) {
-	var v = elements.Percentage(-75)
-	assert.Equal(t, -75, int(v))
-	assert.Equal(t, -0.75, v.AsReal())
+func TestNegativePercentages(t *tes.T) {
+	var v = ele.Percentage(-75)
+	ass.Equal(t, -75, int(v))
+	ass.Equal(t, -0.75, v.AsReal())
 }
 
-func TestStringPercentages(t *testing.T) {
-	var v, ok = elements.PercentageFromString("50%")
-	assert.True(t, ok)
-	assert.Equal(t, 50, int(v))
-	assert.Equal(t, "50%", v.AsString())
-	assert.Equal(t, 0.5, v.AsReal())
+func TestStringPercentages(t *tes.T) {
+	var v, ok = ele.PercentageFromString("50%")
+	ass.True(t, ok)
+	ass.Equal(t, 50, int(v))
+	ass.Equal(t, "50%", v.AsString())
+	ass.Equal(t, 0.5, v.AsReal())
 
-	v, ok = elements.PercentageFromString("100")
-	assert.False(t, ok)
-	assert.Equal(t, 0, int(v))
+	v, ok = ele.PercentageFromString("100")
+	ass.False(t, ok)
+	ass.Equal(t, 0, int(v))
 }
 
-func TestPercentagesLibrary(t *testing.T) {
-	var v0 = elements.Percentage(0)
-	var v1 = elements.Percentage(0.25)
-	var v2 = elements.Percentage(0.5)
-	var v3 = elements.Percentage(1)
+func TestPercentagesLibrary(t *tes.T) {
+	var v0 = ele.Percentage(0)
+	var v1 = ele.Percentage(0.25)
+	var v2 = ele.Percentage(0.5)
+	var v3 = ele.Percentage(1)
 
-	assert.Equal(t, v0, elements.Percentages.Inverse(v0))
-	assert.Equal(t, -v1, elements.Percentages.Inverse(v1))
-	assert.Equal(t, -v2, elements.Percentages.Inverse(v2))
-	assert.Equal(t, -v3, elements.Percentages.Inverse(v3))
+	ass.Equal(t, v0, ele.Percentages.Inverse(v0))
+	ass.Equal(t, -v1, ele.Percentages.Inverse(v1))
+	ass.Equal(t, -v2, ele.Percentages.Inverse(v2))
+	ass.Equal(t, -v3, ele.Percentages.Inverse(v3))
 
-	assert.Equal(t, v1, elements.Percentages.Sum(v0, v1))
-	assert.Equal(t, v0, elements.Percentages.Difference(v1, v1))
-	assert.Equal(t, v2, elements.Percentages.Sum(v1, v1))
-	assert.Equal(t, v1, elements.Percentages.Difference(v2, v1))
-	assert.Equal(t, v3, elements.Percentages.Sum(v2, v2))
-	assert.Equal(t, v2, elements.Percentages.Difference(v3, v2))
+	ass.Equal(t, v1, ele.Percentages.Sum(v0, v1))
+	ass.Equal(t, v0, ele.Percentages.Difference(v1, v1))
+	ass.Equal(t, v2, ele.Percentages.Sum(v1, v1))
+	ass.Equal(t, v1, ele.Percentages.Difference(v2, v1))
+	ass.Equal(t, v3, ele.Percentages.Sum(v2, v2))
+	ass.Equal(t, v2, ele.Percentages.Difference(v3, v2))
 
-	assert.Equal(t, v0, elements.Percentages.Scaled(v0, 3.0))
-	assert.Equal(t, v3, elements.Percentages.Scaled(v1, 4.0))
-	assert.Equal(t, -v2, elements.Percentages.Scaled(v2, -1.0))
+	ass.Equal(t, v0, ele.Percentages.Scaled(v0, 3.0))
+	ass.Equal(t, v3, ele.Percentages.Scaled(v1, 4.0))
+	ass.Equal(t, -v2, ele.Percentages.Scaled(v2, -1.0))
 }

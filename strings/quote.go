@@ -11,8 +11,8 @@
 package strings
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // QUOTE STRING INTERFACE
@@ -24,7 +24,7 @@ import (
 func QuoteFromString(v string) (Quote, bool) {
 	var ok = true
 	var quote string
-	var matches = abstractions.ScanQuote([]byte(v))
+	var matches = abs.ScanQuote([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
@@ -87,7 +87,7 @@ func (v Quote) AsArray() []rune {
 func (v Quote) GetItem(index int) rune {
 	var runes = v.AsArray()
 	var length = len(runes)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	return runes[index]
 }
 
@@ -96,8 +96,8 @@ func (v Quote) GetItem(index int) rune {
 func (v Quote) GetItems(first int, last int) []rune {
 	var runes = v.AsArray()
 	var length = len(runes)
-	first = abstractions.NormalizedIndex(first, length)
-	last = abstractions.NormalizedIndex(last, length)
+	first = abs.NormalizedIndex(first, length)
+	last = abs.NormalizedIndex(last, length)
 	return runes[first : last+1]
 }
 

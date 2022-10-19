@@ -11,10 +11,17 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that causes the
-// execution of a loop to continue at the beginning.
-type ContinueClause struct {
+// CONTINUE CLAUSE IMPLEMENTATION
+
+// This constructor creates a new continue clause.
+func Continue() abs.ContinueLike {
+	var v = &continueClause{}
+	return v
+}
+
+// This type defines the structure and methods associated with a continue clause.
+type continueClause struct {
 }

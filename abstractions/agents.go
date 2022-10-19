@@ -11,8 +11,8 @@
 package abstractions
 
 import (
-	"fmt"
-	"strings"
+	fmt "fmt"
+	str "strings"
 )
 
 // ITERATION INTERFACES
@@ -162,7 +162,7 @@ func FormatterStateWithIndentation(indentation int) FormatterStateLike {
 type formatterState struct {
 	AgentStateLike
 	indentation int
-	result      strings.Builder
+	result      str.Builder
 }
 
 // This method returns the number of levels that each line is indented in the

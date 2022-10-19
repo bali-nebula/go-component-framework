@@ -11,7 +11,7 @@
 package abstractions
 
 import (
-	"fmt"
+	fmt "fmt"
 )
 
 // STRING INTERFACES

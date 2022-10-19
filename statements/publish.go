@@ -11,11 +11,11 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that publishes
 // an event to be delivered to all interested parties.
-type PublishClause struct {
+type Publish struct {
 	Event any
 }

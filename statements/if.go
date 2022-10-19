@@ -11,11 +11,33 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that selects a
-// statement block to be executed based on the value of a conditional expression.
-type IfClause struct {
-	DoBlock *DoBlock
+// IF CLAUSE IMPLEMENTATION
+
+// This constructor creates a new if clause.
+func If(block BlockLike) abs.IfLike {
+	var v = &ifClause{}
+	// Perform argument validation.
+	v.SetBlock(block)
+	return v
+}
+
+// This type defines the structure and methods associated with an if clause.
+type ifClause struct {
+	block BlockLike
+}
+
+// This method returns the statement block for this if clause.
+func (v *ifClause) GetBlock() any {
+	return v.block
+}
+
+// This method sets the statement block for this if clause.
+func (v *ifClause) SetBlock(block any) {
+	if block == nil {
+		panic("An if clause requires a statement block.")
+	}
+	v.block = block
 }

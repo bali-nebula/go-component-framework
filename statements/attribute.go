@@ -11,13 +11,13 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // ATTRIBUTE IMPLEMENTATION
 
 // This constructor creates a new attribute.
-func Attribute(variable string, indices abstractions.ListLike[any]) abstractions.AttributeLike {
+func Attribute(variable string, indices abs.ListLike[any]) abs.AttributeLike {
 	var v = &attribute{}
 	// Perform argument validation.
 	v.SetVariable(variable)
@@ -28,7 +28,7 @@ func Attribute(variable string, indices abstractions.ListLike[any]) abstractions
 // This type defines the structure and methods associated with an attribute.
 type attribute struct {
 	variable string
-	indices  abstractions.ListLike[any]
+	indices  abs.ListLike[any]
 }
 
 // This method returns the variable for this attribute.
@@ -58,12 +58,12 @@ func (v *attribute) SetIndex(index int, expression any) {
 }
 
 // This method returns the list of indices for this attribute.
-func (v *attribute) GetIndices() abstractions.ListLike[any] {
+func (v *attribute) GetIndices() abs.ListLike[any] {
 	return v.indices
 }
 
 // This method sets the list of indices for this attribute.
-func (v *attribute) SetIndices(indices abstractions.ListLike[any]) {
+func (v *attribute) SetIndices(indices abs.ListLike[any]) {
 	if indices == nil || indices.IsEmpty() {
 		panic("An attribute requires at least one index.")
 	}

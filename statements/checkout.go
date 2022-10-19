@@ -11,14 +11,61 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that checks out
-// a draft version of a released document at an optional release level from the
-// document repository and assigns it to a recipient.
-type CheckoutClause struct {
-	Recipient any // The recipient is a symbol or attribute.
-	Level     any
-	Moniker   any
+// CHECKOUT CLAUSE IMPLEMENTATION
+
+// This constructor creates a new checkout clause.
+func Checkout(recipient, level, moniker any) abs.CheckoutLike {
+	var v = &checkoutClause{}
+	// Perform argument validation.
+	v.SetRecipient(recipient)
+	v.SetLevel(level)
+	v.SetMoniker(moniker)
+	return v
+}
+
+// This type defines the structure and methods associated with a checkout
+// clause.
+type checkoutClause struct {
+	recipient any
+	level     any // The version level to be incremented (optional).
+	moniker   any // A moniker to the citation for the document to be checked out.
+}
+
+// This method returns the recipient for this checkout clause.
+func (v *checkoutClause) GetRecipient() any {
+	return v.recipient
+}
+
+// This method sets the recipient for this checkout clause.
+func (v *checkoutClause) SetRecipient(recipient any) {
+	if recipient == nil {
+		panic("A checkout clause requires a recipient.")
+	}
+	v.recipient = recipient
+}
+
+// This method returns the level for this checkout clause.
+func (v *checkoutClause) GetLevel() any {
+	return v.level
+}
+
+// This method sets the level for this checkout clause.
+func (v *checkoutClause) SetLevel(level any) {
+	v.level = level
+}
+
+// This method returns the citation moniker for this checkout clause.
+func (v *checkoutClause) GetMoniker() any {
+	return v.moniker
+}
+
+// This method sets the citation moniker for this checkout clause.
+func (v *checkoutClause) SetMoniker(moniker any) {
+	if moniker == nil {
+		panic("A checkout clause requires a citation moniker.")
+	}
+	v.moniker = moniker
 }

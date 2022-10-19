@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // COMPARISON EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new comparison expression.
-func Comparison(first any, operator abstractions.Operator, second any) abstractions.ComparisonLike {
+func Comparison(first any, operator abs.Operator, second any) abs.ComparisonLike {
 	var v = &comparisonExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -30,7 +30,7 @@ func Comparison(first any, operator abstractions.Operator, second any) abstracti
 // expression.
 type comparisonExpression struct {
 	first    any
-	operator abstractions.Operator
+	operator abs.Operator
 	second   any
 }
 
@@ -49,14 +49,14 @@ func (v *comparisonExpression) SetFirst(first any) {
 }
 
 // This method returns the comparison operator in this comparison expression.
-func (v *comparisonExpression) GetOperator() abstractions.Operator {
+func (v *comparisonExpression) GetOperator() abs.Operator {
 	return v.operator
 }
 
 // This method sets the comparison operator in this comparison expression to the
 // specified value.
-func (v *comparisonExpression) SetOperator(operator abstractions.Operator) {
-	if operator < abstractions.LESS || operator > abstractions.MATCHES {
+func (v *comparisonExpression) SetOperator(operator abs.Operator) {
+	if operator < abs.LESS || operator > abs.MATCHES {
 		panic("The operator in an comparison expression must be a valid comparison operation.")
 	}
 	v.operator = operator

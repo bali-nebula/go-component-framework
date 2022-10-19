@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // PRECEDENCE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new precedence expression.
-func Precedence(expression any) abstractions.PrecedenceLike {
+func Precedence(expression any) abs.PrecedenceLike {
 	var v = &precedenceExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)

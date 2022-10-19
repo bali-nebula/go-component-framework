@@ -11,11 +11,11 @@
 package strings
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
-	"strconv"
-	"strings"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	stc "strconv"
+	str "strings"
 )
 
 // VERSION STRING INTERFACE
@@ -27,7 +27,7 @@ import (
 func VersionFromString(v string) (Version, bool) {
 	var ok = true
 	var version string
-	var matches = abstractions.ScanVersion([]byte(v))
+	var matches = abs.ScanVersion([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
@@ -46,7 +46,7 @@ func VersionFromOrdinals(v []int) Version {
 		if ordinal < 1 {
 			panic(fmt.Sprintf("All version numbers must be greater than zero: %v", v))
 		}
-		version += strconv.FormatInt(int64(ordinal), 10)
+		version += stc.FormatInt(int64(ordinal), 10)
 		if i < length-1 {
 			version += "."
 		}
@@ -87,9 +87,9 @@ func (v Version) GetSize() int {
 // are in the same order as they are in the string.
 func (v Version) AsArray() []int {
 	var ordinals []int
-	var levels = strings.Split(string(v[1:]), ".")
+	var levels = str.Split(string(v[1:]), ".")
 	for _, level := range levels {
-		var ordinal, _ = strconv.ParseInt(level, 10, 0)
+		var ordinal, _ = stc.ParseInt(level, 10, 0)
 		ordinals = append(ordinals, int(ordinal))
 	}
 	return ordinals
@@ -102,7 +102,7 @@ func (v Version) AsArray() []int {
 func (v Version) GetItem(index int) int {
 	var ordinals = v.AsArray()
 	var length = len(ordinals)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	return ordinals[index]
 }
 
@@ -111,8 +111,8 @@ func (v Version) GetItem(index int) int {
 func (v Version) GetItems(first int, last int) []int {
 	var ordinals = v.AsArray()
 	var length = len(ordinals)
-	first = abstractions.NormalizedIndex(first, length)
-	last = abstractions.NormalizedIndex(last, length)
+	first = abs.NormalizedIndex(first, length)
+	last = abs.NormalizedIndex(last, length)
 	var size = last - first + 1
 	return ordinals[first:size]
 }
@@ -213,8 +213,8 @@ func (l *versions) IsValidNextVersion(current Version, next Version) bool {
 	}
 
 	// Iterate through the versions comparing level values.
-	var currentIterator = agents.Iterator[int](current)
-	var nextIterator = agents.Iterator[int](next)
+	var currentIterator = age.Iterator[int](current)
+	var nextIterator = age.Iterator[int](next)
 	for currentIterator.HasNext() && nextIterator.HasNext() {
 		var currentLevel = currentIterator.GetNext()
 		var nextLevel = nextIterator.GetNext()

@@ -11,10 +11,10 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"math"
-	"strconv"
-	"strings"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	mat "math"
+	stc "strconv"
+	str "strings"
 )
 
 // DURATION CONSTANTS
@@ -58,25 +58,25 @@ type Duration int
 
 // This method returns the canonical string for this element.
 func (v Duration) AsString() string {
-	var result strings.Builder
+	var result str.Builder
 	result.WriteString("~")
 	if v.IsNegative() {
 		result.WriteString("-")
 	}
 	result.WriteString("P")
-	result.WriteString(strconv.FormatInt(int64(v.GetYears()), 10))
+	result.WriteString(stc.FormatInt(int64(v.GetYears()), 10))
 	result.WriteString("Y")
-	result.WriteString(strconv.FormatInt(int64(v.GetMonths()), 10))
+	result.WriteString(stc.FormatInt(int64(v.GetMonths()), 10))
 	result.WriteString("M")
-	result.WriteString(strconv.FormatInt(int64(v.GetDays()), 10))
+	result.WriteString(stc.FormatInt(int64(v.GetDays()), 10))
 	result.WriteString("DT")
-	result.WriteString(strconv.FormatInt(int64(v.GetHours()), 10))
+	result.WriteString(stc.FormatInt(int64(v.GetHours()), 10))
 	result.WriteString("H")
-	result.WriteString(strconv.FormatInt(int64(v.GetMinutes()), 10))
+	result.WriteString(stc.FormatInt(int64(v.GetMinutes()), 10))
 	result.WriteString("M")
-	result.WriteString(strconv.FormatInt(int64(v.GetSeconds()), 10))
+	result.WriteString(stc.FormatInt(int64(v.GetSeconds()), 10))
 	result.WriteString(".")
-	result.WriteString(strconv.FormatInt(int64(v.GetMilliseconds()), 10))
+	result.WriteString(stc.FormatInt(int64(v.GetMilliseconds()), 10))
 	result.WriteString("S")
 	return result.String()
 }
@@ -230,7 +230,7 @@ func (l *durations) Difference(first, second Duration) Duration {
 // This library function returns the specified duration scaled by the specified
 // factor.
 func (l *durations) Scaled(duration Duration, factor float64) Duration {
-	return Duration(int(math.Round(float64(duration) * factor)))
+	return Duration(int(mat.Round(float64(duration) * factor)))
 }
 
 // PRIVATE FUNCTIONS
@@ -246,7 +246,7 @@ func magnitude(value int) int {
 // This function parses a duration string and returns the corresponding number
 // of milliseconds for that duration.
 func stringToDuration(v string) (int, bool) {
-	var matches = abstractions.ScanDuration([]byte(v))
+	var matches = abs.ScanDuration([]byte(v))
 	if len(matches) == 0 {
 		return 0, false
 	}
@@ -257,7 +257,7 @@ func stringToDuration(v string) (int, bool) {
 		if match != "" {
 			var stype = match[len(match)-1:] // Strip off the time span.
 			var tspan = match[:len(match)-1] // Strip off the span type.
-			var value, err = strconv.ParseFloat(tspan, 64)
+			var value, err = stc.ParseFloat(tspan, 64)
 			if len(tspan) > 0 && err != nil {
 				return 0, false
 			}

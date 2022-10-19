@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // INTRINSIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new intrinsic expression.
-func Intrinsic(function string, arguments abstractions.ListLike[any]) abstractions.IntrinsicLike {
+func Intrinsic(function string, arguments abs.ListLike[any]) abs.IntrinsicLike {
 	var v = &intrinsicExpression{}
 	// Perform argument validation.
 	v.SetFunction(function)
@@ -29,7 +29,7 @@ func Intrinsic(function string, arguments abstractions.ListLike[any]) abstractio
 // expression.
 type intrinsicExpression struct {
 	function  string
-	arguments abstractions.ListLike[any]
+	arguments abs.ListLike[any]
 }
 
 // This method returns the function name for this intrinsic expression.
@@ -61,12 +61,12 @@ func (v *intrinsicExpression) SetArgument(index int, argument any) {
 }
 
 // This method returns the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) GetArguments() abstractions.ListLike[any] {
+func (v *intrinsicExpression) GetArguments() abs.ListLike[any] {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) SetArguments(arguments abstractions.ListLike[any]) {
+func (v *intrinsicExpression) SetArguments(arguments abs.ListLike[any]) {
 	if arguments == nil {
 		panic("An intrinsic expression requires an array (possibly empty) of arguments.")
 	}

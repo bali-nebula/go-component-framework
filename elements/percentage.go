@@ -11,8 +11,8 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"strconv"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	str "strconv"
 )
 
 // PERCENTAGE INTERFACE
@@ -35,7 +35,7 @@ type Percentage float64
 
 // This method returns the canonical string for this element.
 func (v Percentage) AsString() string {
-	return strconv.FormatFloat(float64(v), 'G', -1, 64) + "%"
+	return str.FormatFloat(float64(v), 'G', -1, 64) + "%"
 }
 
 // This method implements the standard Go Stringer interface.
@@ -98,13 +98,13 @@ func (l *percentages) Scaled(percentage Percentage, factor float64) Percentage {
 func stringToPercentage(v string) (float64, bool) {
 	var percentage float64
 	var ok = true
-	var matches = abstractions.ScanPercentage([]byte(v))
+	var matches = abs.ScanPercentage([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
 	default:
 		var err error
-		percentage, err = strconv.ParseFloat(matches[1], 64)
+		percentage, err = str.ParseFloat(matches[1], 64)
 		if err != nil {
 			ok = false
 		}

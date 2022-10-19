@@ -11,12 +11,12 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that rejects a
 // message that was previously retrieved from a named message bag so that it
 // can be retrieved by another party.
-type RejectClause struct {
+type Reject struct {
 	Message any
 }

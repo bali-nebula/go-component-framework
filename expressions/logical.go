@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // LOGICAL EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new logical expression.
-func Logical(first any, operator abstractions.Operator, second any) abstractions.LogicalLike {
+func Logical(first any, operator abs.Operator, second any) abs.LogicalLike {
 	var v = &logicalExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -30,7 +30,7 @@ func Logical(first any, operator abstractions.Operator, second any) abstractions
 // expression.
 type logicalExpression struct {
 	first    any
-	operator abstractions.Operator
+	operator abs.Operator
 	second   any
 }
 
@@ -49,14 +49,14 @@ func (v *logicalExpression) SetFirst(first any) {
 }
 
 // This method returns the logical operator in this logical expression.
-func (v *logicalExpression) GetOperator() abstractions.Operator {
+func (v *logicalExpression) GetOperator() abs.Operator {
 	return v.operator
 }
 
 // This method sets the logical operator in this logical expression to the
 // specified value.
-func (v *logicalExpression) SetOperator(operator abstractions.Operator) {
-	if operator < abstractions.AND || operator > abstractions.OR {
+func (v *logicalExpression) SetOperator(operator abs.Operator) {
+	if operator < abs.AND || operator > abs.OR {
 		panic("The operator in a logical expression must be a valid logical operation.")
 	}
 	v.operator = operator

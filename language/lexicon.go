@@ -11,7 +11,7 @@
 package language
 
 import (
-	"fmt"
+	fmt "fmt"
 )
 
 // This map captures the syntax rules for the Bali Document Notation™ (BDN)

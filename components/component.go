@@ -11,14 +11,14 @@
 package components
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	"reflect"
 )
 
 // COMPONENT IMPLEMENTATION
 
 // This constructor creates a new component.
-func Component[T any](entity T) abstractions.ComponentLike[T] {
+func Component[T any](entity T) abs.ComponentLike[T] {
 	var v = &component[T]{}
 	// Perform argument validation.
 	v.SetEntity(entity)
@@ -26,7 +26,7 @@ func Component[T any](entity T) abstractions.ComponentLike[T] {
 }
 
 // This constructor creates a new component with the specified context.
-func ComponentWithContext[T any](entity T, context abstractions.ContextLike) abstractions.ComponentLike[T] {
+func ComponentWithContext[T any](entity T, context abs.ContextLike) abs.ComponentLike[T] {
 	var v = &component[T]{}
 	// Perform argument validation.
 	v.SetEntity(entity)
@@ -40,7 +40,7 @@ func ComponentWithContext[T any](entity T, context abstractions.ContextLike) abs
 //   - T is any type of entity.
 type component[T any] struct {
 	entity  T
-	context abstractions.ContextLike
+	context abs.ContextLike
 	note    string
 }
 
@@ -69,12 +69,12 @@ func (v *component[T]) SetEntity(entity T) {
 }
 
 // This method returns the context for this component.
-func (v *component[T]) GetContext() abstractions.ContextLike {
+func (v *component[T]) GetContext() abs.ContextLike {
 	return v.context
 }
 
 // This method sets the context for this component.
-func (v *component[T]) SetContext(context abstractions.ContextLike) {
+func (v *component[T]) SetContext(context abs.ContextLike) {
 	v.context = context
 }
 

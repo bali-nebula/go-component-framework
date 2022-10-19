@@ -11,13 +11,13 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that executes
 // a statement block for each item in a collection. Each item may be optionally
 // assigned to a symbol that is referenced in the statement block.
-type WithClause struct {
-	Item    elements.Symbol
-	DoBlock *DoBlock
+type With struct {
+	Item  elements.Symbol
+	Block *Block
 }

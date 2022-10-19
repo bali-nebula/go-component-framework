@@ -11,45 +11,45 @@
 package agents_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestComparison(t *testing.T) {
+func TestComparison(t *tes.T) {
 	// Nil
 	var ShouldBeNil any
 
-	assert.True(t, agents.CompareValues(nil, nil))
-	assert.True(t, agents.CompareValues(nil, ShouldBeNil))
-	assert.True(t, agents.CompareValues(ShouldBeNil, ShouldBeNil))
-	assert.True(t, agents.CompareValues(ShouldBeNil, nil))
+	ass.True(t, age.CompareValues(nil, nil))
+	ass.True(t, age.CompareValues(nil, ShouldBeNil))
+	ass.True(t, age.CompareValues(ShouldBeNil, ShouldBeNil))
+	ass.True(t, age.CompareValues(ShouldBeNil, nil))
 
 	// Boolean
 	var False = false
 	var True = true
 	var ShouldBeFalse bool
 
-	assert.True(t, agents.CompareValues(ShouldBeFalse, False))
-	assert.False(t, agents.CompareValues(True, ShouldBeFalse))
+	ass.True(t, age.CompareValues(ShouldBeFalse, False))
+	ass.False(t, age.CompareValues(True, ShouldBeFalse))
 
-	assert.False(t, agents.CompareValues(False, True))
-	assert.True(t, agents.CompareValues(False, False))
-	assert.False(t, agents.CompareValues(True, False))
-	assert.True(t, agents.CompareValues(True, True))
+	ass.False(t, age.CompareValues(False, True))
+	ass.True(t, age.CompareValues(False, False))
+	ass.False(t, age.CompareValues(True, False))
+	ass.True(t, age.CompareValues(True, True))
 
 	// Byte
 	var Zero byte = 0x00
 	var One byte = 0x01
 	var ShouldBeZero byte
 
-	assert.True(t, agents.CompareValues(ShouldBeZero, Zero))
-	assert.False(t, agents.CompareValues(One, ShouldBeZero))
+	ass.True(t, age.CompareValues(ShouldBeZero, Zero))
+	ass.False(t, age.CompareValues(One, ShouldBeZero))
 
-	assert.False(t, agents.CompareValues(Zero, One))
-	assert.True(t, agents.CompareValues(Zero, Zero))
-	assert.False(t, agents.CompareValues(One, Zero))
-	assert.True(t, agents.CompareValues(One, One))
+	ass.False(t, age.CompareValues(Zero, One))
+	ass.True(t, age.CompareValues(Zero, Zero))
+	ass.False(t, age.CompareValues(One, Zero))
+	ass.True(t, age.CompareValues(One, One))
 
 	// Integer
 	var Zilch = 0
@@ -57,13 +57,13 @@ func TestComparison(t *testing.T) {
 	var Three = 3
 	var ShouldBeZilch int
 
-	assert.True(t, agents.CompareValues(ShouldBeZilch, Zilch))
-	assert.False(t, agents.CompareValues(Two, ShouldBeZilch))
+	ass.True(t, age.CompareValues(ShouldBeZilch, Zilch))
+	ass.False(t, age.CompareValues(Two, ShouldBeZilch))
 
-	assert.False(t, agents.CompareValues(Two, Three))
-	assert.True(t, agents.CompareValues(Two, Two))
-	assert.False(t, agents.CompareValues(Three, Two))
-	assert.True(t, agents.CompareValues(Three, Three))
+	ass.False(t, age.CompareValues(Two, Three))
+	ass.True(t, age.CompareValues(Two, Two))
+	ass.False(t, age.CompareValues(Three, Two))
+	ass.True(t, age.CompareValues(Three, Three))
 
 	// Float
 	var Negligible = 0.0
@@ -71,13 +71,13 @@ func TestComparison(t *testing.T) {
 	var Half = 0.5
 	var ShouldBeNegligible float64
 
-	assert.True(t, agents.CompareValues(ShouldBeNegligible, Negligible))
-	assert.False(t, agents.CompareValues(Half, ShouldBeNegligible))
+	ass.True(t, age.CompareValues(ShouldBeNegligible, Negligible))
+	ass.False(t, age.CompareValues(Half, ShouldBeNegligible))
 
-	assert.False(t, agents.CompareValues(Fourth, Half))
-	assert.True(t, agents.CompareValues(Fourth, Fourth))
-	assert.False(t, agents.CompareValues(Half, Fourth))
-	assert.True(t, agents.CompareValues(Half, Half))
+	ass.False(t, age.CompareValues(Fourth, Half))
+	ass.True(t, age.CompareValues(Fourth, Fourth))
+	ass.False(t, age.CompareValues(Half, Fourth))
+	ass.True(t, age.CompareValues(Half, Half))
 
 	// Complex
 	var Origin = 0 + 0i
@@ -85,13 +85,13 @@ func TestComparison(t *testing.T) {
 	var PiOver2 = 1 + 0i
 	var ShouldBeOrigin complex128
 
-	assert.True(t, agents.CompareValues(ShouldBeOrigin, Origin))
-	assert.False(t, agents.CompareValues(PiOver4, ShouldBeOrigin))
+	ass.True(t, age.CompareValues(ShouldBeOrigin, Origin))
+	ass.False(t, age.CompareValues(PiOver4, ShouldBeOrigin))
 
-	assert.False(t, agents.CompareValues(PiOver4, PiOver2))
-	assert.True(t, agents.CompareValues(PiOver4, PiOver4))
-	assert.False(t, agents.CompareValues(PiOver2, PiOver4))
-	assert.True(t, agents.CompareValues(PiOver2, PiOver2))
+	ass.False(t, age.CompareValues(PiOver4, PiOver2))
+	ass.True(t, age.CompareValues(PiOver4, PiOver4))
+	ass.False(t, age.CompareValues(PiOver2, PiOver4))
+	ass.True(t, age.CompareValues(PiOver2, PiOver2))
 
 	// Rune
 	var Null = rune(0)
@@ -99,13 +99,13 @@ func TestComparison(t *testing.T) {
 	var Happy = '☺'
 	var ShouldBeNull rune
 
-	assert.True(t, agents.CompareValues(ShouldBeNull, Null))
-	assert.False(t, agents.CompareValues(Sad, ShouldBeNull))
+	ass.True(t, age.CompareValues(ShouldBeNull, Null))
+	ass.False(t, age.CompareValues(Sad, ShouldBeNull))
 
-	assert.False(t, agents.CompareValues(Happy, Sad))
-	assert.True(t, agents.CompareValues(Happy, Happy))
-	assert.False(t, agents.CompareValues(Sad, Happy))
-	assert.True(t, agents.CompareValues(Sad, Sad))
+	ass.False(t, age.CompareValues(Happy, Sad))
+	ass.True(t, age.CompareValues(Happy, Happy))
+	ass.False(t, age.CompareValues(Sad, Happy))
+	ass.True(t, age.CompareValues(Sad, Sad))
 
 	// String
 	var Empty = ""
@@ -113,13 +113,13 @@ func TestComparison(t *testing.T) {
 	var World = "World"
 	var ShouldBeEmpty string
 
-	assert.True(t, agents.CompareValues(ShouldBeEmpty, Empty))
-	assert.False(t, agents.CompareValues(Hello, ShouldBeEmpty))
+	ass.True(t, age.CompareValues(ShouldBeEmpty, Empty))
+	ass.False(t, age.CompareValues(Hello, ShouldBeEmpty))
 
-	assert.False(t, agents.CompareValues(World, Hello))
-	assert.True(t, agents.CompareValues(World, World))
-	assert.False(t, agents.CompareValues(Hello, World))
-	assert.True(t, agents.CompareValues(Hello, Hello))
+	ass.False(t, age.CompareValues(World, Hello))
+	ass.True(t, age.CompareValues(World, World))
+	ass.False(t, age.CompareValues(Hello, World))
+	ass.True(t, age.CompareValues(Hello, Hello))
 
 	// Array
 	var Universe = "Universe"
@@ -128,13 +128,13 @@ func TestComparison(t *testing.T) {
 	var a2 = []any{Hello, Universe}
 	var ShouldBeA0 []any
 
-	assert.True(t, agents.CompareValues(ShouldBeA0, a0))
-	assert.False(t, agents.CompareValues(a1, ShouldBeA0))
+	ass.True(t, age.CompareValues(ShouldBeA0, a0))
+	ass.False(t, age.CompareValues(a1, ShouldBeA0))
 
-	assert.False(t, agents.CompareValues(a1, a2))
-	assert.True(t, agents.CompareValues(a1, a1))
-	assert.False(t, agents.CompareValues(a2, a1))
-	assert.True(t, agents.CompareValues(a2, a2))
+	ass.False(t, age.CompareValues(a1, a2))
+	ass.True(t, age.CompareValues(a1, a1))
+	ass.False(t, age.CompareValues(a2, a1))
+	ass.True(t, age.CompareValues(a2, a2))
 
 	// Map
 	var m0 = map[any]any{}
@@ -146,53 +146,53 @@ func TestComparison(t *testing.T) {
 		Two: Hello}
 	var ShouldBeM0 map[any]any
 
-	assert.True(t, agents.CompareValues(ShouldBeM0, m0))
-	assert.False(t, agents.CompareValues(m1, ShouldBeM0))
+	ass.True(t, age.CompareValues(ShouldBeM0, m0))
+	ass.False(t, age.CompareValues(m1, ShouldBeM0))
 
-	assert.False(t, agents.CompareValues(m1, m2))
-	assert.True(t, agents.CompareValues(m1, m1))
-	assert.False(t, agents.CompareValues(m2, m1))
-	assert.True(t, agents.CompareValues(m2, m2))
+	ass.False(t, age.CompareValues(m1, m2))
+	ass.True(t, age.CompareValues(m1, m1))
+	ass.False(t, age.CompareValues(m2, m1))
+	ass.True(t, age.CompareValues(m2, m2))
 }
 
-func TestRanking(t *testing.T) {
+func TestRanking(t *tes.T) {
 	// Nil
 	var ShouldBeNil any
 
-	assert.Equal(t, 0, agents.RankValues(nil, nil))
-	assert.Equal(t, 0, agents.RankValues(nil, ShouldBeNil))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeNil, ShouldBeNil))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeNil, nil))
+	ass.Equal(t, 0, age.RankValues(nil, nil))
+	ass.Equal(t, 0, age.RankValues(nil, ShouldBeNil))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNil, ShouldBeNil))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNil, nil))
 
 	// Boolean
 	var False = false
 	var True = true
 	var ShouldBeFalse bool
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeFalse, ShouldBeFalse))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeFalse, True))
-	assert.Equal(t, 0, agents.RankValues(False, ShouldBeFalse))
-	assert.Equal(t, 1, agents.RankValues(True, ShouldBeFalse))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeFalse, False))
-	assert.Equal(t, -1, agents.RankValues(False, True))
-	assert.Equal(t, 0, agents.RankValues(False, False))
-	assert.Equal(t, 1, agents.RankValues(True, False))
-	assert.Equal(t, 0, agents.RankValues(True, True))
+	ass.Equal(t, 0, age.RankValues(ShouldBeFalse, ShouldBeFalse))
+	ass.Equal(t, -1, age.RankValues(ShouldBeFalse, True))
+	ass.Equal(t, 0, age.RankValues(False, ShouldBeFalse))
+	ass.Equal(t, 1, age.RankValues(True, ShouldBeFalse))
+	ass.Equal(t, 0, age.RankValues(ShouldBeFalse, False))
+	ass.Equal(t, -1, age.RankValues(False, True))
+	ass.Equal(t, 0, age.RankValues(False, False))
+	ass.Equal(t, 1, age.RankValues(True, False))
+	ass.Equal(t, 0, age.RankValues(True, True))
 
 	// Byte
 	var Zero byte = 0x00
 	var One byte = 0x01
 	var ShouldBeZero byte
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeZero, ShouldBeZero))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeZero, One))
-	assert.Equal(t, 0, agents.RankValues(Zero, ShouldBeZero))
-	assert.Equal(t, 1, agents.RankValues(One, ShouldBeZero))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeZero, Zero))
-	assert.Equal(t, -1, agents.RankValues(Zero, One))
-	assert.Equal(t, 0, agents.RankValues(Zero, Zero))
-	assert.Equal(t, 1, agents.RankValues(One, Zero))
-	assert.Equal(t, 0, agents.RankValues(One, One))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZero, ShouldBeZero))
+	ass.Equal(t, -1, age.RankValues(ShouldBeZero, One))
+	ass.Equal(t, 0, age.RankValues(Zero, ShouldBeZero))
+	ass.Equal(t, 1, age.RankValues(One, ShouldBeZero))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZero, Zero))
+	ass.Equal(t, -1, age.RankValues(Zero, One))
+	ass.Equal(t, 0, age.RankValues(Zero, Zero))
+	ass.Equal(t, 1, age.RankValues(One, Zero))
+	ass.Equal(t, 0, age.RankValues(One, One))
 
 	// Integer
 	var Zilch = 0
@@ -200,15 +200,15 @@ func TestRanking(t *testing.T) {
 	var Three = 3
 	var ShouldBeZilch int
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeZilch, ShouldBeZilch))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeZilch, Two))
-	assert.Equal(t, 0, agents.RankValues(Zilch, ShouldBeZilch))
-	assert.Equal(t, 1, agents.RankValues(Two, ShouldBeZilch))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeZilch, Zilch))
-	assert.Equal(t, -1, agents.RankValues(Two, Three))
-	assert.Equal(t, 0, agents.RankValues(Two, Two))
-	assert.Equal(t, 1, agents.RankValues(Three, Two))
-	assert.Equal(t, 0, agents.RankValues(Three, Three))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZilch, ShouldBeZilch))
+	ass.Equal(t, -1, age.RankValues(ShouldBeZilch, Two))
+	ass.Equal(t, 0, age.RankValues(Zilch, ShouldBeZilch))
+	ass.Equal(t, 1, age.RankValues(Two, ShouldBeZilch))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZilch, Zilch))
+	ass.Equal(t, -1, age.RankValues(Two, Three))
+	ass.Equal(t, 0, age.RankValues(Two, Two))
+	ass.Equal(t, 1, age.RankValues(Three, Two))
+	ass.Equal(t, 0, age.RankValues(Three, Three))
 
 	// Float
 	var Negligible = 0.0
@@ -216,15 +216,15 @@ func TestRanking(t *testing.T) {
 	var Half = 0.5
 	var ShouldBeNegligible float64
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeNegligible, ShouldBeNegligible))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeNegligible, Half))
-	assert.Equal(t, 0, agents.RankValues(Negligible, ShouldBeNegligible))
-	assert.Equal(t, 1, agents.RankValues(Half, ShouldBeNegligible))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeNegligible, Negligible))
-	assert.Equal(t, -1, agents.RankValues(Fourth, Half))
-	assert.Equal(t, 0, agents.RankValues(Fourth, Fourth))
-	assert.Equal(t, 1, agents.RankValues(Half, Fourth))
-	assert.Equal(t, 0, agents.RankValues(Half, Half))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNegligible, ShouldBeNegligible))
+	ass.Equal(t, -1, age.RankValues(ShouldBeNegligible, Half))
+	ass.Equal(t, 0, age.RankValues(Negligible, ShouldBeNegligible))
+	ass.Equal(t, 1, age.RankValues(Half, ShouldBeNegligible))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNegligible, Negligible))
+	ass.Equal(t, -1, age.RankValues(Fourth, Half))
+	ass.Equal(t, 0, age.RankValues(Fourth, Fourth))
+	ass.Equal(t, 1, age.RankValues(Half, Fourth))
+	ass.Equal(t, 0, age.RankValues(Half, Half))
 
 	// Complex
 	var Origin = 0 + 0i
@@ -232,15 +232,15 @@ func TestRanking(t *testing.T) {
 	var PiOver2 = 1 + 0i
 	var ShouldBeOrigin complex128
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeOrigin, ShouldBeOrigin))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeOrigin, PiOver4))
-	assert.Equal(t, 0, agents.RankValues(Origin, ShouldBeOrigin))
-	assert.Equal(t, 1, agents.RankValues(PiOver4, ShouldBeOrigin))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeOrigin, Origin))
-	assert.Equal(t, -1, agents.RankValues(PiOver2, PiOver4))
-	assert.Equal(t, 0, agents.RankValues(PiOver2, PiOver2))
-	assert.Equal(t, 1, agents.RankValues(PiOver4, PiOver2))
-	assert.Equal(t, 0, agents.RankValues(PiOver4, PiOver4))
+	ass.Equal(t, 0, age.RankValues(ShouldBeOrigin, ShouldBeOrigin))
+	ass.Equal(t, -1, age.RankValues(ShouldBeOrigin, PiOver4))
+	ass.Equal(t, 0, age.RankValues(Origin, ShouldBeOrigin))
+	ass.Equal(t, 1, age.RankValues(PiOver4, ShouldBeOrigin))
+	ass.Equal(t, 0, age.RankValues(ShouldBeOrigin, Origin))
+	ass.Equal(t, -1, age.RankValues(PiOver2, PiOver4))
+	ass.Equal(t, 0, age.RankValues(PiOver2, PiOver2))
+	ass.Equal(t, 1, age.RankValues(PiOver4, PiOver2))
+	ass.Equal(t, 0, age.RankValues(PiOver4, PiOver4))
 
 	// Rune
 	var Null = rune(0)
@@ -248,15 +248,15 @@ func TestRanking(t *testing.T) {
 	var Happy = '☺'
 	var ShouldBeNull rune
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeNull, ShouldBeNull))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeNull, Sad))
-	assert.Equal(t, 0, agents.RankValues(Null, ShouldBeNull))
-	assert.Equal(t, 1, agents.RankValues(Sad, ShouldBeNull))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeNull, Null))
-	assert.Equal(t, -1, agents.RankValues(Sad, Happy))
-	assert.Equal(t, 0, agents.RankValues(Sad, Sad))
-	assert.Equal(t, 1, agents.RankValues(Happy, Sad))
-	assert.Equal(t, 0, agents.RankValues(Happy, Happy))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNull, ShouldBeNull))
+	ass.Equal(t, -1, age.RankValues(ShouldBeNull, Sad))
+	ass.Equal(t, 0, age.RankValues(Null, ShouldBeNull))
+	ass.Equal(t, 1, age.RankValues(Sad, ShouldBeNull))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNull, Null))
+	ass.Equal(t, -1, age.RankValues(Sad, Happy))
+	ass.Equal(t, 0, age.RankValues(Sad, Sad))
+	ass.Equal(t, 1, age.RankValues(Happy, Sad))
+	ass.Equal(t, 0, age.RankValues(Happy, Happy))
 
 	// String
 	var Empty = ""
@@ -264,15 +264,15 @@ func TestRanking(t *testing.T) {
 	var World = "World"
 	var ShouldBeEmpty string
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeEmpty, ShouldBeEmpty))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeEmpty, Hello))
-	assert.Equal(t, 0, agents.RankValues(Empty, ShouldBeEmpty))
-	assert.Equal(t, 1, agents.RankValues(Hello, ShouldBeEmpty))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeEmpty, Empty))
-	assert.Equal(t, -1, agents.RankValues(Hello, World))
-	assert.Equal(t, 0, agents.RankValues(Hello, Hello))
-	assert.Equal(t, 1, agents.RankValues(World, Hello))
-	assert.Equal(t, 0, agents.RankValues(World, World))
+	ass.Equal(t, 0, age.RankValues(ShouldBeEmpty, ShouldBeEmpty))
+	ass.Equal(t, -1, age.RankValues(ShouldBeEmpty, Hello))
+	ass.Equal(t, 0, age.RankValues(Empty, ShouldBeEmpty))
+	ass.Equal(t, 1, age.RankValues(Hello, ShouldBeEmpty))
+	ass.Equal(t, 0, age.RankValues(ShouldBeEmpty, Empty))
+	ass.Equal(t, -1, age.RankValues(Hello, World))
+	ass.Equal(t, 0, age.RankValues(Hello, Hello))
+	ass.Equal(t, 1, age.RankValues(World, Hello))
+	ass.Equal(t, 0, age.RankValues(World, World))
 
 	// Array
 	var Universe = "Universe"
@@ -283,23 +283,23 @@ func TestRanking(t *testing.T) {
 	var a4 = []any{Hello, Universe, World}
 	var ShouldBeA0 []any
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeA0, ShouldBeA0))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeA0, a1))
-	assert.Equal(t, 0, agents.RankValues(a0, ShouldBeA0))
-	assert.Equal(t, 1, agents.RankValues(a1, ShouldBeA0))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeA0, a0))
-	assert.Equal(t, -1, agents.RankValues(a2, a1))
-	assert.Equal(t, 0, agents.RankValues(a2, a2))
-	assert.Equal(t, 1, agents.RankValues(a1, a2))
-	assert.Equal(t, 0, agents.RankValues(a1, a1))
-	assert.Equal(t, -1, agents.RankValues(a2, a3))
-	assert.Equal(t, 0, agents.RankValues(a2, a2))
-	assert.Equal(t, 1, agents.RankValues(a3, a2))
-	assert.Equal(t, 0, agents.RankValues(a3, a3))
-	assert.Equal(t, -1, agents.RankValues(a4, a1))
-	assert.Equal(t, 0, agents.RankValues(a4, a4))
-	assert.Equal(t, 1, agents.RankValues(a1, a4))
-	assert.Equal(t, 0, agents.RankValues(a1, a1))
+	ass.Equal(t, 0, age.RankValues(ShouldBeA0, ShouldBeA0))
+	ass.Equal(t, -1, age.RankValues(ShouldBeA0, a1))
+	ass.Equal(t, 0, age.RankValues(a0, ShouldBeA0))
+	ass.Equal(t, 1, age.RankValues(a1, ShouldBeA0))
+	ass.Equal(t, 0, age.RankValues(ShouldBeA0, a0))
+	ass.Equal(t, -1, age.RankValues(a2, a1))
+	ass.Equal(t, 0, age.RankValues(a2, a2))
+	ass.Equal(t, 1, age.RankValues(a1, a2))
+	ass.Equal(t, 0, age.RankValues(a1, a1))
+	ass.Equal(t, -1, age.RankValues(a2, a3))
+	ass.Equal(t, 0, age.RankValues(a2, a2))
+	ass.Equal(t, 1, age.RankValues(a3, a2))
+	ass.Equal(t, 0, age.RankValues(a3, a3))
+	ass.Equal(t, -1, age.RankValues(a4, a1))
+	ass.Equal(t, 0, age.RankValues(a4, a4))
+	ass.Equal(t, 1, age.RankValues(a1, a4))
+	ass.Equal(t, 0, age.RankValues(a1, a1))
 
 	// Map
 	var m0 = map[any]any{}
@@ -319,21 +319,21 @@ func TestRanking(t *testing.T) {
 		Three: World}
 	var ShouldBeM0 map[any]any
 
-	assert.Equal(t, 0, agents.RankValues(ShouldBeM0, ShouldBeM0))
-	assert.Equal(t, -1, agents.RankValues(ShouldBeM0, m1))
-	assert.Equal(t, 0, agents.RankValues(m0, ShouldBeM0))
-	assert.Equal(t, 1, agents.RankValues(m1, ShouldBeM0))
-	assert.Equal(t, 0, agents.RankValues(ShouldBeM0, m0))
-	assert.Equal(t, -1, agents.RankValues(m2, m1))
-	assert.Equal(t, 0, agents.RankValues(m2, m2))
-	assert.Equal(t, 1, agents.RankValues(m1, m2))
-	assert.Equal(t, 0, agents.RankValues(m1, m1))
-	assert.Equal(t, -1, agents.RankValues(m2, m3))
-	assert.Equal(t, 0, agents.RankValues(m2, m2))
-	assert.Equal(t, 1, agents.RankValues(m3, m2))
-	assert.Equal(t, 0, agents.RankValues(m3, m3))
-	assert.Equal(t, -1, agents.RankValues(m4, m1))
-	assert.Equal(t, 0, agents.RankValues(m4, m4))
-	assert.Equal(t, 1, agents.RankValues(m1, m4))
-	assert.Equal(t, 0, agents.RankValues(m1, m1))
+	ass.Equal(t, 0, age.RankValues(ShouldBeM0, ShouldBeM0))
+	ass.Equal(t, -1, age.RankValues(ShouldBeM0, m1))
+	ass.Equal(t, 0, age.RankValues(m0, ShouldBeM0))
+	ass.Equal(t, 1, age.RankValues(m1, ShouldBeM0))
+	ass.Equal(t, 0, age.RankValues(ShouldBeM0, m0))
+	ass.Equal(t, -1, age.RankValues(m2, m1))
+	ass.Equal(t, 0, age.RankValues(m2, m2))
+	ass.Equal(t, 1, age.RankValues(m1, m2))
+	ass.Equal(t, 0, age.RankValues(m1, m1))
+	ass.Equal(t, -1, age.RankValues(m2, m3))
+	ass.Equal(t, 0, age.RankValues(m2, m2))
+	ass.Equal(t, 1, age.RankValues(m3, m2))
+	ass.Equal(t, 0, age.RankValues(m3, m3))
+	ass.Equal(t, -1, age.RankValues(m4, m1))
+	ass.Equal(t, 0, age.RankValues(m4, m4))
+	ass.Equal(t, 1, age.RankValues(m1, m4))
+	ass.Equal(t, 0, age.RankValues(m1, m1))
 }

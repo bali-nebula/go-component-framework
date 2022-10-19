@@ -11,9 +11,9 @@
 package strings
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"strings"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	str "strings"
 )
 
 // NARRATIVE STRING INTERFACE
@@ -25,7 +25,7 @@ import (
 func NarrativeFromString(v string) (Narrative, bool) {
 	var ok = true
 	var narrative string
-	var matches = abstractions.ScanNarrative([]byte(v))
+	var matches = abs.ScanNarrative([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
@@ -87,7 +87,7 @@ func (v Narrative) AsArray() []rune {
 func (v Narrative) GetItem(index int) rune {
 	var runes = v.AsArray()
 	var length = len(runes)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	return runes[index]
 }
 
@@ -96,8 +96,8 @@ func (v Narrative) GetItem(index int) rune {
 func (v Narrative) GetItems(first int, last int) []rune {
 	var runes = v.AsArray()
 	var length = len(runes)
-	first = abstractions.NormalizedIndex(first, length)
-	last = abstractions.NormalizedIndex(last, length)
+	first = abs.NormalizedIndex(first, length)
+	last = abs.NormalizedIndex(last, length)
 	return runes[first : last+1]
 }
 
@@ -117,7 +117,7 @@ func (v Narrative) GetIndex(b rune) int {
 
 func trimTabs(v string) string {
 	var result = `">` + "\n"
-	var lines = strings.Split(v, "\n")
+	var lines = str.Split(v, "\n")
 	var size = len(lines)
 	var last = lines[size-1]  // The last line of the narrative should only be tabs.
 	var tabs = len(last) - 2  // A count of the number of tabs in the last line.

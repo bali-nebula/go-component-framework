@@ -11,11 +11,34 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that discards
-// a draft document referred to by an expression from the document repository.
-type DiscardClause struct {
-	Citation any
+// DISCARD CLAUSE IMPLEMENTATION
+
+// This constructor creates a new discard clause.
+func Discard(citation any) abs.DiscardLike {
+	var v = &discardClause{}
+	// Perform argument validation.
+	v.SetCitation(citation)
+	return v
+}
+
+// This type defines the structure and methods associated with a discard
+// clause.
+type discardClause struct {
+	citation any
+}
+
+// This method returns the citation expression for this discard clause.
+func (v *discardClause) GetCitation() any {
+	return v.citation
+}
+
+// This method sets the citation expression for this discard clause.
+func (v *discardClause) SetCitation(citation any) {
+	if citation == nil {
+		panic("A discard clause requires a citation.")
+	}
+	v.citation = citation
 }

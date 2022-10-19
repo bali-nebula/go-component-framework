@@ -11,12 +11,12 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that selects a
 // statement block to be executed based on the pattern of a control expression.
-type SelectClause struct {
-	Control  any
-	DoBlocks abstractions.ListLike[*DoBlock]
+type Select struct {
+	Control any
+	Blocks  abstractions.ListLike[*Block]
 }

@@ -11,12 +11,12 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that retrieves
 // a random message from a named message bag and assigns it to a recipient.
-type RetrieveClause struct {
+type Retrieve struct {
 	Recipient any // The recipient is a symbol or attribute.
 	Bag       any
 }

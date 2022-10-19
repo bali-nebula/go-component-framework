@@ -11,9 +11,9 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"math"
-	"strconv"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	mat "math"
+	str "strconv"
 )
 
 // ANGLE INTERFACE
@@ -21,10 +21,10 @@ import (
 // This constructor creates a new angle from the specified value and normalizes
 // the value to be in the allowed range for angles [0..2π).
 func AngleFromFloat(v float64) Angle {
-	var twoPi = 2.0 * math.Pi
+	var twoPi = 2.0 * mat.Pi
 	if v < -twoPi || v >= twoPi {
 		// Normalize the angle to the range [-2π..2π).
-		v = math.Remainder(v, twoPi)
+		v = mat.Remainder(v, twoPi)
 	}
 	if v < 0.0 {
 		// Normalize the angle to the range [0..2π).
@@ -51,10 +51,10 @@ type Angle float64
 
 // This method returns the canonical string for this element.
 func (v Angle) AsString() string {
-	if float64(v) == math.Pi {
+	if float64(v) == mat.Pi {
 		return "~π"
 	}
-	return "~" + strconv.FormatFloat(float64(v), 'G', -1, 64)
+	return "~" + str.FormatFloat(float64(v), 'G', -1, 64)
 }
 
 // This method implements the standard Go Stringer interface.
@@ -71,7 +71,7 @@ func (v Angle) AsReal() float64 {
 
 // ANGLES LIBRARY
 
-var Pi = Angle(complex(math.Pi, 0.0))
+var Pi = Angle(complex(mat.Pi, 0.0))
 
 // This singleton creates a unique name space for the library functions for
 // angle elements.
@@ -85,7 +85,7 @@ type angles struct{}
 
 // This library function returns the inverse of the specified angle.
 func (l *angles) Inverse(angle Angle) Angle {
-	return AngleFromFloat(float64(angle) + math.Pi)
+	return AngleFromFloat(float64(angle) + mat.Pi)
 }
 
 // This library function returns the sum of the specified angles.
@@ -109,13 +109,13 @@ func (l *angles) Scaled(angle Angle, factor float64) Angle {
 // This library function returns the complement of the specified angle. The
 // complementary angles add up to π/2.
 func (l *angles) Complement(angle Angle) Angle {
-	return AngleFromFloat(float64(math.Pi/2.0 - angle))
+	return AngleFromFloat(float64(mat.Pi/2.0 - angle))
 }
 
 // This library function returns the supplement of the specified angle. The
 // supplementary angles add up to π.
 func (l *angles) Supplement(angle Angle) Angle {
-	return AngleFromFloat(float64(math.Pi - angle))
+	return AngleFromFloat(float64(mat.Pi - angle))
 }
 
 // This library function returns the conjugate of the specified angle. The
@@ -130,29 +130,29 @@ func (l *angles) Cosine(angle Angle) float64 {
 	switch angle {
 	case 0.0:
 		return 1.0
-	case math.Pi * 0.25:
-		return 0.5 * math.Sqrt2
-	case math.Pi * 0.5:
+	case mat.Pi * 0.25:
+		return 0.5 * mat.Sqrt2
+	case mat.Pi * 0.5:
 		return 0.0
-	case math.Pi * 0.75:
-		return -0.5 * math.Sqrt2
-	case math.Pi:
+	case mat.Pi * 0.75:
+		return -0.5 * mat.Sqrt2
+	case mat.Pi:
 		return -1.0
-	case math.Pi * 1.25:
-		return -0.5 * math.Sqrt2
-	case math.Pi * 1.5:
+	case mat.Pi * 1.25:
+		return -0.5 * mat.Sqrt2
+	case mat.Pi * 1.5:
 		return 0.0
-	case math.Pi * 1.75:
-		return 0.5 * math.Sqrt2
+	case mat.Pi * 1.75:
+		return 0.5 * mat.Sqrt2
 	default:
-		return math.Cos(float64(angle))
+		return mat.Cos(float64(angle))
 	}
 }
 
 // This library function returns the angle whose trigonometric cosine is the
 // specified distance along the x-axis.
 func (l *angles) ArcCosine(x float64) Angle {
-	return AngleFromFloat(math.Acos(x))
+	return AngleFromFloat(mat.Acos(x))
 }
 
 // This library function returns the trigonometric sine of the specified angle.
@@ -160,29 +160,29 @@ func (l *angles) Sine(angle Angle) float64 {
 	switch angle {
 	case 0.0:
 		return 0.0
-	case math.Pi * 0.25:
-		return 0.5 * math.Sqrt2
-	case math.Pi * 0.5:
+	case mat.Pi * 0.25:
+		return 0.5 * mat.Sqrt2
+	case mat.Pi * 0.5:
 		return 1.0
-	case math.Pi * 0.75:
-		return 0.5 * math.Sqrt2
-	case math.Pi:
+	case mat.Pi * 0.75:
+		return 0.5 * mat.Sqrt2
+	case mat.Pi:
 		return 0.0
-	case math.Pi * 1.25:
-		return -0.5 * math.Sqrt2
-	case math.Pi * 1.5:
+	case mat.Pi * 1.25:
+		return -0.5 * mat.Sqrt2
+	case mat.Pi * 1.5:
 		return -1.0
-	case math.Pi * 1.75:
-		return -0.5 * math.Sqrt2
+	case mat.Pi * 1.75:
+		return -0.5 * mat.Sqrt2
 	default:
-		return math.Sin(float64(angle))
+		return mat.Sin(float64(angle))
 	}
 }
 
 // This library function returns the angle whose trigonometric sine is the
 // specified distance along the y-axis.
 func (l *angles) ArcSine(y float64) Angle {
-	return AngleFromFloat(math.Asin(y))
+	return AngleFromFloat(mat.Asin(y))
 }
 
 // This library function returns the trigonometric tangent of the specified
@@ -191,29 +191,29 @@ func (l *angles) Tangent(angle Angle) float64 {
 	switch angle {
 	case 0.0:
 		return 0.0
-	case math.Pi * 0.25:
+	case mat.Pi * 0.25:
 		return 1.0
-	case math.Pi * 0.5:
-		return math.Inf(1)
-	case math.Pi * 0.75:
+	case mat.Pi * 0.5:
+		return mat.Inf(1)
+	case mat.Pi * 0.75:
 		return -1.0
-	case math.Pi:
+	case mat.Pi:
 		return 0.0
-	case math.Pi * 1.25:
+	case mat.Pi * 1.25:
 		return 1.0
-	case math.Pi * 1.5:
-		return math.Inf(1)
-	case math.Pi * 1.75:
+	case mat.Pi * 1.5:
+		return mat.Inf(1)
+	case mat.Pi * 1.75:
 		return -1.0
 	default:
-		return math.Tan(float64(angle))
+		return mat.Tan(float64(angle))
 	}
 }
 
 // This library function returns the angle whose trigonometric tangent is the
 // specified ratio of the distances along the y-axis and x-axis.
 func (l *angles) ArcTangent(x, y float64) Angle {
-	return AngleFromFloat(math.Atan2(y, x))
+	return AngleFromFloat(mat.Atan2(y, x))
 }
 
 // PRIVATE FUNCTIONS
@@ -223,15 +223,15 @@ func (l *angles) ArcTangent(x, y float64) Angle {
 func stringToAngle(v string) (float64, bool) {
 	var angle float64
 	var ok = true
-	var matches = abstractions.ScanAngle([]byte(v))
+	var matches = abs.ScanAngle([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
 	case matches[1] == "pi" || matches[1] == "π":
-		angle = math.Pi
+		angle = mat.Pi
 	default:
 		var err error
-		angle, err = strconv.ParseFloat(matches[1], 64)
+		angle, err = str.ParseFloat(matches[1], 64)
 		if err != nil {
 			ok = false
 		}
@@ -246,14 +246,14 @@ func stringToAngle(v string) (float64, bool) {
 func lockPhase(v float64) float64 {
 	var v32 float32 = float32(v)
 	switch {
-	case math.Abs(v) <= 1.2246467991473515e-16:
+	case mat.Abs(v) <= 1.2246467991473515e-16:
 		return 0
-	case v32 == float32(0.5*math.Pi):
-		return 0.5 * math.Pi
-	case v32 == float32(math.Pi):
-		return math.Pi
-	case v32 == float32(1.5*math.Pi):
-		return 1.5 * math.Pi
+	case v32 == float32(0.5*mat.Pi):
+		return 0.5 * mat.Pi
+	case v32 == float32(mat.Pi):
+		return mat.Pi
+	case v32 == float32(1.5*mat.Pi):
+		return 1.5 * mat.Pi
 	default:
 		return v
 	}

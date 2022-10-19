@@ -11,26 +11,26 @@
 package agents_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestSortingEmpty(t *testing.T) {
+func TestSortingEmpty(t *tes.T) {
 	var empty = []any{}
-	agents.SortArray(empty, agents.RankValues)
+	age.SortArray(empty, age.RankValues)
 }
 
-func TestSortingIntegers(t *testing.T) {
+func TestSortingIntegers(t *tes.T) {
 	var unsorted = []int{4, 3, 1, 5, 2}
 	var sorted = []int{1, 2, 3, 4, 5}
-	agents.SortArray(unsorted, agents.RankValues)
-	assert.Equal(t, sorted, unsorted)
+	age.SortArray(unsorted, age.RankValues)
+	ass.Equal(t, sorted, unsorted)
 }
 
-func TestSortingStrings(t *testing.T) {
+func TestSortingStrings(t *tes.T) {
 	var unsorted = []string{"alpha", "beta", "gamma", "delta"}
 	var sorted = []string{"alpha", "beta", "delta", "gamma"}
-	agents.SortArray(unsorted, agents.RankValues)
-	assert.Equal(t, sorted, unsorted)
+	age.SortArray(unsorted, age.RankValues)
+	ass.Equal(t, sorted, unsorted)
 }

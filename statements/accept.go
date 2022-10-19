@@ -11,13 +11,13 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // ACCEPT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new accept clause.
-func Accept(message any) abstractions.AcceptLike {
+func Accept(message any) abs.AcceptLike {
 	var v = &acceptClause{}
 	// Perform argument validation.
 	v.SetMessage(message)

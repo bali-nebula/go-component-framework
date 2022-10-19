@@ -11,7 +11,7 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // INVOCATION EXPRESSION IMPLEMENTATION
@@ -20,8 +20,8 @@ import (
 func AsynchronousInvocation(
 	target any,
 	message string,
-	arguments abstractions.ListLike[any],
-) abstractions.InvocationLike {
+	arguments abs.ListLike[any],
+) abs.InvocationLike {
 	var v = &invocationExpression{}
 	// Perform argument validation.
 	v.SetSynchronous(false)
@@ -35,8 +35,8 @@ func AsynchronousInvocation(
 func Invocation(
 	target any,
 	message string,
-	arguments abstractions.ListLike[any],
-) abstractions.InvocationLike {
+	arguments abs.ListLike[any],
+) abs.InvocationLike {
 	var v = &invocationExpression{}
 	// Perform argument validation.
 	v.SetSynchronous(true)
@@ -52,7 +52,7 @@ type invocationExpression struct {
 	isSynchronous bool
 	target        any
 	message       string
-	arguments     abstractions.ListLike[any]
+	arguments     abs.ListLike[any]
 }
 
 // This method determines whether or not this invocation expression is
@@ -108,12 +108,12 @@ func (v *invocationExpression) SetArgument(index int, argument any) {
 }
 
 // This method returns the list of arguments for this invocation expression.
-func (v *invocationExpression) GetArguments() abstractions.ListLike[any] {
+func (v *invocationExpression) GetArguments() abs.ListLike[any] {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this invocation expression.
-func (v *invocationExpression) SetArguments(arguments abstractions.ListLike[any]) {
+func (v *invocationExpression) SetArguments(arguments abs.ListLike[any]) {
 	if arguments == nil {
 		panic("An invocation expression requires an array (possibly empty) of arguments.")
 	}

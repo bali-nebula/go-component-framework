@@ -11,15 +11,15 @@
 package language
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/collections"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 )
 
 // This method attempts to parse an association between a key and value. It
 // returns the association and whether or not the association was successfully
 // parsed.
-func (v *parser) parseAssociation() (abstractions.AssociationLike[any, any], *Token, bool) {
+func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool) {
 	var ok bool
 	var token *Token
 	var key any
@@ -40,18 +40,18 @@ func (v *parser) parseAssociation() (abstractions.AssociationLike[any, any], *To
 	if !ok {
 		panic("Expected a value after the ':' character.")
 	}
-	var association = collections.Association[any, any](key, value)
+	var association = col.Association[any, any](key, value)
 	return association, token, true
 }
 
 // This method attempts to parse a catalog collection. It returns the
 // catalog collection and whether or not the catalog collection was
 // successfully parsed.
-func (v *parser) parseCatalog() (abstractions.CatalogLike[any, any], *Token, bool) {
+func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var association abstractions.AssociationLike[any, any]
-	var catalog = collections.Catalog[any, any]()
+	var association abs.AssociationLike[any, any]
+	var catalog = col.Catalog[any, any]()
 	_, token, ok = v.parseEOL()
 	if !ok {
 		// The associations are on a single line.
@@ -127,11 +127,11 @@ func (v *parser) parseCollection() (any, *Token, bool) {
 // This method attempts to parse a list of items. It returns the
 // list of items and whether or not the list of items was
 // successfully parsed.
-func (v *parser) parseList() (abstractions.ListLike[any], *Token, bool) {
+func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
 	var item any
-	var list = collections.List[any]()
+	var list = col.List[any]()
 	_, token, ok = v.parseEOL()
 	if !ok {
 		// The items are on a single line.
@@ -221,7 +221,7 @@ func (v *parser) parseSequence() (any, *Token, bool) {
 
 // This method attempts to parse a range collection. It returns the range
 // collection and whether or not the range collection was successfully parsed.
-func (v *parser) parseRange() (abstractions.RangeLike[any], *Token, bool) {
+func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
 	var first any
@@ -246,6 +246,6 @@ func (v *parser) parseRange() (abstractions.RangeLike[any], *Token, bool) {
 		return nil, token, false
 	}
 	last, token, _ = v.parsePrimitive() // The last value is optional.
-	var rng = collections.Range(first, connector, last)
+	var rng = col.Range(first, connector, last)
 	return rng, token, true
 }

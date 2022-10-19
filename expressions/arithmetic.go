@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // ARITHMETIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new arithmetic expression.
-func Arithmetic(first any, operator abstractions.Operator, second any) abstractions.ArithmeticLike {
+func Arithmetic(first any, operator abs.Operator, second any) abs.ArithmeticLike {
 	var v = &arithmeticExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -30,7 +30,7 @@ func Arithmetic(first any, operator abstractions.Operator, second any) abstracti
 // expression.
 type arithmeticExpression struct {
 	first    any
-	operator abstractions.Operator
+	operator abs.Operator
 	second   any
 }
 
@@ -49,14 +49,14 @@ func (v *arithmeticExpression) SetFirst(first any) {
 }
 
 // This method returns the arithmetic operator in this arithmetic expression.
-func (v *arithmeticExpression) GetOperator() abstractions.Operator {
+func (v *arithmeticExpression) GetOperator() abs.Operator {
 	return v.operator
 }
 
 // This method sets the arithmetic operator in this arithmetic expression to the
 // specified value.
-func (v *arithmeticExpression) SetOperator(operator abstractions.Operator) {
-	if operator < abstractions.PRODUCT || operator > abstractions.DIFFERENCE {
+func (v *arithmeticExpression) SetOperator(operator abs.Operator) {
+	if operator < abs.PRODUCT || operator > abs.DIFFERENCE {
 		panic("The operator in an arithmetic expression must be a valid arithmetic operation.")
 	}
 	v.operator = operator

@@ -11,14 +11,14 @@
 package agents
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // ITERATOR IMPLEMENTATION
 
 // This constructor creates a new instance of an iterator that can be used to
 // traverse the items in the specified array.
-func Iterator[T any](sequence abstractions.Sequential[T]) abstractions.IteratorLike[T] {
+func Iterator[T any](sequence abs.Sequential[T]) abs.IteratorLike[T] {
 	var items = sequence.AsArray() // The returned array is immutable.
 	var size = len(items)
 	var slot = 0

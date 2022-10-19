@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // CHAINING EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new chaining expression.
-func Chaining(first, second any) abstractions.ChainingLike {
+func Chaining(first, second any) abs.ChainingLike {
 	var v = &chainingExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)

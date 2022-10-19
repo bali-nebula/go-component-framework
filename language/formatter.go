@@ -11,11 +11,11 @@
 package language
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"reflect"
-	"strconv"
-	"strings"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	ref "reflect"
+	stc "strconv"
+	str "strings"
 )
 
 // FORMATTER INTERFACE
@@ -28,22 +28,22 @@ func FormatValue(value any) string {
 
 // This constructor creates a new instance of a formatter that can be used to
 // generate the canonical string format for any value.
-func Formatter() abstractions.FormatterLike {
+func Formatter() abs.FormatterLike {
 	return FormatterWithIndentation(0)
 }
 
 // This constructor creates a new instance of a formatter that can be used to
 // generate the canonical string format for any value using the specified
 // initial indentation level.
-func FormatterWithIndentation(indentation int) abstractions.FormatterLike {
-	return &formatter{abstractions.FormatterStateWithIndentation(indentation)}
+func FormatterWithIndentation(indentation int) abs.FormatterLike {
+	return &formatter{abs.FormatterStateWithIndentation(indentation)}
 }
 
 // FORMATTER IMPLEMENTATION
 
 // This type defines the structure and methods for a canonical formatting agent.
 type formatter struct {
-	state abstractions.FormatterStateLike
+	state abs.FormatterStateLike
 }
 
 // This method returns the number of levels that each line is indented in the
@@ -54,7 +54,7 @@ func (v *formatter) GetIndentation() int {
 
 // This method returns the canonical string for the specified value.
 func (v *formatter) FormatValue(value any) string {
-	v.formatValue(reflect.ValueOf(value))
+	v.formatValue(ref.ValueOf(value))
 	return v.state.GetResult()
 }
 
@@ -66,37 +66,37 @@ const maximumFormattingDepth int = 8
 // calls the corresponding format function for that type. Note that because the
 // Go language doesn't really support polymorphism the selection of the actual
 // function called must be done explicitly using reflection and a type switch.
-func (v *formatter) formatValue(value reflect.Value) {
+func (v *formatter) formatValue(value ref.Value) {
 	switch value.Kind() {
 
 	// Handle all primitive types.
-	case reflect.Bool:
+	case ref.Bool:
 		v.formatBoolean(value)
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+	case ref.Uint, ref.Uint8, ref.Uint16, ref.Uint32, ref.Uint64, ref.Uintptr:
 		v.formatUnsigned(value)
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int64:
+	case ref.Int, ref.Int8, ref.Int16, ref.Int64:
 		v.formatInteger(value)
-	case reflect.Float32, reflect.Float64:
+	case ref.Float32, ref.Float64:
 		v.formatFloat(value)
-	case reflect.Complex64, reflect.Complex128:
+	case ref.Complex64, ref.Complex128:
 		v.formatComplex(value)
-	case reflect.Int32:
+	case ref.Int32:
 		v.formatRune(value)
-	case reflect.String:
+	case ref.String:
 		v.formatString(value)
 
 	// Handle all primitive collections.
-	case reflect.Array, reflect.Slice:
+	case ref.Array, ref.Slice:
 		v.formatArray(value, "array")
-	case reflect.Map:
+	case ref.Map:
 		v.formatMap(value)
 
 	// Handle all structures.
-	case reflect.Struct:
+	case ref.Struct:
 		v.formatStructure(value)
 
 	// Handle all interfaces and pointers.
-	case reflect.Interface, reflect.Pointer:
+	case ref.Interface, ref.Pointer:
 		if value.MethodByName("GetParameter").IsValid() {
 			// The value is a component.
 			v.formatComponent(value)
@@ -127,42 +127,42 @@ func (v *formatter) formatValue(value reflect.Value) {
 
 // This private method appends the string for the specified component to
 // the result.
-func (v *formatter) formatComponent(r reflect.Value) {
+func (v *formatter) formatComponent(r ref.Value) {
 }
 
 // This private method appends the nil string for the specified value to the
 // result.
-func (v *formatter) formatNil(r reflect.Value) {
+func (v *formatter) formatNil(r ref.Value) {
 	v.state.AppendString("<nil>")
 }
 
 // This private method appends the name of the specified boolean value to the
 // result.
-func (v *formatter) formatBoolean(r reflect.Value) {
+func (v *formatter) formatBoolean(r ref.Value) {
 	var b = r.Bool()
-	v.state.AppendString(strconv.FormatBool(b))
+	v.state.AppendString(stc.FormatBool(b))
 }
 
 // This private method appends the base 10 string for the specified integer
 // value to the result.
-func (v *formatter) formatInteger(r reflect.Value) {
+func (v *formatter) formatInteger(r ref.Value) {
 	var i = r.Int()
-	v.state.AppendString(strconv.FormatInt(int64(i), 10))
+	v.state.AppendString(stc.FormatInt(int64(i), 10))
 }
 
 // This private method appends the base 10 string for the specified unsigned
 // integer value to the result.
-func (v *formatter) formatUnsigned(r reflect.Value) {
+func (v *formatter) formatUnsigned(r ref.Value) {
 	var u = r.Uint()
-	v.state.AppendString("0x" + strconv.FormatUint(uint64(u), 16))
+	v.state.AppendString("0x" + stc.FormatUint(uint64(u), 16))
 }
 
 // This private method appends the base 10 string for the specified floating
 // point value to the result using scientific notation if necessary.
-func (v *formatter) formatFloat(r reflect.Value) {
+func (v *formatter) formatFloat(r ref.Value) {
 	var flt = r.Float()
-	var str = strconv.FormatFloat(flt, 'G', -1, 64)
-	if !strings.Contains(str, ".") && !strings.Contains(str, "E") {
+	var str = stc.FormatFloat(flt, 'G', -1, 64)
+	if !str.Contains(str, ".") && !str.Contains(str, "E") {
 		str += ".0"
 	}
 	v.state.AppendString(str)
@@ -170,28 +170,28 @@ func (v *formatter) formatFloat(r reflect.Value) {
 
 // This private method appends the base 10 string for the specified complex
 // number value to the result using scientific notation if necessary.
-func (v *formatter) formatComplex(r reflect.Value) {
+func (v *formatter) formatComplex(r ref.Value) {
 	var c = r.Complex()
-	v.state.AppendString(strconv.FormatComplex(c, 'G', -1, 128))
+	v.state.AppendString(stc.FormatComplex(c, 'G', -1, 128))
 }
 
 // This private method appends the string for the specified rune value to the
 // result.
-func (v *formatter) formatRune(r reflect.Value) {
+func (v *formatter) formatRune(r ref.Value) {
 	var rn = r.Int()
-	v.state.AppendString(strconv.QuoteRune(int32(rn)))
+	v.state.AppendString(stc.QuoteRune(int32(rn)))
 }
 
 // This private method appends the string for the specified string value to the
 // result.
-func (v *formatter) formatString(r reflect.Value) {
+func (v *formatter) formatString(r ref.Value) {
 	var str = r.String()
 	v.state.AppendString("\"" + str + "\"")
 }
 
 // This private method appends the string for the specified array of values to
 // the result.
-func (v *formatter) formatArray(r reflect.Value, typ string) {
+func (v *formatter) formatArray(r ref.Value, typ string) {
 	var size = r.Len()
 	v.state.AppendString("[")
 	if size > 0 {
@@ -220,7 +220,7 @@ func (v *formatter) formatArray(r reflect.Value, typ string) {
 
 // This private method appends the string for the specified map of key-value
 // pairs to the result.
-func (v *formatter) formatMap(r reflect.Value) {
+func (v *formatter) formatMap(r ref.Value) {
 	var keys = r.MapKeys()
 	var size = len(keys)
 	v.state.AppendString("[")
@@ -249,23 +249,23 @@ func (v *formatter) formatMap(r reflect.Value) {
 
 // This private method appends the string for the specified structure to
 // the result.
-func (v *formatter) formatStructure(r reflect.Value) {
+func (v *formatter) formatStructure(r ref.Value) {
 }
 
 // This private method appends the string for the specified catalog of
 // key-value pairs to the result. It uses recursion to format each pair.
-func (v *formatter) formatAssociation(r reflect.Value) {
-	var key = r.MethodByName("GetKey").Call([]reflect.Value{})[0]
+func (v *formatter) formatAssociation(r ref.Value) {
+	var key = r.MethodByName("GetKey").Call([]ref.Value{})[0]
 	v.formatValue(key)
 	v.state.AppendString(": ")
-	var value = r.MethodByName("GetValue").Call([]reflect.Value{})[0]
+	var value = r.MethodByName("GetValue").Call([]ref.Value{})[0]
 	v.formatValue(value)
 }
 
 // This private method appends the string for the specified collection of
 // items to the result. It uses recursion to format each item.
-func (v *formatter) formatCollection(r reflect.Value) {
-	var array = r.MethodByName("AsArray").Call([]reflect.Value{})[0]
+func (v *formatter) formatCollection(r ref.Value) {
+	var array = r.MethodByName("AsArray").Call([]ref.Value{})[0]
 	var typ = extractType(r)
 	v.formatArray(array, typ)
 }
@@ -274,32 +274,32 @@ func (v *formatter) formatCollection(r reflect.Value) {
 
 // This private function extracts the type name string from the full reflected
 // type.
-func extractType(r reflect.Value) string {
+func extractType(r ref.Value) string {
 	var t = r.Type().String()
 	switch {
-	case strings.HasPrefix(t, "[]"):
+	case str.HasPrefix(t, "[]"):
 		return "array"
-	case strings.HasPrefix(t, "map["):
+	case str.HasPrefix(t, "map["):
 		return "map"
-	case strings.HasPrefix(t, "*collections.set"):
+	case str.HasPrefix(t, "*collections.set"):
 		return "set"
-	case strings.HasPrefix(t, "abstractions.SetLike"):
+	case str.HasPrefix(t, "abs.SetLike"):
 		return "set"
-	case strings.HasPrefix(t, "*collections.queue"):
+	case str.HasPrefix(t, "*collections.queue"):
 		return "queue"
-	case strings.HasPrefix(t, "abstractions.QueueLike"):
+	case str.HasPrefix(t, "abs.QueueLike"):
 		return "queue"
-	case strings.HasPrefix(t, "*collections.stack"):
+	case str.HasPrefix(t, "*collections.stack"):
 		return "stack"
-	case strings.HasPrefix(t, "abstractions.StackLike"):
+	case str.HasPrefix(t, "abs.StackLike"):
 		return "stack"
-	case strings.HasPrefix(t, "*collections.list"):
+	case str.HasPrefix(t, "*collections.list"):
 		return "list"
-	case strings.HasPrefix(t, "abstractions.ListLike"):
+	case str.HasPrefix(t, "abs.ListLike"):
 		return "list"
-	case strings.HasPrefix(t, "*collections.catalog"):
+	case str.HasPrefix(t, "*collections.catalog"):
 		return "catalog"
-	case strings.HasPrefix(t, "abstractions.CatalogLike"):
+	case str.HasPrefix(t, "abs.CatalogLike"):
 		return "catalog"
 	default:
 		fmt.Printf("UNKNOWN: %v\n", t)

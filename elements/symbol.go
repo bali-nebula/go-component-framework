@@ -11,7 +11,7 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // SYMBOL INTERFACE
@@ -23,7 +23,7 @@ import (
 func SymbolFromString(v string) (Symbol, bool) {
 	var ok = true
 	var symbol string
-	var matches = abstractions.ScanSymbol([]byte(v))
+	var matches = abs.ScanSymbol([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false

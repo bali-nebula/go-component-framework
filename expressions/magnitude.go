@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // MAGNITUDE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new magnitude expression.
-func Magnitude(expression any) abstractions.MagnitudeLike {
+func Magnitude(expression any) abs.MagnitudeLike {
 	var v = &magnitudeExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)

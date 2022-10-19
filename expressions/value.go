@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // VALUE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new value expression.
-func Value(composite any, indices abstractions.ListLike[any]) abstractions.ValueLike {
+func Value(composite any, indices abs.ListLike[any]) abs.ValueLike {
 	var v = &valueExpression{}
 	// Perform argument validation.
 	v.SetComposite(composite)
@@ -29,7 +29,7 @@ func Value(composite any, indices abstractions.ListLike[any]) abstractions.Value
 // expression.
 type valueExpression struct {
 	composite any
-	indices   abstractions.ListLike[any]
+	indices   abs.ListLike[any]
 }
 
 // This method returns the composite for this value expression.
@@ -61,12 +61,12 @@ func (v *valueExpression) SetIndex(index int, expression any) {
 }
 
 // This method returns the list of indices for this value expression.
-func (v *valueExpression) GetIndices() abstractions.ListLike[any] {
+func (v *valueExpression) GetIndices() abs.ListLike[any] {
 	return v.indices
 }
 
 // This method sets the list of indices for this value expression.
-func (v *valueExpression) SetIndices(indices abstractions.ListLike[any]) {
+func (v *valueExpression) SetIndices(indices abs.ListLike[any]) {
 	if indices == nil || indices.IsEmpty() {
 		panic("A value expression requires at least one index.")
 	}

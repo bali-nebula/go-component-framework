@@ -11,11 +11,11 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that causes an
 // exception to be thrown in the executing procedure.
-type ThrowClause struct {
+type Throw struct {
 	Exception any
 }

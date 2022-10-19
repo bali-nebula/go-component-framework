@@ -11,10 +11,10 @@
 package language
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/collections"
-	"github.com/craterdog-bali/go-bali-document-notation/components"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	com "github.com/craterdog-bali/go-bali-document-notation/components"
 )
 
 // PARSING METHODS
@@ -40,15 +40,15 @@ func (v *parser) parseComment() (string, *Token, bool) {
 
 // This method attempts to parse a component. It returns the component and
 // whether or not the component was successfully parsed.
-func (v *parser) parseComponent() (abstractions.ComponentLike[any], *Token, bool) {
-	var component abstractions.ComponentLike[any]
-	var context abstractions.ContextLike
+func (v *parser) parseComponent() (abs.ComponentLike[any], *Token, bool) {
+	var component abs.ComponentLike[any]
+	var context abs.ContextLike
 	var note string
 	var entity, token, ok = v.parseEntity()
 	if ok {
 		context, token, _ = v.parseContext() // The context is optional.
 		note, token, _ = v.parseNote()       // The note is optional.
-		component = components.ComponentWithContext[any](entity, context)
+		component = com.ComponentWithContext[any](entity, context)
 		component.SetNote(note)
 	}
 	return component, token, ok
@@ -57,11 +57,11 @@ func (v *parser) parseComponent() (abstractions.ComponentLike[any], *Token, bool
 // This method attempts to parse the context for a parameterized component. It
 // returns an array of parameters and whether or not the context was
 // successfully parsed.
-func (v *parser) parseContext() (abstractions.ContextLike, *Token, bool) {
+func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameters abstractions.CatalogLike[abstractions.Symbolic, any]
-	var context abstractions.ContextLike
+	var parameters abs.CatalogLike[abs.Symbolic, any]
+	var context abs.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		return nil, token, false
@@ -86,7 +86,7 @@ func (v *parser) parseContext() (abstractions.ContextLike, *Token, bool) {
 			"$name")
 		panic(message)
 	}
-	context = components.Context(parameters)
+	context = com.Context(parameters)
 	return context, token, true
 }
 
@@ -199,10 +199,10 @@ func (v *parser) parseNote() (string, *Token, bool) {
 // This method attempts to parse a parameter containing a name and value. It
 // returns the parameter and whether or not the parameter was successfully
 // parsed.
-func (v *parser) parseParameter() (abstractions.AssociationLike[abstractions.Symbolic, any], *Token, bool) {
+func (v *parser) parseParameter() (abs.AssociationLike[abs.Symbolic, any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var name abstractions.Symbolic
+	var name abs.Symbolic
 	var value any
 	name, token, ok = v.parseSymbol()
 	if !ok {
@@ -220,18 +220,18 @@ func (v *parser) parseParameter() (abstractions.AssociationLike[abstractions.Sym
 	if !ok {
 		panic("Expected a value after the ':' character.")
 	}
-	var parameter = collections.Association[abstractions.Symbolic, any](name, value)
+	var parameter = col.Association[abs.Symbolic, any](name, value)
 	return parameter, token, true
 }
 
 // This method attempts to parse context parameters. It returns the
 // context parameters and whether or not the context parameters were
 // successfully parsed.
-func (v *parser) parseParameters() (abstractions.CatalogLike[abstractions.Symbolic, any], *Token, bool) {
+func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameter abstractions.AssociationLike[abstractions.Symbolic, any]
-	var parameters = collections.Catalog[abstractions.Symbolic, any]()
+	var parameter abs.AssociationLike[abs.Symbolic, any]
+	var parameters = col.Catalog[abs.Symbolic, any]()
 	_, token, ok = v.parseEOL()
 	if !ok {
 		// The parameters are on a single line.

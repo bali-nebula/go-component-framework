@@ -11,21 +11,21 @@
 package agents
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // SORTER INTERFACE
 
 // This function sorts the specified array of items using the specified ranking
 // function.
-func SortArray[T any](array []T, rank abstractions.RankingFunction) {
+func SortArray[T any](array []T, rank abs.RankingFunction) {
 	var v = Sorter[T](rank)
 	v.SortArray(array)
 }
 
 // This constructor creates a new instance of a sorter that can be used to
 // sort an array using a specific ranking function.
-func Sorter[T any](rank abstractions.RankingFunction) abstractions.SorterLike[T] {
+func Sorter[T any](rank abs.RankingFunction) abs.SorterLike[T] {
 	return &sorter[T]{rank: rank}
 }
 
@@ -33,7 +33,7 @@ func Sorter[T any](rank abstractions.RankingFunction) abstractions.SorterLike[T]
 
 // This type defines the structure and methods for a merge sorter agent.
 type sorter[T any] struct {
-	rank abstractions.RankingFunction
+	rank abs.RankingFunction
 }
 
 // This method determines whether or not the specified values are equal.

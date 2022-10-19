@@ -11,10 +11,10 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/utilities"
-	"math"
-	"strconv"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
+	mat "math"
+	str "strconv"
 )
 
 // PROBABILITY INTERFACE
@@ -56,7 +56,7 @@ type Probability float64
 
 // This method returns the canonical string for this element.
 func (v Probability) AsString() string {
-	var s = strconv.FormatFloat(float64(v), 'f', -1, 64)
+	var s = str.FormatFloat(float64(v), 'f', -1, 64)
 	switch {
 	case v == 0:
 		return "." + s
@@ -81,7 +81,7 @@ func (v Probability) AsBoolean() bool {
 
 // This method returns an integer value for this discrete element.
 func (v Probability) AsInteger() int {
-	return int(math.Round(float64(v)))
+	return int(mat.Round(float64(v)))
 }
 
 // CONTINUOUS INTERFACE
@@ -103,7 +103,7 @@ type probabilities struct{}
 
 // This library function returns a random probability.
 func (l *probabilities) Random() Probability {
-	return Probability(utilities.RandomProbability())
+	return Probability(uti.RandomProbability())
 }
 
 // LOGICAL INTERFACE
@@ -146,19 +146,19 @@ func (l *probabilities) Xor(first Probability, second Probability) Probability {
 func stringToProbability(v string) (float64, bool) {
 	var probability float64
 	var ok = true
-	var matches = abstractions.ScanProbability([]byte(v))
+	var matches = abs.ScanProbability([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
 	default:
 		var err error
-		probability, err = strconv.ParseFloat(matches[0], 64)
+		probability, err = str.ParseFloat(matches[0], 64)
 		if err != nil {
 			ok = false
 		}
 	}
 	// Check for mistaken floating point value.
-	matches = abstractions.ScanNumber([]byte(v))
+	matches = abs.ScanNumber([]byte(v))
 	if len(matches) > 0 && len(matches[0]) > 1 {
 		ok = false
 		probability = 0

@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // COMPLEMENT EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new complement expression.
-func Complement(expression any) abstractions.ComplementLike {
+func Complement(expression any) abs.ComplementLike {
 	var v = &complementExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)

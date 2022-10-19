@@ -11,25 +11,19 @@
 package language
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/elements"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	sta "github.com/craterdog-bali/go-bali-document-notation/statements"
 )
-
-// This type defines the node structure associated with a clause that accepts a
-// message that was previously retrieved from a named message bag so that it
-// cannot be retrieved by another party.
-type AcceptClause struct {
-	Message any
-}
 
 // This method attempts to parse an accept clause. It returns the accept
 // clause and whether or not the accept clause was successfully parsed.
-func (v *parser) parseAcceptClause() (*AcceptClause, *Token, bool) {
+func (v *parser) parseAccept() (abs.AcceptLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var message any
-	var clause *AcceptClause
+	var clause abs.AcceptLike
 	_, token, ok = v.parseKeyword("accept")
 	if !ok {
 		// This is not a accept clause.
@@ -42,25 +36,18 @@ func (v *parser) parseAcceptClause() (*AcceptClause, *Token, bool) {
 			"$acceptClause")
 		panic(message)
 	}
-	clause = &AcceptClause{message}
+	clause = sta.Accept(message)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with an indexed attribute
-// within a composite component.
-type Attribute struct {
-	Variable string
-	Indices  abstractions.ListLike[any]
 }
 
 // This method attempts to parse an attribute. It returns the attribute and
 // whether or not the attribute was successfully parsed.
-func (v *parser) parseAttribute() (*Attribute, *Token, bool) {
+func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var variable string
-	var indices abstractions.ListLike[any]
-	var attribute *Attribute
+	var indices abs.ListLike[any]
+	var attribute abs.AttributeLike
 	variable, token, ok = v.parseIdentifier()
 	if !ok {
 		// This is not an attribute.
@@ -90,26 +77,18 @@ func (v *parser) parseAttribute() (*Attribute, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	attribute = &Attribute{variable, indices}
+	attribute = sta.Attribute(variable, indices)
 	return attribute, token, true
-}
-
-// This type defines the node structure associated with a do block of statements
-// that contains an expression and Bali Document Notation (BDN) procedural
-// statements.
-type DoBlock struct {
-	Expression any
-	Statements abstractions.ListLike[any]
 }
 
 // This method attempts to parse a do block. It returns the do block and whether
 // or not the do block was successfully parsed.
-func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
+func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var expression any
-	var statements abstractions.ListLike[any]
-	var doBlock *DoBlock
+	var statements abs.ListLike[any]
+	var block abs.BlockLike
 	expression, token, ok = v.parseExpression()
 	if !ok {
 		var message = fmt.Sprintf("Expected an expression before a statement block but received:\n%v\n\n", token)
@@ -154,21 +133,16 @@ func (v *parser) parseDoBlock() (*DoBlock, *Token, bool) {
 			"$onClause")
 		panic(message)
 	}
-	doBlock = &DoBlock{expression, statements}
-	return doBlock, token, true
-}
-
-// This type defines the node structure associated with a clause that causes the
-// execution of a loop to end.
-type BreakClause struct {
+	block = sta.Block(expression, statements)
+	return block, token, true
 }
 
 // This method attempts to parse a break clause. It returns the break
 // clause and whether or not the break clause was successfully parsed.
-func (v *parser) parseBreakClause() (*BreakClause, *Token, bool) {
+func (v *parser) parseBreak() (abs.BreakLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var clause *BreakClause
+	var clause abs.BreakLike
 	_, token, ok = v.parseKeyword("break")
 	if !ok {
 		// This is not a break clause.
@@ -184,24 +158,15 @@ func (v *parser) parseBreakClause() (*BreakClause, *Token, bool) {
 	return clause, token, true
 }
 
-// This type defines the node structure associated with a clause that checks out
-// a draft version of a released document at an optional release level from the
-// document repository and assigns it to a recipient.
-type CheckoutClause struct {
-	Recipient any // The recipient is a symbol or attribute.
-	Level     any
-	Moniker   any
-}
-
 // This method attempts to parse a checkout clause. It returns the checkout
 // clause and whether or not the checkout clause was successfully parsed.
-func (v *parser) parseCheckoutClause() (*CheckoutClause, *Token, bool) {
+func (v *parser) parseCheckout() (abs.CheckoutLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
 	var level any
 	var moniker any
-	var clause *CheckoutClause
+	var clause abs.CheckoutLike
 	_, token, ok = v.parseKeyword("checkout")
 	if !ok {
 		// This is not a checkout clause.
@@ -271,21 +236,16 @@ func (v *parser) parseCheckoutClause() (*CheckoutClause, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = &CheckoutClause{recipient, level, moniker}
+	clause = sta.Checkout(recipient, level, moniker)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that causes the
-// execution of a loop to continue at the beginning.
-type ContinueClause struct {
 }
 
 // This method attempts to parse a continue clause. It returns the continue
 // clause and whether or not the continue clause was successfully parsed.
-func (v *parser) parseContinueClause() (*ContinueClause, *Token, bool) {
+func (v *parser) parseContinue() (abs.ContinueLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var clause *ContinueClause
+	var clause abs.ContinueLike
 	_, token, ok = v.parseKeyword("continue")
 	if !ok {
 		// This is not a continue clause.
@@ -301,19 +261,13 @@ func (v *parser) parseContinueClause() (*ContinueClause, *Token, bool) {
 	return clause, token, true
 }
 
-// This type defines the node structure associated with a clause that discards
-// a draft document referred to by an expression from the document repository.
-type DiscardClause struct {
-	Citation any
-}
-
 // This method attempts to parse a discard clause. It returns the discard
 // clause and whether or not the discard clause was successfully parsed.
-func (v *parser) parseDiscardClause() (*DiscardClause, *Token, bool) {
+func (v *parser) parseDiscard() (abs.DiscardLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var citation any
-	var clause *DiscardClause
+	var clause abs.DiscardLike
 	_, token, ok = v.parseKeyword("discard")
 	if !ok {
 		// This is not a discard clause.
@@ -326,28 +280,19 @@ func (v *parser) parseDiscardClause() (*DiscardClause, *Token, bool) {
 			"$discardClause")
 		panic(message)
 	}
-	clause = &DiscardClause{citation}
+	clause = sta.Discard(citation)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that evaluates
-// an expression and optionally assigns the result to a recipient. The recipient
-// must support the `Scalable` interface.
-type EvaluateClause struct {
-	Recipient  any // The recipient is a symbol or attribute.
-	Operator   string
-	Expression any
 }
 
 // This method attempts to parse an evaluate clause. It returns the evaluate
 // clause and whether or not the evaluate clause was successfully parsed.
-func (v *parser) parseEvaluateClause() (*EvaluateClause, *Token, bool) {
+func (v *parser) parseEvaluate() (abs.EvaluateLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
 	var operator string
 	var expression any
-	var clause *EvaluateClause
+	var clause abs.EvaluateLike
 	recipient, token, ok = v.parseRecipient()
 	if ok {
 		operator, token, ok = v.parseDelimiter(":=")
@@ -391,173 +336,104 @@ func (v *parser) parseEvaluateClause() (*EvaluateClause, *Token, bool) {
 		// This is not an evaluate clause.
 		return clause, token, false
 	}
-	clause = &EvaluateClause{recipient, operator, expression}
+	clause = sta.Evaluate(recipient, operator, expression)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that handles
-// an exception.
-type OnClause struct {
-	Exception elements.Symbol
-	DoBlocks  abstractions.ListLike[*DoBlock]
-}
-
-// This method attempts to parse an exception clause. It returns the exception
-// clause and whether or not the exception clause was successfully parsed.
-func (v *parser) parseOnClause() (*OnClause, *Token, bool) {
-	var ok bool
-	var token *Token
-	var exception elements.Symbol
-	var doBlock *DoBlock
-	var doBlocks abstractions.ListLike[*DoBlock]
-	var clause *OnClause
-	_, token, ok = v.parseKeyword("on")
-	if !ok {
-		// This is not an exception clause.
-		return clause, token, false
-	}
-	exception, token, ok = v.parseSymbol()
-	if !ok {
-		var message = fmt.Sprintf("Expected an exception symbol following the 'on' keyword but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$onClause",
-			"$exception")
-		panic(message)
-	}
-	for {
-		_, token, ok = v.parseKeyword("matching")
-		if !ok {
-			break // No more possible matches.
-		}
-		doBlock, token, ok = v.parseDoBlock()
-		if !ok {
-			var message = fmt.Sprintf("Expected a pattern expression and statement block following the 'matching' keyword but received:\n%v\n\n", token)
-			message += generateGrammar(
-				"$onClause",
-				"$exception")
-			panic(message)
-		}
-		doBlocks.AddItem(doBlock)
-	}
-	// There must be at least one matching block expression.
-	if doBlocks.IsEmpty() {
-		var message = fmt.Sprintf("Expected at least one pattern expression and statement block in the exception clause but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$onClause",
-			"$exception")
-		panic(message)
-	}
-	clause = &OnClause{exception, doBlocks}
-	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that selects a
-// statement block to be executed based on the value of a conditional expression.
-type IfClause struct {
-	DoBlock *DoBlock
 }
 
 // This method attempts to parse an if clause. It returns the if clause and
 // whether or not the if clause was successfully parsed.
-func (v *parser) parseIfClause() (*IfClause, *Token, bool) {
+func (v *parser) parseIf() (abs.IfLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var doBlock *DoBlock
-	var clause *IfClause
+	var block abs.BlockLike
+	var clause abs.IfLike
 	_, token, ok = v.parseKeyword("if")
 	if !ok {
 		// This is not an if clause.
 		return clause, token, false
 	}
-	doBlock, token, ok = v.parseDoBlock()
+	block, token, ok = v.parseBlock()
 	if !ok {
 		var message = fmt.Sprintf("Expected a condition expression and statement block following the 'if' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$ifClause")
 		panic(message)
 	}
-	clause = &IfClause{doBlock}
+	clause = sta.If(block)
 	return clause, token, true
 }
 
 // This method attempts to parse a main clause. It returns the main clause and
 // whether or not the main clause was successfully parsed.
-func (v *parser) parseMainClause() (any, *Token, bool) {
+func (v *parser) parseMain() (any, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
 	var mainClause any
-	mainClause, token, ok = v.parseIfClause()
+	mainClause, token, ok = v.parseIf()
 	if !ok {
-		mainClause, token, ok = v.parseSelectClause()
+		mainClause, token, ok = v.parseSelect()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseWithClause()
+		mainClause, token, ok = v.parseWith()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseWhileClause()
+		mainClause, token, ok = v.parseWhile()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseContinueClause()
+		mainClause, token, ok = v.parseContinue()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseBreakClause()
+		mainClause, token, ok = v.parseBreak()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseReturnClause()
+		mainClause, token, ok = v.parseReturn()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseThrowClause()
+		mainClause, token, ok = v.parseThrow()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseSaveClause()
+		mainClause, token, ok = v.parseSave()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseDiscardClause()
+		mainClause, token, ok = v.parseDiscard()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseNotarizeClause()
+		mainClause, token, ok = v.parseNotarize()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseCheckoutClause()
+		mainClause, token, ok = v.parseCheckout()
 	}
 	if !ok {
-		mainClause, token, ok = v.parsePublishClause()
+		mainClause, token, ok = v.parsePublish()
 	}
 	if !ok {
-		mainClause, token, ok = v.parsePostClause()
+		mainClause, token, ok = v.parsePost()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseRetrieveClause()
+		mainClause, token, ok = v.parseRetrieve()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseAcceptClause()
+		mainClause, token, ok = v.parseAccept()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseRejectClause()
+		mainClause, token, ok = v.parseReject()
 	}
 	if !ok {
 		// This clause should be checked last since it is slower to fail.
-		mainClause, token, ok = v.parseEvaluateClause()
+		mainClause, token, ok = v.parseEvaluate()
 	}
 	return mainClause, token, ok
 }
 
-// This type defines the node structure associated with a clause that notarizes
-// a draft document as a named released document in the document repository.
-type NotarizeClause struct {
-	Draft   any
-	Moniker any
-}
-
 // This method attempts to parse a notarize clause. It returns the notarize
 // clause and whether or not the notarize clause was successfully parsed.
-func (v *parser) parseNotarizeClause() (*NotarizeClause, *Token, bool) {
+func (v *parser) parseNotarize() (abs.NotarizeLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var draft any
 	var moniker any
-	var clause *NotarizeClause
+	var clause abs.NotarizeLike
 	_, token, ok = v.parseKeyword("notarize")
 	if !ok {
 		// This is not a notarize clause.
@@ -584,25 +460,67 @@ func (v *parser) parseNotarizeClause() (*NotarizeClause, *Token, bool) {
 			"$notarizeClause")
 		panic(message)
 	}
-	clause = &NotarizeClause{draft, moniker}
+	clause = sta.Notarize(draft, moniker)
 	return clause, token, true
 }
 
-// This type defines the node structure associated with a clause that posts a
-// message to a named message bag.
-type PostClause struct {
-	Message any
-	Bag     any
+// This method attempts to parse an exception clause. It returns the exception
+// clause and whether or not the exception clause was successfully parsed.
+func (v *parser) parseOn() (abs.OnLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var exception ele.Symbol
+	var block abs.BlockLike
+	var blocks abs.ListLike[abs.BlockLike]
+	var clause abs.OnLike
+	_, token, ok = v.parseKeyword("on")
+	if !ok {
+		// This is not an exception clause.
+		return clause, token, false
+	}
+	exception, token, ok = v.parseSymbol()
+	if !ok {
+		var message = fmt.Sprintf("Expected an exception symbol following the 'on' keyword but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$onClause",
+			"$exception")
+		panic(message)
+	}
+	for {
+		_, token, ok = v.parseKeyword("matching")
+		if !ok {
+			break // No more possible matches.
+		}
+		block, token, ok = v.parseBlock()
+		if !ok {
+			var message = fmt.Sprintf("Expected a pattern expression and statement block following the 'matching' keyword but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$onClause",
+				"$exception")
+			panic(message)
+		}
+		blocks.AddItem(block)
+	}
+	// There must be at least one matching block expression.
+	if blocks.IsEmpty() {
+		var message = fmt.Sprintf("Expected at least one pattern expression and statement block in the exception clause but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$onClause",
+			"$exception")
+		panic(message)
+	}
+	clause = sta.On(exception, blocks)
+	return clause, token, true
 }
 
 // This method attempts to parse a post clause. It returns the post
 // clause and whether or not the post clause was successfully parsed.
-func (v *parser) parsePostClause() (*PostClause, *Token, bool) {
+func (v *parser) parsePost() (abs.PostLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var message any
 	var bag any
-	var clause *PostClause
+	var clause abs.PostLike
 	_, token, ok = v.parseKeyword("post")
 	if !ok {
 		// This is not a post clause.
@@ -629,16 +547,16 @@ func (v *parser) parsePostClause() (*PostClause, *Token, bool) {
 			"$postClause")
 		panic(message)
 	}
-	clause = &PostClause{message, bag}
+	clause = sta.Post(message, bag)
 	return clause, token, true
 }
 
 // This method attempts to parse a procedure. It returns the procedure and
 // whether or not the procedure was successfully parsed.
-func (v *parser) parseProcedure() (abstractions.ListLike[any], *Token, bool) {
+func (v *parser) parseProcedure() (abs.ListLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var statements abstractions.ListLike[any]
+	var statements abs.ListLike[any]
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		// This is not a procedure.
@@ -665,19 +583,13 @@ func (v *parser) parseProcedure() (abstractions.ListLike[any], *Token, bool) {
 	return statements, token, true
 }
 
-// This type defines the node structure associated with a clause that publishes
-// an event to be delivered to all interested parties.
-type PublishClause struct {
-	Event any
-}
-
 // This method attempts to parse a publish clause. It returns the publish
 // clause and whether or not the publish clause was successfully parsed.
-func (v *parser) parsePublishClause() (*PublishClause, *Token, bool) {
+func (v *parser) parsePublish() (abs.PublishLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var event any
-	var clause *PublishClause
+	var clause abs.PublishLike
 	_, token, ok = v.parseKeyword("publish")
 	if !ok {
 		// This is not a publish clause.
@@ -690,7 +602,7 @@ func (v *parser) parsePublishClause() (*PublishClause, *Token, bool) {
 			"$publishClause")
 		panic(message)
 	}
-	clause = &PublishClause{event}
+	clause = sta.Publish(event)
 	return clause, token, true
 }
 
@@ -707,20 +619,13 @@ func (v *parser) parseRecipient() (any, *Token, bool) {
 	return recipient, token, ok
 }
 
-// This type defines the node structure associated with a clause that rejects a
-// message that was previously retrieved from a named message bag so that it
-// can be retrieved by another party.
-type RejectClause struct {
-	Message any
-}
-
 // This method attempts to parse a reject clause. It returns the reject
 // clause and whether or not the reject clause was successfully parsed.
-func (v *parser) parseRejectClause() (*RejectClause, *Token, bool) {
+func (v *parser) parseReject() (abs.RejectLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var message any
-	var clause *RejectClause
+	var clause abs.RejectLike
 	_, token, ok = v.parseKeyword("reject")
 	if !ok {
 		// This is not a reject clause.
@@ -733,25 +638,18 @@ func (v *parser) parseRejectClause() (*RejectClause, *Token, bool) {
 			"$rejectClause")
 		panic(message)
 	}
-	clause = &RejectClause{message}
+	clause = sta.Reject(message)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that retrieves
-// a random message from a named message bag and assigns it to a recipient.
-type RetrieveClause struct {
-	Recipient any // The recipient is a symbol or attribute.
-	Bag       any
 }
 
 // This method attempts to parse a retrieve clause. It returns the retrieve
 // clause and whether or not the retrieve clause was successfully parsed.
-func (v *parser) parseRetrieveClause() (*RetrieveClause, *Token, bool) {
+func (v *parser) parseRetrieve() (abs.RetrieveLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
 	var bag any
-	var clause *RetrieveClause
+	var clause abs.RetrieveLike
 	_, token, ok = v.parseKeyword("retrieve")
 	if !ok {
 		// This is not a retrieve clause.
@@ -793,23 +691,17 @@ func (v *parser) parseRetrieveClause() (*RetrieveClause, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = &RetrieveClause{recipient, bag}
+	clause = sta.Retrieve(recipient, bag)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that causes an
-// executing procedure to return with a result.
-type ReturnClause struct {
-	Result any
 }
 
 // This method attempts to parse a return clause. It returns the return
 // clause and whether or not the return clause was successfully parsed.
-func (v *parser) parseReturnClause() (*ReturnClause, *Token, bool) {
+func (v *parser) parseReturn() (abs.ReturnLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var result any
-	var clause *ReturnClause
+	var clause abs.ReturnLike
 	_, token, ok = v.parseKeyword("return")
 	if !ok {
 		// This is not a return clause.
@@ -822,27 +714,18 @@ func (v *parser) parseReturnClause() (*ReturnClause, *Token, bool) {
 			"$returnClause")
 		panic(message)
 	}
-	clause = &ReturnClause{result}
+	clause = sta.Return(result)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that saves
-// a draft document referred to by an expression to the document repository
-// and returns a citation to the document which is optionally assigned to a
-// recipient.
-type SaveClause struct {
-	Draft    any
-	Citation any
 }
 
 // This method attempts to parse a save clause. It returns the save
 // clause and whether or not the save clause was successfully parsed.
-func (v *parser) parseSaveClause() (*SaveClause, *Token, bool) {
+func (v *parser) parseSave() (abs.SaveLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var draft any
 	var citation any
-	var clause *SaveClause
+	var clause abs.SaveLike
 	_, token, ok = v.parseKeyword("save")
 	if !ok {
 		// This is not a save clause.
@@ -884,26 +767,19 @@ func (v *parser) parseSaveClause() (*SaveClause, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = &SaveClause{draft, citation}
+	clause = sta.Save(draft, citation)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that selects a
-// statement block to be executed based on the pattern of a control expression.
-type SelectClause struct {
-	Control  any
-	DoBlocks abstractions.ListLike[*DoBlock]
 }
 
 // This method attempts to parse an select clause. It returns the select clause
 // and whether or not the select clause was successfully parsed.
-func (v *parser) parseSelectClause() (*SelectClause, *Token, bool) {
+func (v *parser) parseSelect() (abs.SelectLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var control any
-	var doBlock *DoBlock
-	var doBlocks abstractions.ListLike[*DoBlock]
-	var clause *SelectClause
+	var block abs.BlockLike
+	var blocks abs.ListLike[abs.BlockLike]
+	var clause abs.SelectLike
 	_, token, ok = v.parseKeyword("select")
 	if !ok {
 		// This is not a select clause.
@@ -921,57 +797,49 @@ func (v *parser) parseSelectClause() (*SelectClause, *Token, bool) {
 		if !ok {
 			break // No more possible matches.
 		}
-		doBlock, token, ok = v.parseDoBlock()
+		block, token, ok = v.parseBlock()
 		if !ok {
 			var message = fmt.Sprintf("Expected a pattern expression and statement block following the 'matching' keyword but received:\n%v\n\n", token)
 			message += generateGrammar(
 				"$selectClause")
 			panic(message)
 		}
-		doBlocks.AddItem(doBlock)
+		blocks.AddItem(block)
 	}
 	// There must be at least one matching block expression.
-	if doBlocks.IsEmpty() {
+	if blocks.IsEmpty() {
 		var message = fmt.Sprintf("Expected at least one pattern expression and statement block in the select clause but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$selectClause")
 		panic(message)
 	}
-	clause = &SelectClause{control, doBlocks}
+	clause = sta.Select(control, blocks)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a Bali Document
-// Notation (BDN) statement containing a main clause and an optional
-// exception handling clause.
-type Statement struct {
-	MainClause      any
-	OnClause *OnClause
 }
 
 // This method attempts to parse a statement. It returns the statement and
 // whether or not the statement was successfully parsed.
-func (v *parser) parseStatement() (*Statement, *Token, bool) {
+func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var statement *Statement
+	var statement abs.StatementLike
 	var mainClause any
-	var onClause *OnClause
-	mainClause, token, ok = v.parseMainClause()
+	var onClause abs.OnLike
+	mainClause, token, ok = v.parseMain()
 	if ok {
 		// The exception clause is optional.
-		onClause, token, _ = v.parseOnClause()
+		onClause, token, _ = v.parseOn()
 	}
-	statement = &Statement{mainClause, onClause}
+	statement = sta.Statement(mainClause, onClause)
 	return statement, token, ok
 }
 
 // This method attempts to parse the statements within a procedure. It returns
 // an array of the statements and whether or not the statements were
 // successfully parsed.
-func (v *parser) parseStatements() (abstractions.ListLike[any], *Token, bool) {
+func (v *parser) parseStatements() (abs.ListLike[any], *Token, bool) {
 	var statement any
-	var statements abstractions.ListLike[any]
+	var statements abs.ListLike[any]
 	var _, token, ok = v.parseEOL()
 	if !ok {
 		// The statements are on a single line.
@@ -1039,19 +907,13 @@ func (v *parser) parseStatements() (abstractions.ListLike[any], *Token, bool) {
 	return statements, token, true
 }
 
-// This type defines the node structure associated with a clause that causes an
-// exception to be thrown in the executing procedure.
-type ThrowClause struct {
-	Exception any
-}
-
 // This method attempts to parse a throw clause. It returns the throw
 // clause and whether or not the throw clause was successfully parsed.
-func (v *parser) parseThrowClause() (*ThrowClause, *Token, bool) {
+func (v *parser) parseThrow() (abs.ThrowLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var exception any
-	var clause *ThrowClause
+	var clause abs.ThrowLike
 	_, token, ok = v.parseKeyword("throw")
 	if !ok {
 		// This is not a throw clause.
@@ -1064,55 +926,41 @@ func (v *parser) parseThrowClause() (*ThrowClause, *Token, bool) {
 			"$throwClause")
 		panic(message)
 	}
-	clause = &ThrowClause{exception}
+	clause = sta.Throw(exception)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that executes
-// a statement block while a condition is true.
-type WhileClause struct {
-	DoBlock *DoBlock
 }
 
 // This method attempts to parse a while clause. It returns the while clause and
 // whether or not the while clause was successfully parsed.
-func (v *parser) parseWhileClause() (*WhileClause, *Token, bool) {
+func (v *parser) parseWhile() (abs.WhileLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var doBlock *DoBlock
-	var clause *WhileClause
+	var block abs.BlockLike
+	var clause abs.WhileLike
 	_, token, ok = v.parseKeyword("while")
 	if !ok {
 		// This is not a while clause.
 		return clause, token, false
 	}
-	doBlock, token, ok = v.parseDoBlock()
+	block, token, ok = v.parseBlock()
 	if !ok {
 		var message = fmt.Sprintf("Expected a conditional expression and statement block following the 'while' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$whileClause")
 		panic(message)
 	}
-	clause = &WhileClause{doBlock}
+	clause = sta.While(block)
 	return clause, token, true
-}
-
-// This type defines the node structure associated with a clause that executes
-// a statement block for each item in a collection. Each item may be optionally
-// assigned to a symbol that is referenced in the statement block.
-type WithClause struct {
-	Item    elements.Symbol
-	DoBlock *DoBlock
 }
 
 // This method attempts to parse a with clause. It returns the with clause and
 // whether or not the with clause was successfully parsed.
-func (v *parser) parseWithClause() (*WithClause, *Token, bool) {
+func (v *parser) parseWith() (abs.WithLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var item elements.Symbol
-	var doBlock *DoBlock
-	var clause *WithClause
+	var item ele.Symbol
+	var block abs.BlockLike
+	var clause abs.WithLike
 	_, token, ok = v.parseKeyword("with")
 	if !ok {
 		// This is not a with clause.
@@ -1142,7 +990,7 @@ func (v *parser) parseWithClause() (*WithClause, *Token, bool) {
 			"$item")
 		panic(message)
 	}
-	doBlock, token, ok = v.parseDoBlock()
+	block, token, ok = v.parseBlock()
 	if !ok {
 		var message = fmt.Sprintf("Expected a sequential expression and statement block following the 'in' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
@@ -1150,6 +998,6 @@ func (v *parser) parseWithClause() (*WithClause, *Token, bool) {
 			"$item")
 		panic(message)
 	}
-	clause = &WithClause{item, doBlock}
+	clause = sta.With(item, block)
 	return clause, token, true
 }

@@ -11,13 +11,13 @@
 package expressions
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // INVERSION EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new inversion expression.
-func Inversion(operator abstractions.Operator, expression any) abstractions.InversionLike {
+func Inversion(operator abs.Operator, expression any) abs.InversionLike {
 	var v = &inversionExpression{}
 	// Perform argument validation.
 	v.SetOperator(operator)
@@ -28,19 +28,19 @@ func Inversion(operator abstractions.Operator, expression any) abstractions.Inve
 // This type defines the structure and methods associated with a inversion
 // expression.
 type inversionExpression struct {
-	operator   abstractions.Operator
+	operator   abs.Operator
 	expression any
 }
 
 // This method returns the inversion operator in this inversion expression.
-func (v *inversionExpression) GetOperator() abstractions.Operator {
+func (v *inversionExpression) GetOperator() abs.Operator {
 	return v.operator
 }
 
 // This method sets the inversion operator in this inversion expression to the
 // specified value.
-func (v *inversionExpression) SetOperator(operator abstractions.Operator) {
-	if operator < abstractions.INVERSE || operator > abstractions.CONJUGATE {
+func (v *inversionExpression) SetOperator(operator abs.Operator) {
+	if operator < abs.INVERSE || operator > abs.CONJUGATE {
 		panic("The operator in an inversion expression must be a valid inversion operation.")
 	}
 	v.operator = operator

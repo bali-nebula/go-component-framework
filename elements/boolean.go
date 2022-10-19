@@ -11,8 +11,8 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"strconv"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	str "strconv"
 )
 
 // BOOLEAN INTERFACE
@@ -34,7 +34,7 @@ type Boolean bool
 
 // This method returns the canonical string for this element.
 func (v Boolean) AsString() string {
-	return strconv.FormatBool(bool(v))
+	return str.FormatBool(bool(v))
 }
 
 // This method implements the standard Go Stringer interface.
@@ -105,13 +105,13 @@ func (l *booleans) Xor(first Boolean, second Boolean) Boolean {
 func stringToBoolean(v string) (bool, bool) {
 	var boolean bool
 	var ok = true
-	var matches = abstractions.ScanBoolean([]byte(v))
+	var matches = abs.ScanBoolean([]byte(v))
 	switch {
 	case len(matches) == 0:
 		ok = false
 	default:
 		var err error
-		boolean, err = strconv.ParseBool(matches[0])
+		boolean, err = str.ParseBool(matches[0])
 		if err != nil {
 			ok = false
 		}

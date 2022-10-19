@@ -11,9 +11,9 @@
 package utilities
 
 import (
-	"crypto/rand"
-	"fmt"
-	"math/big"
+	ran "crypto/rand"
+	fmt "fmt"
+	big "math/big"
 )
 
 const maximum = 1 << 53
@@ -21,7 +21,7 @@ const maximum = 1 << 53
 // This function generates a cryptographically secure random integer in the
 // range [0..max].
 func RandomInteger(max int) int {
-	var random, err = rand.Int(rand.Reader, big.NewInt(int64(max+1)))
+	var random, err = ran.Int(ran.Reader, big.NewInt(int64(max+1)))
 	if err != nil {
 		panic(err)
 	}
@@ -37,7 +37,7 @@ func RandomProbability() float64 {
 // This function generates a cryptographically secure array of random bytes.
 func RandomBytes(size int) []byte {
 	var bytes = make([]byte, size)
-	var _, err = rand.Read(bytes)
+	var _, err = ran.Read(bytes)
 	if err != nil {
 		panic(fmt.Sprintf("The random number generator gave the following error: %v", err))
 	}

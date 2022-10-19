@@ -11,32 +11,32 @@
 package agents_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
-	"github.com/craterdog-bali/go-bali-document-notation/collections"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestIteratorsWithLists(t *testing.T) {
+func TestIteratorsWithLists(t *tes.T) {
 	var array = []int{1, 2, 3, 4, 5}
-	var list = collections.ListFromArray[int](array)
-	var iterator = agents.Iterator[int](list)
-	assert.False(t, iterator.HasPrevious())
-	assert.True(t, iterator.HasNext())
-	assert.Equal(t, 1, iterator.GetNext())
-	assert.True(t, iterator.HasPrevious())
-	assert.True(t, iterator.HasNext())
-	assert.Equal(t, 1, iterator.GetPrevious())
+	var list = col.ListFromArray[int](array)
+	var iterator = age.Iterator[int](list)
+	ass.False(t, iterator.HasPrevious())
+	ass.True(t, iterator.HasNext())
+	ass.Equal(t, 1, iterator.GetNext())
+	ass.True(t, iterator.HasPrevious())
+	ass.True(t, iterator.HasNext())
+	ass.Equal(t, 1, iterator.GetPrevious())
 	iterator.ToSlot(2)
-	assert.True(t, iterator.HasPrevious())
-	assert.True(t, iterator.HasNext())
-	assert.Equal(t, 3, iterator.GetNext())
+	ass.True(t, iterator.HasPrevious())
+	ass.True(t, iterator.HasNext())
+	ass.Equal(t, 3, iterator.GetNext())
 	iterator.ToEnd()
-	assert.True(t, iterator.HasPrevious())
-	assert.False(t, iterator.HasNext())
-	assert.Equal(t, 5, iterator.GetPrevious())
+	ass.True(t, iterator.HasPrevious())
+	ass.False(t, iterator.HasNext())
+	ass.Equal(t, 5, iterator.GetPrevious())
 	iterator.ToStart()
-	assert.False(t, iterator.HasPrevious())
-	assert.True(t, iterator.HasNext())
-	assert.Equal(t, 1, iterator.GetNext())
+	ass.False(t, iterator.HasPrevious())
+	ass.True(t, iterator.HasNext())
+	ass.Equal(t, 1, iterator.GetNext())
 }

@@ -11,11 +11,11 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that executes
 // a statement block while a condition is true.
-type WhileClause struct {
-	DoBlock *DoBlock
+type While struct {
+	Block *Block
 }

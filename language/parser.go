@@ -11,10 +11,10 @@
 package language
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/collections"
-	"strings"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	str "strings"
 )
 
 // PARSER INTERFACE
@@ -26,10 +26,10 @@ import (
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
 // All parser rules in the specification are shown in lowerCamelCase.
-func ParseSource(source string) abstractions.ComponentLike[any] {
+func ParseSource(source string) abs.ComponentLike[any] {
 	var ok bool
 	var token *Token
-	var component abstractions.ComponentLike[any]
+	var component abs.ComponentLike[any]
 	var parser = Parser([]byte(source))
 	var message string
 	component, token, ok = parser.parseComponent()
@@ -53,10 +53,10 @@ func ParseSource(source string) abstractions.ComponentLike[any] {
 // This function parses the specified Bali Document Notation™ (BDN) source
 // document and returns the corresponding abstract syntax tree. A POSIX
 // compliant source file must end with a EOL character.
-func ParseDocument(document []byte) abstractions.ComponentLike[any] {
+func ParseDocument(document []byte) abs.ComponentLike[any] {
 	var ok bool
 	var token *Token
-	var component abstractions.ComponentLike[any]
+	var component abs.ComponentLike[any]
 	var parser = Parser(document)
 	component, token, ok = parser.parseComponent()
 	if ok {
@@ -98,8 +98,8 @@ func Parser(source []byte) *parser {
 	Scanner(source, tokens) // Starts scanning in a go routine.
 	var p = &parser{
 		source:   source,
-		previous: collections.Stack[*Token](),
-		next:     collections.Stack[*Token](),
+		previous: col.Stack[*Token](),
+		next:     col.Stack[*Token](),
 		tokens:   tokens}
 	return p
 }
@@ -107,9 +107,9 @@ func Parser(source []byte) *parser {
 // This type defines the structure and methods for the parser agent.
 type parser struct {
 	source   []byte
-	previous abstractions.StackLike[*Token] // The stack of the previously retrieved tokens.
-	next     abstractions.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
-	tokens   chan Token                     // The queue of unread tokens coming from the scanner.
+	previous abs.StackLike[*Token] // The stack of the previously retrieved tokens.
+	next     abs.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
+	tokens   chan Token            // The queue of unread tokens coming from the scanner.
 }
 
 // This method attempts to read the next token from the token stream and return
@@ -149,7 +149,7 @@ func (v *parser) backupOne() {
 func (v *parser) formatError(message string, token *Token) string {
 	message += "\n\n"
 	var line = token.Line
-	var lines = strings.Split(string(v.source), "\n")
+	var lines = str.Split(string(v.source), "\n")
 
 	if line > 1 {
 		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + "\n"

@@ -11,18 +11,18 @@
 package utilities
 
 import (
-	"encoding/base64"
-	"fmt"
-	"math"
-	"strings"
-	"unicode"
+	b64 "encoding/base64"
+	fmt "fmt"
+	mat "math"
+	str "strings"
+	uni "unicode"
 )
 
 // This function encodes the specified bytes as a base 32 string using the
 // ten digits and all UPPER CASE letters except 'E', 'I', 'O', and 'U'.
 func Base32Encode(bytes []byte) string {
 	// Encode each byte.
-	var result strings.Builder
+	var result str.Builder
 	var previousByte byte
 	for index, currentByte := range bytes {
 		// Encode the next one or two 5 bit chunks.
@@ -41,10 +41,10 @@ func Base32Encode(bytes []byte) string {
 // bytes.
 func Base32Decode(encoded string) []byte {
 	// Purify the base 32 encoded string.
-	var buffer strings.Builder
+	var buffer str.Builder
 	for _, c := range encoded {
-		if !unicode.IsSpace(c) {
-			var r = unicode.ToUpper(c)
+		if !uni.IsSpace(c) {
+			var r = uni.ToUpper(c)
 			buffer.WriteRune(r)
 		}
 	}
@@ -52,9 +52,9 @@ func Base32Decode(encoded string) []byte {
 
 	// Decode each base 32 character.
 	var size = len(encoded)
-	var bytes = make([]byte, int(math.Trunc(float64(size)*5.0/8.0)))
+	var bytes = make([]byte, int(mat.Trunc(float64(size)*5.0/8.0)))
 	for index, r := range encoded {
-		var chunk = byte(strings.Index(base32LookupTable, string(r)))
+		var chunk = byte(str.Index(base32LookupTable, string(r)))
 		if chunk < 0 {
 			panic(fmt.Sprintf("The binary string was not encoded using base 32: %s", encoded))
 		}
@@ -70,14 +70,14 @@ func Base32Decode(encoded string) []byte {
 // This function encodes the specified bytes as a base 64 encoded string using
 // standard base 64 encoding with no padding.
 func Base64Encode(bytes []byte) string {
-	var encoded = base64.RawStdEncoding.EncodeToString(bytes)
+	var encoded = b64.RawStdEncoding.EncodeToString(bytes)
 	return encoded
 }
 
 // This function decodes the specified base 64 encoded string into its
 // corresponding decoded bytes.
 func Base64Decode(encoded string) []byte {
-	var bytes, err = base64.RawStdEncoding.DecodeString(encoded)
+	var bytes, err = b64.RawStdEncoding.DecodeString(encoded)
 	if err != nil {
 		panic(fmt.Sprintf("The binary string was not encoded using base 64: %s", encoded))
 	}
@@ -96,7 +96,7 @@ const base32LookupTable = "0123456789ABCDFGHJKLMNPQRSTVWXYZ"
  * byte:  00000111|11222223|33334444|45555566|66677777|...
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F   F8  07
  */
-func base32EncodeBytes(previous byte, current byte, index int, base32 *strings.Builder) {
+func base32EncodeBytes(previous byte, current byte, index int, base32 *str.Builder) {
 	var chunk byte
 	switch index % 5 {
 	case 0:
@@ -129,7 +129,7 @@ func base32EncodeBytes(previous byte, current byte, index int, base32 *strings.B
  * byte:  xxxxx111|00xxxxx3|00004444|0xxxxx66|000xxxxx|...
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F
  */
-func base32EncodeLast(last byte, index int, base32 *strings.Builder) {
+func base32EncodeLast(last byte, index int, base32 *str.Builder) {
 	var chunk byte
 	switch index % 5 {
 	case 0:
@@ -155,7 +155,7 @@ func base32EncodeLast(last byte, index int, base32 *strings.Builder) {
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F   F8  07
  */
 func base32DecodeBytes(chunk byte, characterIndex int, bytes []byte) {
-	var byteIndex = int(math.Trunc(float64(characterIndex) * 5.0 / 8.0))
+	var byteIndex = int(mat.Trunc(float64(characterIndex) * 5.0 / 8.0))
 	switch characterIndex % 8 {
 	case 0:
 		bytes[byteIndex] |= chunk << 3
@@ -187,7 +187,7 @@ func base32DecodeBytes(chunk byte, characterIndex int, bytes []byte) {
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F
  */
 func base32DecodeLast(chunk byte, characterIndex int, bytes []byte) {
-	var byteIndex = int(math.Trunc(float64(characterIndex) * 5.0 / 8.0))
+	var byteIndex = int(mat.Trunc(float64(characterIndex) * 5.0 / 8.0))
 	switch characterIndex % 8 {
 	case 1:
 		bytes[byteIndex] |= chunk >> 2

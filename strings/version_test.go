@@ -11,74 +11,74 @@
 package strings_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/strings"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	str "github.com/craterdog-bali/go-bali-document-notation/strings"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestBadVersion(t *testing.T) {
-	var _, ok = strings.VersionFromString(`v0`)
-	assert.False(t, ok)
+func TestBadVersion(t *tes.T) {
+	var _, ok = str.VersionFromString(`v0`)
+	ass.False(t, ok)
 }
 
-func TestEmptyVersion(t *testing.T) {
-	var _, ok = strings.VersionFromString(`v`)
-	assert.False(t, ok)
+func TestEmptyVersion(t *tes.T) {
+	var _, ok = str.VersionFromString(`v`)
+	ass.False(t, ok)
 }
 
-func TestVersion(t *testing.T) {
-	var v1, ok = strings.VersionFromString("v1.2.3")
-	assert.True(t, ok)
-	assert.Equal(t, "v1.2.3", v1.AsString())
-	assert.False(t, v1.IsEmpty())
-	assert.Equal(t, 3, v1.GetSize())
-	assert.Equal(t, 1, v1.GetItem(1))
-	assert.Equal(t, 3, v1.GetItem(-1))
-	var v2 = strings.VersionFromOrdinals(v1.AsArray())
-	assert.Equal(t, v1.String(), v2.AsString())
-	var v3 = strings.VersionFromOrdinals(v1.GetItems(1, 2))
-	assert.Equal(t, "v1.2", string(v3))
-	assert.Equal(t, 3, v1.GetIndex(3))
+func TestVersion(t *tes.T) {
+	var v1, ok = str.VersionFromString("v1.2.3")
+	ass.True(t, ok)
+	ass.Equal(t, "v1.2.3", v1.AsString())
+	ass.False(t, v1.IsEmpty())
+	ass.Equal(t, 3, v1.GetSize())
+	ass.Equal(t, 1, v1.GetItem(1))
+	ass.Equal(t, 3, v1.GetItem(-1))
+	var v2 = str.VersionFromOrdinals(v1.AsArray())
+	ass.Equal(t, v1.String(), v2.AsString())
+	var v3 = str.VersionFromOrdinals(v1.GetItems(1, 2))
+	ass.Equal(t, "v1.2", string(v3))
+	ass.Equal(t, 3, v1.GetIndex(3))
 }
 
-func TestVersionsLibrary(t *testing.T) {
-	var v1, _ = strings.VersionFromString("v1")
-	var v2, _ = strings.VersionFromString("v2.3")
-	var v3 = strings.Versions.Concatenate(v1, v2)
-	assert.Equal(t, "v1.2.3", v3.AsString())
+func TestVersionsLibrary(t *tes.T) {
+	var v1, _ = str.VersionFromString("v1")
+	var v2, _ = str.VersionFromString("v2.3")
+	var v3 = str.Versions.Concatenate(v1, v2)
+	ass.Equal(t, "v1.2.3", v3.AsString())
 
-	assert.False(t, strings.Versions.IsValidNextVersion(v1, v1))
-	assert.Equal(t, "v2", strings.Versions.GetNextVersion(v1, 1).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v1, strings.Versions.GetNextVersion(v1, 1)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v1, 1), v1))
-	assert.Equal(t, "v1.1", strings.Versions.GetNextVersion(v1, 2).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v1, strings.Versions.GetNextVersion(v1, 2)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v1, 2), v1))
-	assert.Equal(t, "v1.1", strings.Versions.GetNextVersion(v1, 2).AsString())
-	assert.Equal(t, "v1.1", strings.Versions.GetNextVersion(v1, 3).AsString())
+	ass.False(t, str.Versions.IsValidNextVersion(v1, v1))
+	ass.Equal(t, "v2", str.Versions.GetNextVersion(v1, 1).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v1, str.Versions.GetNextVersion(v1, 1)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v1, 1), v1))
+	ass.Equal(t, "v1.1", str.Versions.GetNextVersion(v1, 2).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v1, str.Versions.GetNextVersion(v1, 2)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v1, 2), v1))
+	ass.Equal(t, "v1.1", str.Versions.GetNextVersion(v1, 2).AsString())
+	ass.Equal(t, "v1.1", str.Versions.GetNextVersion(v1, 3).AsString())
 
-	assert.False(t, strings.Versions.IsValidNextVersion(v2, v2))
-	assert.Equal(t, "v3", strings.Versions.GetNextVersion(v2, 1).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v2, strings.Versions.GetNextVersion(v2, 1)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v2, 1), v2))
-	assert.Equal(t, "v2.4", strings.Versions.GetNextVersion(v2, 2).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v2, strings.Versions.GetNextVersion(v2, 2)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v2, 2), v2))
-	assert.Equal(t, "v2.3.1", strings.Versions.GetNextVersion(v2, 3).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v2, strings.Versions.GetNextVersion(v2, 3)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v2, 3), v2))
+	ass.False(t, str.Versions.IsValidNextVersion(v2, v2))
+	ass.Equal(t, "v3", str.Versions.GetNextVersion(v2, 1).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v2, str.Versions.GetNextVersion(v2, 1)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v2, 1), v2))
+	ass.Equal(t, "v2.4", str.Versions.GetNextVersion(v2, 2).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v2, str.Versions.GetNextVersion(v2, 2)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v2, 2), v2))
+	ass.Equal(t, "v2.3.1", str.Versions.GetNextVersion(v2, 3).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v2, str.Versions.GetNextVersion(v2, 3)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v2, 3), v2))
 
-	assert.False(t, strings.Versions.IsValidNextVersion(v3, v3))
-	assert.Equal(t, "v2", strings.Versions.GetNextVersion(v3, 1).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v3, strings.Versions.GetNextVersion(v3, 1)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v3, 1), v3))
-	assert.Equal(t, "v1.3", strings.Versions.GetNextVersion(v3, 2).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v3, strings.Versions.GetNextVersion(v3, 2)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v3, 2), v3))
-	assert.Equal(t, "v1.2.4", strings.Versions.GetNextVersion(v3, 3).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v3, strings.Versions.GetNextVersion(v3, 3)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v3, 3), v3))
-	assert.Equal(t, "v1.2.3.1", strings.Versions.GetNextVersion(v3, 4).AsString())
-	assert.True(t, strings.Versions.IsValidNextVersion(v3, strings.Versions.GetNextVersion(v3, 4)))
-	assert.False(t, strings.Versions.IsValidNextVersion(strings.Versions.GetNextVersion(v3, 4), v3))
+	ass.False(t, str.Versions.IsValidNextVersion(v3, v3))
+	ass.Equal(t, "v2", str.Versions.GetNextVersion(v3, 1).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v3, str.Versions.GetNextVersion(v3, 1)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v3, 1), v3))
+	ass.Equal(t, "v1.3", str.Versions.GetNextVersion(v3, 2).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v3, str.Versions.GetNextVersion(v3, 2)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v3, 2), v3))
+	ass.Equal(t, "v1.2.4", str.Versions.GetNextVersion(v3, 3).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v3, str.Versions.GetNextVersion(v3, 3)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v3, 3), v3))
+	ass.Equal(t, "v1.2.3.1", str.Versions.GetNextVersion(v3, 4).AsString())
+	ass.True(t, str.Versions.IsValidNextVersion(v3, str.Versions.GetNextVersion(v3, 4)))
+	ass.False(t, str.Versions.IsValidNextVersion(str.Versions.GetNextVersion(v3, 4), v3))
 }

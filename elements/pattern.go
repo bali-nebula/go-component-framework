@@ -11,8 +11,8 @@
 package elements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"regexp"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	reg "regexp"
 )
 
 // PATTERN INTERFACE
@@ -48,14 +48,14 @@ func (v Pattern) String() string {
 // This method determines whether or not this pattern matches the specified text
 // string.
 func (v Pattern) MatchesText(text string) bool {
-	var matched, _ = regexp.MatchString(patternToRegexp(v), text)
+	var matched, _ = reg.MatchString(patternToRegexp(v), text)
 	return matched
 }
 
 // This method returns an array of strings containing all matching strings and
 // substrings found in the specified text.
 func (v Pattern) GetMatches(text string) []string {
-	var scanner = regexp.MustCompile(patternToRegexp(v))
+	var scanner = reg.MustCompile(patternToRegexp(v))
 	return scanner.FindStringSubmatch(text)
 }
 
@@ -67,7 +67,7 @@ func (v Pattern) GetMatches(text string) []string {
 func stringToPattern(v string) (string, bool) {
 	var pattern string
 	var ok = true
-	var matches = abstractions.ScanPattern([]byte(v))
+	var matches = abs.ScanPattern([]byte(v))
 	if len(matches) == 0 {
 		ok = false
 	} else {

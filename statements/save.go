@@ -11,14 +11,14 @@
 package statements
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // This type defines the node structure associated with a clause that saves
 // a draft document referred to by an expression to the document repository
 // and returns a citation to the document which is optionally assigned to a
 // recipient.
-type SaveClause struct {
+type Save struct {
 	Draft    any
 	Citation any
 }
