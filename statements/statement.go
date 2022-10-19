@@ -14,10 +14,50 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a Bali Document
-// Notation (BDN) statement containing a main clause and an optional
-// exception handling clause.
-type Statement struct {
-	Main any
-	On   *On
+// STATEMENT IMPLEMENTATION
+
+// This constructor creates a new statement.
+func Statement(mainClause any) abs.StatementLike {
+	var v = &statement{}
+	// Perform argument validation.
+	v.SetMainClause(mainClause)
+	return v
+}
+
+// This constructor creates a new statement.
+func StatementWithHandler(mainClause any, onClause abs.OnClauseLike) abs.StatementLike {
+	var v = &statement{}
+	// Perform argument validation.
+	v.SetMainClause(mainClause)
+	v.SetOnClause(onClause)
+	return v
+}
+
+// This type defines the structure and methods associated with a statement.
+type statement struct {
+	mainClause any
+	onClause   abs.OnClauseLike
+}
+
+// This method returns the main clause for this statement.
+func (v *statement) GetMainClause() any {
+	return v.mainClause
+}
+
+// This method sets the main clause for this statement.
+func (v *statement) SetMainClause(mainClause any) {
+	if mainClause == nil {
+		panic("A statement requires a mainClause.")
+	}
+	v.mainClause = mainClause
+}
+
+// This method returns the on clause for this statement.
+func (v *statement) GetOnClause() abs.OnClauseLike {
+	return v.onClause
+}
+
+// This method sets the on clause for this statement.
+func (v *statement) SetOnClause(onClause abs.OnClauseLike) {
+	v.onClause = onClause
 }

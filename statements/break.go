@@ -17,7 +17,7 @@ import (
 // BREAK CLAUSE IMPLEMENTATION
 
 // This constructor creates a new break clause.
-func Break() abs.BreakLike {
+func BreakClause() abs.BreakClauseLike {
 	var v = &breakClause{}
 	return v
 }

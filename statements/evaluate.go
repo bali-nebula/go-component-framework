@@ -17,11 +17,18 @@ import (
 // EVALUATE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new evaluate clause.
-func Evaluate(recipient any, assignment Assignment, expression any) abs.EvaluateLike {
+func EvaluateClause(expression any) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
-	v.SetRecipient(recipient)
-	v.SetAssignment(assignment)
+	v.SetExpression(expression)
+	return v
+}
+
+// This constructor creates a new evaluate clause.
+func EvaluateClauseWithRecipient(recipient any, assignment abs.Assignment, expression any) abs.EvaluateClauseLike {
+	var v = &evaluateClause{}
+	// Perform argument validation.
+	v.SetRecipient(recipient, assignment)
 	v.SetExpression(expression)
 	return v
 }
@@ -30,30 +37,23 @@ func Evaluate(recipient any, assignment Assignment, expression any) abs.Evaluate
 // clause.
 type evaluateClause struct {
 	recipient  any
-	assignment any
+	assignment abs.Assignment
 	expression any
 }
 
-// This method returns the recipient for this evaluate clause.
-func (v *evaluateClause) GetRecipient() any {
-	return v.recipient
+// This method returns the recipient (with assignment type) for this evaluate
+// clause.
+func (v *evaluateClause) GetRecipient() (recipient any, assignment abs.Assignment) {
+	return v.recipient, v.assignment
 }
 
-// This method sets the recipient for this evaluate clause.
-func (v *evaluateClause) SetRecipient(recipient any) {
-	if recipient == nil {
-		panic("An evaluate clause requires a recipient.")
+// This method sets the recipient (with assignment type) for this evaluate
+// clause.
+func (v *evaluateClause) SetRecipient(recipient any, assignment abs.Assignment) {
+	if recipient == nil || assignment < abs.REGULAR || assignment > abs.MINUS {
+		panic("An evaluate clause requires a recipient and valid assignment type.")
 	}
 	v.recipient = recipient
-}
-
-// This method returns the type of assignment for this evaluate clause.
-func (v *evaluateClause) GetRecipient() any {
-	return v.assignment
-}
-
-// This method sets the type of assignment for this evaluate clause.
-func (v *evaluateClause) SetRecipient(assignment any) {
 	v.assignment = assignment
 }
 

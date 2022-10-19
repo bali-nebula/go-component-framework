@@ -14,8 +14,31 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that causes an
-// exception to be thrown in the executing procedure.
-type Throw struct {
-	Exception any
+// THROW CLAUSE IMPLEMENTATION
+
+// This constructor creates a new throw clause.
+func ThrowClause(exception any) abs.ThrowClauseLike {
+	var v = &throwClause{}
+	// Perform argument validation.
+	v.SetException(exception)
+	return v
+}
+
+// This type defines the structure and methods associated with an throw
+// clause.
+type throwClause struct {
+	exception any
+}
+
+// This method returns the exception expression for this throw clause.
+func (v *throwClause) GetException() any {
+	return v.exception
+}
+
+// This method sets the exception expression for this throw clause.
+func (v *throwClause) SetException(exception any) {
+	if exception == nil {
+		panic("A throw clause requires an exception.")
+	}
+	v.exception = exception
 }

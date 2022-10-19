@@ -14,9 +14,46 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that posts a
-// message to a named message bag.
-type Post struct {
-	Message any
-	Bag     any
+// POST CLAUSE IMPLEMENTATION
+
+// This constructor creates a new post clause.
+func PostClause(message, bag any) abs.PostClauseLike {
+	var v = &postClause{}
+	// Perform argument validation.
+	v.SetMessage(message)
+	v.SetBag(bag)
+	return v
+}
+
+// This type defines the structure and methods associated with a post
+// clause.
+type postClause struct {
+	message any
+	bag     any
+}
+
+// This method returns the message expression for this post clause.
+func (v *postClause) GetMessage() any {
+	return v.message
+}
+
+// This method sets the message expression for this post clause.
+func (v *postClause) SetMessage(message any) {
+	if message == nil {
+		panic("A post clause requires a message.")
+	}
+	v.message = message
+}
+
+// This method returns the message bag expression for this post clause.
+func (v *postClause) GetBag() any {
+	return v.bag
+}
+
+// This method sets the message bag expression for this post clause.
+func (v *postClause) SetBag(bag any) {
+	if bag == nil {
+		panic("A post clause requires a message bag.")
+	}
+	v.bag = bag
 }

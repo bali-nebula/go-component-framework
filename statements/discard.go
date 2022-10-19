@@ -17,7 +17,7 @@ import (
 // DISCARD CLAUSE IMPLEMENTATION
 
 // This constructor creates a new discard clause.
-func Discard(citation any) abs.DiscardLike {
+func DiscardClause(citation any) abs.DiscardClauseLike {
 	var v = &discardClause{}
 	// Perform argument validation.
 	v.SetCitation(citation)

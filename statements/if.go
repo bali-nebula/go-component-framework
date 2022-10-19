@@ -17,7 +17,7 @@ import (
 // IF CLAUSE IMPLEMENTATION
 
 // This constructor creates a new if clause.
-func If(block BlockLike) abs.IfLike {
+func IfClause(block abs.BlockLike) abs.IfClauseLike {
 	var v = &ifClause{}
 	// Perform argument validation.
 	v.SetBlock(block)
@@ -26,16 +26,16 @@ func If(block BlockLike) abs.IfLike {
 
 // This type defines the structure and methods associated with an if clause.
 type ifClause struct {
-	block BlockLike
+	block abs.BlockLike
 }
 
 // This method returns the statement block for this if clause.
-func (v *ifClause) GetBlock() any {
+func (v *ifClause) GetBlock() abs.BlockLike {
 	return v.block
 }
 
 // This method sets the statement block for this if clause.
-func (v *ifClause) SetBlock(block any) {
+func (v *ifClause) SetBlock(block abs.BlockLike) {
 	if block == nil {
 		panic("An if clause requires a statement block.")
 	}

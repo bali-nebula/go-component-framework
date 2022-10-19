@@ -17,7 +17,7 @@ import (
 // ON CLAUSE IMPLEMENTATION
 
 // This constructor creates a new on clause.
-func On(exception abs.Symbolic, blocks abs.ListLike[abs.BlockLike]) abs.OnLike {
+func OnClause(exception abs.Symbolic, blocks abs.ListLike[abs.BlockLike]) abs.OnClauseLike {
 	var v = &onClause{}
 	// Perform argument validation.
 	v.SetException(exception)
@@ -31,17 +31,17 @@ type onClause struct {
 	blocks    abs.ListLike[abs.BlockLike]
 }
 
-// This method returns the expression for this on clause.
-func (v *onClause) GetException() string {
-	return v.variable
+// This method returns the exception symbol for this on clause.
+func (v *onClause) GetException() abs.Symbolic {
+	return v.exception
 }
 
-// This method sets the expression for this on clause.
+// This method sets the exception symbol for this on clause.
 func (v *onClause) SetException(exception abs.Symbolic) {
-	if expression == nil {
-		panic("An on clause requires an expression.")
+	if exception == nil {
+		panic("An on clause requires an exception symbol.")
 	}
-	v.expression = expression
+	v.exception = exception
 }
 
 // This method returns the block at the specified index from this on clause.
@@ -49,7 +49,7 @@ func (v *onClause) GetBlock(index int) abs.BlockLike {
 	return v.blocks.GetItem(index)
 }
 
-// This method sets the expression at the specified index for this on clause.
+// This method sets the block at the specified index for this on clause.
 func (v *onClause) SetBlock(index int, block abs.BlockLike) {
 	if block == nil {
 		panic("Each block in an on clause requires a value.")

@@ -14,8 +14,31 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that causes an
-// executing procedure to return with a result.
-type Return struct {
-	Result any
+// RETURN CLAUSE IMPLEMENTATION
+
+// This constructor creates a new return clause.
+func ReturnClause(result any) abs.ReturnClauseLike {
+	var v = &returnClause{}
+	// Perform argument validation.
+	v.SetResult(result)
+	return v
+}
+
+// This type defines the structure and methods associated with an return
+// clause.
+type returnClause struct {
+	result any
+}
+
+// This method returns the result expression for this return clause.
+func (v *returnClause) GetResult() any {
+	return v.result
+}
+
+// This method sets the result expression for this return clause.
+func (v *returnClause) SetResult(result any) {
+	if result == nil {
+		panic("A return clause requires a result.")
+	}
+	v.result = result
 }

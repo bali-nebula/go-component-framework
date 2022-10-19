@@ -14,8 +14,30 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that executes
-// a statement block while a condition is true.
-type While struct {
-	Block *Block
+// WHILE CLAUSE IMPLEMENTATION
+
+// This constructor creates a new while clause.
+func WhileClause(block abs.BlockLike) abs.WhileClauseLike {
+	var v = &whileClause{}
+	// Perform argument validation.
+	v.SetBlock(block)
+	return v
+}
+
+// This type defines the structure and methods associated with an while clause.
+type whileClause struct {
+	block abs.BlockLike
+}
+
+// This method returns the statement block for this while clause.
+func (v *whileClause) GetBlock() abs.BlockLike {
+	return v.block
+}
+
+// This method sets the statement block for this while clause.
+func (v *whileClause) SetBlock(block abs.BlockLike) {
+	if block == nil {
+		panic("A while clause requires a statement block.")
+	}
+	v.block = block
 }

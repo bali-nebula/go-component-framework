@@ -20,3 +20,32 @@ import (
 type Reject struct {
 	Message any
 }
+
+// REJECT CLAUSE IMPLEMENTATION
+
+// This constructor creates a new reject clause.
+func RejectClause(message any) abs.RejectClauseLike {
+	var v = &rejectClause{}
+	// Perform argument validation.
+	v.SetMessage(message)
+	return v
+}
+
+// This type defines the structure and methods associated with an reject
+// clause.
+type rejectClause struct {
+	message any
+}
+
+// This method returns the message expression for this reject clause.
+func (v *rejectClause) GetMessage() any {
+	return v.message
+}
+
+// This method sets the message expression for this reject clause.
+func (v *rejectClause) SetMessage(message any) {
+	if message == nil {
+		panic("An reject clause requires a message.")
+	}
+	v.message = message
+}

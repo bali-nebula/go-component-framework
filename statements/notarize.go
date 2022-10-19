@@ -17,7 +17,7 @@ import (
 // NOTARIZE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new notarize clause.
-func Notarize(draft, moniker any) abs.NotarizeLike {
+func NotarizeClause(draft, moniker any) abs.NotarizeClauseLike {
 	var v = &notarizeClause{}
 	// Perform argument validation.
 	v.SetDraft(draft)

@@ -17,7 +17,7 @@ import (
 // CHECKOUT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new checkout clause.
-func Checkout(recipient, level, moniker any) abs.CheckoutLike {
+func CheckoutClause(recipient, level, moniker any) abs.CheckoutClauseLike {
 	var v = &checkoutClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient)

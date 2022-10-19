@@ -17,7 +17,7 @@ import (
 // CONTINUE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new continue clause.
-func Continue() abs.ContinueLike {
+func ContinueClause() abs.ContinueClauseLike {
 	var v = &continueClause{}
 	return v
 }

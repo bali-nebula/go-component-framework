@@ -17,7 +17,7 @@ import (
 // ACCEPT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new accept clause.
-func Accept(message any) abs.AcceptLike {
+func AcceptClause(message any) abs.AcceptClauseLike {
 	var v = &acceptClause{}
 	// Perform argument validation.
 	v.SetMessage(message)

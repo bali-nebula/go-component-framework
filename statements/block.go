@@ -32,8 +32,8 @@ type block struct {
 }
 
 // This method returns the expression for this block.
-func (v *block) GetExpression() string {
-	return v.variable
+func (v *block) GetExpression() any {
+	return v.expression
 }
 
 // This method sets the expression for this block.

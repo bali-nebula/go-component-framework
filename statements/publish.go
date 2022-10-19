@@ -14,8 +14,31 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// This type defines the node structure associated with a clause that publishes
-// an event to be delivered to all interested parties.
-type Publish struct {
-	Event any
+// PUBLISH CLAUSE IMPLEMENTATION
+
+// This constructor creates a new publish clause.
+func PublishClause(event any) abs.PublishClauseLike {
+	var v = &publishClause{}
+	// Perform argument validation.
+	v.SetEvent(event)
+	return v
+}
+
+// This type defines the structure and methods associated with a publish
+// clause.
+type publishClause struct {
+	event any
+}
+
+// This method returns the event expression for this publish clause.
+func (v *publishClause) GetEvent() any {
+	return v.event
+}
+
+// This method sets the event expression for this publish clause.
+func (v *publishClause) SetEvent(event any) {
+	if event == nil {
+		panic("A publish clause requires an event.")
+	}
+	v.event = event
 }

@@ -19,11 +19,11 @@ import (
 
 // This method attempts to parse an accept clause. It returns the accept
 // clause and whether or not the accept clause was successfully parsed.
-func (v *parser) parseAccept() (abs.AcceptLike, *Token, bool) {
+func (v *parser) parseAcceptClause() (abs.AcceptClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var message any
-	var clause abs.AcceptLike
+	var clause abs.AcceptClauseLike
 	_, token, ok = v.parseKeyword("accept")
 	if !ok {
 		// This is not a accept clause.
@@ -139,10 +139,10 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 
 // This method attempts to parse a break clause. It returns the break
 // clause and whether or not the break clause was successfully parsed.
-func (v *parser) parseBreak() (abs.BreakLike, *Token, bool) {
+func (v *parser) parseBreakClause() (abs.BreakClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var clause abs.BreakLike
+	var clause abs.BreakClauseLike
 	_, token, ok = v.parseKeyword("break")
 	if !ok {
 		// This is not a break clause.
@@ -160,13 +160,13 @@ func (v *parser) parseBreak() (abs.BreakLike, *Token, bool) {
 
 // This method attempts to parse a checkout clause. It returns the checkout
 // clause and whether or not the checkout clause was successfully parsed.
-func (v *parser) parseCheckout() (abs.CheckoutLike, *Token, bool) {
+func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
 	var level any
 	var moniker any
-	var clause abs.CheckoutLike
+	var clause abs.CheckoutClauseLike
 	_, token, ok = v.parseKeyword("checkout")
 	if !ok {
 		// This is not a checkout clause.
@@ -242,10 +242,10 @@ func (v *parser) parseCheckout() (abs.CheckoutLike, *Token, bool) {
 
 // This method attempts to parse a continue clause. It returns the continue
 // clause and whether or not the continue clause was successfully parsed.
-func (v *parser) parseContinue() (abs.ContinueLike, *Token, bool) {
+func (v *parser) parseContinueClause() (abs.ContinueClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var clause abs.ContinueLike
+	var clause abs.ContinueClauseLike
 	_, token, ok = v.parseKeyword("continue")
 	if !ok {
 		// This is not a continue clause.
@@ -263,11 +263,11 @@ func (v *parser) parseContinue() (abs.ContinueLike, *Token, bool) {
 
 // This method attempts to parse a discard clause. It returns the discard
 // clause and whether or not the discard clause was successfully parsed.
-func (v *parser) parseDiscard() (abs.DiscardLike, *Token, bool) {
+func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var citation any
-	var clause abs.DiscardLike
+	var clause abs.DiscardClauseLike
 	_, token, ok = v.parseKeyword("discard")
 	if !ok {
 		// This is not a discard clause.
@@ -286,13 +286,13 @@ func (v *parser) parseDiscard() (abs.DiscardLike, *Token, bool) {
 
 // This method attempts to parse an evaluate clause. It returns the evaluate
 // clause and whether or not the evaluate clause was successfully parsed.
-func (v *parser) parseEvaluate() (abs.EvaluateLike, *Token, bool) {
+func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
 	var operator string
 	var expression any
-	var clause abs.EvaluateLike
+	var clause abs.EvaluateClauseLike
 	recipient, token, ok = v.parseRecipient()
 	if ok {
 		operator, token, ok = v.parseDelimiter(":=")
@@ -342,11 +342,11 @@ func (v *parser) parseEvaluate() (abs.EvaluateLike, *Token, bool) {
 
 // This method attempts to parse an if clause. It returns the if clause and
 // whether or not the if clause was successfully parsed.
-func (v *parser) parseIf() (abs.IfLike, *Token, bool) {
+func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var block abs.BlockLike
-	var clause abs.IfLike
+	var clause abs.IfClauseLike
 	_, token, ok = v.parseKeyword("if")
 	if !ok {
 		// This is not an if clause.
@@ -365,75 +365,75 @@ func (v *parser) parseIf() (abs.IfLike, *Token, bool) {
 
 // This method attempts to parse a main clause. It returns the main clause and
 // whether or not the main clause was successfully parsed.
-func (v *parser) parseMain() (any, *Token, bool) {
+func (v *parser) parseMainClause() (any, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
 	var mainClause any
-	mainClause, token, ok = v.parseIf()
+	mainClause, token, ok = v.parseIfClause()
 	if !ok {
-		mainClause, token, ok = v.parseSelect()
+		mainClause, token, ok = v.parseSelectClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseWith()
+		mainClause, token, ok = v.parseWithClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseWhile()
+		mainClause, token, ok = v.parseWhileClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseContinue()
+		mainClause, token, ok = v.parseContinueClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseBreak()
+		mainClause, token, ok = v.parseBreakClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseReturn()
+		mainClause, token, ok = v.parseReturnClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseThrow()
+		mainClause, token, ok = v.parseThrowClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseSave()
+		mainClause, token, ok = v.parseSaveClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseDiscard()
+		mainClause, token, ok = v.parseDiscardClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseNotarize()
+		mainClause, token, ok = v.parseNotarizeClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseCheckout()
+		mainClause, token, ok = v.parseCheckoutClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parsePublish()
+		mainClause, token, ok = v.parsePublishClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parsePost()
+		mainClause, token, ok = v.parsePostClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseRetrieve()
+		mainClause, token, ok = v.parseRetrieveClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseAccept()
+		mainClause, token, ok = v.parseAcceptClause()
 	}
 	if !ok {
-		mainClause, token, ok = v.parseReject()
+		mainClause, token, ok = v.parseRejectClause()
 	}
 	if !ok {
 		// This clause should be checked last since it is slower to fail.
-		mainClause, token, ok = v.parseEvaluate()
+		mainClause, token, ok = v.parseEvaluateClause()
 	}
 	return mainClause, token, ok
 }
 
 // This method attempts to parse a notarize clause. It returns the notarize
 // clause and whether or not the notarize clause was successfully parsed.
-func (v *parser) parseNotarize() (abs.NotarizeLike, *Token, bool) {
+func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var draft any
 	var moniker any
-	var clause abs.NotarizeLike
+	var clause abs.NotarizeClauseLike
 	_, token, ok = v.parseKeyword("notarize")
 	if !ok {
 		// This is not a notarize clause.
@@ -466,13 +466,13 @@ func (v *parser) parseNotarize() (abs.NotarizeLike, *Token, bool) {
 
 // This method attempts to parse an exception clause. It returns the exception
 // clause and whether or not the exception clause was successfully parsed.
-func (v *parser) parseOn() (abs.OnLike, *Token, bool) {
+func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var exception ele.Symbol
 	var block abs.BlockLike
 	var blocks abs.ListLike[abs.BlockLike]
-	var clause abs.OnLike
+	var clause abs.OnClauseLike
 	_, token, ok = v.parseKeyword("on")
 	if !ok {
 		// This is not an exception clause.
@@ -515,12 +515,12 @@ func (v *parser) parseOn() (abs.OnLike, *Token, bool) {
 
 // This method attempts to parse a post clause. It returns the post
 // clause and whether or not the post clause was successfully parsed.
-func (v *parser) parsePost() (abs.PostLike, *Token, bool) {
+func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var message any
 	var bag any
-	var clause abs.PostLike
+	var clause abs.PostClauseLike
 	_, token, ok = v.parseKeyword("post")
 	if !ok {
 		// This is not a post clause.
@@ -585,11 +585,11 @@ func (v *parser) parseProcedure() (abs.ListLike[any], *Token, bool) {
 
 // This method attempts to parse a publish clause. It returns the publish
 // clause and whether or not the publish clause was successfully parsed.
-func (v *parser) parsePublish() (abs.PublishLike, *Token, bool) {
+func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var event any
-	var clause abs.PublishLike
+	var clause abs.PublishClauseLike
 	_, token, ok = v.parseKeyword("publish")
 	if !ok {
 		// This is not a publish clause.
@@ -621,11 +621,11 @@ func (v *parser) parseRecipient() (any, *Token, bool) {
 
 // This method attempts to parse a reject clause. It returns the reject
 // clause and whether or not the reject clause was successfully parsed.
-func (v *parser) parseReject() (abs.RejectLike, *Token, bool) {
+func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var message any
-	var clause abs.RejectLike
+	var clause abs.RejectClauseLike
 	_, token, ok = v.parseKeyword("reject")
 	if !ok {
 		// This is not a reject clause.
@@ -644,12 +644,12 @@ func (v *parser) parseReject() (abs.RejectLike, *Token, bool) {
 
 // This method attempts to parse a retrieve clause. It returns the retrieve
 // clause and whether or not the retrieve clause was successfully parsed.
-func (v *parser) parseRetrieve() (abs.RetrieveLike, *Token, bool) {
+func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
 	var bag any
-	var clause abs.RetrieveLike
+	var clause abs.RetrieveClauseLike
 	_, token, ok = v.parseKeyword("retrieve")
 	if !ok {
 		// This is not a retrieve clause.
@@ -697,11 +697,11 @@ func (v *parser) parseRetrieve() (abs.RetrieveLike, *Token, bool) {
 
 // This method attempts to parse a return clause. It returns the return
 // clause and whether or not the return clause was successfully parsed.
-func (v *parser) parseReturn() (abs.ReturnLike, *Token, bool) {
+func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var result any
-	var clause abs.ReturnLike
+	var clause abs.ReturnClauseLike
 	_, token, ok = v.parseKeyword("return")
 	if !ok {
 		// This is not a return clause.
@@ -720,12 +720,12 @@ func (v *parser) parseReturn() (abs.ReturnLike, *Token, bool) {
 
 // This method attempts to parse a save clause. It returns the save
 // clause and whether or not the save clause was successfully parsed.
-func (v *parser) parseSave() (abs.SaveLike, *Token, bool) {
+func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var draft any
 	var citation any
-	var clause abs.SaveLike
+	var clause abs.SaveClauseLike
 	_, token, ok = v.parseKeyword("save")
 	if !ok {
 		// This is not a save clause.
@@ -773,13 +773,13 @@ func (v *parser) parseSave() (abs.SaveLike, *Token, bool) {
 
 // This method attempts to parse an select clause. It returns the select clause
 // and whether or not the select clause was successfully parsed.
-func (v *parser) parseSelect() (abs.SelectLike, *Token, bool) {
+func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var control any
 	var block abs.BlockLike
 	var blocks abs.ListLike[abs.BlockLike]
-	var clause abs.SelectLike
+	var clause abs.SelectClauseLike
 	_, token, ok = v.parseKeyword("select")
 	if !ok {
 		// This is not a select clause.
@@ -824,11 +824,11 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	var token *Token
 	var statement abs.StatementLike
 	var mainClause any
-	var onClause abs.OnLike
-	mainClause, token, ok = v.parseMain()
+	var onClause abs.OnClauseLike
+	mainClause, token, ok = v.parseMainClause()
 	if ok {
 		// The exception clause is optional.
-		onClause, token, _ = v.parseOn()
+		onClause, token, _ = v.parseOnClause()
 	}
 	statement = sta.Statement(mainClause, onClause)
 	return statement, token, ok
@@ -909,11 +909,11 @@ func (v *parser) parseStatements() (abs.ListLike[any], *Token, bool) {
 
 // This method attempts to parse a throw clause. It returns the throw
 // clause and whether or not the throw clause was successfully parsed.
-func (v *parser) parseThrow() (abs.ThrowLike, *Token, bool) {
+func (v *parser) parseThrowClause() (abs.ThrowClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var exception any
-	var clause abs.ThrowLike
+	var clause abs.ThrowClauseLike
 	_, token, ok = v.parseKeyword("throw")
 	if !ok {
 		// This is not a throw clause.
@@ -932,11 +932,11 @@ func (v *parser) parseThrow() (abs.ThrowLike, *Token, bool) {
 
 // This method attempts to parse a while clause. It returns the while clause and
 // whether or not the while clause was successfully parsed.
-func (v *parser) parseWhile() (abs.WhileLike, *Token, bool) {
+func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var block abs.BlockLike
-	var clause abs.WhileLike
+	var clause abs.WhileClauseLike
 	_, token, ok = v.parseKeyword("while")
 	if !ok {
 		// This is not a while clause.
@@ -955,12 +955,12 @@ func (v *parser) parseWhile() (abs.WhileLike, *Token, bool) {
 
 // This method attempts to parse a with clause. It returns the with clause and
 // whether or not the with clause was successfully parsed.
-func (v *parser) parseWith() (abs.WithLike, *Token, bool) {
+func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var item ele.Symbol
 	var block abs.BlockLike
-	var clause abs.WithLike
+	var clause abs.WithClauseLike
 	_, token, ok = v.parseKeyword("with")
 	if !ok {
 		// This is not a with clause.

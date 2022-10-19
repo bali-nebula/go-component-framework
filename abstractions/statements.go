@@ -26,15 +26,15 @@ const (
 // STATEMENT INTERFACES
 
 // This interface defines the methods supported by all accept-clause-like types.
-type AcceptLike interface {
+type AcceptClauseLike interface {
 	GetMessage() any
 	SetMessage(message any)
 }
 
 // This interface defines the methods supported by all attribute-like types.
 type AttributeLike interface {
-	GetIdentifier() string
-	SetIdentifier(identifier string)
+	GetVariable() string
+	SetVariable(variable string)
 	GetIndex(index int) any
 	SetIndex(index int, expression any)
 	GetIndices() ListLike[any]
@@ -52,11 +52,11 @@ type BlockLike interface {
 }
 
 // This interface defines the methods supported by all break-clause-like types.
-type BreakLike interface {
+type BreakClauseLike interface {
 }
 
 // This interface defines the methods supported by all checkout-clause-like types.
-type CheckoutLike interface {
+type CheckoutClauseLike interface {
 	GetRecipient() any
 	SetRecipient(recipient any)
 	GetLevel() any
@@ -65,30 +65,32 @@ type CheckoutLike interface {
 	SetMoniker(moniker any)
 }
 
+// This interface defines the methods supported by all continue-clause-like types.
+type ContinueClauseLike interface {
+}
+
 // This interface defines the methods supported by all discard-clause-like types.
-type DiscardLike interface {
+type DiscardClauseLike interface {
 	GetCitation() any
 	SetCitation(citation any)
 }
 
 // This interface defines the methods supported by all evaluate-clause-like types.
-type EvaluateLike interface {
-	GetRecipient() any
-	SetRecipient(recipient any)
-	GetAssignment() any
-	SetAssignment(assignment any)
+type EvaluateClauseLike interface {
+	GetRecipient() (recipient any, assignment Assignment)
+	SetRecipient(recipient any, assignment Assignment)
 	GetExpression() any
 	SetExpression(expression any)
 }
 
 // This interface defines the methods supported by all if-clause-like types.
-type IfLike interface {
+type IfClauseLike interface {
 	GetBlock() BlockLike
 	SetBlock(block BlockLike)
 }
 
 // This interface defines the methods supported by all notarize-clause-like types.
-type NotarizeLike interface {
+type NotarizeClauseLike interface {
 	GetDraft() any
 	SetDraft(draft any)
 	GetMoniker() any
@@ -96,11 +98,91 @@ type NotarizeLike interface {
 }
 
 // This interface defines the methods supported by all on-clause-like types.
-type OnLike interface {
+type OnClauseLike interface {
 	GetException() Symbolic
 	SetException(exception Symbolic)
 	GetBlock(index int) BlockLike
 	SetBlock(index int, block BlockLike)
 	GetBlocks() ListLike[BlockLike]
 	SetBlocks(blocks ListLike[BlockLike])
+}
+
+// This interface defines the methods supported by all post-clause-like types.
+type PostClauseLike interface {
+	GetMessage() any
+	SetMessage(message any)
+	GetBag() any
+	SetBag(bag any)
+}
+
+// This interface defines the methods supported by all publish-clause-like types.
+type PublishClauseLike interface {
+	GetEvent() any
+	SetEvent(event any)
+}
+
+// This interface defines the methods supported by all reject-clause-like types.
+type RejectClauseLike interface {
+	GetMessage() any
+	SetMessage(message any)
+}
+
+// This interface defines the methods supported by all retrieve-clause-like types.
+type RetrieveClauseLike interface {
+	GetRecipient() any
+	SetRecipient(recipient any)
+	GetBag() any
+	SetBag(bag any)
+}
+
+// This interface defines the methods supported by all return-clause-like types.
+type ReturnClauseLike interface {
+	GetResult() any
+	SetResult(result any)
+}
+
+// This interface defines the methods supported by all save-clause-like types.
+type SaveClauseLike interface {
+	GetDraft() any
+	SetDraft(draft any)
+	GetCitation() any
+	SetCitation(citation any)
+}
+
+// This interface defines the methods supported by all select-clause-like types.
+type SelectClauseLike interface {
+	GetControl() any
+	SetControl(control any)
+	GetBlock(index int) BlockLike
+	SetBlock(index int, block BlockLike)
+	GetBlocks() ListLike[BlockLike]
+	SetBlocks(blocks ListLike[BlockLike])
+}
+
+// This interface defines the methods supported by all statement-like types.
+type StatementLike interface {
+	GetMainClause() any
+	SetMainClause(mainClause any)
+	GetOnClause() OnClauseLike
+	SetOnClause(onClause OnClauseLike)
+}
+
+// This interface defines the methods supported by all throw-clause-like types.
+type ThrowClauseLike interface {
+	GetException() any
+	SetException(exception any)
+}
+
+// This interface defines the methods supported by all while-clause-like types.
+type WhileClauseLike interface {
+	GetBlock() BlockLike
+	SetBlock(block BlockLike)
+}
+
+// This interface defines the methods supported by all with-clause-like types.
+type WithClauseLike interface {
+	GetItem() Symbolic
+	SetItem(exception Symbolic)
+	GetBlock() BlockLike
+	SetBlock(block BlockLike)
 }
