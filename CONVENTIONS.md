@@ -8,8 +8,28 @@ different part of speech:
  * [Method](#Methods) names are always _verb_ phrases.
  * [Interface](#Interfaces) names are always _adjective_ phrases.
 
-This simple lexicon provides immediate context to any piece of code in this
-module.
+This simple guide provides immediate context to any piece of code in this
+repository.
+
+### Packages
+The Go best practices suggest that we keep package names short so that they are
+easy to use in our code. The problem is that the import section can be rather
+cryptic. Instead, we use longer descriptive package names and assign each to a
+short three character variable (usually the first three letters of the package
+name). This makes package references in the code terse while making the import
+section informative. Here is an example:
+```go
+package elements
+
+import (
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	mat "math"
+	cmp "math/cmplx"
+	stc "strconv"
+	str "strings"
+)
+```
 
 ### Types
 Since all types should represent well defined "things" they are named using
@@ -87,6 +107,40 @@ func (v *list[T]) AsArray() []T {
 ```
 
 For coding conventions associated with interfaces see [Interfaces](#Interfaces).
+
+Note that an encapsulated type may be chosen over a structured type even if
+read-update access to all attributes is allowed. The encapsulated type approach
+allows constraints to be enforced on specific attributes. For example:
+```go
+// THROW CLAUSE IMPLEMENTATION
+
+// This constructor creates a new throw clause.
+func ThrowClause(exception any) abs.ThrowClauseLike {
+	var v = &throwClause{}
+	// Perform argument validation.
+	v.SetException(exception)
+	return v
+}
+
+// This type defines the structure and methods associated with an throw
+// clause.
+type throwClause struct {
+	exception any
+}
+
+// This method returns the exception expression for this throw clause.
+func (v *throwClause) GetException() any {
+	return v.exception
+}
+
+// This method sets the exception expression for this throw clause.
+func (v *throwClause) SetException(exception any) {
+	if exception == nil {
+		panic("A throw clause requires an exception.")
+	}
+	v.exception = exception
+}
+```
 
 #### Extended Primitive Types
 The Go primitive types (`int`, `string`, `[]byte`, etc.) can be extended to
