@@ -38,7 +38,12 @@ func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool
 	// This must be an association.
 	value, token, ok = v.parseComponent()
 	if !ok {
-		panic("Expected a value after the ':' character.")
+		var message = fmt.Sprintf("Expected a component after the ':' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$association",
+			"$primitive",
+			"$component")
+		panic(message)
 	}
 	var association = col.Association[any, any](key, value)
 	return association, token, true
@@ -75,7 +80,14 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 			}
 			association, token, ok = v.parseAssociation()
 			if !ok {
-				panic("Expected an association after the ',' character.")
+				var message = fmt.Sprintf(
+					"Expected an association after the ',' character but received:\n%v\n\n", token)
+				message += generateGrammar(
+					"$catalog",
+					"$association",
+					"$primitive",
+					"$component")
+				panic(message)
 			}
 		}
 		return catalog, token, true
@@ -92,7 +104,14 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 		// Every association must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			panic("Expected an EOL character following the association.")
+			var message = fmt.Sprintf(
+				"Expected an EOL character following the association but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$catalog",
+				"$association",
+				"$primitive",
+				"$component")
+			panic(message)
 		}
 		association, token, ok = v.parseAssociation()
 		if !ok {
@@ -115,11 +134,21 @@ func (v *parser) parseCollection() (any, *Token, bool) {
 	}
 	sequence, token, ok = v.parseSequence()
 	if !ok {
-		panic("Expected a sequence following the '[' character.")
+		var message = fmt.Sprintf(
+			"Expected a sequence of items following the '[' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$collection",
+			"$items")
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		panic(fmt.Sprintf("Expected a ']' character following the sequence and received: %v", *token))
+		var message = fmt.Sprintf(
+			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$collection",
+			"$items")
+		panic(message)
 	}
 	return sequence, token, true
 }
@@ -143,8 +172,13 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 		}
 		item, token, ok = v.parseComponent()
 		if !ok {
-			// A non-empty list must have at least one item.
-			panic("Expected an item after the '[' character.")
+			// A non-empty list must have at least one component item.
+			var message = fmt.Sprintf(
+				"Expected a component item after the '[' character but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$list",
+				"$component")
+			panic(message)
 		}
 		for {
 			list.AddItem(item)
@@ -156,7 +190,12 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 			}
 			item, token, ok = v.parseComponent()
 			if !ok {
-				panic("Expected an item after the ',' character.")
+				var message = fmt.Sprintf(
+					"Expected a component item after the ',' character but received:\n%v\n\n", token)
+				message += generateGrammar(
+					"$list",
+					"$component")
+				panic(message)
 			}
 		}
 		return list, token, true
@@ -165,14 +204,24 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 	item, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty list must have at least one item.
-		panic("Expected an item after the '[' character.")
+		var message = fmt.Sprintf(
+			"Expected a component item after the '[' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$list",
+			"$component")
+		panic(message)
 	}
 	for {
 		list.AddItem(item)
 		// Every item must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			panic("Expected an EOL character following the item.")
+			var message = fmt.Sprintf(
+				"Expected an EOL character following the component item but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$list",
+				"$component")
+			panic(message)
 		}
 		item, token, ok = v.parseComponent()
 		if !ok {
