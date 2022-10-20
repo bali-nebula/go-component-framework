@@ -33,7 +33,8 @@ func (v *parser) parseAcceptClause() (abs.AcceptClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a message expression following the 'accept' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$acceptClause")
+			"$acceptClause",
+			"$message")
 		panic(message)
 	}
 	clause = sta.AcceptClause(message)
@@ -181,7 +182,9 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 			"$name",
 			"$attribute",
 			"$variable",
-			"$indices")
+			"$indices",
+			"$ordinal",
+			"$moniker")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("at")
@@ -196,7 +199,9 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 				"$name",
 				"$attribute",
 				"$variable",
-				"$indices")
+				"$indices",
+				"$ordinal",
+				"$moniker")
 			panic(message)
 		}
 		level, token, ok = v.parseExpression()
@@ -208,7 +213,9 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 				"$name",
 				"$attribute",
 				"$variable",
-				"$indices")
+				"$indices",
+				"$ordinal",
+				"$moniker")
 			panic(message)
 		}
 	}
@@ -221,7 +228,9 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 			"$name",
 			"$attribute",
 			"$variable",
-			"$indices")
+			"$indices",
+			"$ordinal",
+			"$moniker")
 		panic(message)
 	}
 	moniker, token, ok = v.parseExpression()
@@ -233,7 +242,9 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 			"$name",
 			"$attribute",
 			"$variable",
-			"$indices")
+			"$indices",
+			"$ordinal",
+			"$moniker")
 		panic(message)
 	}
 	clause = sta.CheckoutClause(recipient, level, moniker)
@@ -277,7 +288,8 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a citation expression following the 'discard' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$discardClause")
+			"$discardClause",
+			"$document")
 		panic(message)
 	}
 	clause = sta.DiscardClause(citation)
@@ -371,7 +383,8 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a condition expression and statement block following the 'if' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$ifClause")
+			"$ifClause",
+			"$condition")
 		panic(message)
 	}
 	clause = sta.IfClause(block.GetPattern(), block.GetStatements())
@@ -458,21 +471,27 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a draft document expression following the 'notarize' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$notarizeClause")
+			"$notarizeClause",
+			"$document",
+			"$moniker")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("as")
 	if !ok {
 		var message = fmt.Sprintf("Expected the 'as' keyword after the draft document expression but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$notarizeClause")
+			"$notarizeClause",
+			"$document",
+			"$moniker")
 		panic(message)
 	}
 	moniker, token, ok = v.parseExpression()
 	if !ok {
 		var message = fmt.Sprintf("Expected a moniker expression following the 'as' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$notarizeClause")
+			"$notarizeClause",
+			"$document",
+			"$moniker")
 		panic(message)
 	}
 	clause = sta.NotarizeClause(draft, moniker)
@@ -545,21 +564,27 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a message expression following the 'post' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$postClause")
+			"$postClause",
+			"$message",
+			"$bag")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("to")
 	if !ok {
 		var message = fmt.Sprintf("Expected the 'to' keyword after the message expression but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$postClause")
+			"$postClause",
+			"$message",
+			"$bag")
 		panic(message)
 	}
 	bag, token, ok = v.parseExpression()
 	if !ok {
 		var message = fmt.Sprintf("Expected a bag expression following the 'to' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$postClause")
+			"$postClause",
+			"$message",
+			"$bag")
 		panic(message)
 	}
 	clause = sta.PostClause(message, bag)
@@ -614,7 +639,8 @@ func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected an event expression following the 'publish' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$publishClause")
+			"$publishClause",
+			"$event")
 		panic(message)
 	}
 	clause = sta.PublishClause(event)
@@ -650,7 +676,8 @@ func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a message expression following the 'reject' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$rejectClause")
+			"$rejectClause",
+			"$message")
 		panic(message)
 	}
 	clause = sta.RejectClause(message)
@@ -679,7 +706,8 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 			"$name",
 			"$attribute",
 			"$variable",
-			"$indices")
+			"$indices",
+			"$bag")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("from")
@@ -691,7 +719,8 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 			"$name",
 			"$attribute",
 			"$variable",
-			"$indices")
+			"$indices",
+			"$bag")
 		panic(message)
 	}
 	bag, token, ok = v.parseExpression()
@@ -703,7 +732,8 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 			"$name",
 			"$attribute",
 			"$variable",
-			"$indices")
+			"$indices",
+			"$bag")
 		panic(message)
 	}
 	clause = sta.RetrieveClause(recipient, bag)
@@ -726,7 +756,8 @@ func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a result expression following the 'return' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$returnClause")
+			"$returnClause",
+			"$result")
 		panic(message)
 	}
 	clause = sta.ReturnClause(result)
@@ -751,6 +782,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = fmt.Sprintf("Expected a draft document expression following the 'save' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$saveClause",
+			"$document",
 			"$recipient",
 			"$name",
 			"$attribute",
@@ -763,6 +795,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = fmt.Sprintf("Expected the 'as' keyword after the draft document expression but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$saveClause",
+			"$document",
 			"$recipient",
 			"$name",
 			"$attribute",
@@ -775,6 +808,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = fmt.Sprintf("Expected a citation recipient following the 'as' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$saveClause",
+			"$document",
 			"$recipient",
 			"$name",
 			"$attribute",
@@ -804,7 +838,9 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a control expression following the 'select' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$selectClause")
+			"$selectClause",
+			"$target",
+			"$pattern")
 		panic(message)
 	}
 	for {
@@ -816,7 +852,9 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 		if !ok {
 			var message = fmt.Sprintf("Expected a pattern expression and statement block following the 'matching' keyword but received:\n%v\n\n", token)
 			message += generateGrammar(
-				"$selectClause")
+				"$selectClause",
+				"$target",
+				"$pattern")
 			panic(message)
 		}
 		blocks.AddItem(block)
@@ -825,7 +863,9 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	if blocks.IsEmpty() {
 		var message = fmt.Sprintf("Expected at least one pattern expression and statement block in the select clause but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$selectClause")
+			"$selectClause",
+			"$target",
+			"$pattern")
 		panic(message)
 	}
 	clause = sta.SelectClause(control, blocks)
@@ -938,7 +978,8 @@ func (v *parser) parseThrowClause() (abs.ThrowClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected an exception expression following the 'throw' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$throwClause")
+			"$throwClause",
+			"$exception")
 		panic(message)
 	}
 	clause = sta.ThrowClause(exception)
@@ -961,7 +1002,8 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 	if !ok {
 		var message = fmt.Sprintf("Expected a conditional expression and statement block following the 'while' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
-			"$whileClause")
+			"$whileClause",
+			"$condition")
 		panic(message)
 	}
 	clause = sta.WhileClause(block.GetPattern(), block.GetStatements())
@@ -986,7 +1028,8 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = fmt.Sprintf("Expected an 'each' keyword following the 'with' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$withClause",
-			"$item")
+			"$item",
+			"$sequence")
 		panic(message)
 	}
 	item, token, ok = v.parseSymbol()
@@ -994,7 +1037,8 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = fmt.Sprintf("Expected a symbol following the 'each' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$withClause",
-			"$item")
+			"$item",
+			"$sequence")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("in")
@@ -1002,7 +1046,8 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = fmt.Sprintf("Expected an 'in' keyword following the symbol but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$withClause",
-			"$item")
+			"$item",
+			"$sequence")
 		panic(message)
 	}
 	block, token, ok = v.parseBlock()
@@ -1010,7 +1055,8 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = fmt.Sprintf("Expected a sequential expression and statement block following the 'in' keyword but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$withClause",
-			"$item")
+			"$item",
+			"$sequence")
 		panic(message)
 	}
 	clause = sta.WithClause(item, block.GetPattern(), block.GetStatements())

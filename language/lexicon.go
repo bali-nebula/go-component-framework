@@ -23,59 +23,63 @@ import (
 //
 // This map is useful when creating scanner and parser error messages.
 var lexicon = map[string]string{
-	"$acceptClause": `"accept" expression`,
+	"$acceptClause": `"accept" message`,
 	"$annotation":   `NOTE | COMMENT`,
 	"$arguments":    `expression {"," expression}`,
 	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
 	"$association":  `primitive ":" component`,
 	"$attribute":    `variable "[" indices "]"`,
+	"$bag":          `expression`,
 	"$breakClause":  `"break" "loop"`,
 	"$catalog": `
     association {"," association} |  ! Inline, no NOTEs allowed.
     EOL <association EOL> |
     ":"  ! An empty catalog.`,
 	"$chaining":       `expression "&" expression`,
-	"$checkoutClause": `"checkout" recipient ["at" "level" expression] "from" expression`,
-	"$collection":     `"[" sequence "]"`,
+	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
+	"$collection":     `"[" items "]"`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
+	"$condition":      `expression`,
 	"$context":        `"(" parameters ")"`,
 	"$continueClause": `"continue" "loop"`,
 	"$dereference":    `"@" expression`,
-	"$discardClause":  `"discard" expression`,
-	"$document":       `component EOL EOF`,
+	"$discardClause":  `"discard" document`,
+	"$document":       `expression`,
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
 	"$entity":         `element | string | collection | procedure`,
 	"$evaluateClause": `[recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
-	"$exception":      `SYMBOL`,
-	"$onClause":       `"on" exception <"matching" expression "do" "{" statements "}">`,
+	"$event":          `expression`,
+	"$exception":      `expression`,
+	"$onClause":       `"on" "$exception" <"matching" pattern "do" "{" statements "}">`,
 	"$exponential":    `expression "^" expression`,
 	"$expression": `
-    component |
-    variable |
-    intrinsic |
-    precedence |
-    dereference |
-    invocation |
-    value |
-    chaining |
-    exponential |
-    inversion |
-    arithmetic |
-    magnitude |
-    comparison |
-    complement |
-    logical`,
+    component   |  ! entity [context] [NOTE]
+    intrinsic   |  ! function "(" [arguments] ")"
+    variable    |  ! IDENTIFIER
+    precedence  |  ! "(" expression ")"
+    dereference |  ! "@" expression
+    invocation  |  ! expression ("." | "<~") method "(" [arguments] ")"
+    value       |  ! expression "[" indices "]"
+    chaining    |  ! expression "&" expression
+    exponential |  ! expression "^" expression
+    inversion   |  ! ("-" | "/" | "*") expression
+    arithmetic  |  ! expression ("*" | "/" | "//" | "+" | "-") expression
+    magnitude   |  ! "|" expression "|"
+    comparison  |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
+    complement  |  ! "NOT" expression
+    logical        ! expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$function":   `IDENTIFIER`,
-	"$ifClause":   `"if" expression "do" "{" statements "}"`,
+	"$ifClause":   `"if" condition "do" "{" statements "}"`,
 	"$indices":    `expression {"," expression}`,
 	"$intrinsic":  `function "(" [arguments] ")"`,
 	"$inversion":  `("-" | "/" | "*") expression`,
-	"$invocation": `expression ("." | "<~") message "(" [arguments] ")"`,
+	"$invocation": `target ("." | "<~") method "(" [arguments] ")"`,
 	"$item":       `SYMBOL`,
+	"$items":      `catalog | list | range`,
 	"$list": `
     component {"," component} |  ! Inline, no NOTEs allowed.
     EOL <component EOL> |
@@ -101,37 +105,44 @@ var lexicon = map[string]string{
     acceptClause |
     rejectClause |
     evaluateClause`,
-	"$message":        `IDENTIFIER`,
+	"$message":        `expression`,
+	"$method":         `IDENTIFIER`,
+	"$moniker":        `expression`,
 	"$name":           `SYMBOL`,
-	"$notarizeClause": `"notarize" expression "as" expression`,
+	"$notarizeClause": `"notarize" document "as" moniker`,
+	"$ordinal":        `expression`,
 	"$parameter":      `name ":" component`,
 	"$parameters": `
     parameter {"," parameter} |  ! Inline, no NOTEs allowed.
     EOL <parameter EOL>`,
-	"$postClause":     `"post" expression "to" expression`,
+	"$pattern":        `expression`,
+	"$postClause":     `"post" message "to" bag`,
 	"$precedence":     `"(" expression ")"`,
 	"$primitive":      `element | string`,
 	"$procedure":      `"{" statements "}"`,
-	"$publishClause":  `"publish" expression`,
+	"$publishClause":  `"publish" event`,
 	"$range":          `[primitive] (".." | "..<" | "<..<" | "<..") [primitive]`,
 	"$recipient":      `name | attribute`,
-	"$rejectClause":   `"reject" expression`,
-	"$retrieveClause": `"retrieve" recipient "from" expression`,
-	"$returnClause":   `"return" expression`,
-	"$saveClause":     `"save" expression "as" recipient`,
-	"$selectClause":   `"select" expression <"matching" expression "do" "{" statements "}">`,
-	"$sequence":       `catalog | list | range`,
+	"$rejectClause":   `"reject" message`,
+	"$result":         `expression`,
+	"$retrieveClause": `"retrieve" recipient "from" bag`,
+	"$returnClause":   `"return" result`,
+	"$saveClause":     `"save" document "as" recipient`,
+	"$selectClause":   `"select" target <"matching" pattern "do" "{" statements "}">`,
+	"$sequence":       `expression`,
+	"$source":         `component EOL EOF  ! EOF is the end-of-file marker.`,
 	"$statement":      `mainClause [onClause]`,
 	"$statements": `
     statement {";" statement} |
     EOL {(annotation | statement) EOL} |
     ! An empty procedure.`,
 	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
-	"$throwClause": `"throw" expression`,
+	"$target":      `expression`,
+	"$throwClause": `"throw" exception`,
 	"$value":       `expression "[" indices "]"`,
 	"$variable":    `IDENTIFIER`,
-	"$whileClause": `"while" expression "do" "{" statements "}"`,
-	"$withClause":  `"with" "each" item "in" expression "do" "{" statements "}"`,
+	"$whileClause": `"while" condition "do" "{" statements "}"`,
+	"$withClause":  `"with" "each" item "in" sequence "do" "{" statements "}"`,
 	"$ANGLE":       `"~" (REAL | ZERO)`,
 	"$ANY":         `"any"`,
 	"$AUTHORITY":   `<~"/">`,

@@ -20,39 +20,15 @@ import (
 // PARSER INTERFACE
 
 // This function parses the specified Bali Document Notation™ (BDN) source
-// string and returns the corresponding abstract syntax tree as defined in
-// the language specification:
+// bytes retrieved from a POSIX compliant file and returns the corresponding
+// abstract syntax tree as defined in the language specification:
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
-// All parser rules in the specification are shown in lowerCamelCase.
-func ParseSource(source string) abs.ComponentLike[any] {
-	var ok bool
-	var token *Token
-	var component abs.ComponentLike[any]
-	var parser = Parser([]byte(source))
-	var message string
-	component, token, ok = parser.parseComponent()
-	if ok {
-		_, token, ok = parser.parseEOF()
-		if !ok {
-			message = fmt.Sprintf("Expected an EOF following the component but received:\n%v\n\n", token)
-			message += generateGrammar(
-				"$component",
-				"$entity",
-				"$context",
-				"$parameters",
-				"$parameter",
-				"$name")
-			panic(message)
-		}
-	}
-	return component
-}
-
-// This function parses the specified Bali Document Notation™ (BDN) source
-// document and returns the corresponding abstract syntax tree. A POSIX
-// compliant source file must end with a EOL character.
+// All parser rules in the specification are shown in lowerCamelCase and scanner
+// tokens shown in UPPERCASE.
+//
+// A POSIX compliant file must end with a EOL character before the EOF marker.
 func ParseDocument(document []byte) abs.ComponentLike[any] {
 	var ok bool
 	var token *Token
@@ -64,7 +40,7 @@ func ParseDocument(document []byte) abs.ComponentLike[any] {
 		if !ok {
 			var message = fmt.Sprintf("Expected an EOL following the component but received:\n%v\n\n", token)
 			message += generateGrammar(
-				"$document",
+				"$source",
 				"$component",
 				"$entity",
 				"$context",
@@ -77,7 +53,7 @@ func ParseDocument(document []byte) abs.ComponentLike[any] {
 		if !ok {
 			var message = fmt.Sprintf("Expected an EOF following the EOL but received:\n%v\n\n", token)
 			message += generateGrammar(
-				"$document",
+				"$source",
 				"$component",
 				"$entity",
 				"$context",
@@ -88,6 +64,13 @@ func ParseDocument(document []byte) abs.ComponentLike[any] {
 		}
 	}
 	return component
+}
+
+// This function parses a source string rather than the bytes from a BDN
+// document file. It is useful when parsing strings within source code.
+func ParseSource(source string) abs.ComponentLike[any] {
+	var document = []byte(source + "\n")
+	return ParseDocument(document)
 }
 
 // PARSER IMPLEMENTATION

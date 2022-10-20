@@ -420,7 +420,7 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 		var message = fmt.Sprintf("Expected a message identifier following the '"+delimiter+"' delimiter but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$invocation",
-			"$message",
+			"$method",
 			"$arguments")
 		panic(message)
 	}
@@ -429,7 +429,7 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 		var message = fmt.Sprintf("Expected a '(' character following the message identifier but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$invocation",
-			"$message",
+			"$method",
 			"$arguments")
 		panic(message)
 	}
@@ -438,7 +438,7 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 		var message = fmt.Sprintf("Expected arguments following the '(' character but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$invocation",
-			"$message",
+			"$method",
 			"$arguments")
 		panic(message)
 	}
@@ -447,7 +447,7 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 		var message = fmt.Sprintf("Expected a ')' character following the arguments but received:\n%v\n\n", token)
 		message += generateGrammar(
 			"$invocation",
-			"$message",
+			"$method",
 			"$arguments")
 		panic(message)
 	}
