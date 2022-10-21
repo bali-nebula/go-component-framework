@@ -150,6 +150,36 @@ func (v *parser) parseElement() (any, *Token, bool) {
 	return element, token, ok
 }
 
+// This method adds the canonical format for the specified element primitive to the
+// state of the formatter.
+func (v *formatter) formatElement(element any) {
+	var value = ref.ValueOf(element)
+	switch {
+	case value.MethodByName("IsAngle").IsValid():
+		v.formatAngle(element)
+	case value.MethodByName("IsBoolean").IsValid():
+		v.formatBoolean(element)
+	case value.MethodByName("IsDuration").IsValid():
+		v.formatDuration(element)
+	case value.MethodByName("IsMoment").IsValid():
+		v.formatMoment(element)
+	case value.MethodByName("IsNumber").IsValid():
+		v.formatNumber(element)
+	case value.MethodByName("IsPattern").IsValid():
+		v.formatPattern(element)
+	case value.MethodByName("IsPercentage").IsValid():
+		v.formatPercentage(element)
+	case value.MethodByName("IsProbability").IsValid():
+		v.formatProbability(element)
+	case value.MethodByName("IsResource").IsValid():
+		v.formatResource(element)
+	case value.MethodByName("IsSymbol").IsValid():
+		v.formatSymbol(element)
+	default:
+		v.formatTag(element)
+	}
+}
+
 // This method attempts to parse a moment element. It returns the moment
 // element and whether or not the moment element was successfully parsed.
 func (v *parser) parseMoment() (ele.Moment, *Token, bool) {

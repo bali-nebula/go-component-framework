@@ -157,6 +157,24 @@ func (v *parser) parseString() (any, *Token, bool) {
 	return s, token, ok
 }
 
+// This method adds the canonical format for the specified string primitive to the
+// state of the formatter.
+func (v *formatter) formatString(s any) {
+	var value = ref.ValueOf(s)
+	switch {
+	case value.MethodByName("IsBinary").IsValid():
+		v.formatBinary(s)
+	case value.MethodByName("IsMoniker").IsValid():
+		v.formatMoniker(s)
+	case value.MethodByName("IsNarrative").IsValid():
+		v.formatNarrative(s)
+	case value.MethodByName("IsQuote").IsValid():
+		v.formatQuote(s)
+	default:
+		v.formatVersion(s)
+	}
+}
+
 // This method attempts to parse a version string. It returns the version
 // string and whether or not the version string was successfully parsed.
 func (v *parser) parseVersion() (str.Version, *Token, bool) {
