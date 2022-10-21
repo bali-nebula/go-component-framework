@@ -31,18 +31,6 @@ func PercentageFromString(v string) (Percentage, bool) {
 // negative.
 type Percentage float64
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Percentage) AsString() string {
-	return str.FormatFloat(float64(v), 'G', -1, 64) + "%"
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Percentage) String() string {
-	return v.AsString()
-}
-
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous component.

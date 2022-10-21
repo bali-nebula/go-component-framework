@@ -47,21 +47,6 @@ func AngleFromString(v string) (Angle, bool) {
 // [0..2π).
 type Angle float64
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Angle) AsString() string {
-	if float64(v) == mat.Pi {
-		return "~π"
-	}
-	return "~" + str.FormatFloat(float64(v), 'G', -1, 64)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Angle) String() string {
-	return v.AsString()
-}
-
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous component.

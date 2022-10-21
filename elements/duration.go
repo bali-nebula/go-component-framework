@@ -54,43 +54,14 @@ func DurationFromString(v string) (Duration, bool) {
 // milliseconds for the entire duration of time. Durations can be negative.
 type Duration int
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Duration) AsString() string {
-	var result str.Builder
-	result.WriteString("~")
-	if v.IsNegative() {
-		result.WriteString("-")
-	}
-	result.WriteString("P")
-	result.WriteString(stc.FormatInt(int64(v.GetYears()), 10))
-	result.WriteString("Y")
-	result.WriteString(stc.FormatInt(int64(v.GetMonths()), 10))
-	result.WriteString("M")
-	result.WriteString(stc.FormatInt(int64(v.GetDays()), 10))
-	result.WriteString("DT")
-	result.WriteString(stc.FormatInt(int64(v.GetHours()), 10))
-	result.WriteString("H")
-	result.WriteString(stc.FormatInt(int64(v.GetMinutes()), 10))
-	result.WriteString("M")
-	result.WriteString(stc.FormatInt(int64(v.GetSeconds()), 10))
-	result.WriteString(".")
-	result.WriteString(stc.FormatInt(int64(v.GetMilliseconds()), 10))
-	result.WriteString("S")
-	return result.String()
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Duration) String() string {
-	return v.AsString()
-}
-
 // POLARIZED INTERFACE
 
 // This method determines whether or not this polarized component is negative.
 func (v Duration) IsNegative() bool {
 	return v < 0.0
+}
+
+	v.state.AppendString(s)
 }
 
 // TEMPORAL INTERFACE

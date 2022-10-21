@@ -41,53 +41,6 @@ func MomentFromString(v string) (Moment, bool) {
 // All moments are based on UTC.
 type Moment int
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Moment) AsString() string {
-	var result str.Builder
-	result.WriteString("<")
-	var year = v.GetYears()
-	result.WriteString(stc.FormatInt(int64(year), 10))
-	var month = v.GetMonths()
-	if month > 1 {
-		result.WriteString("-")
-		result.WriteString(formatOrdinal(month))
-		var day = v.GetDays()
-		if day > 1 {
-			result.WriteString("-")
-			result.WriteString(formatOrdinal(day))
-			var hour = v.GetHours()
-			if hour > 0 {
-				result.WriteString("T")
-				result.WriteString(formatOrdinal(hour))
-				var minute = v.GetMinutes()
-				if minute > 0 {
-					result.WriteString(":")
-					result.WriteString(formatOrdinal(minute))
-					var second = v.GetSeconds()
-					if second > 0 {
-						result.WriteString(":")
-						result.WriteString(formatOrdinal(second))
-						var millisecond = v.GetMilliseconds()
-						if millisecond > 0 {
-							result.WriteString(".")
-							result.WriteString(formatOrdinal(millisecond))
-						}
-					}
-				}
-			}
-		}
-	}
-	result.WriteString(">")
-	return result.String()
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Moment) String() string {
-	return v.AsString()
-}
-
 // TEMPORAL INTERFACE
 
 // This method returns the total number of milliseconds since epoc in this moment.

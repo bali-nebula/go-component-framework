@@ -13,6 +13,7 @@ package language
 import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 )
 
@@ -122,17 +123,35 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 	return catalog, token, true
 }
 
+// This method adds the canonical format for this collection to the state of the
+// formatter.
+func (v *formatter) formatCatalog(catalog abs.CatalogLike[comparable, any]) {
+	if catalog.IsEmpty() {
+		v.state.AppendString(":")
+	} else {
+		var iterator = age.Iterator(list)
+		v.state.IncrementDepth()
+		for iterator.HasNext() {
+			v.state.AppendNewline()
+			var association = iterator.GetNext()
+			v.formatAssociation(association)
+		}
+		v.state.DecrementDepth()
+		v.state.AppendNewline()
+	}
+}
+
 // This method attempts to parse a collection of items. It returns the
 // collection and whether or not the collection was successfully parsed.
 func (v *parser) parseCollection() (any, *Token, bool) {
 	var ok bool
 	var token *Token
-	var sequence any
+	var items any
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		return nil, token, false
 	}
-	sequence, token, ok = v.parseSequence()
+	items, token, ok = v.parseItems()
 	if !ok {
 		var message = fmt.Sprintf(
 			"Expected a sequence of items following the '[' character but received:\n%v\n\n", token)
@@ -150,7 +169,7 @@ func (v *parser) parseCollection() (any, *Token, bool) {
 			"$items")
 		panic(message)
 	}
-	return sequence, token, true
+	return items, token, true
 }
 
 // This method attempts to parse a list of items. It returns the
@@ -232,6 +251,31 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 	return list, token, true
 }
 
+// This method adds the canonical format for this collection to the state of the
+// formatter.
+func (v *formatter) formatList(list abs.ListLike[any]) {
+	var iterator = age.Iterator(list)
+	v.formatSequence(iterator)
+}
+
+// This method adds the canonical format for this sequence of items to the state
+// of the formatter.
+func (v *formatter) formatSequence(iterator abs.IteratorLike[any]) {
+	if iterator.HasNext() {
+		v.state.IncrementDepth()
+		for iterator.HasNext() {
+			v.state.AppendNewline()
+			var item = iterator.GetNext()
+			v.formatComponent(item)
+		}
+		v.state.DecrementDepth()
+		v.state.AppendNewline()
+	} else {
+		// It is an empty sequence.
+		v.state.AppendString(" ")
+	}
+}
+
 // This method attempts to parse a primitive. It returns the primitive and
 // whether or not the primitive was successfully parsed.
 func (v *parser) parsePrimitive() (any, *Token, bool) {
@@ -252,20 +296,20 @@ func (v *parser) parsePrimitive() (any, *Token, bool) {
 
 // This method attempts to parse a sequence of items. It returns the
 // sequence and whether or not the sequence was successfully parsed.
-func (v *parser) parseSequence() (any, *Token, bool) {
+func (v *parser) parseItems() (any, *Token, bool) {
 	var ok bool
 	var token *Token
-	var sequence any
-	sequence, token, ok = v.parseCatalog()
+	var items any
+	items, token, ok = v.parseCatalog()
 	if !ok {
-		sequence, token, ok = v.parseRange()
+		items, token, ok = v.parseRange()
 	}
 	if !ok {
 		// The list must be attempted last since it may start with a component
 		// which cannot be put back as a single token.
-		sequence, token, ok = v.parseList() // The list must be last.
+		items, token, ok = v.parseList() // The list must be last.
 	}
-	return sequence, token, ok
+	return items, token, ok
 }
 
 // This method attempts to parse a range collection. It returns the range

@@ -59,18 +59,6 @@ func VersionFromOrdinals(v []int) Version {
 // the version string.
 type Version string
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this string.
-func (v Version) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Version) String() string {
-	return v.AsString()
-}
-
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

@@ -15,13 +15,6 @@ import (
 	reg "regexp"
 )
 
-// LEXICAL INTERFACES
-
-// This interface defines the methods supported by all lexical elements.
-type Lexical interface {
-	AsString() string
-}
-
 // ANGLE ELEMENT SYNTAX
 
 // These constants are used to form a regular expression for valid angle

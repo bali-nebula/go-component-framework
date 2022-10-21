@@ -38,18 +38,6 @@ func SymbolFromString(v string) (Symbol, bool) {
 // make up the symbol.
 type Symbol string
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Symbol) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Symbol) String() string {
-	return v.AsString()
-}
-
 // SYMBOLIC INTERFACE
 
 // This method returns the identifier for this symbol.

@@ -48,18 +48,6 @@ func BinaryFromBytes(v []byte) Binary {
 // the binary string.
 type Binary string
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this string.
-func (v Binary) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Binary) String() string {
-	return v.AsString()
-}
-
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.
@@ -115,6 +103,7 @@ func (v Binary) GetIndex(b byte) int {
 	return 0
 }
 
+// This function removes all whitespace from the specified string.
 func removeWhiteSpace(s string) string {
 	return str.Map(func(r rune) rune {
 		if uni.IsSpace(r) {

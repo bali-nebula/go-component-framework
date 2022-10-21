@@ -123,18 +123,6 @@ func NumberFromString(v string) (Number, bool) {
 // number.
 type Number complex128
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Number) AsString() string {
-	return v.AsRectangular()
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Number) String() string {
-	return v.AsString()
-}
-
 // DISCRETE INTERFACE
 
 // This method returns a boolean value for this discrete element.

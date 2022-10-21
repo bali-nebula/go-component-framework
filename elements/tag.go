@@ -41,18 +41,6 @@ func TagFromString(v string) (Tag, bool) {
 // the native Go byte array type.
 type Tag string
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Tag) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Tag) String() string {
-	return v.AsString()
-}
-
 // PRIVATE FUNCTIONS
 
 // This function parses a identifier tag string and returns the corresponding

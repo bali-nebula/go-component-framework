@@ -50,18 +50,6 @@ func QuoteFromRunes(v []rune) Quote {
 // the quote string.
 type Quote string
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this string.
-func (v Quote) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Quote) String() string {
-	return v.AsString()
-}
-
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

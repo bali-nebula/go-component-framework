@@ -31,18 +31,6 @@ func PatternFromString(v string) (Pattern, bool) {
 // corresponding to that pattern.
 type Pattern string
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Pattern) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Pattern) String() string {
-	return v.AsString()
-}
-
 // MATCHABLE INTERFACE
 
 // This method determines whether or not this pattern matches the specified text

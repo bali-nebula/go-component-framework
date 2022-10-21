@@ -30,18 +30,6 @@ func BooleanFromString(v string) (Boolean, bool) {
 // the native Go bool type.
 type Boolean bool
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Boolean) AsString() string {
-	return str.FormatBool(bool(v))
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Boolean) String() string {
-	return v.AsString()
-}
-
 // DISCRETE INTERFACE
 
 // This method returns a boolean value for this discrete element.

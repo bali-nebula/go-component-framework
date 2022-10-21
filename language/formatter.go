@@ -67,33 +67,36 @@ const maximumFormattingDepth int = 8
 // Go language doesn't really support polymorphism the selection of the actual
 // function called must be done explicitly using reflection and a type switch.
 func (v *formatter) formatValue(value ref.Value) {
+	if value.MethodByName("AsString").IsValid() {
+		v.formatPrimitive(value)
+	}
 	switch value.Kind() {
 
 	// Handle all primitive types.
 	case ref.Bool:
 		v.formatBoolean(value)
-	case ref.Uint, ref.Uint8, ref.Uint16, ref.Uint32, ref.Uint64, ref.Uintptr:
-		v.formatUnsigned(value)
-	case ref.Int, ref.Int8, ref.Int16, ref.Int64:
-		v.formatInteger(value)
+	case ref.Uint, ref.Uint8, ref.Uint16, ref.Uint32, ref.Uint64:
+		v.formatNumber(elements.Number(complex(value.Uint(), 0)))
+	case ref.Int, ref.Int8, ref.Int16, ref.Int32, ref.Int64:
+		v.formatNumber(elements.Number(complex(value.Int(), 0)))
 	case ref.Float32, ref.Float64:
-		v.formatFloat(value)
+		v.formatNumber(elements.Number(complex(value.Float(), 0)))
 	case ref.Complex64, ref.Complex128:
-		v.formatComplex(value)
-	case ref.Int32:
-		v.formatRune(value)
+		v.formatNumber(elements.Number(value.Complex()))
 	case ref.String:
-		v.formatString(value)
+		v.formatQuote(elements.Quote(value.String()))
 
 	// Handle all primitive collections.
 	case ref.Array, ref.Slice:
-		v.formatArray(value, "array")
-	case ref.Map:
-		v.formatMap(value)
+		v.formatList(collections.ListFromArray(value.Array(0, value.Len())))
+		/*
+			case ref.Map:
+				v.formatCatalog(collections.CatalogFromMap(value.Map()))
 
-	// Handle all structures.
-	case ref.Struct:
-		v.formatStructure(value)
+			// Handle all structures.
+			case ref.Struct:
+				v.formatStructure(value)
+		*/
 
 	// Handle all interfaces and pointers.
 	case ref.Interface, ref.Pointer:
@@ -114,7 +117,7 @@ func (v *formatter) formatValue(value ref.Value) {
 
 	default:
 		if !value.IsValid() {
-			v.formatNil(value)
+			v.formatNone()
 		} else {
 			panic(fmt.Sprintf(
 				"Attempted to format:\n\tvalue: %v\n\ttype: %v\n\tkind: %v\n",
@@ -132,8 +135,8 @@ func (v *formatter) formatComponent(r ref.Value) {
 
 // This private method appends the nil string for the specified value to the
 // result.
-func (v *formatter) formatNil(r ref.Value) {
-	v.state.AppendString("<nil>")
+func (v *formatter) formatNone(r ref.Value) {
+	v.state.AppendString("none")
 }
 
 // This private method appends the name of the specified boolean value to the

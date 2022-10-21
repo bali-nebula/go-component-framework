@@ -30,7 +30,7 @@ func NarrativeFromString(v string) (Narrative, bool) {
 	case len(matches) == 0:
 		ok = false
 	default:
-		narrative = trimTabs(matches[0])
+		narrative = trimIndentation(matches[0])
 	}
 	return Narrative(narrative), ok
 }
@@ -49,18 +49,6 @@ func NarrativeFromRunes(v []rune) Narrative {
 // the native Go string type and represents the string of runes that make up
 // the narrative string.
 type Narrative string
-
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this string.
-func (v Narrative) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Narrative) String() string {
-	return v.AsString()
-}
 
 // SEQUENTIAL INTERFACE
 
@@ -115,15 +103,31 @@ func (v Narrative) GetIndex(b rune) int {
 	return 0
 }
 
-func trimTabs(v string) string {
+// This function removes the indentation from each line of the specified
+// multi-line string.
+//
+// The following narrative string with dashes showing the indentation:
+//  ----$someNarrative: ">
+//  ----    This is the first line
+//  ----    of a multi-line
+//  ----    narrative string.
+//  ----<"
+//
+// Will be trimmed to:
+//  ">
+//      This is the first line
+//      of a multi-line
+//      narrative string.
+//  <"
+func trimIndentation(v string) string {
 	var result = `">` + "\n"
 	var lines = str.Split(v, "\n")
 	var size = len(lines)
-	var last = lines[size-1]  // The last line of the narrative should only be tabs.
-	var tabs = len(last) - 2  // A count of the number of tabs in the last line.
+	var last = lines[size-1]  // The last line of the narrative should only be spaces.
+	var indentation = len(last) - 2  // A count of the number of spaces in the last line.
 	lines = lines[1 : size-1] // Trim off the first and last lines.
 	for _, line := range lines {
-		result += line[tabs:] + "\n" // Strip off the leading tabs.
+		result += line[indentation:] + "\n" // Strip off the leading spaces.
 	}
 	result += `<"`
 	return result

@@ -52,26 +52,6 @@ func ProbabilityFromString(v string) (Probability, bool) {
 // [0..1].
 type Probability float64
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Probability) AsString() string {
-	var s = str.FormatFloat(float64(v), 'f', -1, 64)
-	switch {
-	case v == 0:
-		return "." + s
-	case v == 1:
-		return s + "."
-	default:
-		return s[1:]
-	}
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Probability) String() string {
-	return v.AsString()
-}
-
 // DISCRETE INTERFACE
 
 // This method returns a boolean value for this discrete element.

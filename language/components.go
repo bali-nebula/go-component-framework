@@ -103,17 +103,17 @@ func (v *parser) parseDelimiter(delimiter string) (string, *Token, bool) {
 	return value, token, true
 }
 
-// This method attempts to parse documentation. It returns the documentation and
-// whether or not the documentation was successfully parsed.
-func (v *parser) parseDocumentation() (string, *Token, bool) {
+// This method attempts to parse annotation. It returns the annotation and
+// whether or not the annotation was successfully parsed.
+func (v *parser) parseAnnotation() (string, *Token, bool) {
 	var ok bool
 	var token *Token
-	var documentation string
-	documentation, token, ok = v.parseNote()
+	var annotation string
+	annotation, token, ok = v.parseNote()
 	if !ok {
-		documentation, token, ok = v.parseComment()
+		annotation, token, ok = v.parseComment()
 	}
-	return documentation, token, ok
+	return annotation, token, ok
 }
 
 // This method attempts to parse a component entity. It returns the component

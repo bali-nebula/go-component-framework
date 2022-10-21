@@ -30,18 +30,6 @@ func ResourceFromString(v string) (Resource, bool) {
 // that web resource.
 type Resource string
 
-// LEXICAL INTERFACE
-
-// This method returns the canonical string for this element.
-func (v Resource) AsString() string {
-	return string(v)
-}
-
-// This method implements the standard Go Stringer interface.
-func (v Resource) String() string {
-	return v.AsString()
-}
-
 // SEGMENTED INTERFACE
 
 // This method returns the scheme part of this resource element.
