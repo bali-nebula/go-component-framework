@@ -22,7 +22,7 @@ import (
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
 //
 // This map is useful when creating scanner and parser error messages.
-var lexicon = map[string]string{
+var grammar = map[string]string{
 	"$acceptClause": `"accept" message`,
 	"$annotation":   `NOTE | COMMENT`,
 	"$arguments":    `expression {"," expression}`,
@@ -226,9 +226,9 @@ var lexicon = map[string]string{
 // PRIVATE FUNCTIONS
 
 func generateGrammar(symbols ...string) string {
-	var grammar = "The expected grammar was:\n"
+	var expected = "The expected grammar was:\n"
 	for _, s := range symbols {
-		grammar += fmt.Sprintf("  %v: %v\n\n", s, lexicon[s])
+		expected += fmt.Sprintf("  %v: %v\n\n", s, grammar[s])
 	}
-	return grammar
+	return expected
 }
