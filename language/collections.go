@@ -50,6 +50,16 @@ func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool
 	return association, token, true
 }
 
+// This method adds the canonical format for the specified association to the
+// state of the formatter.
+func (v *formatter) formatAssociation(association abs.AssociationLike[comparable, any]) {
+	var key = association.GetKey()
+	v.formatPrimitive(key)
+	v.state.AppendString(": ")
+	var value = association.GetValue()
+	v.formatComponent(value)
+}
+
 // This method attempts to parse a catalog collection. It returns the
 // catalog collection and whether or not the catalog collection was
 // successfully parsed.
@@ -123,13 +133,13 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 	return catalog, token, true
 }
 
-// This method adds the canonical format for this collection to the state of the
-// formatter.
-func (v *formatter) formatCatalog(catalog abs.CatalogLike[comparable, any]) {
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatCatalog(catalog abs.Sequential[abs.AssociationLike[comparable, any]]) {
 	if catalog.IsEmpty() {
 		v.state.AppendString(":")
 	} else {
-		var iterator = age.Iterator(list)
+		var iterator = age.Iterator(catalog)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
@@ -170,6 +180,14 @@ func (v *parser) parseCollection() (any, *Token, bool) {
 		panic(message)
 	}
 	return items, token, true
+}
+
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatCollection(collection any) {
+	v.state.AppendString("[")
+	v.formatItems(collection)
+	v.state.AppendString("]")
 }
 
 // This method attempts to parse a list of items. It returns the
@@ -251,17 +269,13 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 	return list, token, true
 }
 
-// This method adds the canonical format for this collection to the state of the
-// formatter.
-func (v *formatter) formatList(list abs.ListLike[any]) {
-	var iterator = age.Iterator(list)
-	v.formatSequence(iterator)
-}
-
-// This method adds the canonical format for this sequence of items to the state
-// of the formatter.
-func (v *formatter) formatSequence(iterator abs.IteratorLike[any]) {
-	if iterator.HasNext() {
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatList(list abs.Sequential[any]) {
+	if list.IsEmpty() {
+		v.state.AppendString(" ")
+	} else {
+		var iterator = age.Iterator(list)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
@@ -270,9 +284,6 @@ func (v *formatter) formatSequence(iterator abs.IteratorLike[any]) {
 		}
 		v.state.DecrementDepth()
 		v.state.AppendNewline()
-	} else {
-		// It is an empty sequence.
-		v.state.AppendString(" ")
 	}
 }
 
@@ -294,6 +305,18 @@ func (v *parser) parsePrimitive() (any, *Token, bool) {
 	return primitive, token, ok
 }
 
+// This method adds the canonical format for the specified primitive to the
+// state of the formatter.
+func (v *formatter) formatPrimitive(primitive any) {
+	var value = ref.ValueOf(primitive)
+	switch {
+	case value.MethodByName("IsEmpty").IsValid():
+		v.formatString(primitive)
+	default:
+		v.formatElement(primitive)
+	}
+}
+
 // This method attempts to parse a sequence of items. It returns the
 // sequence and whether or not the sequence was successfully parsed.
 func (v *parser) parseItems() (any, *Token, bool) {
@@ -310,6 +333,20 @@ func (v *parser) parseItems() (any, *Token, bool) {
 		items, token, ok = v.parseList() // The list must be last.
 	}
 	return items, token, ok
+}
+
+// This method adds the canonical format for the specified items to the
+// state of the formatter.
+func (v *formatter) formatItems(items any) {
+	var value = ref.ValueOf(items)
+	switch {
+	case value.MethodByName("IsEnumerable").IsValid():
+		v.formatRange(items)
+	case value.MethodByName("AddAssociation").IsValid():
+		v.formatCatalog(items)
+	default:
+		v.formatList(items)
+	}
 }
 
 // This method attempts to parse a range collection. It returns the range
@@ -341,4 +378,15 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	last, token, _ = v.parsePrimitive() // The last value is optional.
 	var rng = col.Range(first, connector, last)
 	return rng, token, true
+}
+
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatRange(r abs.RangeLike[comparable, any]) {
+	var first = r.GetFirst()
+	v.formatPrimitive(first)
+	var connector = r.GetConnector()
+	v.state.AppendString(connector)
+	var last = r.GetLast()
+	v.formatPrimitive(last)
 }
