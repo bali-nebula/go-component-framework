@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	stc "strconv"
 	str "strings"
 	tim "time"
 )

@@ -12,34 +12,30 @@ package components
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"reflect"
 )
 
 // COMPONENT IMPLEMENTATION
 
 // This constructor creates a new component.
-func Component[T any](entity T) abs.ComponentLike[T] {
-	var v = &component[T]{}
+func Component(entity any) abs.ComponentLike {
+	var v = &component{}
 	// Perform argument validation.
 	v.SetEntity(entity)
 	return v
 }
 
 // This constructor creates a new component with the specified context.
-func ComponentWithContext[T any](entity T, context abs.ContextLike) abs.ComponentLike[T] {
-	var v = &component[T]{}
+func ComponentWithContext(entity any, context abs.ContextLike) abs.ComponentLike {
+	var v = &component{}
 	// Perform argument validation.
 	v.SetEntity(entity)
 	v.SetContext(context)
 	return v
 }
 
-// This type defines the structure and methods associated with a generic
-// component.
-// This type is parameterized as follows:
-//   - T is any type of entity.
-type component[T any] struct {
-	entity  T
+// This type defines the structure and methods associated with a component.
+type component struct {
+	entity  any
 	context abs.ContextLike
 	note    string
 }
@@ -47,43 +43,43 @@ type component[T any] struct {
 // COMPONENT IMPLEMENTATION
 
 // This method determines whether or not this component is parameterized.
-func (v *component[T]) IsGeneric() bool {
+func (v *component) IsGeneric() bool {
 	return v.context != nil
 }
 
-func (v *component[T]) IsAnnotated() bool {
+func (v *component) IsAnnotated() bool {
 	return len(v.note) > 0
 }
 
 // This method returns the entity for this component.
-func (v *component[T]) GetEntity() T {
+func (v *component) GetEntity() any {
 	return v.entity
 }
 
 // This method sets the entity for this component.
-func (v *component[T]) SetEntity(entity T) {
-	if !reflect.ValueOf(entity).IsValid() {
+func (v *component) SetEntity(entity any) {
+	if entity == nil {
 		panic("A component requires an entity.")
 	}
 	v.entity = entity
 }
 
 // This method returns the context for this component.
-func (v *component[T]) GetContext() abs.ContextLike {
+func (v *component) GetContext() abs.ContextLike {
 	return v.context
 }
 
 // This method sets the context for this component.
-func (v *component[T]) SetContext(context abs.ContextLike) {
+func (v *component) SetContext(context abs.ContextLike) {
 	v.context = context
 }
 
 // This method returns the note for this component.
-func (v *component[T]) GetNote() string {
+func (v *component) GetNote() string {
 	return v.note
 }
 
 // This method sets the note for this component.
-func (v *component[T]) SetNote(note string) {
+func (v *component) SetNote(note string) {
 	v.note = note
 }

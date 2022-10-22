@@ -14,7 +14,6 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	mat "math"
 	stc "strconv"
-	str "strings"
 )
 
 // DURATION CONSTANTS
@@ -59,9 +58,6 @@ type Duration int
 // This method determines whether or not this polarized component is negative.
 func (v Duration) IsNegative() bool {
 	return v < 0.0
-}
-
-	v.state.AppendString(s)
 }
 
 // TEMPORAL INTERFACE

@@ -13,9 +13,9 @@ package abstractions
 // COMPONENT INTERFACES
 
 // This interface defines the methods supported by all component-like types.
-type ComponentLike[T any] interface {
+type ComponentLike interface {
 	IsGeneric() bool
-	GetEntity() T
+	GetEntity() any
 	GetContext() ContextLike
 	GetNote() string
 	SetNote(note string)

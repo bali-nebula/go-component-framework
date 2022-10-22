@@ -150,55 +150,6 @@ func (v Number) AsReal() float64 {
 
 // COMPLEX INTERFACE
 
-// This method returns the canonical string for this element in
-// its rectangular form.
-func (v Number) AsRectangular() string {
-	if v.IsZero() {
-		return "0"
-	}
-	if v.IsInfinite() {
-		return "∞"
-	}
-	if v.IsUndefined() {
-		return "undefined"
-	}
-	var realPart = floatToString(real(v))
-	var imagPart string
-	switch imag(v) {
-	case 1:
-		imagPart = "i"
-	case -1:
-		imagPart = "-i"
-	default:
-		imagPart = floatToString(imag(v)) + "i"
-	}
-	if imag(v) == 0 {
-		return realPart
-	}
-	if real(v) == 0 {
-		return imagPart
-	}
-	return "(" + realPart + ", " + imagPart + ")"
-}
-
-// This method returns the canonical string for this element in
-// its polar form.
-func (v Number) AsPolar() string {
-	if v.IsZero() {
-		return "0"
-	}
-	if v.IsInfinite() {
-		return "∞"
-	}
-	if v.IsUndefined() {
-		return "undefined"
-	}
-	var magnitude, phase = cmp.Polar(complex128(v))
-	var realPart = floatToString(lockMagnitude(magnitude))
-	var imagPart = AngleFromFloat(phase).AsString() + "i"
-	return "(" + realPart + "e^" + imagPart + ")"
-}
-
 // This method determines whether or not this number is infinite.
 func (v Number) IsZero() bool {
 	return real(v) == 0 && imag(v) == 0
@@ -489,33 +440,6 @@ func constantToValue(v string) float64 {
 		value = -mat.Pi * 2.0
 	default:
 		panic(fmt.Sprintf("An invalid constant was used in a complex number: %v", v))
-	}
-	return value
-}
-
-// This function parses a number constant string and returns the corresponding
-// real number.
-func floatToString(v float64) string {
-	var value string
-	switch v {
-	case mat.E:
-		value = "e"
-	case -mat.E:
-		value = "-e"
-	case mat.Pi:
-		value = "π"
-	case -mat.Pi:
-		value = "-π"
-	case mat.Phi:
-		value = "φ"
-	case -mat.Phi:
-		value = "-φ"
-	case mat.Pi * 2.0:
-		value = "τ"
-	case -mat.Pi * 2.0:
-		value = "-τ"
-	default:
-		value = str.FormatFloat(v, 'G', -1, 64)
 	}
 	return value
 }

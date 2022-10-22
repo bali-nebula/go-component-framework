@@ -43,7 +43,7 @@ const s = "$getItem"
 const v = "v1.2.3"
 
 func TestParserWithElementTypes(t *tes.T) {
-	var component abs.ComponentLike[any]
+	var component abs.ComponentLike
 
 	// Angle
 	component = lan.ParseSource("~pi($units: $radians)")
@@ -97,7 +97,7 @@ func TestParserWithElementTypes(t *tes.T) {
 }
 
 func TestParserWithStringTypes(t *tes.T) {
-	var component abs.ComponentLike[any]
+	var component abs.ComponentLike
 
 	// Binary
 	component = lan.ParseSource("'AAAAAAAA' ($base: 64, $encoding: $utf8)")
@@ -142,7 +142,7 @@ const k = `[
 ]`
 
 func TestParserWithSequenceTypes(t *tes.T) {
-	var component abs.ComponentLike[any]
+	var component abs.ComponentLike
 
 	// List
 	component = lan.ParseSource("[ ]")

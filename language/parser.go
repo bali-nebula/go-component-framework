@@ -29,10 +29,10 @@ import (
 // tokens shown in UPPERCASE.
 //
 // A POSIX compliant file must end with a EOL character before the EOF marker.
-func ParseDocument(document []byte) abs.ComponentLike[any] {
+func ParseDocument(document []byte) abs.ComponentLike {
 	var ok bool
 	var token *Token
-	var component abs.ComponentLike[any]
+	var component abs.ComponentLike
 	var parser = Parser(document)
 	component, token, ok = parser.parseComponent()
 	if ok {
@@ -68,7 +68,7 @@ func ParseDocument(document []byte) abs.ComponentLike[any] {
 
 // This function parses a source string rather than the bytes from a BDN
 // document file. It is useful when parsing strings within source code.
-func ParseSource(source string) abs.ComponentLike[any] {
+func ParseSource(source string) abs.ComponentLike {
 	var document = []byte(source + "\n")
 	return ParseDocument(document)
 }

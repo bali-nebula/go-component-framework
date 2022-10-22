@@ -57,8 +57,8 @@ func (v *formatter) formatComment(comment string) {
 
 // This method attempts to parse a component. It returns the component and
 // whether or not the component was successfully parsed.
-func (v *parser) parseComponent() (abs.ComponentLike[any], *Token, bool) {
-	var component abs.ComponentLike[any]
+func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
+	var component abs.ComponentLike
 	var context abs.ContextLike
 	var note string
 	var entity, token, ok = v.parseEntity()
@@ -73,7 +73,7 @@ func (v *parser) parseComponent() (abs.ComponentLike[any], *Token, bool) {
 
 // This method adds the canonical format for the specified component to the
 // state of the formatter.
-func (v *formatter) formatComponent(component abs.ComponentLike[any]) {
+func (v *formatter) formatComponent(component abs.ComponentLike) {
 }
 
 // This method attempts to parse the context for a parameterized component. It

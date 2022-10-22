@@ -13,6 +13,7 @@ package language
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	mat "math"
+	cmp "math/cmplx"
 	str "strconv"
 )
 
@@ -180,6 +181,33 @@ func (v *formatter) formatElement(element any) {
 	}
 }
 
+// This method adds the canonical format for the specified imaginary number to
+// the state of the formatter.
+func (v *formatter) formatImaginary(i float64) {
+	var s string
+	switch i {
+	case mat.E:
+		s = "ei"
+	case -mat.E:
+		s = "-ei"
+	case mat.Pi:
+		s = "πi"
+	case -mat.Pi:
+		s = "-πi"
+	case mat.Phi:
+		s = "φi"
+	case -mat.Phi:
+		s = "-φi"
+	case mat.Pi * 2.0:
+		s = "τi"
+	case -mat.Pi * 2.0:
+		s = "-τi"
+	default:
+		s = str.FormatFloat(v, 'G', -1, 64) + "i"
+	}
+	v.state.AppendString(s)
+}
+
 // This method attempts to parse a moment element. It returns the moment
 // element and whether or not the moment element was successfully parsed.
 func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
@@ -253,8 +281,69 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatNumber(number ele.Number) {
-	var s = number.AsRectangular()
+	switch {
+	case number.IsZero():
+		v.state.AppendString("0")
+	case number.IsInfinite():
+		v.state.AppendString("∞")
+	case number.IsUndefined():
+		v.state.AppendString("undefined")
+	default:
+		var realPart = number.GetReal()
+		var imagPart = number.GetImaginary()
+		switch {
+		case imagPart == 0:
+			v.state.AppendString(formatReal(realPart))
+		case realPart == 0:
+			v.state.AppendString(formatImaginary(imagPart))
+		default:
+			v.state.AppendString("(")
+			v.state.AppendString(formatReal(realPart))
+			v.state.AppendString(", ")
+			v.state.AppendString(formatImaginary(imagPart))
+			v.state.AppendString(")")
+		}
+	}
 	v.state.AppendString(s)
+}
+
+// This method adds the canonical format for the specified imaginary phase to
+// the state of the formatter.
+func (v *formatter) formatPhase(p ele.Angle) {
+	var s string
+	if float64(angle) == mat.Pi {
+		s = "~πi"
+	} else {
+		s = "~" + str.FormatFloat(float64(angle), 'G', -1, 64) + "i"
+	}
+	v.state.AppendString(s)
+}
+
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
+func (v *formatter) formatPolar(number ele.Number) {
+	switch {
+	case number.IsZero():
+		v.state.AppendString("0")
+	case number.IsInfinite():
+		v.state.AppendString("∞")
+	case number.IsUndefined():
+		v.state.AppendString("undefined")
+	default:
+		var magnitude = number.GetMagnitude()
+		var phase = number.GetPhase()
+		switch {
+		case phase.IsZero():
+			v.state.AppendString(formatReal(magnitude))
+		case magnitude == 0:
+			v.state.AppendString("0")
+		default:
+		v.state.AppendString("(")
+		v.state.AppendString(formatReal(magnitude))
+		v.state.AppendString("e^")
+		v.state.AppendString(formatPhase(phase))
+		v.state.AppendString(")")
+	}
 }
 
 // This method attempts to parse a pattern element. It returns the pattern
@@ -327,6 +416,33 @@ func (v *formatter) formatProbability(probability ele.Probability) {
 	// Otherwise, remove the leading "0".
 	default:
 		s = s[1:]
+	}
+	v.state.AppendString(s)
+}
+
+// This method adds the canonical format for the specified real number to the
+// state of the formatter.
+func (v *formatter) formatReal(r float64) {
+	var s string
+	switch r {
+	case mat.E:
+		s = "e"
+	case -mat.E:
+		s = "-e"
+	case mat.Pi:
+		s = "π"
+	case -mat.Pi:
+		s = "-π"
+	case mat.Phi:
+		s = "φ"
+	case -mat.Phi:
+		s = "-φ"
+	case mat.Pi * 2.0:
+		s = "τ"
+	case -mat.Pi * 2.0:
+		s = "-τ"
+	default:
+		s = str.FormatFloat(v, 'G', -1, 64)
 	}
 	v.state.AppendString(s)
 }
