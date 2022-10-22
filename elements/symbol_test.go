@@ -12,6 +12,7 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -29,5 +30,5 @@ func TestEmptySymbol(t *tes.T) {
 func TestSymbol(t *tes.T) {
 	var v, ok = ele.SymbolFromString("$foobar")
 	ass.True(t, ok)
-	ass.Equal(t, "$foobar", v.AsString())
+	ass.Equal(t, "$foobar", lan.FormatValue(v))
 }

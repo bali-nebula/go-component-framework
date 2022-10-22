@@ -338,11 +338,12 @@ func (v *formatter) formatPolar(number ele.Number) {
 		case magnitude == 0:
 			v.state.AppendString("0")
 		default:
-		v.state.AppendString("(")
-		v.state.AppendString(formatReal(magnitude))
-		v.state.AppendString("e^")
-		v.state.AppendString(formatPhase(phase))
-		v.state.AppendString(")")
+			v.state.AppendString("(")
+			v.state.AppendString(formatReal(magnitude))
+			v.state.AppendString("e^")
+			v.state.AppendString(formatPhase(phase))
+			v.state.AppendString(")")
+		}
 	}
 }
 

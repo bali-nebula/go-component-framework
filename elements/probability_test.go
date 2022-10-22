@@ -12,6 +12,7 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -78,7 +79,7 @@ func TestStringProbabilities(t *tes.T) {
 	ass.False(t, v.AsBoolean())
 	ass.Equal(t, 0, v.AsInteger()) // Rounds the value.
 	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, ".0", v.AsString())
+	ass.Equal(t, ".0", lan.FormatValue(v))
 
 	v, ok = ele.ProbabilityFromString(".5")
 	ass.True(t, ok)
@@ -86,7 +87,7 @@ func TestStringProbabilities(t *tes.T) {
 	ass.True(t, v.AsBoolean())
 	ass.Equal(t, 1, v.AsInteger()) // Rounds the value.
 	ass.Equal(t, 0.5, v.AsReal())
-	ass.Equal(t, ".5", v.AsString())
+	ass.Equal(t, ".5", lan.FormatValue(v))
 
 	v, ok = ele.ProbabilityFromString("1.")
 	ass.True(t, ok)
@@ -94,7 +95,7 @@ func TestStringProbabilities(t *tes.T) {
 	ass.True(t, v.AsBoolean())
 	ass.Equal(t, 1, v.AsInteger())
 	ass.Equal(t, 1.0, v.AsReal())
-	ass.Equal(t, "1.", v.AsString())
+	ass.Equal(t, "1.", lan.FormatValue(v))
 
 	v, ok = ele.ProbabilityFromString("1.0")
 	ass.False(t, ok)

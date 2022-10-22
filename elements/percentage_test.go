@@ -12,6 +12,7 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -38,7 +39,7 @@ func TestStringPercentages(t *tes.T) {
 	var v, ok = ele.PercentageFromString("50%")
 	ass.True(t, ok)
 	ass.Equal(t, 50, int(v))
-	ass.Equal(t, "50%", v.AsString())
+	ass.Equal(t, "50%", lan.FormatValue(v))
 	ass.Equal(t, 0.5, v.AsReal())
 
 	v, ok = ele.PercentageFromString("100")

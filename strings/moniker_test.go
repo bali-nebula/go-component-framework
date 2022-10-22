@@ -11,6 +11,7 @@
 package strings_test
 
 import (
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -29,7 +30,7 @@ func TestEmptyMoniker(t *tes.T) {
 func TestMoniker(t *tes.T) {
 	var v1, ok = str.MonikerFromString("/bali/abstractions/String/v1.2.3")
 	ass.True(t, ok)
-	ass.Equal(t, "/bali/abstractions/String/v1.2.3", v1.AsString())
+	ass.Equal(t, "/bali/abstractions/String/v1.2.3", lan.FormatValue(v1))
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 4, v1.GetSize())
 	ass.Equal(t, "bali", v1.GetItem(1))
@@ -44,5 +45,5 @@ func TestMoniker(t *tes.T) {
 func TestMonikersLibrary(t *tes.T) {
 	var v1, _ = str.MonikerFromString("/bali/abstractions")
 	var v2, _ = str.MonikerFromString("/String/v1.2.3")
-	ass.Equal(t, "/bali/abstractions/String/v1.2.3", str.Monikers.Concatenate(v1, v2).AsString())
+	ass.Equal(t, "/bali/abstractions/String/v1.2.3", lan.FormatValue(str.Monikers.Concatenate(v1, v2)))
 }

@@ -11,6 +11,7 @@
 package strings_test
 
 import (
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -47,7 +48,7 @@ func TestBadNarrative(t *tes.T) {
 func TestEmptyNarrative(t *tes.T) {
 	var v, ok = str.NarrativeFromString(n0)
 	ass.True(t, ok)
-	ass.Equal(t, n0, v.AsString())
+	ass.Equal(t, n0, lan.FormatValue(v))
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 }
@@ -55,18 +56,18 @@ func TestEmptyNarrative(t *tes.T) {
 func TestNarrative(t *tes.T) {
 	var v, ok = str.NarrativeFromString(n1)
 	ass.True(t, ok)
-	ass.Equal(t, n1, v.AsString())
+	ass.Equal(t, n1, lan.FormatValue(v))
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 10, v.GetSize())
 	ass.Equal(t, 'a', v.GetItem(2))
 	ass.Equal(t, '4', v.GetItem(-1))
-	ass.Equal(t, v.String(), str.NarrativeFromRunes(v.AsArray()).AsString())
-	ass.Equal(t, n2, str.NarrativeFromRunes(v.GetItems(5, 7)).AsString())
+	ass.Equal(t, v.AsArray(), str.NarrativeFromRunes(v.AsArray()).AsArray())
+	ass.Equal(t, n2, lan.FormatValue(str.NarrativeFromRunes(v.GetItems(5, 7))))
 	ass.Equal(t, 6, v.GetIndex('本'))
 }
 
 func TestNarrativesLibrary(t *tes.T) {
 	var v1, _ = str.NarrativeFromString(n3)
 	var v2, _ = str.NarrativeFromString(n4)
-	ass.Equal(t, n1, str.Narratives.Concatenate(v1, v2).AsString())
+	ass.Equal(t, n1, lan.FormatValue(str.Narratives.Concatenate(v1, v2)))
 }

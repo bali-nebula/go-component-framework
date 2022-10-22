@@ -107,25 +107,27 @@ func (v Narrative) GetIndex(b rune) int {
 // multi-line string.
 //
 // The following narrative string with dashes showing the indentation:
-//  ----$someNarrative: ">
-//  ----    This is the first line
-//  ----    of a multi-line
-//  ----    narrative string.
-//  ----<"
+//
+//	----$someNarrative: ">
+//	----    This is the first line
+//	----    of a multi-line
+//	----    narrative string.
+//	----<"
 //
 // Will be trimmed to:
-//  ">
-//      This is the first line
-//      of a multi-line
-//      narrative string.
-//  <"
+//
+//	">
+//	    This is the first line
+//	    of a multi-line
+//	    narrative string.
+//	<"
 func trimIndentation(v string) string {
 	var result = `">` + "\n"
 	var lines = str.Split(v, "\n")
 	var size = len(lines)
-	var last = lines[size-1]  // The last line of the narrative should only be spaces.
-	var indentation = len(last) - 2  // A count of the number of spaces in the last line.
-	lines = lines[1 : size-1] // Trim off the first and last lines.
+	var last = lines[size-1]        // The last line of the narrative should only be spaces.
+	var indentation = len(last) - 2 // A count of the number of spaces in the last line.
+	lines = lines[1 : size-1]       // Trim off the first and last lines.
 	for _, line := range lines {
 		result += line[indentation:] + "\n" // Strip off the leading spaces.
 	}

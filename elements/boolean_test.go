@@ -12,6 +12,7 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -20,7 +21,7 @@ func TestFalseBooleans(t *tes.T) {
 	var v = ele.Boolean(false)
 	ass.False(t, bool(v))
 	ass.False(t, v.AsBoolean())
-	ass.Equal(t, "false", v.AsString())
+	ass.Equal(t, "false", lan.FormatValue(v))
 	ass.Equal(t, 0, v.AsInteger())
 }
 
@@ -28,7 +29,7 @@ func TestTrueBooleans(t *tes.T) {
 	var v = ele.Boolean(true)
 	ass.True(t, bool(v))
 	ass.True(t, v.AsBoolean())
-	ass.Equal(t, "true", v.AsString())
+	ass.Equal(t, "true", lan.FormatValue(v))
 	ass.Equal(t, 1, v.AsInteger())
 }
 
@@ -37,13 +38,13 @@ func TestStringBooleans(t *tes.T) {
 	ass.True(t, ok)
 	ass.False(t, bool(v))
 	ass.False(t, v.AsBoolean())
-	ass.Equal(t, "false", v.AsString())
+	ass.Equal(t, "false", lan.FormatValue(v))
 	ass.Equal(t, 0, v.AsInteger())
 
 	v, ok = ele.BooleanFromString("true")
 	ass.True(t, bool(v))
 	ass.True(t, v.AsBoolean())
-	ass.Equal(t, "true", v.AsString())
+	ass.Equal(t, "true", lan.FormatValue(v))
 	ass.Equal(t, 1, v.AsInteger())
 
 	v, ok = ele.BooleanFromString("bad")

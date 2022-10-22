@@ -12,6 +12,7 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -40,7 +41,7 @@ func TestIntegerMoments(t *tes.T) {
 func TestNegativeMoments(t *tes.T) {
 	var v, ok = ele.MomentFromString("<-1009-08-07T06:05:04.321>")
 	ass.True(t, ok)
-	ass.Equal(t, "<-1009-08-07T06:05:04.321>", v.AsString())
+	ass.Equal(t, "<-1009-08-07T06:05:04.321>", lan.FormatValue(v))
 	ass.Equal(t, -93989267695679, int(v))
 	ass.Equal(t, -93989267695679.0, v.AsMilliseconds())
 	ass.Equal(t, -93989267695.679, v.AsSeconds())

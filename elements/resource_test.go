@@ -12,6 +12,7 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -20,7 +21,7 @@ func TestResourceWithAuthorityAndPath(t *tes.T) {
 	var v, ok = ele.ResourceFromString("<https://craterdog.com/About.html>")
 	ass.True(t, ok)
 	ass.Equal(t, "<https://craterdog.com/About.html>", string(v))
-	ass.Equal(t, "<https://craterdog.com/About.html>", v.AsString())
+	ass.Equal(t, "<https://craterdog.com/About.html>", lan.FormatValue(v))
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
 	ass.Equal(t, "/About.html", v.GetPath())
@@ -32,7 +33,7 @@ func TestResourceWithPath(t *tes.T) {
 	var v, ok = ele.ResourceFromString("<mailto:craterdog@google.com>")
 	ass.True(t, ok)
 	ass.Equal(t, "<mailto:craterdog@google.com>", string(v))
-	ass.Equal(t, "<mailto:craterdog@google.com>", v.AsString())
+	ass.Equal(t, "<mailto:craterdog@google.com>", lan.FormatValue(v))
 	ass.Equal(t, "mailto", v.GetScheme())
 	ass.Equal(t, "", v.GetAuthority())
 	ass.Equal(t, "craterdog@google.com", v.GetPath())
@@ -44,7 +45,7 @@ func TestResourceWithAuthorityAndPathAndQuery(t *tes.T) {
 	var v, ok = ele.ResourceFromString("<https://craterdog.com/?foo=bar;bar=baz>")
 	ass.True(t, ok)
 	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz>", string(v))
-	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz>", v.AsString())
+	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz>", lan.FormatValue(v))
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
 	ass.Equal(t, "/", v.GetPath())
@@ -56,7 +57,7 @@ func TestResourceWithAuthorityAndPathAndFragment(t *tes.T) {
 	var v, ok = ele.ResourceFromString("<https://craterdog.com/#Home>")
 	ass.True(t, ok)
 	ass.Equal(t, "<https://craterdog.com/#Home>", string(v))
-	ass.Equal(t, "<https://craterdog.com/#Home>", v.AsString())
+	ass.Equal(t, "<https://craterdog.com/#Home>", lan.FormatValue(v))
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
 	ass.Equal(t, "/", v.GetPath())
@@ -68,7 +69,7 @@ func TestResourceWithAuthorityAndPathAndQueryAndFragment(t *tes.T) {
 	var v, ok = ele.ResourceFromString("<https://craterdog.com/?foo=bar;bar=baz#Home>")
 	ass.True(t, ok)
 	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz#Home>", string(v))
-	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz#Home>", v.AsString())
+	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz#Home>", lan.FormatValue(v))
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
 	ass.Equal(t, "/", v.GetPath())

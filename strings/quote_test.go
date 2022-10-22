@@ -11,6 +11,7 @@
 package strings_test
 
 import (
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -24,7 +25,7 @@ func TestBadQuote(t *tes.T) {
 func TestEmptyQuote(t *tes.T) {
 	var v, ok = str.QuoteFromString(`""`)
 	ass.True(t, ok)
-	ass.Equal(t, `""`, v.AsString())
+	ass.Equal(t, `""`, lan.FormatValue(v))
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 }
@@ -32,18 +33,18 @@ func TestEmptyQuote(t *tes.T) {
 func TestQuote(t *tes.T) {
 	var v, ok = str.QuoteFromString(`"abcd本1234"`)
 	ass.True(t, ok)
-	ass.Equal(t, `"abcd本1234"`, v.AsString())
+	ass.Equal(t, `"abcd本1234"`, lan.FormatValue(v))
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 9, v.GetSize())
 	ass.Equal(t, 'a', v.GetItem(1))
 	ass.Equal(t, '4', v.GetItem(-1))
-	ass.Equal(t, v.String(), str.QuoteFromRunes(v.AsArray()).AsString())
-	ass.Equal(t, `"d本1"`, str.QuoteFromRunes(v.GetItems(4, 6)).AsString())
+	ass.Equal(t, v.AsArray(), str.QuoteFromRunes(v.AsArray()).AsArray())
+	ass.Equal(t, `"d本1"`, lan.FormatValue(str.QuoteFromRunes(v.GetItems(4, 6))))
 	ass.Equal(t, 5, v.GetIndex('本'))
 }
 
 func TestQuotesLibrary(t *tes.T) {
 	var v1, _ = str.QuoteFromString(`"abcd本"`)
 	var v2, _ = str.QuoteFromString(`"1234"`)
-	ass.Equal(t, `"abcd本1234"`, str.Quotes.Concatenate(v1, v2).AsString())
+	ass.Equal(t, `"abcd本1234"`, lan.FormatValue(str.Quotes.Concatenate(v1, v2)))
 }

@@ -12,6 +12,7 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -19,7 +20,7 @@ import (
 func TestNoPattern(t *tes.T) {
 	var v, ok = ele.PatternFromString(`""?`)
 	ass.False(t, ok)
-	ass.Equal(t, ``, string(v))
+	ass.Equal(t, ``, lan.FormatValue(v))
 }
 
 func TestNonePattern(t *tes.T) {

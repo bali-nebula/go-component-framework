@@ -58,22 +58,22 @@ func TestParserWithElementTypes(t *tes.T) {
 	// Duration
 	component = lan.ParseSource(d)
 	var duration ele.Duration = component.GetEntity().(ele.Duration)
-	ass.Equal(t, d, duration.AsString())
+	ass.Equal(t, d, lan.FormatValue(duration))
 
 	// Moment
 	component = lan.ParseSource(m)
 	var moment ele.Moment = component.GetEntity().(ele.Moment)
-	ass.Equal(t, m, moment.AsString())
+	ass.Equal(t, m, lan.FormatValue(moment))
 
 	// Number
 	component = lan.ParseSource("(3, -i)")
 	var number ele.Number = component.GetEntity().(ele.Number)
-	ass.Equal(t, "(3, -i)", number.AsString())
+	ass.Equal(t, "(3, -i)", lan.FormatValue(number))
 
 	// Pattern
 	component = lan.ParseSource(p)
 	var pattern ele.Pattern = component.GetEntity().(ele.Pattern)
-	ass.Equal(t, p, pattern.AsString())
+	ass.Equal(t, p, lan.FormatValue(pattern))
 
 	// Percentage
 	component = lan.ParseSource("50%")
@@ -88,12 +88,12 @@ func TestParserWithElementTypes(t *tes.T) {
 	// Resource
 	component = lan.ParseSource(r)
 	var resource ele.Resource = component.GetEntity().(ele.Resource)
-	ass.Equal(t, r, resource.AsString())
+	ass.Equal(t, r, lan.FormatValue(resource))
 
 	// Tag
 	component = lan.ParseSource("#ABC")
 	var tag ele.Tag = component.GetEntity().(ele.Tag)
-	ass.Equal(t, "#ABC", tag.AsString())
+	ass.Equal(t, "#ABC", lan.FormatValue(tag))
 }
 
 func TestParserWithStringTypes(t *tes.T) {
@@ -112,22 +112,22 @@ func TestParserWithStringTypes(t *tes.T) {
 	// Narrative
 	component = lan.ParseSource(n + c)
 	var narrative str.Narrative = component.GetEntity().(str.Narrative)
-	ass.Equal(t, n, narrative.AsString())
+	ass.Equal(t, n, lan.FormatValue(narrative))
 
 	// Quote
 	component = lan.ParseSource(`"Hello World!"`)
 	var quote str.Quote = component.GetEntity().(str.Quote)
-	ass.Equal(t, `"Hello World!"`, quote.AsString())
+	ass.Equal(t, `"Hello World!"`, lan.FormatValue(quote))
 
 	// Symbol
 	component = lan.ParseSource(s)
 	var symbol ele.Symbol = component.GetEntity().(ele.Symbol)
-	ass.Equal(t, s, symbol.AsString())
+	ass.Equal(t, s, lan.FormatValue(symbol))
 
 	// Version
 	component = lan.ParseSource(v)
 	var version str.Version = component.GetEntity().(str.Version)
-	ass.Equal(t, v, version.AsString())
+	ass.Equal(t, v, lan.FormatValue(version))
 }
 
 const l = `[

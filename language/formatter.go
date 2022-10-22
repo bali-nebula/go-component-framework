@@ -13,6 +13,7 @@ package language
 import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	st2 "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ref "reflect"
 	stc "strconv"
 	str "strings"
@@ -54,9 +55,11 @@ func (v *formatter) GetIndentation() int {
 
 // This method returns the canonical string for the specified value.
 func (v *formatter) FormatValue(value any) string {
-	v.formatValue(ref.ValueOf(value))
+	v.formatAny(value)
 	return v.state.GetResult()
 }
+
+// PRIVATE METHODS
 
 // The maximum recursion level handles overly complex data models and cyclical
 // references in a clean and efficient way.
@@ -66,130 +69,155 @@ const maximumFormattingDepth int = 8
 // calls the corresponding format function for that type. Note that because the
 // Go language doesn't really support polymorphism the selection of the actual
 // function called must be done explicitly using reflection and a type switch.
-func (v *formatter) formatValue(value ref.Value) {
-	if value.MethodByName("AsString").IsValid() {
-		v.formatPrimitive(value)
-	}
-	switch value.Kind() {
+func (v *formatter) formatAny(value any) {
+	var r = ref.ValueOf(value)
+	switch r.Kind() {
 
 	// Handle all primitive types.
 	case ref.Bool:
-		v.formatBoolean(value)
+		var boolean, ok = value.(ele.Boolean)
+		if !ok {
+			boolean = ele.Boolean(r.Bool())
+		}
+		v.formatBoolean(boolean)
 	case ref.Uint, ref.Uint8, ref.Uint16, ref.Uint32, ref.Uint64:
-		v.formatNumber(elements.Number(complex(value.Uint(), 0)))
+		var number = ele.Number(complex(r.Uint(), 0))
+		v.formatNumber(number)
 	case ref.Int, ref.Int8, ref.Int16, ref.Int32, ref.Int64:
-		v.formatNumber(elements.Number(complex(value.Int(), 0)))
+		var integer, ok = value.(ele.Duration)
+		if ok {
+			v.formatDuration(integer)
+		} else {
+			integer, ok = value.(ele.Moment)
+			if ok {
+				v.formatMoment(integer)
+			} else {
+				integer = ele.Number(complex(r.Int(), 0))
+				v.formatNumber(integer)
+			}
+		}
 	case ref.Float32, ref.Float64:
-		v.formatNumber(elements.Number(complex(value.Float(), 0)))
+		var float, ok = value.(ele.Angle)
+		if ok {
+			v.formatAngle(float)
+		} else {
+			float, ok = value.(ele.Percentage)
+			if ok {
+				v.formatPercentage(float)
+			} else {
+				float, ok = value.(ele.Probability)
+				if ok {
+					v.formatProbability(float)
+				} else {
+					float = ele.Number(complex(r.Float(), 0))
+					v.formatNumber(float)
+				}
+			}
+		}
 	case ref.Complex64, ref.Complex128:
-		v.formatNumber(elements.Number(value.Complex()))
+		var number, ok = value.(ele.Number)
+		if ok {
+			v.formatNumber(number)
+		} else {
+			number = ele.Number(r.Complex())
+			v.formatNumber(number)
+		}
 	case ref.String:
-		v.formatQuote(elements.Quote(value.String()))
+		var s, ok = value.(ele.Pattern)
+		if ok {
+			v.formatPattern(s)
+		} else {
+			s, ok = value.(ele.Resource)
+			if ok {
+				v.formatResource(s)
+			} else {
+				s, ok = value.(ele.Symbol)
+				if ok {
+					v.formatSymbol(s)
+				} else {
+					s, ok = value.(ele.Tag)
+					if ok {
+						v.formatTag(s)
+					} else {
+						s, ok = value.(st2.Binary)
+						if ok {
+							v.formatBinary(s)
+						} else {
+							s, ok = value.(st2.Moniker)
+							if ok {
+								v.formatMoniker(s)
+							} else {
+								s, ok = value.(st2.Narrative)
+								if ok {
+									v.formatNarrative(s)
+								} else {
+									s, ok = value.(st2.Quote)
+									if ok {
+										v.formatQuote(s)
+									} else {
+										s, ok = value.(st2.Version)
+										if ok {
+											v.formatVersion(s)
+										} else {
+											s = st2.QuoteFromString(r.String())
+											v.formatQuote(s)
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 	// Handle all primitive collections.
 	case ref.Array, ref.Slice:
-		v.formatList(collections.ListFromArray(value.Array(0, value.Len())))
-		/*
-			case ref.Map:
-				v.formatCatalog(collections.CatalogFromMap(value.Map()))
+		v.formatArray(r)
+	case ref.Map:
+		v.formatMap(r)
 
-			// Handle all structures.
-			case ref.Struct:
-				v.formatStructure(value)
-		*/
+	// Handle all structures.
+	case ref.Struct:
+		v.formatStructure(r)
 
 	// Handle all interfaces and pointers.
 	case ref.Interface, ref.Pointer:
-		if value.MethodByName("GetParameter").IsValid() {
+		if r.MethodByName("GetParameter").IsValid() {
 			// The value is a component.
-			v.formatComponent(value)
-		} else if value.MethodByName("GetKey").IsValid() {
+			var component = r.(abs.ComponentLike)
+			v.formatComponent(component)
+		} else if r.MethodByName("GetKey").IsValid() {
 			// The value is an association.
-			v.formatAssociation(value)
-		} else if value.MethodByName("AsArray").IsValid() {
+			var association = r.(abs.AssociationLike)
+			v.formatAssociation(association)
+		} else if r.MethodByName("AsArray").IsValid() {
 			// The value is a collection.
-			v.formatCollection(value)
+			var array = r.MethodByName("AsArray").Call([]ref.Value{})[0]
+			v.formatArray(array)
 		} else {
 			// The value is a pointer to the value to be formatted (or type 'any').
-			value = value.Elem()
-			v.formatValue(value)
+			r = r.Elem()
+			v.formatAny(r)
 		}
 
 	default:
-		if !value.IsValid() {
+		if !r.IsValid() {
 			v.formatNone()
 		} else {
 			panic(fmt.Sprintf(
 				"Attempted to format:\n\tvalue: %v\n\ttype: %v\n\tkind: %v\n",
-				value.Interface(),
-				value.Type(),
-				value.Kind()))
+				r.Interface(),
+				r.Type(),
+				r.Kind()))
 		}
 	}
 }
 
-// This private method appends the string for the specified component to
-// the result.
-func (v *formatter) formatComponent(r ref.Value) {
-}
-
 // This private method appends the nil string for the specified value to the
 // result.
-func (v *formatter) formatNone(r ref.Value) {
+func (v *formatter) formatNone() {
 	v.state.AppendString("none")
-}
-
-// This private method appends the name of the specified boolean value to the
-// result.
-func (v *formatter) formatBoolean(r ref.Value) {
-	var b = r.Bool()
-	v.state.AppendString(stc.FormatBool(b))
-}
-
-// This private method appends the base 10 string for the specified integer
-// value to the result.
-func (v *formatter) formatInteger(r ref.Value) {
-	var i = r.Int()
-	v.state.AppendString(stc.FormatInt(int64(i), 10))
-}
-
-// This private method appends the base 10 string for the specified unsigned
-// integer value to the result.
-func (v *formatter) formatUnsigned(r ref.Value) {
-	var u = r.Uint()
-	v.state.AppendString("0x" + stc.FormatUint(uint64(u), 16))
-}
-
-// This private method appends the base 10 string for the specified floating
-// point value to the result using scientific notation if necessary.
-func (v *formatter) formatFloat(r ref.Value) {
-	var flt = r.Float()
-	var s = stc.FormatFloat(flt, 'G', -1, 64)
-	if !str.Contains(s, ".") && !str.Contains(s, "E") {
-		s += ".0"
-	}
-	v.state.AppendString(s)
-}
-
-// This private method appends the base 10 string for the specified complex
-// number value to the result using scientific notation if necessary.
-func (v *formatter) formatComplex(r ref.Value) {
-	var c = r.Complex()
-	v.state.AppendString(stc.FormatComplex(c, 'G', -1, 128))
-}
-
-// This private method appends the string for the specified rune value to the
-// result.
-func (v *formatter) formatRune(r ref.Value) {
-	var rn = r.Int()
-	v.state.AppendString(stc.QuoteRune(int32(rn)))
-}
-
-// This private method appends the string for the specified string value to the
-// result.
-func (v *formatter) formatString(r ref.Value) {
-	var str = r.String()
-	v.state.AppendString("\"" + str + "\"")
 }
 
 // This private method appends the string for the specified array of values to
@@ -206,7 +234,7 @@ func (v *formatter) formatArray(r ref.Value, typ string) {
 				v.state.IncrementDepth()
 				v.state.AppendNewline()
 				var item = r.Index(i)
-				v.formatValue(item)
+				v.formatAny(item)
 				v.state.DecrementDepth()
 			}
 			v.state.AppendNewline()
@@ -237,9 +265,9 @@ func (v *formatter) formatMap(r ref.Value) {
 				v.state.AppendNewline()
 				var key = keys[i]
 				var value = r.MapIndex(key)
-				v.formatValue(key)
+				v.formatAny(key)
 				v.state.AppendString(": ")
-				v.formatValue(value)
+				v.formatAny(value)
 				v.state.DecrementDepth()
 			}
 			v.state.AppendNewline()
@@ -253,59 +281,4 @@ func (v *formatter) formatMap(r ref.Value) {
 // This private method appends the string for the specified structure to
 // the result.
 func (v *formatter) formatStructure(r ref.Value) {
-}
-
-// This private method appends the string for the specified catalog of
-// key-value pairs to the result. It uses recursion to format each pair.
-func (v *formatter) formatAssociation(r ref.Value) {
-	var key = r.MethodByName("GetKey").Call([]ref.Value{})[0]
-	v.formatValue(key)
-	v.state.AppendString(": ")
-	var value = r.MethodByName("GetValue").Call([]ref.Value{})[0]
-	v.formatValue(value)
-}
-
-// This private method appends the string for the specified collection of
-// items to the result. It uses recursion to format each item.
-func (v *formatter) formatCollection(r ref.Value) {
-	var array = r.MethodByName("AsArray").Call([]ref.Value{})[0]
-	var typ = extractType(r)
-	v.formatArray(array, typ)
-}
-
-// PRIVATE FUNCTIONS
-
-// This private function extracts the type name string from the full reflected
-// type.
-func extractType(r ref.Value) string {
-	var t = r.Type().String()
-	switch {
-	case str.HasPrefix(t, "[]"):
-		return "array"
-	case str.HasPrefix(t, "map["):
-		return "map"
-	case str.HasPrefix(t, "*collections.set"):
-		return "set"
-	case str.HasPrefix(t, "abs.SetLike"):
-		return "set"
-	case str.HasPrefix(t, "*collections.queue"):
-		return "queue"
-	case str.HasPrefix(t, "abs.QueueLike"):
-		return "queue"
-	case str.HasPrefix(t, "*collections.stack"):
-		return "stack"
-	case str.HasPrefix(t, "abs.StackLike"):
-		return "stack"
-	case str.HasPrefix(t, "*collections.list"):
-		return "list"
-	case str.HasPrefix(t, "abs.ListLike"):
-		return "list"
-	case str.HasPrefix(t, "*collections.catalog"):
-		return "catalog"
-	case str.HasPrefix(t, "abs.CatalogLike"):
-		return "catalog"
-	default:
-		fmt.Printf("UNKNOWN: %v\n", t)
-		return "unknown"
-	}
 }
