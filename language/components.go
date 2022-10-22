@@ -15,6 +15,7 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	com "github.com/craterdog-bali/go-bali-document-notation/components"
+	str "strings"
 )
 
 // PARSING METHODS
@@ -34,8 +35,24 @@ func (v *parser) parseComment() (string, *Token, bool) {
 		v.backupOne()
 		return comment, token, false
 	}
-	comment = token.Value
+	comment = trimIndentation(token.Value)
 	return comment, token, true
+}
+
+// This method adds the canonical format for the specified annotation to the
+// state of the formatter.
+func (v *formatter) formatComment(comment string) {
+	var s = comment[3 : len(comment)-3] // Remove the bounding '!>\n' and '\n<!' delimiters.
+	var lines = str.Split(s, "\n")
+	v.state.AppendString(`!>`)
+	v.state.IncrementDepth()
+	for _, line := range lines {
+		v.state.AppendNewline()
+		v.state.AppendString(line)
+	}
+	v.state.DecrementDepth()
+	v.state.AppendNewline()
+	v.state.AppendString(`<!`)
 }
 
 // This method attempts to parse a component. It returns the component and
@@ -52,6 +69,11 @@ func (v *parser) parseComponent() (abs.ComponentLike[any], *Token, bool) {
 		component.SetNote(note)
 	}
 	return component, token, ok
+}
+
+// This method adds the canonical format for the specified component to the
+// state of the formatter.
+func (v *formatter) formatComponent(component abs.ComponentLike[any]) {
 }
 
 // This method attempts to parse the context for a parameterized component. It
@@ -278,3 +300,36 @@ func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, any], *Token, 
 	}
 	return parameters, token, true
 }
+
+// PRIVATE FUNCTIONS
+
+// This function removes the indentation from each line of the specified
+// multi-line string.
+//
+// The following comment string with dashes showing the indentation:
+//  ----!>
+//  ----    This is the first line
+//  ----    of a multi-line
+//  ----    comment string.
+//  ----<!
+//
+// Will be trimmed to:
+//  !>
+//      This is the first line
+//      of a multi-line
+//      comment string.
+//  <!
+func trimIndentation(v string) string {
+	var result = `!>` + "\n"
+	var lines = str.Split(v, "\n")
+	var size = len(lines)
+	var last = lines[size-1]  // The last line of the comment should only be spaces.
+	var indentation = len(last) - 2  // A count of the number of spaces in the last line.
+	lines = lines[1 : size-1] // Trim off the first and last lines.
+	for _, line := range lines {
+		result += line[indentation:] + "\n" // Strip off the leading spaces.
+	}
+	result += `<!`
+	return result
+}
+

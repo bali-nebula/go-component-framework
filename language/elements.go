@@ -30,8 +30,8 @@ func (v *parser) parseAngle() (ele.Angle, *Token, bool) {
 	return angle, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatAngle(angle ele.Angle) {
 	var s string
 	if float64(angle) == mat.Pi {
@@ -56,8 +56,8 @@ func (v *parser) parseBoolean() (ele.Boolean, *Token, bool) {
 	return boolean, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatBoolean(boolean ele.Boolean) {
 	var s = str.FormatBool(bool(boolean))
 	v.state.AppendString(s)
@@ -77,8 +77,8 @@ func (v *parser) parseDuration() (ele.Duration, *Token, bool) {
 	return duration, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatDuration(duration ele.Duration) {
 	var result str.Builder
 	result.WriteString("~")
@@ -194,8 +194,8 @@ func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
 	return moment, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatMoment(moment ele.Moment) {
 	var result str.Builder
 	result.WriteString("<")
@@ -250,8 +250,8 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 	return number, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatNumber(number ele.Number) {
 	var s = number.AsRectangular()
 	v.state.AppendString(s)
@@ -271,8 +271,8 @@ func (v *parser) parsePattern() (ele.Pattern, *Token, bool) {
 	return pattern, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatPattern(pattern ele.Pattern) {
 	var s = string(pattern)
 	v.state.AppendString(s)
@@ -292,8 +292,8 @@ func (v *parser) parsePercentage() (ele.Percentage, *Token, bool) {
 	return percentage, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatPercentage(percentage ele.Percentage) {
 	var s = str.FormatFloat(float64(percentage), 'G', -1, 64) + "%"
 	v.state.AppendString(s)
@@ -313,8 +313,8 @@ func (v *parser) parseProbability() (ele.Probability, *Token, bool) {
 	return probability, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatProbability(probability ele.Probability) {
 	var s = str.FormatFloat(float64(probability), 'f', -1, 64)
 	switch {
@@ -346,8 +346,8 @@ func (v *parser) parseResource() (ele.Resource, *Token, bool) {
 	return resource, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatResource(resource ele.Resource) {
 	var s = string(resource)
 	v.state.AppendString(s)
@@ -370,8 +370,8 @@ func (v *parser) parseSymbol() (ele.Symbol, *Token, bool) {
 	return symbol, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatSymbol(symbol ele.Symbol) {
 	var s = string(symbol)
 	v.state.AppendString(s)
@@ -392,8 +392,8 @@ func (v *parser) parseTag() (ele.Tag, *Token, bool) {
 	return tag, token, true
 }
 
-// This method adds the canonical format for this element to the state of the
-// formatter.
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
 func (v *formatter) formatTag(tag ele.Tag) {
 	var s = string(tag)
 	v.state.AppendString(s)

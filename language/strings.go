@@ -31,8 +31,8 @@ func (v *parser) parseBinary() (str.Binary, *Token, bool) {
 
 const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
 
-// This method adds the canonical format for this string to the state of the
-// formatter.
+// This method adds the canonical format for the specified string to the state
+// of the formatter.
 func (v *formatter) formatBinary(binary str.Binary) {
 	var s = string(binary)
 	var length = len(s) - 2
@@ -71,8 +71,8 @@ func (v *parser) parseMoniker() (str.Moniker, *Token, bool) {
 	return moniker, token, true
 }
 
-// This method adds the canonical format for this string to the state of the
-// formatter.
+// This method adds the canonical format for the specified string to the state
+// of the formatter.
 func (v *formatter) formatMoniker(moniker str.Moniker) {
 	var s = string(moniker)
 	v.state.AppendString(s)
@@ -92,8 +92,8 @@ func (v *parser) parseNarrative() (str.Narrative, *Token, bool) {
 	return narrative, token, true
 }
 
-// This method adds the canonical format for this string to the state of the
-// formatter.
+// This method adds the canonical format for the specified string to the state
+// of the formatter.
 func (v *formatter) formatNarrative(narrative str.Narrative) {
 	var s = string(narrative)
 	s = s[3 : len(s)-3] // Remove the bounding '">\n' and '\n<"' delimiters.
@@ -123,8 +123,8 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 	return quote, token, true
 }
 
-// This method adds the canonical format for this string to the state of the
-// formatter.
+// This method adds the canonical format for the specified string to the state
+// of the formatter.
 func (v *formatter) formatQuote(quote str.Quote) {
 	var s = string(quote)
 	v.state.AppendString(s)
@@ -189,8 +189,8 @@ func (v *parser) parseVersion() (str.Version, *Token, bool) {
 	return version, token, true
 }
 
-// This method adds the canonical format for this string to the state of the
-// formatter.
+// This method adds the canonical format for the specified string to the state
+// of the formatter.
 func (v *formatter) formatVersion(version str.Version) {
 	var s = string(version)
 	v.state.AppendString(s)
