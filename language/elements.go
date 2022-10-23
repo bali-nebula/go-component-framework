@@ -11,10 +11,12 @@
 package language
 
 import (
+	fmt "fmt"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	mat "math"
 	cmp "math/cmplx"
-	str "strconv"
+	stc "strconv"
+	str "strings"
 )
 
 // This method attempts to parse an angle element. It returns the angle element
@@ -38,7 +40,7 @@ func (v *formatter) formatAngle(angle ele.Angle) {
 	if float64(angle) == mat.Pi {
 		s = "~π"
 	} else {
-		s = "~" + str.FormatFloat(float64(angle), 'G', -1, 64)
+		s = "~" + stc.FormatFloat(float64(angle), 'G', -1, 64)
 	}
 	v.state.AppendString(s)
 }
@@ -60,7 +62,7 @@ func (v *parser) parseBoolean() (ele.Boolean, *Token, bool) {
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatBoolean(boolean ele.Boolean) {
-	var s = str.FormatBool(bool(boolean))
+	var s = stc.FormatBool(bool(boolean))
 	v.state.AppendString(s)
 }
 
@@ -151,36 +153,6 @@ func (v *parser) parseElement() (any, *Token, bool) {
 	return element, token, ok
 }
 
-// This method adds the canonical format for the specified element primitive to the
-// state of the formatter.
-func (v *formatter) formatElement(element any) {
-	var value = ref.ValueOf(element)
-	switch {
-	case value.MethodByName("IsAngle").IsValid():
-		v.formatAngle(element)
-	case value.MethodByName("IsBoolean").IsValid():
-		v.formatBoolean(element)
-	case value.MethodByName("IsDuration").IsValid():
-		v.formatDuration(element)
-	case value.MethodByName("IsMoment").IsValid():
-		v.formatMoment(element)
-	case value.MethodByName("IsNumber").IsValid():
-		v.formatNumber(element)
-	case value.MethodByName("IsPattern").IsValid():
-		v.formatPattern(element)
-	case value.MethodByName("IsPercentage").IsValid():
-		v.formatPercentage(element)
-	case value.MethodByName("IsProbability").IsValid():
-		v.formatProbability(element)
-	case value.MethodByName("IsResource").IsValid():
-		v.formatResource(element)
-	case value.MethodByName("IsSymbol").IsValid():
-		v.formatSymbol(element)
-	default:
-		v.formatTag(element)
-	}
-}
-
 // This method adds the canonical format for the specified imaginary number to
 // the state of the formatter.
 func (v *formatter) formatImaginary(i float64) {
@@ -203,7 +175,7 @@ func (v *formatter) formatImaginary(i float64) {
 	case -mat.Pi * 2.0:
 		s = "-τi"
 	default:
-		s = str.FormatFloat(v, 'G', -1, 64) + "i"
+		s = stc.FormatFloat(i, 'G', -1, 64) + "i"
 	}
 	v.state.AppendString(s)
 }
@@ -293,28 +265,27 @@ func (v *formatter) formatNumber(number ele.Number) {
 		var imagPart = number.GetImaginary()
 		switch {
 		case imagPart == 0:
-			v.state.AppendString(formatReal(realPart))
+			v.formatReal(realPart)
 		case realPart == 0:
-			v.state.AppendString(formatImaginary(imagPart))
+			v.formatImaginary(imagPart)
 		default:
 			v.state.AppendString("(")
-			v.state.AppendString(formatReal(realPart))
+			v.formatReal(realPart)
 			v.state.AppendString(", ")
-			v.state.AppendString(formatImaginary(imagPart))
+			v.formatImaginary(imagPart)
 			v.state.AppendString(")")
 		}
 	}
-	v.state.AppendString(s)
 }
 
 // This method adds the canonical format for the specified imaginary phase to
 // the state of the formatter.
 func (v *formatter) formatPhase(p ele.Angle) {
 	var s string
-	if float64(angle) == mat.Pi {
+	if float64(p) == mat.Pi {
 		s = "~πi"
 	} else {
-		s = "~" + str.FormatFloat(float64(angle), 'G', -1, 64) + "i"
+		s = "~" + stc.FormatFloat(float64(p), 'G', -1, 64) + "i"
 	}
 	v.state.AppendString(s)
 }
@@ -334,14 +305,14 @@ func (v *formatter) formatPolar(number ele.Number) {
 		var phase = number.GetPhase()
 		switch {
 		case phase.IsZero():
-			v.state.AppendString(formatReal(magnitude))
+			v.formatReal(magnitude)
 		case magnitude == 0:
 			v.state.AppendString("0")
 		default:
 			v.state.AppendString("(")
-			v.state.AppendString(formatReal(magnitude))
+			v.formatReal(magnitude)
 			v.state.AppendString("e^")
-			v.state.AppendString(formatPhase(phase))
+			v.formatPhase(phase)
 			v.state.AppendString(")")
 		}
 	}
@@ -385,7 +356,7 @@ func (v *parser) parsePercentage() (ele.Percentage, *Token, bool) {
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatPercentage(percentage ele.Percentage) {
-	var s = str.FormatFloat(float64(percentage), 'G', -1, 64) + "%"
+	var s = stc.FormatFloat(float64(percentage), 'G', -1, 64) + "%"
 	v.state.AppendString(s)
 }
 
@@ -406,7 +377,7 @@ func (v *parser) parseProbability() (ele.Probability, *Token, bool) {
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatProbability(probability ele.Probability) {
-	var s = str.FormatFloat(float64(probability), 'f', -1, 64)
+	var s = stc.FormatFloat(float64(probability), 'f', -1, 64)
 	switch {
 	// Zero is formatted as ".0".
 	case probability == 0:
@@ -443,7 +414,7 @@ func (v *formatter) formatReal(r float64) {
 	case -mat.Pi * 2.0:
 		s = "-τ"
 	default:
-		s = str.FormatFloat(v, 'G', -1, 64)
+		s = stc.FormatFloat(r, 'G', -1, 64)
 	}
 	v.state.AppendString(s)
 }
@@ -515,3 +486,11 @@ func (v *formatter) formatTag(tag ele.Tag) {
 	var s = string(tag)
 	v.state.AppendString(s)
 }
+
+// PRIVATE FUNCTIONS
+
+// This function formats the specified ordinal value to exactly two digits.
+func formatOrdinal(ordinal int) string {
+	return fmt.Sprintf("%02d", ordinal)
+}
+

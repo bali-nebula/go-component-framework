@@ -49,6 +49,11 @@ type Angle float64
 
 // CONTINUOUS INTERFACE
 
+// This method determines whether or not this angle is zero.
+func (v Angle) IsZero() bool {
+	return v == 0
+}
+
 // This method returns a real value for this continuous component.
 func (v Angle) AsReal() float64 {
 	return float64(v)

@@ -143,17 +143,17 @@ func (v Number) AsInteger() int {
 
 // CONTINUOUS INTERFACE
 
+// This method determines whether or not this number is zero.
+func (v Number) IsZero() bool {
+	return real(v) == 0 && imag(v) == 0
+}
+
 // This method returns a real value for this continuous component.
 func (v Number) AsReal() float64 {
 	return real(v)
 }
 
 // COMPLEX INTERFACE
-
-// This method determines whether or not this number is infinite.
-func (v Number) IsZero() bool {
-	return real(v) == 0 && imag(v) == 0
-}
 
 // This method determines whether or not this number is infinite.
 func (v Number) IsInfinite() bool {

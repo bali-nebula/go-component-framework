@@ -11,7 +11,6 @@
 package elements
 
 import (
-	fmt "fmt"
 	str "strings"
 	tim "time"
 )
@@ -211,11 +210,6 @@ func stringToMoment(v string) (int, bool) {
 func momentToTime(v Moment) tim.Time {
 	var milliseconds int64 = int64(v)
 	return tim.UnixMilli(milliseconds).UTC()
-}
-
-// This function formats the specified ordinal value to exactly two digits.
-func formatOrdinal(ordinal int) string {
-	return fmt.Sprintf("%02d", ordinal)
 }
 
 // The Go tim.Parse() function cannot handle negative years even though the

@@ -15,6 +15,7 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	ref "reflect"
 )
 
 // This method attempts to parse an association between a key and value. It
@@ -52,12 +53,12 @@ func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool
 
 // This method adds the canonical format for the specified association to the
 // state of the formatter.
-func (v *formatter) formatAssociation(association abs.AssociationLike[comparable, any]) {
+func (v *formatter) formatAssociation(association abs.AssociationLike[any, any]) {
 	var key = association.GetKey()
-	v.formatPrimitive(key)
+	v.formatAny(key)
 	v.state.AppendString(": ")
 	var value = association.GetValue()
-	v.formatComponent(value)
+	v.formatAny(value)
 }
 
 // This method attempts to parse a catalog collection. It returns the
@@ -135,7 +136,7 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatCatalog(catalog abs.Sequential[abs.AssociationLike[comparable, any]]) {
+func (v *formatter) formatCatalog(catalog abs.Sequential[abs.AssociationLike[any, any]]) {
 	if catalog.IsEmpty() {
 		v.state.AppendString(":")
 	} else {
@@ -280,7 +281,7 @@ func (v *formatter) formatList(list abs.Sequential[any]) {
 		for iterator.HasNext() {
 			v.state.AppendNewline()
 			var item = iterator.GetNext()
-			v.formatComponent(item)
+			v.formatAny(item)
 		}
 		v.state.DecrementDepth()
 		v.state.AppendNewline()
@@ -303,18 +304,6 @@ func (v *parser) parsePrimitive() (any, *Token, bool) {
 		primitive = nil
 	}
 	return primitive, token, ok
-}
-
-// This method adds the canonical format for the specified primitive to the
-// state of the formatter.
-func (v *formatter) formatPrimitive(primitive any) {
-	var value = ref.ValueOf(primitive)
-	switch {
-	case value.MethodByName("IsEmpty").IsValid():
-		v.formatString(primitive)
-	default:
-		v.formatElement(primitive)
-	}
 }
 
 // This method attempts to parse a sequence of items. It returns the
@@ -341,11 +330,14 @@ func (v *formatter) formatItems(items any) {
 	var value = ref.ValueOf(items)
 	switch {
 	case value.MethodByName("IsEnumerable").IsValid():
-		v.formatRange(items)
+		var r = items.(abs.RangeLike[any])
+		v.formatRange(r)
 	case value.MethodByName("AddAssociation").IsValid():
-		v.formatCatalog(items)
+		var catalog = items.(abs.CatalogLike[any, any])
+		v.formatCatalog(catalog)
 	default:
-		v.formatList(items)
+		var list = items.(abs.ListLike[any])
+		v.formatList(list)
 	}
 }
 
@@ -382,11 +374,11 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(r abs.RangeLike[comparable, any]) {
+func (v *formatter) formatRange(r abs.RangeLike[any]) {
 	var first = r.GetFirst()
-	v.formatPrimitive(first)
+	v.formatAny(first)
 	var connector = r.GetConnector()
 	v.state.AppendString(connector)
 	var last = r.GetLast()
-	v.formatPrimitive(last)
+	v.formatAny(last)
 }

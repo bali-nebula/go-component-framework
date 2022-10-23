@@ -65,7 +65,7 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 	if ok {
 		context, token, _ = v.parseContext() // The context is optional.
 		note, token, _ = v.parseNote()       // The note is optional.
-		component = com.ComponentWithContext[any](entity, context)
+		component = com.ComponentWithContext(entity, context)
 		component.SetNote(note)
 	}
 	return component, token, ok

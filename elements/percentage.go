@@ -33,6 +33,11 @@ type Percentage float64
 
 // CONTINUOUS INTERFACE
 
+// This method determines whether or not this percentage is zero.
+func (v Percentage) IsZero() bool {
+	return v == 0
+}
+
 // This method returns a real value for this continuous component.
 func (v Percentage) AsReal() float64 {
 	return float64(v / 100.0)

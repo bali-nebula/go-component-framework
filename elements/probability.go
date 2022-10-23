@@ -66,6 +66,11 @@ func (v Probability) AsInteger() int {
 
 // CONTINUOUS INTERFACE
 
+// This method determines whether or not this probability is zero.
+func (v Probability) IsZero() bool {
+	return v == 0
+}
+
 // This method returns a real value for this continuous component.
 func (v Probability) AsReal() float64 {
 	return float64(v)
