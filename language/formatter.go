@@ -64,6 +64,119 @@ func (v *formatter) FormatValue(value any) string {
 // references in a clean and efficient way.
 const maximumFormattingDepth int = 8
 
+func (v *formatter) formatBool(value any) {
+	var boolean, ok = value.(ele.Boolean)
+	if !ok {
+		boolean = ele.Boolean(value.(bool))
+	}
+	v.formatBoolean(boolean)
+}
+
+func (v *formatter) formatInteger(value any) {
+	var duration, ok = value.(ele.Duration)
+	if ok {
+		v.formatDuration(duration)
+	} else {
+		var moment, ok = value.(ele.Moment)
+		if ok {
+			v.formatMoment(moment)
+		} else {
+			var integer = ref.ValueOf(value).Int()
+			var number = ele.Number(complex(float64(integer), 0))
+			v.formatNumber(number)
+		}
+	}
+}
+
+func (v *formatter) formatComplex(value any) {
+	var number, ok = value.(ele.Number)
+	if ok {
+		v.formatNumber(number)
+	} else {
+		var c = ref.ValueOf(value).Complex()
+		number = ele.Number(c)
+		v.formatNumber(number)
+	}
+}
+
+func (v *formatter) formatFloat(value any) {
+	var angle, ok = value.(ele.Angle)
+	if ok {
+		v.formatAngle(angle)
+	} else {
+		var percentage, ok = value.(ele.Percentage)
+		if ok {
+			v.formatPercentage(percentage)
+		} else {
+			var probability, ok = value.(ele.Probability)
+			if ok {
+				v.formatProbability(probability)
+			} else {
+				var float = ref.ValueOf(value).Float()
+				var number = ele.Number(complex(float64(float), 0))
+				v.formatNumber(number)
+			}
+		}
+	}
+}
+
+func (v *formatter) formatUnsigned(value any) {
+	var unsigned = ref.ValueOf(value).Uint()
+	var number = ele.Number(complex(float64(unsigned), 0))
+	v.formatNumber(number)
+}
+
+func (v *formatter) formatString(value any) {
+	var pattern, ok = value.(ele.Pattern)
+	if ok {
+		v.formatPattern(pattern)
+	} else {
+		var resource, ok = value.(ele.Resource)
+		if ok {
+			v.formatResource(resource)
+		} else {
+			var symbol, ok = value.(ele.Symbol)
+			if ok {
+				v.formatSymbol(symbol)
+			} else {
+				var tag, ok = value.(ele.Tag)
+				if ok {
+					v.formatTag(tag)
+				} else {
+					var binary, ok = value.(str.Binary)
+					if ok {
+						v.formatBinary(binary)
+					} else {
+						var moniker, ok = value.(str.Moniker)
+						if ok {
+							v.formatMoniker(moniker)
+						} else {
+							var narrative, ok = value.(str.Narrative)
+							if ok {
+								v.formatNarrative(narrative)
+							} else {
+								var quote, ok = value.(str.Quote)
+								if ok {
+									v.formatQuote(quote)
+								} else {
+									var version, ok = value.(str.Version)
+									if ok {
+										v.formatVersion(version)
+									} else {
+										var s = ref.ValueOf(value).String()
+										quote = str.Quote(`"` + s + `"`)
+										v.formatQuote(quote)
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 // This private method determines the actual type of the specified value and
 // calls the corresponding format function for that type. Note that because the
 // Go language doesn't really support polymorphism the selection of the actual
@@ -74,130 +187,29 @@ func (v *formatter) formatAny(value any) {
 
 	// Handle all primitive types.
 	case ref.Bool:
-		var boolean, ok = value.(ele.Boolean)
-		if !ok {
-			boolean = ele.Boolean(r.Bool())
-		}
-		v.formatBoolean(boolean)
+		v.formatBool(value)
 	case ref.Uint, ref.Uint8, ref.Uint16, ref.Uint32, ref.Uint64:
-		var number = ele.Number(complex(float64(r.Uint()), 0))
-		v.formatNumber(number)
+		v.formatUnsigned(value)
 	case ref.Int, ref.Int8, ref.Int16, ref.Int32, ref.Int64:
-		var duration, ok = value.(ele.Duration)
-		if ok {
-			v.formatDuration(duration)
-		} else {
-			var moment, ok = value.(ele.Moment)
-			if ok {
-				v.formatMoment(moment)
-			} else {
-				var number = ele.Number(complex(float64(r.Int()), 0))
-				v.formatNumber(number)
-			}
-		}
+		v.formatInteger(value)
 	case ref.Float32, ref.Float64:
-		var angle, ok = value.(ele.Angle)
-		if ok {
-			v.formatAngle(angle)
-		} else {
-			var percentage, ok = value.(ele.Percentage)
-			if ok {
-				v.formatPercentage(percentage)
-			} else {
-				var probability, ok = value.(ele.Probability)
-				if ok {
-					v.formatProbability(probability)
-				} else {
-					var number = ele.Number(complex(r.Float(), 0))
-					v.formatNumber(number)
-				}
-			}
-		}
+		v.formatFloat(value)
 	case ref.Complex64, ref.Complex128:
-		var number, ok = value.(ele.Number)
-		if ok {
-			v.formatNumber(number)
-		} else {
-			number = ele.Number(r.Complex())
-			v.formatNumber(number)
-		}
+		v.formatComplex(value)
 	case ref.String:
-		var pattern, ok = value.(ele.Pattern)
-		if ok {
-			v.formatPattern(pattern)
-		} else {
-			var resource, ok = value.(ele.Resource)
-			if ok {
-				v.formatResource(resource)
-			} else {
-				var symbol, ok = value.(ele.Symbol)
-				if ok {
-					v.formatSymbol(symbol)
-				} else {
-					var tag, ok = value.(ele.Tag)
-					if ok {
-						v.formatTag(tag)
-					} else {
-						var binary, ok = value.(str.Binary)
-						if ok {
-							v.formatBinary(binary)
-						} else {
-							var moniker, ok = value.(str.Moniker)
-							if ok {
-								v.formatMoniker(moniker)
-							} else {
-								var narrative, ok = value.(str.Narrative)
-								if ok {
-									v.formatNarrative(narrative)
-								} else {
-									var quote, ok = value.(str.Quote)
-									if ok {
-										v.formatQuote(quote)
-									} else {
-										var version, ok = value.(str.Version)
-										if ok {
-											v.formatVersion(version)
-										} else {
-											quote = str.Quote(`"` + r.String() + `"`)
-											v.formatQuote(quote)
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		v.formatString(value)
 
-	// Handle all primitive collections.
+	// Handle all interfaces and pointers.
+	case ref.Interface, ref.Pointer:
+		v.formatInterface(value)
+
+	// Handle all composites.
 	case ref.Array, ref.Slice:
 		v.formatArray(r)
 	case ref.Map:
 		v.formatMap(r)
-
-	// Handle all structures.
 	case ref.Struct:
 		v.formatStructure(r)
-
-	// Handle all interfaces and pointers.
-	case ref.Interface, ref.Pointer:
-		if r.MethodByName("GetParameter").IsValid() {
-			// The value is a component.
-			var component = value.(abs.ComponentLike)
-			v.formatComponent(component)
-		} else if r.MethodByName("GetKey").IsValid() {
-			// The value is an association.
-			var association = value.(abs.AssociationLike[any, any])
-			v.formatAssociation(association)
-		} else if r.MethodByName("AsArray").IsValid() {
-			// The value is a collection.
-			v.formatCollection(value)
-		} else {
-			// The value is a pointer to the value to be formatted (or type 'any').
-			r = r.Elem()
-			v.formatAny(r)
-		}
 
 	default:
 		if !r.IsValid() {
@@ -209,6 +221,27 @@ func (v *formatter) formatAny(value any) {
 				r.Type(),
 				r.Kind()))
 		}
+	}
+}
+
+func (v *formatter) formatInterface(value any) {
+	var r = ref.ValueOf(value)
+	switch {
+	case r.MethodByName("GetParameter").IsValid():
+		// The value is a component.
+		var component = value.(abs.ComponentLike)
+		v.formatComponent(component)
+	case r.MethodByName("GetKey").IsValid():
+		// The value is an association.
+		var association = value.(abs.AssociationLike[any, any])
+		v.formatAssociation(association)
+	case r.MethodByName("AsArray").IsValid():
+		// The value is a collection.
+		v.formatCollection(value)
+	default:
+		// The value is a pointer to the value to be formatted (or type 'any').
+		r = r.Elem()
+		v.formatAny(r)
 	}
 }
 

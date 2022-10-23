@@ -330,8 +330,8 @@ func (v *formatter) formatItems(items any) {
 	var value = ref.ValueOf(items)
 	switch {
 	case value.MethodByName("IsEnumerable").IsValid():
-		var r = items.(abs.RangeLike[any])
-		v.formatRange(r)
+		var rang = items.(abs.RangeLike[any])
+		v.formatRange(rang)
 	case value.MethodByName("AddAssociation").IsValid():
 		var catalog = items.(abs.CatalogLike[any, any])
 		v.formatCatalog(catalog)

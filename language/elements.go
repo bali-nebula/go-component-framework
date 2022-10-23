@@ -14,7 +14,6 @@ import (
 	fmt "fmt"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	mat "math"
-	cmp "math/cmplx"
 	stc "strconv"
 	str "strings"
 )
@@ -493,4 +492,3 @@ func (v *formatter) formatTag(tag ele.Tag) {
 func formatOrdinal(ordinal int) string {
 	return fmt.Sprintf("%02d", ordinal)
 }
-

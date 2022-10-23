@@ -930,7 +930,7 @@ func (v *parser) parseStatements() (abs.ListLike[any], *Token, bool) {
 	}
 	// The statements are on separate lines.
 	for {
-		statement, token, ok = v.parseDocumentation()
+		statement, token, ok = v.parseAnnotation()
 		if !ok {
 			statement, token, ok = v.parseStatement()
 		}
