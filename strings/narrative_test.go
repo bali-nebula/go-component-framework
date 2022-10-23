@@ -40,34 +40,26 @@ const n4 = `">
 1234
 <"`
 
-func TestBadNarrative(t *tes.T) {
-	var _, ok = str.NarrativeFromString(bad)
-	ass.False(t, ok)
-}
-
 func TestEmptyNarrative(t *tes.T) {
-	var v, ok = str.NarrativeFromString(n0)
-	ass.True(t, ok)
+	var v = str.Narrative(n0)
 	ass.Equal(t, n0, lan.FormatValue(v))
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 }
 
 func TestNarrative(t *tes.T) {
-	var v, ok = str.NarrativeFromString(n1)
-	ass.True(t, ok)
+	var v = str.Narrative(n1)
 	ass.Equal(t, n1, lan.FormatValue(v))
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 10, v.GetSize())
 	ass.Equal(t, 'a', v.GetItem(2))
 	ass.Equal(t, '4', v.GetItem(-1))
-	ass.Equal(t, v.AsArray(), str.NarrativeFromRunes(v.AsArray()).AsArray())
-	ass.Equal(t, n2, lan.FormatValue(str.NarrativeFromRunes(v.GetItems(5, 7))))
+	ass.Equal(t, n2, lan.FormatValue(str.Narrative(string(v.GetItems(5, 7)))))
 	ass.Equal(t, 6, v.GetIndex('本'))
 }
 
 func TestNarrativesLibrary(t *tes.T) {
-	var v1, _ = str.NarrativeFromString(n3)
-	var v2, _ = str.NarrativeFromString(n4)
+	var v1 = str.Narrative(n3)
+	var v2 = str.Narrative(n4)
 	ass.Equal(t, n1, lan.FormatValue(str.Narratives.Concatenate(v1, v2)))
 }

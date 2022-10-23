@@ -11,53 +11,25 @@
 package strings
 
 import (
-	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	str "strings"
 )
 
 // NARRATIVE STRING INTERFACE
 
-// This constructor attempts to create a new narrative string from the specified
-// formatted string. It returns a narrative value and whether or not the string
-// contained a valid narrative string.
-// For valid string formats for this type see `../abstractions/language.go`.
-func NarrativeFromString(v string) (Narrative, bool) {
-	var ok = true
-	var narrative string
-	var matches = abs.ScanNarrative([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		narrative = trimIndentation(matches[0])
-	}
-	return Narrative(narrative), ok
-}
-
-// This constructor attempts to create a new narrative string from the specified
-// array of runes. It returns the corresponding narrative string.
-func NarrativeFromRunes(v []rune) Narrative {
-	var narrative, ok = NarrativeFromString(`">` + "\n" + string(v) + "\n" + `<"`)
-	if !ok {
-		panic(fmt.Sprintf("The runes contain an illegal character: %v", string(v)))
-	}
-	return narrative
-}
-
 // This type defines the methods associated with a narrative string that extends
 // the native Go string type and represents the string of runes that make up
 // the narrative string.
+// For valid string formats for this type see `../abstractions/language.go`.
 type Narrative string
 
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.
 func (v Narrative) IsEmpty() bool {
-	return len(v) == 6 // The empty narrative string is: '">' EOL EOL '<"'.
+	return len(v) == 1 // An empty narrative string is: '">' EOL EOL '<"'.
 }
 
-// This method returns the number of runes contained in this string.
+// This method returns the number of runes contained in this narrative.
 func (v Narrative) GetSize() int {
 	return len(v.AsArray())
 }
@@ -65,7 +37,7 @@ func (v Narrative) GetSize() int {
 // This method returns all the runes in this string. The runes retrieved
 // are in the same order as they are in the string.
 func (v Narrative) AsArray() []rune {
-	return []rune(v[3 : len(v)-3])
+	return []rune(v)
 }
 
 // INDEXED INTERFACE
@@ -103,38 +75,6 @@ func (v Narrative) GetIndex(b rune) int {
 	return 0
 }
 
-// This function removes the indentation from each line of the specified
-// multi-line string.
-//
-// The following narrative string with dashes showing the indentation:
-//
-//	----$someNarrative: ">
-//	----    This is the first line
-//	----    of a multi-line
-//	----    narrative string.
-//	----<"
-//
-// Will be trimmed to:
-//
-//	">
-//	    This is the first line
-//	    of a multi-line
-//	    narrative string.
-//	<"
-func trimIndentation(v string) string {
-	var result = `">` + "\n"
-	var lines = str.Split(v, "\n")
-	var size = len(lines)
-	var last = lines[size-1]        // The last line of the narrative should only be spaces.
-	var indentation = len(last) - 2 // A count of the number of spaces in the last line.
-	lines = lines[1 : size-1]       // Trim off the first and last lines.
-	for _, line := range lines {
-		result += line[indentation:] + "\n" // Strip off the leading spaces.
-	}
-	result += `<"`
-	return result
-}
-
 // NARRATIVES LIBRARY
 
 // This singleton creates a unique name space for the library functions for
@@ -151,6 +91,6 @@ type narratives struct{}
 // narrative strings.
 func (l *narratives) Concatenate(first Narrative, second Narrative) Narrative {
 	// TODO: This might need tweaking due to tabs before last double quote.
-	var narrative = first[:len(first)-3] + second[3:]
+	var narrative = first + second
 	return Narrative(narrative)
 }

@@ -64,9 +64,9 @@ func (v *formatter) FormatValue(value any) string {
 // references in a clean and efficient way.
 const maximumFormattingDepth int = 8
 
-// This private method determines the actual type of the specified value and
-// calls the corresponding format function for that type. Note that because the
-// Go language doesn't really support polymorphism the selection of the actual
+// This method determines the actual type of the specified value and calls the
+// corresponding format function for that type. Note that because the Go
+// language doesn't really support polymorphism the selection of the actual
 // function called must be done explicitly using reflection and a type switch.
 func (v *formatter) formatAny(value any) {
 	var r = ref.ValueOf(value)
@@ -90,7 +90,7 @@ func (v *formatter) formatAny(value any) {
 	case ref.Interface, ref.Pointer:
 		v.formatInterface(value)
 	case ref.Invalid:
-		v.formatNone()
+		v.formatNil()
 
 	// Handle all composites.
 	case ref.Array, ref.Slice:
@@ -108,6 +108,8 @@ func (v *formatter) formatAny(value any) {
 	}
 }
 
+// This method adds the canonical list format for the specified Go array to the
+// state of the formatter.
 func (v *formatter) formatArray(value any) {
 	var r = ref.ValueOf(value)
 	var size = r.Len()
@@ -132,6 +134,8 @@ func (v *formatter) formatArray(value any) {
 	v.state.AppendString("]")
 }
 
+// This method adds the canonical boolean format for the specified Go bool to
+// the state of the formatter.
 func (v *formatter) formatBool(value any) {
 	boolean, ok := value.(ele.Boolean)
 	if !ok {
@@ -140,6 +144,8 @@ func (v *formatter) formatBool(value any) {
 	v.formatBoolean(boolean)
 }
 
+// This method adds the canonical number format for the specified Go complex to
+// the state of the formatter.
 func (v *formatter) formatComplex(value any) {
 	number, ok := value.(ele.Number)
 	if ok {
@@ -151,6 +157,8 @@ func (v *formatter) formatComplex(value any) {
 	v.formatNumber(number)
 }
 
+// This method adds the canonical element format for the specified Go float to
+// the state of the formatter.
 func (v *formatter) formatFloat(value any) {
 	angle, ok := value.(ele.Angle)
 	if ok {
@@ -172,75 +180,8 @@ func (v *formatter) formatFloat(value any) {
 	v.formatNumber(number)
 }
 
-func (v *formatter) formatInteger(value any) {
-	duration, ok := value.(ele.Duration)
-	if ok {
-		v.formatDuration(duration)
-		return
-	}
-	moment, ok := value.(ele.Moment)
-	if ok {
-		v.formatMoment(moment)
-		return
-	}
-	var integer = ref.ValueOf(value).Int()
-	var number = ele.Number(complex(float64(integer), 0))
-	v.formatNumber(number)
-}
-
-func (v *formatter) formatInterface(value any) {
-	component, ok := value.(abs.ComponentLike)
-	if ok {
-		v.formatComponent(component)
-		return
-	}
-	association, ok := value.(abs.AssociationLike[any, any])
-	if ok {
-		v.formatAssociation(association)
-		return
-	}
-	collection, ok := value.(abs.Sequential[any])
-	if ok {
-		v.formatCollection(collection)
-		return
-	}
-	// The value is a pointer to the value to be formatted (or type 'any').
-	var ptr = value.(*any)
-	v.formatAny(*ptr)
-}
-
-func (v *formatter) formatMap(value any) {
-	var r = ref.ValueOf(value)
-	var keys = r.MapKeys()
-	var size = len(keys)
-	v.state.AppendString("[")
-	if size > 0 {
-		if v.state.CurrentDepth()+1 > maximumFormattingDepth {
-			// Truncate the recursion.
-			v.state.AppendString("...")
-		} else {
-			for i := 0; i < size; i++ {
-				v.state.IncrementDepth()
-				v.state.AppendNewline()
-				var key = keys[i]
-				var value = r.MapIndex(key)
-				v.formatAny(key)
-				v.state.AppendString(": ")
-				v.formatAny(value)
-				v.state.DecrementDepth()
-			}
-			v.state.AppendNewline()
-		}
-	} else {
-		v.state.AppendString(":") // The map is empty: [:]
-	}
-	v.state.AppendString("](map)")
-}
-
-func (v *formatter) formatNone() {
-	v.state.AppendString("none")
-}
-
+// This method adds the canonical primitive format for the specified Go string
+// to the state of the formatter.
 func (v *formatter) formatString(value any) {
 	pattern, ok := value.(ele.Pattern)
 	if ok {
@@ -292,12 +233,93 @@ func (v *formatter) formatString(value any) {
 	v.formatQuote(quote)
 }
 
+// This method adds the canonical element format for the specified Go int to
+// the state of the formatter.
+func (v *formatter) formatInteger(value any) {
+	duration, ok := value.(ele.Duration)
+	if ok {
+		v.formatDuration(duration)
+		return
+	}
+	moment, ok := value.(ele.Moment)
+	if ok {
+		v.formatMoment(moment)
+		return
+	}
+	var integer = ref.ValueOf(value).Int()
+	var number = ele.Number(complex(float64(integer), 0))
+	v.formatNumber(number)
+}
+
+// This method adds the canonical entity format for the specified Go interface
+// to the state of the formatter.
+func (v *formatter) formatInterface(value any) {
+	component, ok := value.(abs.ComponentLike)
+	if ok {
+		v.formatComponent(component)
+		return
+	}
+	association, ok := value.(abs.AssociationLike[any, any])
+	if ok {
+		v.formatAssociation(association)
+		return
+	}
+	collection, ok := value.(abs.Sequential[any])
+	if ok {
+		v.formatCollection(collection)
+		return
+	}
+	// The value is a pointer to the value to be formatted (or type 'any').
+	var ptr = value.(*any)
+	v.formatAny(*ptr)
+}
+
+// This method adds the canonical catalog format for the specified Go map to the
+// state of the formatter.
+func (v *formatter) formatMap(value any) {
+	var r = ref.ValueOf(value)
+	var keys = r.MapKeys()
+	var size = len(keys)
+	v.state.AppendString("[")
+	if size > 0 {
+		if v.state.CurrentDepth()+1 > maximumFormattingDepth {
+			// Truncate the recursion.
+			v.state.AppendString("...")
+		} else {
+			for i := 0; i < size; i++ {
+				v.state.IncrementDepth()
+				v.state.AppendNewline()
+				var key = keys[i]
+				var value = r.MapIndex(key)
+				v.formatAny(key)
+				v.state.AppendString(": ")
+				v.formatAny(value)
+				v.state.DecrementDepth()
+			}
+			v.state.AppendNewline()
+		}
+	} else {
+		v.state.AppendString(":") // The map is empty: [:]
+	}
+	v.state.AppendString("](map)")
+}
+
+// This method adds the canonical pattern format for the specified Go nil to the
+// state of the formatter.
+func (v *formatter) formatNil() {
+	v.state.AppendString("none")
+}
+
+// This method adds the canonical entity format for the specified Go struct to
+// the state of the formatter.
 func (v *formatter) formatStructure(value any) {
 	//TODO:
 	//var r = ref.ValueOf(value)
 	//...
 }
 
+// This method adds the canonical number format for the specified Go uint to the
+// state of the formatter.
 func (v *formatter) formatUnsigned(value any) {
 	var unsigned = ref.ValueOf(value).Uint()
 	var number = ele.Number(complex(float64(unsigned), 0))

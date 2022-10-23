@@ -88,7 +88,7 @@ func (v *parser) parseNarrative() (str.Narrative, *Token, bool) {
 		v.backupOne()
 		return narrative, token, false
 	}
-	narrative, _ = str.NarrativeFromString(token.Value)
+	narrative = str.Narrative(trimNarrative(token.Value))
 	return narrative, token, true
 }
 
@@ -96,7 +96,6 @@ func (v *parser) parseNarrative() (str.Narrative, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatNarrative(narrative str.Narrative) {
 	var s = string(narrative)
-	s = s[3 : len(s)-3] // Remove the bounding '">\n' and '\n<"' delimiters.
 	var lines = st2.Split(s, "\n")
 	v.state.AppendString(`">`)
 	v.state.IncrementDepth()
@@ -157,24 +156,6 @@ func (v *parser) parseString() (any, *Token, bool) {
 	return s, token, ok
 }
 
-// This method adds the canonical format for the specified string primitive to the
-// state of the formatter.
-func (v *formatter) formatString(s any) {
-	var value = ref.ValueOf(s)
-	switch {
-	case value.MethodByName("IsBinary").IsValid():
-		v.formatBinary(s)
-	case value.MethodByName("IsMoniker").IsValid():
-		v.formatMoniker(s)
-	case value.MethodByName("IsNarrative").IsValid():
-		v.formatNarrative(s)
-	case value.MethodByName("IsQuote").IsValid():
-		v.formatQuote(s)
-	default:
-		v.formatVersion(s)
-	}
-}
-
 // This method attempts to parse a version string. It returns the version
 // string and whether or not the version string was successfully parsed.
 func (v *parser) parseVersion() (str.Version, *Token, bool) {
@@ -194,4 +175,37 @@ func (v *parser) parseVersion() (str.Version, *Token, bool) {
 func (v *formatter) formatVersion(version str.Version) {
 	var s = string(version)
 	v.state.AppendString(s)
+}
+
+// PRIVATE FUNCTIONS
+
+// This function removes the indentation from each line of the specified
+// multi-line string.
+//
+// The following narrative string with dashes showing the indentation:
+//
+//	----$someNarrative: ">
+//	--------This is the first line
+//	--------of a multi-line
+//	--------narrative string.
+//	----<"
+//
+// The resulting narrative will be trimmed down to:
+//
+//	This is the first line
+//	of a multi-line
+//	narrative string.
+//
+// The delimiters and indentation will have been trimmed away.
+func trimNarrative(v string) string {
+	var narrative string
+	var lines = st2.Split(v, "\n")
+	var size = len(lines)
+	var last = lines[size-1]        // The last line provides the level of indentation.
+	var indentation = len(last) - 2 // The number of spaces in the last line.
+	lines = lines[1 : size-1]       // Strip off the '">' and '<"' delimitier lines.
+	for _, line := range lines {
+		narrative += line[indentation+4:] + "\n" // Strip off the indentation plus four spaces.
+	}
+	return narrative[:len(narrative)-1] // Strip off the extra end-of-line character.
 }

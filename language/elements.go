@@ -157,6 +157,10 @@ func (v *parser) parseElement() (any, *Token, bool) {
 func (v *formatter) formatImaginary(i float64) {
 	var s string
 	switch i {
+	case 1:
+		s = "i"
+	case -1:
+		s = "-i"
 	case mat.E:
 		s = "ei"
 	case -mat.E:
