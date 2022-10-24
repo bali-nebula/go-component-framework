@@ -15,7 +15,6 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
-	ref "reflect"
 )
 
 // This method attempts to parse an association between a key and value. It
@@ -327,18 +326,18 @@ func (v *parser) parseItems() (any, *Token, bool) {
 // This method adds the canonical format for the specified items to the
 // state of the formatter.
 func (v *formatter) formatItems(items any) {
-	var value = ref.ValueOf(items)
-	switch {
-	case value.MethodByName("IsEnumerable").IsValid():
-		var rang = items.(abs.RangeLike[any])
+	rang, ok := items.(abs.RangeLike[any])
+	if ok {
 		v.formatRange(rang)
-	case value.MethodByName("AddAssociation").IsValid():
-		var catalog = items.(abs.CatalogLike[any, any])
-		v.formatCatalog(catalog)
-	default:
-		var list = items.(abs.ListLike[any])
-		v.formatList(list)
+		return
 	}
+	catalog, ok := items.(abs.CatalogLike[any, any])
+	if ok {
+		v.formatCatalog(catalog)
+		return
+	}
+	var list = items.(abs.ListLike[any])
+	v.formatList(list)
 }
 
 // This method attempts to parse a range collection. It returns the range

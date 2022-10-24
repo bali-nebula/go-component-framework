@@ -40,3 +40,9 @@ func TestRandomProbabilities(t *tes.T) {
 	ass.True(t, total > 4800)
 	ass.True(t, total < 5200)
 }
+
+func TestRandomShuffling(t *tes.T) {
+	var size = 20
+	var array []int = make([]int, size)
+	uti.ShuffleArray[int](array)
+}

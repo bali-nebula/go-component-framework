@@ -13,8 +13,7 @@ package collections
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
-	ran "math/rand"
-	tim "time"
+	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
 )
 
 // LIST IMPLEMENTATION
@@ -250,11 +249,7 @@ func (v *list[T]) RemoveAll() {
 
 // This method pseudo-randomly shuffles the items in this list.
 func (v *list[T]) ShuffleItems() {
-	ran.Seed(tim.Now().UnixNano())
-	ran.Shuffle(len(v.items), func(i, j int) {
-		// Swap the two items.
-		v.items[i], v.items[j] = v.items[j], v.items[i]
-	})
+	uti.ShuffleArray[T](v.items)
 }
 
 // This method sorts the items in this list using the canonical rank function.
