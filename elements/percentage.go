@@ -10,21 +10,7 @@
 
 package elements
 
-import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	str "strconv"
-)
-
 // PERCENTAGE INTERFACE
-
-// This constructor attempts to create a new percentage from the specified
-// formatted string. It returns a percentage value and whether or not the string
-// contained a valid percentage.
-// For valid string formats for this type see `../abstractions/language.go`.
-func PercentageFromString(v string) (Percentage, bool) {
-	var percentage, ok = stringToPercentage(v)
-	return Percentage(percentage), ok
-}
 
 // This type defines the methods associated with percentage elements. It extends
 // the native Go float64 type and represents a percentage. Percentages can be
@@ -81,26 +67,4 @@ func (l *percentages) Difference(first, second Percentage) Percentage {
 // specified factor.
 func (l *percentages) Scaled(percentage Percentage, factor float64) Percentage {
 	return Percentage(float64(percentage) * factor)
-}
-
-// PRIVATE FUNCTIONS
-
-// This function parses a percentage string and returns the corresponding
-// floating point number and whether or not the string contained a valid
-// percentage.
-func stringToPercentage(v string) (float64, bool) {
-	var percentage float64
-	var ok = true
-	var matches = abs.ScanPercentage([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		var err error
-		percentage, err = str.ParseFloat(matches[1], 64)
-		if err != nil {
-			ok = false
-		}
-	}
-	return percentage, ok
 }

@@ -11,10 +11,8 @@
 package elements
 
 import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
 	mat "math"
-	str "strconv"
 )
 
 // PROBABILITY INTERFACE
@@ -36,15 +34,6 @@ func ProbabilityFromBoolean(v bool) Probability {
 		return Probability(1)
 	}
 	return Probability(0)
-}
-
-// This constructor attempts to create a new probability from the specified
-// formatted string. It returns a probability value and whether or not the
-// string contained a valid probability.
-// For valid string formats for this type see `../abstractions/language.go`.
-func ProbabilityFromString(v string) (Probability, bool) {
-	var probability, ok = stringToProbability(v)
-	return ProbabilityFromFloat(probability), ok // Will be normalized.
 }
 
 // This type defines the methods associated with probability elements. It
@@ -121,32 +110,4 @@ func (l *probabilities) Or(first Probability, second Probability) Probability {
 // specified probability elements.
 func (l *probabilities) Xor(first Probability, second Probability) Probability {
 	return l.Or(l.Sans(first, second), l.Sans(second, first))
-}
-
-// PRIVATE FUNCTIONS
-
-// This function parses a probability string and returns the corresponding
-// floating point number and whether or not the string contained a valid
-// probability.
-func stringToProbability(v string) (float64, bool) {
-	var probability float64
-	var ok = true
-	var matches = abs.ScanProbability([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		var err error
-		probability, err = str.ParseFloat(matches[0], 64)
-		if err != nil {
-			ok = false
-		}
-	}
-	// Check for mistaken floating point value.
-	matches = abs.ScanNumber([]byte(v))
-	if len(matches) > 0 && len(matches[0]) > 1 {
-		ok = false
-		probability = 0
-	}
-	return probability, ok
 }

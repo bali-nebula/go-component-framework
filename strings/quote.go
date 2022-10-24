@@ -11,37 +11,16 @@
 package strings
 
 import (
-	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
 // QUOTE STRING INTERFACE
 
 // This constructor attempts to create a new quote string from the specified
-// formatted string. It returns a quote value and whether or not the string
-// contained a valid quote string.
-// For valid string formats for this type see `../abstractions/language.go`.
-func QuoteFromString(v string) (Quote, bool) {
-	var ok = true
-	var quote string
-	var matches = abs.ScanQuote([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		quote = matches[0]
-	}
-	return Quote(quote), ok
-}
-
-// This constructor attempts to create a new quote string from the specified
 // array of runes. It returns a quote string and whether or not the
 // resulting string contained a valid quote.
 func QuoteFromRunes(v []rune) Quote {
-	var quote, ok = QuoteFromString(`"` + string(v) + `"`)
-	if !ok {
-		panic(fmt.Sprintf("The runes contain an illegal character: %v", string(v)))
-	}
+	var quote = Quote(string(v))
 	return quote
 }
 
@@ -54,7 +33,7 @@ type Quote string
 
 // This method determines whether or not this string is empty.
 func (v Quote) IsEmpty() bool {
-	return len(v) == 2 // The empty quote string is: '""'.
+	return len(v) == 0
 }
 
 // This method returns the number of runes contained in this string.
@@ -65,7 +44,7 @@ func (v Quote) GetSize() int {
 // This method returns all the runes in this string. The runes retrieved
 // are in the same order as they are in the string.
 func (v Quote) AsArray() []rune {
-	return []rune(v[1 : len(v)-1])
+	return []rune(v)
 }
 
 // INDEXED INTERFACE
@@ -118,5 +97,5 @@ type quotes struct{}
 // This library function returns the concatenation of the two specified quote
 // strings.
 func (l *quotes) Concatenate(first Quote, second Quote) Quote {
-	return Quote(first[:len(first)-1] + second[1:])
+	return Quote(first + second)
 }

@@ -13,33 +13,14 @@ package strings
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
-	str "strings"
-	uni "unicode"
 )
 
 // BINARY STRING INTERFACE
 
 // This constructor attempts to create a new binary string from the specified
-// base 64 encoded string. It returns a binary value and whether or not the
-// string contained valid base64 encoding.
-// For valid string formats for this type see `../abstractions/language.go`.
-func BinaryFromString(v string) (Binary, bool) {
-	var ok = true
-	var binary string
-	var matches = abs.ScanBinary([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		binary = removeWhiteSpace(matches[0])
-	}
-	return Binary(binary), ok
-}
-
-// This constructor attempts to create a new binary string from the specified
 // byte array. It returns the corresponding binary string.
 func BinaryFromBytes(v []byte) Binary {
-	var encoded = "'" + uti.Base64Encode(v) + "'"
+	var encoded = uti.Base64Encode(v)
 	return Binary(encoded)
 }
 
@@ -52,7 +33,7 @@ type Binary string
 
 // This method determines whether or not this string is empty.
 func (v Binary) IsEmpty() bool {
-	return len(v) == 2 // The empty binary string is: "''".
+	return len(v) == 0
 }
 
 // This method returns the number of bytes contained in this string.
@@ -63,7 +44,7 @@ func (v Binary) GetSize() int {
 // This method returns all the bytes in this string. The bytes retrieved
 // are in the same order as they are in the string.
 func (v Binary) AsArray() []byte {
-	var encoded = string(v[1 : len(v)-1]) // Remove the single quotes.
+	var encoded = string(v)
 	var bytes = uti.Base64Decode(encoded)
 	return bytes
 }
@@ -101,16 +82,6 @@ func (v Binary) GetIndex(b byte) int {
 	}
 	// The byte was not found.
 	return 0
-}
-
-// This function removes all whitespace from the specified string.
-func removeWhiteSpace(s string) string {
-	return str.Map(func(r rune) rune {
-		if uni.IsSpace(r) {
-			return -1
-		}
-		return r
-	}, s)
 }
 
 // BINARIES LIBRARY

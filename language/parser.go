@@ -14,7 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
-	str "strings"
+	sts "strings"
 )
 
 // PARSER INTERFACE
@@ -132,7 +132,7 @@ func (v *parser) backupOne() {
 func (v *parser) formatError(message string, token *Token) string {
 	message += "\n\n"
 	var line = token.Line
-	var lines = str.Split(string(v.source), "\n")
+	var lines = sts.Split(string(v.source), "\n")
 
 	if line > 1 {
 		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + "\n"

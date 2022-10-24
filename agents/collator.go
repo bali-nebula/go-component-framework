@@ -15,7 +15,7 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	cmp "math/cmplx"
 	ref "reflect"
-	str "strings"
+	sts "strings"
 )
 
 // COLLATOR INTERFACE
@@ -534,7 +534,7 @@ func rankStrings[T ~string](v *collator, first ref.Value, second ref.Value) int 
 // type and converts an empty interface into type "any".
 func baseTypeName(t ref.Type) string {
 	var result = t.String()
-	var index = str.Index(result, "[")
+	var index = sts.Index(result, "[")
 	if index > -1 {
 		result = result[:index]
 	}

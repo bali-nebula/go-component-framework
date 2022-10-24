@@ -15,7 +15,7 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	com "github.com/craterdog-bali/go-bali-document-notation/components"
-	str "strings"
+	sts "strings"
 )
 
 // PARSING METHODS
@@ -43,7 +43,7 @@ func (v *parser) parseComment() (string, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComment(comment string) {
 	var s = comment[3 : len(comment)-3] // Remove the bounding '!>\n' and '\n<!' delimiters.
-	var lines = str.Split(s, "\n")
+	var lines = sts.Split(s, "\n")
 	v.state.AppendString(`!>`)
 	v.state.IncrementDepth()
 	for _, line := range lines {
@@ -323,7 +323,7 @@ func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, any], *Token, 
 //	<!
 func trimIndentation(v string) string {
 	var result = `!>` + "\n"
-	var lines = str.Split(v, "\n")
+	var lines = sts.Split(v, "\n")
 	var size = len(lines)
 	var last = lines[size-1]        // The last line of the comment should only be spaces.
 	var indentation = len(last) - 2 // A count of the number of spaces in the last line.

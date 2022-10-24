@@ -10,21 +10,7 @@
 
 package elements
 
-import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	str "strconv"
-)
-
 // BOOLEAN INTERFACE
-
-// This constructor attempts to create a new boolean from the specified
-// formatted string. It returns a boolean value and whether or not the
-// string contained a valid boolean.
-// For valid string formats for this type see `../abstractions/language.go`.
-func BooleanFromString(v string) (Boolean, bool) {
-	var boolean, ok = stringToBoolean(v)
-	return Boolean(boolean), ok
-}
 
 // This type defines the methods associated with boolean elements. It extends
 // the native Go bool type.
@@ -84,25 +70,4 @@ func (l *booleans) Or(first Boolean, second Boolean) Boolean {
 // specified boolean elements.
 func (l *booleans) Xor(first Boolean, second Boolean) Boolean {
 	return (first && !second) || (!first && second)
-}
-
-// PRIVATE FUNCTIONS
-
-// This function parses a boolean string and returns the corresponding boolean
-// value and whether or not the string contained a valid boolean.
-func stringToBoolean(v string) (bool, bool) {
-	var boolean bool
-	var ok = true
-	var matches = abs.ScanBoolean([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		var err error
-		boolean, err = str.ParseBool(matches[0])
-		if err != nil {
-			ok = false
-		}
-	}
-	return boolean, ok
 }

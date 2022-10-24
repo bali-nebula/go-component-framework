@@ -11,8 +11,10 @@
 package language
 
 import (
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
-	st2 "strings"
+	sts "strings"
+	uni "unicode"
 )
 
 // This method attempts to parse a binary string. It returns the binary
@@ -25,7 +27,14 @@ func (v *parser) parseBinary() (str.Binary, *Token, bool) {
 		v.backupOne()
 		return binary, token, false
 	}
-	binary, _ = str.BinaryFromString(token.Value)
+	var matches = abs.ScanBinary([]byte(token.Value))
+	// Remove all whitespace and the "'" delimiters.
+	binary = str.Binary(sts.Map(func(r rune) rune {
+		if uni.IsSpace(r) {
+			return -1
+		}
+		return r
+	}, matches[1]))
 	return binary, token, true
 }
 
@@ -35,10 +44,9 @@ const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
 // of the formatter.
 func (v *formatter) formatBinary(binary str.Binary) {
 	var s = string(binary)
-	var length = len(s) - 2
+	var length = len(s)
 	if length > lineLength {
 		// Spans multiple lines.
-		s = s[1 : length+1] // Remove the bounding "'" characters.
 		v.state.AppendString("'")
 		v.state.IncrementDepth()
 		for index := 0; index < length; {
@@ -67,7 +75,8 @@ func (v *parser) parseMoniker() (str.Moniker, *Token, bool) {
 		v.backupOne()
 		return moniker, token, false
 	}
-	moniker, _ = str.MonikerFromString(token.Value)
+	var matches = abs.ScanMoniker([]byte(token.Value))
+	moniker = str.Moniker(matches[0])
 	return moniker, token, true
 }
 
@@ -96,7 +105,7 @@ func (v *parser) parseNarrative() (str.Narrative, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatNarrative(narrative str.Narrative) {
 	var s = string(narrative)
-	var lines = st2.Split(s, "\n")
+	var lines = sts.Split(s, "\n")
 	v.state.AppendString(`">`)
 	v.state.IncrementDepth()
 	for _, line := range lines {
@@ -118,14 +127,15 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 		v.backupOne()
 		return quote, token, false
 	}
-	quote, _ = str.QuoteFromString(token.Value)
+	var matches = abs.ScanQuote([]byte(token.Value))
+	quote = str.Quote(matches[1]) // Remove the '"' delimiters.
 	return quote, token, true
 }
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
 func (v *formatter) formatQuote(quote str.Quote) {
-	var s = string(quote)
+	var s = `"` + string(quote) + `"`
 	v.state.AppendString(s)
 }
 
@@ -166,14 +176,15 @@ func (v *parser) parseVersion() (str.Version, *Token, bool) {
 		v.backupOne()
 		return version, token, false
 	}
-	version, _ = str.VersionFromString(token.Value)
+	var matches = abs.ScanVersion([]byte(token.Value))
+	version = str.Version(matches[1]) // Remove the leading "v".
 	return version, token, true
 }
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
 func (v *formatter) formatVersion(version str.Version) {
-	var s = string(version)
+	var s = "v" + string(version)
 	v.state.AppendString(s)
 }
 
@@ -199,7 +210,7 @@ func (v *formatter) formatVersion(version str.Version) {
 // The delimiters and indentation will have been trimmed away.
 func trimNarrative(v string) string {
 	var narrative string
-	var lines = st2.Split(v, "\n")
+	var lines = sts.Split(v, "\n")
 	var size = len(lines)
 	var last = lines[size-1]        // The last line provides the level of indentation.
 	var indentation = len(last) - 2 // The number of spaces in the last line.

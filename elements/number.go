@@ -12,10 +12,8 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	mat "math"
 	cmp "math/cmplx"
-	str "strconv"
 )
 
 // NUMBER INTERFACE
@@ -97,25 +95,6 @@ func NumberFromComplex(v complex128) Number {
 func NumberFromPolar(m float64, p Angle) Number {
 	var v = cmp.Rect(m, float64(p))
 	return NumberFromComplex(v)
-}
-
-// This constructor attempts to create a new number from the specified formatted
-// string. It returns an number value and whether or not the string
-// contained a valid number. Some common examples of numbers in this format
-// include:
-//   - 0
-//   - -1
-//   - 5i
-//   - 1.23E-45
-//   - (-3.0, 4.0i) - rectangular form
-//   - (1.0e^~π)    - polar form
-//   - ∞
-//   - undefined
-//
-// For valid string formats for this type see `../abstractions/language.go`.
-func NumberFromString(v string) (Number, bool) {
-	var number, ok = stringToNumber(v)
-	return Number(number), ok
 }
 
 // This type defines the methods associated with number elements. It extends the
@@ -332,117 +311,6 @@ func (l *numbers) Logarithm(base, number Number) Number {
 }
 
 // PRIVATE FUNCTIONS
-
-// This function parses a number string and returns the corresponding complex
-// number.
-func stringToNumber(v string) (complex128, bool) {
-	var ok = true
-	var err any
-	var number complex128
-	var realPart float64
-	var imaginaryPart float64
-	var phasePart Angle
-	var matches = abs.ScanNumber([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false // The value is not a number.
-	case matches[0] == "undefined":
-		number = undefined
-	case matches[0] == "infinity" || matches[0] == "∞":
-		number = infinity
-	case matches[0] == "i":
-		number = complex(0, 1)
-	case matches[0] == "-i":
-		number = complex(0, -1)
-	case matches[0] == "pi", matches[0] == "-pi", matches[0] == "phi", matches[0] == "-phi":
-		// The value is a pure real constant ending in "i" so it must be handled first.
-		var realPart = constantToValue(matches[0])
-		number = complex(realPart, 0)
-	case matches[0][len(matches[0])-1] == 'i':
-		// The value is pure imaginary.
-		var match = matches[0][:len(matches[0])-1] // Strip off the trailing "i".
-		var imaginaryPart, err = str.ParseFloat(match, 64)
-		if err != nil {
-			// The value is a pure imaginary constant.
-			imaginaryPart = constantToValue(match)
-		}
-		number = complex(0, imaginaryPart)
-	case matches[0][0] == '(':
-		// The value is complex.
-		switch {
-		case matches[2] == ", ":
-			// The complex number is in rectangular form.
-			realPart, err = str.ParseFloat(matches[1], 64)
-			if err != nil {
-				// The real part of the number is a constant.
-				realPart = constantToValue(matches[1])
-			}
-			if matches[3] == "i" {
-				imaginaryPart = 1
-			} else if matches[3] == "-i" {
-				imaginaryPart = -1
-			} else {
-				var match = matches[3][:len(matches[3])-1] // Strip off the trailing "i".
-				imaginaryPart, err = str.ParseFloat(match, 64)
-				if err != nil {
-					// The imaginary part of the number is a constant.
-					imaginaryPart = constantToValue(match)
-				}
-			}
-			number = complex(realPart, imaginaryPart)
-		default:
-			// The complex number is in polar form.
-			realPart, err = str.ParseFloat(matches[4], 64)
-			if err != nil {
-				// The real part of the number is a constant.
-				realPart = constantToValue(matches[4])
-			}
-			var match = matches[6][:len(matches[6])-1] // Strip off the trailing "i".
-			phasePart, ok = AngleFromString(match)
-			number = complex128(NumberFromPolar(realPart, phasePart))
-		}
-	default:
-		// The value is pure real.
-		realPart, err = str.ParseFloat(matches[0], 64)
-		if err != nil {
-			// The value is a pure real constant.
-			realPart = constantToValue(matches[0])
-		}
-		number = complex(realPart, 0)
-	}
-	return number, ok
-}
-
-// This function parses a number constant string and returns the corresponding
-// real number.
-func constantToValue(v string) float64 {
-	var value float64
-	switch v {
-	case "":
-		value = 1
-	case "-":
-		value = -1
-	case "e":
-		value = mat.E
-	case "-e":
-		value = -mat.E
-	case "pi", "π":
-		value = mat.Pi
-	case "-pi", "-π":
-		value = -mat.Pi
-	case "phi", "φ":
-		value = mat.Phi
-	case "-phi", "-φ":
-		value = -mat.Phi
-	case "tau", "τ":
-		value = mat.Pi * 2.0
-	case "-tau", "-τ":
-		value = -mat.Pi * 2.0
-	default:
-		panic(fmt.Sprintf("An invalid constant was used in a complex number: %v", v))
-	}
-	return value
-}
 
 // This function uses the single precision floating point range to lock a double
 // precision magnitude onto 0, 1, -1, or ∞ if the magnitude falls outside the

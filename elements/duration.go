@@ -11,9 +11,7 @@
 package elements
 
 import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	mat "math"
-	stc "strconv"
 )
 
 // DURATION CONSTANTS
@@ -38,15 +36,6 @@ const WeeksPerMonth float64 = float64(MillisecondsPerMonth) / float64(Millisecon
 const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsPerDay)     // ~365.2425 days/year
 
 // DURATION INTERFACE
-
-// This constructor attempts to create a new duration from the specified
-// formatted string. It returns a duration value and whether or not the string
-// contained a valid duration.
-// For valid string formats for this type see `../abstractions/language.go`.
-func DurationFromString(v string) (Duration, bool) {
-	var duration, ok = stringToDuration(v)
-	return Duration(duration), ok
-}
 
 // This type defines the methods associated with time duration elements. It
 // extends the native Go `int` type and its value represents the number of
@@ -208,49 +197,4 @@ func magnitude(value int) int {
 		return -value
 	}
 	return value
-}
-
-// This function parses a duration string and returns the corresponding number
-// of milliseconds for that duration.
-func stringToDuration(v string) (int, bool) {
-	var matches = abs.ScanDuration([]byte(v))
-	if len(matches) == 0 {
-		return 0, false
-	}
-	var milliseconds = 0.0
-	var sign = 1.0
-	var isTime = false
-	for _, match := range matches[1:] {
-		if match != "" {
-			var stype = match[len(match)-1:] // Strip off the time span.
-			var tspan = match[:len(match)-1] // Strip off the span type.
-			var value, err = stc.ParseFloat(tspan, 64)
-			if len(tspan) > 0 && err != nil {
-				return 0, false
-			}
-			switch stype {
-			case "-":
-				sign = -1
-			case "W":
-				milliseconds += value * float64(MillisecondsPerWeek)
-			case "Y":
-				milliseconds += value * float64(MillisecondsPerYear)
-			case "M":
-				if isTime {
-					milliseconds += value * float64(MillisecondsPerMinute)
-				} else {
-					milliseconds += value * float64(MillisecondsPerMonth)
-				}
-			case "D":
-				milliseconds += value * float64(MillisecondsPerDay)
-			case "T":
-				isTime = true
-			case "H":
-				milliseconds += value * float64(MillisecondsPerHour)
-			case "S":
-				milliseconds += value * float64(MillisecondsPerSecond)
-			}
-		}
-	}
-	return int(sign * milliseconds), true
 }

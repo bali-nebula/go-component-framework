@@ -14,7 +14,7 @@ import (
 	b64 "encoding/base64"
 	fmt "fmt"
 	mat "math"
-	str "strings"
+	sts "strings"
 	uni "unicode"
 )
 
@@ -22,7 +22,7 @@ import (
 // ten digits and all UPPER CASE letters except 'E', 'I', 'O', and 'U'.
 func Base32Encode(bytes []byte) string {
 	// Encode each byte.
-	var result str.Builder
+	var result sts.Builder
 	var previousByte byte
 	for index, currentByte := range bytes {
 		// Encode the next one or two 5 bit chunks.
@@ -41,7 +41,7 @@ func Base32Encode(bytes []byte) string {
 // bytes.
 func Base32Decode(encoded string) []byte {
 	// Purify the base 32 encoded string.
-	var buffer str.Builder
+	var buffer sts.Builder
 	for _, c := range encoded {
 		if !uni.IsSpace(c) {
 			var r = uni.ToUpper(c)
@@ -54,7 +54,7 @@ func Base32Decode(encoded string) []byte {
 	var size = len(encoded)
 	var bytes = make([]byte, int(mat.Trunc(float64(size)*5.0/8.0)))
 	for index, r := range encoded {
-		var chunk = byte(str.Index(base32LookupTable, string(r)))
+		var chunk = byte(sts.Index(base32LookupTable, string(r)))
 		if chunk < 0 {
 			panic(fmt.Sprintf("The binary string was not encoded using base 32: %s", encoded))
 		}
@@ -96,7 +96,7 @@ const base32LookupTable = "0123456789ABCDFGHJKLMNPQRSTVWXYZ"
  * byte:  00000111|11222223|33334444|45555566|66677777|...
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F   F8  07
  */
-func base32EncodeBytes(previous byte, current byte, index int, base32 *str.Builder) {
+func base32EncodeBytes(previous byte, current byte, index int, base32 *sts.Builder) {
 	var chunk byte
 	switch index % 5 {
 	case 0:
@@ -129,7 +129,7 @@ func base32EncodeBytes(previous byte, current byte, index int, base32 *str.Build
  * byte:  xxxxx111|00xxxxx3|00004444|0xxxxx66|000xxxxx|...
  * mask:   F8  07  C0 3E  01 F0  0F 80  7C 03  E0  1F
  */
-func base32EncodeLast(last byte, index int, base32 *str.Builder) {
+func base32EncodeLast(last byte, index int, base32 *sts.Builder) {
 	var chunk byte
 	switch index % 5 {
 	case 0:

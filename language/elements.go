@@ -12,10 +12,13 @@ package language
 
 import (
 	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	mat "math"
+	cmp "math/cmplx"
 	stc "strconv"
-	str "strings"
+	sts "strings"
+	tim "time"
 )
 
 // This method attempts to parse an angle element. It returns the angle element
@@ -28,7 +31,7 @@ func (v *parser) parseAngle() (ele.Angle, *Token, bool) {
 		v.backupOne()
 		return angle, token, false
 	}
-	angle, _ = ele.AngleFromString(token.Value)
+	angle = ele.AngleFromFloat(stringToFloat(token.Value[1:]))
 	return angle, token, true
 }
 
@@ -54,7 +57,8 @@ func (v *parser) parseBoolean() (ele.Boolean, *Token, bool) {
 		v.backupOne()
 		return boolean, token, false
 	}
-	boolean, _ = ele.BooleanFromString(token.Value)
+	var b, _ = stc.ParseBool(token.Value)
+	boolean = ele.Boolean(b)
 	return boolean, token, true
 }
 
@@ -75,14 +79,47 @@ func (v *parser) parseDuration() (ele.Duration, *Token, bool) {
 		v.backupOne()
 		return duration, token, false
 	}
-	duration, _ = ele.DurationFromString(token.Value)
+	var matches = abs.ScanDuration([]byte(token.Value))
+	var milliseconds = 0.0
+	var sign = 1.0
+	var isTime = false
+	for _, match := range matches[1:] {
+		if match != "" {
+			var stype = match[len(match)-1:] // Strip off the time span.
+			var tspan = match[:len(match)-1] // Strip off the span type.
+			var value, _ = stc.ParseFloat(tspan, 64)
+			switch stype {
+			case "-":
+				sign = -1
+			case "W":
+				milliseconds += value * float64(ele.MillisecondsPerWeek)
+			case "Y":
+				milliseconds += value * float64(ele.MillisecondsPerYear)
+			case "M":
+				if isTime {
+					milliseconds += value * float64(ele.MillisecondsPerMinute)
+				} else {
+					milliseconds += value * float64(ele.MillisecondsPerMonth)
+				}
+			case "D":
+				milliseconds += value * float64(ele.MillisecondsPerDay)
+			case "T":
+				isTime = true
+			case "H":
+				milliseconds += value * float64(ele.MillisecondsPerHour)
+			case "S":
+				milliseconds += value * float64(ele.MillisecondsPerSecond)
+			}
+		}
+	}
+	duration = ele.Duration(int(sign * milliseconds))
 	return duration, token, true
 }
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatDuration(duration ele.Duration) {
-	var result str.Builder
+	var result sts.Builder
 	result.WriteString("~")
 	if duration.IsNegative() {
 		result.WriteString("-")
@@ -193,14 +230,22 @@ func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
 		v.backupOne()
 		return moment, token, false
 	}
-	moment, _ = ele.MomentFromString(token.Value)
+	var milliseconds int
+	for _, format := range isoFormats {
+		var t, err = hackedParse(format, token.Value) // Parsed in UTC.
+		if err == nil {
+			milliseconds = int(t.UnixMilli())
+			break
+		}
+	}
+	moment = ele.Moment(milliseconds)
 	return moment, token, true
 }
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatMoment(moment ele.Moment) {
-	var result str.Builder
+	var result sts.Builder
 	result.WriteString("<")
 	var year = moment.GetYears()
 	result.WriteString(stc.FormatInt(int64(year), 10))
@@ -242,14 +287,85 @@ func (v *formatter) formatMoment(moment ele.Moment) {
 // This method attempts to parse a number element. It returns the number
 // element and whether or not the number element was successfully parsed.
 func (v *parser) parseNumber() (ele.Number, *Token, bool) {
-	var token *Token
 	var number ele.Number
-	token = v.nextToken()
+	var token = v.nextToken()
 	if token.Type != TokenNumber {
 		v.backupOne()
 		return number, token, false
 	}
-	number, _ = ele.NumberFromString(token.Value)
+	var err any
+	var c complex128
+	var realPart float64
+	var imaginaryPart float64
+	var phasePart ele.Angle
+	var matches = abs.ScanNumber([]byte(token.Value))
+	switch {
+	case matches[0] == "undefined":
+		c = cmp.NaN()
+	case matches[0] == "infinity" || matches[0] == "∞":
+		c = cmp.Inf()
+	case matches[0] == "i":
+		c = complex(0, 1)
+	case matches[0] == "-i":
+		c = complex(0, -1)
+	case matches[0] == "pi", matches[0] == "-pi", matches[0] == "phi", matches[0] == "-phi":
+		// The value is a pure real constant ending in "i" so it must be handled first.
+		var realPart = stringToFloat(matches[0])
+		c = complex(realPart, 0)
+	case matches[0][len(matches[0])-1] == 'i':
+		// The value is pure imaginary.
+		var match = matches[0][:len(matches[0])-1] // Strip off the trailing "i".
+		var imaginaryPart, err = stc.ParseFloat(match, 64)
+		if err != nil {
+			// The value is a pure imaginary constant.
+			imaginaryPart = stringToFloat(match)
+		}
+		c = complex(0, imaginaryPart)
+	case matches[0][0] == '(':
+		// The value is complex.
+		switch {
+		case matches[2] == ", ":
+			// The complex number is in rectangular form.
+			realPart, err = stc.ParseFloat(matches[1], 64)
+			if err != nil {
+				// The real part of the number is a constant.
+				realPart = stringToFloat(matches[1])
+			}
+			if matches[3] == "i" {
+				imaginaryPart = 1
+			} else if matches[3] == "-i" {
+				imaginaryPart = -1
+			} else {
+				var match = matches[3][:len(matches[3])-1] // Strip off the trailing "i".
+				imaginaryPart, err = stc.ParseFloat(match, 64)
+				if err != nil {
+					// The imaginary part of the number is a constant.
+					imaginaryPart = stringToFloat(match)
+				}
+			}
+			c = complex(realPart, imaginaryPart)
+		default:
+			// The complex number is in polar form.
+			realPart, err = stc.ParseFloat(matches[4], 64)
+			if err != nil {
+				// The real part of the number is a constant.
+				realPart = stringToFloat(matches[4])
+			}
+			var match = matches[6][:len(matches[6])-1] // Strip off the trailing "i".
+			var parser = Parser([]byte(match))
+			phasePart, _, _ = parser.parseAngle()
+			c = complex128(ele.NumberFromPolar(realPart, phasePart))
+		}
+	default:
+		// The value is pure real.
+		realPart, err = stc.ParseFloat(matches[0], 64)
+		if err != nil {
+			// The value is a pure real constant.
+			realPart = stringToFloat(matches[0])
+		}
+		c = complex(realPart, 0)
+	}
+	number = ele.NumberFromComplex(c)
 	return number, token, true
 }
 
@@ -331,14 +447,27 @@ func (v *parser) parsePattern() (ele.Pattern, *Token, bool) {
 		v.backupOne()
 		return pattern, token, false
 	}
-	pattern, _ = ele.PatternFromString(token.Value)
+	var regex = token.Value[1:len(token.Value)-2] // Strip off the '"' and '"?' delimiters.
+	switch regex {
+	case `none`:
+		regex = `^none$`
+	case `any`:
+		regex = `.*`
+	}
+	pattern = ele.Pattern(regex)
 	return pattern, token, true
 }
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatPattern(pattern ele.Pattern) {
-	var s = string(pattern)
+	var s = `"` + string(pattern) + `"?`
+	switch pattern {
+	case `^none$`:
+		s = `none`
+	case `.*`:
+		s = `any`
+	}
 	v.state.AppendString(s)
 }
 
@@ -352,7 +481,9 @@ func (v *parser) parsePercentage() (ele.Percentage, *Token, bool) {
 		v.backupOne()
 		return percentage, token, false
 	}
-	percentage, _ = ele.PercentageFromString(token.Value)
+	var s = token.Value[:len(token.Value)-1] // Removed the trailing '%'.
+	var float, _ = stc.ParseFloat(s, 64)
+	percentage = ele.Percentage(float)
 	return percentage, token, true
 }
 
@@ -373,7 +504,9 @@ func (v *parser) parseProbability() (ele.Probability, *Token, bool) {
 		v.backupOne()
 		return probability, token, false
 	}
-	probability, _ = ele.ProbabilityFromString(token.Value)
+	var matches = abs.ScanProbability([]byte(token.Value))
+	var float, _ = stc.ParseFloat(matches[0], 64)
+	probability = ele.ProbabilityFromFloat(float)
 	return probability, token, true
 }
 
@@ -433,7 +566,8 @@ func (v *parser) parseResource() (ele.Resource, *Token, bool) {
 		v.backupOne()
 		return resource, token, false
 	}
-	resource, _ = ele.ResourceFromString(token.Value)
+	var matches = abs.ScanResource([]byte(token.Value))
+	resource = ele.Resource(matches[0])
 	return resource, token, true
 }
 
@@ -457,14 +591,15 @@ func (v *parser) parseSymbol() (ele.Symbol, *Token, bool) {
 		v.backupOne()
 		return symbol, token, false
 	}
-	symbol, _ = ele.SymbolFromString(token.Value)
+	var matches = abs.ScanSymbol([]byte(token.Value))
+	symbol = ele.Symbol(matches[1]) // Remove the leading '$'.
 	return symbol, token, true
 }
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatSymbol(symbol ele.Symbol) {
-	var s = string(symbol)
+	var s = "$" + string(symbol)
 	v.state.AppendString(s)
 }
 
@@ -479,14 +614,15 @@ func (v *parser) parseTag() (ele.Tag, *Token, bool) {
 		v.backupOne()
 		return tag, token, false
 	}
-	tag, _ = ele.TagFromString(token.Value)
+	var matches = abs.ScanTag([]byte(token.Value))
+	tag = ele.Tag(matches[1]) // Remove the leading "#".
 	return tag, token, true
 }
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatTag(tag ele.Tag) {
-	var s = string(tag)
+	var s = "#" + string(tag)
 	v.state.AppendString(s)
 }
 
@@ -495,4 +631,77 @@ func (v *formatter) formatTag(tag ele.Tag) {
 // This function formats the specified ordinal value to exactly two digits.
 func formatOrdinal(ordinal int) string {
 	return fmt.Sprintf("%02d", ordinal)
+}
+
+// This function converts a string into a float value.
+func stringToFloat(s string) float64 {
+	switch s {
+	case "":
+		return 1
+	case "-":
+		return -1
+	case "e":
+		return mat.E
+	case "-e":
+		return -mat.E
+	case "pi", "π":
+		return mat.Pi
+	case "-pi", "-π":
+		return -mat.Pi
+	case "phi", "φ":
+		return mat.Phi
+	case "-phi", "-φ":
+		return -mat.Phi
+	case "tau", "τ":
+		return mat.Pi * 2.0
+	case "-tau", "-τ":
+		return -mat.Pi * 2.0
+	}
+	var float, _ = stc.ParseFloat(s, 64)
+	return float
+}
+
+// This list contains the supported ISO 8601 date-time formats. Note: the Go
+// templates in this list must contain their exact values. If you are curious
+// why check out this posting:
+//   - https://medium.com/@simplyianm/how-go-solves-date-and-time-formatting-8a932117c41c
+//
+// A good mnemonic to use to remember the pattern is:
+//
+//	  1    2    3     4      5     6      7
+//	month day hour minute second year timezone
+//
+//	"January 2nd, 2006 at 3:04:05pm in the MST timezone"
+//
+// The "Z" in the templates corresponds to the UTC timezone.
+//
+// Anyway, it is what it is, but this hides it from the rest of the code.
+var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
+	"<2006-01-02T15:04:05.000>",
+	"<2006-01-02T15:04:05>",
+	"<2006-01-02T15:04>",
+	"<2006-01-02T15>",
+	"<2006-01-02>",
+	"<2006-01>",
+	"<2006>",
+	"<-2006>",
+	"<-2006-01>",
+	"<-2006-01-02>",
+	"<-2006-01-02T15>",
+	"<-2006-01-02T15:04>",
+	"<-2006-01-02T15:04:05>",
+	"<-2006-01-02T15:04:05.000>"}
+
+// The Go tim.Parse() function cannot handle negative years even though the
+// tim.Time.Format() method will correctly print negative years. The Go team
+// has labeled this issue as "unfortunate" and will not fix it. Alas...
+func hackedParse(layout string, value string) (tim.Time, error) {
+	var date, err = tim.Parse(layout, value)
+	if err != nil {
+		return date, err
+	}
+	if sts.HasPrefix(layout, "<-") {
+		date = date.AddDate(-2*date.Year(), 0, 0)
+	}
+	return date, err
 }

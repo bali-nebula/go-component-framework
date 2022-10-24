@@ -14,7 +14,7 @@ import (
 	byt "bytes"
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	str "strings"
+	sts "strings"
 	utf "unicode/utf8"
 )
 
@@ -232,7 +232,7 @@ func (v *scanner) emitToken(tType TokenType) TokenType {
 	//fmt.Println(token)
 	v.tokens <- token
 	v.firstByte = v.nextByte
-	v.position += str.Count(tValue, "") - 1 // Add the number of runes in the token.
+	v.position += sts.Count(tValue, "") - 1 // Add the number of runes in the token.
 	return tType
 }
 
@@ -269,7 +269,7 @@ func (v *scanner) foundBinary() bool {
 	var matches = abs.ScanBinary(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.line += str.Count(matches[0], "\n")
+		v.line += sts.Count(matches[0], "\n")
 		v.emitToken(TokenBinary)
 		return true
 	}
@@ -283,7 +283,7 @@ func (v *scanner) foundComment() bool {
 	var matches = abs.ScanComment(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.line += str.Count(matches[0], "\n")
+		v.line += sts.Count(matches[0], "\n")
 		v.emitToken(TokenComment)
 		return true
 	}
@@ -408,7 +408,7 @@ func (v *scanner) foundNarrative() bool {
 	var matches = abs.ScanNarrative(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.line += str.Count(matches[0], "\n")
+		v.line += sts.Count(matches[0], "\n")
 		v.emitToken(TokenNarrative)
 		return true
 	}

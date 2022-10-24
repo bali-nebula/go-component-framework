@@ -11,7 +11,6 @@
 package elements
 
 import (
-	str "strings"
 	tim "time"
 )
 
@@ -22,15 +21,6 @@ import (
 func Now() Moment {
 	var now = tim.Now().UTC().UnixMilli()
 	return Moment(now)
-}
-
-// This constructor attempts to create a new moment in time from the specified
-// formatted string. It returns a moment value and whether or not the string
-// contained a valid moment in tim.
-// For valid string formats for this type see `../abstractions/language.go`.
-func MomentFromString(v string) (Moment, bool) {
-	var moment, ok = stringToMoment(v)
-	return Moment(moment), ok
 }
 
 // This type defines the methods associated with moment in time elements. It
@@ -160,68 +150,8 @@ func (l *moments) Later(moment Moment, duration Duration) Moment {
 
 // PRIVATE FUNCTIONS
 
-// This list contains the supported ISO 8601 date-time formats. Note: the Go
-// templates in this list must contain their exact values. If you are curious
-// why check out this posting:
-//   - https://medium.com/@simplyianm/how-go-solves-date-and-time-formatting-8a932117c41c
-//
-// A good mnemonic to use to remember the pattern is:
-//
-//	  1    2    3     4      5     6      7
-//	month day hour minute second year timezone
-//
-//	"January 2nd, 2006 at 3:04:05pm in the MST timezone"
-//
-// The "Z" in the templates corresponds to the UTC timezone.
-//
-// Anyway, it is what it is, but this hides it from the rest of the code.
-var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
-	"<2006-01-02T15:04:05.000>",
-	"<2006-01-02T15:04:05>",
-	"<2006-01-02T15:04>",
-	"<2006-01-02T15>",
-	"<2006-01-02>",
-	"<2006-01>",
-	"<2006>",
-	"<-2006>",
-	"<-2006-01>",
-	"<-2006-01-02>",
-	"<-2006-01-02T15>",
-	"<-2006-01-02T15:04>",
-	"<-2006-01-02T15:04:05>",
-	"<-2006-01-02T15:04:05.000>"}
-
-// This function parses a moment string and returns the corresponding number
-// of milliseconds since UNIX epoc for that moment in tim. We take advantage
-// of the Go time package to do the parsing and decoding of the string.
-func stringToMoment(v string) (int, bool) {
-	var result int
-	for _, format := range isoFormats {
-		var t, err = hackedParse(format, string(v)) // Parsed in UTC.
-		if err == nil {
-			result = int(t.UnixMilli())
-			return result, true
-		}
-	}
-	return result, false
-}
-
 // This function returns the go Time value for the specified UNIX milliseconds.
 func momentToTime(v Moment) tim.Time {
 	var milliseconds int64 = int64(v)
 	return tim.UnixMilli(milliseconds).UTC()
-}
-
-// The Go tim.Parse() function cannot handle negative years even though the
-// tim.Time.Format() method will correctly print negative years. The Go team
-// has labeled this issue as "unfortunate" and will not fix it. Alas...
-func hackedParse(layout string, value string) (tim.Time, error) {
-	var date, err = tim.Parse(layout, value)
-	if err != nil {
-		return date, err
-	}
-	if str.HasPrefix(layout, "<-") {
-		date = date.AddDate(-2*date.Year(), 0, 0)
-	}
-	return date, err
 }

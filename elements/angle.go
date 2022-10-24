@@ -11,9 +11,7 @@
 package elements
 
 import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	mat "math"
-	str "strconv"
 )
 
 // ANGLE INTERFACE
@@ -31,15 +29,6 @@ func AngleFromFloat(v float64) Angle {
 		v = v + twoPi
 	}
 	return Angle(lockPhase(v))
-}
-
-// This constructor attempts to create a new angle from the specified formatted
-// string. It returns an angle value and whether or not the string contained a
-// valid angle.
-// For valid string formats for this type see `../abstractions/language.go`.
-func AngleFromString(v string) (Angle, bool) {
-	var angle, ok = stringToAngle(v)
-	return AngleFromFloat(angle), ok // This normalizes the angle.
 }
 
 // This type defines the methods associated with angle elements. It extends the
@@ -207,27 +196,6 @@ func (l *angles) ArcTangent(x, y float64) Angle {
 }
 
 // PRIVATE FUNCTIONS
-
-// This function parses an angle string and returns the corresponding floating
-// point number and whether or not the string contained a valid angle.
-func stringToAngle(v string) (float64, bool) {
-	var angle float64
-	var ok = true
-	var matches = abs.ScanAngle([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	case matches[1] == "pi" || matches[1] == "π":
-		angle = mat.Pi
-	default:
-		var err error
-		angle, err = str.ParseFloat(matches[1], 64)
-		if err != nil {
-			ok = false
-		}
-	}
-	return angle, ok
-}
 
 // This function uses the single precision floating point range to lock a double
 // precision phase angle onto 0, π/2, π, or 3π/2 if the angle falls outside the

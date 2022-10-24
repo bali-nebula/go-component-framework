@@ -16,15 +16,6 @@ import (
 
 // RESOURCE INTERFACE
 
-// This constructor attempts to create a new web resource from the specified
-// formatted string. It returns a resource value and whether or not the string
-// contained a valid resource.
-// For valid string formats for this type see `../abstractions/language.go`.
-func ResourceFromString(v string) (Resource, bool) {
-	var resource, ok = stringToResource(v)
-	return Resource(resource), ok
-}
-
 // This type defines the methods associated with a web resource element that
 // extends the native Go string type and represents the URI corresponding to
 // that web resource.
@@ -64,20 +55,4 @@ func (v Resource) GetFragment() string {
 	var matches = abs.ScanResource([]byte(v))
 	var fragment = matches[6]
 	return fragment
-}
-
-// PRIVATE FUNCTIONS
-
-// This function parses a resource string and returns the corresponding web URI.
-func stringToResource(v string) (string, bool) {
-	var resource string
-	var ok = true
-	var matches = abs.ScanResource([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		resource = matches[0]
-	}
-	return resource, ok
 }

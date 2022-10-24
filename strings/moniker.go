@@ -11,37 +11,16 @@
 package strings
 
 import (
-	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	str "strings"
+	sts "strings"
 )
 
 // MONIKER STRING INTERFACE
 
 // This constructor attempts to create a new moniker string from the specified
-// formatted string. It returns a moniker value and whether or not the string
-// contained a valid moniker.
-// For valid string formats for this type see `../abstractions/language.go`.
-func MonikerFromString(v string) (Moniker, bool) {
-	var ok = true
-	var moniker string
-	var matches = abs.ScanMoniker([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		moniker = matches[0]
-	}
-	return Moniker(moniker), ok
-}
-
-// This constructor attempts to create a new moniker string from the specified
 // array of names. It returns the corresponding moniker value.
 func MonikerFromNames(v []string) Moniker {
-	var moniker, ok = MonikerFromString("/" + str.Join(v, "/"))
-	if !ok {
-		panic(fmt.Sprintf("The names contain an illegal character: %v", v))
-	}
+	var moniker = Moniker("/" + sts.Join(v, "/"))
 	return moniker
 }
 
@@ -66,7 +45,7 @@ func (v Moniker) GetSize() int {
 // This method returns all the names in this string. The names retrieved are in
 // the same order as they are in the string.
 func (v Moniker) AsArray() []string {
-	return str.Split(string(v[1:]), "/")
+	return sts.Split(string(v[1:]), "/")
 }
 
 // INDEXED INTERFACE

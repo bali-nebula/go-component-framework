@@ -15,33 +15,16 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	stc "strconv"
-	str "strings"
+	sts "strings"
 )
 
 // VERSION STRING INTERFACE
 
 // This constructor attempts to create a new version string from the specified
-// formatted string. It returns a version value and whether or not the string
-// contained a valid version.
-// For valid string formats for this type see `../abstractions/language.go`.
-func VersionFromString(v string) (Version, bool) {
-	var ok = true
-	var version string
-	var matches = abs.ScanVersion([]byte(v))
-	switch {
-	case len(matches) == 0:
-		ok = false
-	default:
-		version = matches[0]
-	}
-	return Version(version), ok
-}
-
-// This constructor attempts to create a new version string from the specified
 // array of ordinals. It returns the corresponding version string.
 func VersionFromOrdinals(v []int) Version {
 	var length = len(v)
-	var version = "v"
+	var version string
 	for i, ordinal := range v {
 		if ordinal < 1 {
 			panic(fmt.Sprintf("All version numbers must be greater than zero: %v", v))
@@ -75,7 +58,7 @@ func (v Version) GetSize() int {
 // are in the same order as they are in the string.
 func (v Version) AsArray() []int {
 	var ordinals []int
-	var levels = str.Split(string(v[1:]), ".")
+	var levels = sts.Split(string(v), ".")
 	for _, level := range levels {
 		var ordinal, _ = stc.ParseInt(level, 10, 0)
 		ordinals = append(ordinals, int(ordinal))
@@ -135,7 +118,7 @@ type versions struct{}
 // This library function returns the concatenation of the two specified version
 // strings.
 func (l *versions) Concatenate(first Version, second Version) Version {
-	var version = first + "." + second[1:]
+	var version = first + "." + second
 	return Version(version)
 }
 
