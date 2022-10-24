@@ -11,7 +11,6 @@
 package language
 
 import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	sts "strings"
 	uni "unicode"
@@ -27,7 +26,7 @@ func (v *parser) parseBinary() (str.Binary, *Token, bool) {
 		v.backupOne()
 		return binary, token, false
 	}
-	var matches = abs.ScanBinary([]byte(token.Value))
+	var matches = scanBinary([]byte(token.Value))
 	// Remove all whitespace and the "'" delimiters.
 	binary = str.Binary(sts.Map(func(r rune) rune {
 		if uni.IsSpace(r) {
@@ -75,7 +74,7 @@ func (v *parser) parseMoniker() (str.Moniker, *Token, bool) {
 		v.backupOne()
 		return moniker, token, false
 	}
-	var matches = abs.ScanMoniker([]byte(token.Value))
+	var matches = scanMoniker([]byte(token.Value))
 	moniker = str.Moniker(matches[0])
 	return moniker, token, true
 }
@@ -127,7 +126,7 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 		v.backupOne()
 		return quote, token, false
 	}
-	var matches = abs.ScanQuote([]byte(token.Value))
+	var matches = scanQuote([]byte(token.Value))
 	quote = str.Quote(matches[1]) // Remove the '"' delimiters.
 	return quote, token, true
 }
@@ -176,7 +175,7 @@ func (v *parser) parseVersion() (str.Version, *Token, bool) {
 		v.backupOne()
 		return version, token, false
 	}
-	var matches = abs.ScanVersion([]byte(token.Value))
+	var matches = scanVersion([]byte(token.Value))
 	version = str.Version(matches[1]) // Remove the leading "v".
 	return version, token, true
 }

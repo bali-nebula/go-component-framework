@@ -12,7 +12,6 @@ package language
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	mat "math"
 	cmp "math/cmplx"
@@ -79,7 +78,7 @@ func (v *parser) parseDuration() (ele.Duration, *Token, bool) {
 		v.backupOne()
 		return duration, token, false
 	}
-	var matches = abs.ScanDuration([]byte(token.Value))
+	var matches = scanDuration([]byte(token.Value))
 	var milliseconds = 0.0
 	var sign = 1.0
 	var isTime = false
@@ -298,7 +297,7 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 	var realPart float64
 	var imaginaryPart float64
 	var phasePart ele.Angle
-	var matches = abs.ScanNumber([]byte(token.Value))
+	var matches = scanNumber([]byte(token.Value))
 	switch {
 	case matches[0] == "undefined":
 		c = cmp.NaN()
@@ -504,7 +503,7 @@ func (v *parser) parseProbability() (ele.Probability, *Token, bool) {
 		v.backupOne()
 		return probability, token, false
 	}
-	var matches = abs.ScanProbability([]byte(token.Value))
+	var matches = scanProbability([]byte(token.Value))
 	var float, _ = stc.ParseFloat(matches[0], 64)
 	probability = ele.ProbabilityFromFloat(float)
 	return probability, token, true
@@ -566,7 +565,7 @@ func (v *parser) parseResource() (ele.Resource, *Token, bool) {
 		v.backupOne()
 		return resource, token, false
 	}
-	var matches = abs.ScanResource([]byte(token.Value))
+	var matches = scanResource([]byte(token.Value))
 	resource = ele.Resource(matches[0])
 	return resource, token, true
 }
@@ -591,7 +590,7 @@ func (v *parser) parseSymbol() (ele.Symbol, *Token, bool) {
 		v.backupOne()
 		return symbol, token, false
 	}
-	var matches = abs.ScanSymbol([]byte(token.Value))
+	var matches = scanSymbol([]byte(token.Value))
 	symbol = ele.Symbol(matches[1]) // Remove the leading '$'.
 	return symbol, token, true
 }
@@ -614,7 +613,7 @@ func (v *parser) parseTag() (ele.Tag, *Token, bool) {
 		v.backupOne()
 		return tag, token, false
 	}
-	var matches = abs.ScanTag([]byte(token.Value))
+	var matches = scanTag([]byte(token.Value))
 	tag = ele.Tag(matches[1]) // Remove the leading "#".
 	return tag, token, true
 }

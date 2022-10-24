@@ -27,9 +27,6 @@ type Resource string
 func (v Resource) GetScheme() string {
 	var u, _ = uri.Parse(string(v))
 	return u.Scheme
-	//var matches = abs.ScanResource([]byte(v))
-	//var scheme = matches[2]
-	//return scheme
 }
 
 // This method returns the authority part of this resource element.
@@ -43,33 +40,22 @@ func (v Resource) GetAuthority() string {
 	}
 	authority += host
 	return authority
-	//var matches = abs.ScanResource([]byte(v))
-	//var authority = matches[3]
-	//return authority
 }
 
 // This method returns the path part of this resource element.
 func (v Resource) GetPath() string {
 	var u, _ = uri.Parse(string(v))
 	return u.Path
-	//var matches = abs.ScanResource([]byte(v))
-	//return matches[4]
 }
 
 // This method returns the query part of this resource element.
 func (v Resource) GetQuery() string {
 	var u, _ = uri.Parse(string(v))
 	return u.RawQuery
-	//var matches = abs.ScanResource([]byte(v))
-	//var query = matches[5]
-	//return query
 }
 
 // This method returns the fragment part of this resource element.
 func (v Resource) GetFragment() string {
 	var u, _ = uri.Parse(string(v))
 	return u.Fragment
-	//var matches = abs.ScanResource([]byte(v))
-	//var fragment = matches[6]
-	//return fragment
 }
