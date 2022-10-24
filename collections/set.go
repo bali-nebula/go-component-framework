@@ -11,23 +11,23 @@
 package collections
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 )
 
 // SET IMPLEMENTATION
 
 // This constructor creates a new empty set that uses the canonical rank
 // function.
-func Set[T any]() abstractions.SetLike[T] {
-	var rank = agents.RankValues
+func Set[T any]() abs.SetLike[T] {
+	var rank = age.RankValues
 	var items = List[T]()
 	return &set[T]{items, items, items, rank}
 }
 
 // This constructor creates a new set from the specified array that uses the
 // canonical rank function.
-func SetFromArray[T any](array []T) abstractions.SetLike[T] {
+func SetFromArray[T any](array []T) abs.SetLike[T] {
 	var v = Set[T]()
 	for _, item := range array {
 		v.AddItem(item)
@@ -42,10 +42,10 @@ func SetFromArray[T any](array []T) abstractions.SetLike[T] {
 //   - T is any type of item.
 type set[T any] struct {
 	// Note: The delegated methods don't see the real collection type.
-	abstractions.Sequential[T]
-	abstractions.Indexed[T]
-	items abstractions.ListLike[T]
-	rank  abstractions.RankingFunction
+	abs.Sequential[T]
+	abs.Indexed[T]
+	items abs.ListLike[T]
+	rank  abs.RankingFunction
 }
 
 // SEARCHABLE INTERFACE
@@ -58,8 +58,8 @@ func (v *set[T]) ContainsItem(item T) bool {
 
 // This method determines whether or not this set contains ANY of the
 // specified items.
-func (v *set[T]) ContainsAny(items abstractions.Sequential[T]) bool {
-	var iterator = agents.Iterator(items)
+func (v *set[T]) ContainsAny(items abs.Sequential[T]) bool {
+	var iterator = age.Iterator(items)
 	for iterator.HasNext() {
 		var item = iterator.GetNext()
 		if v.ContainsItem(item) {
@@ -73,8 +73,8 @@ func (v *set[T]) ContainsAny(items abstractions.Sequential[T]) bool {
 
 // This method determines whether or not this set contains ALL of the
 // specified items.
-func (v *set[T]) ContainsAll(items abstractions.Sequential[T]) bool {
-	var iterator = agents.Iterator(items)
+func (v *set[T]) ContainsAll(items abs.Sequential[T]) bool {
+	var iterator = age.Iterator(items)
 	for iterator.HasNext() {
 		var item = iterator.GetNext()
 		if !v.ContainsItem(item) {
@@ -89,9 +89,9 @@ func (v *set[T]) ContainsAll(items abstractions.Sequential[T]) bool {
 // FLEXIBLE INTERFACE
 
 // This method sets the ranker function for this set.
-func (v *set[T]) SetRanker(rank abstractions.RankingFunction) {
+func (v *set[T]) SetRanker(rank abs.RankingFunction) {
 	if rank == nil {
-		rank = agents.RankValues
+		rank = age.RankValues
 	}
 	v.rank = rank
 }
@@ -108,8 +108,8 @@ func (v *set[T]) AddItem(item T) {
 
 // This method adds the specified items to this set if they are not already
 // members of the set.
-func (v *set[T]) AddItems(items abstractions.Sequential[T]) {
-	var iterator = agents.Iterator(items)
+func (v *set[T]) AddItems(items abs.Sequential[T]) {
+	var iterator = age.Iterator(items)
 	for iterator.HasNext() {
 		var item = iterator.GetNext()
 		v.AddItem(item)
@@ -128,8 +128,8 @@ func (v *set[T]) RemoveItem(item T) {
 
 // This method removes the specified items from this set. It returns the number
 // of items that were removed.
-func (v *set[T]) RemoveItems(items abstractions.Sequential[T]) {
-	var iterator = agents.Iterator(items)
+func (v *set[T]) RemoveItems(items abs.Sequential[T]) {
+	var iterator = age.Iterator(items)
 	for iterator.HasNext() {
 		var item = iterator.GetNext()
 		v.RemoveItem(item)
@@ -201,14 +201,14 @@ type sets[T any] struct{}
 // LOGICAL INTERFACE
 
 // This library function returns the logical inverse of the specified set.
-func (l *sets[T]) Not(set abstractions.SetLike[T]) abstractions.SetLike[T] {
+func (l *sets[T]) Not(set abs.SetLike[T]) abs.SetLike[T] {
 	panic("Not(set) is meaningless, use Sans(fullSet, set) instead.")
 }
 
 // This library function returns the logical conjunction of the specified sets.
-func (l *sets[T]) And(first, second abstractions.SetLike[T]) abstractions.SetLike[T] {
+func (l *sets[T]) And(first, second abs.SetLike[T]) abs.SetLike[T] {
 	var result = Set[T]()
-	var iterator = agents.Iterator[T](first)
+	var iterator = age.Iterator[T](first)
 	for iterator.HasNext() {
 		var item = iterator.GetNext()
 		if second.ContainsItem(item) {
@@ -220,7 +220,7 @@ func (l *sets[T]) And(first, second abstractions.SetLike[T]) abstractions.SetLik
 
 // This library function returns the logical material non-implication of the
 // specified sets.
-func (l *sets[T]) Sans(first, second abstractions.SetLike[T]) abstractions.SetLike[T] {
+func (l *sets[T]) Sans(first, second abs.SetLike[T]) abs.SetLike[T] {
 	var result = Set[T]()
 	result.AddItems(first)
 	result.RemoveItems(second)
@@ -228,7 +228,7 @@ func (l *sets[T]) Sans(first, second abstractions.SetLike[T]) abstractions.SetLi
 }
 
 // This library function returns the logical disjunction of the specified sets.
-func (l *sets[T]) Or(first, second abstractions.SetLike[T]) abstractions.SetLike[T] {
+func (l *sets[T]) Or(first, second abs.SetLike[T]) abs.SetLike[T] {
 	var result = Set[T]()
 	result.AddItems(first)
 	result.AddItems(second)
@@ -237,7 +237,7 @@ func (l *sets[T]) Or(first, second abstractions.SetLike[T]) abstractions.SetLike
 
 // This library function returns the logical exclusive disjunction of the
 // specified sets.
-func (l *sets[T]) Xor(first, second abstractions.SetLike[T]) abstractions.SetLike[T] {
+func (l *sets[T]) Xor(first, second abs.SetLike[T]) abs.SetLike[T] {
 	var result = l.Or(l.Sans(first, second), l.Sans(second, first))
 	return result
 }

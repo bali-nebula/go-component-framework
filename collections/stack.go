@@ -11,20 +11,20 @@
 package collections
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 )
 
 // STACK IMPLEMENTATION
 
 // This constructor creates a new empty stack with the default capacity.
 // The default capacity is 16 items.
-func Stack[T any]() abstractions.StackLike[T] {
+func Stack[T any]() abs.StackLike[T] {
 	return StackWithCapacity[T](0)
 }
 
 // This constructor creates a new empty stack with the specified capacity.
-func StackWithCapacity[T any](capacity int) abstractions.StackLike[T] {
+func StackWithCapacity[T any](capacity int) abs.StackLike[T] {
 	// Groom the arguments.
 	if capacity < 1 {
 		capacity = 16 // The default value.
@@ -41,8 +41,8 @@ func StackWithCapacity[T any](capacity int) abstractions.StackLike[T] {
 //   - T is any type of item.
 type stack[T any] struct {
 	// Note: The delegated methods don't see the real collection type.
-	abstractions.Sequential[T]
-	items    abstractions.ListLike[T]
+	abs.Sequential[T]
+	items    abs.ListLike[T]
 	capacity int
 }
 
@@ -62,8 +62,8 @@ func (v *stack[T]) AddItem(item T) {
 }
 
 // This method adds the specified items to the top of this stack.
-func (v *stack[T]) AddItems(items abstractions.Sequential[T]) {
-	var iterator = agents.Iterator(items)
+func (v *stack[T]) AddItems(items abs.Sequential[T]) {
+	var iterator = age.Iterator(items)
 	for iterator.HasNext() {
 		var item = iterator.GetNext()
 		v.AddItem(item) // We must call this explicitly to get the capacity check.

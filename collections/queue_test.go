@@ -11,30 +11,30 @@
 package collections_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
-	"github.com/craterdog-bali/go-bali-document-notation/collections"
-	"github.com/stretchr/testify/assert"
-	"sync"
-	"testing"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	ass "github.com/stretchr/testify/assert"
+	syn "sync"
+	tes "testing"
 )
 
-func TestQueueWithConcurrency(t *testing.T) {
+func TestQueueWithConcurrency(t *tes.T) {
 	// Create a wait group for synchronization.
-	var wg = new(sync.WaitGroup)
+	var wg = new(syn.WaitGroup)
 	defer wg.Wait()
 
 	// Create a new queue with a specific capacity.
-	var queue = collections.QueueWithCapacity[int](12)
-	assert.Equal(t, 12, queue.GetCapacity())
-	assert.True(t, queue.IsEmpty())
-	assert.Equal(t, 0, queue.GetSize())
+	var queue = col.QueueWithCapacity[int](12)
+	ass.Equal(t, 12, queue.GetCapacity())
+	ass.True(t, queue.IsEmpty())
+	ass.Equal(t, 0, queue.GetSize())
 
 	// Add items to the queue in bulk.
 	for i := 1; i < 10; i++ {
 		queue.AddItem(i)
 	}
-	assert.Equal(t, 9, queue.GetSize())
+	ass.Equal(t, 9, queue.GetSize())
 
 	// Remove items from the queue in the background.
 	wg.Add(1)
@@ -42,7 +42,7 @@ func TestQueueWithConcurrency(t *testing.T) {
 		defer wg.Done()
 		for i := 1; i < 101; i++ {
 			var item, _ = queue.RemoveHead()
-			assert.Equal(t, i, item)
+			ass.Equal(t, i, item)
 		}
 	}()
 
@@ -52,28 +52,28 @@ func TestQueueWithConcurrency(t *testing.T) {
 	}
 }
 
-func TestQueueWithFork(t *testing.T) {
-	var queues = collections.Queues[int]()
+func TestQueueWithFork(t *tes.T) {
+	var queues = col.Queues[int]()
 
 	// Create a wait group for synchronization.
-	var wg = new(sync.WaitGroup)
+	var wg = new(syn.WaitGroup)
 	defer wg.Wait()
 
 	// Create a new queue with a fan out of two.
-	var input = collections.QueueWithCapacity[int](3)
+	var input = col.QueueWithCapacity[int](3)
 	var outputs = queues.Fork(wg, input, 2)
 
 	// Remove items from the output queues in the background.
-	var readOutput = func(output abstractions.FIFO[int], name string) {
+	var readOutput = func(output abs.FIFO[int], name string) {
 		defer wg.Done()
 		var item, ok = output.RemoveHead()
 		for i := 1; ok; i++ {
-			assert.Equal(t, i, item)
+			ass.Equal(t, i, item)
 			item, ok = output.RemoveHead()
 		}
 	}
 	wg.Add(2)
-	var iterator = agents.Iterator(outputs)
+	var iterator = age.Iterator(outputs)
 	for iterator.HasNext() {
 		var output = iterator.GetNext()
 		go readOutput(output, "output")
@@ -86,15 +86,15 @@ func TestQueueWithFork(t *testing.T) {
 	input.CloseQueue()
 }
 
-func TestQueueWithSplitAndJoin(t *testing.T) {
-	var queues = collections.Queues[int]()
+func TestQueueWithSplitAndJoin(t *tes.T) {
+	var queues = col.Queues[int]()
 
 	// Create a wait group for synchronization.
-	var wg = new(sync.WaitGroup)
+	var wg = new(syn.WaitGroup)
 	defer wg.Wait()
 
 	// Create a new queue with a split of five outputs and a join back to one.
-	var input = collections.QueueWithCapacity[int](3)
+	var input = col.QueueWithCapacity[int](3)
 	var split = queues.Split(wg, input, 5)
 	var output = queues.Join(wg, split)
 
@@ -104,7 +104,7 @@ func TestQueueWithSplitAndJoin(t *testing.T) {
 		defer wg.Done()
 		var item, ok = output.RemoveHead()
 		for i := 1; ok; i++ {
-			assert.Equal(t, i, item)
+			ass.Equal(t, i, item)
 			item, ok = output.RemoveHead()
 		}
 	}()

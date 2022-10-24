@@ -11,16 +11,16 @@
 package collections
 
 import (
-	"fmt"
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/elements"
-	"reflect"
+	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	ref "reflect"
 )
 
 // RANGE IMPLEMENTATION
 
 // This constructor creates a new range of items covering the specified endpoints.
-func Range[T any](first T, connector string, last T) abstractions.RangeLike[T] {
+func Range[T any](first T, connector string, last T) abs.RangeLike[T] {
 	switch connector {
 	case "..":
 	case "<..":
@@ -77,7 +77,7 @@ func (v *ranje[T]) AsArray() []T {
 // INDEXED INTERFACE
 
 // This method sets the comparer function for this list.
-func (v *ranje[T]) SetComparer(compare abstractions.ComparisonFunction) {
+func (v *ranje[T]) SetComparer(compare abs.ComparisonFunction) {
 	// This method does nothing since range items are either sequential or only
 	// have meaning within the context of a set. We may revisit this...
 }
@@ -85,7 +85,7 @@ func (v *ranje[T]) SetComparer(compare abstractions.ComparisonFunction) {
 // This method retrieves from this range the item that is associated with the
 // specified index.
 func (v *ranje[T]) GetItem(index int) T {
-	var offset = abstractions.NormalizedIndex(index, v.size)
+	var offset = abs.NormalizedIndex(index, v.size)
 	var first = v.effectiveFirst()
 	var item = v.indexToItem(first + offset)
 	return item
@@ -93,7 +93,7 @@ func (v *ranje[T]) GetItem(index int) T {
 
 // This method retrieves from this range all items from the first index through
 // the last index (inclusive).
-func (v *ranje[T]) GetItems(first int, last int) abstractions.Sequential[T] {
+func (v *ranje[T]) GetItems(first int, last int) abs.Sequential[T] {
 	var items = List[T]()
 	for index := first; index <= last; index++ {
 		var item = v.indexToItem(index)
@@ -212,7 +212,7 @@ func (v *ranje[T]) itemToIndex(item T) int {
 		return int(real(index))
 	case complex128:
 		return int(real(index))
-	case elements.Number:
+	case ele.Number:
 		return int(real(index))
 	default:
 		panic(fmt.Sprintf("The item is not an integer type: %T", item))
@@ -251,10 +251,10 @@ func (v *ranje[T]) effectiveLast() int {
 // parameterized type T is an integer type. If it is not an integer type
 // the effective size is zero.
 func (v *ranje[T]) calculateSize() int {
-	switch reflect.ValueOf(v.first).Kind() {
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32,
-		reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32,
-		reflect.Complex64, reflect.Complex128:
+	switch ref.ValueOf(v.first).Kind() {
+	case ref.Uint, ref.Uint8, ref.Uint16, ref.Uint32,
+		ref.Int, ref.Int8, ref.Int16, ref.Int32,
+		ref.Complex64, ref.Complex128:
 		var first = v.effectiveFirst()
 		var last = v.effectiveLast()
 		var size = last - first + 1

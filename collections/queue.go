@@ -11,21 +11,21 @@
 package collections
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
-	"sync"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	syn "sync"
 )
 
 // QUEUE IMPLEMENTATION
 
 // This constructor creates a new empty queue with the default capacity.
 // The default capacity is 16 items.
-func Queue[T any]() abstractions.QueueLike[T] {
+func Queue[T any]() abs.QueueLike[T] {
 	return QueueWithCapacity[T](0)
 }
 
 // This constructor creates a new empty queue with the specified capacity.
-func QueueWithCapacity[T any](capacity int) abstractions.QueueLike[T] {
+func QueueWithCapacity[T any](capacity int) abs.QueueLike[T] {
 	// Groom the arguments.
 	if capacity < 1 {
 		capacity = 16 // The default value.
@@ -49,8 +49,8 @@ func QueueWithCapacity[T any](capacity int) abstractions.QueueLike[T] {
 // AsArray() method.
 type queue[T any] struct {
 	available chan bool
-	items     abstractions.ListLike[T]
-	mutex     sync.Mutex
+	items     abs.ListLike[T]
+	mutex     syn.Mutex
 }
 
 // SEQUENTIAL INTERFACE
@@ -96,8 +96,8 @@ func (v *queue[T]) AddItem(item T) {
 }
 
 // This method adds the specified items to the top of this queue.
-func (v *queue[T]) AddItems(items abstractions.Sequential[T]) {
-	var iterator = agents.Iterator(items)
+func (v *queue[T]) AddItems(items abs.Sequential[T]) {
+	var iterator = age.Iterator(items)
 	for iterator.HasNext() {
 		var item = iterator.GetNext()
 		v.mutex.Lock()
@@ -153,7 +153,7 @@ type queues[T any] struct{}
 // added automatically to ALL of the output queues. This pattern is useful when
 // a set of DIFFERENT operations needs to occur for every item and each
 // operation can be done in parallel.
-func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size int) abstractions.Sequential[abstractions.FIFO[T]] {
+func (l *queues[T]) Fork(wg *syn.WaitGroup, input abs.FIFO[T], size int) abs.Sequential[abs.FIFO[T]] {
 	// Validate the arguments.
 	if size < 1 {
 		panic("The fan out size for a queue must be greater than zero.")
@@ -161,9 +161,9 @@ func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size in
 
 	// Create the new output queues.
 	var capacity = input.GetCapacity()
-	var outputs = List[abstractions.FIFO[T]]()
+	var outputs = List[abs.FIFO[T]]()
 	for i := 0; i < size; i++ {
-		outputs.AddItem(abstractions.FIFO[T](QueueWithCapacity[T](capacity)))
+		outputs.AddItem(abs.FIFO[T](QueueWithCapacity[T](capacity)))
 	}
 
 	// Connect up the input queue to the output queues in a separate goroutine.
@@ -173,7 +173,7 @@ func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size in
 		defer wg.Done()
 
 		// Write each item read from the input queue to each output queue.
-		var iterator = agents.Iterator[abstractions.FIFO[T]](outputs)
+		var iterator = age.Iterator[abs.FIFO[T]](outputs)
 		for {
 			// Read from the input queue.
 			var item, ok = input.RemoveHead() // Will block when empty.
@@ -207,7 +207,7 @@ func (l *queues[T]) Fork(wg *sync.WaitGroup, input abstractions.FIFO[T], size in
 // a SINGLE operation needs to occur for each item and the operation can be done
 // on the items in parallel. The results can then be consolidated later on using
 // the Join() function.
-func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size int) abstractions.Sequential[abstractions.FIFO[T]] {
+func (l *queues[T]) Split(wg *syn.WaitGroup, input abs.FIFO[T], size int) abs.Sequential[abs.FIFO[T]] {
 	// Validate the arguments.
 	if size < 1 {
 		panic("The size of the split must be greater than zero.")
@@ -215,9 +215,9 @@ func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size i
 
 	// Create the new output queues.
 	var capacity = input.GetCapacity()
-	var outputs = List[abstractions.FIFO[T]]()
+	var outputs = List[abs.FIFO[T]]()
 	for i := 0; i < size; i++ {
-		outputs.AddItem(abstractions.FIFO[T](QueueWithCapacity[T](capacity)))
+		outputs.AddItem(abs.FIFO[T](QueueWithCapacity[T](capacity)))
 	}
 
 	// Connect up the input queue to the output queues.
@@ -227,7 +227,7 @@ func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size i
 		defer wg.Done()
 
 		// Take turns reading from the input queue and writing to each output queue.
-		var iterator = agents.Iterator[abstractions.FIFO[T]](outputs)
+		var iterator = age.Iterator[abs.FIFO[T]](outputs)
 		for {
 			// Read from the input queue.
 			var item, ok = input.RemoveHead() // Will block when empty.
@@ -259,14 +259,14 @@ func (l *queues[T]) Split(wg *sync.WaitGroup, input abstractions.FIFO[T], size i
 // removed from each input queue will automatically be added to the output
 // queue. This pattern is useful when the results of the processing with a
 // Split() function need to be consolicated into a single queue.
-func (l *queues[T]) Join(wg *sync.WaitGroup, inputs abstractions.Sequential[abstractions.FIFO[T]]) abstractions.FIFO[T] {
+func (l *queues[T]) Join(wg *syn.WaitGroup, inputs abs.Sequential[abs.FIFO[T]]) abs.FIFO[T] {
 	// Validate the arguments.
 	if inputs == nil || inputs.IsEmpty() {
 		panic("The number of input queues for a join must be greater than zero.")
 	}
 
 	// Create the new output queue.
-	var iterator = agents.Iterator(inputs)
+	var iterator = age.Iterator(inputs)
 	var capacity = iterator.GetNext().GetCapacity()
 	var output = QueueWithCapacity[T](capacity)
 

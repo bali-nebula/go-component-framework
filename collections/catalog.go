@@ -11,14 +11,14 @@
 package collections
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 )
 
 // ASSOCIATION IMPLEMENTATION
 
 // This constructor creates a new association with the specified key and value.
-func Association[K any, V any](key K, value V) abstractions.AssociationLike[K, V] {
+func Association[K any, V any](key K, value V) abs.AssociationLike[K, V] {
 	return &association[K, V]{key, value}
 }
 
@@ -49,9 +49,9 @@ func (v *association[K, V]) SetValue(value V) {
 }
 
 // This constructor creates a new empty catalog.
-func Catalog[K any, V any]() abstractions.CatalogLike[K, V] {
-	var keys = map[any]abstractions.AssociationLike[K, V]{}
-	var associations = List[abstractions.AssociationLike[K, V]]()
+func Catalog[K any, V any]() abs.CatalogLike[K, V] {
+	var keys = map[any]abs.AssociationLike[K, V]{}
+	var associations = List[abs.AssociationLike[K, V]]()
 	return &catalog[K, V]{associations, associations, associations, keys}
 }
 
@@ -63,24 +63,24 @@ func Catalog[K any, V any]() abstractions.CatalogLike[K, V] {
 //   - V is any type of value.
 type catalog[K any, V any] struct {
 	// Note: The delegated methods don't see the real collection type.
-	abstractions.Sequential[abstractions.AssociationLike[K, V]]
-	abstractions.Indexed[abstractions.AssociationLike[K, V]]
-	associations abstractions.ListLike[abstractions.AssociationLike[K, V]]
-	keys         map[any]abstractions.AssociationLike[K, V]
+	abs.Sequential[abs.AssociationLike[K, V]]
+	abs.Indexed[abs.AssociationLike[K, V]]
+	associations abs.ListLike[abs.AssociationLike[K, V]]
+	keys         map[any]abs.AssociationLike[K, V]
 }
 
 // ASSOCIATIVE INTERFACE
 
 // This method appends the specified association to the end of this catalog.
-func (v *catalog[K, V]) AddAssociation(association abstractions.AssociationLike[K, V]) {
+func (v *catalog[K, V]) AddAssociation(association abs.AssociationLike[K, V]) {
 	var key = association.GetKey()
 	var value = association.GetValue()
 	v.SetValue(key, value) // This copies the association.
 }
 
 // This method appends the specified associations to the end of this catalog.
-func (v *catalog[K, V]) AddAssociations(associations abstractions.Sequential[abstractions.AssociationLike[K, V]]) {
-	var iterator = agents.Iterator(associations)
+func (v *catalog[K, V]) AddAssociations(associations abs.Sequential[abs.AssociationLike[K, V]]) {
+	var iterator = age.Iterator(associations)
 	for iterator.HasNext() {
 		var association = iterator.GetNext()
 		v.AddAssociation(association)
@@ -88,9 +88,9 @@ func (v *catalog[K, V]) AddAssociations(associations abstractions.Sequential[abs
 }
 
 // This method returns the keys for this catalog.
-func (v *catalog[K, V]) GetKeys() abstractions.Sequential[K] {
+func (v *catalog[K, V]) GetKeys() abs.Sequential[K] {
 	var keys = List[K]()
-	var iterator = agents.Iterator[abstractions.AssociationLike[K, V]](v.associations)
+	var iterator = age.Iterator[abs.AssociationLike[K, V]](v.associations)
 	for iterator.HasNext() {
 		var association = iterator.GetNext()
 		keys.AddItem(association.GetKey())
@@ -113,9 +113,9 @@ func (v *catalog[K, V]) GetValue(key K) V {
 // This method returns the values associated with the specified keys for this
 // catalog. The values are returned in the same order as the keys in the
 // catalog.
-func (v *catalog[K, V]) GetValues(keys abstractions.Sequential[K]) abstractions.Sequential[V] {
+func (v *catalog[K, V]) GetValues(keys abs.Sequential[K]) abs.Sequential[V] {
 	var values = List[V]()
-	var iterator = agents.Iterator(keys)
+	var iterator = age.Iterator(keys)
 	for iterator.HasNext() {
 		var key = iterator.GetNext()
 		values.AddItem(v.GetValue(key))
@@ -154,9 +154,9 @@ func (v *catalog[K, V]) RemoveValue(key K) V {
 
 // This method removes the associations associated with the specified keys from
 // the catalog and returns the removed values.
-func (v *catalog[K, V]) RemoveValues(keys abstractions.Sequential[K]) abstractions.Sequential[V] {
+func (v *catalog[K, V]) RemoveValues(keys abs.Sequential[K]) abs.Sequential[V] {
 	var values = List[V]()
-	var iterator = agents.Iterator(keys)
+	var iterator = age.Iterator(keys)
 	for iterator.HasNext() {
 		var key = iterator.GetNext()
 		values.AddItem(v.RemoveValue(key))
@@ -166,7 +166,7 @@ func (v *catalog[K, V]) RemoveValues(keys abstractions.Sequential[K]) abstractio
 
 // This method removes all associations from this catalog.
 func (v *catalog[K, V]) RemoveAll() {
-	v.keys = map[any]abstractions.AssociationLike[K, V]{}
+	v.keys = map[any]abs.AssociationLike[K, V]{}
 	v.associations.RemoveAll()
 }
 
@@ -178,7 +178,7 @@ func (v *catalog[K, V]) SortAssociations() {
 
 // This method sorts this catalog using the specified rank function to compare
 // the keys.
-func (v *catalog[K, V]) SortAssociationsWithRanker(rank abstractions.RankingFunction) {
+func (v *catalog[K, V]) SortAssociationsWithRanker(rank abs.RankingFunction) {
 	v.associations.SortItemsWithRanker(rank)
 }
 
@@ -207,7 +207,7 @@ type catalogs[K any, V any] struct{}
 // This library function returns a new catalog containing all of the associations
 // that are in the specified catalogs in the order that they appear in each
 // catalog.
-func (l *catalogs[K, V]) Merge(first, second abstractions.CatalogLike[K, V]) abstractions.CatalogLike[K, V] {
+func (l *catalogs[K, V]) Merge(first, second abs.CatalogLike[K, V]) abs.CatalogLike[K, V] {
 	var result = Catalog[K, V]()
 	result.AddAssociations(first)
 	result.AddAssociations(second)
@@ -218,9 +218,9 @@ func (l *catalogs[K, V]) Merge(first, second abstractions.CatalogLike[K, V]) abs
 // that are in the specified catalog that have the specified keys. The
 // associations in the resulting catalog will be in the same order as the
 // specified keys.
-func (l *catalogs[K, V]) Extract(catalog abstractions.CatalogLike[K, V], keys abstractions.Sequential[K]) abstractions.CatalogLike[K, V] {
+func (l *catalogs[K, V]) Extract(catalog abs.CatalogLike[K, V], keys abs.Sequential[K]) abs.CatalogLike[K, V] {
 	var result = Catalog[K, V]()
-	var iterator = agents.Iterator(keys)
+	var iterator = age.Iterator(keys)
 	for iterator.HasNext() {
 		var key = iterator.GetNext()
 		var value = catalog.GetValue(key)

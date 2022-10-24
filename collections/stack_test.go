@@ -11,26 +11,26 @@
 package collections_test
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/collections"
-	"github.com/stretchr/testify/assert"
-	"testing"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	ass "github.com/stretchr/testify/assert"
+	tes "testing"
 )
 
-func TestStacksWithStrings(t *testing.T) {
-	var stack = collections.Stack[string]()
-	assert.True(t, stack.IsEmpty())
-	assert.Equal(t, 0, stack.GetSize())
+func TestStacksWithStrings(t *tes.T) {
+	var stack = col.Stack[string]()
+	ass.True(t, stack.IsEmpty())
+	ass.Equal(t, 0, stack.GetSize())
 	stack.RemoveAll()
 	stack.AddItem("foo")
 	stack.AddItem("bar")
 	stack.AddItem("baz")
-	assert.Equal(t, 3, stack.GetSize())
-	assert.Equal(t, "baz", string(stack.GetTop()))
-	assert.Equal(t, "baz", string(stack.RemoveTop()))
-	assert.Equal(t, 2, stack.GetSize())
-	assert.Equal(t, "bar", string(stack.GetTop()))
-	assert.Equal(t, "bar", string(stack.RemoveTop()))
-	assert.Equal(t, 1, stack.GetSize())
-	assert.Equal(t, "foo", string(stack.GetTop()))
+	ass.Equal(t, 3, stack.GetSize())
+	ass.Equal(t, "baz", string(stack.GetTop()))
+	ass.Equal(t, "baz", string(stack.RemoveTop()))
+	ass.Equal(t, 2, stack.GetSize())
+	ass.Equal(t, "bar", string(stack.GetTop()))
+	ass.Equal(t, "bar", string(stack.RemoveTop()))
+	ass.Equal(t, 1, stack.GetSize())
+	ass.Equal(t, "foo", string(stack.GetTop()))
 	stack.RemoveAll()
 }

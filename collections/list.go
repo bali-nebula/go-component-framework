@@ -11,26 +11,26 @@
 package collections
 
 import (
-	"github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	"github.com/craterdog-bali/go-bali-document-notation/agents"
-	"math/rand"
-	"time"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	ran "math/rand"
+	tim "time"
 )
 
 // LIST IMPLEMENTATION
 
 // This constructor creates a new empty list that uses the canonical compare
 // function.
-func List[T any]() abstractions.ListLike[T] {
+func List[T any]() abs.ListLike[T] {
 	var capacity = 4 // The minimum value.
 	var items = make([]T, 0, capacity)
-	var compare = agents.CompareValues
+	var compare = age.CompareValues
 	return &list[T]{items, compare}
 }
 
 // This constructor creates a new list from the specified array that uses the
 // canonical compare function.
-func ListFromArray[T any](array []T) abstractions.ListLike[T] {
+func ListFromArray[T any](array []T) abs.ListLike[T] {
 	var v = List[T]()
 	for _, item := range array {
 		v.AddItem(item)
@@ -46,7 +46,7 @@ func ListFromArray[T any](array []T) abstractions.ListLike[T] {
 //   - T is any type of item.
 type list[T any] struct {
 	items   []T
-	compare abstractions.ComparisonFunction
+	compare abs.ComparisonFunction
 }
 
 // SEQUENTIAL INTERFACE
@@ -73,9 +73,9 @@ func (v *list[T]) AsArray() []T {
 // INDEXED INTERFACE
 
 // This method sets the comparer function for this list.
-func (v *list[T]) SetComparer(compare abstractions.ComparisonFunction) {
+func (v *list[T]) SetComparer(compare abs.ComparisonFunction) {
 	if compare == nil {
-		compare = agents.CompareValues
+		compare = age.CompareValues
 	}
 	v.compare = compare
 }
@@ -84,16 +84,16 @@ func (v *list[T]) SetComparer(compare abstractions.ComparisonFunction) {
 // specified index.
 func (v *list[T]) GetItem(index int) T {
 	var length = len(v.items)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	return v.items[index]
 }
 
 // This method retrieves from this list all items from the first index through
 // the last index (inclusive).
-func (v *list[T]) GetItems(first int, last int) abstractions.Sequential[T] {
+func (v *list[T]) GetItems(first int, last int) abs.Sequential[T] {
 	var length = len(v.items)
-	first = abstractions.NormalizedIndex(first, length)
-	last = abstractions.NormalizedIndex(last, length)
+	first = abs.NormalizedIndex(first, length)
+	last = abs.NormalizedIndex(last, length)
 	var result = ListFromArray[T](v.items[first : last+1])
 	return result
 }
@@ -120,8 +120,8 @@ func (v *list[T]) ContainsItem(item T) bool {
 
 // This method determines whether or not this list contains ANY of the specified
 // items.
-func (v *list[T]) ContainsAny(items abstractions.Sequential[T]) bool {
-	var iterator = agents.Iterator[T](items)
+func (v *list[T]) ContainsAny(items abs.Sequential[T]) bool {
+	var iterator = age.Iterator[T](items)
 	for iterator.HasNext() {
 		var candidate = iterator.GetNext()
 		if v.GetIndex(candidate) > 0 {
@@ -135,8 +135,8 @@ func (v *list[T]) ContainsAny(items abstractions.Sequential[T]) bool {
 
 // This method determines whether or not this list contains ALL of the specified
 // items.
-func (v *list[T]) ContainsAll(items abstractions.Sequential[T]) bool {
-	var iterator = agents.Iterator[T](items)
+func (v *list[T]) ContainsAll(items abs.Sequential[T]) bool {
+	var iterator = age.Iterator[T](items)
 	for iterator.HasNext() {
 		var candidate = iterator.GetNext()
 		if v.GetIndex(candidate) == 0 {
@@ -162,7 +162,7 @@ func (v *list[T]) AddItem(item T) {
 }
 
 // This method appends the specified items to the end of this list.
-func (v *list[T]) AddItems(items abstractions.Sequential[T]) {
+func (v *list[T]) AddItems(items abs.Sequential[T]) {
 	// Add space for the new items.
 	var index = len(v.items)
 	var length = index + items.GetSize()
@@ -176,15 +176,15 @@ func (v *list[T]) AddItems(items abstractions.Sequential[T]) {
 // index to be the specified item.
 func (v *list[T]) SetItem(index int, item T) {
 	var length = len(v.items)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	v.items[index] = item
 }
 
 // This method sets the items in this list starting with the specified index
 // to the specified items.
-func (v *list[T]) SetItems(index int, items abstractions.Sequential[T]) {
+func (v *list[T]) SetItems(index int, items abs.Sequential[T]) {
 	var length = len(v.items)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	copy(v.items[index:], items.AsArray())
 }
 
@@ -202,7 +202,7 @@ func (v *list[T]) InsertItem(slot int, item T) {
 
 // This method inserts the specified items into this list in the specified
 // slot between existing items.
-func (v *list[T]) InsertItems(slot int, items abstractions.Sequential[T]) {
+func (v *list[T]) InsertItems(slot int, items abs.Sequential[T]) {
 	// Add space for the new items.
 	var size = items.GetSize()
 	var length = len(v.items) + size
@@ -218,7 +218,7 @@ func (v *list[T]) InsertItems(slot int, items abstractions.Sequential[T]) {
 func (v *list[T]) RemoveItem(index int) T {
 	// Remove the old item.
 	var length = len(v.items)
-	index = abstractions.NormalizedIndex(index, length)
+	index = abs.NormalizedIndex(index, length)
 	var old = v.items[index]
 	copy(v.items[index:], v.items[index+1:])
 
@@ -229,11 +229,11 @@ func (v *list[T]) RemoveItem(index int) T {
 
 // This method removes the items in the specified index range from this list.
 // The removed items are returned.
-func (v *list[T]) RemoveItems(first int, last int) abstractions.Sequential[T] {
+func (v *list[T]) RemoveItems(first int, last int) abs.Sequential[T] {
 	// Remove the specified items.
 	var length = len(v.items)
-	first = abstractions.NormalizedIndex(first, length)
-	last = abstractions.NormalizedIndex(last, length)
+	first = abs.NormalizedIndex(first, length)
+	last = abs.NormalizedIndex(last, length)
 	var result = ListFromArray[T](v.items[first : last+1])
 	copy(v.items[first:], v.items[last+1:])
 
@@ -250,8 +250,8 @@ func (v *list[T]) RemoveAll() {
 
 // This method pseudo-randomly shuffles the items in this list.
 func (v *list[T]) ShuffleItems() {
-	rand.Seed(time.Now().UnixNano())
-	rand.Shuffle(len(v.items), func(i, j int) {
+	ran.Seed(tim.Now().UnixNano())
+	ran.Shuffle(len(v.items), func(i, j int) {
 		// Swap the two items.
 		v.items[i], v.items[j] = v.items[j], v.items[i]
 	})
@@ -263,12 +263,12 @@ func (v *list[T]) SortItems() {
 }
 
 // This method sorts the items in this list using the specified rank function.
-func (v *list[T]) SortItemsWithRanker(rank abstractions.RankingFunction) {
+func (v *list[T]) SortItemsWithRanker(rank abs.RankingFunction) {
 	if rank == nil {
-		rank = agents.RankValues
+		rank = age.RankValues
 	}
 	if len(v.items) > 1 {
-		agents.SortArray[T](v.items, rank)
+		age.SortArray[T](v.items, rank)
 	}
 }
 
@@ -325,7 +325,7 @@ type lists[T any] struct{}
 // CHAINABLE INTERFACE
 
 // This library function returns the concatenation of the two specified lists.
-func (l *lists[T]) Concatenate(first, second abstractions.ListLike[T]) abstractions.ListLike[T] {
+func (l *lists[T]) Concatenate(first, second abs.ListLike[T]) abs.ListLike[T] {
 	var result = List[T]()
 	result.AddItems(first)
 	result.AddItems(second)
