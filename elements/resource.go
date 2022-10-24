@@ -11,7 +11,7 @@
 package elements
 
 import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	uri "net/url"
 )
 
 // RESOURCE INTERFACE
@@ -25,34 +25,51 @@ type Resource string
 
 // This method returns the scheme part of this resource element.
 func (v Resource) GetScheme() string {
-	var matches = abs.ScanResource([]byte(v))
-	var scheme = matches[2]
-	return scheme
+	var u, _ = uri.Parse(string(v))
+	return u.Scheme
+	//var matches = abs.ScanResource([]byte(v))
+	//var scheme = matches[2]
+	//return scheme
 }
 
 // This method returns the authority part of this resource element.
 func (v Resource) GetAuthority() string {
-	var matches = abs.ScanResource([]byte(v))
-	var authority = matches[3]
+	var authority string
+	var u, _ = uri.Parse(string(v))
+	var user = u.User.String()
+	var host = u.Host
+	if len(user) > 0 {
+		authority = user + "@"
+	}
+	authority += host
 	return authority
+	//var matches = abs.ScanResource([]byte(v))
+	//var authority = matches[3]
+	//return authority
 }
 
 // This method returns the path part of this resource element.
 func (v Resource) GetPath() string {
-	var matches = abs.ScanResource([]byte(v))
-	return matches[4]
+	var u, _ = uri.Parse(string(v))
+	return u.Path
+	//var matches = abs.ScanResource([]byte(v))
+	//return matches[4]
 }
 
 // This method returns the query part of this resource element.
 func (v Resource) GetQuery() string {
-	var matches = abs.ScanResource([]byte(v))
-	var query = matches[5]
-	return query
+	var u, _ = uri.Parse(string(v))
+	return u.RawQuery
+	//var matches = abs.ScanResource([]byte(v))
+	//var query = matches[5]
+	//return query
 }
 
 // This method returns the fragment part of this resource element.
 func (v Resource) GetFragment() string {
-	var matches = abs.ScanResource([]byte(v))
-	var fragment = matches[6]
-	return fragment
+	var u, _ = uri.Parse(string(v))
+	return u.Fragment
+	//var matches = abs.ScanResource([]byte(v))
+	//var fragment = matches[6]
+	//return fragment
 }

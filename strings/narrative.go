@@ -26,7 +26,7 @@ type Narrative string
 
 // This method determines whether or not this string is empty.
 func (v Narrative) IsEmpty() bool {
-	return len(v) == 1 // An empty narrative string is: '">' EOL EOL '<"'.
+	return len(v) == 0
 }
 
 // This method returns the number of runes contained in this narrative.

@@ -12,7 +12,6 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -70,36 +69,6 @@ func TestOtherProbabilities(t *tes.T) {
 	ass.Equal(t, 1, v3.AsInteger())
 	ass.Equal(t, 0.75, v3.AsReal())
 	ass.Equal(t, 0.75, float64(v3))
-}
-
-func TestStringProbabilities(t *tes.T) {
-	var v, ok = ele.ProbabilityFromString(".0")
-	ass.True(t, ok)
-	ass.Equal(t, 0, int(v)) // Truncates the value.
-	ass.False(t, v.AsBoolean())
-	ass.Equal(t, 0, v.AsInteger()) // Rounds the value.
-	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, ".0", lan.FormatValue(v))
-
-	v, ok = ele.ProbabilityFromString(".5")
-	ass.True(t, ok)
-	ass.Equal(t, 0, int(v)) // Truncates the value.
-	ass.True(t, v.AsBoolean())
-	ass.Equal(t, 1, v.AsInteger()) // Rounds the value.
-	ass.Equal(t, 0.5, v.AsReal())
-	ass.Equal(t, ".5", lan.FormatValue(v))
-
-	v, ok = ele.ProbabilityFromString("1.")
-	ass.True(t, ok)
-	ass.Equal(t, 1, int(v))
-	ass.True(t, v.AsBoolean())
-	ass.Equal(t, 1, v.AsInteger())
-	ass.Equal(t, 1.0, v.AsReal())
-	ass.Equal(t, "1.", lan.FormatValue(v))
-
-	v, ok = ele.ProbabilityFromString("1.0")
-	ass.False(t, ok)
-	ass.Equal(t, 0, int(v))
 }
 
 func TestProbabilitiesLibrary(t *tes.T) {

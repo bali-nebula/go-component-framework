@@ -12,7 +12,6 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
 	tes "testing"
@@ -21,39 +20,23 @@ import (
 func TestZeroAngles(t *tes.T) {
 	var v = ele.AngleFromFloat(0)
 	ass.Equal(t, 0.0, float64(v))
-	ass.Equal(t, "~0", lan.FormatValue(v))
 	ass.Equal(t, 0.0, v.AsReal())
 }
 
 func TestPositiveAngles(t *tes.T) {
 	var v = ele.AngleFromFloat(mat.Pi)
 	ass.Equal(t, mat.Pi, float64(v))
-	ass.Equal(t, "~π", lan.FormatValue(v))
 	ass.Equal(t, mat.Pi, v.AsReal())
 }
 
 func TestNegativeAngles(t *tes.T) {
 	var v1 = ele.AngleFromFloat(-mat.Pi)
 	ass.Equal(t, mat.Pi, float64(v1))
-	ass.Equal(t, "~π", lan.FormatValue(v1))
 	ass.Equal(t, mat.Pi, v1.AsReal())
 
 	var v2 = ele.AngleFromFloat(-mat.Pi / 2.0)
 	ass.Equal(t, 1.5*mat.Pi, float64(v2))
-	ass.Equal(t, "~4.71238898038469", lan.FormatValue(v2))
 	ass.Equal(t, 1.5*mat.Pi, v2.AsReal())
-}
-
-func TestStringAngles(t *tes.T) {
-	var v, ok = ele.AngleFromString("~π")
-	ass.True(t, ok)
-	ass.Equal(t, mat.Pi, float64(v))
-	ass.Equal(t, "~π", lan.FormatValue(v))
-	ass.Equal(t, mat.Pi, v.AsReal())
-
-	v, ok = ele.AngleFromString("bad")
-	ass.False(t, ok)
-	ass.Equal(t, 0, int(v))
 }
 
 func TestAnglesLibrary(t *tes.T) {

@@ -12,7 +12,6 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
 	tes "testing"
@@ -30,7 +29,6 @@ func TestZeroDurations(t *tes.T) {
 	ass.Equal(t, 0.0, v.AsWeeks())
 	ass.Equal(t, 0.0, v.AsMonths())
 	ass.Equal(t, 0.0, v.AsYears())
-	ass.Equal(t, "~P0Y0M0DT0H0M0.0S", lan.FormatValue(v))
 	ass.Equal(t, 0, v.GetMilliseconds())
 	ass.Equal(t, 0, v.GetSeconds())
 	ass.Equal(t, 0, v.GetMinutes())
@@ -53,7 +51,6 @@ func TestPositiveDurations(t *tes.T) {
 	ass.Equal(t, 9.92063492063492e-05, v.AsWeeks())
 	ass.Equal(t, 2.2815891724904232e-05, v.AsMonths())
 	ass.Equal(t, 1.901324310408686e-06, v.AsYears())
-	ass.Equal(t, "~P0Y0M0DT0H1M0.0S", lan.FormatValue(v))
 	ass.Equal(t, 0, v.GetMilliseconds())
 	ass.Equal(t, 0, v.GetSeconds())
 	ass.Equal(t, 1, v.GetMinutes())
@@ -76,7 +73,6 @@ func TestNegativeDurations(t *tes.T) {
 	ass.Equal(t, -9.92063492063492e-05, v.AsWeeks())
 	ass.Equal(t, -2.2815891724904232e-05, v.AsMonths())
 	ass.Equal(t, -1.901324310408686e-06, v.AsYears())
-	ass.Equal(t, "~-P0Y0M0DT0H1M0.0S", lan.FormatValue(v))
 	ass.Equal(t, 0, v.GetMilliseconds())
 	ass.Equal(t, 0, v.GetSeconds())
 	ass.Equal(t, 1, v.GetMinutes())
@@ -85,34 +81,6 @@ func TestNegativeDurations(t *tes.T) {
 	ass.Equal(t, 0, v.GetWeeks())
 	ass.Equal(t, 0, v.GetMonths())
 	ass.Equal(t, 0, v.GetYears())
-}
-
-func TestStringDurations(t *tes.T) {
-	var v, ok = ele.DurationFromString("~-P12Y3M4DT5H6M7.890S")
-	ass.True(t, ok)
-	ass.Equal(t, -386936629890, int(v))
-	ass.True(t, v.IsNegative())
-	ass.Equal(t, -386936629890.0, v.AsMilliseconds())
-	ass.Equal(t, -386936629.89, v.AsSeconds())
-	ass.Equal(t, -6448943.831499999, v.AsMinutes())
-	ass.Equal(t, -107482.39719166666, v.AsHours())
-	ass.Equal(t, -4478.433216319444, v.AsDays())
-	ass.Equal(t, -639.7761737599205, v.AsWeeks())
-	ass.Equal(t, -147.138404199493, v.AsMonths())
-	ass.Equal(t, -12.261533683291084, v.AsYears())
-	ass.Equal(t, "~-P12Y3M4DT5H6M7.890S", lan.FormatValue(v))
-	ass.Equal(t, 890, v.GetMilliseconds())
-	ass.Equal(t, 7, v.GetSeconds())
-	ass.Equal(t, 6, v.GetMinutes())
-	ass.Equal(t, 5, v.GetHours())
-	ass.Equal(t, 4, v.GetDays())
-	ass.Equal(t, 13, v.GetWeeks())
-	ass.Equal(t, 3, v.GetMonths())
-	ass.Equal(t, 12, v.GetYears())
-
-	v, ok = ele.DurationFromString("P12Y3M4DT5H6M7.890S")
-	ass.False(t, ok)
-	ass.Equal(t, 0, int(v))
 }
 
 func TestDurationsLibrary(t *tes.T) {

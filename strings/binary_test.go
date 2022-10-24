@@ -11,43 +11,35 @@
 package strings_test
 
 import (
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
-func TestBadBinary(t *tes.T) {
-	var _, ok = str.BinaryFromString("'.'")
-	ass.False(t, ok)
-}
-
 func TestEmptyBinary(t *tes.T) {
-	var v, ok = str.BinaryFromString("''")
-	ass.True(t, ok)
-	ass.Equal(t, "''", lan.FormatValue(v))
+	var v = str.Binary("")
+	ass.Equal(t, "", string(v))
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 	ass.Equal(t, 0, v.GetIndex(byte(0x69)))
 }
 
 func TestBinary(t *tes.T) {
-	var v, ok = str.BinaryFromString("'abcd\n1234'")
-	ass.True(t, ok)
-	ass.Equal(t, "'abcd1234'", lan.FormatValue(v))
+	var v = str.Binary("abcd1234")
+	ass.Equal(t, "abcd1234", string(v))
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
 	ass.Equal(t, byte(0x69), v.GetItem(1))
 	ass.Equal(t, byte(0xf8), v.GetItem(-1))
 	ass.Equal(t, v.AsArray(), str.BinaryFromBytes(v.AsArray()).AsArray())
-	ass.Equal(t, "'abcd'", lan.FormatValue(str.BinaryFromBytes(v.GetItems(1, 3))))
+	ass.Equal(t, "abcd", string(str.BinaryFromBytes(v.GetItems(1, 3))))
 	ass.Equal(t, 1, v.GetIndex(byte(0x69)))
 }
 
 func TestBinariesLibrary(t *tes.T) {
-	var v1, _ = str.BinaryFromString("'abcd'")
-	var v2, _ = str.BinaryFromString("'12345678'")
-	ass.Equal(t, "'abcd12345678'", lan.FormatValue(str.Binaries.Concatenate(v1, v2)))
+	var v1 = str.Binary("abcd")
+	var v2 = str.Binary("12345678")
+	ass.Equal(t, "abcd12345678", string(str.Binaries.Concatenate(v1, v2)))
 
 	v1 = str.BinaryFromBytes([]byte{0x00, 0x01, 0x02, 0x03, 0x04})
 	v2 = str.BinaryFromBytes([]byte{0x03, 0x00, 0x01, 0x02})

@@ -447,7 +447,7 @@ func (v *parser) parsePattern() (ele.Pattern, *Token, bool) {
 		v.backupOne()
 		return pattern, token, false
 	}
-	var regex = token.Value[1:len(token.Value)-2] // Strip off the '"' and '"?' delimiters.
+	var regex = token.Value[1 : len(token.Value)-2] // Strip off the '"' and '"?' delimiters.
 	switch regex {
 	case `none`:
 		regex = `^none$`

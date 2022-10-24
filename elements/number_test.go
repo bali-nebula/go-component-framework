@@ -12,7 +12,6 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
 	cmp "math/cmplx"
@@ -30,7 +29,6 @@ func TestZero(t *tes.T) {
 	ass.Equal(t, 0.0, v.AsReal())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "0", lan.FormatValue(v))
 }
 
 func TestInfinity(t *tes.T) {
@@ -44,7 +42,6 @@ func TestInfinity(t *tes.T) {
 	ass.Equal(t, mat.Inf(1), v.AsReal())
 	ass.Equal(t, mat.Inf(1), v.GetReal())
 	ass.Equal(t, mat.Inf(1), v.GetImaginary())
-	ass.Equal(t, "∞", lan.FormatValue(v))
 }
 
 func TestUndefined(t *tes.T) {
@@ -58,11 +55,9 @@ func TestUndefined(t *tes.T) {
 	ass.True(t, mat.IsNaN(v.AsReal()))
 	ass.True(t, mat.IsNaN(v.GetReal()))
 	ass.True(t, mat.IsNaN(v.GetImaginary()))
-	ass.Equal(t, "undefined", lan.FormatValue(v))
 }
 
 func TestPositiveReals(t *tes.T) {
-	var ok bool
 	var v ele.Number
 
 	v = ele.NumberFromComplex(0.25)
@@ -72,41 +67,9 @@ func TestPositiveReals(t *tes.T) {
 	ass.Equal(t, 0.25, v.AsReal())
 	ass.Equal(t, 0.25, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "0.25", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("pi")
-	ass.True(t, ok)
-	ass.Equal(t, mat.Pi, real(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 3, v.AsInteger())
-	ass.Equal(t, mat.Pi, v.AsReal())
-	ass.Equal(t, mat.Pi, v.GetReal())
-	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "π", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("phi")
-	ass.True(t, ok)
-	ass.Equal(t, mat.Phi, real(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 2, v.AsInteger())
-	ass.Equal(t, mat.Phi, v.AsReal())
-	ass.Equal(t, mat.Phi, v.GetReal())
-	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "φ", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("tau")
-	ass.True(t, ok)
-	ass.Equal(t, 2.0*mat.Pi, real(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 6, v.AsInteger())
-	ass.Equal(t, 2.0*mat.Pi, v.AsReal())
-	ass.Equal(t, 2.0*mat.Pi, v.GetReal())
-	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "τ", lan.FormatValue(v))
 }
 
 func TestPositiveImaginaries(t *tes.T) {
-	var ok bool
 	var v ele.Number
 
 	v = ele.NumberFromComplex(0.25i)
@@ -116,41 +79,9 @@ func TestPositiveImaginaries(t *tes.T) {
 	ass.Equal(t, 0.0, v.AsReal())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 0.25, v.GetImaginary())
-	ass.Equal(t, "0.25i", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("pii")
-	ass.True(t, ok)
-	ass.Equal(t, mat.Pi, imag(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0, v.AsInteger())
-	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, 0.0, v.GetReal())
-	ass.Equal(t, mat.Pi, v.GetImaginary())
-	ass.Equal(t, "πi", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("phii")
-	ass.True(t, ok)
-	ass.Equal(t, mat.Phi, imag(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0, v.AsInteger())
-	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, 0.0, v.GetReal())
-	ass.Equal(t, mat.Phi, v.GetImaginary())
-	ass.Equal(t, "φi", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("taui")
-	ass.True(t, ok)
-	ass.Equal(t, 2.0*mat.Pi, imag(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0, v.AsInteger())
-	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, 0.0, v.GetReal())
-	ass.Equal(t, 2.0*mat.Pi, v.GetImaginary())
-	ass.Equal(t, "τi", lan.FormatValue(v))
 }
 
 func TestNegativeReals(t *tes.T) {
-	var ok bool
 	var v ele.Number
 
 	v = ele.NumberFromComplex(-0.75)
@@ -160,41 +91,9 @@ func TestNegativeReals(t *tes.T) {
 	ass.Equal(t, -0.75, v.AsReal())
 	ass.Equal(t, -0.75, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "-0.75", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("-pi")
-	ass.True(t, ok)
-	ass.Equal(t, -mat.Pi, real(v))
-	ass.True(t, v.IsNegative())
-	ass.Equal(t, -3, v.AsInteger())
-	ass.Equal(t, -mat.Pi, v.AsReal())
-	ass.Equal(t, -mat.Pi, v.GetReal())
-	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "-π", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("-phi")
-	ass.True(t, ok)
-	ass.Equal(t, -mat.Phi, real(v))
-	ass.True(t, v.IsNegative())
-	ass.Equal(t, -2, v.AsInteger())
-	ass.Equal(t, -mat.Phi, v.AsReal())
-	ass.Equal(t, -mat.Phi, v.GetReal())
-	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "-φ", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("-tau")
-	ass.True(t, ok)
-	ass.Equal(t, -2.0*mat.Pi, real(v))
-	ass.True(t, v.IsNegative())
-	ass.Equal(t, -6, v.AsInteger())
-	ass.Equal(t, -2.0*mat.Pi, v.AsReal())
-	ass.Equal(t, -2.0*mat.Pi, v.GetReal())
-	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "-τ", lan.FormatValue(v))
 }
 
 func TestNegativeImaginaries(t *tes.T) {
-	var ok bool
 	var v ele.Number
 
 	v = ele.NumberFromComplex(-0.75i)
@@ -204,74 +103,6 @@ func TestNegativeImaginaries(t *tes.T) {
 	ass.Equal(t, 0.0, v.AsReal())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, -0.75, v.GetImaginary())
-	ass.Equal(t, "-0.75i", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("-pii")
-	ass.True(t, ok)
-	ass.Equal(t, -mat.Pi, imag(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0, v.AsInteger())
-	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, 0.0, v.GetReal())
-	ass.Equal(t, -mat.Pi, v.GetImaginary())
-	ass.Equal(t, "-πi", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("-phii")
-	ass.True(t, ok)
-	ass.Equal(t, -mat.Phi, imag(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0, v.AsInteger())
-	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, 0.0, v.GetReal())
-	ass.Equal(t, -mat.Phi, v.GetImaginary())
-	ass.Equal(t, "-φi", lan.FormatValue(v))
-
-	v, ok = ele.NumberFromString("-taui")
-	ass.True(t, ok)
-	ass.Equal(t, -2.0*mat.Pi, imag(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0, v.AsInteger())
-	ass.Equal(t, 0.0, v.AsReal())
-	ass.Equal(t, 0.0, v.GetReal())
-	ass.Equal(t, -2.0*mat.Pi, v.GetImaginary())
-	ass.Equal(t, "-τi", lan.FormatValue(v))
-}
-
-func TestPolarNumbers(t *tes.T) {
-	var ok bool
-	var v ele.Number
-
-	v, ok = ele.NumberFromString("(5e^~0.9272952180016123i)")
-	ass.True(t, ok)
-	ass.Equal(t, 3.0, real(v))
-	ass.Equal(t, 4.0, imag(v))
-	ass.False(t, v.IsNegative())
-	ass.Equal(t, 3, v.AsInteger())
-	ass.Equal(t, 3.0, v.AsReal())
-	ass.Equal(t, 3.0, v.GetReal())
-	ass.Equal(t, 4.0, v.GetImaginary())
-	ass.Equal(t, "(3, 4i)", lan.FormatValue(v))
-	ass.Equal(t, "(5e^~0.9272952180016122i)", v.AsPolar())
-
-	v, ok = ele.NumberFromString("(1e^~πi)")
-	ass.True(t, ok)
-	ass.Equal(t, -1.0, real(v))
-	ass.Equal(t, 0.0, imag(v))
-	ass.True(t, v.IsNegative())
-	ass.Equal(t, -1, v.AsInteger())
-	ass.Equal(t, -1.0, v.AsReal())
-	ass.Equal(t, -1.0, v.GetReal())
-	ass.Equal(t, 0.0, v.GetImaginary())
-	ass.Equal(t, "-1", lan.FormatValue(v))
-	ass.Equal(t, "(1e^~πi)", v.AsPolar())
-}
-
-func TestRoundtripNumbers(t *tes.T) {
-	for _, s := range numbers {
-		var v, ok = ele.NumberFromString(s)
-		ass.True(t, ok)
-		ass.Equal(t, s, lan.FormatValue(v))
-	}
 }
 
 func TestNumbersLibrary(t *tes.T) {

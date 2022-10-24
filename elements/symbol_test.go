@@ -12,23 +12,11 @@ package elements_test
 
 import (
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
-func TestBadSymbol(t *tes.T) {
-	var _, ok = ele.SymbolFromString(`bad`)
-	ass.False(t, ok)
-}
-
-func TestEmptySymbol(t *tes.T) {
-	var _, ok = ele.SymbolFromString(`$`)
-	ass.False(t, ok)
-}
-
 func TestSymbol(t *tes.T) {
-	var v, ok = ele.SymbolFromString("$foobar")
-	ass.True(t, ok)
-	ass.Equal(t, "$foobar", lan.FormatValue(v))
+	var v = ele.Symbol("foobar")
+	ass.Equal(t, "foobar", string(v))
 }
