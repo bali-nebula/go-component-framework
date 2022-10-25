@@ -112,18 +112,30 @@ func TestParserWithDurations(t *tes.T) {
 
 func TestParserWithMoments(t *tes.T) {
 	var momentStrings = []string{
-		`<1776>`,
+		`<0>`,
+		`<1>`,
+		`<-1>`,
 		`<1970>`,
+		`<1776>`,
+		`<10000>`,
+		`<-10000>`,
 		`<2009-04>`,
 		`<1962-04-25>`,
+		`<1-02-03T04:05:06.789>`,
 		`<-1-02-03T04:05:06.789>`,
 	}
 
 	var momentValues = []ele.Moment{
-		-6122044800000,
+		-62167219200000,
+		-62135596800000,
+		-62198755200000,
 		0,
+		-6122044800000,
+		253402300800000,
+		-377736739200000,
 		1238544000000,
 		-242611200000,
+		-62132730893211,
 		-62195889293211,
 	}
 
@@ -137,3 +149,27 @@ func TestParserWithMoments(t *tes.T) {
 		ass.Equal(t, momentStrings[index], s)
 	}
 }
+
+/*
+func TestParserWithNumbers(t *tes.T) {
+	var numberStrings = []string{
+		`false`,
+		`true`,
+	}
+
+	var numberValues = []ele.Number{
+		false,
+		true,
+	}
+
+	for index, s := range numberStrings {
+		var number = lan.ParseSource(s).GetEntity().(ele.Number)
+		ass.Equal(t, numberValues[index], number)
+	}
+
+	for index, number := range numberValues {
+		var s = lan.FormatValue(number)
+		ass.Equal(t, numberStrings[index], s)
+	}
+}
+*/

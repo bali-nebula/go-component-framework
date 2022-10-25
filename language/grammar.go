@@ -178,7 +178,7 @@ var grammar = map[string]string{
     "checkout" | "break" | "at" | "as" | "accept" |
     "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
-	"$MOMENT":      `"<" YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
+	"$MOMENT":      `"<" [SIGN] YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
 	"$MONIKER":     `<"/" NAME>`,
 	"$MONTH":       `"0" "1".."9" | "1" "0".."2"`,
 	"$NAME":        `LETTER {[SEPARATOR] (LETTER | DIGIT)}`,
@@ -219,7 +219,7 @@ var grammar = map[string]string{
     "U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16`,
 	"$VERSION": `"v" ORDINAL {"." ORDINAL}`,
 	"$WEEKS":   `TIMESPAN "W"`,
-	"$YEAR":    `[SIGN] ORDINAL`,
+	"$YEAR":    `ORDINAL | ZERO`,
 	"$ZERO":    `"0"`,
 }
 

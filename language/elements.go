@@ -263,15 +263,10 @@ func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
 		v.backupOne()
 		return moment, token, false
 	}
-	for _, format := range isoFormats {
-		var t, err = hackedParse(format, token.Value) // Parsed in UTC.
-		if err == nil {
-			var milliseconds = int(t.UnixMilli())
-			moment = ele.Moment(milliseconds)
-			return moment, token, true
-		}
-	}
-	panic(fmt.Sprintf("The moment does not match a known format: %v", token.Value))
+	var date tim.Time = hackedParseDate(token.Value)
+	var milliseconds = int(date.UnixMilli())
+	moment = ele.Moment(milliseconds)
+	return moment, token, true
 }
 
 // This method adds the canonical format for the specified element to the state
@@ -705,8 +700,6 @@ func stringToFloat(s string) float64 {
 //
 //	"January 2nd, 2006 at 3:04:05pm in the MST timezone"
 //
-// The "Z" in the templates corresponds to the UTC timezone.
-//
 // Anyway, it is what it is, but this hides it from the rest of the code.
 var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
 	"<2006-01-02T15:04:05.000>",
@@ -726,21 +719,36 @@ var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
 
 // The Go time.Parse() function can only handle years in the range [0000..9999]
 // even though the time.Time.Format() method will correctly print any size year
-// positive or negative. The Go team has labeled this issue as "unfortunate"
-// and will not fix it. Alas...
-func hackedParse(layout string, value string) (tim.Time, error) {
+// positive or negative. The Go team has labeled this issue as "unfortunate" and
+// will not fix it.
+//
+// To support the whole ISO 8601 calendar as shown here:
+//  https://en.wikipedia.org/wiki/Holocene_calendar#Conversion
+// we must resort to hacking...
+func hackedParseDate(value string) tim.Time {
+
+	// First, replace the year with year zero.
 	var matches = scanMoment([]byte(value))
 	var yearString = matches[2]
-	var year, _ = stc.ParseInt(yearString, 10, 64)
-	value = sts.Replace(value, yearString, fmt.Sprintf("%04d", year), 1)
-	var date, err = tim.Parse(layout, value)
-	if err != nil {
-		// There was an error parsing the value using the specified layout.
-		return date, err
+	var patched = sts.Replace(value, yearString, "0000", 1)
+
+	// Next, parse the new value with the zero year.
+	for _, format := range isoFormats {
+		var date, err = tim.Parse(format, patched) // Parsed in UTC.
+		if err == nil {
+
+			// Found a match, now add back in the correct year.
+			var year, _ = stc.ParseInt(yearString, 10, 64)
+			date = date.AddDate(int(year), 0, 0)
+			if sts.HasPrefix(format, "<-") {
+
+				// Change the positive date to a negative one.
+				date = date.AddDate(-2*date.Year(), 0, 0)
+			}
+
+			// Return the correct date.
+			return date
+		}
 	}
-	if sts.HasPrefix(layout, "<-") {
-		// The value contains a negative date that was parsed as positive one.
-		date = date.AddDate(-2*date.Year(), 0, 0)
-	}
-	return date, err
+	panic(fmt.Sprintf("The moment does not match a known format: %v", value))
 }

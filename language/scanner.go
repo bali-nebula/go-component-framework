@@ -750,7 +750,7 @@ func scanKeyword(v []byte) []string {
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Moment
 const (
-	year   = sign + `?` + ordinal
+	year   = `(?:` + ordinal + `|` + zero + `)`
 	month  = `(?:[0][1-9])|(?:[1][012])`
 	day    = `(?:[012][1-9])|(?:[3][01])`
 	hour   = `(?:[01][0-9])|(?:[2][0-3])`
