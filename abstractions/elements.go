@@ -14,14 +14,15 @@ package abstractions
 
 // This interface defines the methods supported by all discrete elements.
 type Discrete interface {
+	IsZero() bool
 	AsBoolean() bool
 	AsInteger() int
 }
 
 // This interface defines the methods supported by all continuous elements.
 type Continuous interface {
-	AsReal() float64
 	IsZero() bool
+	AsReal() float64
 }
 
 // This interface defines the methods supported by all polar elements.

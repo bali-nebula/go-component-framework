@@ -42,6 +42,23 @@ const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsP
 // milliseconds for the entire duration of time. Durations can be negative.
 type Duration int
 
+// DISCRETE INTERFACE
+
+// This method determines whether or not this duration is zero.
+func (v Duration) IsZero() bool {
+	return v == 0
+}
+
+// This method returns a boolean value for this discrete element.
+func (v Duration) AsBoolean() bool {
+	return v != 0
+}
+
+// This method returns an integer value for this discrete element.
+func (v Duration) AsInteger() int {
+	return int(v)
+}
+
 // POLARIZED INTERFACE
 
 // This method determines whether or not this polarized component is negative.

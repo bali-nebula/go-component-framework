@@ -10,12 +10,28 @@
 
 package elements
 
+import (
+	mat "math"
+)
+
 // PERCENTAGE INTERFACE
 
 // This type defines the methods associated with percentage elements. It extends
 // the native Go float64 type and represents a percentage. Percentages can be
 // negative.
 type Percentage float64
+
+// DISCRETE INTERFACE
+
+// This method returns a boolean value for this discrete element.
+func (v Percentage) AsBoolean() bool {
+	return v != 0
+}
+
+// This method returns an integer value for this discrete element.
+func (v Percentage) AsInteger() int {
+	return int(mat.Round(float64(v)))
+}
 
 // CONTINUOUS INTERFACE
 

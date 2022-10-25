@@ -124,22 +124,56 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 		result.WriteString("-")
 	}
 	result.WriteString("P")
-	result.WriteString(stc.FormatInt(int64(duration.GetYears()), 10))
-	result.WriteString("Y")
-	result.WriteString(stc.FormatInt(int64(duration.GetMonths()), 10))
-	result.WriteString("M")
-	result.WriteString(stc.FormatInt(int64(duration.GetDays()), 10))
-	result.WriteString("DT")
-	result.WriteString(stc.FormatInt(int64(duration.GetHours()), 10))
-	result.WriteString("H")
-	result.WriteString(stc.FormatInt(int64(duration.GetMinutes()), 10))
-	result.WriteString("M")
-	result.WriteString(stc.FormatInt(int64(duration.GetSeconds()), 10))
-	result.WriteString(".")
-	result.WriteString(stc.FormatInt(int64(duration.GetMilliseconds()), 10))
-	result.WriteString("S")
-	var s = result.String()
-	v.state.AppendString(s)
+	var weeks = mat.Abs(duration.AsWeeks())
+	if float64(int(weeks)) == weeks {
+		// It is an exact number of weeks.
+		result.WriteString(stc.FormatInt(int64(weeks), 10))
+		result.WriteString("W")
+		v.state.AppendString(result.String())
+		return
+	}
+	var years = duration.GetYears()
+	if years > 0 {
+		result.WriteString(stc.FormatInt(int64(years), 10))
+		result.WriteString("Y")
+	}
+	var months = duration.GetMonths()
+	if months > 0 {
+		result.WriteString(stc.FormatInt(int64(months), 10))
+		result.WriteString("M")
+	}
+	var days = duration.GetDays()
+	if days > 0 {
+		result.WriteString(stc.FormatInt(int64(days), 10))
+		result.WriteString("D")
+	}
+	var hours = duration.GetHours()
+	var minutes = duration.GetMinutes()
+	var seconds = duration.GetSeconds()
+	var milliseconds = duration.GetMilliseconds()
+	if hours + minutes + seconds + milliseconds == 0 {
+		// There is no time part of the duration.
+		v.state.AppendString(result.String())
+		return
+	}
+	result.WriteString("T")
+	if hours > 0 {
+		result.WriteString(stc.FormatInt(int64(hours), 10))
+		result.WriteString("H")
+	}
+	if minutes > 0 {
+		result.WriteString(stc.FormatInt(int64(minutes), 10))
+		result.WriteString("M")
+	}
+	if seconds + milliseconds > 0 {
+		result.WriteString(stc.FormatInt(int64(seconds), 10))
+		if milliseconds > 0 {
+			result.WriteString(".")
+			result.WriteString(stc.FormatInt(int64(milliseconds), 10))
+		}
+		result.WriteString("S")
+	}
+	v.state.AppendString(result.String())
 }
 
 // This method attempts to parse an element primitive. It returns the
@@ -229,16 +263,15 @@ func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
 		v.backupOne()
 		return moment, token, false
 	}
-	var milliseconds int
 	for _, format := range isoFormats {
 		var t, err = hackedParse(format, token.Value) // Parsed in UTC.
 		if err == nil {
-			milliseconds = int(t.UnixMilli())
-			break
+			var milliseconds = int(t.UnixMilli())
+			moment = ele.Moment(milliseconds)
+			return moment, token, true
 		}
 	}
-	moment = ele.Moment(milliseconds)
-	return moment, token, true
+	panic(fmt.Sprintf("The moment does not match a known format: %v", token.Value))
 }
 
 // This method adds the canonical format for the specified element to the state
@@ -691,15 +724,22 @@ var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
 	"<-2006-01-02T15:04:05>",
 	"<-2006-01-02T15:04:05.000>"}
 
-// The Go tim.Parse() function cannot handle negative years even though the
-// tim.Time.Format() method will correctly print negative years. The Go team
-// has labeled this issue as "unfortunate" and will not fix it. Alas...
+// The Go time.Parse() function can only handle years in the range [0000..9999]
+// even though the time.Time.Format() method will correctly print any size year
+// positive or negative. The Go team has labeled this issue as "unfortunate"
+// and will not fix it. Alas...
 func hackedParse(layout string, value string) (tim.Time, error) {
+	var matches = scanMoment([]byte(value))
+	var yearString = matches[2]
+	var year, _ = stc.ParseInt(yearString, 10, 64)
+	value = sts.Replace(value, yearString, fmt.Sprintf("%04d", year), 1)
 	var date, err = tim.Parse(layout, value)
 	if err != nil {
+		// There was an error parsing the value using the specified layout.
 		return date, err
 	}
 	if sts.HasPrefix(layout, "<-") {
+		// The value contains a negative date that was parsed as positive one.
 		date = date.AddDate(-2*date.Year(), 0, 0)
 	}
 	return date, err
