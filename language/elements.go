@@ -151,7 +151,7 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 	var minutes = duration.GetMinutes()
 	var seconds = duration.GetSeconds()
 	var milliseconds = duration.GetMilliseconds()
-	if hours + minutes + seconds + milliseconds == 0 {
+	if hours+minutes+seconds+milliseconds == 0 {
 		// There is no time part of the duration.
 		v.state.AppendString(result.String())
 		return
@@ -165,7 +165,7 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 		result.WriteString(stc.FormatInt(int64(minutes), 10))
 		result.WriteString("M")
 	}
-	if seconds + milliseconds > 0 {
+	if seconds+milliseconds > 0 {
 		result.WriteString(stc.FormatInt(int64(seconds), 10))
 		if milliseconds > 0 {
 			result.WriteString(".")
@@ -688,9 +688,9 @@ func stringToFloat(s string) float64 {
 	return float
 }
 
-// This list contains the supported ISO 8601 date-time formats. Note: the Go
-// templates in this list must contain their exact values. If you are curious
-// why check out this posting:
+// This list contains the supported ISO 8601 date-time formats delimited by
+// angle brackets. Note: the Go templates in this list must contain their exact
+// numeric values. If you are curious why this is, check out this posting:
 //   - https://medium.com/@simplyianm/how-go-solves-date-and-time-formatting-8a932117c41c
 //
 // A good mnemonic to use to remember the pattern is:
@@ -701,7 +701,7 @@ func stringToFloat(s string) float64 {
 //	"January 2nd, 2006 at 3:04:05pm in the MST timezone"
 //
 // Anyway, it is what it is, but this hides it from the rest of the code.
-var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
+var isoFormats = [...]string{
 	"<2006-01-02T15:04:05.000>",
 	"<2006-01-02T15:04:05>",
 	"<2006-01-02T15:04>",
@@ -715,40 +715,47 @@ var isoFormats = [...]string{ // The "..." makes it a fixed sized array.
 	"<-2006-01-02T15>",
 	"<-2006-01-02T15:04>",
 	"<-2006-01-02T15:04:05>",
-	"<-2006-01-02T15:04:05.000>"}
+	"<-2006-01-02T15:04:05.000>",
+}
 
 // The Go time.Parse() function can only handle years in the range [0000..9999]
 // even though the time.Time.Format() method will correctly print any size year
 // positive or negative. The Go team has labeled this issue as "unfortunate" and
 // will not fix it.
 //
-// To support the whole ISO 8601 calendar as shown here:
-//  https://en.wikipedia.org/wiki/Holocene_calendar#Conversion
-// we must resort to hacking...
+// To support the entire ISO 8601 calendar (and beyond) as shown here:
+//
+//	https://en.wikipedia.org/wiki/Holocene_calendar#Conversion
+//
+// we must resort to some hacking...
 func hackedParseDate(value string) tim.Time {
 
-	// First, replace the year with year zero.
+	// First, we replace the year with year zero.
 	var matches = scanMoment([]byte(value))
 	var yearString = matches[2]
 	var patched = sts.Replace(value, yearString, "0000", 1)
 
-	// Next, parse the new value with the zero year.
+	// Next, we attempt to parse the patched value using our formats.
 	for _, format := range isoFormats {
 		var date, err = tim.Parse(format, patched) // Parsed in UTC.
 		if err == nil {
 
-			// Found a match, now add back in the correct year.
+			// We found a match, now we add back in the correct year.
 			var year, _ = stc.ParseInt(yearString, 10, 64)
 			date = date.AddDate(int(year), 0, 0)
 			if sts.HasPrefix(format, "<-") {
 
-				// Change the positive date to a negative one.
+				// We change the positive date to a negative one.
 				date = date.AddDate(-2*date.Year(), 0, 0)
 			}
 
-			// Return the correct date.
+			// And return the correct date.
 			return date
 		}
 	}
+
+	// This panic will only happen if the scanner regular expressions are out
+	// of sync with the ISO 8601 standard formats. The value has already been
+	// succussfully scanned by the the scanner.
 	panic(fmt.Sprintf("The moment does not match a known format: %v", value))
 }

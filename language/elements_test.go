@@ -15,6 +15,7 @@ import (
 	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
+	cmp "math/cmplx"
 	tes "testing"
 )
 
@@ -150,16 +151,39 @@ func TestParserWithMoments(t *tes.T) {
 	}
 }
 
-/*
 func TestParserWithNumbers(t *tes.T) {
 	var numberStrings = []string{
-		`false`,
-		`true`,
+		`0`,
+		`e`,
+		`-e`,
+		`π`,
+		`-π`,
+		`i`,
+		`-i`,
+		`ei`,
+		`-ei`,
+		`πi`,
+		`-πi`,
+		`∞`,
+		`(1, -i)`,
+		`(-3, 4i)`,
 	}
 
 	var numberValues = []ele.Number{
-		false,
-		true,
+		0,
+		mat.E,
+		-mat.E,
+		mat.Pi,
+		-mat.Pi,
+		complex(0,1),
+		complex(0,-1),
+		complex(0,mat.E),
+		complex(0,-mat.E),
+		complex(0,mat.Pi),
+		complex(0,-mat.Pi),
+		ele.Number(cmp.Inf()),
+		complex(1,-1),
+		complex(-3,4),
 	}
 
 	for index, s := range numberStrings {
@@ -172,4 +196,3 @@ func TestParserWithNumbers(t *tes.T) {
 		ass.Equal(t, numberStrings[index], s)
 	}
 }
-*/
