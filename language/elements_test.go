@@ -175,15 +175,15 @@ func TestParserWithNumbers(t *tes.T) {
 		-mat.E,
 		mat.Pi,
 		-mat.Pi,
-		complex(0,1),
-		complex(0,-1),
-		complex(0,mat.E),
-		complex(0,-mat.E),
-		complex(0,mat.Pi),
-		complex(0,-mat.Pi),
+		complex(0, 1),
+		complex(0, -1),
+		complex(0, mat.E),
+		complex(0, -mat.E),
+		complex(0, mat.Pi),
+		complex(0, -mat.Pi),
 		ele.Number(cmp.Inf()),
-		complex(1,-1),
-		complex(-3,4),
+		complex(1, -1),
+		complex(-3, 4),
 	}
 
 	for index, s := range numberStrings {
@@ -194,5 +194,151 @@ func TestParserWithNumbers(t *tes.T) {
 	for index, number := range numberValues {
 		var s = lan.FormatValue(number)
 		ass.Equal(t, numberStrings[index], s)
+	}
+}
+
+func TestParserWithPatterns(t *tes.T) {
+	var patternStrings = []string{
+		`none`,
+		`"c[aou]+t"?`,
+		`any`,
+	}
+
+	var patternValues = []ele.Pattern{
+		"^none$",
+		`c[aou]+t`,
+		".*",
+	}
+
+	for index, s := range patternStrings {
+		var pattern = lan.ParseSource(s).GetEntity().(ele.Pattern)
+		ass.Equal(t, patternValues[index], pattern)
+	}
+
+	for index, pattern := range patternValues {
+		var s = lan.FormatValue(pattern)
+		ass.Equal(t, patternStrings[index], s)
+	}
+}
+
+func TestParserWithPercentages(t *tes.T) {
+	var percentageStrings = []string{
+		`0%`,
+		`50%`,
+		`100%`,
+		`-1.7%`,
+	}
+
+	var percentageValues = []ele.Percentage{
+		0,
+		50,
+		100,
+		-1.7,
+	}
+
+	for index, s := range percentageStrings {
+		var percentage = lan.ParseSource(s).GetEntity().(ele.Percentage)
+		ass.Equal(t, percentageValues[index], percentage)
+	}
+
+	for index, percentage := range percentageValues {
+		var s = lan.FormatValue(percentage)
+		ass.Equal(t, percentageStrings[index], s)
+	}
+}
+
+func TestParserWithProbabilities(t *tes.T) {
+	var probabilityStrings = []string{
+		`.0`,
+		`.5`,
+		`1.`,
+	}
+
+	var probabilityValues = []ele.Probability{
+		0,
+		0.5,
+		1,
+	}
+
+	for index, s := range probabilityStrings {
+		var probability = lan.ParseSource(s).GetEntity().(ele.Probability)
+		ass.Equal(t, probabilityValues[index], probability)
+	}
+
+	for index, probability := range probabilityValues {
+		var s = lan.FormatValue(probability)
+		ass.Equal(t, probabilityStrings[index], s)
+	}
+}
+
+func TestParserWithResources(t *tes.T) {
+	var resourceStrings = []string{
+		`<https://google.com>`,
+		`<https://google.com/path>`,
+		`<https://google.com/path?foo=bar>`,
+		`<https://google.com/path#fragment>`,
+		`<https://google.com/path?foo=bar#fragment>`,
+	}
+
+	var resourceValues = []ele.Resource{
+		"https://google.com",
+		"https://google.com/path",
+		"https://google.com/path?foo=bar",
+		"https://google.com/path#fragment",
+		"https://google.com/path?foo=bar#fragment",
+	}
+
+	for index, s := range resourceStrings {
+		var resource = lan.ParseSource(s).GetEntity().(ele.Resource)
+		ass.Equal(t, resourceValues[index], resource)
+	}
+
+	for index, resource := range resourceValues {
+		var s = lan.FormatValue(resource)
+		ass.Equal(t, resourceStrings[index], s)
+	}
+}
+
+func TestParserWithSymbols(t *tes.T) {
+	var symbolStrings = []string{
+		`$A`,
+		`$foobar`,
+	}
+
+	var symbolValues = []ele.Symbol{
+		"A",
+		"foobar",
+	}
+
+	for index, s := range symbolStrings {
+		var symbol = lan.ParseSource(s).GetEntity().(ele.Symbol)
+		ass.Equal(t, symbolValues[index], symbol)
+	}
+
+	for index, symbol := range symbolValues {
+		var s = lan.FormatValue(symbol)
+		ass.Equal(t, symbolStrings[index], s)
+	}
+}
+
+func TestParserWithTags(t *tes.T) {
+	var tagStrings = []string{
+		`#A`,
+		`#A3GHK57Z`,
+	}
+
+	var tagValues = []ele.Tag{
+		`A`,
+		`A3GHK57Z`,
+	}
+
+	for index, s := range tagStrings {
+		var tag = lan.ParseSource(s).GetEntity().(ele.Tag)
+		ass.Equal(t, tagValues[index], tag)
+	}
+
+	for index, tag := range tagValues {
+		var s = lan.FormatValue(tag)
+		ass.Equal(t, tagStrings[index], s)
 	}
 }

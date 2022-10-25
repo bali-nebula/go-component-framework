@@ -474,12 +474,14 @@ func (v *parser) parsePattern() (ele.Pattern, *Token, bool) {
 		v.backupOne()
 		return pattern, token, false
 	}
-	var regex = token.Value[1 : len(token.Value)-2] // Strip off the '"' and '"?' delimiters.
+	var regex = token.Value
 	switch regex {
 	case `none`:
 		regex = `^none$`
 	case `any`:
 		regex = `.*`
+	default:
+		regex = regex[1 : len(regex)-2] // Strip off the '"' and '"?' delimiters.
 	}
 	pattern = ele.Pattern(regex)
 	return pattern, token, true
@@ -594,14 +596,14 @@ func (v *parser) parseResource() (ele.Resource, *Token, bool) {
 		return resource, token, false
 	}
 	var matches = scanResource([]byte(token.Value))
-	resource = ele.Resource(matches[0])
+	resource = ele.Resource(matches[1])
 	return resource, token, true
 }
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatResource(resource ele.Resource) {
-	var s = string(resource)
+	var s = "<" + string(resource) + ">"
 	v.state.AppendString(s)
 }
 

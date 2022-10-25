@@ -158,15 +158,16 @@ func (v *scanner) scanToken() bool {
 	// Must be first in case the input buffer is empty.
 	case v.foundEOL():
 	case v.foundSymbol():
-	case v.foundPercentage(): // Must be before foundNumber().
-	case v.foundNumber():
-	case v.foundVersion():
 	case v.foundBoolean():
+	case v.foundPattern():
+	case v.foundPercentage():
+	case v.foundProbability():
+	case v.foundNumber(): // Must be after foundPercentage() and foundProbability().
+	case v.foundVersion():
 	case v.foundKeyword():
-	case v.foundIdentifier(): // Must be after foundVersion(), foundBoolean() and foundKeyword().
+	case v.foundIdentifier(): // Must be after foundBoolean(), foundKeyword(), foundPattern() and foundVersion().
 	case v.foundNote():
 	case v.foundComment():
-	case v.foundPattern():
 	case v.foundQuote(): // Must be after foundPattern().
 	case v.foundNarrative():
 	case v.foundTag():
@@ -176,7 +177,6 @@ func (v *scanner) scanToken() bool {
 	case v.foundMoment():
 	case v.foundDuration():
 	case v.foundAngle():
-	case v.foundProbability():
 	case v.foundDelimiter(): // Must be after all element and string types.
 	case v.foundEOF():
 		// We are done scanning.
@@ -474,7 +474,7 @@ func (v *scanner) foundPercentage() bool {
 func (v *scanner) foundProbability() bool {
 	var s = v.source[v.nextByte:]
 	var matches = scanProbability(s)
-	if len(matches) > 0 {
+	if len(matches) > 0 && v.source[v.nextByte+len(matches[0])] != '.' {
 		v.nextByte += len(matches[0])
 		v.emitToken(TokenProbability)
 		return true
