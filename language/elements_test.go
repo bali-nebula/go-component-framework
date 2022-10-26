@@ -19,18 +19,6 @@ import (
 	tes "testing"
 )
 
-/*
-const m = "<-1009-08-07T06:05:04.321>"
-
-const p = `"ca+t"?`
-
-const r = "<https://google.com>"
-
-const s = "$getItem"
-
-const v = "v1.2.3"
-*/
-
 func TestParserWithAngles(t *tes.T) {
 	var angleStrings = []string{
 		`~0`,
