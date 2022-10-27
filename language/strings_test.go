@@ -106,3 +106,51 @@ func TestRoundtripWithNarratives(t *tes.T) {
 		ass.Equal(t, narrativeStrings[index], s)
 	}
 }
+
+func TestRoundtripWithQuotes(t *tes.T) {
+	var quoteStrings = []string{
+		`""`,
+		`"To be, or not to be, that is the question?"`,
+		`"This quote contains '\"'s."`,
+	}
+
+	var quoteValues = []str.Quote{
+		"",
+		"To be, or not to be, that is the question?",
+		`This quote contains '"'s.`,
+	}
+
+	for index, s := range quoteStrings {
+		var quote = lan.ParseSource(s).GetEntity().(str.Quote)
+		ass.Equal(t, quoteValues[index], quote)
+	}
+
+	for index, quote := range quoteValues {
+		var s = lan.FormatValue(quote)
+		ass.Equal(t, quoteStrings[index], s)
+	}
+}
+
+func TestRoundtripWithVersions(t *tes.T) {
+	var versionStrings = []string{
+		`v1`,
+		`v1.2`,
+		`v1.2.3`,
+	}
+
+	var versionValues = []str.Version{
+		"1",
+		"1.2",
+		"1.2.3",
+	}
+
+	for index, s := range versionStrings {
+		var version = lan.ParseSource(s).GetEntity().(str.Version)
+		ass.Equal(t, versionValues[index], version)
+	}
+
+	for index, version := range versionValues {
+		var s = lan.FormatValue(version)
+		ass.Equal(t, versionStrings[index], s)
+	}
+}

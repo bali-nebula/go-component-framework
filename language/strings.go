@@ -12,6 +12,7 @@ package language
 
 import (
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
+	stc "strconv"
 	sts "strings"
 	uni "unicode"
 )
@@ -126,14 +127,17 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 		return quote, token, false
 	}
 	var matches = scanQuote([]byte(token.Value))
-	quote = str.Quote(matches[1]) // Remove the '"' delimiters.
+	// We must unquote the full token value properly.
+	var unquoted, _ = stc.Unquote(matches[0])
+	quote = str.Quote(unquoted)
 	return quote, token, true
 }
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
 func (v *formatter) formatQuote(quote str.Quote) {
-	var s = `"` + string(quote) + `"`
+	// We must requote the string value properly.
+	var s = stc.Quote(string(quote))
 	v.state.AppendString(s)
 }
 
