@@ -27,6 +27,19 @@ import (
 //  * The parsed token that caused the failure if the parsing did fail.
 //  * Whether or not the parsing succeeded.
 
+// This method attempts to parse annotation. It returns the annotation and
+// whether or not the annotation was successfully parsed.
+func (v *parser) parseAnnotation() (string, *Token, bool) {
+	var ok bool
+	var token *Token
+	var annotation string
+	annotation, token, ok = v.parseNote()
+	if !ok {
+		annotation, token, ok = v.parseComment()
+	}
+	return annotation, token, ok
+}
+
 // This method attempts to parse a comment. It returns a string containing the
 // comment and whether or not the comment was successfully parsed.
 func (v *parser) parseComment() (string, *Token, bool) {
@@ -125,16 +138,8 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.state.AppendString("(")
-	var catalog = col.Catalog[any, any]()
 	var parameters = context.GetParameters()
-	var iterator = age.Iterator[abs.AssociationLike[abs.Symbolic, any]](parameters)
-	for iterator.HasNext() {
-		var association = iterator.GetNext()
-		var key any = association.GetKey()
-		var value any = association.GetValue()
-		catalog.SetValue(key, value)
-	}
-	v.formatCatalog(catalog)
+	v.formatParameters(parameters)
 	v.state.AppendString(")")
 }
 
@@ -149,19 +154,6 @@ func (v *parser) parseDelimiter(delimiter string) (string, *Token, bool) {
 	}
 	value = token.Value
 	return value, token, true
-}
-
-// This method attempts to parse annotation. It returns the annotation and
-// whether or not the annotation was successfully parsed.
-func (v *parser) parseAnnotation() (string, *Token, bool) {
-	var ok bool
-	var token *Token
-	var annotation string
-	annotation, token, ok = v.parseNote()
-	if !ok {
-		annotation, token, ok = v.parseComment()
-	}
-	return annotation, token, ok
 }
 
 // This method attempts to parse a component entity. It returns the component
@@ -216,6 +208,12 @@ func (v *parser) parseIdentifier() (string, *Token, bool) {
 	}
 	identifier = token.Value
 	return identifier, token, true
+}
+
+// This method adds the canonical format for the specified identifier to the
+// state of the formatter.
+func (v *formatter) formatIdentifier(identifier string) {
+	v.state.AppendString(identifier)
 }
 
 // This method attempts to parse the specified keyword. It returns
@@ -279,6 +277,17 @@ func (v *parser) parseParameter() (abs.AssociationLike[abs.Symbolic, any], *Toke
 	return parameter, token, true
 }
 
+// This method adds the canonical format for the specified parameter to the
+// state of the formatter.
+func (v *formatter) formatParameter(parameter abs.AssociationLike[abs.Symbolic, any]) {
+	var key = parameter.GetKey()
+	v.state.AppendString("$")
+	v.formatIdentifier(key.GetIdentifier())
+	v.state.AppendString(": ")
+	var value = parameter.GetValue()
+	v.formatAny(value)
+}
+
 // This method attempts to parse context parameters. It returns the
 // context parameters and whether or not the context parameters were
 // successfully parsed.
@@ -332,6 +341,28 @@ func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, any], *Token, 
 		}
 	}
 	return parameters, token, true
+}
+
+// This method adds the canonical format for the specified parameters to the
+// state of the formatter.
+func (v *formatter) formatParameters(parameters abs.CatalogLike[abs.Symbolic, any]) {
+	switch parameters.GetSize() {
+	case 0:
+		panic("A context must have at least one parameter.")
+	case 1:
+		var parameter = parameters.GetItem(1)
+		v.formatParameter(parameter)
+	default:
+		var iterator = age.Iterator[abs.AssociationLike[abs.Symbolic, any]](parameters)
+		v.state.IncrementDepth()
+		for iterator.HasNext() {
+			v.state.AppendNewline()
+			var parameter = iterator.GetNext()
+			v.formatParameter(parameter)
+		}
+		v.state.DecrementDepth()
+		v.state.AppendNewline()
+	}
 }
 
 // PRIVATE FUNCTIONS
