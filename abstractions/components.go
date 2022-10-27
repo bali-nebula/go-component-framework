@@ -15,6 +15,7 @@ package abstractions
 // This interface defines the methods supported by all component-like types.
 type ComponentLike interface {
 	IsGeneric() bool
+	IsAnnotated() bool
 	GetEntity() any
 	GetContext() ContextLike
 	GetNote() string

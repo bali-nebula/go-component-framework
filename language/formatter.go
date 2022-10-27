@@ -264,6 +264,11 @@ func (v *formatter) formatInterface(value any) {
 		v.formatAssociation(association)
 		return
 	}
+	catalog, ok := value.(abs.Sequential[abs.AssociationLike[any, any]])
+	if ok {
+		v.formatCollection(catalog)
+		return
+	}
 	collection, ok := value.(abs.Sequential[any])
 	if ok {
 		v.formatCollection(collection)

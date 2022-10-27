@@ -45,7 +45,7 @@ func (v *context) GetValue(name abs.Symbolic) any {
 // for this component context.
 func (v *context) SetValue(name abs.Symbolic, value any) {
 	if value == nil {
-		panic("Each parameter for an component context requires a value.")
+		panic("Each parameter for a component context requires a value.")
 	}
 	v.parameters.SetValue(name, value)
 }
@@ -58,7 +58,7 @@ func (v *context) GetParameters() abs.CatalogLike[abs.Symbolic, any] {
 // This method sets the catalog of parameters for this component context.
 func (v *context) SetParameters(parameters abs.CatalogLike[abs.Symbolic, any]) {
 	if parameters == nil || parameters.IsEmpty() {
-		panic("An component context requires at least one parameter.")
+		panic("A component context requires at least one parameter.")
 	}
 	v.parameters = parameters
 }

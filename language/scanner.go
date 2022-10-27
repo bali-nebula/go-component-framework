@@ -876,7 +876,7 @@ const (
 	imaginary   = `(?:` + sign + `|` + real + `)?i`
 	rectangular = `(` + real + `)(, )(` + imaginary + `)`
 	polar       = `(` + real + `)(e\^)(` + angle + `i)`
-	number      = imaginary + `|` + real + `|` + zero + `|` + infinity + `|` + undefined + `|` +
+	number      = infinity + `|` + imaginary + `|` + real + `|` + zero + `|` + undefined + `|` +
 		`\((?:` + rectangular + `|` + polar + `)\)`
 )
 

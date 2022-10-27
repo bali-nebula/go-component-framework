@@ -74,6 +74,18 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 // This method adds the canonical format for the specified component to the
 // state of the formatter.
 func (v *formatter) formatComponent(component abs.ComponentLike) {
+	var entity = component.GetEntity()
+	v.formatAny(entity)
+	if component.IsGeneric() {
+		var context = component.GetContext()
+		v.formatContext(context)
+	}
+	/*
+	if component.IsAnnotated() {
+		var note = component.GetNote()
+		v.formatNote(note)
+	}
+	*/
 }
 
 // This method attempts to parse the context for a parameterized component. It
@@ -110,6 +122,15 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	}
 	context = com.Context(parameters)
 	return context, token, true
+}
+
+// This method adds the canonical format for the specified context to the
+// state of the formatter.
+func (v *formatter) formatContext(context abs.ContextLike) {
+	v.state.AppendString("(")
+	var parameters = context.GetParameters()
+	v.formatAny(parameters)
+	v.state.AppendString(")")
 }
 
 // This method attempts to parse the specified delimiter. It returns

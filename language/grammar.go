@@ -185,7 +185,7 @@ var grammar = map[string]string{
 	"$NARRATIVE":   `'">' EOL {NARRATIVE | ~'<"'} EOL {SPACE} '<"'`,
 	"$NONE":        `"none"`,
 	"$NOTE":        `"! " <~EOL>`,
-	"$NUMBER":      `IMAGINARY | REAL | ZERO | INFINITY | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"`,
+	"$NUMBER":      `INFINITY | IMAGINARY | REAL | ZERO | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"`,
 	"$ONE":         `"1."`,
 	"$ORDINAL":     `"1".."9" {"0".."9"}`,
 	"$PATH":        `{~("?" | "#" | ">")}`,
