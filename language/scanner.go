@@ -168,8 +168,8 @@ func (v *scanner) scanToken() bool {
 	case v.foundIdentifier(): // Must be after foundBoolean(), foundKeyword(), foundPattern() and foundVersion().
 	case v.foundNote():
 	case v.foundComment():
-	case v.foundQuote(): // Must be after foundPattern().
 	case v.foundNarrative():
+	case v.foundQuote(): // Must be after foundPattern() and foundNarrative().
 	case v.foundTag():
 	case v.foundMoniker():
 	case v.foundBinary():
@@ -638,6 +638,7 @@ func scanComment(v []byte) []string {
 	}
 	var angleBangAllowed = false
 	var current = 3 // Skip the leading '!>\n' characters.
+	var last = 0
 	var level = 1
 	for level > 0 {
 		var s = v[current:]
@@ -646,6 +647,7 @@ func scanComment(v []byte) []string {
 			return result
 		case byt.HasPrefix(s, eol):
 			angleBangAllowed = true
+			last = current
 			current++
 		case byt.HasPrefix(s, bangAngle):
 			current += 3 // Skip the '!>\n' characters.
@@ -664,6 +666,7 @@ func scanComment(v []byte) []string {
 		}
 	}
 	result = append(result, string(v[:current])) // Includes bang delimeters.
+	result = append(result, string(v[3:last])) // Excludes bang delimeters.
 	return result
 }
 
@@ -809,6 +812,7 @@ func scanNarrative(v []byte) []string {
 	}
 	var angleQuoteAllowed = false
 	var current = 3 // Skip the leading '">\n' characters.
+	var last = 0
 	var level = 1
 	for level > 0 {
 		var s = v[current:]
@@ -817,6 +821,7 @@ func scanNarrative(v []byte) []string {
 			return result
 		case byt.HasPrefix(s, eol):
 			angleQuoteAllowed = true
+			last = current
 			current++
 		case byt.HasPrefix(s, quoteAngle):
 			current += 3 // Skip the '">\n' characters.
@@ -835,6 +840,7 @@ func scanNarrative(v []byte) []string {
 		}
 	}
 	result = append(result, string(v[:current])) // Includes quote delimeters.
+	result = append(result, string(v[3:last])) // Excludes quote delimeters.
 	return result
 }
 

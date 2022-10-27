@@ -19,7 +19,7 @@ import (
 	tes "testing"
 )
 
-func TestParserWithAngles(t *tes.T) {
+func TestRoundtripWithAngles(t *tes.T) {
 	var angleStrings = []string{
 		`~0`,
 		`~π`,
@@ -43,7 +43,7 @@ func TestParserWithAngles(t *tes.T) {
 	}
 }
 
-func TestParserWithBooleans(t *tes.T) {
+func TestRoundtripWithBooleans(t *tes.T) {
 	var booleanStrings = []string{
 		`false`,
 		`true`,
@@ -65,7 +65,7 @@ func TestParserWithBooleans(t *tes.T) {
 	}
 }
 
-func TestParserWithDurations(t *tes.T) {
+func TestRoundtripWithDurations(t *tes.T) {
 	var durationStrings = []string{
 		`~P0W`,
 		`~-P13W`,
@@ -99,7 +99,7 @@ func TestParserWithDurations(t *tes.T) {
 	}
 }
 
-func TestParserWithMoments(t *tes.T) {
+func TestRoundtripWithMoments(t *tes.T) {
 	var momentStrings = []string{
 		`<0>`,
 		`<1>`,
@@ -139,7 +139,7 @@ func TestParserWithMoments(t *tes.T) {
 	}
 }
 
-func TestParserWithNumbers(t *tes.T) {
+func TestRoundtripWithNumbers(t *tes.T) {
 	var numberStrings = []string{
 		`0`,
 		`e`,
@@ -185,7 +185,7 @@ func TestParserWithNumbers(t *tes.T) {
 	}
 }
 
-func TestParserWithPatterns(t *tes.T) {
+func TestRoundtripWithPatterns(t *tes.T) {
 	var patternStrings = []string{
 		`none`,
 		`"c[aou]+t"?`,
@@ -209,7 +209,7 @@ func TestParserWithPatterns(t *tes.T) {
 	}
 }
 
-func TestParserWithPercentages(t *tes.T) {
+func TestRoundtripWithPercentages(t *tes.T) {
 	var percentageStrings = []string{
 		`0%`,
 		`50%`,
@@ -235,7 +235,7 @@ func TestParserWithPercentages(t *tes.T) {
 	}
 }
 
-func TestParserWithProbabilities(t *tes.T) {
+func TestRoundtripWithProbabilities(t *tes.T) {
 	var probabilityStrings = []string{
 		`.0`,
 		`.5`,
@@ -259,7 +259,7 @@ func TestParserWithProbabilities(t *tes.T) {
 	}
 }
 
-func TestParserWithResources(t *tes.T) {
+func TestRoundtripWithResources(t *tes.T) {
 	var resourceStrings = []string{
 		`<https://google.com>`,
 		`<https://google.com/path>`,
@@ -287,7 +287,7 @@ func TestParserWithResources(t *tes.T) {
 	}
 }
 
-func TestParserWithSymbols(t *tes.T) {
+func TestRoundtripWithSymbols(t *tes.T) {
 	var symbolStrings = []string{
 		`$A`,
 		`$foobar`,
@@ -309,7 +309,7 @@ func TestParserWithSymbols(t *tes.T) {
 	}
 }
 
-func TestParserWithTags(t *tes.T) {
+func TestRoundtripWithTags(t *tes.T) {
 	var tagStrings = []string{
 		`#A`,
 		`#A3GHK57Z`,

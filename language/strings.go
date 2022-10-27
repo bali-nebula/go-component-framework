@@ -42,11 +42,11 @@ const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
 func (v *formatter) formatBinary(binary str.Binary) {
+	v.state.AppendString("'")
 	var s = string(binary)
 	var length = len(s)
 	if length > lineLength {
 		// Spans multiple lines.
-		v.state.AppendString("'")
 		v.state.IncrementDepth()
 		for index := 0; index < length; {
 			v.state.AppendNewline()
@@ -58,10 +58,11 @@ func (v *formatter) formatBinary(binary str.Binary) {
 			index = next
 		}
 		v.state.DecrementDepth()
-		v.state.AppendString("'")
+		v.state.AppendNewline()
 	} else {
 		v.state.AppendString(s)
 	}
+	v.state.AppendString("'")
 }
 
 // This method attempts to parse a moniker string. It returns the moniker string
@@ -106,12 +107,10 @@ func (v *formatter) formatNarrative(narrative str.Narrative) {
 	var s = string(narrative)
 	var lines = sts.Split(s, "\n")
 	v.state.AppendString(`">`)
-	v.state.IncrementDepth()
 	for _, line := range lines {
 		v.state.AppendNewline()
 		v.state.AppendString(line)
 	}
-	v.state.DecrementDepth()
 	v.state.AppendNewline()
 	v.state.AppendString(`<"`)
 }
@@ -210,12 +209,12 @@ func (v *formatter) formatVersion(version str.Version) {
 func trimNarrative(v string) string {
 	var narrative string
 	var lines = sts.Split(v, "\n")
-	var size = len(lines)
-	var last = lines[size-1]        // The last line provides the level of indentation.
+	var size = len(lines) - 1
+	var last = lines[size]        // The last line provides the level of indentation.
 	var indentation = len(last) - 2 // The number of spaces in the last line.
-	lines = lines[1 : size-1]       // Strip off the '">' and '<"' delimitier lines.
+	lines = lines[1 : size]       // Strip off the '">' and '<"' delimitier lines.
 	for _, line := range lines {
-		narrative += line[indentation+4:] + "\n" // Strip off the indentation plus four spaces.
+		narrative += line[indentation:] + "\n" // Strip off the indentation.
 	}
 	return narrative[:len(narrative)-1] // Strip off the extra end-of-line character.
 }
