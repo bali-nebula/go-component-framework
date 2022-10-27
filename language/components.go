@@ -43,15 +43,12 @@ func (v *parser) parseComment() (string, *Token, bool) {
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
 func (v *formatter) formatComment(comment string) {
-	var s = comment[3 : len(comment)-3] // Remove the bounding '!>\n' and '\n<!' delimiters.
-	var lines = sts.Split(s, "\n")
+	var lines = sts.Split(comment, "\n")
 	v.state.AppendString(`!>`)
-	v.state.IncrementDepth()
 	for _, line := range lines {
 		v.state.AppendNewline()
 		v.state.AppendString(line)
 	}
-	v.state.DecrementDepth()
 	v.state.AppendNewline()
 	v.state.AppendString(`<!`)
 }
@@ -243,13 +240,14 @@ func (v *parser) parseNote() (string, *Token, bool) {
 		v.backupOne()
 		return note, token, false
 	}
-	note = token.Value
+	note = token.Value[2:] // Remove the leading "! ".
 	return note, token, true
 }
 
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
 func (v *formatter) formatNote(note string) {
+	v.state.AppendString("! ")
 	v.state.AppendString(note)
 }
 
@@ -338,34 +336,33 @@ func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, any], *Token, 
 
 // PRIVATE FUNCTIONS
 
-// This function removes the indentation from each line of the specified
-// multi-line string.
+// This function removes the first and last line delimiters (shown as "xx")
+// and the indentation from each line of the specified multi-line string.
 //
-// The following comment string with dashes showing the indentation:
+// The following is an indented string with dashes showing the indentation:
 //
-//	----!>
-//	----    This is the first line
-//	----    of a multi-line
-//	----    comment string.
-//	----<!
+//	----xx
+//	----This is the first line
+//	----of a multi-line
+//	----indented string.
+//	----xx
 //
-// Will be trimmed to:
+// It will be trimmed to:
 //
-//	!>
-//	    This is the first line
-//	    of a multi-line
-//	    comment string.
-//	<!
+//	This is the first line
+//	of a multi-line
+//	indented string.
+//
+// Only the indented lines remain and are no longer indented.
 func trimIndentation(v string) string {
-	var result = `!>` + "\n"
+	var trimmed string
 	var lines = sts.Split(v, "\n")
-	var size = len(lines)
-	var last = lines[size-1]        // The last line of the comment should only be spaces.
-	var indentation = len(last) - 2 // A count of the number of spaces in the last line.
-	lines = lines[1 : size-1]       // Trim off the first and last lines.
+	var size = len(lines) - 1
+	var last = lines[size]        // The last line provides the level of indentation.
+	var indentation = len(last) - 2 // The number of spaces in the last line.
+	lines = lines[1 : size]       // Strip off the first and last delimitier lines.
 	for _, line := range lines {
-		result += line[indentation:] + "\n" // Strip off the leading spaces.
+		trimmed += line[indentation:] + "\n" // Strip off the indentation.
 	}
-	result += `<!`
-	return result
+	return trimmed[:len(trimmed)-1] // Strip off the extra end-of-line character.
 }
