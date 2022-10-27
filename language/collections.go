@@ -375,9 +375,13 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatRange(r abs.RangeLike[any]) {
 	var first = r.GetFirst()
-	v.formatAny(first)
+	if first != nil {
+		v.formatAny(first)
+	}
 	var connector = r.GetConnector()
 	v.state.AppendString(connector)
 	var last = r.GetLast()
-	v.formatAny(last)
+	if last != nil {
+		v.formatAny(last)
+	}
 }

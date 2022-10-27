@@ -57,8 +57,11 @@ func TestRoundtripWithLists(t *tes.T) {
 
 func TestRoundtripWithRanges(t *tes.T) {
 	var rangeStrings = []string{
-		`[none..none]`,
-		`[0..infinity]`,
+		`[..]`,
+		`[0..∞]`,
+		`[-π<..π]`,
+		`[1<..100]`,
+		`[-1<..<1]`,
 	}
 
 	for index, s := range rangeStrings {
