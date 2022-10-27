@@ -15,7 +15,7 @@ package abstractions
 type Operator int
 
 const (
-	INVALID Operator = iota
+	_ Operator = iota
 	AT
 	CHAIN
 	POWER

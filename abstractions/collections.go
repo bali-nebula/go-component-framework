@@ -14,6 +14,18 @@ import (
 	syn "sync"
 )
 
+// EXTENT CONSTANTS
+
+type Extent int
+
+const (
+	_ Extent = iota
+	INCLUSIVE
+	LEFT
+	RIGHT
+	EXCLUSIVE
+)
+
 // COLLECTION INTERFACES
 
 // This interface defines the methods supported by all searchable collections of
@@ -37,8 +49,8 @@ type Elastic[T any] interface {
 	IsEnumerable() bool
 	GetFirst() T
 	SetFirst(T)
-	GetConnector() string
-	SetConnector(connector string)
+	GetExtent() Extent
+	SetExtent(extent Extent)
 	GetLast() T
 	SetLast(T)
 }

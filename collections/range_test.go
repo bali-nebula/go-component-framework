@@ -11,6 +11,7 @@
 package collections_test
 
 import (
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	ass "github.com/stretchr/testify/assert"
@@ -18,7 +19,7 @@ import (
 )
 
 func TestRangesWithIntegers(t *tes.T) {
-	var s = col.Range[int](3, "..", 7)
+	var s = col.Range[int](3, abs.INCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
 	ass.Equal(t, 5, s.GetItem(3))
@@ -33,7 +34,7 @@ func TestRangesWithIntegers(t *tes.T) {
 	iterator.ToEnd()
 	ass.Equal(t, 7, iterator.GetPrevious())
 
-	s = col.Range[int](3, "<..", 7)
+	s = col.Range[int](3, abs.RIGHT, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())
 	ass.Equal(t, 4, s.GetItem(1))
@@ -44,7 +45,7 @@ func TestRangesWithIntegers(t *tes.T) {
 	ass.Equal(t, 0, s.GetIndex(8))
 	ass.Equal(t, []int{4, 5, 6, 7}, s.AsArray())
 
-	s = col.Range[int](3, "<..<", 7)
+	s = col.Range[int](3, abs.EXCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 3, s.GetSize())
 	ass.Equal(t, 4, s.GetItem(1))
@@ -54,7 +55,7 @@ func TestRangesWithIntegers(t *tes.T) {
 	ass.Equal(t, 0, s.GetIndex(7))
 	ass.Equal(t, []int{4, 5, 6}, s.AsArray())
 
-	s = col.Range[int](3, "..<", 7)
+	s = col.Range[int](3, abs.LEFT, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())
 	ass.Equal(t, 3, s.GetItem(1))
@@ -65,7 +66,7 @@ func TestRangesWithIntegers(t *tes.T) {
 }
 
 func TestRangesWithRunes(t *tes.T) {
-	var s = col.Range[rune]('a', "..", 'z')
+	var s = col.Range[rune]('a', abs.INCLUSIVE, 'z')
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 26, s.GetSize())
 	ass.Equal(t, 'd', s.GetItem(4))

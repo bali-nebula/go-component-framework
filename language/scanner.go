@@ -666,7 +666,7 @@ func scanComment(v []byte) []string {
 		}
 	}
 	result = append(result, string(v[:current])) // Includes bang delimeters.
-	result = append(result, string(v[3:last])) // Excludes bang delimeters.
+	result = append(result, string(v[3:last]))   // Excludes bang delimeters.
 	return result
 }
 
@@ -840,7 +840,7 @@ func scanNarrative(v []byte) []string {
 		}
 	}
 	result = append(result, string(v[:current])) // Includes quote delimeters.
-	result = append(result, string(v[3:last])) // Excludes quote delimeters.
+	result = append(result, string(v[3:last]))   // Excludes quote delimeters.
 	return result
 }
 

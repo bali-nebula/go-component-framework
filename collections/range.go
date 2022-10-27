@@ -20,16 +20,16 @@ import (
 // RANGE IMPLEMENTATION
 
 // This constructor creates a new range of items covering the specified endpoints.
-func Range[T any](first T, connector string, last T) abs.RangeLike[T] {
-	switch connector {
-	case "..":
-	case "<..":
-	case "<..<":
-	case "..<":
+func Range[T any](first T, extent abs.Extent, last T) abs.RangeLike[T] {
+	switch extent {
+	case abs.INCLUSIVE:
+	case abs.LEFT:
+	case abs.RIGHT:
+	case abs.EXCLUSIVE:
 	default:
-		panic(fmt.Sprintf("Received an invalid range connector: %v", connector))
+		panic(fmt.Sprintf("Received an invalid range extent: %v", extent))
 	}
-	var v = ranje[T]{first: first, connector: connector, last: last}
+	var v = ranje[T]{first: first, extent: extent, last: last}
 	v.size = v.calculateSize()
 	return &v
 }
@@ -38,10 +38,10 @@ func Range[T any](first T, connector string, last T) abs.RangeLike[T] {
 // This type is parameterized as follows:
 //   - T is any type of primitive item.
 type ranje[T any] struct {
-	first     T
-	connector string
-	last      T
-	size      int
+	first  T
+	extent abs.Extent
+	last   T
+	size   int
 }
 
 // SEQUENTIAL INTERFACE
@@ -134,14 +134,14 @@ func (v *ranje[T]) SetFirst(item T) {
 	v.first = item
 }
 
-// This method returns the connector for this range.
-func (v *ranje[T]) GetConnector() string {
-	return v.connector
+// This method returns the extent for this range.
+func (v *ranje[T]) GetExtent() abs.Extent {
+	return v.extent
 }
 
-// This method sets the connector for this range.
-func (v *ranje[T]) SetConnector(connector string) {
-	v.connector = connector
+// This method sets the extent for this range.
+func (v *ranje[T]) SetExtent(extent abs.Extent) {
+	v.extent = extent
 }
 
 // This method returns the last item in this range.
@@ -220,28 +220,28 @@ func (v *ranje[T]) itemToIndex(item T) int {
 }
 
 // This function returns the effective first item in the range based on its
-// connector type. It can only be called when the parameterized item type T is
+// extent type. It can only be called when the parameterized item type T is
 // an integer type.
 func (v *ranje[T]) effectiveFirst() int {
 	var first = v.itemToIndex(v.first)
-	switch v.connector {
-	case "<..":
+	switch v.extent {
+	case abs.RIGHT:
 		first++
-	case "<..<":
+	case abs.EXCLUSIVE:
 		first++
 	}
 	return first
 }
 
 // This function returns the effective last item in the range based on its
-// connector type. It can only be called when the parameterized item type T is
+// extent type. It can only be called when the parameterized item type T is
 // an integer type.
 func (v *ranje[T]) effectiveLast() int {
 	var last = v.itemToIndex(v.last)
-	switch v.connector {
-	case "..<":
+	switch v.extent {
+	case abs.LEFT:
 		last--
-	case "<..<":
+	case abs.EXCLUSIVE:
 		last--
 	}
 	return last

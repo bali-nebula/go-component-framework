@@ -353,19 +353,20 @@ func (v *formatter) formatItems(items any) {
 func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
+	var delimiter string
 	var first any
-	var connector string
+	var extent abs.Extent
 	var last any
 	first, token, _ = v.parsePrimitive() // The first value is optional.
-	connector, token, ok = v.parseDelimiter("..")
+	delimiter, token, ok = v.parseDelimiter("..")
 	if !ok {
-		connector, token, ok = v.parseDelimiter("<..")
+		delimiter, token, ok = v.parseDelimiter("<..")
 	}
 	if !ok {
-		connector, token, ok = v.parseDelimiter("<..<")
+		delimiter, token, ok = v.parseDelimiter("<..<")
 	}
 	if !ok {
-		connector, token, ok = v.parseDelimiter("..<")
+		delimiter, token, ok = v.parseDelimiter("..<")
 	}
 	if !ok {
 		// This is not a range collection.
@@ -374,8 +375,20 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 		}
 		return nil, token, false
 	}
+	switch delimiter {
+	case "..":
+		extent = abs.INCLUSIVE
+	case "<..":
+		extent = abs.RIGHT
+	case "..<":
+		extent = abs.LEFT
+	case "<..<":
+		extent = abs.EXCLUSIVE
+	default:
+		panic(fmt.Sprintf("The range contains an unknown extent: %v", delimiter))
+	}
 	last, token, _ = v.parsePrimitive() // The last value is optional.
-	var rng = col.Range(first, connector, last)
+	var rng = col.Range(first, extent, last)
 	return rng, token, true
 }
 
@@ -386,8 +399,21 @@ func (v *formatter) formatRange(r abs.RangeLike[any]) {
 	if first != nil {
 		v.formatAny(first)
 	}
-	var connector = r.GetConnector()
-	v.state.AppendString(connector)
+	var extent = r.GetExtent()
+	var delimiter string
+	switch extent {
+	case abs.INCLUSIVE:
+		delimiter = ".."
+	case abs.RIGHT:
+		delimiter = "<.."
+	case abs.LEFT:
+		delimiter = "..<"
+	case abs.EXCLUSIVE:
+		delimiter = "<..<"
+	default:
+		panic(fmt.Sprintf("The range contains an unknown extent: %v", extent))
+	}
+	v.state.AppendString(delimiter)
 	var last = r.GetLast()
 	if last != nil {
 		v.formatAny(last)

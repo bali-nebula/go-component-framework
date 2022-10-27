@@ -389,9 +389,9 @@ func trimIndentation(v string) string {
 	var trimmed string
 	var lines = sts.Split(v, "\n")
 	var size = len(lines) - 1
-	var last = lines[size]        // The last line provides the level of indentation.
+	var last = lines[size]          // The last line provides the level of indentation.
 	var indentation = len(last) - 2 // The number of spaces in the last line.
-	lines = lines[1 : size]       // Strip off the first and last delimitier lines.
+	lines = lines[1:size]           // Strip off the first and last delimitier lines.
 	for _, line := range lines {
 		trimmed += line[indentation:] + "\n" // Strip off the indentation.
 	}

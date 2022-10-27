@@ -19,6 +19,8 @@ import (
 
 func TestRoundtripWithComponents(t *tes.T) {
 	var componentStrings = []string{
+		`none`,
+		`false  ! This is not true.`,
 		`[ ]($type: /bali/collections/Set/v1)  ! This is a note`,
 	}
 

@@ -15,7 +15,8 @@ package abstractions
 type Assignment int
 
 const (
-	REGULAR Assignment = iota
+	_ Assignment = iota
+	REGULAR
 	DEFAULT
 	TIMES
 	DIVIDE
