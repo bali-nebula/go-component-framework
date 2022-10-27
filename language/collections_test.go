@@ -20,9 +20,7 @@ import (
 func TestRoundtripWithCatalogs(t *tes.T) {
 	var catalogStrings = []string{
 		`[:]`,
-		"[\n" +
-		"    $key: \"value\"\n" +
-		"]",
+		"[$key: \"value\"]",
 		"[\n" +
 		"    $foo: 5\n" +
 		"    $bar: ~π\n" +
@@ -39,9 +37,7 @@ func TestRoundtripWithCatalogs(t *tes.T) {
 func TestRoundtripWithLists(t *tes.T) {
 	var listStrings = []string{
 		`[ ]`,
-		"[\n" +
-		"    42\n" +
-		"]",
+		"[42]",
 		"[\n" +
 		"    $foo\n" +
 		"    $bar\n" +

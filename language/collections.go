@@ -135,11 +135,15 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatCatalog(catalog abs.Sequential[abs.AssociationLike[any, any]]) {
-	if catalog.IsEmpty() {
+func (v *formatter) formatCatalog(catalog abs.CatalogLike[any, any]) {
+	switch catalog.GetSize() {
+	case 0:
 		v.state.AppendString(":")
-	} else {
-		var iterator = age.Iterator(catalog)
+	case 1:
+		var association = catalog.GetItem(1)
+		v.formatAssociation(association)
+	default:
+		var iterator = age.Iterator[abs.AssociationLike[any, any]](catalog)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
@@ -271,11 +275,15 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatList(list abs.Sequential[any]) {
-	if list.IsEmpty() {
+func (v *formatter) formatList(list abs.ListLike[any]) {
+	switch list.GetSize() {
+	case 0:
 		v.state.AppendString(" ")
-	} else {
-		var iterator = age.Iterator(list)
+	case 1:
+		var item = list.GetItem(1)
+		v.formatAny(item)
+	default:
+		var iterator = age.Iterator[any](list)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()

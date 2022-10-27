@@ -13,6 +13,7 @@ package language
 import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	com "github.com/craterdog-bali/go-bali-document-notation/components"
 	sts "strings"
@@ -80,12 +81,11 @@ func (v *formatter) formatComponent(component abs.ComponentLike) {
 		var context = component.GetContext()
 		v.formatContext(context)
 	}
-	/*
 	if component.IsAnnotated() {
+		v.state.AppendString("  ")
 		var note = component.GetNote()
 		v.formatNote(note)
 	}
-	*/
 }
 
 // This method attempts to parse the context for a parameterized component. It
@@ -128,8 +128,16 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.state.AppendString("(")
+	var catalog = col.Catalog[any, any]()
 	var parameters = context.GetParameters()
-	v.formatAny(parameters)
+	var iterator = age.Iterator[abs.AssociationLike[abs.Symbolic, any]](parameters)
+	for iterator.HasNext() {
+		var association = iterator.GetNext()
+		var key any = association.GetKey()
+		var value any = association.GetValue()
+		catalog.SetValue(key, value)
+	}
+	v.formatCatalog(catalog)
 	v.state.AppendString(")")
 }
 
@@ -237,6 +245,12 @@ func (v *parser) parseNote() (string, *Token, bool) {
 	}
 	note = token.Value
 	return note, token, true
+}
+
+// This method adds the canonical format for the specified annotation to the
+// state of the formatter.
+func (v *formatter) formatNote(note string) {
+	v.state.AppendString(note)
 }
 
 // This method attempts to parse a parameter containing a name and value. It
