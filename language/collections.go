@@ -33,7 +33,7 @@ func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool
 	_, token, ok = v.parseDelimiter(":")
 	if !ok {
 		// This is not an association.
-		v.backupOne() // Put back the primitive token.
+		v.backupOne() // Put back the primitive key token.
 		return nil, token, false
 	}
 	// This must be an association.
@@ -66,49 +66,263 @@ func (v *formatter) formatAssociation(association abs.AssociationLike[any, any])
 func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var association abs.AssociationLike[any, any]
 	var catalog = col.Catalog[any, any]()
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		return catalog, token, false
+	}
 	_, token, ok = v.parseEOL()
 	if !ok {
-		// The associations are on a single line.
-		_, token, ok = v.parseDelimiter(":")
-		if ok {
-			// This is an empty catalog.
-			return catalog, token, true
-		}
-		association, token, ok = v.parseAssociation()
+		catalog, token, ok = v.parseInlineAssociations()
 		if !ok {
-			// A non-empty catalog must have at least one association.
-			return nil, token, false
+			v.backupOne() // Put back the '[' character.
+			return catalog, token, false
 		}
-		for {
-			catalog.AddAssociation(association)
-			// Every subsequent association must be preceded by a ','.
-			_, token, ok = v.parseDelimiter(",")
-			if !ok {
-				// No more associations.
-				break
-			}
-			association, token, ok = v.parseAssociation()
-			if !ok {
-				var message = fmt.Sprintf(
-					"Expected an association after the ',' character but received:\n%v\n\n", token)
-				message += generateGrammar(
-					"$catalog",
-					"$association",
-					"$primitive",
-					"$component")
-				panic(message)
-			}
+	} else {
+		catalog, token, ok = v.parseMultilineAssociations()
+		if !ok {
+			v.backupOne() // Put back the EOL character.
+			v.backupOne() // Put back the '[' character.
+			return catalog, token, false
 		}
+	}
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		var message = fmt.Sprintf(
+			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$collection",
+			"$items")
+		panic(message)
+	}
+	return catalog, token, true
+}
+
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatCatalog(catalog abs.CatalogLike[any, any]) {
+	v.state.AppendString("[")
+	switch catalog.GetSize() {
+	case 0:
+		v.state.AppendString(":")
+	case 1:
+		var association = catalog.GetItem(1)
+		v.formatAssociation(association)
+	default:
+		var iterator = age.Iterator[abs.AssociationLike[any, any]](catalog)
+		v.state.IncrementDepth()
+		for iterator.HasNext() {
+			v.state.AppendNewline()
+			var association = iterator.GetNext()
+			v.formatAssociation(association)
+		}
+		v.state.DecrementDepth()
+		v.state.AppendNewline()
+	}
+	v.state.AppendString("]")
+}
+
+// This method attempts to parse a collection of items. It returns the
+// collection and whether or not the collection was successfully parsed.
+func (v *parser) parseCollection() (any, *Token, bool) {
+	var ok bool
+	var token *Token
+	var collection any
+	collection, token, ok = v.parseCatalog()
+	if !ok {
+		collection, token, ok = v.parseRange()
+	}
+	if !ok {
+		// The list must be attempted last since it may start with a component
+		// which cannot be put back as a single token.
+		collection, token, ok = v.parseList()
+	}
+	return collection, token, ok
+}
+
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatCollection(collection any) {
+	rang, ok := collection.(abs.RangeLike[any])
+	if ok {
+		v.formatRange(rang)
+		return
+	}
+	catalog, ok := collection.(abs.CatalogLike[any, any])
+	if ok {
+		v.formatCatalog(catalog)
+		return
+	}
+	var list = collection.(abs.ListLike[any])
+	v.formatList(list)
+}
+
+// This method attempts to parse a catalog collection with inline associations.
+// It returns the catalog collection and whether or not the catalog collection
+// was successfully parsed.
+func (v *parser) parseInlineAssociations() (abs.CatalogLike[any, any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var association abs.AssociationLike[any, any]
+	var catalog = col.Catalog[any, any]()
+	_, token, ok = v.parseDelimiter(":")
+	if ok {
+		// This is an empty catalog.
 		return catalog, token, true
 	}
-	// The associations are on separate lines.
+	_, token, ok = v.parseDelimiter("]")
+	if ok {
+		// This is an empty list.
+		v.backupOne() // Put back the ']' character.
+		return catalog, token, false
+	}
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty catalog must have at least one association.
-		v.backupOne() // Put back the EOL token.
-		return nil, token, false
+		return catalog, token, false
+	}
+	for {
+		catalog.AddAssociation(association)
+		// Every subsequent association must be preceded by a ','.
+		_, token, ok = v.parseDelimiter(",")
+		if !ok {
+			// No more associations.
+			break
+		}
+		association, token, ok = v.parseAssociation()
+		if !ok {
+			var message = fmt.Sprintf(
+				"Expected an association after the ',' character but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$catalog",
+				"$association",
+				"$primitive",
+				"$component")
+			panic(message)
+		}
+	}
+	return catalog, token, true
+}
+
+// This method attempts to parse a list collection with inline items. It returns
+// the catalog collection and whether or not the catalog collection was
+// successfully parsed.
+func (v *parser) parseInlineItems() (abs.ListLike[any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var item any
+	var list = col.List[any]()
+	_, token, ok = v.parseDelimiter("]")
+	if ok {
+		// This is an empty list.
+		v.backupOne() // Put back the ']' token.
+		return list, token, true
+	}
+	item, token, ok = v.parseComponent()
+	if !ok {
+		// A non-empty list must have at least one component item.
+		var message = fmt.Sprintf(
+			"Expected a component item after the '[' character but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$list",
+			"$component")
+		panic(message)
+	}
+	for {
+		list.AddItem(item)
+		// Every subsequent item must be preceded by a ','.
+		_, token, ok = v.parseDelimiter(",")
+		if !ok {
+			// No more items.
+			break
+		}
+		item, token, ok = v.parseComponent()
+		if !ok {
+			var message = fmt.Sprintf(
+				"Expected a component item after the ',' character but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$list",
+				"$component")
+			panic(message)
+		}
+	}
+	return list, token, true
+}
+
+// This method attempts to parse a list of items. It returns the
+// list of items and whether or not the list of items was
+// successfully parsed.
+func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var list = col.List[any]()
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		return list, token, false
+	}
+	_, token, ok = v.parseEOL()
+	if !ok {
+		list, token, ok = v.parseInlineItems()
+		if !ok {
+			v.backupOne() // Put back the '[' character.
+			return list, token, false
+		}
+	} else {
+		list, token, ok = v.parseMultilineItems()
+		if !ok {
+			v.backupOne() // Put back the EOL character.
+			v.backupOne() // Put back the '[' character.
+			return list, token, false
+		}
+	}
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		var message = fmt.Sprintf(
+			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$list",
+			"$component")
+		panic(message)
+	}
+	return list, token, ok
+}
+
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatList(list abs.ListLike[any]) {
+	v.state.AppendString("[")
+	switch list.GetSize() {
+	case 0:
+		v.state.AppendString(" ")
+	case 1:
+		var item = list.GetItem(1)
+		v.formatAny(item)
+	default:
+		var iterator = age.Iterator[any](list)
+		v.state.IncrementDepth()
+		for iterator.HasNext() {
+			v.state.AppendNewline()
+			var item = iterator.GetNext()
+			v.formatAny(item)
+		}
+		v.state.DecrementDepth()
+		v.state.AppendNewline()
+	}
+	v.state.AppendString("]")
+}
+
+// This method attempts to parse a catalog collection with multiline associations.
+// It returns the catalog collection and whether or not the catalog collection
+// was successfully parsed.
+func (v *parser) parseMultilineAssociations() (abs.CatalogLike[any, any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var association abs.AssociationLike[any, any]
+	var catalog = col.Catalog[any, any]()
+	association, token, ok = v.parseAssociation()
+	if !ok {
+		// A non-empty catalog must have at least one association.
+		return catalog, token, false
 	}
 	for {
 		catalog.AddAssociation(association)
@@ -133,115 +347,14 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 	return catalog, token, true
 }
 
-// This method adds the canonical format for the specified collection to the
-// state of the formatter.
-func (v *formatter) formatCatalog(catalog abs.CatalogLike[any, any]) {
-	switch catalog.GetSize() {
-	case 0:
-		v.state.AppendString(":")
-	case 1:
-		var association = catalog.GetItem(1)
-		v.formatAssociation(association)
-	default:
-		var iterator = age.Iterator[abs.AssociationLike[any, any]](catalog)
-		v.state.IncrementDepth()
-		for iterator.HasNext() {
-			v.state.AppendNewline()
-			var association = iterator.GetNext()
-			v.formatAssociation(association)
-		}
-		v.state.DecrementDepth()
-		v.state.AppendNewline()
-	}
-}
-
-// This method attempts to parse a collection of items. It returns the
-// collection and whether or not the collection was successfully parsed.
-func (v *parser) parseCollection() (any, *Token, bool) {
-	var ok bool
-	var token *Token
-	var items any
-	_, token, ok = v.parseDelimiter("[")
-	if !ok {
-		return nil, token, false
-	}
-	items, token, ok = v.parseItems()
-	if !ok {
-		var message = fmt.Sprintf(
-			"Expected a sequence of items following the '[' character but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$collection",
-			"$items")
-		panic(message)
-	}
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
-		var message = fmt.Sprintf(
-			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
-		message += generateGrammar(
-			"$collection",
-			"$items")
-		panic(message)
-	}
-	return items, token, true
-}
-
-// This method adds the canonical format for the specified collection to the
-// state of the formatter.
-func (v *formatter) formatCollection(collection any) {
-	v.state.AppendString("[")
-	v.formatItems(collection)
-	v.state.AppendString("]")
-}
-
-// This method attempts to parse a list of items. It returns the
-// list of items and whether or not the list of items was
+// This method attempts to parse a list collection with multiline items. It
+// returns the catalog collection and whether or not the catalog collection was
 // successfully parsed.
-func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
+func (v *parser) parseMultilineItems() (abs.ListLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
 	var item any
 	var list = col.List[any]()
-	_, token, ok = v.parseEOL()
-	if !ok {
-		// The items are on a single line.
-		_, token, ok = v.parseDelimiter("]")
-		if ok {
-			// This is an empty list.
-			v.backupOne() // Put back the ']' token.
-			return list, token, true
-		}
-		item, token, ok = v.parseComponent()
-		if !ok {
-			// A non-empty list must have at least one component item.
-			var message = fmt.Sprintf(
-				"Expected a component item after the '[' character but received:\n%v\n\n", token)
-			message += generateGrammar(
-				"$list",
-				"$component")
-			panic(message)
-		}
-		for {
-			list.AddItem(item)
-			// Every subsequent item must be preceded by a ','.
-			_, token, ok = v.parseDelimiter(",")
-			if !ok {
-				// No more items.
-				break
-			}
-			item, token, ok = v.parseComponent()
-			if !ok {
-				var message = fmt.Sprintf(
-					"Expected a component item after the ',' character but received:\n%v\n\n", token)
-				message += generateGrammar(
-					"$list",
-					"$component")
-				panic(message)
-			}
-		}
-		return list, token, true
-	}
-	// The items are on separate lines.
 	item, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty list must have at least one item.
@@ -273,28 +386,6 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 	return list, token, true
 }
 
-// This method adds the canonical format for the specified collection to the
-// state of the formatter.
-func (v *formatter) formatList(list abs.ListLike[any]) {
-	switch list.GetSize() {
-	case 0:
-		v.state.AppendString(" ")
-	case 1:
-		var item = list.GetItem(1)
-		v.formatAny(item)
-	default:
-		var iterator = age.Iterator[any](list)
-		v.state.IncrementDepth()
-		for iterator.HasNext() {
-			v.state.AppendNewline()
-			var item = iterator.GetNext()
-			v.formatAny(item)
-		}
-		v.state.DecrementDepth()
-		v.state.AppendNewline()
-	}
-}
-
 // This method attempts to parse a primitive. It returns the primitive and
 // whether or not the primitive was successfully parsed.
 func (v *parser) parsePrimitive() (any, *Token, bool) {
@@ -313,41 +404,6 @@ func (v *parser) parsePrimitive() (any, *Token, bool) {
 	return primitive, token, ok
 }
 
-// This method attempts to parse a sequence of items. It returns the
-// sequence and whether or not the sequence was successfully parsed.
-func (v *parser) parseItems() (any, *Token, bool) {
-	var ok bool
-	var token *Token
-	var items any
-	items, token, ok = v.parseCatalog()
-	if !ok {
-		items, token, ok = v.parseRange()
-	}
-	if !ok {
-		// The list must be attempted last since it may start with a component
-		// which cannot be put back as a single token.
-		items, token, ok = v.parseList() // The list must be last.
-	}
-	return items, token, ok
-}
-
-// This method adds the canonical format for the specified items to the
-// state of the formatter.
-func (v *formatter) formatItems(items any) {
-	rang, ok := items.(abs.RangeLike[any])
-	if ok {
-		v.formatRange(rang)
-		return
-	}
-	catalog, ok := items.(abs.CatalogLike[any, any])
-	if ok {
-		v.formatCatalog(catalog)
-		return
-	}
-	var list = items.(abs.ListLike[any])
-	v.formatList(list)
-}
-
 // This method attempts to parse a range collection. It returns the range
 // collection and whether or not the range collection was successfully parsed.
 func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
@@ -357,6 +413,11 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	var first any
 	var extent abs.Extent
 	var last any
+	var rng  abs.RangeLike[any]
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		return rng, token, false
+	}
 	first, token, _ = v.parsePrimitive() // The first value is optional.
 	delimiter, token, ok = v.parseDelimiter("..")
 	if !ok {
@@ -371,9 +432,10 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	if !ok {
 		// This is not a range collection.
 		if first != nil {
-			v.backupOne() // Put back the Value token.
+			v.backupOne() // Put back the first value token.
 		}
-		return nil, token, false
+		v.backupOne() // Put back the '[' character.
+		return rng, token, false
 	}
 	switch delimiter {
 	case "..":
@@ -388,18 +450,28 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 		panic(fmt.Sprintf("The range contains an unknown extent: %v", delimiter))
 	}
 	last, token, _ = v.parsePrimitive() // The last value is optional.
-	var rng = col.Range(first, extent, last)
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		var message = fmt.Sprintf(
+			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
+		message += generateGrammar(
+			"$collection",
+			"$items")
+		panic(message)
+	}
+	rng = col.Range(first, extent, last)
 	return rng, token, true
 }
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(r abs.RangeLike[any]) {
-	var first = r.GetFirst()
+func (v *formatter) formatRange(rng abs.RangeLike[any]) {
+	v.state.AppendString("[")
+	var first = rng.GetFirst()
 	if first != nil {
 		v.formatAny(first)
 	}
-	var extent = r.GetExtent()
+	var extent = rng.GetExtent()
 	var delimiter string
 	switch extent {
 	case abs.INCLUSIVE:
@@ -414,8 +486,9 @@ func (v *formatter) formatRange(r abs.RangeLike[any]) {
 		panic(fmt.Sprintf("The range contains an unknown extent: %v", extent))
 	}
 	v.state.AppendString(delimiter)
-	var last = r.GetLast()
+	var last = rng.GetLast()
 	if last != nil {
 		v.formatAny(last)
 	}
+	v.state.AppendString("]")
 }
