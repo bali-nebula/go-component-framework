@@ -25,16 +25,17 @@ import (
 var grammar = map[string]string{
 	"$acceptClause": `"accept" message`,
 	"$annotation":   `NOTE | COMMENT`,
-	"$arguments":    `expression {"," expression}`,
+	"$arguments":    `"(" [expression {"," expression}] ")"`,
 	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
 	"$association":  `primitive ":" component`,
-	"$attribute":    `variable "[" indices "]"`,
-	"$bag":          `expression`,
-	"$breakClause":  `"break" "loop"`,
-	"$catalog": `
-    "[" association {"," association} "]" |  ! Inline, no NOTEs allowed.
-    "[" EOL <association EOL> "]" |
-    "[" ":" "]"  ! An empty catalog.`,
+	"$associations": `
+    association {"," association} |  ! Inline, no NOTEs allowed.
+    EOL <association EOL> |
+    ":"  ! No associations.`,
+	"$attribute":      `variable "[" indices "]"`,
+	"$bag":            `expression`,
+	"$breakClause":    `"break" "loop"`,
+	"$catalog":        `"[" associations "]"`,
 	"$chaining":       `expression "&" expression`,
 	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
 	"$collection":     `catalog | list | range`,
@@ -57,11 +58,11 @@ var grammar = map[string]string{
 	"$exponential":    `expression "^" expression`,
 	"$expression": `
     component   |  ! entity [context] [NOTE]
-    intrinsic   |  ! function "(" [arguments] ")"
+    intrinsic   |  ! function arguments
     variable    |  ! IDENTIFIER
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
-    invocation  |  ! expression ("." | "<~") method "(" [arguments] ")"
+    invocation  |  ! expression ("." | "<~") method arguments
     value       |  ! expression "[" indices "]"
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
@@ -74,14 +75,15 @@ var grammar = map[string]string{
 	"$function":   `IDENTIFIER`,
 	"$ifClause":   `"if" condition "do" "{" statements "}"`,
 	"$indices":    `expression {"," expression}`,
-	"$intrinsic":  `function "(" [arguments] ")"`,
+	"$intrinsic":  `function arguments`,
 	"$inversion":  `("-" | "/" | "*") expression`,
-	"$invocation": `target ("." | "<~") method "(" [arguments] ")"`,
+	"$invocation": `target ("." | "<~") method arguments`,
 	"$item":       `SYMBOL`,
-	"$list": `
-    "[" component {"," component} "]" |  ! Inline, no NOTEs allowed.
-    "[" EOL <component EOL> "]" |
-    "[" "]" ! An empty list.`,
+	"$items": `
+    component {"," component} |  ! Inline, no NOTEs allowed.
+    EOL <component EOL>       |
+    ! No components.`,
+	"$list":      `"[" items "]"`,
 	"$logical":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitude": `"|" expression "|"`,
 	"$mainClause": `
@@ -113,14 +115,14 @@ var grammar = map[string]string{
 	"$parameter":      `name ":" component`,
 	"$parameters": `
     parameter {"," parameter} |  ! Inline, no NOTEs allowed.
-    EOL <parameter EOL>`,
+    EOL <parameter EOL>  ! At least one parameter is required.`,
 	"$pattern":        `expression`,
 	"$postClause":     `"post" message "to" bag`,
 	"$precedence":     `"(" expression ")"`,
 	"$primitive":      `element | string`,
 	"$procedure":      `"{" statements "}"`,
 	"$publishClause":  `"publish" event`,
-	"$range":          `("[" | "(") [primitive] ".." [primitive] (")" | "]")`,
+	"$range":          `( "[" | "(" ) [primitive] ".." [primitive] ( ")" | "]" )`,
 	"$recipient":      `name | attribute`,
 	"$rejectClause":   `"reject" message`,
 	"$result":         `expression`,

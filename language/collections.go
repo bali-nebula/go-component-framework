@@ -405,7 +405,7 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	var first any
 	var extent abs.Extent
 	var last any
-	var rng  abs.RangeLike[any]
+	var rng abs.RangeLike[any]
 	left, token, ok = v.parseDelimiter("[")
 	if !ok {
 		left, token, ok = v.parseDelimiter("(")

@@ -12,17 +12,23 @@ package language
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	exp "github.com/craterdog-bali/go-bali-document-notation/expressions"
 )
 
-// This method attempts to parse the arguments within a call. It returns an
-// array of the arguments and whether or not the arguments were successfully
+// This method attempts to parse the arguments within a call. It returns a
+// list of the arguments and whether or not the arguments were successfully
 // parsed.
 func (v *parser) parseArguments() (abs.ListLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
 	var argument any
-	var arguments abs.ListLike[any]
+	var arguments = col.List[any]()
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		// This is not an argument expression.
+		return arguments, token, false
+	}
 	argument, token, ok = v.parseExpression()
 	for ok {
 		arguments.AddItem(argument)
@@ -39,6 +45,15 @@ func (v *parser) parseArguments() (abs.ListLike[any], *Token, bool) {
 				"$arguments")
 			panic(message)
 		}
+	}
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar(")",
+			"$intrinsic",
+			"$function",
+			"$arguments")
+		panic(message)
 	}
 	return arguments, token, true
 }
@@ -280,7 +295,7 @@ func (v *parser) parseExpression() (any, *Token, bool) {
 	return expression, token, ok
 }
 
-// This method attempts to parse a sequence of indices. It returns an array of
+// This method attempts to parse a sequence of indices. It returns a list of
 // the indices and whether or not the indices were successfully parsed.
 func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
 	var ok bool
@@ -328,22 +343,7 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 		// This is not an function expression.
 		return expression, token, false
 	}
-	_, token, ok = v.parseDelimiter("(")
-	if !ok {
-		// This is not an function expression.
-		v.backupOne() // Put back the identifier token.
-		return expression, token, false
-	}
 	arguments, token, ok = v.parseArguments()
-	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("$expression",
-			"$intrinsic",
-			"$function",
-			"$arguments")
-		panic(message)
-	}
-	_, token, ok = v.parseDelimiter(")")
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$expression",
@@ -423,28 +423,10 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 			"$arguments")
 		panic(message)
 	}
-	_, token, ok = v.parseDelimiter("(")
-	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("(",
-			"$invocation",
-			"$method",
-			"$arguments")
-		panic(message)
-	}
 	arguments, token, ok = v.parseArguments()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$expression",
-			"$invocation",
-			"$method",
-			"$arguments")
-		panic(message)
-	}
-	_, token, ok = v.parseDelimiter(")")
-	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar(")",
 			"$invocation",
 			"$method",
 			"$arguments")
