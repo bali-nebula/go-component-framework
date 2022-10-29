@@ -32,12 +32,12 @@ var grammar = map[string]string{
 	"$bag":          `expression`,
 	"$breakClause":  `"break" "loop"`,
 	"$catalog": `
-    association {"," association} |  ! Inline, no NOTEs allowed.
-    EOL <association EOL> |
-    ":"  ! An empty catalog.`,
+    "[" association {"," association} "]" |  ! Inline, no NOTEs allowed.
+    "[" EOL <association EOL> "]" |
+    "[" ":" "]"  ! An empty catalog.`,
 	"$chaining":       `expression "&" expression`,
 	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
-	"$collection":     `"[" items "]"`,
+	"$collection":     `catalog | list | range`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
@@ -79,11 +79,10 @@ var grammar = map[string]string{
 	"$inversion":  `("-" | "/" | "*") expression`,
 	"$invocation": `target ("." | "<~") method "(" [arguments] ")"`,
 	"$item":       `SYMBOL`,
-	"$items":      `catalog | list | range`,
 	"$list": `
-    component {"," component} |  ! Inline, no NOTEs allowed.
-    EOL <component EOL> |
-    ! An empty list.`,
+    "[" component {"," component} "]" |  ! Inline, no NOTEs allowed.
+    "[" EOL <component EOL> "]" |
+    "[" "]" ! An empty list.`,
 	"$logical":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitude": `"|" expression "|"`,
 	"$mainClause": `
@@ -121,7 +120,7 @@ var grammar = map[string]string{
 	"$primitive":      `element | string`,
 	"$procedure":      `"{" statements "}"`,
 	"$publishClause":  `"publish" event`,
-	"$range":          `[primitive] (".." | "..<" | "<..<" | "<..") [primitive]`,
+	"$range":          `("[" | "(") [primitive] ".." [primitive] (")" | "]")`,
 	"$recipient":      `name | attribute`,
 	"$rejectClause":   `"reject" message`,
 	"$result":         `expression`,
@@ -155,10 +154,9 @@ var grammar = map[string]string{
 	"$DATES":       `[TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]`,
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
 	"$DELIMITER": `
-    "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" |
-    "<..<" | "<.." | "<~" | "<" | ";" | ":=" | ":" | "/=" | "//" | "/" |
-    "..<" | ".." | "." | "-=" | "-" | "," | "+=" | "+" | "*=" | "*" |
-    ")" | "(" | "&"`,
+    "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "<~" | "<" |
+	";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," |
+	"+=" | "+" | "*=" | "*" | ")" | "(" | "&"`,
 	"$DURATION":   `"~" [SIGN] "P" (WEEKS | DATES [TIMES])`,
 	"$E":          `"e"`,
 	"$EOL":        `"\n"`,

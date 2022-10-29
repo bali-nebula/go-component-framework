@@ -409,54 +409,56 @@ func (v *parser) parsePrimitive() (any, *Token, bool) {
 func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	var ok bool
 	var token *Token
-	var delimiter string
+	var left, right string
 	var first any
 	var extent abs.Extent
 	var last any
 	var rng  abs.RangeLike[any]
-	_, token, ok = v.parseDelimiter("[")
+	left, token, ok = v.parseDelimiter("[")
 	if !ok {
-		return rng, token, false
+		left, token, ok = v.parseDelimiter("(")
+		if !ok {
+			return rng, token, false
+		}
 	}
 	first, token, _ = v.parsePrimitive() // The first value is optional.
-	delimiter, token, ok = v.parseDelimiter("..")
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("<..")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("<..<")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("..<")
-	}
+	_, token, ok = v.parseDelimiter("..")
 	if !ok {
 		// This is not a range collection.
 		if first != nil {
 			v.backupOne() // Put back the first value token.
 		}
-		v.backupOne() // Put back the '[' character.
+		v.backupOne() // Put back the left bracket character.
 		return rng, token, false
 	}
-	switch delimiter {
-	case "..":
+	last, token, _ = v.parsePrimitive() // The last value is optional.
+	right, token, ok = v.parseDelimiter("]")
+	if !ok {
+		right, token, ok = v.parseDelimiter(")")
+		if !ok {
+			var message = fmt.Sprintf(
+				"Expected a right bracket following the range of items but received:\n%v\n\n", token)
+			message += generateGrammar(
+				"$range",
+				"$primitive")
+			panic(message)
+		}
+	}
+	switch {
+	case left == "[" && right == "]":
 		extent = abs.INCLUSIVE
-	case "<..":
+	case left == "(" && right == "]":
 		extent = abs.RIGHT
-	case "..<":
+	case left == "[" && right == ")":
 		extent = abs.LEFT
-	case "<..<":
+	case left == "(" && right == ")":
 		extent = abs.EXCLUSIVE
 	default:
-		panic(fmt.Sprintf("The range contains an unknown extent: %v", delimiter))
-	}
-	last, token, _ = v.parsePrimitive() // The last value is optional.
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
 		var message = fmt.Sprintf(
-			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
+			"Expected valid range brackets but received:%q and %q\n\n", left, right)
 		message += generateGrammar(
-			"$collection",
-			"$items")
+			"$range",
+			"$primitive")
 		panic(message)
 	}
 	rng = col.Range(first, extent, last)
@@ -466,29 +468,29 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
 func (v *formatter) formatRange(rng abs.RangeLike[any]) {
-	v.state.AppendString("[")
+	var extent = rng.GetExtent()
+	var left, right string
+	switch extent {
+	case abs.INCLUSIVE:
+		left, right = "[", "]"
+	case abs.RIGHT:
+		left, right = "(", "]"
+	case abs.LEFT:
+		left, right = "[", ")"
+	case abs.EXCLUSIVE:
+		left, right = "(", ")"
+	default:
+		panic(fmt.Sprintf("The range contains an unknown extent: %v", extent))
+	}
+	v.state.AppendString(left)
 	var first = rng.GetFirst()
 	if first != nil {
 		v.formatAny(first)
 	}
-	var extent = rng.GetExtent()
-	var delimiter string
-	switch extent {
-	case abs.INCLUSIVE:
-		delimiter = ".."
-	case abs.RIGHT:
-		delimiter = "<.."
-	case abs.LEFT:
-		delimiter = "..<"
-	case abs.EXCLUSIVE:
-		delimiter = "<..<"
-	default:
-		panic(fmt.Sprintf("The range contains an unknown extent: %v", extent))
-	}
-	v.state.AppendString(delimiter)
+	v.state.AppendString("..")
 	var last = rng.GetLast()
 	if last != nil {
 		v.formatAny(last)
 	}
-	v.state.AppendString("]")
+	v.state.AppendString(right)
 }

@@ -183,15 +183,15 @@ func TestParserWithSequenceTypes(t *tes.T) {
 	var rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 1, rng.GetSize())
 
-	component = lan.ParseSource("[1<..1]")
+	component = lan.ParseSource("(1..1]")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = lan.ParseSource("[1<..<1]")
+	component = lan.ParseSource("(1..1)")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = lan.ParseSource("[1..<1]")
+	component = lan.ParseSource("[1..1)")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 0, rng.GetSize())
 
@@ -199,15 +199,15 @@ func TestParserWithSequenceTypes(t *tes.T) {
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 7, rng.GetSize())
 
-	component = lan.ParseSource("[-1<..5]")
+	component = lan.ParseSource("(-1..5]")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 6, rng.GetSize())
 
-	component = lan.ParseSource("[-1<..<5]")
+	component = lan.ParseSource("(-1..5)")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 5, rng.GetSize())
 
-	component = lan.ParseSource("[-1..<5]")
+	component = lan.ParseSource("[-1..5)")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 6, rng.GetSize())
 
@@ -215,15 +215,15 @@ func TestParserWithSequenceTypes(t *tes.T) {
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = lan.ParseSource("[<..]")
+	component = lan.ParseSource("(..]")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = lan.ParseSource("[<..<]")
+	component = lan.ParseSource("(..)")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = lan.ParseSource("[..<]")
+	component = lan.ParseSource("[..)")
 	rng = component.GetEntity().(abs.RangeLike[any])
 	ass.Equal(t, 0, rng.GetSize())
 }
