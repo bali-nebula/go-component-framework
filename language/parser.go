@@ -38,8 +38,8 @@ func ParseDocument(document []byte) abs.ComponentLike {
 	if ok {
 		_, token, ok = parser.parseEOL() // Required by POSIX.
 		if !ok {
-			var message = fmt.Sprintf("Expected an EOL following the component but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = parser.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("EOL",
 				"$source",
 				"$component",
 				"$entity",
@@ -51,8 +51,8 @@ func ParseDocument(document []byte) abs.ComponentLike {
 		}
 		_, token, ok = parser.parseEOF()
 		if !ok {
-			var message = fmt.Sprintf("Expected an EOF following the EOL but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = parser.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("EOF",
 				"$source",
 				"$component",
 				"$entity",
@@ -62,6 +62,17 @@ func ParseDocument(document []byte) abs.ComponentLike {
 				"$name")
 			panic(message)
 		}
+	} else {
+		var message = parser.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$component",
+			"$source",
+			"$component",
+			"$entity",
+			"$context",
+			"$parameters",
+			"$parameter",
+			"$name")
+		panic(message)
 	}
 	return component
 }

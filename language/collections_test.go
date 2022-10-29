@@ -28,8 +28,8 @@ func TestRoundtripWithCatalogs(t *tes.T) {
 	}
 
 	for index, s := range catalogStrings {
-		var catalog = lan.ParseSource(s).GetEntity().(abs.CatalogLike[any, any])
-		var s = lan.FormatValue(catalog)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, catalogStrings[index], s)
 	}
 }
@@ -45,8 +45,8 @@ func TestRoundtripWithLists(t *tes.T) {
 	}
 
 	for index, s := range listStrings {
-		var list = lan.ParseSource(s).GetEntity().(abs.ListLike[any])
-		var s = lan.FormatValue(list)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, listStrings[index], s)
 	}
 }
@@ -54,15 +54,18 @@ func TestRoundtripWithLists(t *tes.T) {
 func TestRoundtripWithRanges(t *tes.T) {
 	var rangeStrings = []string{
 		`[..]`,
-		`[0..∞]`,
-		`[-π..π]`,
+		`[0..∞)`,
+		`(-π..π]`,
 		`[1..100]`,
-		`[-1..1]`,
+		`(-1..1)`,
+		`[1....5)  ! Two probability endpoints.`,
+		`[v1.2..v1.5]`,
+		`[/bali/elements/Angle/v1../bali/elements/Tag/v1]`,
 	}
 
 	for index, s := range rangeStrings {
-		var r = lan.ParseSource(s).GetEntity().(abs.RangeLike[any])
-		var s = lan.FormatValue(r)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, rangeStrings[index], s)
 	}
 }

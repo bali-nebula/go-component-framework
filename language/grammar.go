@@ -54,7 +54,6 @@ var grammar = map[string]string{
 	"$evaluateClause": `[recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$event":          `expression`,
 	"$exception":      `expression`,
-	"$onClause":       `"on" "$exception" <"matching" pattern "do" "{" statements "}">`,
 	"$exponential":    `expression "^" expression`,
 	"$expression": `
     component   |  ! entity [context] [NOTE]
@@ -109,6 +108,7 @@ var grammar = map[string]string{
 	"$moniker":        `expression`,
 	"$name":           `SYMBOL`,
 	"$notarizeClause": `"notarize" document "as" moniker`,
+	"$onClause":       `"on" "$exception" <"matching" pattern "do" "{" statements "}">`,
 	"$ordinal":        `expression`,
 	"$parameter":      `name ":" component`,
 	"$parameters": `
@@ -223,10 +223,10 @@ var grammar = map[string]string{
 
 // PRIVATE FUNCTIONS
 
-func generateGrammar(symbols ...string) string {
-	var expected = "The expected grammar was:\n"
-	for _, s := range symbols {
-		expected += fmt.Sprintf("  %v: %v\n\n", s, grammar[s])
+func generateGrammar(expected string, symbols ...string) string {
+	var message = "Was expecting '" + expected + "' from:\n"
+	for _, symbol := range symbols {
+		message += fmt.Sprintf("  %v: %v\n\n", symbol, grammar[symbol])
 	}
-	return expected
+	return message
 }

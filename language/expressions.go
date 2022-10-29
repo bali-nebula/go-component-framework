@@ -11,7 +11,6 @@
 package language
 
 import (
-	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	exp "github.com/craterdog-bali/go-bali-document-notation/expressions"
 )
@@ -35,8 +34,8 @@ func (v *parser) parseArguments() (abs.ListLike[any], *Token, bool) {
 		}
 		argument, token, ok = v.parseExpression()
 		if !ok {
-			var message = fmt.Sprintf("Expected an argument after the ',' character but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("$expression",
 				"$arguments")
 			panic(message)
 		}
@@ -73,8 +72,8 @@ func (v *parser) parseArithmetic(left any) (abs.ArithmeticLike, *Token, bool) {
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an expression following the '"+delimiter+"' operator but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$arithmetic")
 		panic(message)
 	}
@@ -109,8 +108,8 @@ func (v *parser) parseChaining(left any) (abs.ChainingLike, *Token, bool) {
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an expression following the '&' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$chaining")
 		panic(message)
 	}
@@ -150,8 +149,8 @@ func (v *parser) parseComparison(left any) (abs.ComparisonLike, *Token, bool) {
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an expression following the '"+delimiter+"' operator but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$comparison")
 		panic(message)
 	}
@@ -188,8 +187,8 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 	}
 	logical, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected a logical expression following the 'NOT' operator but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$complement")
 		panic(message)
 	}
@@ -212,8 +211,8 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 	}
 	reference, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an expression following the '@' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$dereference")
 		panic(message)
 	}
@@ -236,8 +235,8 @@ func (v *parser) parseExponential(base any) (abs.ExponentialLike, *Token, bool) 
 	}
 	exponent, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an exponent expression following the '^' operator but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$exponential")
 		panic(message)
 	}
@@ -291,8 +290,8 @@ func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
 	index, token, ok = v.parseExpression()
 	// There must be at least one index.
 	if !ok {
-		var message = fmt.Sprintf("Expected at least one index in the sequence of indices but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$indices")
 		panic(message)
 	}
@@ -306,8 +305,8 @@ func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
 		}
 		index, token, ok = v.parseExpression()
 		if !ok {
-			var message = fmt.Sprintf("Expected an index after the ',' character but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("$expression",
 				"$indices")
 			panic(message)
 		}
@@ -337,8 +336,8 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 	}
 	arguments, token, ok = v.parseArguments()
 	if !ok {
-		var message = fmt.Sprintf("Expected arguments following the '(' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$intrinsic",
 			"$function",
 			"$arguments")
@@ -346,8 +345,8 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		var message = fmt.Sprintf("Expected a ')' character following the arguments but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$intrinsic",
 			"$function",
 			"$arguments")
@@ -380,8 +379,8 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	}
 	numeric, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected a numeric expression following the '"+delimiter+"' operator but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$inversion")
 		panic(message)
 	}
@@ -417,8 +416,8 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 	}
 	message, token, ok = v.parseIdentifier()
 	if !ok {
-		var message = fmt.Sprintf("Expected a message identifier following the '"+delimiter+"' delimiter but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$method",
 			"$invocation",
 			"$method",
 			"$arguments")
@@ -426,8 +425,8 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 	}
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
-		var message = fmt.Sprintf("Expected a '(' character following the message identifier but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("(",
 			"$invocation",
 			"$method",
 			"$arguments")
@@ -435,8 +434,8 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 	}
 	arguments, token, ok = v.parseArguments()
 	if !ok {
-		var message = fmt.Sprintf("Expected arguments following the '(' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$invocation",
 			"$method",
 			"$arguments")
@@ -444,8 +443,8 @@ func (v *parser) parseInvocation(target any) (abs.InvocationLike, *Token, bool) 
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		var message = fmt.Sprintf("Expected a ')' character following the arguments but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar(")",
 			"$invocation",
 			"$method",
 			"$arguments")
@@ -486,8 +485,8 @@ func (v *parser) parseLogical(left any) (abs.LogicalLike, *Token, bool) {
 	}
 	right, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected a logical expression following the '"+delimiter+"' operator but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$logical")
 		panic(message)
 	}
@@ -520,15 +519,15 @@ func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 	}
 	numeric, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected a numeric expression following the '|' operator but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$magnitude")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("|")
 	if !ok {
-		var message = fmt.Sprintf("Expected a '|' operator following the numeric expression but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("|",
 			"$magnitude")
 		panic(message)
 	}
@@ -551,15 +550,15 @@ func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 	}
 	inner, token, ok = v.parseExpression()
 	if !ok {
-		var message = fmt.Sprintf("Expected an expression following the '(' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$precedence")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		var message = fmt.Sprintf("Expected a ')' character following the expression but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$precedence")
 		panic(message)
 	}
@@ -599,8 +598,8 @@ func (v *parser) parseRecursive() (any, *Token, bool) {
 		expression, token, ok = v.parseLogical(expression)
 	}
 	if !ok {
-		var message = fmt.Sprintf("Expected a valid operator after the expression but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("operator",
 			"$invocation",
 			"$value",
 			"$chaining",
@@ -628,16 +627,16 @@ func (v *parser) parseValue(composite any) (abs.ValueLike, *Token, bool) {
 	}
 	indices, token, ok = v.parseIndices()
 	if !ok {
-		var message = fmt.Sprintf("Expected indices following the '[' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
 			"$value",
 			"$indices")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		var message = fmt.Sprintf("Expected a ']' character following the indices but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("]",
 			"$value",
 			"$indices")
 		panic(message)

@@ -11,11 +11,9 @@
 package language_test
 
 import (
-	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	lan "github.com/craterdog-bali/go-bali-document-notation/language"
 	ass "github.com/stretchr/testify/assert"
-	mat "math"
-	cmp "math/cmplx"
 	tes "testing"
 )
 
@@ -26,19 +24,9 @@ func TestRoundtripWithAngles(t *tes.T) {
 		`~1.23456789E-10`,
 	}
 
-	var angleValues = []ele.Angle{
-		0,
-		mat.Pi,
-		1.23456789e-10,
-	}
-
 	for index, s := range angleStrings {
-		var angle = lan.ParseSource(s).GetEntity().(ele.Angle)
-		ass.Equal(t, angleValues[index], angle)
-	}
-
-	for index, angle := range angleValues {
-		var s = lan.FormatValue(angle)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, angleStrings[index], s)
 	}
 }
@@ -49,18 +37,9 @@ func TestRoundtripWithBooleans(t *tes.T) {
 		`true`,
 	}
 
-	var booleanValues = []ele.Boolean{
-		false,
-		true,
-	}
-
 	for index, s := range booleanStrings {
-		var boolean = lan.ParseSource(s).GetEntity().(ele.Boolean)
-		ass.Equal(t, booleanValues[index], boolean)
-	}
-
-	for index, boolean := range booleanValues {
-		var s = lan.FormatValue(boolean)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, booleanStrings[index], s)
 	}
 }
@@ -77,24 +56,9 @@ func TestRoundtripWithDurations(t *tes.T) {
 		`~-P12Y4DT5H6M7S`,
 	}
 
-	var durationValues = []ele.Duration{
-		0,
-		-7862400000,
-		386936629890,
-		-386918262000,
-		8253198000,
-		-367890,
-		378683791890,
-		-379047391000,
-	}
-
 	for index, s := range durationStrings {
-		var duration = lan.ParseSource(s).GetEntity().(ele.Duration)
-		ass.Equal(t, durationValues[index], duration)
-	}
-
-	for index, duration := range durationValues {
-		var s = lan.FormatValue(duration)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, durationStrings[index], s)
 	}
 }
@@ -114,27 +78,9 @@ func TestRoundtripWithMoments(t *tes.T) {
 		`<-1-02-03T04:05:06.789>`,
 	}
 
-	var momentValues = []ele.Moment{
-		-62167219200000,
-		-62135596800000,
-		-62198755200000,
-		0,
-		-6122044800000,
-		253402300800000,
-		-377736739200000,
-		1238544000000,
-		-242611200000,
-		-62132730893211,
-		-62195889293211,
-	}
-
 	for index, s := range momentStrings {
-		var moment = lan.ParseSource(s).GetEntity().(ele.Moment)
-		ass.Equal(t, momentValues[index], moment)
-	}
-
-	for index, moment := range momentValues {
-		var s = lan.FormatValue(moment)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, momentStrings[index], s)
 	}
 }
@@ -157,30 +103,9 @@ func TestRoundtripWithNumbers(t *tes.T) {
 		`(-3, 4i)`,
 	}
 
-	var numberValues = []ele.Number{
-		0,
-		mat.E,
-		-mat.E,
-		mat.Pi,
-		-mat.Pi,
-		complex(0, 1),
-		complex(0, -1),
-		complex(0, mat.E),
-		complex(0, -mat.E),
-		complex(0, mat.Pi),
-		complex(0, -mat.Pi),
-		ele.Number(cmp.Inf()),
-		complex(1, -1),
-		complex(-3, 4),
-	}
-
 	for index, s := range numberStrings {
-		var number = lan.ParseSource(s).GetEntity().(ele.Number)
-		ass.Equal(t, numberValues[index], number)
-	}
-
-	for index, number := range numberValues {
-		var s = lan.FormatValue(number)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, numberStrings[index], s)
 	}
 }
@@ -192,19 +117,9 @@ func TestRoundtripWithPatterns(t *tes.T) {
 		`any`,
 	}
 
-	var patternValues = []ele.Pattern{
-		"^none$",
-		`c[aou]+t`,
-		".*",
-	}
-
 	for index, s := range patternStrings {
-		var pattern = lan.ParseSource(s).GetEntity().(ele.Pattern)
-		ass.Equal(t, patternValues[index], pattern)
-	}
-
-	for index, pattern := range patternValues {
-		var s = lan.FormatValue(pattern)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, patternStrings[index], s)
 	}
 }
@@ -217,20 +132,9 @@ func TestRoundtripWithPercentages(t *tes.T) {
 		`-1.7%`,
 	}
 
-	var percentageValues = []ele.Percentage{
-		0,
-		50,
-		100,
-		-1.7,
-	}
-
 	for index, s := range percentageStrings {
-		var percentage = lan.ParseSource(s).GetEntity().(ele.Percentage)
-		ass.Equal(t, percentageValues[index], percentage)
-	}
-
-	for index, percentage := range percentageValues {
-		var s = lan.FormatValue(percentage)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, percentageStrings[index], s)
 	}
 }
@@ -242,19 +146,9 @@ func TestRoundtripWithProbabilities(t *tes.T) {
 		`1.`,
 	}
 
-	var probabilityValues = []ele.Probability{
-		0,
-		0.5,
-		1,
-	}
-
 	for index, s := range probabilityStrings {
-		var probability = lan.ParseSource(s).GetEntity().(ele.Probability)
-		ass.Equal(t, probabilityValues[index], probability)
-	}
-
-	for index, probability := range probabilityValues {
-		var s = lan.FormatValue(probability)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, probabilityStrings[index], s)
 	}
 }
@@ -268,21 +162,9 @@ func TestRoundtripWithResources(t *tes.T) {
 		`<https://google.com/path?foo=bar#fragment>`,
 	}
 
-	var resourceValues = []ele.Resource{
-		"https://google.com",
-		"https://google.com/path",
-		"https://google.com/path?foo=bar",
-		"https://google.com/path#fragment",
-		"https://google.com/path?foo=bar#fragment",
-	}
-
 	for index, s := range resourceStrings {
-		var resource = lan.ParseSource(s).GetEntity().(ele.Resource)
-		ass.Equal(t, resourceValues[index], resource)
-	}
-
-	for index, resource := range resourceValues {
-		var s = lan.FormatValue(resource)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, resourceStrings[index], s)
 	}
 }
@@ -293,18 +175,9 @@ func TestRoundtripWithSymbols(t *tes.T) {
 		`$foobar`,
 	}
 
-	var symbolValues = []ele.Symbol{
-		"A",
-		"foobar",
-	}
-
 	for index, s := range symbolStrings {
-		var symbol = lan.ParseSource(s).GetEntity().(ele.Symbol)
-		ass.Equal(t, symbolValues[index], symbol)
-	}
-
-	for index, symbol := range symbolValues {
-		var s = lan.FormatValue(symbol)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, symbolStrings[index], s)
 	}
 }
@@ -315,18 +188,9 @@ func TestRoundtripWithTags(t *tes.T) {
 		`#A3GHK57Z`,
 	}
 
-	var tagValues = []ele.Tag{
-		`A`,
-		`A3GHK57Z`,
-	}
-
 	for index, s := range tagStrings {
-		var tag = lan.ParseSource(s).GetEntity().(ele.Tag)
-		ass.Equal(t, tagValues[index], tag)
-	}
-
-	for index, tag := range tagValues {
-		var s = lan.FormatValue(tag)
+		var component = lan.ParseSource(s).(abs.ComponentLike)
+		var s = lan.FormatValue(component)
 		ass.Equal(t, tagStrings[index], s)
 	}
 }

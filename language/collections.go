@@ -39,8 +39,8 @@ func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool
 	// This must be an association.
 	value, token, ok = v.parseComponent()
 	if !ok {
-		var message = fmt.Sprintf("Expected a component after the ':' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$component",
 			"$association",
 			"$primitive",
 			"$component")
@@ -88,9 +88,8 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		var message = fmt.Sprintf(
-			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("]",
 			"$collection",
 			"$items")
 		panic(message)
@@ -191,9 +190,8 @@ func (v *parser) parseInlineAssociations() (abs.CatalogLike[any, any], *Token, b
 		}
 		association, token, ok = v.parseAssociation()
 		if !ok {
-			var message = fmt.Sprintf(
-				"Expected an association after the ',' character but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("$association",
 				"$catalog",
 				"$association",
 				"$primitive",
@@ -221,9 +219,8 @@ func (v *parser) parseInlineItems() (abs.ListLike[any], *Token, bool) {
 	item, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty list must have at least one component item.
-		var message = fmt.Sprintf(
-			"Expected a component item after the '[' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$component",
 			"$list",
 			"$component")
 		panic(message)
@@ -238,9 +235,8 @@ func (v *parser) parseInlineItems() (abs.ListLike[any], *Token, bool) {
 		}
 		item, token, ok = v.parseComponent()
 		if !ok {
-			var message = fmt.Sprintf(
-				"Expected a component item after the ',' character but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("$component",
 				"$list",
 				"$component")
 			panic(message)
@@ -277,9 +273,8 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		var message = fmt.Sprintf(
-			"Expected a ']' character following the sequence of items but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("]",
 			"$list",
 			"$component")
 		panic(message)
@@ -329,9 +324,8 @@ func (v *parser) parseMultilineAssociations() (abs.CatalogLike[any, any], *Token
 		// Every association must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			var message = fmt.Sprintf(
-				"Expected an EOL character following the association but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("EOL",
 				"$catalog",
 				"$association",
 				"$primitive",
@@ -358,9 +352,8 @@ func (v *parser) parseMultilineItems() (abs.ListLike[any], *Token, bool) {
 	item, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty list must have at least one item.
-		var message = fmt.Sprintf(
-			"Expected a component item after the '[' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$component",
 			"$list",
 			"$component")
 		panic(message)
@@ -370,9 +363,8 @@ func (v *parser) parseMultilineItems() (abs.ListLike[any], *Token, bool) {
 		// Every item must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			var message = fmt.Sprintf(
-				"Expected an EOL character following the component item but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("EOL",
 				"$list",
 				"$component")
 			panic(message)
@@ -436,9 +428,8 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	if !ok {
 		right, token, ok = v.parseDelimiter(")")
 		if !ok {
-			var message = fmt.Sprintf(
-				"Expected a right bracket following the range of items but received:\n%v\n\n", token)
-			message += generateGrammar(
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("right bracket",
 				"$range",
 				"$primitive")
 			panic(message)
@@ -454,11 +445,8 @@ func (v *parser) parseRange() (abs.RangeLike[any], *Token, bool) {
 	case left == "(" && right == ")":
 		extent = abs.EXCLUSIVE
 	default:
-		var message = fmt.Sprintf(
-			"Expected valid range brackets but received:%q and %q\n\n", left, right)
-		message += generateGrammar(
-			"$range",
-			"$primitive")
+		// This should never happen unless there is a bug in the parser.
+		var message = fmt.Sprintf("Expected valid range brackets but received:%q and %q\n\n", left, right)
 		panic(message)
 	}
 	rng = col.Range(first, extent, last)

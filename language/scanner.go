@@ -474,10 +474,15 @@ func (v *scanner) foundPercentage() bool {
 func (v *scanner) foundProbability() bool {
 	var s = v.source[v.nextByte:]
 	var matches = scanProbability(s)
-	if len(matches) > 0 && v.source[v.nextByte+len(matches[0])] != '.' {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenProbability)
-		return true
+	if len(matches) > 0 {
+		// Check to see if the match is part of a range.
+		if matches[0] != "1." ||
+		byt.HasPrefix(v.source[v.nextByte+len(matches[0]):], []byte("..")) || // "1...x" is ok.
+		!byt.HasPrefix(v.source[v.nextByte+len(matches[0]):], []byte(".")) {  // "1.x" is ok.
+			v.nextByte += len(matches[0])
+			v.emitToken(TokenProbability)
+			return true
+		} // "1..x" is NOT ok.
 	}
 	return false
 }

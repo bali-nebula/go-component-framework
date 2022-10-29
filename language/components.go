@@ -11,7 +11,6 @@
 package language
 
 import (
-	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
@@ -112,8 +111,8 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	}
 	parameters, token, ok = v.parseParameters()
 	if !ok {
-		var message = fmt.Sprintf("Expected at least one parameter following the '(' character but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$parameter",
 			"$context",
 			"$parameters",
 			"$parameter",
@@ -122,8 +121,8 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		var message = fmt.Sprintf("Expected a ')' character following the parameters but received:\n%v\n\n", token)
-		message += generateGrammar(
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar(")",
 			"$context",
 			"$parameters",
 			"$parameter",
