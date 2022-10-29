@@ -12,6 +12,8 @@ package language
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
+	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	sta "github.com/craterdog-bali/go-bali-document-notation/statements"
 )
@@ -111,7 +113,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 			"$onClause")
 		panic(message)
 	}
-	statements, token, ok = v.parseStatements()
+	statements, token, ok = v.parseMultilineStatements()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$statements",
@@ -390,6 +392,49 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method attempts to parse a list of inline statements. It returns
+// the list of statements and whether or not the list of statements was
+// successfully parsed.
+func (v *parser) parseInlineStatements() (abs.ListLike[any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var statement any
+	var statements = col.List[any]()
+	_, token, ok = v.parseDelimiter("}")
+	if ok {
+		// This is an empty list of statements.
+		v.backupOne() // Put back the '}' token.
+		return statements, token, true
+	}
+	statement, token, ok = v.parseStatement()
+	if !ok {
+		// A non-empty list must have at least one statement.
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$statement",
+			"$statements",
+			"$statement")
+		panic(message)
+	}
+	for {
+		statements.AddItem(statement)
+		// Every subsequent statement must be preceded by a ';'.
+		_, token, ok = v.parseDelimiter(";")
+		if !ok {
+			// No more statements.
+			break
+		}
+		statement, token, ok = v.parseStatement()
+		if !ok {
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("$statement",
+				"$statements",
+				"$statement")
+			panic(message)
+		}
+	}
+	return statements, token, true
+}
+
 // This method attempts to parse a main clause. It returns the main clause and
 // whether or not the main clause was successfully parsed.
 func (v *parser) parseMainClause() (any, *Token, bool) {
@@ -451,6 +496,43 @@ func (v *parser) parseMainClause() (any, *Token, bool) {
 		mainClause, token, ok = v.parseEvaluateClause()
 	}
 	return mainClause, token, ok
+}
+
+// This method attempts to parse a list of multiline statements. It returns the
+// list of statements and whether or not the list of statements was successfully
+// parsed.
+func (v *parser) parseMultilineStatements() (abs.ListLike[any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var statement any
+	var statements = col.List[any]()
+	statement, token, ok = v.parseStatement()
+	if !ok {
+		// A non-empty list must have at least one statement.
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$component",
+			"$statements",
+			"$statement")
+		panic(message)
+	}
+	for {
+		statements.AddItem(statement)
+		// Every statement must be followed by an EOL.
+		_, token, ok = v.parseEOL()
+		if !ok {
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("EOL",
+				"$statements",
+				"$statement")
+			panic(message)
+		}
+		statement, token, ok = v.parseStatement()
+		if !ok {
+			// No more statements.
+			break
+		}
+	}
+	return statements, token, true
 }
 
 // This method attempts to parse a notarize clause. It returns the notarize
@@ -596,25 +678,32 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
-// This method attempts to parse a procedure. It returns the procedure and
-// whether or not the procedure was successfully parsed.
-func (v *parser) parseProcedure() (abs.ListLike[any], *Token, bool) {
+// This method attempts to parse a list of statements. It returns the
+// list of statements and whether or not the list of statements was
+// successfully parsed.
+func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var statements abs.ListLike[any]
+	var procedure abs.ProcedureLike
+	var statements = col.List[any]()
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
-		// This is not a procedure.
-		return statements, token, false
+		return procedure, token, false
 	}
-	statements, token, ok = v.parseStatements()
+	_, token, ok = v.parseEOL()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("$statements",
-			"$procedure",
-			"$statements",
-			"$statement")
-		panic(message)
+		statements, token, ok = v.parseInlineStatements()
+		if !ok {
+			v.backupOne() // Put back the '{' character.
+			return procedure, token, false
+		}
+	} else {
+		statements, token, ok = v.parseMultilineStatements()
+		if !ok {
+			v.backupOne() // Put back the EOL character.
+			v.backupOne() // Put back the '{' character.
+			return procedure, token, false
+		}
 	}
 	_, token, ok = v.parseDelimiter("}")
 	if !ok {
@@ -625,7 +714,32 @@ func (v *parser) parseProcedure() (abs.ListLike[any], *Token, bool) {
 			"$statement")
 		panic(message)
 	}
-	return statements, token, true
+	procedure = sta.Procedure(statements)
+	return procedure, token, ok
+}
+
+// This method adds the canonical format for the specified procedure to the
+// state of the formatter.
+func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
+	v.state.AppendString("{")
+	switch procedure.GetSize() {
+	case 0:
+		v.state.AppendString(" ")
+	case 1:
+		var statement = procedure.GetItem(1)
+		v.formatAny(statement)
+	default:
+		var iterator = age.Iterator[any](procedure)
+		v.state.IncrementDepth()
+		for iterator.HasNext() {
+			v.state.AppendNewline()
+			var statement = iterator.GetNext()
+			v.formatAny(statement)
+		}
+		v.state.DecrementDepth()
+		v.state.AppendNewline()
+	}
+	v.state.AppendString("}")
 }
 
 // This method attempts to parse a publish clause. It returns the publish
@@ -879,10 +993,10 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 
 // This method attempts to parse a statement. It returns the statement and
 // whether or not the statement was successfully parsed.
-func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
+func (v *parser) parseStatement() (any, *Token, bool) {
 	var ok bool
 	var token *Token
-	var statement abs.StatementLike
+	var statement any
 	var mainClause any
 	var onClause abs.OnClauseLike
 	mainClause, token, ok = v.parseMainClause()
@@ -892,79 +1006,6 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	}
 	statement = sta.StatementWithHandler(mainClause, onClause)
 	return statement, token, ok
-}
-
-// This method attempts to parse the statements within a procedure. It returns
-// an array of the statements and whether or not the statements were
-// successfully parsed.
-func (v *parser) parseStatements() (abs.ListLike[any], *Token, bool) {
-	var statement any
-	var statements abs.ListLike[any]
-	var _, token, ok = v.parseEOL()
-	if !ok {
-		// The statements are on a single line.
-		statement, token, ok = v.parseStatement()
-		// There must be at least one statement.
-		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
-			message += generateGrammar("$statement",
-				"$procedure",
-				"$statements",
-				"$statement")
-			panic(message)
-		}
-		for {
-			statements.AddItem(statement)
-			// Every subsequent statement must be preceded by a ';'.
-			_, token, ok = v.parseDelimiter(";")
-			if !ok {
-				// No more statements.
-				break
-			}
-			statement, token, ok = v.parseStatement()
-			if !ok {
-				var message = v.formatError("An unexpected token was received by the parser:", token)
-				message += generateGrammar("$statement",
-					"$procedure",
-					"$statements",
-					"$statement")
-				panic(message)
-			}
-		}
-		return statements, token, true
-	}
-	// The statements are on separate lines.
-	for {
-		statement, token, ok = v.parseAnnotation()
-		if !ok {
-			statement, token, ok = v.parseStatement()
-		}
-		if !ok {
-			// No more statements.
-			break
-		}
-		statements.AddItem(statement)
-		// Every statement must be followed by an EOL.
-		_, token, ok = v.parseEOL()
-		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
-			message += generateGrammar("EOL",
-				"$procedure",
-				"$statements",
-				"$statement")
-			panic(message)
-		}
-	}
-	// There must be at least one statement.
-	if statements.IsEmpty() {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("$statement",
-			"$procedure",
-			"$statements",
-			"$statement")
-		panic(message)
-	}
-	return statements, token, true
 }
 
 // This method attempts to parse a throw clause. It returns the throw

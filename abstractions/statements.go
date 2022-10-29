@@ -120,6 +120,15 @@ type PostClauseLike interface {
 	SetBag(bag any)
 }
 
+// This interface consolidates all the interfaces supported by procedure-like
+// types.
+type ProcedureLike interface {
+	Sequential[any]
+	Indexed[any]
+	Updatable[any]
+	Malleable[any]
+}
+
 // This interface defines the methods supported by all publish-clause-like types.
 type PublishClauseLike interface {
 	GetEvent() any

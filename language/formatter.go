@@ -264,14 +264,24 @@ func (v *formatter) formatInterface(value any) {
 		v.formatAssociation(association)
 		return
 	}
-	catalog, ok := value.(abs.Sequential[abs.AssociationLike[any, any]])
+	catalog, ok := value.(abs.CatalogLike[any, any])
 	if ok {
-		v.formatCollection(catalog)
+		v.formatCatalog(catalog)
 		return
 	}
-	collection, ok := value.(abs.Sequential[any])
+	list, ok := value.(abs.ListLike[any])
 	if ok {
-		v.formatCollection(collection)
+		v.formatList(list)
+		return
+	}
+	rng, ok := value.(abs.RangeLike[any])
+	if ok {
+		v.formatRange(rng)
+		return
+	}
+	procedure, ok := value.(abs.ProcedureLike)
+	if ok {
+		v.formatProcedure(procedure)
 		return
 	}
 	// The value is a pointer to the value to be formatted (or type 'any').

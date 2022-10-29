@@ -203,7 +203,7 @@ func (v *parser) parseInlineAssociations() (abs.CatalogLike[any, any], *Token, b
 }
 
 // This method attempts to parse a list collection with inline items. It returns
-// the catalog collection and whether or not the catalog collection was
+// the list collection and whether or not the list collection was
 // successfully parsed.
 func (v *parser) parseInlineItems() (abs.ListLike[any], *Token, bool) {
 	var ok bool
@@ -342,7 +342,7 @@ func (v *parser) parseMultilineAssociations() (abs.CatalogLike[any, any], *Token
 }
 
 // This method attempts to parse a list collection with multiline items. It
-// returns the catalog collection and whether or not the catalog collection was
+// returns the list collection and whether or not the list collection was
 // successfully parsed.
 func (v *parser) parseMultilineItems() (abs.ListLike[any], *Token, bool) {
 	var ok bool
