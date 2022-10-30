@@ -8,20 +8,37 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package statements
+package procedures
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// BREAK CLAUSE IMPLEMENTATION
+// PUBLISH CLAUSE IMPLEMENTATION
 
-// This constructor creates a new break clause.
-func BreakClause() abs.BreakClauseLike {
-	var v = &breakClause{}
+// This constructor creates a new publish clause.
+func PublishClause(event any) abs.PublishClauseLike {
+	var v = &publishClause{}
+	// Perform argument validation.
+	v.SetEvent(event)
 	return v
 }
 
-// This type defines the structure and methods associated with a break clause.
-type breakClause struct {
+// This type defines the structure and methods associated with a publish
+// clause.
+type publishClause struct {
+	event any
+}
+
+// This method returns the event expression for this publish clause.
+func (v *publishClause) GetEvent() any {
+	return v.event
+}
+
+// This method sets the event expression for this publish clause.
+func (v *publishClause) SetEvent(event any) {
+	if event == nil {
+		panic("A publish clause requires an event.")
+	}
+	v.event = event
 }

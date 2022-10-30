@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package statements
+package procedures
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
@@ -27,8 +27,8 @@ func Block(expression any, procedure abs.ProcedureLike) abs.BlockLike {
 
 // This type defines the structure and methods associated with a procedure block.
 type block struct {
-	expression    any
-	procedure abs.ProcedureLike
+	expression any
+	procedure  abs.ProcedureLike
 }
 
 // This method returns the expression for this block.

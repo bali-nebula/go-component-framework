@@ -15,7 +15,7 @@ import (
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	sta "github.com/craterdog-bali/go-bali-document-notation/statements"
+	pro "github.com/craterdog-bali/go-bali-document-notation/procedures"
 )
 
 // This method attempts to parse an accept clause. It returns the accept
@@ -38,7 +38,7 @@ func (v *parser) parseAcceptClause() (abs.AcceptClauseLike, *Token, bool) {
 			"$message")
 		panic(message)
 	}
-	clause = sta.AcceptClause(message)
+	clause = pro.AcceptClause(message)
 	return clause, token, true
 }
 
@@ -87,7 +87,7 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	attribute = sta.Attribute(variable, indices)
+	attribute = pro.Attribute(variable, indices)
 	return attribute, token, true
 }
 
@@ -132,7 +132,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 			"$onClause")
 		panic(message)
 	}
-	block = sta.Block(expression, statements)
+	block = pro.Block(expression, statements)
 	return block, token, true
 }
 
@@ -255,7 +255,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 			"$moniker")
 		panic(message)
 	}
-	clause = sta.CheckoutClause(recipient, level, moniker)
+	clause = pro.CheckoutClause(recipient, level, moniker)
 	return clause, token, true
 }
 
@@ -300,7 +300,7 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 			"$document")
 		panic(message)
 	}
-	clause = sta.DiscardClause(citation)
+	clause = pro.DiscardClause(citation)
 	return clause, token, true
 }
 
@@ -371,7 +371,7 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	case "-=":
 		operator = abs.MINUS
 	}
-	clause = sta.EvaluateClauseWithRecipient(recipient, operator, expression)
+	clause = pro.EvaluateClauseWithRecipient(recipient, operator, expression)
 	return clause, token, true
 }
 
@@ -401,7 +401,7 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = sta.IfClause(block.GetExpression(), block.GetProcedure())
+	clause = pro.IfClause(block.GetExpression(), block.GetProcedure())
 	return clause, token, true
 }
 
@@ -443,7 +443,7 @@ func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatIndices(indices abs.ListLike[any]) {
 	var iterator = age.Iterator[any](indices)
-	var index = iterator.GetNext()  // There is always at least one index.
+	var index = iterator.GetNext() // There is always at least one index.
 	v.formatAny(index)
 	for iterator.HasNext() {
 		v.state.AppendString(", ")
@@ -635,7 +635,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 			"$moniker")
 		panic(message)
 	}
-	clause = sta.NotarizeClause(draft, moniker)
+	clause = pro.NotarizeClause(draft, moniker)
 	return clause, token, true
 }
 
@@ -690,7 +690,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 			"$statements")
 		panic(message)
 	}
-	clause = sta.OnClause(exception, blocks)
+	clause = pro.OnClause(exception, blocks)
 	return clause, token, true
 }
 
@@ -734,7 +734,7 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 			"$bag")
 		panic(message)
 	}
-	clause = sta.PostClause(message, bag)
+	clause = pro.PostClause(message, bag)
 	return clause, token, true
 }
 
@@ -774,7 +774,7 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 			"$statement")
 		panic(message)
 	}
-	procedure = sta.Procedure(statements)
+	procedure = pro.Procedure(statements)
 	return procedure, token, ok
 }
 
@@ -819,7 +819,7 @@ func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 			"$event")
 		panic(message)
 	}
-	clause = sta.PublishClause(event)
+	clause = pro.PublishClause(event)
 	return clause, token, true
 }
 
@@ -856,7 +856,7 @@ func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 			"$message")
 		panic(message)
 	}
-	clause = sta.RejectClause(message)
+	clause = pro.RejectClause(message)
 	return clause, token, true
 }
 
@@ -912,7 +912,7 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 			"$bag")
 		panic(message)
 	}
-	clause = sta.RetrieveClause(recipient, bag)
+	clause = pro.RetrieveClause(recipient, bag)
 	return clause, token, true
 }
 
@@ -936,7 +936,7 @@ func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 			"$result")
 		panic(message)
 	}
-	clause = sta.ReturnClause(result)
+	clause = pro.ReturnClause(result)
 	return clause, token, true
 }
 
@@ -992,7 +992,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = sta.SaveClause(draft, citation)
+	clause = pro.SaveClause(draft, citation)
 	return clause, token, true
 }
 
@@ -1045,7 +1045,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 			"$pattern")
 		panic(message)
 	}
-	clause = sta.SelectClause(control, blocks)
+	clause = pro.SelectClause(control, blocks)
 	return clause, token, true
 }
 
@@ -1062,7 +1062,7 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 		// The exception clause is optional.
 		onClause, token, _ = v.parseOnClause()
 	}
-	statement = sta.StatementWithHandler(mainClause, onClause)
+	statement = pro.StatementWithHandler(mainClause, onClause)
 	return statement, token, ok
 }
 
@@ -1091,7 +1091,7 @@ func (v *parser) parseThrowClause() (abs.ThrowClauseLike, *Token, bool) {
 			"$exception")
 		panic(message)
 	}
-	clause = sta.ThrowClause(exception)
+	clause = pro.ThrowClause(exception)
 	return clause, token, true
 }
 
@@ -1116,7 +1116,7 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = sta.WhileClause(block.GetExpression(), block.GetProcedure())
+	clause = pro.WhileClause(block.GetExpression(), block.GetProcedure())
 	return clause, token, true
 }
 
@@ -1170,6 +1170,6 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = sta.WithClause(item, block.GetExpression(), block.GetProcedure())
+	clause = pro.WithClause(item, block.GetExpression(), block.GetProcedure())
 	return clause, token, true
 }

@@ -8,24 +8,20 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package statements
+package procedures
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// PROCEDURE IMPLEMENTATION
+// BREAK CLAUSE IMPLEMENTATION
 
-// This constructor creates a new procedure.
-func Procedure(statements abs.ListLike[abs.StatementLike]) abs.ProcedureLike {
-	var v = &procedure{statements, statements, statements, statements}
+// This constructor creates a new break clause.
+func BreakClause() abs.BreakClauseLike {
+	var v = &breakClause{}
 	return v
 }
 
-// This type defines the structure and methods associated with a procedure.
-type procedure struct {
-	abs.Sequential[abs.StatementLike]
-	abs.Indexed[abs.StatementLike]
-	abs.Updatable[abs.StatementLike]
-	abs.Malleable[abs.StatementLike]
+// This type defines the structure and methods associated with a break clause.
+type breakClause struct {
 }

@@ -8,37 +8,44 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package statements
+package procedures
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// DISCARD CLAUSE IMPLEMENTATION
+// This type defines the node structure associated with a clause that rejects a
+// message that was previously retrieved from a named message bag so that it
+// can be retrieved by another party.
+type Reject struct {
+	Message any
+}
 
-// This constructor creates a new discard clause.
-func DiscardClause(citation any) abs.DiscardClauseLike {
-	var v = &discardClause{}
+// REJECT CLAUSE IMPLEMENTATION
+
+// This constructor creates a new reject clause.
+func RejectClause(message any) abs.RejectClauseLike {
+	var v = &rejectClause{}
 	// Perform argument validation.
-	v.SetCitation(citation)
+	v.SetMessage(message)
 	return v
 }
 
-// This type defines the structure and methods associated with a discard
+// This type defines the structure and methods associated with an reject
 // clause.
-type discardClause struct {
-	citation any
+type rejectClause struct {
+	message any
 }
 
-// This method returns the citation expression for this discard clause.
-func (v *discardClause) GetCitation() any {
-	return v.citation
+// This method returns the message expression for this reject clause.
+func (v *rejectClause) GetMessage() any {
+	return v.message
 }
 
-// This method sets the citation expression for this discard clause.
-func (v *discardClause) SetCitation(citation any) {
-	if citation == nil {
-		panic("A discard clause requires a citation.")
+// This method sets the message expression for this reject clause.
+func (v *rejectClause) SetMessage(message any) {
+	if message == nil {
+		panic("An reject clause requires a message.")
 	}
-	v.citation = citation
+	v.message = message
 }

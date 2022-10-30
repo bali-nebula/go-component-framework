@@ -8,37 +8,37 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package statements
+package procedures
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// THROW CLAUSE IMPLEMENTATION
+// RETURN CLAUSE IMPLEMENTATION
 
-// This constructor creates a new throw clause.
-func ThrowClause(exception any) abs.ThrowClauseLike {
-	var v = &throwClause{}
+// This constructor creates a new return clause.
+func ReturnClause(result any) abs.ReturnClauseLike {
+	var v = &returnClause{}
 	// Perform argument validation.
-	v.SetException(exception)
+	v.SetResult(result)
 	return v
 }
 
-// This type defines the structure and methods associated with an throw
+// This type defines the structure and methods associated with an return
 // clause.
-type throwClause struct {
-	exception any
+type returnClause struct {
+	result any
 }
 
-// This method returns the exception expression for this throw clause.
-func (v *throwClause) GetException() any {
-	return v.exception
+// This method returns the result expression for this return clause.
+func (v *returnClause) GetResult() any {
+	return v.result
 }
 
-// This method sets the exception expression for this throw clause.
-func (v *throwClause) SetException(exception any) {
-	if exception == nil {
-		panic("A throw clause requires an exception.")
+// This method sets the result expression for this return clause.
+func (v *returnClause) SetResult(result any) {
+	if result == nil {
+		panic("A return clause requires a result.")
 	}
-	v.exception = exception
+	v.result = result
 }

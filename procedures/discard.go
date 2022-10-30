@@ -8,37 +8,37 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package statements
+package procedures
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// RETURN CLAUSE IMPLEMENTATION
+// DISCARD CLAUSE IMPLEMENTATION
 
-// This constructor creates a new return clause.
-func ReturnClause(result any) abs.ReturnClauseLike {
-	var v = &returnClause{}
+// This constructor creates a new discard clause.
+func DiscardClause(citation any) abs.DiscardClauseLike {
+	var v = &discardClause{}
 	// Perform argument validation.
-	v.SetResult(result)
+	v.SetCitation(citation)
 	return v
 }
 
-// This type defines the structure and methods associated with an return
+// This type defines the structure and methods associated with a discard
 // clause.
-type returnClause struct {
-	result any
+type discardClause struct {
+	citation any
 }
 
-// This method returns the result expression for this return clause.
-func (v *returnClause) GetResult() any {
-	return v.result
+// This method returns the citation expression for this discard clause.
+func (v *discardClause) GetCitation() any {
+	return v.citation
 }
 
-// This method sets the result expression for this return clause.
-func (v *returnClause) SetResult(result any) {
-	if result == nil {
-		panic("A return clause requires a result.")
+// This method sets the citation expression for this discard clause.
+func (v *discardClause) SetCitation(citation any) {
+	if citation == nil {
+		panic("A discard clause requires a citation.")
 	}
-	v.result = result
+	v.citation = citation
 }

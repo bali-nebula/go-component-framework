@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package statements
+package procedures
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
@@ -38,7 +38,7 @@ type statement struct {
 	annotation string
 	mainClause any
 	onClause   abs.OnClauseLike
-	note string
+	note       string
 }
 
 // This method returns the annotation for this statement.
