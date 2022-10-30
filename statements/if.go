@@ -45,12 +45,12 @@ func (v *ifClause) SetCondition(condition any) {
 }
 
 // This method returns the statement at the specified index from this if clause.
-func (v *ifClause) GetStatement(index int) any {
+func (v *ifClause) GetStatement(index int) abs.StatementLike {
 	return v.statements.GetItem(index)
 }
 
 // This method sets the statement at the specified index for this if clause.
-func (v *ifClause) SetStatement(index int, statement any) {
+func (v *ifClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each statement in an if clause requires a value.")
 	}

@@ -46,8 +46,8 @@ type AttributeLike interface {
 type BlockLike interface {
 	GetPattern() any
 	SetPattern(pattern any)
-	GetStatement(index int) any
-	SetStatement(index int, statement any)
+	GetStatement(index int) StatementLike
+	SetStatement(index int, statement StatementLike)
 	GetStatements() ProcedureLike
 	SetStatements(statements ProcedureLike)
 }
@@ -88,8 +88,8 @@ type EvaluateClauseLike interface {
 type IfClauseLike interface {
 	GetCondition() any
 	SetCondition(condition any)
-	GetStatement(index int) any
-	SetStatement(index int, statement any)
+	GetStatement(index int) StatementLike
+	SetStatement(index int, statement StatementLike)
 	GetStatements() ProcedureLike
 	SetStatements(statements ProcedureLike)
 }
@@ -123,10 +123,10 @@ type PostClauseLike interface {
 // This interface consolidates all the interfaces supported by procedure-like
 // types.
 type ProcedureLike interface {
-	Sequential[any]
-	Indexed[any]
-	Updatable[any]
-	Malleable[any]
+	Sequential[StatementLike]
+	Indexed[StatementLike]
+	Updatable[StatementLike]
+	Malleable[StatementLike]
 }
 
 // This interface defines the methods supported by all publish-clause-like types.
@@ -191,8 +191,8 @@ type ThrowClauseLike interface {
 type WhileClauseLike interface {
 	GetCondition() any
 	SetCondition(condition any)
-	GetStatement(index int) any
-	SetStatement(index int, statement any)
+	GetStatement(index int) StatementLike
+	SetStatement(index int, statement StatementLike)
 	GetStatements() ProcedureLike
 	SetStatements(statements ProcedureLike)
 }
@@ -203,8 +203,8 @@ type WithClauseLike interface {
 	SetItem(exception Symbolic)
 	GetSequence() any
 	SetSequence(sequence any)
-	GetStatement(index int) any
-	SetStatement(index int, statement any)
+	GetStatement(index int) StatementLike
+	SetStatement(index int, statement StatementLike)
 	GetStatements() ProcedureLike
 	SetStatements(statements ProcedureLike)
 }

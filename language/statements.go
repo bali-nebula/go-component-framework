@@ -386,11 +386,11 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 // This method attempts to parse a list of inline statements. It returns
 // the list of statements and whether or not the list of statements was
 // successfully parsed.
-func (v *parser) parseInlineStatements() (abs.ListLike[any], *Token, bool) {
+func (v *parser) parseInlineStatements() (abs.ListLike[abs.StatementLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var statement any
-	var statements = col.List[any]()
+	var statement abs.StatementLike
+	var statements = col.List[abs.StatementLike]()
 	_, token, ok = v.parseDelimiter("}")
 	if ok {
 		// This is an empty list of statements.
@@ -492,11 +492,11 @@ func (v *parser) parseMainClause() (any, *Token, bool) {
 // This method attempts to parse a list of multiline statements. It returns the
 // list of statements and whether or not the list of statements was successfully
 // parsed.
-func (v *parser) parseMultilineStatements() (abs.ListLike[any], *Token, bool) {
+func (v *parser) parseMultilineStatements() (abs.ListLike[abs.StatementLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var statement any
-	var statements = col.List[any]()
+	var statement abs.StatementLike
+	var statements = col.List[abs.StatementLike]()
 	statement, token, ok = v.parseStatement()
 	if !ok {
 		// A non-empty list must have at least one statement.
@@ -676,7 +676,7 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var procedure abs.ProcedureLike
-	var statements = col.List[any]()
+	var statements = col.List[abs.StatementLike]()
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		return procedure, token, false
@@ -717,12 +717,12 @@ func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
 	case 0:
 		v.state.AppendString(" ")
 	default:
-		var iterator = age.Iterator[any](procedure)
+		var iterator = age.Iterator[abs.StatementLike](procedure)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
 			var statement = iterator.GetNext()
-			v.formatAny(statement)
+			v.formatStatement(statement)
 		}
 		v.state.DecrementDepth()
 		v.state.AppendNewline()
@@ -981,10 +981,10 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 
 // This method attempts to parse a statement. It returns the statement and
 // whether or not the statement was successfully parsed.
-func (v *parser) parseStatement() (any, *Token, bool) {
+func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var statement any
+	var statement abs.StatementLike
 	var mainClause any
 	var onClause abs.OnClauseLike
 	mainClause, token, ok = v.parseMainClause()
@@ -994,6 +994,11 @@ func (v *parser) parseStatement() (any, *Token, bool) {
 	}
 	statement = sta.StatementWithHandler(mainClause, onClause)
 	return statement, token, ok
+}
+
+// This method adds the canonical format for the specified statement to the
+// state of the formatter.
+func (v *formatter) formatStatement(statement abs.StatementLike) {
 }
 
 // This method attempts to parse a throw clause. It returns the throw

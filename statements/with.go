@@ -61,12 +61,12 @@ func (v *withClause) SetSequence(sequence any) {
 
 // This method returns the statement at the specified index from this while
 // clause.
-func (v *withClause) GetStatement(index int) any {
+func (v *withClause) GetStatement(index int) abs.StatementLike {
 	return v.statements.GetItem(index)
 }
 
 // This method sets the statement at the specified index for this with clause.
-func (v *withClause) SetStatement(index int, statement any) {
+func (v *withClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each statement in a with clause requires a value.")
 	}

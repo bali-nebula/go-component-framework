@@ -46,12 +46,12 @@ func (v *whileClause) SetCondition(condition any) {
 
 // This method returns the statement at the specified index from this while
 // clause.
-func (v *whileClause) GetStatement(index int) any {
+func (v *whileClause) GetStatement(index int) abs.StatementLike {
 	return v.statements.GetItem(index)
 }
 
 // This method sets the statement at the specified index for this while clause.
-func (v *whileClause) SetStatement(index int, statement any) {
+func (v *whileClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each statement in a while clause requires a value.")
 	}

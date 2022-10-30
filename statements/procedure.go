@@ -17,15 +17,15 @@ import (
 // PROCEDURE IMPLEMENTATION
 
 // This constructor creates a new procedure.
-func Procedure(statements abs.ListLike[any]) abs.ProcedureLike {
+func Procedure(statements abs.ListLike[abs.StatementLike]) abs.ProcedureLike {
 	var v = &procedure{statements, statements, statements, statements}
 	return v
 }
 
 // This type defines the structure and methods associated with a procedure.
 type procedure struct {
-	abs.Sequential[any]
-	abs.Indexed[any]
-	abs.Updatable[any]
-	abs.Malleable[any]
+	abs.Sequential[abs.StatementLike]
+	abs.Indexed[abs.StatementLike]
+	abs.Updatable[abs.StatementLike]
+	abs.Malleable[abs.StatementLike]
 }

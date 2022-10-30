@@ -45,12 +45,12 @@ func (v *block) SetPattern(pattern any) {
 }
 
 // This method returns the statement at the specified index from this block.
-func (v *block) GetStatement(index int) any {
+func (v *block) GetStatement(index int) abs.StatementLike {
 	return v.statements.GetItem(index)
 }
 
 // This method sets the statement at the specified index for this block.
-func (v *block) SetStatement(index int, statement any) {
+func (v *block) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each statement in a block requires a value.")
 	}

@@ -284,7 +284,7 @@ func (v *formatter) formatParameter(parameter abs.AssociationLike[abs.Symbolic, 
 	v.formatIdentifier(key.GetIdentifier())
 	v.state.AppendString(": ")
 	var value = parameter.GetValue()
-	v.formatAny(value)
+	v.formatComponent(value)
 }
 
 // This method attempts to parse context parameters. It returns the
