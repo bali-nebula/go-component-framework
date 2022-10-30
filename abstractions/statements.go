@@ -175,8 +175,12 @@ type SelectClauseLike interface {
 
 // This interface defines the methods supported by all statement-like types.
 type StatementLike interface {
+	GetAnnotation() string
+	SetAnnotation(annotation string)
 	GetMainClause() any
 	SetMainClause(mainClause any)
+	GetNote() string
+	SetNote(note string)
 	GetOnClause() OnClauseLike
 	SetOnClause(onClause OnClauseLike)
 }

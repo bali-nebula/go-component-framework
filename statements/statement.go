@@ -35,8 +35,20 @@ func StatementWithHandler(mainClause any, onClause abs.OnClauseLike) abs.Stateme
 
 // This type defines the structure and methods associated with a statement.
 type statement struct {
+	annotation string
 	mainClause any
 	onClause   abs.OnClauseLike
+	note string
+}
+
+// This method returns the annotation for this statement.
+func (v *statement) GetAnnotation() string {
+	return v.annotation
+}
+
+// This method sets the annotation for this statement.
+func (v *statement) SetAnnotation(annotation string) {
+	v.annotation = annotation
 }
 
 // This method returns the main clause for this statement.
@@ -46,10 +58,17 @@ func (v *statement) GetMainClause() any {
 
 // This method sets the main clause for this statement.
 func (v *statement) SetMainClause(mainClause any) {
-	if mainClause == nil {
-		panic("A statement requires a mainClause.")
-	}
 	v.mainClause = mainClause
+}
+
+// This method returns the note for this statement.
+func (v *statement) GetNote() string {
+	return v.note
+}
+
+// This method sets the note for this statement.
+func (v *statement) SetNote(note string) {
+	v.note = note
 }
 
 // This method returns the on clause for this statement.
