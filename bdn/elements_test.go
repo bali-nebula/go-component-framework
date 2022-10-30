@@ -8,11 +8,11 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package language_test
+package bdn_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
+	lan "github.com/craterdog-bali/go-bali-document-notation/bdn"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )

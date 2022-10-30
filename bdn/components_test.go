@@ -8,23 +8,25 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package language_test
+package bdn_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	lan "github.com/craterdog-bali/go-bali-document-notation/language"
+	lan "github.com/craterdog-bali/go-bali-document-notation/bdn"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
-func TestRoundtripWithStatements(t *tes.T) {
-	var statementStrings = []string{
-		`{ }`,
+func TestRoundtripWithComponents(t *tes.T) {
+	var componentStrings = []string{
+		`none`,
+		`false  ! This is not true.`,
+		`[ ]($type: /bali/collections/Set/v1)  ! This is a note`,
 	}
 
-	for index, s := range statementStrings {
+	for index, s := range componentStrings {
 		var component = lan.ParseSource(s).(abs.ComponentLike)
 		var s = lan.FormatValue(component)
-		ass.Equal(t, statementStrings[index], s)
+		ass.Equal(t, componentStrings[index], s)
 	}
 }
