@@ -17,36 +17,36 @@ import (
 // BLOCK IMPLEMENTATION
 
 // This constructor creates a new block.
-func Block(pattern any, statements abs.ProcedureLike) abs.BlockLike {
+func Block(expression any, procedure abs.ProcedureLike) abs.BlockLike {
 	var v = &block{}
 	// Perform argument validation.
-	v.SetPattern(pattern)
-	v.SetStatements(statements)
+	v.SetExpression(expression)
+	v.SetProcedure(procedure)
 	return v
 }
 
-// This type defines the structure and methods associated with a block of statements.
+// This type defines the structure and methods associated with a procedure block.
 type block struct {
-	pattern    any
-	statements abs.ProcedureLike
+	expression    any
+	procedure abs.ProcedureLike
 }
 
-// This method returns the pattern expression for this block.
-func (v *block) GetPattern() any {
-	return v.pattern
+// This method returns the expression for this block.
+func (v *block) GetExpression() any {
+	return v.expression
 }
 
-// This method sets the pattern expression for this block.
-func (v *block) SetPattern(pattern any) {
-	if pattern == nil {
-		panic("A block requires a pattern expression.")
+// This method sets the expression for this block.
+func (v *block) SetExpression(expression any) {
+	if expression == nil {
+		panic("A block requires an expression.")
 	}
-	v.pattern = pattern
+	v.expression = expression
 }
 
 // This method returns the statement at the specified index from this block.
 func (v *block) GetStatement(index int) abs.StatementLike {
-	return v.statements.GetItem(index)
+	return v.procedure.GetItem(index)
 }
 
 // This method sets the statement at the specified index for this block.
@@ -54,18 +54,18 @@ func (v *block) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each statement in a block requires a value.")
 	}
-	v.statements.SetItem(index, statement)
+	v.procedure.SetItem(index, statement)
 }
 
-// This method returns the list of statements for this block.
-func (v *block) GetStatements() abs.ProcedureLike {
-	return v.statements
+// This method returns the procedure for this block.
+func (v *block) GetProcedure() abs.ProcedureLike {
+	return v.procedure
 }
 
-// This method sets the list of statements for this block.
-func (v *block) SetStatements(statements abs.ProcedureLike) {
-	if statements == nil || statements.IsEmpty() {
+// This method sets the procedure for this block.
+func (v *block) SetProcedure(procedure abs.ProcedureLike) {
+	if procedure == nil || procedure.IsEmpty() {
 		panic("A block requires at least one statement.")
 	}
-	v.statements = statements
+	v.procedure = procedure
 }

@@ -91,6 +91,17 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 	return attribute, token, true
 }
 
+// This method adds the canonical format for the specified attribute to the
+// state of the formatter.
+func (v *formatter) formatAttribute(attribute abs.AttributeLike) {
+	var variable = attribute.GetVariable()
+	v.state.AppendString(variable)
+	v.state.AppendString("[")
+	var indices = attribute.GetIndices()
+	v.formatIndices(indices)
+	v.state.AppendString("]")
+}
+
 // This method attempts to parse a do block. It returns the do block and whether
 // or not the do block was successfully parsed.
 func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
@@ -123,6 +134,16 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	}
 	block = sta.Block(expression, statements)
 	return block, token, true
+}
+
+// This method adds the canonical format for the specified accept clause to the
+// state of the formatter.
+func (v *formatter) formatBlock(block abs.BlockLike) {
+	var expression = block.GetExpression()
+	v.formatExpression(expression)
+	v.state.AppendString(" ")
+	var procedure = block.GetProcedure()
+	v.formatProcedure(procedure)
 }
 
 // This method attempts to parse a break clause. It returns the break
@@ -380,8 +401,55 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = sta.IfClause(block.GetPattern(), block.GetStatements())
+	clause = sta.IfClause(block.GetExpression(), block.GetProcedure())
 	return clause, token, true
+}
+
+// This method attempts to parse a sequence of indices. It returns a list of
+// the indices and whether or not the indices were successfully parsed.
+func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
+	var ok bool
+	var token *Token
+	var index any
+	var indices abs.ListLike[any]
+	index, token, ok = v.parseExpression()
+	// There must be at least one index.
+	if !ok {
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("$expression",
+			"$indices")
+		panic(message)
+	}
+	for {
+		indices.AddItem(index)
+		// Every subsequent index must be preceded by a ','.
+		_, token, ok = v.parseDelimiter(",")
+		if !ok {
+			// No more indices.
+			break
+		}
+		index, token, ok = v.parseExpression()
+		if !ok {
+			var message = v.formatError("An unexpected token was received by the parser:", token)
+			message += generateGrammar("$expression",
+				"$indices")
+			panic(message)
+		}
+	}
+	return indices, token, true
+}
+
+// This method adds the canonical format for the specified indices to the
+// state of the formatter.
+func (v *formatter) formatIndices(indices abs.ListLike[any]) {
+	var iterator = age.Iterator[any](indices)
+	var index = iterator.GetNext()  // There is always at least one index.
+	v.formatAny(index)
+	for iterator.HasNext() {
+		v.state.AppendString(", ")
+		index = iterator.GetNext()
+		v.formatAny(index)
+	}
 }
 
 // This method attempts to parse a list of inline statements. It returns
@@ -1048,7 +1116,7 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = sta.WhileClause(block.GetPattern(), block.GetStatements())
+	clause = sta.WhileClause(block.GetExpression(), block.GetProcedure())
 	return clause, token, true
 }
 
@@ -1102,6 +1170,6 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = sta.WithClause(item, block.GetPattern(), block.GetStatements())
+	clause = sta.WithClause(item, block.GetExpression(), block.GetProcedure())
 	return clause, token, true
 }

@@ -295,40 +295,6 @@ func (v *parser) parseExpression() (any, *Token, bool) {
 	return expression, token, ok
 }
 
-// This method attempts to parse a sequence of indices. It returns a list of
-// the indices and whether or not the indices were successfully parsed.
-func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
-	var ok bool
-	var token *Token
-	var index any
-	var indices abs.ListLike[any]
-	index, token, ok = v.parseExpression()
-	// There must be at least one index.
-	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("$expression",
-			"$indices")
-		panic(message)
-	}
-	for {
-		indices.AddItem(index)
-		// Every subsequent index must be preceded by a ','.
-		_, token, ok = v.parseDelimiter(",")
-		if !ok {
-			// No more indices.
-			break
-		}
-		index, token, ok = v.parseExpression()
-		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
-			message += generateGrammar("$expression",
-				"$indices")
-			panic(message)
-		}
-	}
-	return indices, token, true
-}
-
 // This method attempts to parse a function expression. It returns the
 // function expression and whether or not the function expression was
 // successfully parsed.

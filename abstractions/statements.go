@@ -44,12 +44,12 @@ type AttributeLike interface {
 
 // This interface defines the methods supported by all block-like types.
 type BlockLike interface {
-	GetPattern() any
-	SetPattern(pattern any)
+	GetExpression() any
+	SetExpression(expression any)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
-	GetStatements() ProcedureLike
-	SetStatements(statements ProcedureLike)
+	GetProcedure() ProcedureLike
+	SetProcedure(procedure ProcedureLike)
 }
 
 // This interface defines the methods supported by all break-clause-like types.
