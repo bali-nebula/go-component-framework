@@ -17,7 +17,7 @@ import (
 // WITH CLAUSE IMPLEMENTATION
 
 // This constructor creates a new with clause.
-func WithClause(item abs.Symbolic, sequence any, statements abs.ListLike[any]) abs.WithClauseLike {
+func WithClause(item abs.Symbolic, sequence any, statements abs.ProcedureLike) abs.WithClauseLike {
 	var v = &withClause{}
 	// Perform argument validation.
 	v.SetItem(item)
@@ -30,7 +30,7 @@ func WithClause(item abs.Symbolic, sequence any, statements abs.ListLike[any]) a
 type withClause struct {
 	item       abs.Symbolic
 	sequence   any
-	statements abs.ListLike[any]
+	statements abs.ProcedureLike
 }
 
 // This method returns the item symbol for this with clause.
@@ -74,12 +74,12 @@ func (v *withClause) SetStatement(index int, statement any) {
 }
 
 // This method returns the list of statements for this with clause.
-func (v *withClause) GetStatements() abs.ListLike[any] {
+func (v *withClause) GetStatements() abs.ProcedureLike {
 	return v.statements
 }
 
 // This method sets the list of statements for this with clause.
-func (v *withClause) SetStatements(statements abs.ListLike[any]) {
+func (v *withClause) SetStatements(statements abs.ProcedureLike) {
 	if statements == nil {
 		panic("A with clause requires a list of statements.")
 	}

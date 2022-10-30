@@ -17,7 +17,7 @@ import (
 // BLOCK IMPLEMENTATION
 
 // This constructor creates a new block.
-func Block(pattern any, statements abs.ListLike[any]) abs.BlockLike {
+func Block(pattern any, statements abs.ProcedureLike) abs.BlockLike {
 	var v = &block{}
 	// Perform argument validation.
 	v.SetPattern(pattern)
@@ -28,7 +28,7 @@ func Block(pattern any, statements abs.ListLike[any]) abs.BlockLike {
 // This type defines the structure and methods associated with a block of statements.
 type block struct {
 	pattern    any
-	statements abs.ListLike[any]
+	statements abs.ProcedureLike
 }
 
 // This method returns the pattern expression for this block.
@@ -58,12 +58,12 @@ func (v *block) SetStatement(index int, statement any) {
 }
 
 // This method returns the list of statements for this block.
-func (v *block) GetStatements() abs.ListLike[any] {
+func (v *block) GetStatements() abs.ProcedureLike {
 	return v.statements
 }
 
 // This method sets the list of statements for this block.
-func (v *block) SetStatements(statements abs.ListLike[any]) {
+func (v *block) SetStatements(statements abs.ProcedureLike) {
 	if statements == nil || statements.IsEmpty() {
 		panic("A block requires at least one statement.")
 	}

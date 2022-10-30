@@ -163,19 +163,19 @@ func TestParserWithSequenceTypes(t *tes.T) {
 
 	// Catalog
 	component = lan.ParseSource("[:]")
-	var catalog = component.GetEntity().(abs.CatalogLike[any, any])
+	var catalog = component.GetEntity().(abs.CatalogLike[any, abs.ComponentLike])
 	ass.Equal(t, 0, catalog.GetSize())
 
 	component = lan.ParseSource("[0: false]")
-	catalog = component.GetEntity().(abs.CatalogLike[any, any])
+	catalog = component.GetEntity().(abs.CatalogLike[any, abs.ComponentLike])
 	ass.Equal(t, 1, catalog.GetSize())
 
 	component = lan.ParseSource("[0: false, 1: true]")
-	catalog = component.GetEntity().(abs.CatalogLike[any, any])
+	catalog = component.GetEntity().(abs.CatalogLike[any, abs.ComponentLike])
 	ass.Equal(t, 2, catalog.GetSize())
 
 	component = lan.ParseSource(k)
-	catalog = component.GetEntity().(abs.CatalogLike[any, any])
+	catalog = component.GetEntity().(abs.CatalogLike[any, abs.ComponentLike])
 	ass.Equal(t, 2, catalog.GetSize())
 
 	// Range

@@ -259,12 +259,12 @@ func (v *formatter) formatInterface(value any) {
 		v.formatComponent(component)
 		return
 	}
-	association, ok := value.(abs.AssociationLike[any, any])
+	association, ok := value.(abs.AssociationLike[any, abs.ComponentLike])
 	if ok {
 		v.formatAssociation(association)
 		return
 	}
-	catalog, ok := value.(abs.CatalogLike[any, any])
+	catalog, ok := value.(abs.CatalogLike[any, abs.ComponentLike])
 	if ok {
 		v.formatCatalog(catalog)
 		return

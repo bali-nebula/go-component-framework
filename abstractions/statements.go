@@ -48,8 +48,8 @@ type BlockLike interface {
 	SetPattern(pattern any)
 	GetStatement(index int) any
 	SetStatement(index int, statement any)
-	GetStatements() ListLike[any]
-	SetStatements(statements ListLike[any])
+	GetStatements() ProcedureLike
+	SetStatements(statements ProcedureLike)
 }
 
 // This interface defines the methods supported by all break-clause-like types.
@@ -90,8 +90,8 @@ type IfClauseLike interface {
 	SetCondition(condition any)
 	GetStatement(index int) any
 	SetStatement(index int, statement any)
-	GetStatements() ListLike[any]
-	SetStatements(statements ListLike[any])
+	GetStatements() ProcedureLike
+	SetStatements(statements ProcedureLike)
 }
 
 // This interface defines the methods supported by all notarize-clause-like types.
@@ -193,8 +193,8 @@ type WhileClauseLike interface {
 	SetCondition(condition any)
 	GetStatement(index int) any
 	SetStatement(index int, statement any)
-	GetStatements() ListLike[any]
-	SetStatements(statements ListLike[any])
+	GetStatements() ProcedureLike
+	SetStatements(statements ProcedureLike)
 }
 
 // This interface defines the methods supported by all with-clause-like types.
@@ -205,6 +205,6 @@ type WithClauseLike interface {
 	SetSequence(sequence any)
 	GetStatement(index int) any
 	SetStatement(index int, statement any)
-	GetStatements() ListLike[any]
-	SetStatements(statements ListLike[any])
+	GetStatements() ProcedureLike
+	SetStatements(statements ProcedureLike)
 }

@@ -25,8 +25,8 @@ type ComponentLike interface {
 // This interface defines the methods supported by all context-like types.
 type ContextLike interface {
 	GetNames() Sequential[Symbolic]
-	GetValue(name Symbolic) any
-	SetValue(name Symbolic, value any)
-	GetParameters() CatalogLike[Symbolic, any]
-	SetParameters(parameters CatalogLike[Symbolic, any])
+	GetValue(name Symbolic) ComponentLike
+	SetValue(name Symbolic, value ComponentLike)
+	GetParameters() CatalogLike[Symbolic, ComponentLike]
+	SetParameters(parameters CatalogLike[Symbolic, ComponentLike])
 }

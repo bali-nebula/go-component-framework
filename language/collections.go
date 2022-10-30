@@ -20,11 +20,11 @@ import (
 // This method attempts to parse an association between a key and value. It
 // returns the association and whether or not the association was successfully
 // parsed.
-func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool) {
+func (v *parser) parseAssociation() (abs.AssociationLike[any, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var key any
-	var value any
+	var value abs.ComponentLike
 	key, token, ok = v.parsePrimitive()
 	if !ok {
 		// This is not an association.
@@ -46,27 +46,27 @@ func (v *parser) parseAssociation() (abs.AssociationLike[any, any], *Token, bool
 			"$component")
 		panic(message)
 	}
-	var association = col.Association[any, any](key, value)
+	var association = col.Association[any, abs.ComponentLike](key, value)
 	return association, token, true
 }
 
 // This method adds the canonical format for the specified association to the
 // state of the formatter.
-func (v *formatter) formatAssociation(association abs.AssociationLike[any, any]) {
+func (v *formatter) formatAssociation(association abs.AssociationLike[any, abs.ComponentLike]) {
 	var key = association.GetKey()
 	v.formatAny(key)
 	v.state.AppendString(": ")
 	var value = association.GetValue()
-	v.formatAny(value)
+	v.formatComponent(value)
 }
 
 // This method attempts to parse a catalog collection. It returns the
 // catalog collection and whether or not the catalog collection was
 // successfully parsed.
-func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
+func (v *parser) parseCatalog() (abs.CatalogLike[any, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var catalog = col.Catalog[any, any]()
+	var catalog = col.Catalog[any, abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		return catalog, token, false
@@ -99,7 +99,7 @@ func (v *parser) parseCatalog() (abs.CatalogLike[any, any], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatCatalog(catalog abs.CatalogLike[any, any]) {
+func (v *formatter) formatCatalog(catalog abs.CatalogLike[any, abs.ComponentLike]) {
 	v.state.AppendString("[")
 	switch catalog.GetSize() {
 	case 0:
@@ -108,7 +108,7 @@ func (v *formatter) formatCatalog(catalog abs.CatalogLike[any, any]) {
 		var association = catalog.GetItem(1)
 		v.formatAssociation(association)
 	default:
-		var iterator = age.Iterator[abs.AssociationLike[any, any]](catalog)
+		var iterator = age.Iterator[abs.AssociationLike[any, abs.ComponentLike]](catalog)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
@@ -147,7 +147,7 @@ func (v *formatter) formatCollection(collection any) {
 		v.formatRange(rang)
 		return
 	}
-	catalog, ok := collection.(abs.CatalogLike[any, any])
+	catalog, ok := collection.(abs.CatalogLike[any, abs.ComponentLike])
 	if ok {
 		v.formatCatalog(catalog)
 		return
@@ -159,11 +159,11 @@ func (v *formatter) formatCollection(collection any) {
 // This method attempts to parse a catalog collection with inline associations.
 // It returns the catalog collection and whether or not the catalog collection
 // was successfully parsed.
-func (v *parser) parseInlineAssociations() (abs.CatalogLike[any, any], *Token, bool) {
+func (v *parser) parseInlineAssociations() (abs.CatalogLike[any, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var association abs.AssociationLike[any, any]
-	var catalog = col.Catalog[any, any]()
+	var association abs.AssociationLike[any, abs.ComponentLike]
+	var catalog = col.Catalog[any, abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
 		// This is an empty catalog.
@@ -309,11 +309,11 @@ func (v *formatter) formatList(list abs.ListLike[any]) {
 // This method attempts to parse a catalog collection with multiline associations.
 // It returns the catalog collection and whether or not the catalog collection
 // was successfully parsed.
-func (v *parser) parseMultilineAssociations() (abs.CatalogLike[any, any], *Token, bool) {
+func (v *parser) parseMultilineAssociations() (abs.CatalogLike[any, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var association abs.AssociationLike[any, any]
-	var catalog = col.Catalog[any, any]()
+	var association abs.AssociationLike[any, abs.ComponentLike]
+	var catalog = col.Catalog[any, abs.ComponentLike]()
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty catalog must have at least one association.

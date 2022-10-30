@@ -42,6 +42,14 @@ func (v *parser) parseAcceptClause() (abs.AcceptClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified accept clause to the
+// state of the formatter.
+func (v *formatter) formatAcceptClause(clause abs.AcceptClauseLike) {
+	v.state.AppendString("accept ")
+	var message = clause.GetMessage()
+	v.formatExpression(message)
+}
+
 // This method attempts to parse an attribute. It returns the attribute and
 // whether or not the attribute was successfully parsed.
 func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
@@ -89,7 +97,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var expression any
-	var statements abs.ListLike[any]
+	var statements abs.ProcedureLike
 	var block abs.BlockLike
 	expression, token, ok = v.parseExpression()
 	if !ok {
@@ -102,32 +110,10 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 			"$onClause")
 		panic(message)
 	}
-	_, token, ok = v.parseDelimiter("{")
-	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("{",
-			"$ifClause",
-			"$selectClause",
-			"$withClause",
-			"$whileClause",
-			"$onClause")
-		panic(message)
-	}
-	statements, token, ok = v.parseMultilineStatements()
+	statements, token, ok = v.parseProcedure()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$statements",
-			"$ifClause",
-			"$selectClause",
-			"$withClause",
-			"$whileClause",
-			"$onClause")
-		panic(message)
-	}
-	_, token, ok = v.parseDelimiter("}")
-	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("}",
 			"$ifClause",
 			"$selectClause",
 			"$withClause",
@@ -366,6 +352,11 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	}
 	clause = sta.EvaluateClauseWithRecipient(recipient, operator, expression)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified expression to the
+// state of the formatter.
+func (v *formatter) formatExpression(expression any) {
 }
 
 // This method attempts to parse an if clause. It returns the if clause and
@@ -725,9 +716,6 @@ func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
 	switch procedure.GetSize() {
 	case 0:
 		v.state.AppendString(" ")
-	case 1:
-		var statement = procedure.GetItem(1)
-		v.formatAny(statement)
 	default:
 		var iterator = age.Iterator[any](procedure)
 		v.state.IncrementDepth()

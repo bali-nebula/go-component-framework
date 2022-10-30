@@ -17,7 +17,7 @@ import (
 // WHILE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new while clause.
-func WhileClause(condition any, statements abs.ListLike[any]) abs.WhileClauseLike {
+func WhileClause(condition any, statements abs.ProcedureLike) abs.WhileClauseLike {
 	var v = &whileClause{}
 	// Perform argument validation.
 	v.SetCondition(condition)
@@ -28,7 +28,7 @@ func WhileClause(condition any, statements abs.ListLike[any]) abs.WhileClauseLik
 // This type defines the structure and methods associated with a while clause.
 type whileClause struct {
 	condition  any
-	statements abs.ListLike[any]
+	statements abs.ProcedureLike
 }
 
 // This method returns the condition expression for this while clause.
@@ -59,12 +59,12 @@ func (v *whileClause) SetStatement(index int, statement any) {
 }
 
 // This method returns the list of statements for this while clause.
-func (v *whileClause) GetStatements() abs.ListLike[any] {
+func (v *whileClause) GetStatements() abs.ProcedureLike {
 	return v.statements
 }
 
 // This method sets the list of statements for this while clause.
-func (v *whileClause) SetStatements(statements abs.ListLike[any]) {
+func (v *whileClause) SetStatements(statements abs.ProcedureLike) {
 	if statements == nil {
 		panic("A while clause requires a list of statements.")
 	}

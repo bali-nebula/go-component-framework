@@ -103,7 +103,7 @@ func (v *formatter) formatComponent(component abs.ComponentLike) {
 func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameters abs.CatalogLike[abs.Symbolic, any]
+	var parameters abs.CatalogLike[abs.Symbolic, abs.ComponentLike]
 	var context abs.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
@@ -251,11 +251,11 @@ func (v *formatter) formatNote(note string) {
 // This method attempts to parse a parameter containing a name and value. It
 // returns the parameter and whether or not the parameter was successfully
 // parsed.
-func (v *parser) parseParameter() (abs.AssociationLike[abs.Symbolic, any], *Token, bool) {
+func (v *parser) parseParameter() (abs.AssociationLike[abs.Symbolic, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var name abs.Symbolic
-	var value any
+	var value abs.ComponentLike
 	name, token, ok = v.parseSymbol()
 	if !ok {
 		// This is not a parameter.
@@ -272,13 +272,13 @@ func (v *parser) parseParameter() (abs.AssociationLike[abs.Symbolic, any], *Toke
 	if !ok {
 		panic("Expected a value after the ':' character.")
 	}
-	var parameter = col.Association[abs.Symbolic, any](name, value)
+	var parameter = col.Association[abs.Symbolic, abs.ComponentLike](name, value)
 	return parameter, token, true
 }
 
 // This method adds the canonical format for the specified parameter to the
 // state of the formatter.
-func (v *formatter) formatParameter(parameter abs.AssociationLike[abs.Symbolic, any]) {
+func (v *formatter) formatParameter(parameter abs.AssociationLike[abs.Symbolic, abs.ComponentLike]) {
 	var key = parameter.GetKey()
 	v.state.AppendString("$")
 	v.formatIdentifier(key.GetIdentifier())
@@ -290,11 +290,11 @@ func (v *formatter) formatParameter(parameter abs.AssociationLike[abs.Symbolic, 
 // This method attempts to parse context parameters. It returns the
 // context parameters and whether or not the context parameters were
 // successfully parsed.
-func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, any], *Token, bool) {
+func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameter abs.AssociationLike[abs.Symbolic, any]
-	var parameters = col.Catalog[abs.Symbolic, any]()
+	var parameter abs.AssociationLike[abs.Symbolic, abs.ComponentLike]
+	var parameters = col.Catalog[abs.Symbolic, abs.ComponentLike]()
 	_, token, ok = v.parseEOL()
 	if !ok {
 		// The parameters are on a single line.
@@ -344,7 +344,7 @@ func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, any], *Token, 
 
 // This method adds the canonical format for the specified parameters to the
 // state of the formatter.
-func (v *formatter) formatParameters(parameters abs.CatalogLike[abs.Symbolic, any]) {
+func (v *formatter) formatParameters(parameters abs.CatalogLike[abs.Symbolic, abs.ComponentLike]) {
 	switch parameters.GetSize() {
 	case 0:
 		panic("A context must have at least one parameter.")
@@ -352,7 +352,7 @@ func (v *formatter) formatParameters(parameters abs.CatalogLike[abs.Symbolic, an
 		var parameter = parameters.GetItem(1)
 		v.formatParameter(parameter)
 	default:
-		var iterator = age.Iterator[abs.AssociationLike[abs.Symbolic, any]](parameters)
+		var iterator = age.Iterator[abs.AssociationLike[abs.Symbolic, abs.ComponentLike]](parameters)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
