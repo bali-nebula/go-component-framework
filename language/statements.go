@@ -376,7 +376,8 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$condition",
 			"$ifClause",
-			"$condition")
+			"$condition",
+			"$procedure")
 		panic(message)
 	}
 	clause = sta.IfClause(block.GetPattern(), block.GetStatements())
@@ -606,7 +607,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 				"$onClause",
 				"$exception",
 				"$pattern",
-				"$statements")
+				"$procedure")
 			panic(message)
 		}
 		blocks.AddItem(block)
@@ -961,7 +962,8 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 			message += generateGrammar("$pattern",
 				"$selectClause",
 				"$target",
-				"$pattern")
+				"$pattern",
+				"$procedure")
 			panic(message)
 		}
 		blocks.AddItem(block)
@@ -1042,7 +1044,8 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$condition",
 			"$whileClause",
-			"$condition")
+			"$condition",
+			"$procedure")
 		panic(message)
 	}
 	clause = sta.WhileClause(block.GetPattern(), block.GetStatements())
@@ -1095,7 +1098,8 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		message += generateGrammar("$sequence",
 			"$withClause",
 			"$item",
-			"$sequence")
+			"$sequence",
+			"$procedure")
 		panic(message)
 	}
 	clause = sta.WithClause(item, block.GetPattern(), block.GetStatements())
