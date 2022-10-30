@@ -29,7 +29,7 @@ var grammar = map[string]string{
 	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
 	"$association":  `primitive ":" component`,
 	"$associations": `
-    association {"," association} |  ! Inline, no NOTEs allowed.
+    association {"," association} |
     EOL <association EOL> |
     ":"  ! No associations.`,
 	"$attribute":      `variable "[" indices "]"`,
@@ -80,7 +80,7 @@ var grammar = map[string]string{
 	"$invocation": `target ("." | "<~") method arguments`,
 	"$item":       `SYMBOL`,
 	"$items": `
-    component {"," component} |  ! Inline, no NOTEs allowed.
+    component {"," component} |
     EOL <component EOL>       |
     ! No components.`,
 	"$list":      `"[" items "]"`,
@@ -114,7 +114,7 @@ var grammar = map[string]string{
 	"$ordinal":        `expression`,
 	"$parameter":      `name ":" component`,
 	"$parameters": `
-    parameter {"," parameter} |  ! Inline, no NOTEs allowed.
+    parameter {"," parameter} |
     EOL <parameter EOL>  ! At least one parameter is required.`,
 	"$pattern":        `expression`,
 	"$postClause":     `"post" message "to" bag`,
@@ -132,7 +132,7 @@ var grammar = map[string]string{
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
 	"$sequence":       `expression`,
 	"$source":         `component EOL EOF  ! EOF is the end-of-file marker.`,
-	"$statement":      `mainClause [onClause]`,
+	"$statement":      `[annotation EOL] [mainClause] [onClause] [NOTE]`,
 	"$statements": `
     statement {";" statement} |
     EOL {(annotation | statement) EOL} |
