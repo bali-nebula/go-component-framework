@@ -12,7 +12,7 @@ package bdn_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	lan "github.com/craterdog-bali/go-bali-document-notation/bdn"
+	bdn "github.com/craterdog-bali/go-bali-document-notation/bdn"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -28,8 +28,8 @@ func TestRoundtripWithCatalogs(t *tes.T) {
 	}
 
 	for index, s := range catalogStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, catalogStrings[index], s)
 	}
 }
@@ -45,8 +45,8 @@ func TestRoundtripWithLists(t *tes.T) {
 	}
 
 	for index, s := range listStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, listStrings[index], s)
 	}
 }
@@ -64,8 +64,8 @@ func TestRoundtripWithRanges(t *tes.T) {
 	}
 
 	for index, s := range rangeStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, rangeStrings[index], s)
 	}
 }

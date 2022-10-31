@@ -12,7 +12,7 @@ package bdn_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	lan "github.com/craterdog-bali/go-bali-document-notation/bdn"
+	bdn "github.com/craterdog-bali/go-bali-document-notation/bdn"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -32,8 +32,8 @@ func TestRoundtripWithBinaries(t *tes.T) {
 	}
 
 	for index, s := range binaryStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, binaryStrings[index], s)
 	}
 }
@@ -46,8 +46,8 @@ func TestRoundtripWithMonikers(t *tes.T) {
 	}
 
 	for index, s := range monikerStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, monikerStrings[index], s)
 	}
 }
@@ -65,8 +65,8 @@ func TestRoundtripWithNarratives(t *tes.T) {
 	}
 
 	for index, s := range narrativeStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, narrativeStrings[index], s)
 	}
 }
@@ -79,8 +79,8 @@ func TestRoundtripWithQuotes(t *tes.T) {
 	}
 
 	for index, s := range quoteStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, quoteStrings[index], s)
 	}
 }
@@ -93,8 +93,8 @@ func TestRoundtripWithVersions(t *tes.T) {
 	}
 
 	for index, s := range versionStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, versionStrings[index], s)
 	}
 }

@@ -17,11 +17,11 @@ import (
 // SAVE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new save clause.
-func SaveClause(draft abs.ExpressionLike, citation any) abs.SaveClauseLike {
+func SaveClause(draft abs.ExpressionLike, recipient any) abs.SaveClauseLike {
 	var v = &saveClause{}
 	// Perform argument validation.
 	v.SetDraft(draft)
-	v.SetCitation(citation)
+	v.SetRecipient(recipient)
 	return v
 }
 
@@ -29,7 +29,7 @@ func SaveClause(draft abs.ExpressionLike, citation any) abs.SaveClauseLike {
 // clause.
 type saveClause struct {
 	draft    abs.ExpressionLike
-	citation any
+	recipient any
 }
 
 // This method returns the draft expression for this save clause.
@@ -46,14 +46,14 @@ func (v *saveClause) SetDraft(draft abs.ExpressionLike) {
 }
 
 // This method returns the document citation recipient for this save clause.
-func (v *saveClause) GetCitation() any {
-	return v.citation
+func (v *saveClause) GetRecipient() any {
+	return v.recipient
 }
 
 // This method sets the document citation recipient for this save clause.
-func (v *saveClause) SetCitation(citation any) {
-	if citation == nil {
+func (v *saveClause) SetRecipient(recipient any) {
+	if recipient == nil {
 		panic("A save clause requires a document citation recipient.")
 	}
-	v.citation = citation
+	v.recipient = recipient
 }

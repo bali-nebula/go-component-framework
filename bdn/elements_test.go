@@ -12,7 +12,7 @@ package bdn_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	lan "github.com/craterdog-bali/go-bali-document-notation/bdn"
+	bdn "github.com/craterdog-bali/go-bali-document-notation/bdn"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -25,8 +25,8 @@ func TestRoundtripWithAngles(t *tes.T) {
 	}
 
 	for index, s := range angleStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, angleStrings[index], s)
 	}
 }
@@ -38,8 +38,8 @@ func TestRoundtripWithBooleans(t *tes.T) {
 	}
 
 	for index, s := range booleanStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, booleanStrings[index], s)
 	}
 }
@@ -57,8 +57,8 @@ func TestRoundtripWithDurations(t *tes.T) {
 	}
 
 	for index, s := range durationStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, durationStrings[index], s)
 	}
 }
@@ -79,8 +79,8 @@ func TestRoundtripWithMoments(t *tes.T) {
 	}
 
 	for index, s := range momentStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, momentStrings[index], s)
 	}
 }
@@ -104,8 +104,8 @@ func TestRoundtripWithNumbers(t *tes.T) {
 	}
 
 	for index, s := range numberStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, numberStrings[index], s)
 	}
 }
@@ -118,8 +118,8 @@ func TestRoundtripWithPatterns(t *tes.T) {
 	}
 
 	for index, s := range patternStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, patternStrings[index], s)
 	}
 }
@@ -133,8 +133,8 @@ func TestRoundtripWithPercentages(t *tes.T) {
 	}
 
 	for index, s := range percentageStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, percentageStrings[index], s)
 	}
 }
@@ -147,8 +147,8 @@ func TestRoundtripWithProbabilities(t *tes.T) {
 	}
 
 	for index, s := range probabilityStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, probabilityStrings[index], s)
 	}
 }
@@ -163,8 +163,8 @@ func TestRoundtripWithResources(t *tes.T) {
 	}
 
 	for index, s := range resourceStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, resourceStrings[index], s)
 	}
 }
@@ -176,8 +176,8 @@ func TestRoundtripWithSymbols(t *tes.T) {
 	}
 
 	for index, s := range symbolStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, symbolStrings[index], s)
 	}
 }
@@ -189,8 +189,8 @@ func TestRoundtripWithTags(t *tes.T) {
 	}
 
 	for index, s := range tagStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, tagStrings[index], s)
 	}
 }

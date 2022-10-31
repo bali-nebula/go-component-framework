@@ -946,7 +946,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var draft abs.ExpressionLike
-	var citation any
+	var recipient any
 	var clause abs.SaveClauseLike
 	_, token, ok = v.parseKeyword("save")
 	if !ok {
@@ -979,7 +979,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	citation, token, ok = v.parseRecipient()
+	recipient, token, ok = v.parseRecipient()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$recipient",
@@ -992,7 +992,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = pro.SaveClause(draft, citation)
+	clause = pro.SaveClause(draft, recipient)
 	return clause, token, true
 }
 

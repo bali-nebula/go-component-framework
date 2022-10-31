@@ -12,7 +12,7 @@ package bdn_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	lan "github.com/craterdog-bali/go-bali-document-notation/bdn"
+	bdn "github.com/craterdog-bali/go-bali-document-notation/bdn"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -23,8 +23,8 @@ func TestRoundtripWithStatements(t *tes.T) {
 	}
 
 	for index, s := range statementStrings {
-		var component = lan.ParseSource(s).(abs.ComponentLike)
-		var s = lan.FormatValue(component)
+		var component = bdn.ParseSource(s).(abs.ComponentLike)
+		var s = bdn.FormatValue(component)
 		ass.Equal(t, statementStrings[index], s)
 	}
 }

@@ -159,8 +159,8 @@ type ReturnClauseLike interface {
 type SaveClauseLike interface {
 	GetDraft() ExpressionLike
 	SetDraft(draft ExpressionLike)
-	GetCitation() any
-	SetCitation(citation any)
+	GetRecipient() any
+	SetRecipient(recipient any)
 }
 
 // This interface defines the methods supported by all select-clause-like types.
