@@ -17,7 +17,7 @@ import (
 // RETRIEVE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new retrieve clause.
-func RetrieveClause(recipient any, bag abs.Expression) abs.RetrieveClauseLike {
+func RetrieveClause(recipient abs.Recipient, bag abs.Expression) abs.RetrieveClauseLike {
 	var v = &retrieveClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient)
@@ -28,17 +28,17 @@ func RetrieveClause(recipient any, bag abs.Expression) abs.RetrieveClauseLike {
 // This type defines the structure and methods associated with a retrieve
 // clause.
 type retrieveClause struct {
-	recipient any
+	recipient abs.Recipient
 	bag       abs.Expression
 }
 
 // This method returns the recipient expression for this retrieve clause.
-func (v *retrieveClause) GetRecipient() any {
+func (v *retrieveClause) GetRecipient() abs.Recipient {
 	return v.recipient
 }
 
 // This method sets the recipient expression for this retrieve clause.
-func (v *retrieveClause) SetRecipient(recipient any) {
+func (v *retrieveClause) SetRecipient(recipient abs.Recipient) {
 	if recipient == nil {
 		panic("A retrieve clause requires a recipient.")
 	}

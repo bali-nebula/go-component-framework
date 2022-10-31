@@ -157,10 +157,10 @@ func (v *parser) parseDelimiter(delimiter string) (string, *Token, bool) {
 
 // This method attempts to parse a component entity. It returns the component
 // entity and whether or not the component entity was successfully parsed.
-func (v *parser) parseEntity() (any, *Token, bool) {
+func (v *parser) parseEntity() (abs.Entity, *Token, bool) {
 	var ok bool
 	var token *Token
-	var entity any
+	var entity abs.Entity
 	entity, token, ok = v.parseElement()
 	if !ok {
 		entity, token, ok = v.parseString()

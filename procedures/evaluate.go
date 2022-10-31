@@ -25,7 +25,7 @@ func EvaluateClause(expression abs.Expression) abs.EvaluateClauseLike {
 }
 
 // This constructor creates a new evaluate clause.
-func EvaluateClauseWithRecipient(recipient any, assignment abs.Assignment, expression abs.Expression) abs.EvaluateClauseLike {
+func EvaluateClauseWithRecipient(recipient abs.Recipient, assignment abs.Assignment, expression abs.Expression) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient, assignment)
@@ -36,20 +36,20 @@ func EvaluateClauseWithRecipient(recipient any, assignment abs.Assignment, expre
 // This type defines the structure and methods associated with an evaluate
 // clause.
 type evaluateClause struct {
-	recipient  any
+	recipient  abs.Recipient
 	assignment abs.Assignment
 	expression abs.Expression
 }
 
 // This method returns the recipient (with assignment type) for this evaluate
 // clause.
-func (v *evaluateClause) GetRecipient() (recipient any, assignment abs.Assignment) {
+func (v *evaluateClause) GetRecipient() (recipient abs.Recipient, assignment abs.Assignment) {
 	return v.recipient, v.assignment
 }
 
 // This method sets the recipient (with assignment type) for this evaluate
 // clause.
-func (v *evaluateClause) SetRecipient(recipient any, assignment abs.Assignment) {
+func (v *evaluateClause) SetRecipient(recipient abs.Recipient, assignment abs.Assignment) {
 	if recipient == nil || assignment < abs.REGULAR || assignment > abs.MINUS {
 		panic("An evaluate clause requires a recipient and valid assignment type.")
 	}

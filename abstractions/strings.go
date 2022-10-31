@@ -16,6 +16,8 @@ import (
 
 // STRING INTERFACES
 
+type String any
+
 // This interface defines the methods supported by all sequential strings of
 // items.
 type Sequential[T any] interface {

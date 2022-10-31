@@ -11,6 +11,7 @@
 package bdn
 
 import (
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	stc "strconv"
 	sts "strings"
@@ -144,10 +145,10 @@ func (v *formatter) formatQuote(quote str.Quote) {
 // This method attempts to parse a string primitive. It returns the
 // string primitive and whether or not the string primitive was
 // successfully parsed.
-func (v *parser) parseString() (any, *Token, bool) {
+func (v *parser) parseString() (abs.String, *Token, bool) {
 	var ok bool
 	var token *Token
-	var s any
+	var s abs.String
 	s, token, ok = v.parseQuote()
 	if !ok {
 		s, token, ok = v.parseMoniker()

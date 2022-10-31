@@ -172,7 +172,7 @@ func (v *parser) parseBreakClause() (abs.BreakClauseLike, *Token, bool) {
 func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var recipient any
+	var recipient abs.Recipient
 	var level abs.Expression
 	var moniker abs.Expression
 	var clause abs.CheckoutClauseLike
@@ -309,7 +309,7 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var recipient any
+	var recipient abs.Recipient
 	var delimiter string
 	var operator abs.Assignment
 	var expression abs.Expression
@@ -497,11 +497,11 @@ func (v *parser) parseInlineStatements() (abs.ListLike[abs.StatementLike], *Toke
 
 // This method attempts to parse a main clause. It returns the main clause and
 // whether or not the main clause was successfully parsed.
-func (v *parser) parseMainClause() (any, *Token, bool) {
+func (v *parser) parseMainClause() (abs.Clause, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
-	var mainClause any
+	var mainClause abs.Clause
 	mainClause, token, ok = v.parseIfClause()
 	if !ok {
 		mainClause, token, ok = v.parseSelectClause()
@@ -825,10 +825,10 @@ func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 
 // This method attempts to parse a recipient. It returns the recipient and
 // whether or not the recipient was successfully parsed.
-func (v *parser) parseRecipient() (any, *Token, bool) {
+func (v *parser) parseRecipient() (abs.Recipient, *Token, bool) {
 	var ok bool
 	var token *Token
-	var recipient any
+	var recipient abs.Recipient
 	recipient, token, ok = v.parseSymbol()
 	if !ok {
 		recipient, token, ok = v.parseAttribute()
@@ -865,7 +865,7 @@ func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var recipient any
+	var recipient abs.Recipient
 	var bag abs.Expression
 	var clause abs.RetrieveClauseLike
 	_, token, ok = v.parseKeyword("retrieve")
@@ -946,7 +946,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var draft abs.Expression
-	var recipient any
+	var recipient abs.Recipient
 	var clause abs.SaveClauseLike
 	_, token, ok = v.parseKeyword("save")
 	if !ok {
@@ -1055,7 +1055,7 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
-	var mainClause any
+	var mainClause abs.Clause
 	var onClause abs.OnClauseLike
 	mainClause, token, ok = v.parseMainClause()
 	if ok {

@@ -17,7 +17,7 @@ import (
 // CHECKOUT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new checkout clause.
-func CheckoutClause(recipient any, level abs.Expression, moniker abs.Expression) abs.CheckoutClauseLike {
+func CheckoutClause(recipient abs.Recipient, level abs.Expression, moniker abs.Expression) abs.CheckoutClauseLike {
 	var v = &checkoutClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient)
@@ -29,18 +29,18 @@ func CheckoutClause(recipient any, level abs.Expression, moniker abs.Expression)
 // This type defines the structure and methods associated with a checkout
 // clause.
 type checkoutClause struct {
-	recipient any
+	recipient abs.Recipient
 	level     abs.Expression // The version level to be incremented (optional).
 	moniker   abs.Expression // A moniker to the citation for the document to be checked out.
 }
 
 // This method returns the recipient for this checkout clause.
-func (v *checkoutClause) GetRecipient() any {
+func (v *checkoutClause) GetRecipient() abs.Recipient {
 	return v.recipient
 }
 
 // This method sets the recipient for this checkout clause.
-func (v *checkoutClause) SetRecipient(recipient any) {
+func (v *checkoutClause) SetRecipient(recipient abs.Recipient) {
 	if recipient == nil {
 		panic("A checkout clause requires a recipient.")
 	}

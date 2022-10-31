@@ -17,7 +17,7 @@ import (
 // STATEMENT IMPLEMENTATION
 
 // This constructor creates a new statement.
-func Statement(mainClause any) abs.StatementLike {
+func Statement(mainClause abs.Clause) abs.StatementLike {
 	var v = &statement{}
 	// Perform argument validation.
 	v.SetMainClause(mainClause)
@@ -25,7 +25,7 @@ func Statement(mainClause any) abs.StatementLike {
 }
 
 // This constructor creates a new statement.
-func StatementWithHandler(mainClause any, onClause abs.OnClauseLike) abs.StatementLike {
+func StatementWithHandler(mainClause abs.Clause, onClause abs.OnClauseLike) abs.StatementLike {
 	var v = &statement{}
 	// Perform argument validation.
 	v.SetMainClause(mainClause)
@@ -36,7 +36,7 @@ func StatementWithHandler(mainClause any, onClause abs.OnClauseLike) abs.Stateme
 // This type defines the structure and methods associated with a statement.
 type statement struct {
 	annotation string
-	mainClause any
+	mainClause abs.Clause
 	onClause   abs.OnClauseLike
 	note       string
 }
@@ -52,12 +52,12 @@ func (v *statement) SetAnnotation(annotation string) {
 }
 
 // This method returns the main clause for this statement.
-func (v *statement) GetMainClause() any {
+func (v *statement) GetMainClause() abs.Clause {
 	return v.mainClause
 }
 
 // This method sets the main clause for this statement.
-func (v *statement) SetMainClause(mainClause any) {
+func (v *statement) SetMainClause(mainClause abs.Clause) {
 	v.mainClause = mainClause
 }
 

@@ -17,7 +17,7 @@ import (
 // COMPONENT IMPLEMENTATION
 
 // This constructor creates a new component.
-func Component(entity any) abs.ComponentLike {
+func Component(entity abs.Entity) abs.ComponentLike {
 	var v = &component{}
 	// Perform argument validation.
 	v.SetEntity(entity)
@@ -25,7 +25,7 @@ func Component(entity any) abs.ComponentLike {
 }
 
 // This constructor creates a new component with the specified context.
-func ComponentWithContext(entity any, context abs.ContextLike) abs.ComponentLike {
+func ComponentWithContext(entity abs.Entity, context abs.ContextLike) abs.ComponentLike {
 	var v = &component{}
 	// Perform argument validation.
 	v.SetEntity(entity)
@@ -35,7 +35,7 @@ func ComponentWithContext(entity any, context abs.ContextLike) abs.ComponentLike
 
 // This type defines the structure and methods associated with a component.
 type component struct {
-	entity  any
+	entity  abs.Entity
 	context abs.ContextLike
 	note    string
 }
@@ -52,12 +52,12 @@ func (v *component) IsAnnotated() bool {
 }
 
 // This method returns the entity for this component.
-func (v *component) GetEntity() any {
+func (v *component) GetEntity() abs.Entity {
 	return v.entity
 }
 
 // This method sets the entity for this component.
-func (v *component) SetEntity(entity any) {
+func (v *component) SetEntity(entity abs.Entity) {
 	if entity == nil {
 		panic("A component requires an entity.")
 	}

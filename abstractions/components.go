@@ -12,11 +12,13 @@ package abstractions
 
 // COMPONENT INTERFACES
 
+type Primitive any
+
 // This interface defines the methods supported by all component-like types.
 type ComponentLike interface {
 	IsGeneric() bool
 	IsAnnotated() bool
-	GetEntity() any
+	GetEntity() Entity
 	GetContext() ContextLike
 	GetNote() string
 	SetNote(note string)
@@ -30,6 +32,9 @@ type ContextLike interface {
 	GetParameters() CatalogLike[Symbolic, ComponentLike]
 	SetParameters(parameters CatalogLike[Symbolic, ComponentLike])
 }
+
+// This interface defines the methods supported by all entities.
+type Entity any
 
 // This interface defines the methods supported by all symbolic types.
 type Symbolic interface {

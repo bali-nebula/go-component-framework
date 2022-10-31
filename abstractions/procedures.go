@@ -24,7 +24,11 @@ const (
 	MINUS
 )
 
-// STATEMENT INTERFACES
+// PROCEDURE INTERFACES
+
+type Clause any
+
+type Recipient any
 
 // This interface defines the methods supported by all accept-clause-like types.
 type AcceptClauseLike interface {
@@ -58,8 +62,8 @@ type BreakClauseLike interface {
 
 // This interface defines the methods supported by all checkout-clause-like types.
 type CheckoutClauseLike interface {
-	GetRecipient() any
-	SetRecipient(recipient any)
+	GetRecipient() Recipient
+	SetRecipient(recipient Recipient)
 	GetLevel() Expression
 	SetLevel(level Expression)
 	GetMoniker() Expression
@@ -78,8 +82,8 @@ type DiscardClauseLike interface {
 
 // This interface defines the methods supported by all evaluate-clause-like types.
 type EvaluateClauseLike interface {
-	GetRecipient() (recipient any, assignment Assignment)
-	SetRecipient(recipient any, assignment Assignment)
+	GetRecipient() (recipient Recipient, assignment Assignment)
+	SetRecipient(recipient Recipient, assignment Assignment)
 	GetExpression() Expression
 	SetExpression(expression Expression)
 }
@@ -143,8 +147,8 @@ type RejectClauseLike interface {
 
 // This interface defines the methods supported by all retrieve-clause-like types.
 type RetrieveClauseLike interface {
-	GetRecipient() any
-	SetRecipient(recipient any)
+	GetRecipient() Recipient
+	SetRecipient(recipient Recipient)
 	GetBag() Expression
 	SetBag(bag Expression)
 }
@@ -159,8 +163,8 @@ type ReturnClauseLike interface {
 type SaveClauseLike interface {
 	GetDraft() Expression
 	SetDraft(draft Expression)
-	GetRecipient() any
-	SetRecipient(recipient any)
+	GetRecipient() Recipient
+	SetRecipient(recipient Recipient)
 }
 
 // This interface defines the methods supported by all select-clause-like types.
@@ -177,8 +181,8 @@ type SelectClauseLike interface {
 type StatementLike interface {
 	GetAnnotation() string
 	SetAnnotation(annotation string)
-	GetMainClause() any
-	SetMainClause(mainClause any)
+	GetMainClause() Clause
+	SetMainClause(mainClause Clause)
 	GetNote() string
 	SetNote(note string)
 	GetOnClause() OnClauseLike

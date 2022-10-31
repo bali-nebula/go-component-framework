@@ -12,6 +12,7 @@ package bdn
 
 import (
 	fmt "fmt"
+	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	mat "math"
 	cmp "math/cmplx"
@@ -179,11 +180,11 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 // This method attempts to parse an element primitive. It returns the
 // element primitive and whether or not the element primitive was
 // successfully parsed.
-func (v *parser) parseElement() (any, *Token, bool) {
+func (v *parser) parseElement() (abs.Element, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
-	var element any
+	var element abs.Element
 	element, token, ok = v.parseAngle()
 	if !ok {
 		element, token, ok = v.parseBoolean()

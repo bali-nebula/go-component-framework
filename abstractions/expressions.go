@@ -42,6 +42,8 @@ const (
 
 // EXPRESSION INTERFACES
 
+type Expression any
+
 // This interface defines the methods supported by all arithmetic-like expressions.
 type ArithmeticLike interface {
 	GetFirst() Expression
@@ -89,9 +91,6 @@ type ExponentialLike interface {
 	GetExponent() Expression
 	SetExponent(exponent Expression)
 }
-
-// This interface defines the methods supported by all expressions.
-type Expression any
 
 // This interface defines the methods supported by all intrinsic-like expressions.
 type IntrinsicLike interface {

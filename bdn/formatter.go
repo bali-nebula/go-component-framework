@@ -259,12 +259,12 @@ func (v *formatter) formatInterface(value any) {
 		v.formatComponent(component)
 		return
 	}
-	association, ok := value.(abs.AssociationLike[any, abs.ComponentLike])
+	association, ok := value.(abs.AssociationLike[abs.Primitive, abs.ComponentLike])
 	if ok {
 		v.formatAssociation(association)
 		return
 	}
-	catalog, ok := value.(abs.CatalogLike[any, abs.ComponentLike])
+	catalog, ok := value.(abs.CatalogLike[abs.Primitive, abs.ComponentLike])
 	if ok {
 		v.formatCatalog(catalog)
 		return
@@ -274,7 +274,7 @@ func (v *formatter) formatInterface(value any) {
 		v.formatList(list)
 		return
 	}
-	rng, ok := value.(abs.RangeLike[any])
+	rng, ok := value.(abs.RangeLike[abs.Primitive])
 	if ok {
 		v.formatRange(rng)
 		return

@@ -12,6 +12,8 @@ package abstractions
 
 // ELEMENT INTERFACES
 
+type Element any
+
 // This interface defines the methods supported by all discrete elements.
 type Discrete interface {
 	IsZero() bool

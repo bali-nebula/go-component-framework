@@ -28,6 +28,8 @@ const (
 
 // COLLECTION INTERFACES
 
+type Collection any
+
 // This interface defines the methods supported by all searchable collections of
 // items.
 type Searchable[T any] interface {
