@@ -89,7 +89,7 @@ func TestCatalogsWithMerge(t *tes.T) {
 	catalog4.AddAssociation(association1)
 	catalog4.AddAssociation(association2)
 	catalog4.AddAssociation(association3)
-	ass.True(t, age.CompareValues(catalog3, catalog4))
+	ass.True(t, age.CompareItems(catalog3, catalog4))
 }
 
 func TestCatalogsWithExtract(t *tes.T) {
@@ -106,7 +106,7 @@ func TestCatalogsWithExtract(t *tes.T) {
 	var catalog3 = col.Catalog[string, int]()
 	catalog3.AddAssociation(association1)
 	catalog3.AddAssociation(association3)
-	ass.True(t, age.CompareValues(catalog2, catalog3))
+	ass.True(t, age.CompareItems(catalog2, catalog3))
 }
 
 func TestCatalogsWithEmptyCatalogs(t *tes.T) {
@@ -116,8 +116,8 @@ func TestCatalogsWithEmptyCatalogs(t *tes.T) {
 	var catalog2 = col.Catalog[int, string]()
 	var catalog3 = catalogs.Merge(catalog1, catalog2)
 	var catalog4 = catalogs.Extract(catalog1, keys)
-	ass.True(t, age.CompareValues(catalog1, catalog2))
-	ass.True(t, age.CompareValues(catalog2, catalog3))
-	ass.True(t, age.CompareValues(catalog3, catalog4))
-	ass.True(t, age.CompareValues(catalog4, catalog1))
+	ass.True(t, age.CompareItems(catalog1, catalog2))
+	ass.True(t, age.CompareItems(catalog2, catalog3))
+	ass.True(t, age.CompareItems(catalog3, catalog4))
+	ass.True(t, age.CompareItems(catalog4, catalog1))
 }

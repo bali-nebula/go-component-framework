@@ -18,7 +18,7 @@ import (
 
 // This constructor creates a new instance of an iterator that can be used to
 // traverse the items in the specified array.
-func Iterator[T any](sequence abs.Sequential[T]) abs.IteratorLike[T] {
+func Iterator[T abs.ItemLike](sequence abs.Sequential[T]) abs.IteratorLike[T] {
 	var items = sequence.AsArray() // The returned array is immutable.
 	var size = len(items)
 	var slot = 0
@@ -27,7 +27,7 @@ func Iterator[T any](sequence abs.Sequential[T]) abs.IteratorLike[T] {
 
 // This type defines the structure and methods for a sequence iterator. The
 // iterator operates on a sequence of items and is backed by a native Go array.
-type iterator[T any] struct {
+type iterator[T abs.ItemLike] struct {
 	items []T // The array of items is immutable.
 	size  int // So we can safely cache the size.
 	slot  int // The default slot is zero.

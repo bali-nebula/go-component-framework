@@ -20,21 +20,21 @@ import (
 
 // COLLATOR INTERFACE
 
-// This function determines whether or not the specified values are equal using
+// This function determines whether or not the specified items are equal using
 // their natural comparison criteria.
-func CompareValues(first any, second any) bool {
+func CompareItems(first abs.ItemLike, second abs.ItemLike) bool {
 	var v = Collator()
-	return v.CompareValues(first, second)
+	return v.CompareItems(first, second)
 }
 
-// This function ranks the specified values based on their natural ordering.
-func RankValues(first any, second any) int {
+// This function ranks the specified items based on their natural ordering.
+func RankItems(first abs.ItemLike, second abs.ItemLike) int {
 	var v = Collator()
-	return v.RankValues(first, second)
+	return v.RankItems(first, second)
 }
 
-// This constructor creates a new instance of a formatter that can be used to
-// generate the natural string format for any value.
+// This constructor creates a new instance of a collator that can be used to
+// compare or rank any two items.
 func Collator() abs.CollatorLike {
 	return &collator{abs.AgentState()}
 }
@@ -46,20 +46,20 @@ type collator struct {
 	state abs.AgentStateLike
 }
 
-// This method determines whether or not the specified values are equal.
-func (v *collator) CompareValues(first any, second any) bool {
-	return v.compareValues(ref.ValueOf(first), ref.ValueOf(second))
+// This method determines whether or not the specified items are equal.
+func (v *collator) CompareItems(first abs.ItemLike, second abs.ItemLike) bool {
+	return v.compareItems(ref.ValueOf(first), ref.ValueOf(second))
 }
 
-// This method ranks the specified values using their natural ordering.
-func (v *collator) RankValues(first any, second any) int {
-	return v.rankValues(ref.ValueOf(first), ref.ValueOf(second))
+// This method ranks the specified items using their natural ordering.
+func (v *collator) RankItems(first abs.ItemLike, second abs.ItemLike) int {
+	return v.rankItems(ref.ValueOf(first), ref.ValueOf(second))
 }
 
-// This function determines whether or not the specified reflective values are
+// This function determines whether or not the specified reflective items are
 // equal using reflection and a recursive descent algorithm.
-func (v *collator) compareValues(first ref.Value, second ref.Value) bool {
-	// Handle nil values.
+func (v *collator) compareItems(first ref.Value, second ref.Value) bool {
+	// Handle nil items.
 	if !first.IsValid() {
 		return !second.IsValid()
 	}
@@ -71,12 +71,12 @@ func (v *collator) compareValues(first ref.Value, second ref.Value) bool {
 	var firstType = baseTypeName(first.Type())
 	var secondType = baseTypeName(second.Type())
 	if firstType != secondType && firstType != "any" && secondType != "any" {
-		// The values have different types.
+		// The items have different types.
 		return false
 	}
 
-	// At this point, the types of the values are the same, and neither of
-	// the values is nil.
+	// At this point, the types of the items are the same, and neither of
+	// the items is nil.
 	switch first.Kind() {
 
 	// Handle all primitive elements.
@@ -96,16 +96,16 @@ func (v *collator) compareValues(first ref.Value, second ref.Value) bool {
 	// Handle all sequential collections.
 	case ref.Interface, ref.Pointer:
 		if first.MethodByName("AsArray").IsValid() {
-			// The value is a collection.
+			// The item is a collection.
 			return v.compareCollections(first, second)
 		} else if first.MethodByName("GetKey").IsValid() {
-			// The value is an association.
+			// The item is an association.
 			return v.compareAssociations(first, second)
 		} else {
-			// The values are pointers to the values to be compared.
+			// The items are pointers to the items to be compared.
 			first = first.Elem()
 			second = second.Elem()
-			return v.compareValues(first, second)
+			return v.compareItems(first, second)
 		}
 
 	default:
@@ -136,7 +136,7 @@ func (v *collator) compareArrays(first ref.Value, second ref.Value) bool {
 	}
 	for i := 0; i < size; i++ {
 		v.state.IncrementDepth()
-		if !v.compareValues(first.Index(i), second.Index(i)) {
+		if !v.compareItems(first.Index(i), second.Index(i)) {
 			// Two of the items in the arrays are different.
 			v.state.DecrementDepth()
 			return false
@@ -163,7 +163,7 @@ func (v *collator) compareMaps(first ref.Value, second ref.Value) bool {
 		var key = iterator.Key()
 		var firstValue = iterator.Value()
 		var secondValue = second.MapIndex(key)
-		if !v.compareValues(firstValue, secondValue) {
+		if !v.compareItems(firstValue, secondValue) {
 			// The values don't match.
 			v.state.DecrementDepth()
 			return false
@@ -181,7 +181,7 @@ func (v *collator) compareAssociations(first ref.Value, second ref.Value) bool {
 	// Compare the keys of the two associations.
 	var firstKey = first.MethodByName("GetKey").Call([]ref.Value{})[0]
 	var secondKey = second.MethodByName("GetKey").Call([]ref.Value{})[0]
-	if !v.compareValues(firstKey, secondKey) {
+	if !v.compareItems(firstKey, secondKey) {
 		// The keys don't match.
 		return false
 	}
@@ -189,7 +189,7 @@ func (v *collator) compareAssociations(first ref.Value, second ref.Value) bool {
 	// The keys match so compare the values of the two associations.
 	var firstValue = first.MethodByName("GetValue").Call([]ref.Value{})[0]
 	var secondValue = second.MethodByName("GetValue").Call([]ref.Value{})[0]
-	return v.compareValues(firstValue, secondValue)
+	return v.compareItems(firstValue, secondValue)
 }
 
 // This private method determines whether or not the specified collections
@@ -203,15 +203,15 @@ func (v *collator) compareCollections(first ref.Value, second ref.Value) bool {
 
 // PRIVATE FUNCTIONS
 
-func (v *collator) rankReflective(first any, second any) int {
+func (v *collator) rankReflective(first abs.ItemLike, second abs.ItemLike) int {
 	var firstValue = first.(ref.Value)
 	var secondValue = second.(ref.Value)
-	return v.rankValues(firstValue, secondValue)
+	return v.rankItems(firstValue, secondValue)
 }
 
 // This private method returns the ranking order of the specified values using
 // reflection and a recursive descent algorithm.
-func (v *collator) rankValues(first ref.Value, second ref.Value) int {
+func (v *collator) rankItems(first ref.Value, second ref.Value) int {
 	if !first.IsValid() {
 		if !second.IsValid() {
 			// Both values are nil.
@@ -229,7 +229,7 @@ func (v *collator) rankValues(first ref.Value, second ref.Value) int {
 	var secondType = baseTypeName(second.Type())
 	if firstType != secondType && firstType != "any" && secondType != "any" {
 		// The values have different types.
-		return RankValues(firstType, secondType)
+		return RankItems(firstType, secondType)
 	}
 
 	// At this point, the types of the values are the same,
@@ -306,7 +306,7 @@ func (v *collator) rankValues(first ref.Value, second ref.Value) int {
 			// The values are pointers to the values to be ranked.
 			first = first.Elem()
 			second = second.Elem()
-			return v.rankValues(first, second)
+			return v.rankItems(first, second)
 		}
 
 	default:
@@ -335,7 +335,7 @@ func (v *collator) rankArrays(first ref.Value, second ref.Value) int {
 	// Iterate through the smallest array.
 	for i := 0; i < firstSize; i++ {
 		v.state.IncrementDepth()
-		var rank = v.rankValues(first.Index(i), second.Index(i))
+		var rank = v.rankItems(first.Index(i), second.Index(i))
 		if rank < 0 {
 			// The item in the first array comes before its matching item.
 			v.state.DecrementDepth()
@@ -387,7 +387,7 @@ func (v *collator) rankMaps(first ref.Value, second ref.Value) int {
 		// Rank the two keys.
 		var firstKey = firstKeys[i]
 		var secondKey = secondKeys[i]
-		var keyRank = v.rankValues(firstKey, secondKey)
+		var keyRank = v.rankItems(firstKey, secondKey)
 		if keyRank < 0 {
 			// The key in the first map comes before its matching key.
 			return -1
@@ -400,7 +400,7 @@ func (v *collator) rankMaps(first ref.Value, second ref.Value) int {
 		// The two keys match so rank the corresponding values.
 		var firstValue = first.MapIndex(firstKey)
 		var secondValue = second.MapIndex(secondKey)
-		var valueRank = v.rankValues(firstValue, secondValue)
+		var valueRank = v.rankItems(firstValue, secondValue)
 		if valueRank < 0 {
 			// The value in the first map comes before its matching value.
 			return -1
@@ -426,7 +426,7 @@ func (v *collator) rankAssociations(first ref.Value, second ref.Value) int {
 	// Rank the keys of the two associations.
 	var firstKey = first.MethodByName("GetKey").Call([]ref.Value{})[0]
 	var secondKey = second.MethodByName("GetKey").Call([]ref.Value{})[0]
-	var keyRank = v.rankValues(firstKey, secondKey)
+	var keyRank = v.rankItems(firstKey, secondKey)
 	if keyRank < 0 {
 		// The key in the first association comes before the second.
 		return -1
@@ -439,7 +439,7 @@ func (v *collator) rankAssociations(first ref.Value, second ref.Value) int {
 	// The keys match so rank the values of the two associations.
 	var firstValue = first.MethodByName("GetValue").Call([]ref.Value{})[0]
 	var secondValue = second.MethodByName("GetValue").Call([]ref.Value{})[0]
-	return v.rankValues(firstValue, secondValue)
+	return v.rankItems(firstValue, secondValue)
 }
 
 // This private method returns the ranking order of the specified collections

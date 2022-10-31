@@ -269,7 +269,7 @@ func (v *formatter) formatInterface(value any) {
 		v.formatCatalog(catalog)
 		return
 	}
-	list, ok := value.(abs.ListLike[any])
+	list, ok := value.(abs.ListLike[abs.ItemLike])
 	if ok {
 		v.formatList(list)
 		return

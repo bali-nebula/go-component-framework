@@ -188,11 +188,11 @@ func (v *parser) parseInlineAssociations() (abs.CatalogLike[abs.PrimitiveLike, a
 // This method attempts to parse a list collection with inline items. It returns
 // the list collection and whether or not the list collection was
 // successfully parsed.
-func (v *parser) parseInlineItems() (abs.ListLike[any], *Token, bool) {
+func (v *parser) parseInlineItems() (abs.ListLike[abs.ItemLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var item any
-	var list = col.List[any]()
+	var item abs.ItemLike
+	var list = col.List[abs.ItemLike]()
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
 		// This is an empty list.
@@ -231,10 +231,10 @@ func (v *parser) parseInlineItems() (abs.ListLike[any], *Token, bool) {
 // This method attempts to parse a list of items. It returns the
 // list of items and whether or not the list of items was
 // successfully parsed.
-func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
+func (v *parser) parseList() (abs.ListLike[abs.ItemLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var list = col.List[any]()
+	var list = col.List[abs.ItemLike]()
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		return list, token, false
@@ -267,7 +267,7 @@ func (v *parser) parseList() (abs.ListLike[any], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatList(list abs.ListLike[any]) {
+func (v *formatter) formatList(list abs.ListLike[abs.ItemLike]) {
 	v.state.AppendString("[")
 	switch list.GetSize() {
 	case 0:
@@ -276,7 +276,7 @@ func (v *formatter) formatList(list abs.ListLike[any]) {
 		var item = list.GetItem(1)
 		v.formatAny(item)
 	default:
-		var iterator = age.Iterator[any](list)
+		var iterator = age.Iterator[abs.ItemLike](list)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
@@ -327,11 +327,11 @@ func (v *parser) parseMultilineAssociations() (abs.CatalogLike[abs.PrimitiveLike
 // This method attempts to parse a list collection with multiline items. It
 // returns the list collection and whether or not the list collection was
 // successfully parsed.
-func (v *parser) parseMultilineItems() (abs.ListLike[any], *Token, bool) {
+func (v *parser) parseMultilineItems() (abs.ListLike[abs.ItemLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var item any
-	var list = col.List[any]()
+	var item abs.ItemLike
+	var list = col.List[abs.ItemLike]()
 	item, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty list must have at least one item.

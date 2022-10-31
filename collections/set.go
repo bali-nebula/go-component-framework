@@ -19,15 +19,15 @@ import (
 
 // This constructor creates a new empty set that uses the canonical rank
 // function.
-func Set[T any]() abs.SetLike[T] {
-	var rank = age.RankValues
+func Set[T abs.ItemLike]() abs.SetLike[T] {
+	var rank = age.RankItems
 	var items = List[T]()
 	return &set[T]{items, items, items, rank}
 }
 
 // This constructor creates a new set from the specified array that uses the
 // canonical rank function.
-func SetFromArray[T any](array []T) abs.SetLike[T] {
+func SetFromArray[T abs.ItemLike](array []T) abs.SetLike[T] {
 	var v = Set[T]()
 	for _, item := range array {
 		v.AddItem(item)
@@ -40,7 +40,7 @@ func SetFromArray[T any](array []T) abs.SetLike[T] {
 // the description of what this means in the Sequential interface definition).
 // This type is parameterized as follows:
 //   - T is any type of item.
-type set[T any] struct {
+type set[T abs.ItemLike] struct {
 	// Note: The delegated methods don't see the real collection type.
 	abs.Sequential[T]
 	abs.Indexed[T]
@@ -91,7 +91,7 @@ func (v *set[T]) ContainsAll(items abs.Sequential[T]) bool {
 // This method sets the ranker function for this set.
 func (v *set[T]) SetRanker(rank abs.RankingFunction) {
 	if rank == nil {
-		rank = age.RankValues
+		rank = age.RankItems
 	}
 	v.rank = rank
 }
@@ -188,7 +188,7 @@ func (v *set[T]) search(item T) (index int, found bool) {
 
 // This constructor creates a new sets library for the specified generic
 // item type.
-func Sets[T any]() *sets[T] {
+func Sets[T abs.ItemLike]() *sets[T] {
 	return &sets[T]{}
 }
 
@@ -196,7 +196,7 @@ func Sets[T any]() *sets[T] {
 // sets have a parameterized item type this library type is also
 // parameterized as follows:
 //   - T is any type of item.
-type sets[T any] struct{}
+type sets[T abs.ItemLike] struct{}
 
 // LOGICAL INTERFACE
 

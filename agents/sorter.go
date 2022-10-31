@@ -18,21 +18,21 @@ import (
 
 // This function sorts the specified array of items using the specified ranking
 // function.
-func SortArray[T any](array []T, rank abs.RankingFunction) {
+func SortArray[T abs.ItemLike](array []T, rank abs.RankingFunction) {
 	var v = Sorter[T](rank)
 	v.SortArray(array)
 }
 
 // This constructor creates a new instance of a sorter that can be used to
 // sort an array using a specific ranking function.
-func Sorter[T any](rank abs.RankingFunction) abs.SorterLike[T] {
+func Sorter[T abs.ItemLike](rank abs.RankingFunction) abs.SorterLike[T] {
 	return &sorter[T]{rank: rank}
 }
 
 // SORTER IMPLEMENTATION
 
 // This type defines the structure and methods for a merge sorter agent.
-type sorter[T any] struct {
+type sorter[T abs.ItemLike] struct {
 	rank abs.RankingFunction
 }
 

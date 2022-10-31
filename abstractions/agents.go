@@ -31,7 +31,7 @@ import (
 //
 // It moves from slot to slot and has access to the items (if they exist) on
 // each side of the slot.
-type IteratorLike[T any] interface {
+type IteratorLike[T ItemLike] interface {
 	GetSlot() int
 	ToSlot(slot int)
 	ToStart()
@@ -45,23 +45,35 @@ type IteratorLike[T any] interface {
 // COLLATION INTERFACES
 
 // This interface defines the methods supported by all collator-like agent
-// types that can compare and rank two values.
+// types that can compare and rank two items.
 type CollatorLike interface {
-	CompareValues(first any, second any) bool
-	RankValues(first any, second any) int
+	CompareItems(first ItemLike, second ItemLike) bool
+	RankItems(first ItemLike, second ItemLike) int
 }
 
 // This type defines the function signature for any function that can determine
-// whether or not two specified values are equal to each other.
-type ComparisonFunction func(first any, second any) bool
+// whether or not two specified items are equal to each other.
+type ComparisonFunction func(first ItemLike, second ItemLike) bool
 
 // This type defines the function signature for any function that can determine
-// the relative ordering of two specified values. The result must be one of
+// the relative ordering of two specified items. The result must be one of
 // the following:
-//   - -1: The first value is less than the second value.
-//   - 0: The first value is equal to the second value.
-//   - 1: The first value is more than the second value.
-type RankingFunction func(first any, second any) int
+//   - -1: The first item is less than the second item.
+//   - 0: The first item is equal to the second item.
+//   - 1: The first item is more than the second item.
+type RankingFunction func(first ItemLike, second ItemLike) int
+
+// SORTING INTERFACES
+
+// This interface defines the methods supported by all sorter-like agents that
+// can sort an array of items using a ranking function.
+type SorterLike[T ItemLike] interface {
+	SortArray(array []T)
+}
+
+// This type defines the function signature for any function that can sort an
+// array of items using a ranking function.
+type Sort[T ItemLike] func(array []T, rank RankingFunction)
 
 // FORMATTING INTERFACES
 
@@ -75,18 +87,6 @@ type FormatterLike interface {
 // This type defines the function signature for any function that can format
 // a value as a canoncial string.
 type Format func(value any) string
-
-// SORTING INTERFACES
-
-// This interface defines the methods supported by all sorter-like agents that
-// can sort an array of items using a ranking function.
-type SorterLike[T any] interface {
-	SortArray(array []T)
-}
-
-// This type defines the function signature for any function that can sort an
-// array of items using a ranking function.
-type Sort[T any] func(array []T, rank RankingFunction)
 
 // AGENT STATE
 

@@ -122,7 +122,7 @@ type Angular[T ~float64] interface {
 
 // This library interface defines the functions supported by all libraries of
 // elements that support boolean logic.
-type Logical[T any] interface {
+type Logical[T ElementLike] interface {
 	Not(boolean T) T
 	And(first, second T) T
 	Sans(first, second T) T

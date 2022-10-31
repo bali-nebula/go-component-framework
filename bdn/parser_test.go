@@ -146,19 +146,19 @@ func TestParserWithSequenceTypes(t *tes.T) {
 
 	// List
 	component = bdn.ParseSource("[ ]")
-	var list = component.GetEntity().(abs.ListLike[any])
+	var list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 0, list.GetSize())
 
 	component = bdn.ParseSource("[$foo]")
-	list = component.GetEntity().(abs.ListLike[any])
+	list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 1, list.GetSize())
 
 	component = bdn.ParseSource("[$foo, $bar, $baz]")
-	list = component.GetEntity().(abs.ListLike[any])
+	list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 3, list.GetSize())
 
 	component = bdn.ParseSource(l)
-	list = component.GetEntity().(abs.ListLike[any])
+	list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 3, list.GetSize())
 
 	// Catalog

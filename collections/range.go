@@ -20,7 +20,7 @@ import (
 // RANGE IMPLEMENTATION
 
 // This constructor creates a new range of items covering the specified endpoints.
-func Range[T any](first T, extent abs.Extent, last T) abs.RangeLike[T] {
+func Range[T abs.PrimitiveLike](first T, extent abs.Extent, last T) abs.RangeLike[T] {
 	switch extent {
 	case abs.INCLUSIVE:
 	case abs.LEFT:
@@ -36,8 +36,8 @@ func Range[T any](first T, extent abs.Extent, last T) abs.RangeLike[T] {
 
 // This type defines the structure and methods associated with a range of items.
 // This type is parameterized as follows:
-//   - T is any type of primitive item.
-type ranje[T any] struct {
+//   - T is any primitive type.
+type ranje[T abs.PrimitiveLike] struct {
 	first  T
 	extent abs.Extent
 	last   T
@@ -160,28 +160,29 @@ func (v *ranje[T]) SetLast(item T) {
 // type T.
 func (v *ranje[T]) indexToItem(index int) T {
 	var template T
-	var value any = template
+	var value abs.ItemLike = template
+	var item abs.ItemLike
 	switch value.(type) {
 	case uint8:
-		var item any = uint8(index)
+		item = uint8(index)
 		return item.(T)
 	case uint16:
-		var item any = uint16(index)
+		item = uint16(index)
 		return item.(T)
 	case uint32:
-		var item any = uint32(index)
+		item = uint32(index)
 		return item.(T)
 	case int8:
-		var item any = int8(index)
+		item = int8(index)
 		return item.(T)
 	case int16:
-		var item any = int16(index)
+		item = int16(index)
 		return item.(T)
 	case int32:
-		var item any = int32(index)
+		item = int32(index)
 		return item.(T)
 	case int:
-		var item any = int(index)
+		item = int(index)
 		return item.(T)
 	default:
 		panic(fmt.Sprintf("The item is not an integer type: %T", template))
@@ -190,7 +191,7 @@ func (v *ranje[T]) indexToItem(index int) T {
 
 // This function converts the type of the specified item to an integer type.
 func (v *ranje[T]) itemToIndex(item T) int {
-	var value any = item
+	var value abs.PrimitiveLike = item
 	switch index := value.(type) {
 	case uint8:
 		return int(index)

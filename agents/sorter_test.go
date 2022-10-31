@@ -18,19 +18,19 @@ import (
 
 func TestSortingEmpty(t *tes.T) {
 	var empty = []any{}
-	age.SortArray(empty, age.RankValues)
+	age.SortArray(empty, age.RankItems)
 }
 
 func TestSortingIntegers(t *tes.T) {
 	var unsorted = []int{4, 3, 1, 5, 2}
 	var sorted = []int{1, 2, 3, 4, 5}
-	age.SortArray(unsorted, age.RankValues)
+	age.SortArray(unsorted, age.RankItems)
 	ass.Equal(t, sorted, unsorted)
 }
 
 func TestSortingStrings(t *tes.T) {
 	var unsorted = []string{"alpha", "beta", "gamma", "delta"}
 	var sorted = []string{"alpha", "beta", "delta", "gamma"}
-	age.SortArray(unsorted, age.RankValues)
+	age.SortArray(unsorted, age.RankItems)
 	ass.Equal(t, sorted, unsorted)
 }

@@ -19,12 +19,12 @@ import (
 
 // This constructor creates a new empty stack with the default capacity.
 // The default capacity is 16 items.
-func Stack[T any]() abs.StackLike[T] {
+func Stack[T abs.ItemLike]() abs.StackLike[T] {
 	return StackWithCapacity[T](0)
 }
 
 // This constructor creates a new empty stack with the specified capacity.
-func StackWithCapacity[T any](capacity int) abs.StackLike[T] {
+func StackWithCapacity[T abs.ItemLike](capacity int) abs.StackLike[T] {
 	// Groom the arguments.
 	if capacity < 1 {
 		capacity = 16 // The default value.
@@ -39,7 +39,7 @@ func StackWithCapacity[T any](capacity int) abs.StackLike[T] {
 // items. A stack implements last-in-first-out semantics.
 // This type is parameterized as follows:
 //   - T is any type of item.
-type stack[T any] struct {
+type stack[T abs.ItemLike] struct {
 	// Note: The delegated methods don't see the real collection type.
 	abs.Sequential[T]
 	items    abs.ListLike[T]

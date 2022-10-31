@@ -18,17 +18,17 @@ import (
 // ASSOCIATION IMPLEMENTATION
 
 // This constructor creates a new association with the specified key and value.
-func Association[K any, V any](key K, value V) abs.AssociationLike[K, V] {
+func Association[K abs.PrimitiveLike, V abs.EntityLike](key K, value V) abs.AssociationLike[K, V] {
 	return &association[K, V]{key, value}
 }
 
 // This type defines the structure and methods associated with a key-value
 // pair. This type is parameterized as follows:
-//   - K is an ordered type of key.
-//   - V is any type of value.
+//   - K is a primitive type of key.
+//   - V is any type of entity.
 //
 // This structure is used by the catalog type to maintain its associations.
-type association[K any, V any] struct {
+type association[K abs.PrimitiveLike, V abs.EntityLike] struct {
 	key   K
 	value V
 }
@@ -49,8 +49,8 @@ func (v *association[K, V]) SetValue(value V) {
 }
 
 // This constructor creates a new empty catalog.
-func Catalog[K any, V any]() abs.CatalogLike[K, V] {
-	var keys = map[any]abs.AssociationLike[K, V]{}
+func Catalog[K abs.PrimitiveLike, V abs.EntityLike]() abs.CatalogLike[K, V] {
+	var keys = map[abs.PrimitiveLike]abs.AssociationLike[K, V]{}
 	var associations = List[abs.AssociationLike[K, V]]()
 	return &catalog[K, V]{associations, associations, associations, keys}
 }
@@ -59,14 +59,14 @@ func Catalog[K any, V any]() abs.CatalogLike[K, V] {
 
 // This type defines the structure and methods associated with a catalog of
 // key-value pair associations. This type is parameterized as follows:
-//   - K is a primitive Go type of ordered key.
-//   - V is any type of value.
-type catalog[K any, V any] struct {
+//   - K is a primitive type of key.
+//   - V is any type of entity.
+type catalog[K abs.PrimitiveLike, V abs.EntityLike] struct {
 	// Note: The delegated methods don't see the real collection type.
 	abs.Sequential[abs.AssociationLike[K, V]]
 	abs.Indexed[abs.AssociationLike[K, V]]
 	associations abs.ListLike[abs.AssociationLike[K, V]]
-	keys         map[any]abs.AssociationLike[K, V]
+	keys         map[abs.PrimitiveLike]abs.AssociationLike[K, V]
 }
 
 // ASSOCIATIVE INTERFACE
@@ -166,7 +166,7 @@ func (v *catalog[K, V]) RemoveValues(keys abs.Sequential[K]) abs.Sequential[V] {
 
 // This method removes all associations from this catalog.
 func (v *catalog[K, V]) RemoveAll() {
-	v.keys = map[any]abs.AssociationLike[K, V]{}
+	v.keys = map[abs.PrimitiveLike]abs.AssociationLike[K, V]{}
 	v.associations.RemoveAll()
 }
 
@@ -191,16 +191,16 @@ func (v *catalog[K, V]) ReverseAssociations() {
 
 // This constructor creates a new catalogs library for the specified generic
 // key and value types.
-func Catalogs[K any, V any]() *catalogs[K, V] {
+func Catalogs[K abs.PrimitiveLike, V abs.EntityLike]() *catalogs[K, V] {
 	return &catalogs[K, V]{}
 }
 
 // This type defines the library functions that operate on catalogs. Since
 // catalogs have parameterized key and value types this library type is also
 // parameterized as follows:
-//   - K is a primitive Go type of ordered key.
-//   - V is any type of value.
-type catalogs[K any, V any] struct{}
+//   - K is a primitive type of key.
+//   - V is any type of entity.
+type catalogs[K abs.PrimitiveLike, V abs.EntityLike] struct{}
 
 // BLENDABLE INTERFACE
 

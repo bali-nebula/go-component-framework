@@ -20,16 +20,16 @@ import (
 
 // This constructor creates a new empty list that uses the canonical compare
 // function.
-func List[T any]() abs.ListLike[T] {
+func List[T abs.ItemLike]() abs.ListLike[T] {
 	var capacity = 4 // The minimum value.
 	var items = make([]T, 0, capacity)
-	var compare = age.CompareValues
+	var compare = age.CompareItems
 	return &list[T]{items, compare}
 }
 
 // This constructor creates a new list from the specified array that uses the
 // canonical compare function.
-func ListFromArray[T any](array []T) abs.ListLike[T] {
+func ListFromArray[T abs.ItemLike](array []T) abs.ListLike[T] {
 	var v = List[T]()
 	for _, item := range array {
 		v.AddItem(item)
@@ -43,7 +43,7 @@ func ListFromArray[T any](array []T) abs.ListLike[T] {
 // description of what this means in the Sequential interface definition).
 // This type is parameterized as follows:
 //   - T is any type of item.
-type list[T any] struct {
+type list[T abs.ItemLike] struct {
 	items   []T
 	compare abs.ComparisonFunction
 }
@@ -74,7 +74,7 @@ func (v *list[T]) AsArray() []T {
 // This method sets the comparer function for this list.
 func (v *list[T]) SetComparer(compare abs.ComparisonFunction) {
 	if compare == nil {
-		compare = age.CompareValues
+		compare = age.CompareItems
 	}
 	v.compare = compare
 }
@@ -260,7 +260,7 @@ func (v *list[T]) SortItems() {
 // This method sorts the items in this list using the specified rank function.
 func (v *list[T]) SortItemsWithRanker(rank abs.RankingFunction) {
 	if rank == nil {
-		rank = age.RankValues
+		rank = age.RankItems
 	}
 	if len(v.items) > 1 {
 		age.SortArray[T](v.items, rank)
@@ -307,7 +307,7 @@ func (v *list[T]) resize(length int) {
 
 // This constructor creates a new lists library for the specified generic
 // item type.
-func Lists[T any]() *lists[T] {
+func Lists[T abs.ItemLike]() *lists[T] {
 	return &lists[T]{}
 }
 
@@ -315,7 +315,7 @@ func Lists[T any]() *lists[T] {
 // lists have a parameterized item type this library type is also
 // parameterized as follows:
 //   - T is any type of item.
-type lists[T any] struct{}
+type lists[T abs.ItemLike] struct{}
 
 // CHAINABLE INTERFACE
 

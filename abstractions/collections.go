@@ -14,25 +14,17 @@ import (
 	syn "sync"
 )
 
-// EXTENT CONSTANTS
-
-type Extent int
-
-const (
-	_ Extent = iota
-	INCLUSIVE
-	LEFT
-	RIGHT
-	EXCLUSIVE
-)
-
 // COLLECTION INTERFACES
+
+type PrimitiveLike any
+
+type EntityLike any
 
 type CollectionLike any
 
 // This interface defines the methods supported by all searchable collections of
 // items.
-type Searchable[T any] interface {
+type Searchable[T ItemLike] interface {
 	ContainsItem(item T) bool
 	ContainsAny(items Sequential[T]) bool
 	ContainsAll(items Sequential[T]) bool
@@ -40,14 +32,14 @@ type Searchable[T any] interface {
 
 // This interface defines the methods supported by all updatable collections of
 // items.
-type Updatable[T any] interface {
+type Updatable[T ItemLike] interface {
 	SetItem(index int, item T)
 	SetItems(index int, items Sequential[T])
 }
 
 // This interface defines the methods supported by all collections of items that
 // allow their endpoints to be changed.
-type Elastic[T any] interface {
+type Elastic[T ItemLike] interface {
 	IsEnumerable() bool
 	GetFirst() T
 	SetFirst(T)
@@ -59,7 +51,7 @@ type Elastic[T any] interface {
 
 // This interface defines the methods supported by all collections of items that
 // allow items to be added and removed.
-type Flexible[T any] interface {
+type Flexible[T ItemLike] interface {
 	SetRanker(rank RankingFunction)
 	AddItem(item T)
 	AddItems(items Sequential[T])
@@ -70,7 +62,7 @@ type Flexible[T any] interface {
 
 // This interface defines the methods supported by all collections whose items
 // may be modified, inserted, removed, or reordered.
-type Malleable[T any] interface {
+type Malleable[T ItemLike] interface {
 	AddItem(item T)
 	AddItems(items Sequential[T])
 	InsertItem(slot int, item T)
@@ -86,7 +78,7 @@ type Malleable[T any] interface {
 
 // This interface defines the methods supported by all associative collections
 // whose items consist of key-value pair associations.
-type Associative[K any, V any] interface {
+type Associative[K PrimitiveLike, V EntityLike] interface {
 	AddAssociation(association AssociationLike[K, V])
 	AddAssociations(associations Sequential[AssociationLike[K, V]])
 	GetKeys() Sequential[K]
@@ -103,7 +95,7 @@ type Associative[K any, V any] interface {
 
 // This interface defines the methods supported by all collections whose items
 // are accessed using first-in-first-out (FIFO) semantics.
-type FIFO[T any] interface {
+type FIFO[T ItemLike] interface {
 	GetCapacity() int
 	AddItem(item T)
 	AddItems(items Sequential[T])
@@ -113,7 +105,7 @@ type FIFO[T any] interface {
 
 // This interface defines the methods supported by all collections whose items
 // are accessed using last-in-first-out (LIFO) semantics.
-type LIFO[T any] interface {
+type LIFO[T ItemLike] interface {
 	GetCapacity() int
 	AddItem(item T)
 	AddItems(items Sequential[T])
@@ -126,7 +118,7 @@ type LIFO[T any] interface {
 
 // This interface consolidates all the interfaces supported by array-like
 // collections.
-type ArrayLike[T any] interface {
+type ArrayLike[T ItemLike] interface {
 	Sequential[T]
 	Indexed[T]
 	Searchable[T]
@@ -135,7 +127,7 @@ type ArrayLike[T any] interface {
 
 // This interface defines the methods supported by all association-like types.
 // An association associates a key with an setable value.
-type AssociationLike[K any, V any] interface {
+type AssociationLike[K PrimitiveLike, V EntityLike] interface {
 	GetKey() K
 	GetValue() V
 	SetValue(value V)
@@ -143,7 +135,7 @@ type AssociationLike[K any, V any] interface {
 
 // This interface consolidates all the interfaces supported by catalog-like
 // collections.
-type CatalogLike[K any, V any] interface {
+type CatalogLike[K PrimitiveLike, V EntityLike] interface {
 	Sequential[AssociationLike[K, V]]
 	Indexed[AssociationLike[K, V]]
 	Associative[K, V]
@@ -151,7 +143,7 @@ type CatalogLike[K any, V any] interface {
 
 // This interface consolidates all the interfaces supported by list-like
 // collections.
-type ListLike[T any] interface {
+type ListLike[T ItemLike] interface {
 	Sequential[T]
 	Indexed[T]
 	Searchable[T]
@@ -161,14 +153,14 @@ type ListLike[T any] interface {
 
 // This interface consolidates all of the interfaces supported by queue-like
 // collections.
-type QueueLike[T any] interface {
+type QueueLike[T ItemLike] interface {
 	Sequential[T]
 	FIFO[T]
 }
 
 // This interface consolidates all the interfaces supported by set-like
 // collections.
-type SetLike[T any] interface {
+type SetLike[T ItemLike] interface {
 	Sequential[T]
 	Indexed[T]
 	Searchable[T]
@@ -177,7 +169,7 @@ type SetLike[T any] interface {
 
 // This interface consolidates all the interfaces supported by range-like
 // collections.
-type RangeLike[T any] interface {
+type RangeLike[T PrimitiveLike] interface {
 	Sequential[T]
 	Indexed[T]
 	Elastic[T]
@@ -185,7 +177,7 @@ type RangeLike[T any] interface {
 
 // This interface consolidates all the interfaces supported by stack-like
 // collections.
-type StackLike[T any] interface {
+type StackLike[T ItemLike] interface {
 	Sequential[T]
 	LIFO[T]
 }
@@ -194,15 +186,27 @@ type StackLike[T any] interface {
 
 // This library interface defines the functions supported by all libraries that
 // can disect and combine associative collections.
-type Blendable[K any, V any] interface {
+type Blendable[K PrimitiveLike, V EntityLike] interface {
 	Merge(first, second CatalogLike[K, V]) CatalogLike[K, V]
 	Extract(catalog CatalogLike[K, V], keys Sequential[K]) CatalogLike[K, V]
 }
 
 // This library interface defines the functions supported by all libraries that
 // can combine queue-like collections in interesting ways.
-type Routeable[T any] interface {
+type Routeable[T ItemLike] interface {
 	Fork(wg *syn.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
 	Split(wg *syn.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
 	Join(wg *syn.WaitGroup, inputs Sequential[FIFO[T]]) FIFO[T]
 }
+
+// EXTENT CONSTANTS
+
+type Extent int
+
+const (
+	_ Extent = iota
+	INCLUSIVE
+	LEFT
+	RIGHT
+	EXCLUSIVE
+)

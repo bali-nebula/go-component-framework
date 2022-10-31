@@ -16,11 +16,13 @@ import (
 
 // STRING INTERFACES
 
+type ItemLike any
+
 type StringLike any
 
 // This interface defines the methods supported by all sequential strings of
 // items.
-type Sequential[T any] interface {
+type Sequential[T ItemLike] interface {
 	IsEmpty() bool
 	GetSize() int
 	AsArray() []T
@@ -38,7 +40,7 @@ type Sequential[T any] interface {
 //
 // Notice that because the indices are ordinal based, the positive and negative
 // indices are symmetrical.
-type Indexed[T any] interface {
+type Indexed[T ItemLike] interface {
 	SetComparer(compare ComparisonFunction)
 	GetItem(index int) T
 	GetItems(first int, last int) Sequential[T]
@@ -76,6 +78,6 @@ func NormalizedIndex(index int, length int) int {
 
 // This library interface defines the functions supported by all libraries of
 // chainable items.
-type Chainable[T any] interface {
+type Chainable[T StringLike] interface {
 	Concatenate(first Sequential[T], second Sequential[T]) Sequential[T]
 }

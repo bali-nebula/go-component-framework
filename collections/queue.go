@@ -20,12 +20,12 @@ import (
 
 // This constructor creates a new empty queue with the default capacity.
 // The default capacity is 16 items.
-func Queue[T any]() abs.QueueLike[T] {
+func Queue[T abs.ItemLike]() abs.QueueLike[T] {
 	return QueueWithCapacity[T](0)
 }
 
 // This constructor creates a new empty queue with the specified capacity.
-func QueueWithCapacity[T any](capacity int) abs.QueueLike[T] {
+func QueueWithCapacity[T abs.ItemLike](capacity int) abs.QueueLike[T] {
 	// Groom the arguments.
 	if capacity < 1 {
 		capacity = 16 // The default value.
@@ -47,7 +47,7 @@ func QueueWithCapacity[T any](capacity int) abs.QueueLike[T] {
 // can be removed and the channel modified to pass the items instead of the
 // availability. Currently, the underlying list is only required by the
 // AsArray() method.
-type queue[T any] struct {
+type queue[T abs.ItemLike] struct {
 	available chan bool
 	items     abs.ListLike[T]
 	mutex     syn.Mutex
@@ -135,7 +135,7 @@ func (v *queue[T]) CloseQueue() {
 
 // This constructor creates a new queues library for the specified generic
 // item type.
-func Queues[T any]() *queues[T] {
+func Queues[T abs.ItemLike]() *queues[T] {
 	return &queues[T]{}
 }
 
@@ -143,7 +143,7 @@ func Queues[T any]() *queues[T] {
 // queues have a parameterized item type this library type is also
 // parameterized as follows:
 //   - T is any type of item.
-type queues[T any] struct{}
+type queues[T abs.ItemLike] struct{}
 
 // ROUTEABLE INTERFACE
 

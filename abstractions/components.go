@@ -12,10 +12,6 @@ package abstractions
 
 // COMPONENT INTERFACES
 
-type PrimitiveLike any
-
-type EntityLike any
-
 // This interface defines the methods supported by all component-like types.
 type ComponentLike interface {
 	IsGeneric() bool
