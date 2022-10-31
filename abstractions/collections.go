@@ -28,7 +28,7 @@ const (
 
 // COLLECTION INTERFACES
 
-type Collection any
+type CollectionLike any
 
 // This interface defines the methods supported by all searchable collections of
 // items.

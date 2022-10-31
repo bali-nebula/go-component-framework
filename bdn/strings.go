@@ -145,10 +145,10 @@ func (v *formatter) formatQuote(quote str.Quote) {
 // This method attempts to parse a string primitive. It returns the
 // string primitive and whether or not the string primitive was
 // successfully parsed.
-func (v *parser) parseString() (abs.String, *Token, bool) {
+func (v *parser) parseString() (abs.StringLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var s abs.String
+	var s abs.StringLike
 	s, token, ok = v.parseQuote()
 	if !ok {
 		s, token, ok = v.parseMoniker()

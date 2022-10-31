@@ -17,7 +17,7 @@ import (
 // DISCARD CLAUSE IMPLEMENTATION
 
 // This constructor creates a new discard clause.
-func DiscardClause(citation abs.Expression) abs.DiscardClauseLike {
+func DiscardClause(citation abs.ExpressionLike) abs.DiscardClauseLike {
 	var v = &discardClause{}
 	// Perform argument validation.
 	v.SetCitation(citation)
@@ -27,16 +27,16 @@ func DiscardClause(citation abs.Expression) abs.DiscardClauseLike {
 // This type defines the structure and methods associated with a discard
 // clause.
 type discardClause struct {
-	citation abs.Expression
+	citation abs.ExpressionLike
 }
 
 // This method returns the citation expression for this discard clause.
-func (v *discardClause) GetCitation() abs.Expression {
+func (v *discardClause) GetCitation() abs.ExpressionLike {
 	return v.citation
 }
 
 // This method sets the citation expression for this discard clause.
-func (v *discardClause) SetCitation(citation abs.Expression) {
+func (v *discardClause) SetCitation(citation abs.ExpressionLike) {
 	if citation == nil {
 		panic("A discard clause requires a citation.")
 	}

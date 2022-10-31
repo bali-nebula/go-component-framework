@@ -17,7 +17,7 @@ import (
 // EXPONENTIAL EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new exponential expression.
-func Exponential(base, exponent abs.Expression) abs.ExponentialLike {
+func Exponential(base, exponent abs.ExpressionLike) abs.ExponentialLike {
 	var v = &exponentialExpression{}
 	// Perform argument validation.
 	v.SetBase(base)
@@ -28,18 +28,18 @@ func Exponential(base, exponent abs.Expression) abs.ExponentialLike {
 // This type defines the structure and methods associated with a exponential
 // expression.
 type exponentialExpression struct {
-	base     abs.Expression
-	exponent abs.Expression
+	base     abs.ExpressionLike
+	exponent abs.ExpressionLike
 }
 
 // This method returns the base expression in this exponential expression.
-func (v *exponentialExpression) GetBase() abs.Expression {
+func (v *exponentialExpression) GetBase() abs.ExpressionLike {
 	return v.base
 }
 
 // This method sets the base expression in this exponential expression to the
 // specified value.
-func (v *exponentialExpression) SetBase(base abs.Expression) {
+func (v *exponentialExpression) SetBase(base abs.ExpressionLike) {
 	if base == nil {
 		panic("The base expression in a exponential expression cannot be nil.")
 	}
@@ -47,13 +47,13 @@ func (v *exponentialExpression) SetBase(base abs.Expression) {
 }
 
 // This method returns the exponent expression in this exponential expression.
-func (v *exponentialExpression) GetExponent() abs.Expression {
+func (v *exponentialExpression) GetExponent() abs.ExpressionLike {
 	return v.exponent
 }
 
 // This method sets the exponent expression in this exponential expression to
 // the specified value.
-func (v *exponentialExpression) SetExponent(exponent abs.Expression) {
+func (v *exponentialExpression) SetExponent(exponent abs.ExpressionLike) {
 	if exponent == nil {
 		panic("The exponent expression in a exponential expression cannot be nil.")
 	}

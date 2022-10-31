@@ -12,7 +12,7 @@ package abstractions
 
 // ELEMENT INTERFACES
 
-type Element any
+type ElementLike any
 
 // This interface defines the methods supported by all discrete elements.
 type Discrete interface {

@@ -17,7 +17,7 @@ import (
 // ACCEPT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new accept clause.
-func AcceptClause(message abs.Expression) abs.AcceptClauseLike {
+func AcceptClause(message abs.ExpressionLike) abs.AcceptClauseLike {
 	var v = &acceptClause{}
 	// Perform argument validation.
 	v.SetMessage(message)
@@ -27,16 +27,16 @@ func AcceptClause(message abs.Expression) abs.AcceptClauseLike {
 // This type defines the structure and methods associated with an accept
 // clause.
 type acceptClause struct {
-	message abs.Expression
+	message abs.ExpressionLike
 }
 
 // This method returns the message expression for this accept clause.
-func (v *acceptClause) GetMessage() abs.Expression {
+func (v *acceptClause) GetMessage() abs.ExpressionLike {
 	return v.message
 }
 
 // This method sets the message expression for this accept clause.
-func (v *acceptClause) SetMessage(message abs.Expression) {
+func (v *acceptClause) SetMessage(message abs.ExpressionLike) {
 	if message == nil {
 		panic("An accept clause requires a message.")
 	}

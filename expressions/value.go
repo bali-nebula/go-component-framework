@@ -17,7 +17,7 @@ import (
 // VALUE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new value expression.
-func Value(composite abs.Expression, indices abs.ListLike[abs.Expression]) abs.ValueLike {
+func Value(composite abs.ExpressionLike, indices abs.ListLike[abs.ExpressionLike]) abs.ValueLike {
 	var v = &valueExpression{}
 	// Perform argument validation.
 	v.SetComposite(composite)
@@ -28,17 +28,17 @@ func Value(composite abs.Expression, indices abs.ListLike[abs.Expression]) abs.V
 // This type defines the structure and methods associated with a value
 // expression.
 type valueExpression struct {
-	composite abs.Expression
-	indices   abs.ListLike[abs.Expression]
+	composite abs.ExpressionLike
+	indices   abs.ListLike[abs.ExpressionLike]
 }
 
 // This method returns the composite for this value expression.
-func (v *valueExpression) GetComposite() abs.Expression {
+func (v *valueExpression) GetComposite() abs.ExpressionLike {
 	return v.composite
 }
 
 // This method sets the composite for this value expression.
-func (v *valueExpression) SetComposite(composite abs.Expression) {
+func (v *valueExpression) SetComposite(composite abs.ExpressionLike) {
 	if composite == nil {
 		panic("A value expression requires a composite expression.")
 	}
@@ -47,13 +47,13 @@ func (v *valueExpression) SetComposite(composite abs.Expression) {
 
 // This method returns the index at the specified index from this value
 // expression.
-func (v *valueExpression) GetIndex(index int) abs.Expression {
+func (v *valueExpression) GetIndex(index int) abs.ExpressionLike {
 	return v.indices.GetItem(index)
 }
 
 // This method sets the expression at the specified index for this value
 // expression.
-func (v *valueExpression) SetIndex(index int, expression abs.Expression) {
+func (v *valueExpression) SetIndex(index int, expression abs.ExpressionLike) {
 	if expression == nil {
 		panic("Each index expression for a value expression requires a value.")
 	}
@@ -61,12 +61,12 @@ func (v *valueExpression) SetIndex(index int, expression abs.Expression) {
 }
 
 // This method returns the list of indices for this value expression.
-func (v *valueExpression) GetIndices() abs.ListLike[abs.Expression] {
+func (v *valueExpression) GetIndices() abs.ListLike[abs.ExpressionLike] {
 	return v.indices
 }
 
 // This method sets the list of indices for this value expression.
-func (v *valueExpression) SetIndices(indices abs.ListLike[abs.Expression]) {
+func (v *valueExpression) SetIndices(indices abs.ListLike[abs.ExpressionLike]) {
 	if indices == nil || indices.IsEmpty() {
 		panic("A value expression requires at least one index.")
 	}

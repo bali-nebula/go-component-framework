@@ -180,11 +180,11 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 // This method attempts to parse an element primitive. It returns the
 // element primitive and whether or not the element primitive was
 // successfully parsed.
-func (v *parser) parseElement() (abs.Element, *Token, bool) {
+func (v *parser) parseElement() (abs.ElementLike, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
-	var element abs.Element
+	var element abs.ElementLike
 	element, token, ok = v.parseAngle()
 	if !ok {
 		element, token, ok = v.parseBoolean()

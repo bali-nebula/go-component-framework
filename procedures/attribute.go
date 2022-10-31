@@ -17,7 +17,7 @@ import (
 // ATTRIBUTE IMPLEMENTATION
 
 // This constructor creates a new attribute.
-func Attribute(variable string, indices abs.ListLike[abs.Expression]) abs.AttributeLike {
+func Attribute(variable string, indices abs.ListLike[abs.ExpressionLike]) abs.AttributeLike {
 	var v = &attribute{}
 	// Perform argument validation.
 	v.SetVariable(variable)
@@ -28,7 +28,7 @@ func Attribute(variable string, indices abs.ListLike[abs.Expression]) abs.Attrib
 // This type defines the structure and methods associated with an attribute.
 type attribute struct {
 	variable string
-	indices  abs.ListLike[abs.Expression]
+	indices  abs.ListLike[abs.ExpressionLike]
 }
 
 // This method returns the variable for this attribute.
@@ -45,12 +45,12 @@ func (v *attribute) SetVariable(variable string) {
 }
 
 // This method returns the index at the specified index from this attribute.
-func (v *attribute) GetIndex(index int) abs.Expression {
+func (v *attribute) GetIndex(index int) abs.ExpressionLike {
 	return v.indices.GetItem(index)
 }
 
 // This method sets the expression at the specified index for this attribute.
-func (v *attribute) SetIndex(index int, expression abs.Expression) {
+func (v *attribute) SetIndex(index int, expression abs.ExpressionLike) {
 	if expression == nil {
 		panic("Each index expression for an attribute requires a value.")
 	}
@@ -58,12 +58,12 @@ func (v *attribute) SetIndex(index int, expression abs.Expression) {
 }
 
 // This method returns the list of indices for this attribute.
-func (v *attribute) GetIndices() abs.ListLike[abs.Expression] {
+func (v *attribute) GetIndices() abs.ListLike[abs.ExpressionLike] {
 	return v.indices
 }
 
 // This method sets the list of indices for this attribute.
-func (v *attribute) SetIndices(indices abs.ListLike[abs.Expression]) {
+func (v *attribute) SetIndices(indices abs.ListLike[abs.ExpressionLike]) {
 	if indices == nil || indices.IsEmpty() {
 		panic("An attribute requires at least one index.")
 	}

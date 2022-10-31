@@ -17,7 +17,7 @@ import (
 // EVALUATE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new evaluate clause.
-func EvaluateClause(expression abs.Expression) abs.EvaluateClauseLike {
+func EvaluateClause(expression abs.ExpressionLike) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
 	v.SetExpression(expression)
@@ -25,7 +25,7 @@ func EvaluateClause(expression abs.Expression) abs.EvaluateClauseLike {
 }
 
 // This constructor creates a new evaluate clause.
-func EvaluateClauseWithRecipient(recipient abs.Recipient, assignment abs.Assignment, expression abs.Expression) abs.EvaluateClauseLike {
+func EvaluateClauseWithRecipient(recipient abs.RecipientLike, assignment abs.Assignment, expression abs.ExpressionLike) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient, assignment)
@@ -36,20 +36,20 @@ func EvaluateClauseWithRecipient(recipient abs.Recipient, assignment abs.Assignm
 // This type defines the structure and methods associated with an evaluate
 // clause.
 type evaluateClause struct {
-	recipient  abs.Recipient
+	recipient  abs.RecipientLike
 	assignment abs.Assignment
-	expression abs.Expression
+	expression abs.ExpressionLike
 }
 
 // This method returns the recipient (with assignment type) for this evaluate
 // clause.
-func (v *evaluateClause) GetRecipient() (recipient abs.Recipient, assignment abs.Assignment) {
+func (v *evaluateClause) GetRecipient() (recipient abs.RecipientLike, assignment abs.Assignment) {
 	return v.recipient, v.assignment
 }
 
 // This method sets the recipient (with assignment type) for this evaluate
 // clause.
-func (v *evaluateClause) SetRecipient(recipient abs.Recipient, assignment abs.Assignment) {
+func (v *evaluateClause) SetRecipient(recipient abs.RecipientLike, assignment abs.Assignment) {
 	if recipient == nil || assignment < abs.REGULAR || assignment > abs.MINUS {
 		panic("An evaluate clause requires a recipient and valid assignment type.")
 	}
@@ -58,12 +58,12 @@ func (v *evaluateClause) SetRecipient(recipient abs.Recipient, assignment abs.As
 }
 
 // This method returns the expression for this evaluate clause.
-func (v *evaluateClause) GetExpression() abs.Expression {
+func (v *evaluateClause) GetExpression() abs.ExpressionLike {
 	return v.expression
 }
 
 // This method sets the expression for this evaluate clause.
-func (v *evaluateClause) SetExpression(expression abs.Expression) {
+func (v *evaluateClause) SetExpression(expression abs.ExpressionLike) {
 	if expression == nil {
 		panic("An evaluate clause requires an expression.")
 	}

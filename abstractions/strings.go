@@ -16,7 +16,7 @@ import (
 
 // STRING INTERFACES
 
-type String any
+type StringLike any
 
 // This interface defines the methods supported by all sequential strings of
 // items.
@@ -72,19 +72,10 @@ func NormalizedIndex(index int, length int) int {
 	}
 }
 
-// CONSOLIDATED INTERFACES
-
-// This interface consolidates all the interfaces supported by string-like
-// collections.
-type StringLike[T any] interface {
-	Sequential[T]
-	Indexed[T]
-}
-
 // LIBRARY INTERFACES
 
 // This library interface defines the functions supported by all libraries of
 // chainable items.
 type Chainable[T any] interface {
-	Concatenate(first StringLike[T], second StringLike[T]) StringLike[T]
+	Concatenate(first Sequential[T], second Sequential[T]) Sequential[T]
 }
