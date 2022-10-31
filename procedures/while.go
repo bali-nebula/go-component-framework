@@ -17,7 +17,7 @@ import (
 // WHILE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new while clause.
-func WhileClause(condition abs.ExpressionLike, statements abs.ProcedureLike) abs.WhileClauseLike {
+func WhileClause(condition abs.Expression, statements abs.ProcedureLike) abs.WhileClauseLike {
 	var v = &whileClause{}
 	// Perform argument validation.
 	v.SetCondition(condition)
@@ -27,17 +27,17 @@ func WhileClause(condition abs.ExpressionLike, statements abs.ProcedureLike) abs
 
 // This type defines the structure and methods associated with a while clause.
 type whileClause struct {
-	condition  abs.ExpressionLike
+	condition  abs.Expression
 	statements abs.ProcedureLike
 }
 
 // This method returns the condition expression for this while clause.
-func (v *whileClause) GetCondition() abs.ExpressionLike {
+func (v *whileClause) GetCondition() abs.Expression {
 	return v.condition
 }
 
 // This method sets the condition expression for this while clause.
-func (v *whileClause) SetCondition(condition abs.ExpressionLike) {
+func (v *whileClause) SetCondition(condition abs.Expression) {
 	if condition == nil {
 		panic("A while clause requires a condition expression.")
 	}

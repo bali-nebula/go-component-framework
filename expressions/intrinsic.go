@@ -17,7 +17,7 @@ import (
 // INTRINSIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new intrinsic expression.
-func Intrinsic(function string, arguments abs.ListLike[abs.ExpressionLike]) abs.IntrinsicLike {
+func Intrinsic(function string, arguments abs.ListLike[abs.Expression]) abs.IntrinsicLike {
 	var v = &intrinsicExpression{}
 	// Perform argument validation.
 	v.SetFunction(function)
@@ -29,7 +29,7 @@ func Intrinsic(function string, arguments abs.ListLike[abs.ExpressionLike]) abs.
 // expression.
 type intrinsicExpression struct {
 	function  string
-	arguments abs.ListLike[abs.ExpressionLike]
+	arguments abs.ListLike[abs.Expression]
 }
 
 // This method returns the function name for this intrinsic expression.
@@ -47,13 +47,13 @@ func (v *intrinsicExpression) SetFunction(function string) {
 
 // This method returns the argument at the specified index from this intrinsic
 // expression.
-func (v *intrinsicExpression) GetArgument(index int) abs.ExpressionLike {
+func (v *intrinsicExpression) GetArgument(index int) abs.Expression {
 	return v.arguments.GetItem(index)
 }
 
 // This method sets the argument at the specified index for this intrinsic
 // expression.
-func (v *intrinsicExpression) SetArgument(index int, argument abs.ExpressionLike) {
+func (v *intrinsicExpression) SetArgument(index int, argument abs.Expression) {
 	if argument == nil {
 		panic("Each argument for an intrinsic expression requires a value.")
 	}
@@ -61,19 +61,14 @@ func (v *intrinsicExpression) SetArgument(index int, argument abs.ExpressionLike
 }
 
 // This method returns the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) GetArguments() abs.ListLike[abs.ExpressionLike] {
+func (v *intrinsicExpression) GetArguments() abs.ListLike[abs.Expression] {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) SetArguments(arguments abs.ListLike[abs.ExpressionLike]) {
+func (v *intrinsicExpression) SetArguments(arguments abs.ListLike[abs.Expression]) {
 	if arguments == nil {
 		panic("An intrinsic expression requires an array (possibly empty) of arguments.")
 	}
 	v.arguments = arguments
-}
-
-// This method returns the type of this expression.
-func (v *intrinsicExpression) GetType() abs.Type {
-	return abs.INTRINSIC
 }

@@ -17,7 +17,7 @@ import (
 // EXPONENTIAL EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new exponential expression.
-func Exponential(base, exponent abs.ExpressionLike) abs.ExponentialLike {
+func Exponential(base, exponent abs.Expression) abs.ExponentialLike {
 	var v = &exponentialExpression{}
 	// Perform argument validation.
 	v.SetBase(base)
@@ -28,18 +28,18 @@ func Exponential(base, exponent abs.ExpressionLike) abs.ExponentialLike {
 // This type defines the structure and methods associated with a exponential
 // expression.
 type exponentialExpression struct {
-	base     abs.ExpressionLike
-	exponent abs.ExpressionLike
+	base     abs.Expression
+	exponent abs.Expression
 }
 
 // This method returns the base expression in this exponential expression.
-func (v *exponentialExpression) GetBase() abs.ExpressionLike {
+func (v *exponentialExpression) GetBase() abs.Expression {
 	return v.base
 }
 
 // This method sets the base expression in this exponential expression to the
 // specified value.
-func (v *exponentialExpression) SetBase(base abs.ExpressionLike) {
+func (v *exponentialExpression) SetBase(base abs.Expression) {
 	if base == nil {
 		panic("The base expression in a exponential expression cannot be nil.")
 	}
@@ -47,20 +47,15 @@ func (v *exponentialExpression) SetBase(base abs.ExpressionLike) {
 }
 
 // This method returns the exponent expression in this exponential expression.
-func (v *exponentialExpression) GetExponent() abs.ExpressionLike {
+func (v *exponentialExpression) GetExponent() abs.Expression {
 	return v.exponent
 }
 
 // This method sets the exponent expression in this exponential expression to
 // the specified value.
-func (v *exponentialExpression) SetExponent(exponent abs.ExpressionLike) {
+func (v *exponentialExpression) SetExponent(exponent abs.Expression) {
 	if exponent == nil {
 		panic("The exponent expression in a exponential expression cannot be nil.")
 	}
 	v.exponent = exponent
-}
-
-// This method returns the type of this expression.
-func (v *exponentialExpression) GetType() abs.Type {
-	return abs.EXPONENTIAL
 }

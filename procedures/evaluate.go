@@ -17,7 +17,7 @@ import (
 // EVALUATE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new evaluate clause.
-func EvaluateClause(expression abs.ExpressionLike) abs.EvaluateClauseLike {
+func EvaluateClause(expression abs.Expression) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
 	v.SetExpression(expression)
@@ -25,7 +25,7 @@ func EvaluateClause(expression abs.ExpressionLike) abs.EvaluateClauseLike {
 }
 
 // This constructor creates a new evaluate clause.
-func EvaluateClauseWithRecipient(recipient any, assignment abs.Assignment, expression abs.ExpressionLike) abs.EvaluateClauseLike {
+func EvaluateClauseWithRecipient(recipient any, assignment abs.Assignment, expression abs.Expression) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient, assignment)
@@ -38,7 +38,7 @@ func EvaluateClauseWithRecipient(recipient any, assignment abs.Assignment, expre
 type evaluateClause struct {
 	recipient  any
 	assignment abs.Assignment
-	expression abs.ExpressionLike
+	expression abs.Expression
 }
 
 // This method returns the recipient (with assignment type) for this evaluate
@@ -58,12 +58,12 @@ func (v *evaluateClause) SetRecipient(recipient any, assignment abs.Assignment) 
 }
 
 // This method returns the expression for this evaluate clause.
-func (v *evaluateClause) GetExpression() abs.ExpressionLike {
+func (v *evaluateClause) GetExpression() abs.Expression {
 	return v.expression
 }
 
 // This method sets the expression for this evaluate clause.
-func (v *evaluateClause) SetExpression(expression abs.ExpressionLike) {
+func (v *evaluateClause) SetExpression(expression abs.Expression) {
 	if expression == nil {
 		panic("An evaluate clause requires an expression.")
 	}

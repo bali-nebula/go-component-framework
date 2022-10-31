@@ -42,8 +42,3 @@ func (v *variableExpression) SetIdentifier(identifier string) {
 	}
 	v.identifier = identifier
 }
-
-// This method returns the type of this expression.
-func (v *variableExpression) GetType() abs.Type {
-	return abs.VARIABLE
-}

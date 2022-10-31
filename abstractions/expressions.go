@@ -10,29 +10,6 @@
 
 package abstractions
 
-// TYPE CONSTANTS
-
-type Type int
-
-const (
-	_ Type = iota
-	ARITHMETIC
-	CHAINING
-	COMPARISON
-	COMPLEMENT
-	COMPONENT
-	DEREFERENCE
-	EXPONENTIAL
-	INTRINSIC
-	INVERSION
-	INVOCATION
-	LOGICAL
-	MAGNITUDE
-	PRECEDENCE
-	VALUE
-	VARIABLE
-)
-
 // OPERATOR CONSTANTS
 
 type Operator int
@@ -67,136 +44,120 @@ const (
 
 // This interface defines the methods supported by all arithmetic-like expressions.
 type ArithmeticLike interface {
-	GetType() Type
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all chaining-like expressions.
 type ChainingLike interface {
-	GetType() Type
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all comparison-like expressions.
 type ComparisonLike interface {
-	GetType() Type
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all complement-like expressions.
 type ComplementLike interface {
-	GetType() Type
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all dereference-like expressions.
 type DereferenceLike interface {
-	GetType() Type
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all exponential-like expressions.
 type ExponentialLike interface {
-	GetType() Type
-	GetBase() ExpressionLike
-	SetBase(base ExpressionLike)
-	GetExponent() ExpressionLike
-	SetExponent(exponent ExpressionLike)
+	GetBase() Expression
+	SetBase(base Expression)
+	GetExponent() Expression
+	SetExponent(exponent Expression)
 }
 
 // This interface defines the methods supported by all expressions.
-type ExpressionLike interface {
-	GetType() Type
-}
+type Expression any
 
 // This interface defines the methods supported by all intrinsic-like expressions.
 type IntrinsicLike interface {
-	GetType() Type
 	GetFunction() string
 	SetFunction(function string)
-	GetArgument(index int) ExpressionLike           // Ordinal based indexing.
-	SetArgument(index int, argument ExpressionLike) // Ordinal based indexing.
-	GetArguments() ListLike[ExpressionLike]
-	SetArguments(arguments ListLike[ExpressionLike])
+	GetArgument(index int) Expression           // Ordinal based indexing.
+	SetArgument(index int, argument Expression) // Ordinal based indexing.
+	GetArguments() ListLike[Expression]
+	SetArguments(arguments ListLike[Expression])
 }
 
 // This interface defines the methods supported by all inversion-like expressions.
 type InversionLike interface {
-	GetType() Type
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all invocation-like expressions.
 type InvocationLike interface {
-	GetType() Type
 	IsSynchronous() bool
 	SetSynchronous(isSynchronous bool)
-	GetTarget() ExpressionLike
-	SetTarget(target ExpressionLike)
+	GetTarget() Expression
+	SetTarget(target Expression)
 	GetMessage() string
 	SetMessage(message string)
-	GetArgument(index int) ExpressionLike           // Ordinal based indexing.
-	SetArgument(index int, argument ExpressionLike) // Ordinal based indexing.
-	GetArguments() ListLike[ExpressionLike]
-	SetArguments(arguments ListLike[ExpressionLike])
+	GetArgument(index int) Expression           // Ordinal based indexing.
+	SetArgument(index int, argument Expression) // Ordinal based indexing.
+	GetArguments() ListLike[Expression]
+	SetArguments(arguments ListLike[Expression])
 }
 
 // This interface defines the methods supported by all logical-like expressions.
 type LogicalLike interface {
-	GetType() Type
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all magnitude-like expressions.
 type MagnitudeLike interface {
-	GetType() Type
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all precedence-like expressions.
 type PrecedenceLike interface {
-	GetType() Type
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all value-like expressions.
 type ValueLike interface {
-	GetType() Type
-	GetComposite() ExpressionLike
-	SetComposite(composite ExpressionLike)
-	GetIndex(index int) ExpressionLike
-	SetIndex(index int, expression ExpressionLike)
-	GetIndices() ListLike[ExpressionLike]
-	SetIndices(indices ListLike[ExpressionLike])
+	GetComposite() Expression
+	SetComposite(composite Expression)
+	GetIndex(index int) Expression
+	SetIndex(index int, expression Expression)
+	GetIndices() ListLike[Expression]
+	SetIndices(indices ListLike[Expression])
 }
 
 // This interface defines the methods supported by all variable-like expressions.
 type VariableLike interface {
-	GetType() Type
 	GetIdentifier() string
 }

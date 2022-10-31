@@ -19,11 +19,11 @@ import (
 // This method attempts to parse the arguments within a call. It returns a
 // list of the arguments and whether or not the arguments were successfully
 // parsed.
-func (v *parser) parseArguments() (abs.ListLike[abs.ExpressionLike], *Token, bool) {
+func (v *parser) parseArguments() (abs.ListLike[abs.Expression], *Token, bool) {
 	var ok bool
 	var token *Token
-	var argument abs.ExpressionLike
-	var arguments = col.List[abs.ExpressionLike]()
+	var argument abs.Expression
+	var arguments = col.List[abs.Expression]()
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		// This is not an argument expression.
@@ -61,12 +61,12 @@ func (v *parser) parseArguments() (abs.ListLike[abs.ExpressionLike], *Token, boo
 // This method attempts to parse a arithmetic expression. It returns the
 // arithmetic expression and whether or not the arithmetic expression was
 // successfully parsed.
-func (v *parser) parseArithmetic(left abs.ExpressionLike) (abs.ArithmeticLike, *Token, bool) {
+func (v *parser) parseArithmetic(left abs.Expression) (abs.ArithmeticLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var operator abs.Operator
-	var right abs.ExpressionLike
+	var right abs.Expression
 	var expression abs.ArithmeticLike
 	delimiter, token, ok = v.parseDelimiter("*")
 	if !ok {
@@ -111,10 +111,10 @@ func (v *parser) parseArithmetic(left abs.ExpressionLike) (abs.ArithmeticLike, *
 // This method attempts to parse a chain expression. It returns the
 // chain expression and whether or not the chain expression was
 // successfully parsed.
-func (v *parser) parseChaining(left abs.ExpressionLike) (abs.ChainingLike, *Token, bool) {
+func (v *parser) parseChaining(left abs.Expression) (abs.ChainingLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var right abs.ExpressionLike
+	var right abs.Expression
 	var expression abs.ChainingLike
 	_, token, ok = v.parseDelimiter("&")
 	if !ok {
@@ -135,12 +135,12 @@ func (v *parser) parseChaining(left abs.ExpressionLike) (abs.ChainingLike, *Toke
 // This method attempts to parse a comparison expression. It returns the
 // comparison expression and whether or not the comparison expression was
 // successfully parsed.
-func (v *parser) parseComparison(left abs.ExpressionLike) (abs.ComparisonLike, *Token, bool) {
+func (v *parser) parseComparison(left abs.Expression) (abs.ComparisonLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var operator abs.Operator
-	var right abs.ExpressionLike
+	var right abs.Expression
 	var expression abs.ComparisonLike
 	delimiter, token, ok = v.parseDelimiter("<")
 	if !ok {
@@ -193,7 +193,7 @@ func (v *parser) parseComparison(left abs.ExpressionLike) (abs.ComparisonLike, *
 func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var logical abs.ExpressionLike
+	var logical abs.Expression
 	var expression abs.ComplementLike
 	_, token, ok = v.parseKeyword("NOT")
 	if !ok {
@@ -217,7 +217,7 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var reference abs.ExpressionLike
+	var reference abs.Expression
 	var expression abs.DereferenceLike
 	_, token, ok = v.parseDelimiter("@")
 	if !ok {
@@ -238,10 +238,10 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 // This method attempts to parse a power expression. It returns the
 // power expression and whether or not the power expression was
 // successfully parsed.
-func (v *parser) parseExponential(base abs.ExpressionLike) (abs.ExponentialLike, *Token, bool) {
+func (v *parser) parseExponential(base abs.Expression) (abs.ExponentialLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var exponent abs.ExpressionLike
+	var exponent abs.Expression
 	var expression abs.ExponentialLike
 	_, token, ok = v.parseDelimiter("^")
 	if !ok {
@@ -262,10 +262,10 @@ func (v *parser) parseExponential(base abs.ExpressionLike) (abs.ExponentialLike,
 // This method attempts to parse an expression. It returns the expression and
 // whether or not the expression was successfully parsed. The expressions are
 // are checked in precedence order from highest to lowest precedence.
-func (v *parser) parseExpression() (abs.ExpressionLike, *Token, bool) {
+func (v *parser) parseExpression() (abs.Expression, *Token, bool) {
 	var ok bool
 	var token *Token
-	var expression abs.ExpressionLike
+	var expression abs.Expression
 	expression, token, ok = v.parseComponent()
 	if !ok {
 		// This must come before the parseIdentifier() for a variable.
@@ -302,7 +302,7 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var function string
-	var arguments abs.ListLike[abs.ExpressionLike]
+	var arguments abs.ListLike[abs.Expression]
 	var expression abs.IntrinsicLike
 	function, token, ok = v.parseIdentifier()
 	if !ok {
@@ -330,7 +330,7 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	var token *Token
 	var delimiter string
 	var operator abs.Operator
-	var numeric abs.ExpressionLike
+	var numeric abs.Expression
 	var expression abs.InversionLike
 	delimiter, token, ok = v.parseDelimiter("-")
 	if !ok {
@@ -365,12 +365,12 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 // This method attempts to parse a message expression. It returns the
 // message expression and whether or not the message expression was
 // successfully parsed.
-func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike, *Token, bool) {
+func (v *parser) parseInvocation(target abs.Expression) (abs.InvocationLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var message string
-	var arguments abs.ListLike[abs.ExpressionLike]
+	var arguments abs.ListLike[abs.Expression]
 	var expression abs.InvocationLike
 	delimiter, token, ok = v.parseDelimiter(".")
 	if !ok {
@@ -410,12 +410,12 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 // This method attempts to parse a logical expression. It returns the
 // logical expression and whether or not the logical expression was
 // successfully parsed.
-func (v *parser) parseLogical(left abs.ExpressionLike) (abs.LogicalLike, *Token, bool) {
+func (v *parser) parseLogical(left abs.Expression) (abs.LogicalLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var operator abs.Operator
-	var right abs.ExpressionLike
+	var right abs.Expression
 	var expression abs.LogicalLike
 	delimiter, token, ok = v.parseKeyword("AND")
 	if !ok {
@@ -458,7 +458,7 @@ func (v *parser) parseLogical(left abs.ExpressionLike) (abs.LogicalLike, *Token,
 func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var numeric abs.ExpressionLike
+	var numeric abs.Expression
 	var expression abs.MagnitudeLike
 	_, token, ok = v.parseDelimiter("|")
 	if !ok {
@@ -489,7 +489,7 @@ func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var inner abs.ExpressionLike
+	var inner abs.Expression
 	var expression abs.PrecedenceLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
@@ -517,10 +517,10 @@ func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 // This method attempts to parse a left recursive expression. It returns
 // the left recursive expression and whether or not the left recursive
 // expression was successfully parsed.
-func (v *parser) parseRecursive() (abs.ExpressionLike, *Token, bool) {
+func (v *parser) parseRecursive() (abs.Expression, *Token, bool) {
 	var ok bool
 	var token *Token
-	var expression abs.ExpressionLike
+	var expression abs.Expression
 	expression, token, ok = v.parseExpression()
 	if !ok {
 		// This is not a left recursive expression.
@@ -563,10 +563,10 @@ func (v *parser) parseRecursive() (abs.ExpressionLike, *Token, bool) {
 // This method attempts to parse an value expression. It returns the
 // value expression and whether or not the value expression was
 // successfully parsed.
-func (v *parser) parseValue(composite abs.ExpressionLike) (abs.ValueLike, *Token, bool) {
+func (v *parser) parseValue(composite abs.Expression) (abs.ValueLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var indices abs.ListLike[abs.ExpressionLike]
+	var indices abs.ListLike[abs.Expression]
 	var expression abs.ValueLike
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
@@ -612,4 +612,3 @@ func (v *formatter) formatVariable(variable abs.VariableLike) {
 	var identifier = variable.GetIdentifier()
 	v.state.AppendString(identifier)
 }
-
