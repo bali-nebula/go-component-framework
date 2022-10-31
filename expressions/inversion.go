@@ -17,7 +17,7 @@ import (
 // INVERSION EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new inversion expression.
-func Inversion(operator abs.Operator, expression any) abs.InversionLike {
+func Inversion(operator abs.Operator, expression abs.ExpressionLike) abs.InversionLike {
 	var v = &inversionExpression{}
 	// Perform argument validation.
 	v.SetOperator(operator)
@@ -29,7 +29,7 @@ func Inversion(operator abs.Operator, expression any) abs.InversionLike {
 // expression.
 type inversionExpression struct {
 	operator   abs.Operator
-	expression any
+	expression abs.ExpressionLike
 }
 
 // This method returns the inversion operator in this inversion expression.
@@ -48,15 +48,20 @@ func (v *inversionExpression) SetOperator(operator abs.Operator) {
 
 // This method returns the expression to be operated on by this inversion
 // expression.
-func (v *inversionExpression) GetExpression() any {
+func (v *inversionExpression) GetExpression() abs.ExpressionLike {
 	return v.expression
 }
 
 // This method sets the expression to be operated on by this inversion
 // expression to the specified value.
-func (v *inversionExpression) SetExpression(expression any) {
+func (v *inversionExpression) SetExpression(expression abs.ExpressionLike) {
 	if expression == nil {
 		panic("The expression to be operated on cannot be nil.")
 	}
 	v.expression = expression
+}
+
+// This method returns the type of this expression.
+func (v *inversionExpression) GetType() abs.Type {
+	return abs.INVERSION
 }

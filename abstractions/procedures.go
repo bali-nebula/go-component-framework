@@ -28,24 +28,24 @@ const (
 
 // This interface defines the methods supported by all accept-clause-like types.
 type AcceptClauseLike interface {
-	GetMessage() any
-	SetMessage(message any)
+	GetMessage() ExpressionLike
+	SetMessage(message ExpressionLike)
 }
 
 // This interface defines the methods supported by all attribute-like types.
 type AttributeLike interface {
 	GetVariable() string
 	SetVariable(variable string)
-	GetIndex(index int) any
-	SetIndex(index int, expression any)
-	GetIndices() ListLike[any]
-	SetIndices(indices ListLike[any])
+	GetIndex(index int) ExpressionLike
+	SetIndex(index int, expression ExpressionLike)
+	GetIndices() ListLike[ExpressionLike]
+	SetIndices(indices ListLike[ExpressionLike])
 }
 
 // This interface defines the methods supported by all block-like types.
 type BlockLike interface {
-	GetExpression() any
-	SetExpression(expression any)
+	GetExpression() ExpressionLike
+	SetExpression(expression ExpressionLike)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
 	GetProcedure() ProcedureLike
@@ -60,10 +60,10 @@ type BreakClauseLike interface {
 type CheckoutClauseLike interface {
 	GetRecipient() any
 	SetRecipient(recipient any)
-	GetLevel() any
-	SetLevel(level any)
-	GetMoniker() any
-	SetMoniker(moniker any)
+	GetLevel() ExpressionLike
+	SetLevel(level ExpressionLike)
+	GetMoniker() ExpressionLike
+	SetMoniker(moniker ExpressionLike)
 }
 
 // This interface defines the methods supported by all continue-clause-like types.
@@ -72,22 +72,22 @@ type ContinueClauseLike interface {
 
 // This interface defines the methods supported by all discard-clause-like types.
 type DiscardClauseLike interface {
-	GetCitation() any
-	SetCitation(citation any)
+	GetCitation() ExpressionLike
+	SetCitation(citation ExpressionLike)
 }
 
 // This interface defines the methods supported by all evaluate-clause-like types.
 type EvaluateClauseLike interface {
 	GetRecipient() (recipient any, assignment Assignment)
 	SetRecipient(recipient any, assignment Assignment)
-	GetExpression() any
-	SetExpression(expression any)
+	GetExpression() ExpressionLike
+	SetExpression(expression ExpressionLike)
 }
 
 // This interface defines the methods supported by all if-clause-like types.
 type IfClauseLike interface {
-	GetCondition() any
-	SetCondition(condition any)
+	GetCondition() ExpressionLike
+	SetCondition(condition ExpressionLike)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
 	GetStatements() ProcedureLike
@@ -96,10 +96,10 @@ type IfClauseLike interface {
 
 // This interface defines the methods supported by all notarize-clause-like types.
 type NotarizeClauseLike interface {
-	GetDraft() any
-	SetDraft(draft any)
-	GetMoniker() any
-	SetMoniker(moniker any)
+	GetDraft() ExpressionLike
+	SetDraft(draft ExpressionLike)
+	GetMoniker() ExpressionLike
+	SetMoniker(moniker ExpressionLike)
 }
 
 // This interface defines the methods supported by all on-clause-like types.
@@ -114,10 +114,10 @@ type OnClauseLike interface {
 
 // This interface defines the methods supported by all post-clause-like types.
 type PostClauseLike interface {
-	GetMessage() any
-	SetMessage(message any)
-	GetBag() any
-	SetBag(bag any)
+	GetMessage() ExpressionLike
+	SetMessage(message ExpressionLike)
+	GetBag() ExpressionLike
+	SetBag(bag ExpressionLike)
 }
 
 // This interface consolidates all the interfaces supported by procedure-like
@@ -131,42 +131,42 @@ type ProcedureLike interface {
 
 // This interface defines the methods supported by all publish-clause-like types.
 type PublishClauseLike interface {
-	GetEvent() any
-	SetEvent(event any)
+	GetEvent() ExpressionLike
+	SetEvent(event ExpressionLike)
 }
 
 // This interface defines the methods supported by all reject-clause-like types.
 type RejectClauseLike interface {
-	GetMessage() any
-	SetMessage(message any)
+	GetMessage() ExpressionLike
+	SetMessage(message ExpressionLike)
 }
 
 // This interface defines the methods supported by all retrieve-clause-like types.
 type RetrieveClauseLike interface {
 	GetRecipient() any
 	SetRecipient(recipient any)
-	GetBag() any
-	SetBag(bag any)
+	GetBag() ExpressionLike
+	SetBag(bag ExpressionLike)
 }
 
 // This interface defines the methods supported by all return-clause-like types.
 type ReturnClauseLike interface {
-	GetResult() any
-	SetResult(result any)
+	GetResult() ExpressionLike
+	SetResult(result ExpressionLike)
 }
 
 // This interface defines the methods supported by all save-clause-like types.
 type SaveClauseLike interface {
-	GetDraft() any
-	SetDraft(draft any)
+	GetDraft() ExpressionLike
+	SetDraft(draft ExpressionLike)
 	GetCitation() any
 	SetCitation(citation any)
 }
 
 // This interface defines the methods supported by all select-clause-like types.
 type SelectClauseLike interface {
-	GetControl() any
-	SetControl(control any)
+	GetControl() ExpressionLike
+	SetControl(control ExpressionLike)
 	GetOption(index int) BlockLike
 	SetOption(index int, option BlockLike)
 	GetOptions() ListLike[BlockLike]
@@ -187,14 +187,14 @@ type StatementLike interface {
 
 // This interface defines the methods supported by all throw-clause-like types.
 type ThrowClauseLike interface {
-	GetException() any
-	SetException(exception any)
+	GetException() ExpressionLike
+	SetException(exception ExpressionLike)
 }
 
 // This interface defines the methods supported by all while-clause-like types.
 type WhileClauseLike interface {
-	GetCondition() any
-	SetCondition(condition any)
+	GetCondition() ExpressionLike
+	SetCondition(condition ExpressionLike)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
 	GetStatements() ProcedureLike
@@ -205,8 +205,8 @@ type WhileClauseLike interface {
 type WithClauseLike interface {
 	GetItem() Symbolic
 	SetItem(exception Symbolic)
-	GetSequence() any
-	SetSequence(sequence any)
+	GetSequence() ExpressionLike
+	SetSequence(sequence ExpressionLike)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
 	GetStatements() ProcedureLike

@@ -17,7 +17,7 @@ import (
 // COMPARISON EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new comparison expression.
-func Comparison(first any, operator abs.Operator, second any) abs.ComparisonLike {
+func Comparison(first abs.ExpressionLike, operator abs.Operator, second abs.ExpressionLike) abs.ComparisonLike {
 	var v = &comparisonExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -29,19 +29,19 @@ func Comparison(first any, operator abs.Operator, second any) abs.ComparisonLike
 // This type defines the structure and methods associated with an comparison
 // expression.
 type comparisonExpression struct {
-	first    any
+	first    abs.ExpressionLike
 	operator abs.Operator
-	second   any
+	second   abs.ExpressionLike
 }
 
 // This method returns the first expression in this comparison expression.
-func (v *comparisonExpression) GetFirst() any {
+func (v *comparisonExpression) GetFirst() abs.ExpressionLike {
 	return v.first
 }
 
 // This method sets the first expression in this comparison expression to the
 // specified value.
-func (v *comparisonExpression) SetFirst(first any) {
+func (v *comparisonExpression) SetFirst(first abs.ExpressionLike) {
 	if first == nil {
 		panic("The first expression in an comparison expression cannot be nil.")
 	}
@@ -63,15 +63,20 @@ func (v *comparisonExpression) SetOperator(operator abs.Operator) {
 }
 
 // This method returns the second expression in this comparison expression.
-func (v *comparisonExpression) GetSecond() any {
+func (v *comparisonExpression) GetSecond() abs.ExpressionLike {
 	return v.second
 }
 
 // This method sets the second expression in this comparison expression to the
 // specified value.
-func (v *comparisonExpression) SetSecond(second any) {
+func (v *comparisonExpression) SetSecond(second abs.ExpressionLike) {
 	if second == nil {
 		panic("The second expression in an comparison expression cannot be nil.")
 	}
 	v.second = second
+}
+
+// This method returns the type of this expression.
+func (v *comparisonExpression) GetType() abs.Type {
+	return abs.COMPARISON
 }

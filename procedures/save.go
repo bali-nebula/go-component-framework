@@ -17,7 +17,7 @@ import (
 // SAVE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new save clause.
-func SaveClause(draft, citation any) abs.SaveClauseLike {
+func SaveClause(draft abs.ExpressionLike, citation any) abs.SaveClauseLike {
 	var v = &saveClause{}
 	// Perform argument validation.
 	v.SetDraft(draft)
@@ -28,17 +28,17 @@ func SaveClause(draft, citation any) abs.SaveClauseLike {
 // This type defines the structure and methods associated with a save
 // clause.
 type saveClause struct {
-	draft    any
+	draft    abs.ExpressionLike
 	citation any
 }
 
 // This method returns the draft expression for this save clause.
-func (v *saveClause) GetDraft() any {
+func (v *saveClause) GetDraft() abs.ExpressionLike {
 	return v.draft
 }
 
 // This method sets the draft expression for this save clause.
-func (v *saveClause) SetDraft(draft any) {
+func (v *saveClause) SetDraft(draft abs.ExpressionLike) {
 	if draft == nil {
 		panic("A save clause requires a draft.")
 	}

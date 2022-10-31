@@ -58,11 +58,6 @@ type Segmented interface {
 	GetFragment() string
 }
 
-// This interface defines the methods supported by all symbolic elements.
-type Symbolic interface {
-	GetIdentifier() string
-}
-
 // This interface defines the methods supported by all temporal elements.
 type Temporal interface {
 	// Return the entire time in specific units.

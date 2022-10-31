@@ -139,23 +139,6 @@ func (v *parser) parseCollection() (any, *Token, bool) {
 	return collection, token, ok
 }
 
-// This method adds the canonical format for the specified collection to the
-// state of the formatter.
-func (v *formatter) formatCollection(collection any) {
-	rang, ok := collection.(abs.RangeLike[any])
-	if ok {
-		v.formatRange(rang)
-		return
-	}
-	catalog, ok := collection.(abs.CatalogLike[any, abs.ComponentLike])
-	if ok {
-		v.formatCatalog(catalog)
-		return
-	}
-	var list = collection.(abs.ListLike[any])
-	v.formatList(list)
-}
-
 // This method attempts to parse a catalog collection with inline associations.
 // It returns the catalog collection and whether or not the catalog collection
 // was successfully parsed.

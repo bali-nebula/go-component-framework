@@ -17,7 +17,7 @@ import (
 // ARITHMETIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new arithmetic expression.
-func Arithmetic(first any, operator abs.Operator, second any) abs.ArithmeticLike {
+func Arithmetic(first abs.ExpressionLike, operator abs.Operator, second abs.ExpressionLike) abs.ArithmeticLike {
 	var v = &arithmeticExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -29,19 +29,19 @@ func Arithmetic(first any, operator abs.Operator, second any) abs.ArithmeticLike
 // This type defines the structure and methods associated with an arithmetic
 // expression.
 type arithmeticExpression struct {
-	first    any
+	first    abs.ExpressionLike
 	operator abs.Operator
-	second   any
+	second   abs.ExpressionLike
 }
 
 // This method returns the first expression in this arithmetic expression.
-func (v *arithmeticExpression) GetFirst() any {
+func (v *arithmeticExpression) GetFirst() abs.ExpressionLike {
 	return v.first
 }
 
 // This method sets the first expression in this arithmetic expression to the
 // specified value.
-func (v *arithmeticExpression) SetFirst(first any) {
+func (v *arithmeticExpression) SetFirst(first abs.ExpressionLike) {
 	if first == nil {
 		panic("The first expression in an arithmetic expression cannot be nil.")
 	}
@@ -63,15 +63,20 @@ func (v *arithmeticExpression) SetOperator(operator abs.Operator) {
 }
 
 // This method returns the second expression in this arithmetic expression.
-func (v *arithmeticExpression) GetSecond() any {
+func (v *arithmeticExpression) GetSecond() abs.ExpressionLike {
 	return v.second
 }
 
 // This method sets the second expression in this arithmetic expression to the
 // specified value.
-func (v *arithmeticExpression) SetSecond(second any) {
+func (v *arithmeticExpression) SetSecond(second abs.ExpressionLike) {
 	if second == nil {
 		panic("The second expression in an arithmetic expression cannot be nil.")
 	}
 	v.second = second
+}
+
+// This method returns the type of this expression.
+func (v *arithmeticExpression) GetType() abs.Type {
+	return abs.ARITHMETIC
 }

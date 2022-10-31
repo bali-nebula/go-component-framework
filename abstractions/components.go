@@ -14,6 +14,7 @@ package abstractions
 
 // This interface defines the methods supported by all component-like types.
 type ComponentLike interface {
+	GetType() Type
 	IsGeneric() bool
 	IsAnnotated() bool
 	GetEntity() any
@@ -29,4 +30,9 @@ type ContextLike interface {
 	SetValue(name Symbolic, value ComponentLike)
 	GetParameters() CatalogLike[Symbolic, ComponentLike]
 	SetParameters(parameters CatalogLike[Symbolic, ComponentLike])
+}
+
+// This interface defines the methods supported by all symbolic types.
+type Symbolic interface {
+	GetIdentifier() string
 }

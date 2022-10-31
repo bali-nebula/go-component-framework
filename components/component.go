@@ -83,3 +83,8 @@ func (v *component) GetNote() string {
 func (v *component) SetNote(note string) {
 	v.note = note
 }
+
+// This method returns the type of this expression.
+func (v *component) GetType() abs.Type {
+	return abs.COMPONENT
+}

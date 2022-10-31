@@ -17,7 +17,7 @@ import (
 // THROW CLAUSE IMPLEMENTATION
 
 // This constructor creates a new throw clause.
-func ThrowClause(exception any) abs.ThrowClauseLike {
+func ThrowClause(exception abs.ExpressionLike) abs.ThrowClauseLike {
 	var v = &throwClause{}
 	// Perform argument validation.
 	v.SetException(exception)
@@ -27,16 +27,16 @@ func ThrowClause(exception any) abs.ThrowClauseLike {
 // This type defines the structure and methods associated with an throw
 // clause.
 type throwClause struct {
-	exception any
+	exception abs.ExpressionLike
 }
 
 // This method returns the exception expression for this throw clause.
-func (v *throwClause) GetException() any {
+func (v *throwClause) GetException() abs.ExpressionLike {
 	return v.exception
 }
 
 // This method sets the exception expression for this throw clause.
-func (v *throwClause) SetException(exception any) {
+func (v *throwClause) SetException(exception abs.ExpressionLike) {
 	if exception == nil {
 		panic("A throw clause requires an exception.")
 	}

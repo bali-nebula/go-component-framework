@@ -17,7 +17,7 @@ import (
 // LOGICAL EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new logical expression.
-func Logical(first any, operator abs.Operator, second any) abs.LogicalLike {
+func Logical(first abs.ExpressionLike, operator abs.Operator, second abs.ExpressionLike) abs.LogicalLike {
 	var v = &logicalExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -29,19 +29,19 @@ func Logical(first any, operator abs.Operator, second any) abs.LogicalLike {
 // This type defines the structure and methods associated with a logical
 // expression.
 type logicalExpression struct {
-	first    any
+	first    abs.ExpressionLike
 	operator abs.Operator
-	second   any
+	second   abs.ExpressionLike
 }
 
 // This method returns the first expression in this logical expression.
-func (v *logicalExpression) GetFirst() any {
+func (v *logicalExpression) GetFirst() abs.ExpressionLike {
 	return v.first
 }
 
 // This method sets the first expression in this logical expression to the
 // specified value.
-func (v *logicalExpression) SetFirst(first any) {
+func (v *logicalExpression) SetFirst(first abs.ExpressionLike) {
 	if first == nil {
 		panic("The first expression in a logical expression cannot be nil.")
 	}
@@ -63,15 +63,20 @@ func (v *logicalExpression) SetOperator(operator abs.Operator) {
 }
 
 // This method returns the second expression in this logical expression.
-func (v *logicalExpression) GetSecond() any {
+func (v *logicalExpression) GetSecond() abs.ExpressionLike {
 	return v.second
 }
 
 // This method sets the second expression in this logical expression to the
 // specified value.
-func (v *logicalExpression) SetSecond(second any) {
+func (v *logicalExpression) SetSecond(second abs.ExpressionLike) {
 	if second == nil {
 		panic("The second expression in a logical expression cannot be nil.")
 	}
 	v.second = second
+}
+
+// This method returns the type of this expression.
+func (v *logicalExpression) GetType() abs.Type {
+	return abs.LOGICAL
 }

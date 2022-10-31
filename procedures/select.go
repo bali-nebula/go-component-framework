@@ -17,7 +17,7 @@ import (
 // SELECT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new select clause.
-func SelectClause(control any, options abs.ListLike[abs.BlockLike]) abs.SelectClauseLike {
+func SelectClause(control abs.ExpressionLike, options abs.ListLike[abs.BlockLike]) abs.SelectClauseLike {
 	var v = &selectClause{}
 	// Perform argument validation.
 	v.SetControl(control)
@@ -27,17 +27,17 @@ func SelectClause(control any, options abs.ListLike[abs.BlockLike]) abs.SelectCl
 
 // This type defines the structure and methods associated with a select clause.
 type selectClause struct {
-	control any
+	control abs.ExpressionLike
 	options abs.ListLike[abs.BlockLike]
 }
 
 // This method returns the control expression for this select clause.
-func (v *selectClause) GetControl() any {
+func (v *selectClause) GetControl() abs.ExpressionLike {
 	return v.control
 }
 
 // This method sets the control expression for this select clause.
-func (v *selectClause) SetControl(control any) {
+func (v *selectClause) SetControl(control abs.ExpressionLike) {
 	if control == nil {
 		panic("A select clause requires an control expression.")
 	}

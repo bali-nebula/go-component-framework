@@ -23,7 +23,7 @@ import (
 func (v *parser) parseAcceptClause() (abs.AcceptClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var message any
+	var message abs.ExpressionLike
 	var clause abs.AcceptClauseLike
 	_, token, ok = v.parseKeyword("accept")
 	if !ok {
@@ -56,7 +56,7 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var variable string
-	var indices abs.ListLike[any]
+	var indices abs.ListLike[abs.ExpressionLike]
 	var attribute abs.AttributeLike
 	variable, token, ok = v.parseIdentifier()
 	if !ok {
@@ -107,7 +107,7 @@ func (v *formatter) formatAttribute(attribute abs.AttributeLike) {
 func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var expression any
+	var expression abs.ExpressionLike
 	var statements abs.ProcedureLike
 	var block abs.BlockLike
 	expression, token, ok = v.parseExpression()
@@ -173,8 +173,8 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
-	var level any
-	var moniker any
+	var level abs.ExpressionLike
+	var moniker abs.ExpressionLike
 	var clause abs.CheckoutClauseLike
 	_, token, ok = v.parseKeyword("checkout")
 	if !ok {
@@ -285,7 +285,7 @@ func (v *parser) parseContinueClause() (abs.ContinueClauseLike, *Token, bool) {
 func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var citation any
+	var citation abs.ExpressionLike
 	var clause abs.DiscardClauseLike
 	_, token, ok = v.parseKeyword("discard")
 	if !ok {
@@ -312,7 +312,7 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	var recipient any
 	var delimiter string
 	var operator abs.Assignment
-	var expression any
+	var expression abs.ExpressionLike
 	var clause abs.EvaluateClauseLike
 	recipient, token, ok = v.parseRecipient()
 	if ok {
@@ -377,7 +377,7 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 
 // This method adds the canonical format for the specified expression to the
 // state of the formatter.
-func (v *formatter) formatExpression(expression any) {
+func (v *formatter) formatExpression(expression abs.ExpressionLike) {
 }
 
 // This method attempts to parse an if clause. It returns the if clause and
@@ -407,11 +407,11 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 
 // This method attempts to parse a sequence of indices. It returns a list of
 // the indices and whether or not the indices were successfully parsed.
-func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
+func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var index any
-	var indices abs.ListLike[any]
+	var index abs.ExpressionLike
+	var indices abs.ListLike[abs.ExpressionLike]
 	index, token, ok = v.parseExpression()
 	// There must be at least one index.
 	if !ok {
@@ -441,8 +441,8 @@ func (v *parser) parseIndices() (abs.ListLike[any], *Token, bool) {
 
 // This method adds the canonical format for the specified indices to the
 // state of the formatter.
-func (v *formatter) formatIndices(indices abs.ListLike[any]) {
-	var iterator = age.Iterator[any](indices)
+func (v *formatter) formatIndices(indices abs.ListLike[abs.ExpressionLike]) {
+	var iterator = age.Iterator[abs.ExpressionLike](indices)
 	var index = iterator.GetNext() // There is always at least one index.
 	v.formatAny(index)
 	for iterator.HasNext() {
@@ -600,8 +600,8 @@ func (v *parser) parseMultilineStatements() (abs.ListLike[abs.StatementLike], *T
 func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var draft any
-	var moniker any
+	var draft abs.ExpressionLike
+	var moniker abs.ExpressionLike
 	var clause abs.NotarizeClauseLike
 	_, token, ok = v.parseKeyword("notarize")
 	if !ok {
@@ -699,8 +699,8 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var message any
-	var bag any
+	var message abs.ExpressionLike
+	var bag abs.ExpressionLike
 	var clause abs.PostClauseLike
 	_, token, ok = v.parseKeyword("post")
 	if !ok {
@@ -804,7 +804,7 @@ func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
 func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var event any
+	var event abs.ExpressionLike
 	var clause abs.PublishClauseLike
 	_, token, ok = v.parseKeyword("publish")
 	if !ok {
@@ -841,7 +841,7 @@ func (v *parser) parseRecipient() (any, *Token, bool) {
 func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var message any
+	var message abs.ExpressionLike
 	var clause abs.RejectClauseLike
 	_, token, ok = v.parseKeyword("reject")
 	if !ok {
@@ -866,7 +866,7 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient any
-	var bag any
+	var bag abs.ExpressionLike
 	var clause abs.RetrieveClauseLike
 	_, token, ok = v.parseKeyword("retrieve")
 	if !ok {
@@ -921,7 +921,7 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var result any
+	var result abs.ExpressionLike
 	var clause abs.ReturnClauseLike
 	_, token, ok = v.parseKeyword("return")
 	if !ok {
@@ -945,7 +945,7 @@ func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var draft any
+	var draft abs.ExpressionLike
 	var citation any
 	var clause abs.SaveClauseLike
 	_, token, ok = v.parseKeyword("save")
@@ -1001,7 +1001,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var control any
+	var control abs.ExpressionLike
 	var block abs.BlockLike
 	var blocks abs.ListLike[abs.BlockLike]
 	var clause abs.SelectClauseLike
@@ -1076,7 +1076,7 @@ func (v *formatter) formatStatement(statement abs.StatementLike) {
 func (v *parser) parseThrowClause() (abs.ThrowClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var exception any
+	var exception abs.ExpressionLike
 	var clause abs.ThrowClauseLike
 	_, token, ok = v.parseKeyword("throw")
 	if !ok {

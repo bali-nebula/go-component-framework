@@ -17,7 +17,7 @@ import (
 // RETURN CLAUSE IMPLEMENTATION
 
 // This constructor creates a new return clause.
-func ReturnClause(result any) abs.ReturnClauseLike {
+func ReturnClause(result abs.ExpressionLike) abs.ReturnClauseLike {
 	var v = &returnClause{}
 	// Perform argument validation.
 	v.SetResult(result)
@@ -27,16 +27,16 @@ func ReturnClause(result any) abs.ReturnClauseLike {
 // This type defines the structure and methods associated with an return
 // clause.
 type returnClause struct {
-	result any
+	result abs.ExpressionLike
 }
 
 // This method returns the result expression for this return clause.
-func (v *returnClause) GetResult() any {
+func (v *returnClause) GetResult() abs.ExpressionLike {
 	return v.result
 }
 
 // This method sets the result expression for this return clause.
-func (v *returnClause) SetResult(result any) {
+func (v *returnClause) SetResult(result abs.ExpressionLike) {
 	if result == nil {
 		panic("A return clause requires a result.")
 	}

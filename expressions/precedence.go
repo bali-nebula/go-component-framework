@@ -17,7 +17,7 @@ import (
 // PRECEDENCE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new precedence expression.
-func Precedence(expression any) abs.PrecedenceLike {
+func Precedence(expression abs.ExpressionLike) abs.PrecedenceLike {
 	var v = &precedenceExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)
@@ -27,19 +27,24 @@ func Precedence(expression any) abs.PrecedenceLike {
 // This type defines the structure and methods associated with a precedence
 // expression.
 type precedenceExpression struct {
-	expression any
+	expression abs.ExpressionLike
 }
 
 // This method returns the expression wrapped by this precedence expression.
-func (v *precedenceExpression) GetExpression() any {
+func (v *precedenceExpression) GetExpression() abs.ExpressionLike {
 	return v.expression
 }
 
 // This method sets the expression to be wrapped by this precedence expression
 // to the specified value.
-func (v *precedenceExpression) SetExpression(expression any) {
+func (v *precedenceExpression) SetExpression(expression abs.ExpressionLike) {
 	if expression == nil {
 		panic("The expression wrapped by a precedence expression cannot be nil.")
 	}
 	v.expression = expression
+}
+
+// This method returns the type of this expression.
+func (v *precedenceExpression) GetType() abs.Type {
+	return abs.PRECEDENCE
 }

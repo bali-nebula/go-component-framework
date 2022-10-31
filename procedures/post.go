@@ -17,7 +17,7 @@ import (
 // POST CLAUSE IMPLEMENTATION
 
 // This constructor creates a new post clause.
-func PostClause(message, bag any) abs.PostClauseLike {
+func PostClause(message, bag abs.ExpressionLike) abs.PostClauseLike {
 	var v = &postClause{}
 	// Perform argument validation.
 	v.SetMessage(message)
@@ -28,17 +28,17 @@ func PostClause(message, bag any) abs.PostClauseLike {
 // This type defines the structure and methods associated with a post
 // clause.
 type postClause struct {
-	message any
-	bag     any
+	message abs.ExpressionLike
+	bag     abs.ExpressionLike
 }
 
 // This method returns the message expression for this post clause.
-func (v *postClause) GetMessage() any {
+func (v *postClause) GetMessage() abs.ExpressionLike {
 	return v.message
 }
 
 // This method sets the message expression for this post clause.
-func (v *postClause) SetMessage(message any) {
+func (v *postClause) SetMessage(message abs.ExpressionLike) {
 	if message == nil {
 		panic("A post clause requires a message.")
 	}
@@ -46,12 +46,12 @@ func (v *postClause) SetMessage(message any) {
 }
 
 // This method returns the message bag expression for this post clause.
-func (v *postClause) GetBag() any {
+func (v *postClause) GetBag() abs.ExpressionLike {
 	return v.bag
 }
 
 // This method sets the message bag expression for this post clause.
-func (v *postClause) SetBag(bag any) {
+func (v *postClause) SetBag(bag abs.ExpressionLike) {
 	if bag == nil {
 		panic("A post clause requires a message bag.")
 	}

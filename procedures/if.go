@@ -17,7 +17,7 @@ import (
 // IF CLAUSE IMPLEMENTATION
 
 // This constructor creates a new if clause.
-func IfClause(condition any, statements abs.ProcedureLike) abs.IfClauseLike {
+func IfClause(condition abs.ExpressionLike, statements abs.ProcedureLike) abs.IfClauseLike {
 	var v = &ifClause{}
 	// Perform argument validation.
 	v.SetCondition(condition)
@@ -27,17 +27,17 @@ func IfClause(condition any, statements abs.ProcedureLike) abs.IfClauseLike {
 
 // This type defines the structure and methods associated with an if clause.
 type ifClause struct {
-	condition  any
+	condition  abs.ExpressionLike
 	statements abs.ProcedureLike
 }
 
 // This method returns the condition expression for this if clause.
-func (v *ifClause) GetCondition() any {
+func (v *ifClause) GetCondition() abs.ExpressionLike {
 	return v.condition
 }
 
 // This method sets the condition expression for this if clause.
-func (v *ifClause) SetCondition(condition any) {
+func (v *ifClause) SetCondition(condition abs.ExpressionLike) {
 	if condition == nil {
 		panic("An if clause requires a condition expression.")
 	}

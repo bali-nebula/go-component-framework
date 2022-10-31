@@ -17,7 +17,7 @@ import (
 // WITH CLAUSE IMPLEMENTATION
 
 // This constructor creates a new with clause.
-func WithClause(item abs.Symbolic, sequence any, statements abs.ProcedureLike) abs.WithClauseLike {
+func WithClause(item abs.Symbolic, sequence abs.ExpressionLike, statements abs.ProcedureLike) abs.WithClauseLike {
 	var v = &withClause{}
 	// Perform argument validation.
 	v.SetItem(item)
@@ -29,7 +29,7 @@ func WithClause(item abs.Symbolic, sequence any, statements abs.ProcedureLike) a
 // This type defines the structure and methods associated with a with clause.
 type withClause struct {
 	item       abs.Symbolic
-	sequence   any
+	sequence   abs.ExpressionLike
 	statements abs.ProcedureLike
 }
 
@@ -47,12 +47,12 @@ func (v *withClause) SetItem(item abs.Symbolic) {
 }
 
 // This method returns the sequence expression for this with clause.
-func (v *withClause) GetSequence() any {
+func (v *withClause) GetSequence() abs.ExpressionLike {
 	return v.sequence
 }
 
 // This method sets the sequence expression for this with clause.
-func (v *withClause) SetSequence(sequence any) {
+func (v *withClause) SetSequence(sequence abs.ExpressionLike) {
 	if sequence == nil {
 		panic("A with clause requires a sequence expression.")
 	}

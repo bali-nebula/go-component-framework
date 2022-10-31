@@ -14,38 +14,36 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// MAGNITUDE EXPRESSION IMPLEMENTATION
+// VARIABLE EXPRESSION IMPLEMENTATION
 
-// This constructor creates a new magnitude expression.
-func Magnitude(expression abs.ExpressionLike) abs.MagnitudeLike {
-	var v = &magnitudeExpression{}
+// This constructor creates a new variable expression.
+func Variable(identifier string) abs.VariableLike {
+	var v = &variableExpression{}
 	// Perform argument validation.
-	v.SetExpression(expression)
+	v.SetIdentifier(identifier)
 	return v
 }
 
-// This type defines the structure and methods associated with a magnitude
+// This type defines the structure and methods associated with a variable
 // expression.
-type magnitudeExpression struct {
-	expression abs.ExpressionLike
+type variableExpression struct {
+	identifier string
 }
 
-// This method returns the expression to be operated on by this magnitude
-// expression.
-func (v *magnitudeExpression) GetExpression() abs.ExpressionLike {
-	return v.expression
+// This method returns the identifier for this variable expression.
+func (v *variableExpression) GetIdentifier() string {
+	return v.identifier
 }
 
-// This method sets the expression to be operated on by this magnitude
-// expression to the specified value.
-func (v *magnitudeExpression) SetExpression(expression abs.ExpressionLike) {
-	if expression == nil {
-		panic("The expression to be operated on cannot be nil.")
+// This method sets the identifier for this variable expression.
+func (v *variableExpression) SetIdentifier(identifier string) {
+	if len(identifier) == 0 {
+		panic("A variable expression requires an identifier.")
 	}
-	v.expression = expression
+	v.identifier = identifier
 }
 
 // This method returns the type of this expression.
-func (v *magnitudeExpression) GetType() abs.Type {
-	return abs.MAGNITUDE
+func (v *variableExpression) GetType() abs.Type {
+	return abs.VARIABLE
 }

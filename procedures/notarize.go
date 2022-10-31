@@ -17,7 +17,7 @@ import (
 // NOTARIZE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new notarize clause.
-func NotarizeClause(draft, moniker any) abs.NotarizeClauseLike {
+func NotarizeClause(draft, moniker abs.ExpressionLike) abs.NotarizeClauseLike {
 	var v = &notarizeClause{}
 	// Perform argument validation.
 	v.SetDraft(draft)
@@ -28,17 +28,17 @@ func NotarizeClause(draft, moniker any) abs.NotarizeClauseLike {
 // This type defines the structure and methods associated with a notarize
 // clause.
 type notarizeClause struct {
-	draft   any
-	moniker any
+	draft   abs.ExpressionLike
+	moniker abs.ExpressionLike
 }
 
 // This method returns the draft expression for this notarize clause.
-func (v *notarizeClause) GetDraft() any {
+func (v *notarizeClause) GetDraft() abs.ExpressionLike {
 	return v.draft
 }
 
 // This method sets the draft expression for this notarize clause.
-func (v *notarizeClause) SetDraft(draft any) {
+func (v *notarizeClause) SetDraft(draft abs.ExpressionLike) {
 	if draft == nil {
 		panic("A notarize clause requires a draft expression.")
 	}
@@ -46,12 +46,12 @@ func (v *notarizeClause) SetDraft(draft any) {
 }
 
 // This method returns the citation moniker for this notarize clause.
-func (v *notarizeClause) GetMoniker() any {
+func (v *notarizeClause) GetMoniker() abs.ExpressionLike {
 	return v.moniker
 }
 
 // This method sets the citation moniker for this notarize clause.
-func (v *notarizeClause) SetMoniker(moniker any) {
+func (v *notarizeClause) SetMoniker(moniker abs.ExpressionLike) {
 	if moniker == nil {
 		panic("A notarize clause requires a citation moniker.")
 	}
