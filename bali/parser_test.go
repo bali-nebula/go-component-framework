@@ -8,12 +8,12 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package bdn_test
+package bali_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	bdn "github.com/craterdog-bali/go-bali-document-notation/bdn"
+	bal "github.com/craterdog-bali/go-bali-document-notation/bali"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -46,88 +46,88 @@ func TestParserWithElementTypes(t *tes.T) {
 	var component abs.ComponentLike
 
 	// Angle
-	component = bdn.ParseSource("~pi($units: $radians)")
+	component = bal.ParseSource("~pi($units: $radians)")
 	var angle ele.Angle = component.GetEntity().(ele.Angle)
 	ass.Equal(t, ele.Pi, angle)
 
 	// Boolean
-	component = bdn.ParseSource("true")
+	component = bal.ParseSource("true")
 	var boolean ele.Boolean = component.GetEntity().(ele.Boolean)
 	ass.True(t, boolean.AsBoolean())
 
 	// Duration
-	component = bdn.ParseSource(d)
+	component = bal.ParseSource(d)
 	var duration ele.Duration = component.GetEntity().(ele.Duration)
-	ass.Equal(t, d, bdn.FormatEntity(duration))
+	ass.Equal(t, d, bal.FormatEntity(duration))
 
 	// Moment
-	component = bdn.ParseSource(m)
+	component = bal.ParseSource(m)
 	var moment ele.Moment = component.GetEntity().(ele.Moment)
-	ass.Equal(t, m, bdn.FormatEntity(moment))
+	ass.Equal(t, m, bal.FormatEntity(moment))
 
 	// Number
-	component = bdn.ParseSource("(3, -i)")
+	component = bal.ParseSource("(3, -i)")
 	var number ele.Number = component.GetEntity().(ele.Number)
-	ass.Equal(t, "(3, -i)", bdn.FormatEntity(number))
+	ass.Equal(t, "(3, -i)", bal.FormatEntity(number))
 
 	// Pattern
-	component = bdn.ParseSource(p)
+	component = bal.ParseSource(p)
 	var pattern ele.Pattern = component.GetEntity().(ele.Pattern)
-	ass.Equal(t, p, bdn.FormatEntity(pattern))
+	ass.Equal(t, p, bal.FormatEntity(pattern))
 
 	// Percentage
-	component = bdn.ParseSource("50%")
+	component = bal.ParseSource("50%")
 	var percentage ele.Percentage = component.GetEntity().(ele.Percentage)
 	ass.Equal(t, 0.5, percentage.AsReal())
 
 	// Probability
-	component = bdn.ParseSource(".75")
+	component = bal.ParseSource(".75")
 	var probability ele.Probability = component.GetEntity().(ele.Probability)
 	ass.Equal(t, 0.75, probability.AsReal())
 
 	// Resource
-	component = bdn.ParseSource(r)
+	component = bal.ParseSource(r)
 	var resource ele.Resource = component.GetEntity().(ele.Resource)
-	ass.Equal(t, r, bdn.FormatEntity(resource))
+	ass.Equal(t, r, bal.FormatEntity(resource))
 
 	// Tag
-	component = bdn.ParseSource("#ABC")
+	component = bal.ParseSource("#ABC")
 	var tag ele.Tag = component.GetEntity().(ele.Tag)
-	ass.Equal(t, "#ABC", bdn.FormatEntity(tag))
+	ass.Equal(t, "#ABC", bal.FormatEntity(tag))
 }
 
 func TestParserWithStringTypes(t *tes.T) {
 	var component abs.ComponentLike
 
 	// Binary
-	component = bdn.ParseSource("'AAAAAAAA' ($base: 64, $encoding: $utf8)")
+	component = bal.ParseSource("'AAAAAAAA' ($base: 64, $encoding: $utf8)")
 	var binary str.Binary = component.GetEntity().(str.Binary)
 	ass.Equal(t, []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, binary.AsArray())
 
 	// Moniker
-	component = bdn.ParseSource("/bali/types/Number/v1.2.3")
+	component = bal.ParseSource("/bali/types/Number/v1.2.3")
 	var moniker str.Moniker = component.GetEntity().(str.Moniker)
 	ass.Equal(t, []string{"bali", "types", "Number", "v1.2.3"}, moniker.AsArray())
 
 	// Narrative
-	component = bdn.ParseSource(n + c)
+	component = bal.ParseSource(n + c)
 	var narrative str.Narrative = component.GetEntity().(str.Narrative)
-	ass.Equal(t, n, bdn.FormatEntity(narrative))
+	ass.Equal(t, n, bal.FormatEntity(narrative))
 
 	// Quote
-	component = bdn.ParseSource(`"Hello World!"`)
+	component = bal.ParseSource(`"Hello World!"`)
 	var quote str.Quote = component.GetEntity().(str.Quote)
-	ass.Equal(t, `"Hello World!"`, bdn.FormatEntity(quote))
+	ass.Equal(t, `"Hello World!"`, bal.FormatEntity(quote))
 
 	// Symbol
-	component = bdn.ParseSource(s)
+	component = bal.ParseSource(s)
 	var symbol ele.Symbol = component.GetEntity().(ele.Symbol)
-	ass.Equal(t, s, bdn.FormatEntity(symbol))
+	ass.Equal(t, s, bal.FormatEntity(symbol))
 
 	// Version
-	component = bdn.ParseSource(v)
+	component = bal.ParseSource(v)
 	var version str.Version = component.GetEntity().(str.Version)
-	ass.Equal(t, v, bdn.FormatEntity(version))
+	ass.Equal(t, v, bal.FormatEntity(version))
 }
 
 const l = `[
@@ -145,85 +145,85 @@ func TestParserWithSequenceTypes(t *tes.T) {
 	var component abs.ComponentLike
 
 	// List
-	component = bdn.ParseSource("[ ]")
+	component = bal.ParseSource("[ ]")
 	var list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 0, list.GetSize())
 
-	component = bdn.ParseSource("[$foo]")
+	component = bal.ParseSource("[$foo]")
 	list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 1, list.GetSize())
 
-	component = bdn.ParseSource("[$foo, $bar, $baz]")
+	component = bal.ParseSource("[$foo, $bar, $baz]")
 	list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 3, list.GetSize())
 
-	component = bdn.ParseSource(l)
+	component = bal.ParseSource(l)
 	list = component.GetEntity().(abs.ListLike[abs.ItemLike])
 	ass.Equal(t, 3, list.GetSize())
 
 	// Catalog
-	component = bdn.ParseSource("[:]")
+	component = bal.ParseSource("[:]")
 	var catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 0, catalog.GetSize())
 
-	component = bdn.ParseSource("[0: false]")
+	component = bal.ParseSource("[0: false]")
 	catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 1, catalog.GetSize())
 
-	component = bdn.ParseSource("[0: false, 1: true]")
+	component = bal.ParseSource("[0: false, 1: true]")
 	catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 2, catalog.GetSize())
 
-	component = bdn.ParseSource(k)
+	component = bal.ParseSource(k)
 	catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 2, catalog.GetSize())
 
 	// Range
-	component = bdn.ParseSource("[1..1]")
+	component = bal.ParseSource("[1..1]")
 	var rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 1, rng.GetSize())
 
-	component = bdn.ParseSource("(1..1]")
+	component = bal.ParseSource("(1..1]")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = bdn.ParseSource("(1..1)")
+	component = bal.ParseSource("(1..1)")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = bdn.ParseSource("[1..1)")
+	component = bal.ParseSource("[1..1)")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = bdn.ParseSource("[-1..5]")
+	component = bal.ParseSource("[-1..5]")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 7, rng.GetSize())
 
-	component = bdn.ParseSource("(-1..5]")
+	component = bal.ParseSource("(-1..5]")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 6, rng.GetSize())
 
-	component = bdn.ParseSource("(-1..5)")
+	component = bal.ParseSource("(-1..5)")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 5, rng.GetSize())
 
-	component = bdn.ParseSource("[-1..5)")
+	component = bal.ParseSource("[-1..5)")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 6, rng.GetSize())
 
-	component = bdn.ParseSource("[..]")
+	component = bal.ParseSource("[..]")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = bdn.ParseSource("(..]")
+	component = bal.ParseSource("(..]")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = bdn.ParseSource("(..)")
+	component = bal.ParseSource("(..)")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
-	component = bdn.ParseSource("[..)")
+	component = bal.ParseSource("[..)")
 	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 }

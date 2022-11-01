@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package bdn
+package bali
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
