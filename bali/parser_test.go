@@ -12,8 +12,8 @@ package bali_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	bal "github.com/craterdog-bali/go-bali-document-notation/bali"
+	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -180,50 +180,50 @@ func TestParserWithSequenceTypes(t *tes.T) {
 
 	// Range
 	component = bal.ParseSource("[1..1]")
-	var rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	var rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 1, rng.GetSize())
 
 	component = bal.ParseSource("(1..1]")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bal.ParseSource("(1..1)")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bal.ParseSource("[1..1)")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bal.ParseSource("[-1..5]")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 7, rng.GetSize())
 
 	component = bal.ParseSource("(-1..5]")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 6, rng.GetSize())
 
 	component = bal.ParseSource("(-1..5)")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 5, rng.GetSize())
 
 	component = bal.ParseSource("[-1..5)")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 6, rng.GetSize())
 
 	component = bal.ParseSource("[..]")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bal.ParseSource("(..]")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bal.ParseSource("(..)")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bal.ParseSource("[..)")
-	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ValueLike])
 	ass.Equal(t, 0, rng.GetSize())
 }

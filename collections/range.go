@@ -19,8 +19,8 @@ import (
 
 // RANGE IMPLEMENTATION
 
-// This constructor creates a new range of items covering the specified endpoints.
-func Range[T abs.ItemLike](first T, extent abs.Extent, last T) abs.RangeLike[T] {
+// This constructor creates a new range of values covering the specified endpoints.
+func Range[T abs.ValueLike](first T, extent abs.Extent, last T) abs.RangeLike[T] {
 	switch extent {
 	case abs.INCLUSIVE:
 	case abs.LEFT:
@@ -34,10 +34,10 @@ func Range[T abs.ItemLike](first T, extent abs.Extent, last T) abs.RangeLike[T] 
 	return &v
 }
 
-// This type defines the structure and methods associated with a range of items.
+// This type defines the structure and methods associated with a range of values.
 // This type is parameterized as follows:
 //   - T is any primitive type.
-type ranje[T abs.ItemLike] struct {
+type ranje[T abs.ValueLike] struct {
 	first  T
 	extent abs.Extent
 	last   T
@@ -51,12 +51,12 @@ func (v *ranje[T]) IsEmpty() bool {
 	return v.size == 0
 }
 
-// This method returns the number of items contained in this range.
+// This method returns the number of values contained in this range.
 func (v *ranje[T]) GetSize() int {
 	return v.size
 }
 
-// This method returns up to the first 256 items in this range. The items
+// This method returns up to the first 256 values in this range. The values
 // retrieved are in the same order as they are in the range.
 func (v *ranje[T]) AsArray() []T {
 	var size = v.size
@@ -67,8 +67,8 @@ func (v *ranje[T]) AsArray() []T {
 	if size > 0 {
 		var first = v.effectiveFirst()
 		for i := 0; i < size; i++ {
-			var item = v.indexToItem(first + i)
-			array[i] = item
+			var value = v.indexToValue(first + i)
+			array[i] = value
 		}
 	}
 	return array
@@ -78,37 +78,37 @@ func (v *ranje[T]) AsArray() []T {
 
 // This method sets the comparer function for this list.
 func (v *ranje[T]) SetComparer(compare abs.ComparisonFunction) {
-	// This method does nothing since range items are either sequential or only
+	// This method does nothing since range values are either sequential or only
 	// have meaning within the context of a set. We may revisit this...
 }
 
-// This method retrieves from this range the item that is associated with the
+// This method retrieves from this range the value that is associated with the
 // specified index.
 func (v *ranje[T]) GetItem(index int) T {
 	var offset = abs.NormalizedIndex(index, v.size)
 	var first = v.effectiveFirst()
-	var item = v.indexToItem(first + offset)
-	return item
+	var value = v.indexToValue(first + offset)
+	return value
 }
 
-// This method retrieves from this range all items from the first index through
+// This method retrieves from this range all values from the first index through
 // the last index (inclusive).
 func (v *ranje[T]) GetItems(first int, last int) abs.Sequential[T] {
-	var items = List[T]()
+	var values = List[T]()
 	for index := first; index <= last; index++ {
-		var item = v.indexToItem(index)
-		items.AddItem(item)
+		var value = v.indexToValue(index)
+		values.AddItem(value)
 	}
-	return items
+	return values
 }
 
-// This method returns the index of the FIRST occurence of the specified item in
-// this range, or zero if this range does not contain the item.
-func (v *ranje[T]) GetIndex(item T) int {
+// This method returns the index of the FIRST occurence of the specified value in
+// this range, or zero if this range does not contain the value.
+func (v *ranje[T]) GetIndex(value T) int {
 	if v.size == 0 {
 		return 0
 	}
-	var index = v.itemToIndex(item)
+	var index = v.valueToIndex(value)
 	var first = v.effectiveFirst()
 	var offset = index - first + 1
 	if offset < 0 || offset > v.size {
@@ -124,14 +124,14 @@ func (v *ranje[T]) IsEnumerable() bool {
 	return v.size > 0
 }
 
-// This method returns the first item in this range.
+// This method returns the first value in this range.
 func (v *ranje[T]) GetFirst() T {
 	return v.first
 }
 
-// This method sets the first item in this range.
-func (v *ranje[T]) SetFirst(item T) {
-	v.first = item
+// This method sets the first value in this range.
+func (v *ranje[T]) SetFirst(value T) {
+	v.first = value
 }
 
 // This method returns the extent for this range.
@@ -144,55 +144,48 @@ func (v *ranje[T]) SetExtent(extent abs.Extent) {
 	v.extent = extent
 }
 
-// This method returns the last item in this range.
+// This method returns the last value in this range.
 func (v *ranje[T]) GetLast() T {
 	return v.last
 }
 
-// This method sets the last item in this range.
-func (v *ranje[T]) SetLast(item T) {
-	v.last = item
+// This method sets the last value in this range.
+func (v *ranje[T]) SetLast(value T) {
+	v.last = value
 }
 
 // PRIVATE INTERFACE
 
 // This function converts the type of the specified index to the parameterized
 // type T.
-func (v *ranje[T]) indexToItem(index int) T {
+func (v *ranje[T]) indexToValue(index int) T {
 	var template T
-	var value abs.ItemLike = template
-	var item abs.ItemLike
+	var value abs.ValueLike = template
 	switch value.(type) {
 	case uint8:
-		item = uint8(index)
-		return item.(T)
+		value = uint8(index)
 	case uint16:
-		item = uint16(index)
-		return item.(T)
+		value = uint16(index)
 	case uint32:
-		item = uint32(index)
-		return item.(T)
+		value = uint32(index)
 	case int8:
-		item = int8(index)
-		return item.(T)
+		value = int8(index)
 	case int16:
-		item = int16(index)
-		return item.(T)
+		value = int16(index)
 	case int32:
-		item = int32(index)
-		return item.(T)
+		value = int32(index)
 	case int:
-		item = int(index)
-		return item.(T)
+		value = int(index)
 	default:
-		panic(fmt.Sprintf("The item is not an integer type: %T", template))
+		panic(fmt.Sprintf("The value is not an integer type: %T", template))
 	}
+	return value.(T)
 }
 
-// This function converts the type of the specified item to an integer type.
-func (v *ranje[T]) itemToIndex(item T) int {
-	var value abs.ItemLike = item
-	switch index := value.(type) {
+// This function converts the type of the specified value to an integer type.
+func (v *ranje[T]) valueToIndex(value T) int {
+	var template abs.ValueLike = value
+	switch index := template.(type) {
 	case uint8:
 		return int(index)
 	case uint16:
@@ -216,15 +209,15 @@ func (v *ranje[T]) itemToIndex(item T) int {
 	case ele.Number:
 		return int(real(index))
 	default:
-		panic(fmt.Sprintf("The item is not an integer type: %T", item))
+		panic(fmt.Sprintf("The value is not an integer type: %T", value))
 	}
 }
 
-// This function returns the effective first item in the range based on its
-// extent type. It can only be called when the parameterized item type T is
+// This function returns the effective first value in the range based on its
+// extent type. It can only be called when the parameterized value type T is
 // an integer type.
 func (v *ranje[T]) effectiveFirst() int {
-	var first = v.itemToIndex(v.first)
+	var first = v.valueToIndex(v.first)
 	switch v.extent {
 	case abs.RIGHT:
 		first++
@@ -234,11 +227,11 @@ func (v *ranje[T]) effectiveFirst() int {
 	return first
 }
 
-// This function returns the effective last item in the range based on its
-// extent type. It can only be called when the parameterized item type T is
+// This function returns the effective last value in the range based on its
+// extent type. It can only be called when the parameterized value type T is
 // an integer type.
 func (v *ranje[T]) effectiveLast() int {
-	var last = v.itemToIndex(v.last)
+	var last = v.valueToIndex(v.last)
 	switch v.extent {
 	case abs.LEFT:
 		last--

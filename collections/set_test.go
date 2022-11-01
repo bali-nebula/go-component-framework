@@ -117,7 +117,7 @@ func TestSetsWithAnd(t *tes.T) {
 	var set3 = sets.And(set1, set2)
 	var set4 = col.Set[int]()
 	set4.AddItems(list3)
-	ass.True(t, age.CompareItems(set3, set4))
+	ass.True(t, age.CompareValues(set3, set4))
 }
 
 func TestSetsWithSans(t *tes.T) {
@@ -132,7 +132,7 @@ func TestSetsWithSans(t *tes.T) {
 	var set3 = sets.Sans(set1, set2)
 	var set4 = col.Set[int]()
 	set4.AddItems(list3)
-	ass.True(t, age.CompareItems(set3, set4))
+	ass.True(t, age.CompareValues(set3, set4))
 }
 
 func TestSetsWithOr(t *tes.T) {
@@ -149,7 +149,7 @@ func TestSetsWithOr(t *tes.T) {
 	ass.True(t, set3.ContainsAll(set2))
 	var set4 = col.Set[int]()
 	set4.AddItems(list3)
-	ass.True(t, age.CompareItems(set3, set4))
+	ass.True(t, age.CompareValues(set3, set4))
 }
 
 func TestSetsWithXor(t *tes.T) {
@@ -164,7 +164,7 @@ func TestSetsWithXor(t *tes.T) {
 	var set3 = sets.Xor(set1, set2)
 	var set4 = col.Set[int]()
 	set4.AddItems(list3)
-	ass.True(t, age.CompareItems(set3, set4))
+	ass.True(t, age.CompareValues(set3, set4))
 }
 
 func TestSetsWithEmptySets(t *tes.T) {
@@ -175,8 +175,8 @@ func TestSetsWithEmptySets(t *tes.T) {
 	var set4 = sets.Sans(set1, set2)
 	var set5 = sets.Or(set1, set2)
 	var set6 = sets.Xor(set1, set2)
-	ass.True(t, age.CompareItems(set3, set4))
-	ass.True(t, age.CompareItems(set4, set5))
-	ass.True(t, age.CompareItems(set5, set6))
-	ass.True(t, age.CompareItems(set6, set1))
+	ass.True(t, age.CompareValues(set3, set4))
+	ass.True(t, age.CompareValues(set4, set5))
+	ass.True(t, age.CompareValues(set5, set6))
+	ass.True(t, age.CompareValues(set6, set1))
 }

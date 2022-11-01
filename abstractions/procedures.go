@@ -207,8 +207,8 @@ type WhileClauseLike interface {
 
 // This interface defines the methods supported by all with-clause-like types.
 type WithClauseLike interface {
-	GetItem() Symbolic
-	SetItem(exception Symbolic)
+	GetValue() Symbolic
+	SetValue(exception Symbolic)
 	GetSequence() ExpressionLike
 	SetSequence(sequence ExpressionLike)
 	GetStatement(index int) StatementLike

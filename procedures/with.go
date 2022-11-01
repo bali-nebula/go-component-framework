@@ -17,10 +17,10 @@ import (
 // WITH CLAUSE IMPLEMENTATION
 
 // This constructor creates a new with clause.
-func WithClause(item abs.Symbolic, sequence abs.ExpressionLike, statements abs.ProcedureLike) abs.WithClauseLike {
+func WithClause(value abs.Symbolic, sequence abs.ExpressionLike, statements abs.ProcedureLike) abs.WithClauseLike {
 	var v = &withClause{}
 	// Perform argument validation.
-	v.SetItem(item)
+	v.SetValue(value)
 	v.SetSequence(sequence)
 	v.SetStatements(statements)
 	return v
@@ -28,22 +28,22 @@ func WithClause(item abs.Symbolic, sequence abs.ExpressionLike, statements abs.P
 
 // This type defines the structure and methods associated with a with clause.
 type withClause struct {
-	item       abs.Symbolic
+	value      abs.Symbolic
 	sequence   abs.ExpressionLike
 	statements abs.ProcedureLike
 }
 
-// This method returns the item symbol for this with clause.
-func (v *withClause) GetItem() abs.Symbolic {
-	return v.item
+// This method returns the value symbol for this with clause.
+func (v *withClause) GetValue() abs.Symbolic {
+	return v.value
 }
 
-// This method sets the item symbol for this with clause.
-func (v *withClause) SetItem(item abs.Symbolic) {
-	if item == nil {
-		panic("A with clause requires an item symbol.")
+// This method sets the value symbol for this with clause.
+func (v *withClause) SetValue(value abs.Symbolic) {
+	if value == nil {
+		panic("A with clause requires an value symbol.")
 	}
-	v.item = item
+	v.value = value
 }
 
 // This method returns the sequence expression for this with clause.
@@ -68,7 +68,7 @@ func (v *withClause) GetStatement(index int) abs.StatementLike {
 // This method sets the statement at the specified index for this with clause.
 func (v *withClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
-		panic("Each statement in a with clause requires a value.")
+		panic("Each index in a with clause requires a statement.")
 	}
 	v.statements.SetItem(index, statement)
 }

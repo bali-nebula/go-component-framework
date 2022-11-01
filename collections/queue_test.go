@@ -30,23 +30,23 @@ func TestQueueWithConcurrency(t *tes.T) {
 	ass.True(t, queue.IsEmpty())
 	ass.Equal(t, 0, queue.GetSize())
 
-	// Add items to the queue in bulk.
+	// Add values to the queue in bulk.
 	for i := 1; i < 10; i++ {
 		queue.AddItem(i)
 	}
 	ass.Equal(t, 9, queue.GetSize())
 
-	// Remove items from the queue in the background.
+	// Remove values from the queue in the background.
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		for i := 1; i < 101; i++ {
-			var item, _ = queue.RemoveHead()
-			ass.Equal(t, i, item)
+			var value, _ = queue.RemoveHead()
+			ass.Equal(t, i, value)
 		}
 	}()
 
-	// Add more items to the queue.
+	// Add more values to the queue.
 	for i := 10; i < 101; i++ {
 		queue.AddItem(i)
 	}
@@ -63,13 +63,13 @@ func TestQueueWithFork(t *tes.T) {
 	var input = col.QueueWithCapacity[int](3)
 	var outputs = queues.Fork(wg, input, 2)
 
-	// Remove items from the output queues in the background.
+	// Remove values from the output queues in the background.
 	var readOutput = func(output abs.FIFO[int], name string) {
 		defer wg.Done()
-		var item, ok = output.RemoveHead()
+		var value, ok = output.RemoveHead()
 		for i := 1; ok; i++ {
-			ass.Equal(t, i, item)
-			item, ok = output.RemoveHead()
+			ass.Equal(t, i, value)
+			value, ok = output.RemoveHead()
 		}
 	}
 	wg.Add(2)
@@ -79,7 +79,7 @@ func TestQueueWithFork(t *tes.T) {
 		go readOutput(output, "output")
 	}
 
-	// Add items to the input queue.
+	// Add values to the input queue.
 	for i := 1; i < 11; i++ {
 		input.AddItem(i)
 	}
@@ -98,18 +98,18 @@ func TestQueueWithSplitAndJoin(t *tes.T) {
 	var split = queues.Split(wg, input, 5)
 	var output = queues.Join(wg, split)
 
-	// Remove items from the output queue in the background.
+	// Remove values from the output queue in the background.
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		var item, ok = output.RemoveHead()
+		var value, ok = output.RemoveHead()
 		for i := 1; ok; i++ {
-			ass.Equal(t, i, item)
-			item, ok = output.RemoveHead()
+			ass.Equal(t, i, value)
+			value, ok = output.RemoveHead()
 		}
 	}()
 
-	// Add items to the input queue.
+	// Add values to the input queue.
 	for i := 1; i < 21; i++ {
 		input.AddItem(i)
 	}

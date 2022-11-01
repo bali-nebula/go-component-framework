@@ -10,36 +10,6 @@
 
 package abstractions
 
-// OPERATOR CONSTANTS
-
-type Operator int
-
-const (
-	_ Operator = iota
-	AND
-	AT
-	CHAIN
-	CONJUGATE
-	DIFFERENCE
-	EQUAL
-	INVERSE
-	IS
-	LESS
-	MATCHES
-	MORE
-	NOT
-	OR
-	POWER
-	PRODUCT
-	QUOTIENT
-	RECIPROCAL
-	REMAINDER
-	SANS
-	SUM
-	UNEQUAL
-	XOR
-)
-
 // EXPRESSION INTERFACES
 
 type ExpressionLike any
@@ -146,8 +116,8 @@ type PrecedenceLike interface {
 	SetExpression(expression ExpressionLike)
 }
 
-// This interface defines the methods supported by all value-like expressions.
-type ValueLike interface {
+// This interface defines the methods supported by all item-like expressions.
+type ItemLike interface {
 	GetComposite() ExpressionLike
 	SetComposite(composite ExpressionLike)
 	GetIndex(index int) ExpressionLike
@@ -160,3 +130,33 @@ type ValueLike interface {
 type VariableLike interface {
 	GetIdentifier() string
 }
+
+// CONSTANTS
+
+type Operator int
+
+const (
+	_ Operator = iota
+	AND
+	AT
+	CHAIN
+	CONJUGATE
+	DIFFERENCE
+	EQUAL
+	INVERSE
+	IS
+	LESS
+	MATCHES
+	MORE
+	NOT
+	OR
+	POWER
+	PRODUCT
+	QUOTIENT
+	RECIPROCAL
+	REMAINDER
+	SANS
+	SUM
+	UNEQUAL
+	XOR
+)

@@ -53,7 +53,7 @@ func (v *whileClause) GetStatement(index int) abs.StatementLike {
 // This method sets the statement at the specified index for this while clause.
 func (v *whileClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
-		panic("Each statement in a while clause requires a value.")
+		panic("Each index in a while clause requires a statement.")
 	}
 	v.statements.SetItem(index, statement)
 }

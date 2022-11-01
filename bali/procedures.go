@@ -1125,7 +1125,7 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var item ele.Symbol
+	var value ele.Symbol
 	var block abs.BlockLike
 	var clause abs.WithClauseLike
 	_, token, ok = v.parseKeyword("with")
@@ -1138,16 +1138,16 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("each",
 			"$withClause",
-			"$item",
+			"$value",
 			"$sequence")
 		panic(message)
 	}
-	item, token, ok = v.parseSymbol()
+	value, token, ok = v.parseSymbol()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("$item",
+		message += generateGrammar("$value",
 			"$withClause",
-			"$item",
+			"$value",
 			"$sequence")
 		panic(message)
 	}
@@ -1156,7 +1156,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("in",
 			"$withClause",
-			"$item",
+			"$value",
 			"$sequence")
 		panic(message)
 	}
@@ -1165,11 +1165,11 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$sequence",
 			"$withClause",
-			"$item",
+			"$value",
 			"$sequence",
 			"$procedure")
 		panic(message)
 	}
-	clause = pro.WithClause(item, block.GetExpression(), block.GetProcedure())
+	clause = pro.WithClause(value, block.GetExpression(), block.GetProcedure())
 	return clause, token, true
 }

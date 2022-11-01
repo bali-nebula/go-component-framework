@@ -52,7 +52,7 @@ func (v *ifClause) GetStatement(index int) abs.StatementLike {
 // This method sets the statement at the specified index for this if clause.
 func (v *ifClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
-		panic("Each statement in an if clause requires a value.")
+		panic("Each index in an if clause requires a statement.")
 	}
 	v.statements.SetItem(index, statement)
 }

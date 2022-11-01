@@ -145,14 +145,12 @@ func (v *formatter) formatContext(context abs.ContextLike) {
 // This method attempts to parse the specified delimiter. It returns
 // the token and whether or not the delimiter was found.
 func (v *parser) parseDelimiter(delimiter string) (string, *Token, bool) {
-	var value string
 	var token = v.nextToken()
 	if token.Type == TokenEOF || token.Value != delimiter {
 		v.backupOne()
-		return value, token, false
+		return delimiter, token, false
 	}
-	value = token.Value
-	return value, token, true
+	return delimiter, token, true
 }
 
 // This method attempts to parse a component entity. It returns the component
@@ -218,14 +216,12 @@ func (v *formatter) formatIdentifier(identifier string) {
 // This method attempts to parse the specified keyword. It returns
 // the token and whether or not the keyword was found.
 func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
-	var value string
 	var token = v.nextToken()
 	if token.Type == TokenKeyword || token.Value != keyword {
 		v.backupOne()
-		return value, token, false
+		return keyword, token, false
 	}
-	value = token.Value
-	return value, token, true
+	return keyword, token, true
 }
 
 // This method attempts to parse a note. It returns a string containing the

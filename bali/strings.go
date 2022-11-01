@@ -128,7 +128,7 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 		return quote, token, false
 	}
 	var matches = scanQuote([]byte(token.Value))
-	// We must unquote the full token value properly.
+	// We must unquote the full token string properly.
 	var unquoted, _ = stc.Unquote(matches[0])
 	quote = str.Quote(unquoted)
 	return quote, token, true
@@ -137,7 +137,7 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
 func (v *formatter) formatQuote(quote str.Quote) {
-	// We must requote the string value properly.
+	// We must requote the string string properly.
 	var s = stc.Quote(string(quote))
 	v.state.AppendString(s)
 }

@@ -20,31 +20,31 @@ import (
 
 // This constructor creates a new empty list that uses the canonical compare
 // function.
-func List[T abs.ItemLike]() abs.ListLike[T] {
+func List[T abs.ValueLike]() abs.ListLike[T] {
 	var capacity = 4 // The minimum value.
-	var items = make([]T, 0, capacity)
-	var compare = age.CompareItems
-	return &list[T]{items, compare}
+	var values = make([]T, 0, capacity)
+	var compare = age.CompareValues
+	return &list[T]{values, compare}
 }
 
 // This constructor creates a new list from the specified array that uses the
 // canonical compare function.
-func ListFromArray[T abs.ItemLike](array []T) abs.ListLike[T] {
+func ListFromArray[T abs.ValueLike](array []T) abs.ListLike[T] {
 	var v = List[T]()
-	for _, item := range array {
-		v.AddItem(item)
+	for _, value := range array {
+		v.AddItem(value)
 	}
 	return v
 }
 
-// This type defines the structure and methods associated with a list of items.
-// Each item is associated with an implicit positive integer index. The list
+// This type defines the structure and methods associated with a list of values.
+// Each value is associated with an implicit positive integer index. The list
 // uses ORDINAL based indexing rather than ZERO based indexing (see the
 // description of what this means in the Sequential interface definition).
 // This type is parameterized as follows:
-//   - T is any type of item.
-type list[T abs.ItemLike] struct {
-	items   []T
+//   - T is any type of value.
+type list[T abs.ValueLike] struct {
+	values  []T
 	compare abs.ComparisonFunction
 }
 
@@ -52,20 +52,20 @@ type list[T abs.ItemLike] struct {
 
 // This method determines whether or not this list is empty.
 func (v *list[T]) IsEmpty() bool {
-	return len(v.items) == 0
+	return len(v.values) == 0
 }
 
-// This method returns the number of items contained in this list.
+// This method returns the number of values contained in this list.
 func (v *list[T]) GetSize() int {
-	return len(v.items)
+	return len(v.values)
 }
 
-// This method returns all the items in this list. The items retrieved are in
+// This method returns all the values in this list. The values retrieved are in
 // the same order as they are in the list.
 func (v *list[T]) AsArray() []T {
-	var length = len(v.items)
+	var length = len(v.values)
 	var result = make([]T, length)
-	copy(result, v.items)
+	copy(result, v.values)
 	return result
 }
 
@@ -74,167 +74,167 @@ func (v *list[T]) AsArray() []T {
 // This method sets the comparer function for this list.
 func (v *list[T]) SetComparer(compare abs.ComparisonFunction) {
 	if compare == nil {
-		compare = age.CompareItems
+		compare = age.CompareValues
 	}
 	v.compare = compare
 }
 
-// This method retrieves from this list the item that is associated with the
+// This method retrieves from this list the value that is associated with the
 // specified index.
 func (v *list[T]) GetItem(index int) T {
-	var length = len(v.items)
+	var length = len(v.values)
 	index = abs.NormalizedIndex(index, length)
-	return v.items[index]
+	return v.values[index]
 }
 
-// This method retrieves from this list all items from the first index through
+// This method retrieves from this list all values from the first index through
 // the last index (inclusive).
 func (v *list[T]) GetItems(first int, last int) abs.Sequential[T] {
-	var length = len(v.items)
+	var length = len(v.values)
 	first = abs.NormalizedIndex(first, length)
 	last = abs.NormalizedIndex(last, length)
-	var result = ListFromArray[T](v.items[first : last+1])
+	var result = ListFromArray[T](v.values[first : last+1])
 	return result
 }
 
-// This method returns the index of the FIRST occurence of the specified item in
-// this list, or zero if this list does not contain the item.
-func (v *list[T]) GetIndex(item T) int {
-	for index, candidate := range v.items {
-		if v.compare(candidate, item) {
-			// Found the item.
+// This method returns the index of the FIRST occurence of the specified value in
+// this list, or zero if this list does not contain the value.
+func (v *list[T]) GetIndex(value T) int {
+	for index, candidate := range v.values {
+		if v.compare(candidate, value) {
+			// Found the value.
 			return index + 1 // Convert to an ORDINAL based index.
 		}
 	}
-	// The item was not found.
+	// The value was not found.
 	return 0
 }
 
 // SEARCHABLE INTERFACE
 
-// This method determines whether or not this list contains the specified item.
-func (v *list[T]) ContainsItem(item T) bool {
-	return v.GetIndex(item) > 0
+// This method determines whether or not this list contains the specified value.
+func (v *list[T]) ContainsItem(value T) bool {
+	return v.GetIndex(value) > 0
 }
 
 // This method determines whether or not this list contains ANY of the specified
-// items.
-func (v *list[T]) ContainsAny(items abs.Sequential[T]) bool {
-	var iterator = age.Iterator[T](items)
+// values.
+func (v *list[T]) ContainsAny(values abs.Sequential[T]) bool {
+	var iterator = age.Iterator[T](values)
 	for iterator.HasNext() {
 		var candidate = iterator.GetNext()
 		if v.GetIndex(candidate) > 0 {
-			// Found one of the items.
+			// Found one of the values.
 			return true
 		}
 	}
-	// Did not find any of the items.
+	// Did not find any of the values.
 	return false
 }
 
 // This method determines whether or not this list contains ALL of the specified
-// items.
-func (v *list[T]) ContainsAll(items abs.Sequential[T]) bool {
-	var iterator = age.Iterator[T](items)
+// values.
+func (v *list[T]) ContainsAll(values abs.Sequential[T]) bool {
+	var iterator = age.Iterator[T](values)
 	for iterator.HasNext() {
 		var candidate = iterator.GetNext()
 		if v.GetIndex(candidate) == 0 {
-			// Didn't find one of the items.
+			// Didn't find one of the values.
 			return false
 		}
 	}
-	// Found all of the items.
+	// Found all of the values.
 	return true
 }
 
 // MALLEABLE INTERFACE
 
-// This method appends the specified item to the end of this list.
-func (v *list[T]) AddItem(item T) {
-	// Add space for the new item.
-	var index = len(v.items)
+// This method appends the specified value to the end of this list.
+func (v *list[T]) AddItem(value T) {
+	// Add space for the new value.
+	var index = len(v.values)
 	var length = index + 1
 	v.resize(length)
 
-	// Append the new item.
-	v.items[index] = item
+	// Append the new value.
+	v.values[index] = value
 }
 
-// This method appends the specified items to the end of this list.
-func (v *list[T]) AddItems(items abs.Sequential[T]) {
-	// Add space for the new items.
-	var index = len(v.items)
-	var length = index + items.GetSize()
+// This method appends the specified values to the end of this list.
+func (v *list[T]) AddItems(values abs.Sequential[T]) {
+	// Add space for the new values.
+	var index = len(v.values)
+	var length = index + values.GetSize()
 	v.resize(length)
 
-	// Append the new items.
-	copy(v.items[index:], items.AsArray())
+	// Append the new values.
+	copy(v.values[index:], values.AsArray())
 }
 
-// This method sets the item in this list that is associated with the specified
-// index to be the specified item.
-func (v *list[T]) SetItem(index int, item T) {
-	var length = len(v.items)
+// This method sets the value in this list that is associated with the specified
+// index to be the specified value.
+func (v *list[T]) SetItem(index int, value T) {
+	var length = len(v.values)
 	index = abs.NormalizedIndex(index, length)
-	v.items[index] = item
+	v.values[index] = value
 }
 
-// This method sets the items in this list starting with the specified index
-// to the specified items.
-func (v *list[T]) SetItems(index int, items abs.Sequential[T]) {
-	var length = len(v.items)
+// This method sets the values in this list starting with the specified index
+// to the specified values.
+func (v *list[T]) SetItems(index int, values abs.Sequential[T]) {
+	var length = len(v.values)
 	index = abs.NormalizedIndex(index, length)
-	copy(v.items[index:], items.AsArray())
+	copy(v.values[index:], values.AsArray())
 }
 
-// This method inserts the specified item into this list in the specified
-// slot between existing items.
-func (v *list[T]) InsertItem(slot int, item T) {
-	// Add space for the new item.
-	var length = len(v.items) + 1
+// This method inserts the specified value into this list in the specified
+// slot between existing values.
+func (v *list[T]) InsertItem(slot int, value T) {
+	// Add space for the new value.
+	var length = len(v.values) + 1
 	v.resize(length)
 
-	// Insert the new item.
-	copy(v.items[slot+1:], v.items[slot:])
-	v.items[slot] = item
+	// Insert the new value.
+	copy(v.values[slot+1:], v.values[slot:])
+	v.values[slot] = value
 }
 
-// This method inserts the specified items into this list in the specified
-// slot between existing items.
-func (v *list[T]) InsertItems(slot int, items abs.Sequential[T]) {
-	// Add space for the new items.
-	var size = items.GetSize()
-	var length = len(v.items) + size
+// This method inserts the specified values into this list in the specified
+// slot between existing values.
+func (v *list[T]) InsertItems(slot int, values abs.Sequential[T]) {
+	// Add space for the new values.
+	var size = values.GetSize()
+	var length = len(v.values) + size
 	v.resize(length)
 
-	// Insert the new items.
-	copy(v.items[slot+size:], v.items[slot:])
-	copy(v.items[slot:], items.AsArray())
+	// Insert the new values.
+	copy(v.values[slot+size:], v.values[slot:])
+	copy(v.values[slot:], values.AsArray())
 }
 
-// This method removes the item at the specified index from this list. The
-// removed item is returned.
+// This method removes the value at the specified index from this list. The
+// removed value is returned.
 func (v *list[T]) RemoveItem(index int) T {
-	// Remove the old item.
-	var length = len(v.items)
+	// Remove the old value.
+	var length = len(v.values)
 	index = abs.NormalizedIndex(index, length)
-	var old = v.items[index]
-	copy(v.items[index:], v.items[index+1:])
+	var old = v.values[index]
+	copy(v.values[index:], v.values[index+1:])
 
 	// Remove extra space.
 	v.resize(length - 1)
 	return old
 }
 
-// This method removes the items in the specified index range from this list.
-// The removed items are returned.
+// This method removes the values in the specified index range from this list.
+// The removed values are returned.
 func (v *list[T]) RemoveItems(first int, last int) abs.Sequential[T] {
-	// Remove the specified items.
-	var length = len(v.items)
+	// Remove the specified values.
+	var length = len(v.values)
 	first = abs.NormalizedIndex(first, length)
 	last = abs.NormalizedIndex(last, length)
-	var result = ListFromArray[T](v.items[first : last+1])
-	copy(v.items[first:], v.items[last+1:])
+	var result = ListFromArray[T](v.values[first : last+1])
+	copy(v.values[first:], v.values[last+1:])
 
 	// Remove the extra space.
 	var size = last - first + 1
@@ -242,80 +242,80 @@ func (v *list[T]) RemoveItems(first int, last int) abs.Sequential[T] {
 	return result
 }
 
-// This method removes all items from this list.
+// This method removes all values from this list.
 func (v *list[T]) RemoveAll() {
-	v.items = make([]T, 0, 4)
+	v.values = make([]T, 0, 4)
 }
 
-// This method pseudo-randomly shuffles the items in this list.
+// This method pseudo-randomly shuffles the values in this list.
 func (v *list[T]) ShuffleItems() {
-	uti.ShuffleArray[T](v.items)
+	uti.ShuffleArray[T](v.values)
 }
 
-// This method sorts the items in this list using the canonical rank function.
+// This method sorts the values in this list using the canonical rank function.
 func (v *list[T]) SortItems() {
 	v.SortItemsWithRanker(nil)
 }
 
-// This method sorts the items in this list using the specified rank function.
+// This method sorts the values in this list using the specified rank function.
 func (v *list[T]) SortItemsWithRanker(rank abs.RankingFunction) {
 	if rank == nil {
-		rank = age.RankItems
+		rank = age.RankValues
 	}
-	if len(v.items) > 1 {
-		age.SortArray[T](v.items, rank)
+	if len(v.values) > 1 {
+		age.SortArray[T](v.values, rank)
 	}
 }
 
-// This method reverses the order of all items in this list.
+// This method reverses the order of all values in this list.
 func (v *list[T]) ReverseItems() {
 	// Allocate a new array/slice.
-	var length = len(v.items)
-	var capacity = cap(v.items)
+	var length = len(v.values)
+	var capacity = cap(v.values)
 	var reversed = make([]T, length, capacity)
 
-	// Copy the items into the new array in reverse.
-	for i, _ := range v.items {
-		reversed[i] = v.items[length-i-1]
+	// Copy the values into the new array in reverse.
+	for i, _ := range v.values {
+		reversed[i] = v.values[length-i-1]
 	}
-	v.items = reversed
+	v.values = reversed
 }
 
 // PRIVATE INTERFACE
 
 // This method resizes this list and adjusts the capacity of this list if
-// necessary to make it more efficient. Note: Any additional items that are
+// necessary to make it more efficient. Note: Any additional values that are
 // added to the length of the list are NOT zeroed out.
 func (v *list[T]) resize(length int) {
-	var capacity = cap(v.items)
+	var capacity = cap(v.values)
 	for length > capacity {
 		capacity *= 2
 	}
 	for length < capacity/4 {
 		capacity /= 2
 	}
-	if capacity != cap(v.items) {
+	if capacity != cap(v.values) {
 		// Adjust the capacity accordingly.
-		var items = make([]T, length, capacity)
-		copy(items, v.items)
-		v.items = items
+		var values = make([]T, length, capacity)
+		copy(values, v.values)
+		v.values = values
 	}
-	v.items = v.items[:length] // A change the length of the slice.
+	v.values = v.values[:length] // A change the length of the slice.
 }
 
 // LISTS LIBRARY
 
 // This constructor creates a new lists library for the specified generic
-// item type.
-func Lists[T abs.ItemLike]() *lists[T] {
+// value type.
+func Lists[T abs.ValueLike]() *lists[T] {
 	return &lists[T]{}
 }
 
 // This type defines the library functions that operate on lists. Since
-// lists have a parameterized item type this library type is also
+// lists have a parameterized value type this library type is also
 // parameterized as follows:
-//   - T is any type of item.
-type lists[T abs.ItemLike] struct{}
+//   - T is any type of value.
+type lists[T abs.ValueLike] struct{}
 
 // CHAINABLE INTERFACE
 

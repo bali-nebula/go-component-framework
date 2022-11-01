@@ -52,7 +52,7 @@ func (v *block) GetStatement(index int) abs.StatementLike {
 // This method sets the statement at the specified index for this block.
 func (v *block) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
-		panic("Each statement in a block requires a value.")
+		panic("Each index in a procedure requires a statement.")
 	}
 	v.procedure.SetItem(index, statement)
 }

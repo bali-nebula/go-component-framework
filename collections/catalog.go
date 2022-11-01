@@ -18,7 +18,7 @@ import (
 // ASSOCIATION IMPLEMENTATION
 
 // This constructor creates a new association with the specified key and value.
-func Association[K abs.KeyLike, V abs.ItemLike](key K, value V) abs.AssociationLike[K, V] {
+func Association[K abs.KeyLike, V abs.ValueLike](key K, value V) abs.AssociationLike[K, V] {
 	return &association[K, V]{key, value}
 }
 
@@ -28,7 +28,7 @@ func Association[K abs.KeyLike, V abs.ItemLike](key K, value V) abs.AssociationL
 //   - V is any type of entity.
 //
 // This structure is used by the catalog type to maintain its associations.
-type association[K abs.KeyLike, V abs.ItemLike] struct {
+type association[K abs.KeyLike, V abs.ValueLike] struct {
 	key   K
 	value V
 }
@@ -49,7 +49,7 @@ func (v *association[K, V]) SetValue(value V) {
 }
 
 // This constructor creates a new empty catalog.
-func Catalog[K abs.KeyLike, V abs.ItemLike]() abs.CatalogLike[K, V] {
+func Catalog[K abs.KeyLike, V abs.ValueLike]() abs.CatalogLike[K, V] {
 	var keys = map[abs.KeyLike]abs.AssociationLike[K, V]{}
 	var associations = List[abs.AssociationLike[K, V]]()
 	return &catalog[K, V]{associations, associations, associations, keys}
@@ -61,7 +61,7 @@ func Catalog[K abs.KeyLike, V abs.ItemLike]() abs.CatalogLike[K, V] {
 // key-value pair associations. This type is parameterized as follows:
 //   - K is a primitive type of key.
 //   - V is any type of entity.
-type catalog[K abs.KeyLike, V abs.ItemLike] struct {
+type catalog[K abs.KeyLike, V abs.ValueLike] struct {
 	// Note: The delegated methods don't see the real collection type.
 	abs.Sequential[abs.AssociationLike[K, V]]
 	abs.Indexed[abs.AssociationLike[K, V]]
@@ -191,7 +191,7 @@ func (v *catalog[K, V]) ReverseAssociations() {
 
 // This constructor creates a new catalogs library for the specified generic
 // key and value types.
-func Catalogs[K abs.KeyLike, V abs.ItemLike]() *catalogs[K, V] {
+func Catalogs[K abs.KeyLike, V abs.ValueLike]() *catalogs[K, V] {
 	return &catalogs[K, V]{}
 }
 
@@ -200,7 +200,7 @@ func Catalogs[K abs.KeyLike, V abs.ItemLike]() *catalogs[K, V] {
 // parameterized as follows:
 //   - K is a primitive type of key.
 //   - V is any type of entity.
-type catalogs[K abs.KeyLike, V abs.ItemLike] struct{}
+type catalogs[K abs.KeyLike, V abs.ValueLike] struct{}
 
 // BLENDABLE INTERFACE
 

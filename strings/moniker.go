@@ -18,7 +18,7 @@ import (
 // MONIKER STRING INTERFACE
 
 // This constructor attempts to create a new moniker string from the specified
-// array of names. It returns the corresponding moniker value.
+// array of names. It returns the corresponding moniker string.
 func MonikerFromNames(v []string) Moniker {
 	var moniker = Moniker("/" + sts.Join(v, "/"))
 	return moniker

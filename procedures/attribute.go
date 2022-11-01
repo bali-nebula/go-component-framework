@@ -52,7 +52,7 @@ func (v *attribute) GetIndex(index int) abs.ExpressionLike {
 // This method sets the expression at the specified index for this attribute.
 func (v *attribute) SetIndex(index int, expression abs.ExpressionLike) {
 	if expression == nil {
-		panic("Each index expression for an attribute requires a value.")
+		panic("Each index for an attribute requires an expression.")
 	}
 	v.indices.SetItem(index, expression)
 }

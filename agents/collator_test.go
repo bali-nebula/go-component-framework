@@ -20,36 +20,36 @@ func TestComparison(t *tes.T) {
 	// Nil
 	var ShouldBeNil any
 
-	ass.True(t, age.CompareItems(nil, nil))
-	ass.True(t, age.CompareItems(nil, ShouldBeNil))
-	ass.True(t, age.CompareItems(ShouldBeNil, ShouldBeNil))
-	ass.True(t, age.CompareItems(ShouldBeNil, nil))
+	ass.True(t, age.CompareValues(nil, nil))
+	ass.True(t, age.CompareValues(nil, ShouldBeNil))
+	ass.True(t, age.CompareValues(ShouldBeNil, ShouldBeNil))
+	ass.True(t, age.CompareValues(ShouldBeNil, nil))
 
 	// Boolean
 	var False = false
 	var True = true
 	var ShouldBeFalse bool
 
-	ass.True(t, age.CompareItems(ShouldBeFalse, False))
-	ass.False(t, age.CompareItems(True, ShouldBeFalse))
+	ass.True(t, age.CompareValues(ShouldBeFalse, False))
+	ass.False(t, age.CompareValues(True, ShouldBeFalse))
 
-	ass.False(t, age.CompareItems(False, True))
-	ass.True(t, age.CompareItems(False, False))
-	ass.False(t, age.CompareItems(True, False))
-	ass.True(t, age.CompareItems(True, True))
+	ass.False(t, age.CompareValues(False, True))
+	ass.True(t, age.CompareValues(False, False))
+	ass.False(t, age.CompareValues(True, False))
+	ass.True(t, age.CompareValues(True, True))
 
 	// Byte
 	var Zero byte = 0x00
 	var One byte = 0x01
 	var ShouldBeZero byte
 
-	ass.True(t, age.CompareItems(ShouldBeZero, Zero))
-	ass.False(t, age.CompareItems(One, ShouldBeZero))
+	ass.True(t, age.CompareValues(ShouldBeZero, Zero))
+	ass.False(t, age.CompareValues(One, ShouldBeZero))
 
-	ass.False(t, age.CompareItems(Zero, One))
-	ass.True(t, age.CompareItems(Zero, Zero))
-	ass.False(t, age.CompareItems(One, Zero))
-	ass.True(t, age.CompareItems(One, One))
+	ass.False(t, age.CompareValues(Zero, One))
+	ass.True(t, age.CompareValues(Zero, Zero))
+	ass.False(t, age.CompareValues(One, Zero))
+	ass.True(t, age.CompareValues(One, One))
 
 	// Integer
 	var Zilch = 0
@@ -57,13 +57,13 @@ func TestComparison(t *tes.T) {
 	var Three = 3
 	var ShouldBeZilch int
 
-	ass.True(t, age.CompareItems(ShouldBeZilch, Zilch))
-	ass.False(t, age.CompareItems(Two, ShouldBeZilch))
+	ass.True(t, age.CompareValues(ShouldBeZilch, Zilch))
+	ass.False(t, age.CompareValues(Two, ShouldBeZilch))
 
-	ass.False(t, age.CompareItems(Two, Three))
-	ass.True(t, age.CompareItems(Two, Two))
-	ass.False(t, age.CompareItems(Three, Two))
-	ass.True(t, age.CompareItems(Three, Three))
+	ass.False(t, age.CompareValues(Two, Three))
+	ass.True(t, age.CompareValues(Two, Two))
+	ass.False(t, age.CompareValues(Three, Two))
+	ass.True(t, age.CompareValues(Three, Three))
 
 	// Float
 	var Negligible = 0.0
@@ -71,13 +71,13 @@ func TestComparison(t *tes.T) {
 	var Half = 0.5
 	var ShouldBeNegligible float64
 
-	ass.True(t, age.CompareItems(ShouldBeNegligible, Negligible))
-	ass.False(t, age.CompareItems(Half, ShouldBeNegligible))
+	ass.True(t, age.CompareValues(ShouldBeNegligible, Negligible))
+	ass.False(t, age.CompareValues(Half, ShouldBeNegligible))
 
-	ass.False(t, age.CompareItems(Fourth, Half))
-	ass.True(t, age.CompareItems(Fourth, Fourth))
-	ass.False(t, age.CompareItems(Half, Fourth))
-	ass.True(t, age.CompareItems(Half, Half))
+	ass.False(t, age.CompareValues(Fourth, Half))
+	ass.True(t, age.CompareValues(Fourth, Fourth))
+	ass.False(t, age.CompareValues(Half, Fourth))
+	ass.True(t, age.CompareValues(Half, Half))
 
 	// Complex
 	var Origin = 0 + 0i
@@ -85,13 +85,13 @@ func TestComparison(t *tes.T) {
 	var PiOver2 = 1 + 0i
 	var ShouldBeOrigin complex128
 
-	ass.True(t, age.CompareItems(ShouldBeOrigin, Origin))
-	ass.False(t, age.CompareItems(PiOver4, ShouldBeOrigin))
+	ass.True(t, age.CompareValues(ShouldBeOrigin, Origin))
+	ass.False(t, age.CompareValues(PiOver4, ShouldBeOrigin))
 
-	ass.False(t, age.CompareItems(PiOver4, PiOver2))
-	ass.True(t, age.CompareItems(PiOver4, PiOver4))
-	ass.False(t, age.CompareItems(PiOver2, PiOver4))
-	ass.True(t, age.CompareItems(PiOver2, PiOver2))
+	ass.False(t, age.CompareValues(PiOver4, PiOver2))
+	ass.True(t, age.CompareValues(PiOver4, PiOver4))
+	ass.False(t, age.CompareValues(PiOver2, PiOver4))
+	ass.True(t, age.CompareValues(PiOver2, PiOver2))
 
 	// Rune
 	var Null = rune(0)
@@ -99,13 +99,13 @@ func TestComparison(t *tes.T) {
 	var Happy = '☺'
 	var ShouldBeNull rune
 
-	ass.True(t, age.CompareItems(ShouldBeNull, Null))
-	ass.False(t, age.CompareItems(Sad, ShouldBeNull))
+	ass.True(t, age.CompareValues(ShouldBeNull, Null))
+	ass.False(t, age.CompareValues(Sad, ShouldBeNull))
 
-	ass.False(t, age.CompareItems(Happy, Sad))
-	ass.True(t, age.CompareItems(Happy, Happy))
-	ass.False(t, age.CompareItems(Sad, Happy))
-	ass.True(t, age.CompareItems(Sad, Sad))
+	ass.False(t, age.CompareValues(Happy, Sad))
+	ass.True(t, age.CompareValues(Happy, Happy))
+	ass.False(t, age.CompareValues(Sad, Happy))
+	ass.True(t, age.CompareValues(Sad, Sad))
 
 	// String
 	var Empty = ""
@@ -113,13 +113,13 @@ func TestComparison(t *tes.T) {
 	var World = "World"
 	var ShouldBeEmpty string
 
-	ass.True(t, age.CompareItems(ShouldBeEmpty, Empty))
-	ass.False(t, age.CompareItems(Hello, ShouldBeEmpty))
+	ass.True(t, age.CompareValues(ShouldBeEmpty, Empty))
+	ass.False(t, age.CompareValues(Hello, ShouldBeEmpty))
 
-	ass.False(t, age.CompareItems(World, Hello))
-	ass.True(t, age.CompareItems(World, World))
-	ass.False(t, age.CompareItems(Hello, World))
-	ass.True(t, age.CompareItems(Hello, Hello))
+	ass.False(t, age.CompareValues(World, Hello))
+	ass.True(t, age.CompareValues(World, World))
+	ass.False(t, age.CompareValues(Hello, World))
+	ass.True(t, age.CompareValues(Hello, Hello))
 
 	// Array
 	var Universe = "Universe"
@@ -128,13 +128,13 @@ func TestComparison(t *tes.T) {
 	var a2 = []any{Hello, Universe}
 	var ShouldBeA0 []any
 
-	ass.True(t, age.CompareItems(ShouldBeA0, a0))
-	ass.False(t, age.CompareItems(a1, ShouldBeA0))
+	ass.True(t, age.CompareValues(ShouldBeA0, a0))
+	ass.False(t, age.CompareValues(a1, ShouldBeA0))
 
-	ass.False(t, age.CompareItems(a1, a2))
-	ass.True(t, age.CompareItems(a1, a1))
-	ass.False(t, age.CompareItems(a2, a1))
-	ass.True(t, age.CompareItems(a2, a2))
+	ass.False(t, age.CompareValues(a1, a2))
+	ass.True(t, age.CompareValues(a1, a1))
+	ass.False(t, age.CompareValues(a2, a1))
+	ass.True(t, age.CompareValues(a2, a2))
 
 	// Map
 	var m0 = map[any]any{}
@@ -146,53 +146,53 @@ func TestComparison(t *tes.T) {
 		Two: Hello}
 	var ShouldBeM0 map[any]any
 
-	ass.True(t, age.CompareItems(ShouldBeM0, m0))
-	ass.False(t, age.CompareItems(m1, ShouldBeM0))
+	ass.True(t, age.CompareValues(ShouldBeM0, m0))
+	ass.False(t, age.CompareValues(m1, ShouldBeM0))
 
-	ass.False(t, age.CompareItems(m1, m2))
-	ass.True(t, age.CompareItems(m1, m1))
-	ass.False(t, age.CompareItems(m2, m1))
-	ass.True(t, age.CompareItems(m2, m2))
+	ass.False(t, age.CompareValues(m1, m2))
+	ass.True(t, age.CompareValues(m1, m1))
+	ass.False(t, age.CompareValues(m2, m1))
+	ass.True(t, age.CompareValues(m2, m2))
 }
 
 func TestRanking(t *tes.T) {
 	// Nil
 	var ShouldBeNil any
 
-	ass.Equal(t, 0, age.RankItems(nil, nil))
-	ass.Equal(t, 0, age.RankItems(nil, ShouldBeNil))
-	ass.Equal(t, 0, age.RankItems(ShouldBeNil, ShouldBeNil))
-	ass.Equal(t, 0, age.RankItems(ShouldBeNil, nil))
+	ass.Equal(t, 0, age.RankValues(nil, nil))
+	ass.Equal(t, 0, age.RankValues(nil, ShouldBeNil))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNil, ShouldBeNil))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNil, nil))
 
 	// Boolean
 	var False = false
 	var True = true
 	var ShouldBeFalse bool
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeFalse, ShouldBeFalse))
-	ass.Equal(t, -1, age.RankItems(ShouldBeFalse, True))
-	ass.Equal(t, 0, age.RankItems(False, ShouldBeFalse))
-	ass.Equal(t, 1, age.RankItems(True, ShouldBeFalse))
-	ass.Equal(t, 0, age.RankItems(ShouldBeFalse, False))
-	ass.Equal(t, -1, age.RankItems(False, True))
-	ass.Equal(t, 0, age.RankItems(False, False))
-	ass.Equal(t, 1, age.RankItems(True, False))
-	ass.Equal(t, 0, age.RankItems(True, True))
+	ass.Equal(t, 0, age.RankValues(ShouldBeFalse, ShouldBeFalse))
+	ass.Equal(t, -1, age.RankValues(ShouldBeFalse, True))
+	ass.Equal(t, 0, age.RankValues(False, ShouldBeFalse))
+	ass.Equal(t, 1, age.RankValues(True, ShouldBeFalse))
+	ass.Equal(t, 0, age.RankValues(ShouldBeFalse, False))
+	ass.Equal(t, -1, age.RankValues(False, True))
+	ass.Equal(t, 0, age.RankValues(False, False))
+	ass.Equal(t, 1, age.RankValues(True, False))
+	ass.Equal(t, 0, age.RankValues(True, True))
 
 	// Byte
 	var Zero byte = 0x00
 	var One byte = 0x01
 	var ShouldBeZero byte
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeZero, ShouldBeZero))
-	ass.Equal(t, -1, age.RankItems(ShouldBeZero, One))
-	ass.Equal(t, 0, age.RankItems(Zero, ShouldBeZero))
-	ass.Equal(t, 1, age.RankItems(One, ShouldBeZero))
-	ass.Equal(t, 0, age.RankItems(ShouldBeZero, Zero))
-	ass.Equal(t, -1, age.RankItems(Zero, One))
-	ass.Equal(t, 0, age.RankItems(Zero, Zero))
-	ass.Equal(t, 1, age.RankItems(One, Zero))
-	ass.Equal(t, 0, age.RankItems(One, One))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZero, ShouldBeZero))
+	ass.Equal(t, -1, age.RankValues(ShouldBeZero, One))
+	ass.Equal(t, 0, age.RankValues(Zero, ShouldBeZero))
+	ass.Equal(t, 1, age.RankValues(One, ShouldBeZero))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZero, Zero))
+	ass.Equal(t, -1, age.RankValues(Zero, One))
+	ass.Equal(t, 0, age.RankValues(Zero, Zero))
+	ass.Equal(t, 1, age.RankValues(One, Zero))
+	ass.Equal(t, 0, age.RankValues(One, One))
 
 	// Integer
 	var Zilch = 0
@@ -200,15 +200,15 @@ func TestRanking(t *tes.T) {
 	var Three = 3
 	var ShouldBeZilch int
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeZilch, ShouldBeZilch))
-	ass.Equal(t, -1, age.RankItems(ShouldBeZilch, Two))
-	ass.Equal(t, 0, age.RankItems(Zilch, ShouldBeZilch))
-	ass.Equal(t, 1, age.RankItems(Two, ShouldBeZilch))
-	ass.Equal(t, 0, age.RankItems(ShouldBeZilch, Zilch))
-	ass.Equal(t, -1, age.RankItems(Two, Three))
-	ass.Equal(t, 0, age.RankItems(Two, Two))
-	ass.Equal(t, 1, age.RankItems(Three, Two))
-	ass.Equal(t, 0, age.RankItems(Three, Three))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZilch, ShouldBeZilch))
+	ass.Equal(t, -1, age.RankValues(ShouldBeZilch, Two))
+	ass.Equal(t, 0, age.RankValues(Zilch, ShouldBeZilch))
+	ass.Equal(t, 1, age.RankValues(Two, ShouldBeZilch))
+	ass.Equal(t, 0, age.RankValues(ShouldBeZilch, Zilch))
+	ass.Equal(t, -1, age.RankValues(Two, Three))
+	ass.Equal(t, 0, age.RankValues(Two, Two))
+	ass.Equal(t, 1, age.RankValues(Three, Two))
+	ass.Equal(t, 0, age.RankValues(Three, Three))
 
 	// Float
 	var Negligible = 0.0
@@ -216,15 +216,15 @@ func TestRanking(t *tes.T) {
 	var Half = 0.5
 	var ShouldBeNegligible float64
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeNegligible, ShouldBeNegligible))
-	ass.Equal(t, -1, age.RankItems(ShouldBeNegligible, Half))
-	ass.Equal(t, 0, age.RankItems(Negligible, ShouldBeNegligible))
-	ass.Equal(t, 1, age.RankItems(Half, ShouldBeNegligible))
-	ass.Equal(t, 0, age.RankItems(ShouldBeNegligible, Negligible))
-	ass.Equal(t, -1, age.RankItems(Fourth, Half))
-	ass.Equal(t, 0, age.RankItems(Fourth, Fourth))
-	ass.Equal(t, 1, age.RankItems(Half, Fourth))
-	ass.Equal(t, 0, age.RankItems(Half, Half))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNegligible, ShouldBeNegligible))
+	ass.Equal(t, -1, age.RankValues(ShouldBeNegligible, Half))
+	ass.Equal(t, 0, age.RankValues(Negligible, ShouldBeNegligible))
+	ass.Equal(t, 1, age.RankValues(Half, ShouldBeNegligible))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNegligible, Negligible))
+	ass.Equal(t, -1, age.RankValues(Fourth, Half))
+	ass.Equal(t, 0, age.RankValues(Fourth, Fourth))
+	ass.Equal(t, 1, age.RankValues(Half, Fourth))
+	ass.Equal(t, 0, age.RankValues(Half, Half))
 
 	// Complex
 	var Origin = 0 + 0i
@@ -232,15 +232,15 @@ func TestRanking(t *tes.T) {
 	var PiOver2 = 1 + 0i
 	var ShouldBeOrigin complex128
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeOrigin, ShouldBeOrigin))
-	ass.Equal(t, -1, age.RankItems(ShouldBeOrigin, PiOver4))
-	ass.Equal(t, 0, age.RankItems(Origin, ShouldBeOrigin))
-	ass.Equal(t, 1, age.RankItems(PiOver4, ShouldBeOrigin))
-	ass.Equal(t, 0, age.RankItems(ShouldBeOrigin, Origin))
-	ass.Equal(t, -1, age.RankItems(PiOver2, PiOver4))
-	ass.Equal(t, 0, age.RankItems(PiOver2, PiOver2))
-	ass.Equal(t, 1, age.RankItems(PiOver4, PiOver2))
-	ass.Equal(t, 0, age.RankItems(PiOver4, PiOver4))
+	ass.Equal(t, 0, age.RankValues(ShouldBeOrigin, ShouldBeOrigin))
+	ass.Equal(t, -1, age.RankValues(ShouldBeOrigin, PiOver4))
+	ass.Equal(t, 0, age.RankValues(Origin, ShouldBeOrigin))
+	ass.Equal(t, 1, age.RankValues(PiOver4, ShouldBeOrigin))
+	ass.Equal(t, 0, age.RankValues(ShouldBeOrigin, Origin))
+	ass.Equal(t, -1, age.RankValues(PiOver2, PiOver4))
+	ass.Equal(t, 0, age.RankValues(PiOver2, PiOver2))
+	ass.Equal(t, 1, age.RankValues(PiOver4, PiOver2))
+	ass.Equal(t, 0, age.RankValues(PiOver4, PiOver4))
 
 	// Rune
 	var Null = rune(0)
@@ -248,15 +248,15 @@ func TestRanking(t *tes.T) {
 	var Happy = '☺'
 	var ShouldBeNull rune
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeNull, ShouldBeNull))
-	ass.Equal(t, -1, age.RankItems(ShouldBeNull, Sad))
-	ass.Equal(t, 0, age.RankItems(Null, ShouldBeNull))
-	ass.Equal(t, 1, age.RankItems(Sad, ShouldBeNull))
-	ass.Equal(t, 0, age.RankItems(ShouldBeNull, Null))
-	ass.Equal(t, -1, age.RankItems(Sad, Happy))
-	ass.Equal(t, 0, age.RankItems(Sad, Sad))
-	ass.Equal(t, 1, age.RankItems(Happy, Sad))
-	ass.Equal(t, 0, age.RankItems(Happy, Happy))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNull, ShouldBeNull))
+	ass.Equal(t, -1, age.RankValues(ShouldBeNull, Sad))
+	ass.Equal(t, 0, age.RankValues(Null, ShouldBeNull))
+	ass.Equal(t, 1, age.RankValues(Sad, ShouldBeNull))
+	ass.Equal(t, 0, age.RankValues(ShouldBeNull, Null))
+	ass.Equal(t, -1, age.RankValues(Sad, Happy))
+	ass.Equal(t, 0, age.RankValues(Sad, Sad))
+	ass.Equal(t, 1, age.RankValues(Happy, Sad))
+	ass.Equal(t, 0, age.RankValues(Happy, Happy))
 
 	// String
 	var Empty = ""
@@ -264,15 +264,15 @@ func TestRanking(t *tes.T) {
 	var World = "World"
 	var ShouldBeEmpty string
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeEmpty, ShouldBeEmpty))
-	ass.Equal(t, -1, age.RankItems(ShouldBeEmpty, Hello))
-	ass.Equal(t, 0, age.RankItems(Empty, ShouldBeEmpty))
-	ass.Equal(t, 1, age.RankItems(Hello, ShouldBeEmpty))
-	ass.Equal(t, 0, age.RankItems(ShouldBeEmpty, Empty))
-	ass.Equal(t, -1, age.RankItems(Hello, World))
-	ass.Equal(t, 0, age.RankItems(Hello, Hello))
-	ass.Equal(t, 1, age.RankItems(World, Hello))
-	ass.Equal(t, 0, age.RankItems(World, World))
+	ass.Equal(t, 0, age.RankValues(ShouldBeEmpty, ShouldBeEmpty))
+	ass.Equal(t, -1, age.RankValues(ShouldBeEmpty, Hello))
+	ass.Equal(t, 0, age.RankValues(Empty, ShouldBeEmpty))
+	ass.Equal(t, 1, age.RankValues(Hello, ShouldBeEmpty))
+	ass.Equal(t, 0, age.RankValues(ShouldBeEmpty, Empty))
+	ass.Equal(t, -1, age.RankValues(Hello, World))
+	ass.Equal(t, 0, age.RankValues(Hello, Hello))
+	ass.Equal(t, 1, age.RankValues(World, Hello))
+	ass.Equal(t, 0, age.RankValues(World, World))
 
 	// Array
 	var Universe = "Universe"
@@ -283,23 +283,23 @@ func TestRanking(t *tes.T) {
 	var a4 = []any{Hello, Universe, World}
 	var ShouldBeA0 []any
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeA0, ShouldBeA0))
-	ass.Equal(t, -1, age.RankItems(ShouldBeA0, a1))
-	ass.Equal(t, 0, age.RankItems(a0, ShouldBeA0))
-	ass.Equal(t, 1, age.RankItems(a1, ShouldBeA0))
-	ass.Equal(t, 0, age.RankItems(ShouldBeA0, a0))
-	ass.Equal(t, -1, age.RankItems(a2, a1))
-	ass.Equal(t, 0, age.RankItems(a2, a2))
-	ass.Equal(t, 1, age.RankItems(a1, a2))
-	ass.Equal(t, 0, age.RankItems(a1, a1))
-	ass.Equal(t, -1, age.RankItems(a2, a3))
-	ass.Equal(t, 0, age.RankItems(a2, a2))
-	ass.Equal(t, 1, age.RankItems(a3, a2))
-	ass.Equal(t, 0, age.RankItems(a3, a3))
-	ass.Equal(t, -1, age.RankItems(a4, a1))
-	ass.Equal(t, 0, age.RankItems(a4, a4))
-	ass.Equal(t, 1, age.RankItems(a1, a4))
-	ass.Equal(t, 0, age.RankItems(a1, a1))
+	ass.Equal(t, 0, age.RankValues(ShouldBeA0, ShouldBeA0))
+	ass.Equal(t, -1, age.RankValues(ShouldBeA0, a1))
+	ass.Equal(t, 0, age.RankValues(a0, ShouldBeA0))
+	ass.Equal(t, 1, age.RankValues(a1, ShouldBeA0))
+	ass.Equal(t, 0, age.RankValues(ShouldBeA0, a0))
+	ass.Equal(t, -1, age.RankValues(a2, a1))
+	ass.Equal(t, 0, age.RankValues(a2, a2))
+	ass.Equal(t, 1, age.RankValues(a1, a2))
+	ass.Equal(t, 0, age.RankValues(a1, a1))
+	ass.Equal(t, -1, age.RankValues(a2, a3))
+	ass.Equal(t, 0, age.RankValues(a2, a2))
+	ass.Equal(t, 1, age.RankValues(a3, a2))
+	ass.Equal(t, 0, age.RankValues(a3, a3))
+	ass.Equal(t, -1, age.RankValues(a4, a1))
+	ass.Equal(t, 0, age.RankValues(a4, a4))
+	ass.Equal(t, 1, age.RankValues(a1, a4))
+	ass.Equal(t, 0, age.RankValues(a1, a1))
 
 	// Map
 	var m0 = map[any]any{}
@@ -319,21 +319,21 @@ func TestRanking(t *tes.T) {
 		Three: World}
 	var ShouldBeM0 map[any]any
 
-	ass.Equal(t, 0, age.RankItems(ShouldBeM0, ShouldBeM0))
-	ass.Equal(t, -1, age.RankItems(ShouldBeM0, m1))
-	ass.Equal(t, 0, age.RankItems(m0, ShouldBeM0))
-	ass.Equal(t, 1, age.RankItems(m1, ShouldBeM0))
-	ass.Equal(t, 0, age.RankItems(ShouldBeM0, m0))
-	ass.Equal(t, -1, age.RankItems(m2, m1))
-	ass.Equal(t, 0, age.RankItems(m2, m2))
-	ass.Equal(t, 1, age.RankItems(m1, m2))
-	ass.Equal(t, 0, age.RankItems(m1, m1))
-	ass.Equal(t, -1, age.RankItems(m2, m3))
-	ass.Equal(t, 0, age.RankItems(m2, m2))
-	ass.Equal(t, 1, age.RankItems(m3, m2))
-	ass.Equal(t, 0, age.RankItems(m3, m3))
-	ass.Equal(t, -1, age.RankItems(m4, m1))
-	ass.Equal(t, 0, age.RankItems(m4, m4))
-	ass.Equal(t, 1, age.RankItems(m1, m4))
-	ass.Equal(t, 0, age.RankItems(m1, m1))
+	ass.Equal(t, 0, age.RankValues(ShouldBeM0, ShouldBeM0))
+	ass.Equal(t, -1, age.RankValues(ShouldBeM0, m1))
+	ass.Equal(t, 0, age.RankValues(m0, ShouldBeM0))
+	ass.Equal(t, 1, age.RankValues(m1, ShouldBeM0))
+	ass.Equal(t, 0, age.RankValues(ShouldBeM0, m0))
+	ass.Equal(t, -1, age.RankValues(m2, m1))
+	ass.Equal(t, 0, age.RankValues(m2, m2))
+	ass.Equal(t, 1, age.RankValues(m1, m2))
+	ass.Equal(t, 0, age.RankValues(m1, m1))
+	ass.Equal(t, -1, age.RankValues(m2, m3))
+	ass.Equal(t, 0, age.RankValues(m2, m2))
+	ass.Equal(t, 1, age.RankValues(m3, m2))
+	ass.Equal(t, 0, age.RankValues(m3, m3))
+	ass.Equal(t, -1, age.RankValues(m4, m1))
+	ass.Equal(t, 0, age.RankValues(m4, m4))
+	ass.Equal(t, 1, age.RankValues(m1, m4))
+	ass.Equal(t, 0, age.RankValues(m1, m1))
 }

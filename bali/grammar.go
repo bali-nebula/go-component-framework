@@ -42,6 +42,7 @@ var grammar = map[string]string{
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
+	"$composit":       `expression`,
 	"$condition":      `expression`,
 	"$context":        `"(" parameters ")"`,
 	"$continueClause": `"continue" "loop"`,
@@ -62,8 +63,8 @@ var grammar = map[string]string{
     variable    |  ! IDENTIFIER
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
-    invocation  |  ! expression ("." | "<-") method arguments
-    value       |  ! expression "[" indices "]"
+    invocation  |  ! target ("." | "<-") method arguments
+    item        |  ! composite "[" indices "]"
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
     inversion   |  ! ("-" | "/" | "*") expression
@@ -78,14 +79,10 @@ var grammar = map[string]string{
 	"$intrinsic":  `function arguments`,
 	"$inversion":  `("-" | "/" | "*") expression`,
 	"$invocation": `target ("." | "<-") method arguments`,
-	"$item":       `SYMBOL`,
-	"$items": `
-    component {"," component} |
-    EOL <component EOL>       |
-    ! No components.`,
-	"$list":      `"[" items "]"`,
-	"$logical":   `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
-	"$magnitude": `"|" expression "|"`,
+	"$item":       `composite "[" indices "]"`,
+	"$list":       `"[" values "]"`,
+	"$logical":    `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
+	"$magnitude":  `"|" expression "|"`,
 	"$mainClause": `
     ifClause |
     selectClause |
@@ -140,10 +137,14 @@ var grammar = map[string]string{
 	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$target":      `expression`,
 	"$throwClause": `"throw" exception`,
-	"$value":       `expression "[" indices "]"`,
+	"$value":       `SYMBOL`,
+	"$values": `
+    component {"," component} |
+    EOL <component EOL>       |
+    ! No components.`,
 	"$variable":    `IDENTIFIER`,
 	"$whileClause": `"while" condition "do" procedure`,
-	"$withClause":  `"with" "each" item "in" sequence "do" procedure`,
+	"$withClause":  `"with" "each" value "in" sequence "do" procedure`,
 	"$ANGLE":       `"~" (REAL | ZERO)`,
 	"$ANY":         `"any"`,
 	"$AUTHORITY":   `<~"/">`,

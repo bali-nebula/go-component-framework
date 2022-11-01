@@ -18,31 +18,31 @@ import (
 // STACK IMPLEMENTATION
 
 // This constructor creates a new empty stack with the default capacity.
-// The default capacity is 16 items.
-func Stack[T abs.ItemLike]() abs.StackLike[T] {
+// The default capacity is 16 values.
+func Stack[T abs.ValueLike]() abs.StackLike[T] {
 	return StackWithCapacity[T](0)
 }
 
 // This constructor creates a new empty stack with the specified capacity.
-func StackWithCapacity[T abs.ItemLike](capacity int) abs.StackLike[T] {
+func StackWithCapacity[T abs.ValueLike](capacity int) abs.StackLike[T] {
 	// Groom the arguments.
 	if capacity < 1 {
 		capacity = 16 // The default value.
 	}
 
 	// Return an empty stack.
-	var items = List[T]()
-	return &stack[T]{items, items, capacity}
+	var values = List[T]()
+	return &stack[T]{values, values, capacity}
 }
 
 // This type defines the structure and methods associated with a stack of
-// items. A stack implements last-in-first-out semantics.
+// values. A stack implements last-in-first-out semantics.
 // This type is parameterized as follows:
-//   - T is any type of item.
-type stack[T abs.ItemLike] struct {
+//   - T is any type of value.
+type stack[T abs.ValueLike] struct {
 	// Note: The delegated methods don't see the real collection type.
 	abs.Sequential[T]
-	items    abs.ListLike[T]
+	values   abs.ListLike[T]
 	capacity int
 }
 
@@ -53,40 +53,40 @@ func (v *stack[T]) GetCapacity() int {
 	return v.capacity
 }
 
-// This method adds the specified item to the top of this stack.
-func (v *stack[T]) AddItem(item T) {
-	if v.items.GetSize() == v.capacity {
-		panic("Attempted to add an item onto a stack that has reached its capacity!")
+// This method adds the specified value to the top of this stack.
+func (v *stack[T]) AddItem(value T) {
+	if v.values.GetSize() == v.capacity {
+		panic("Attempted to add an value onto a stack that has reached its capacity!")
 	}
-	v.items.AddItem(item)
+	v.values.AddItem(value)
 }
 
-// This method adds the specified items to the top of this stack.
-func (v *stack[T]) AddItems(items abs.Sequential[T]) {
-	var iterator = age.Iterator(items)
+// This method adds the specified values to the top of this stack.
+func (v *stack[T]) AddItems(values abs.Sequential[T]) {
+	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
-		var item = iterator.GetNext()
-		v.AddItem(item) // We must call this explicitly to get the capacity check.
+		var value = iterator.GetNext()
+		v.AddItem(value) // We must call this explicitly to get the capacity check.
 	}
 }
 
-// This method retrieves from this stack the item that is on top of it.
+// This method retrieves from this stack the value that is on top of it.
 func (v *stack[T]) GetTop() T {
-	if v.items.IsEmpty() {
+	if v.values.IsEmpty() {
 		panic("Attempted to retrieve the top of an empty stack!")
 	}
-	return v.items.GetItem(-1)
+	return v.values.GetItem(-1)
 }
 
-// This method removes from this stack the item that is on top of it.
+// This method removes from this stack the value that is on top of it.
 func (v *stack[T]) RemoveTop() T {
-	if v.items.IsEmpty() {
+	if v.values.IsEmpty() {
 		panic("Attempted to remove the top of an empty stack!")
 	}
-	return v.items.RemoveItem(-1)
+	return v.values.RemoveItem(-1)
 }
 
-// This method removes all items from this stack.
+// This method removes all values from this stack.
 func (v *stack[T]) RemoveAll() {
-	v.items.RemoveAll()
+	v.values.RemoveAll()
 }

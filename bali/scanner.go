@@ -93,18 +93,18 @@ type Token struct {
 
 // This method returns the a canonical string version of this token.
 func (v Token) String() string {
-	var value string
+	var s string
 	switch {
 	case v.Type == TokenEOF:
-		value = "<EOF>"
+		s = "<EOF>"
 	case v.Type == TokenEOL:
-		value = "<EOL>"
+		s = "<EOL>"
 	case len(v.Value) > 60:
-		value = fmt.Sprintf("%.60q...", v.Value)
+		s = fmt.Sprintf("%.60q...", v.Value)
 	default:
-		value = fmt.Sprintf("%q", v.Value)
+		s = fmt.Sprintf("%q", v.Value)
 	}
-	return fmt.Sprintf("Token [type: %s, line: %2d, position: %2d]: %s", v.Type, v.Line, v.Position, value)
+	return fmt.Sprintf("Token [type: %s, line: %2d, position: %2d]: %s", v.Type, v.Line, v.Position, s)
 }
 
 // SCANNER
@@ -578,7 +578,7 @@ const (
 var angleScanner = reg.MustCompile(`^(?:` + angle + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for an angle element. The first item in the array is the entire
+// subgroups for an angle element. The first string in the array is the entire
 // matched string.
 func scanAngle(v []byte) []string {
 	return bytesToStrings(angleScanner.FindSubmatch(v))
@@ -601,7 +601,7 @@ const (
 var binaryScanner = reg.MustCompile(`^(?:` + binary + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a binary string. The first item in the array is the entire
+// subgroups for a binary string. The first string in the array is the entire
 // matched string.
 func scanBinary(v []byte) []string {
 	return bytesToStrings(binaryScanner.FindSubmatch(v))
@@ -621,7 +621,7 @@ const (
 var booleanScanner = reg.MustCompile(`^(?:` + boolean + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a boolean element. The first item in the array is the entire
+// subgroups for a boolean element. The first string in the array is the entire
 // matched string.
 func scanBoolean(v []byte) []string {
 	return bytesToStrings(booleanScanner.FindSubmatch(v))
@@ -630,7 +630,7 @@ func scanBoolean(v []byte) []string {
 // COMMENT SYNTAX
 
 // This function returns for the specified string an array of the matching
-// subgroups for a commment. The first item in the array is the entire matched
+// subgroups for a commment. The first string in the array is the entire matched
 // string. Since a comment can be recursive a regular expression is not used in
 // this implementation.
 func scanComment(v []byte) []string {
@@ -679,7 +679,7 @@ func scanComment(v []byte) []string {
 // DELIMITER SYNTAX
 
 // This function returns for the specified string an array of the matching
-// subgroups for a delimiter. The first item in the array is the entire
+// subgroups for a delimiter. The first string in the array is the entire
 // matched string.
 func scanDelimiter(v []byte) []string {
 	var result []string
@@ -709,7 +709,7 @@ const (
 var durationScanner = reg.MustCompile(`^(?:` + duration + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a duration element. The first item in the array is the entire
+// subgroups for a duration element. The first string in the array is the entire
 // matched string.
 func scanDuration(v []byte) []string {
 	return bytesToStrings(durationScanner.FindSubmatch(v))
@@ -731,7 +731,7 @@ const (
 var identifierScanner = reg.MustCompile(`^(?:` + identifier + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for an identifier. The first item in the array is the entire
+// subgroups for an identifier. The first string in the array is the entire
 // matched string.
 func scanIdentifier(v []byte) []string {
 	return bytesToStrings(identifierScanner.FindSubmatch(v))
@@ -740,7 +740,7 @@ func scanIdentifier(v []byte) []string {
 // KEYWORD SYNTAX
 
 // This function returns for the specified string an array of the matching
-// subgroups for a keyword. The first item in the array is the entire
+// subgroups for a keyword. The first string in the array is the entire
 // matched string.
 func scanKeyword(v []byte) []string {
 	var result []string
@@ -773,7 +773,7 @@ const (
 var momentScanner = reg.MustCompile(`^(?:` + moment + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a moment element. The first item in the array is the entire
+// subgroups for a moment element. The first string in the array is the entire
 // matched string.
 func scanMoment(v []byte) []string {
 	return bytesToStrings(momentScanner.FindSubmatch(v))
@@ -795,7 +795,7 @@ const (
 var monikerScanner = reg.MustCompile(`^(?:` + moniker + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a moniker string. The first item in the array is the entire
+// subgroups for a moniker string. The first string in the array is the entire
 // matched string.
 func scanMoniker(v []byte) []string {
 	return bytesToStrings(monikerScanner.FindSubmatch(v))
@@ -804,7 +804,7 @@ func scanMoniker(v []byte) []string {
 // NARRATIVE STRING SYNTAX
 
 // This function returns for the specified string an array of the matching
-// subgroups for a narrative string. The first item in the array is the entire
+// subgroups for a narrative string. The first string in the array is the entire
 // matched string. Since a narrative can be recursive a regular expression is
 // not used in this implementation.
 func scanNarrative(v []byte) []string {
@@ -864,7 +864,7 @@ const (
 var noteScanner = reg.MustCompile(`^(?:` + note + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a note. The first item in the array is the entire matched
+// subgroups for a note. The first string in the array is the entire matched
 // string.
 func scanNote(v []byte) []string {
 	return bytesToStrings(noteScanner.FindSubmatch(v))
@@ -890,7 +890,7 @@ const (
 var numberScanner = reg.MustCompile(`^(?:` + number + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a number element. The first item in the array is the entire
+// subgroups for a number element. The first string in the array is the entire
 // matched string.
 func scanNumber(v []byte) []string {
 	return bytesToStrings(numberScanner.FindSubmatch(v))
@@ -915,7 +915,7 @@ const (
 var patternScanner = reg.MustCompile(`^(?:` + pattern + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a pattern element. The first item in the array is the entire
+// subgroups for a pattern element. The first string in the array is the entire
 // matched string.
 func scanPattern(v []byte) []string {
 	return bytesToStrings(patternScanner.FindSubmatch(v))
@@ -935,7 +935,7 @@ const (
 var percentageScanner = reg.MustCompile(`^(?:` + percentage + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a percentage element. The first item in the array is the entire
+// subgroups for a percentage element. The first string in the array is the entire
 // matched string.
 func scanPercentage(v []byte) []string {
 	return bytesToStrings(percentageScanner.FindSubmatch(v))
@@ -955,7 +955,7 @@ const (
 var probabilityScanner = reg.MustCompile(`^(?:` + probability + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a probability element. The first item in the array is the
+// subgroups for a probability element. The first string in the array is the
 // entire matched string.
 func scanProbability(v []byte) []string {
 	return bytesToStrings(probabilityScanner.FindSubmatch(v))
@@ -975,7 +975,7 @@ const (
 var quoteScanner = reg.MustCompile(`^(?:` + quote + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a quoted string. The first item in the array is the entire
+// subgroups for a quoted string. The first string in the array is the entire
 // matched string.
 func scanQuote(v []byte) []string {
 	return bytesToStrings(quoteScanner.FindSubmatch(v))
@@ -1006,7 +1006,7 @@ const (
 var resourceScanner = reg.MustCompile(`^(?:` + resource + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a resource element. The first item in the array is the entire
+// subgroups for a resource element. The first string in the array is the entire
 // matched string.
 func scanResource(v []byte) []string {
 	return bytesToStrings(resourceScanner.FindSubmatch(v))
@@ -1026,7 +1026,7 @@ const (
 var symbolScanner = reg.MustCompile(`^(?:` + symbol + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a symbol string. The first item in the array is the entire
+// subgroups for a symbol string. The first string in the array is the entire
 // matched string.
 func scanSymbol(v []byte) []string {
 	return bytesToStrings(symbolScanner.FindSubmatch(v))
@@ -1047,7 +1047,7 @@ const (
 var tagScanner = reg.MustCompile(`^(?:` + tag + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a tag element. The first item in the array is the entire
+// subgroups for a tag element. The first string in the array is the entire
 // matched string.
 func scanTag(v []byte) []string {
 	return bytesToStrings(tagScanner.FindSubmatch(v))
@@ -1067,7 +1067,7 @@ const (
 var versionScanner = reg.MustCompile(`^(?:` + version + `)`)
 
 // This function returns for the specified string an array of the matching
-// subgroups for a version string. The first item in the array is the entire
+// subgroups for a version string. The first string in the array is the entire
 // matched string.
 func scanVersion(v []byte) []string {
 	return bytesToStrings(versionScanner.FindSubmatch(v))

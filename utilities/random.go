@@ -44,7 +44,7 @@ func RandomBytes(size int) []byte {
 	return bytes
 }
 
-// This function randomly shuffles (in place) the items in the specified array.
+// This function randomly shuffles (in place) the values in the specified array.
 func ShuffleArray[T any](array []T) {
 	var size = len(array)
 	for i := 0; i < size; i++ {

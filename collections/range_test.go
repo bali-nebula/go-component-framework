@@ -73,7 +73,7 @@ func TestRangesWithRunes(t *tes.T) {
 	ass.Equal(t, 13, s.GetIndex('m'))
 
 	var a = col.List[rune]()
-	var items = s.AsArray()
+	var values = s.AsArray()
 	a.AddItems(s)
-	ass.Equal(t, items, a.AsArray())
+	ass.Equal(t, values, a.AsArray())
 }

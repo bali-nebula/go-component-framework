@@ -134,14 +134,14 @@ func (v *formatter) formatArray(value any) {
 			for i := 0; i < size; i++ {
 				v.state.IncrementDepth()
 				v.state.AppendNewline()
-				var item = r.Index(i)
-				v.formatAny(item)
+				var value = r.Index(i)
+				v.formatAny(value)
 				v.state.DecrementDepth()
 			}
 			v.state.AppendNewline()
 		}
 	} else {
-		v.state.AppendString(" ") // The array of items is empty: [ ]
+		v.state.AppendString(" ") // The array of values is empty: [ ]
 	}
 	v.state.AppendString("]")
 }
@@ -286,7 +286,7 @@ func (v *formatter) formatInterface(value any) {
 		v.formatList(list)
 		return
 	}
-	rng, ok := value.(abs.RangeLike[abs.ItemLike])
+	rng, ok := value.(abs.RangeLike[abs.ValueLike])
 	if ok {
 		v.formatRange(rng)
 		return

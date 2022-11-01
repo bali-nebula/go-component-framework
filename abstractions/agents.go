@@ -18,20 +18,20 @@ import (
 // ITERATION INTERFACES
 
 // This interface defines the methods supported by all iterator-like agents that
-// are capable of moving forward and backward over the items in a sequence. It
+// are capable of moving forward and backward over the values in a sequence. It
 // is used to implement the GoF Iterator Pattern:
 //   - https://en.wikipedia.org/wiki/Iterator_pattern
 //
-// An iterator locks into the slots that reside between each item in the
+// An iterator locks into the slots that reside between each value in the
 // sequence:
 //
-//	    [item 1] . [item 2] . [item 3] ... [item N]
-//	  ^          ^          ^                       ^
-//	slot 0     slot 1     slot 2                  slot N
+//	    [value 1] . [value 2] . [value 3] ... [value N]
+//	  ^           ^           ^                         ^
+//	slot 0      slot 1      slot 2                    slot N
 //
-// It moves from slot to slot and has access to the items (if they exist) on
+// It moves from slot to slot and has access to the values (if they exist) on
 // each side of the slot.
-type IteratorLike[T ItemLike] interface {
+type IteratorLike[T ValueLike] interface {
 	GetSlot() int
 	ToSlot(slot int)
 	ToStart()
@@ -45,35 +45,35 @@ type IteratorLike[T ItemLike] interface {
 // COLLATION INTERFACES
 
 // This interface defines the methods supported by all collator-like agent
-// types that can compare and rank two items.
+// types that can compare and rank two values.
 type CollatorLike interface {
-	CompareItems(first ItemLike, second ItemLike) bool
-	RankItems(first ItemLike, second ItemLike) int
+	CompareValues(first ValueLike, second ValueLike) bool
+	RankValues(first ValueLike, second ValueLike) int
 }
 
 // This type defines the function signature for any function that can determine
-// whether or not two specified items are equal to each other.
-type ComparisonFunction func(first ItemLike, second ItemLike) bool
+// whether or not two specified values are equal to each other.
+type ComparisonFunction func(first ValueLike, second ValueLike) bool
 
 // This type defines the function signature for any function that can determine
-// the relative ordering of two specified items. The result must be one of
+// the relative ordering of two specified values. The result must be one of
 // the following:
-//   - -1: The first item is less than the second item.
-//   - 0: The first item is equal to the second item.
-//   - 1: The first item is more than the second item.
-type RankingFunction func(first ItemLike, second ItemLike) int
+//   - -1: The first value is less than the second value.
+//   - 0: The first value is equal to the second value.
+//   - 1: The first value is more than the second value.
+type RankingFunction func(first ValueLike, second ValueLike) int
 
 // SORTING INTERFACES
 
 // This interface defines the methods supported by all sorter-like agents that
-// can sort an array of items using a ranking function.
-type SorterLike[T ItemLike] interface {
+// can sort an array of values using a ranking function.
+type SorterLike[T ValueLike] interface {
 	SortArray(array []T)
 }
 
 // This type defines the function signature for any function that can sort an
-// array of items using a ranking function.
-type Sort[T ItemLike] func(array []T, rank RankingFunction)
+// array of values using a ranking function.
+type Sort[T ValueLike] func(array []T, rank RankingFunction)
 
 // AGENT STATE
 

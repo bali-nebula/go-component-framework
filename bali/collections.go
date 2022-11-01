@@ -91,7 +91,7 @@ func (v *parser) parseCatalog() (abs.CatalogLike[abs.KeyLike, abs.ComponentLike]
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("]",
 			"$collection",
-			"$items")
+			"$values")
 		panic(message)
 	}
 	return catalog, token, true
@@ -121,7 +121,7 @@ func (v *formatter) formatCatalog(catalog abs.CatalogLike[abs.KeyLike, abs.Compo
 	v.state.AppendString("]")
 }
 
-// This method attempts to parse a collection of items. It returns the
+// This method attempts to parse a collection of values. It returns the
 // collection and whether or not the collection was successfully parsed.
 func (v *parser) parseCollection() (abs.SequenceLike, *Token, bool) {
 	var ok bool
@@ -185,13 +185,13 @@ func (v *parser) parseInlineAssociations() (abs.CatalogLike[abs.KeyLike, abs.Com
 	return catalog, token, true
 }
 
-// This method attempts to parse a list collection with inline items. It returns
+// This method attempts to parse a list collection with inline values. It returns
 // the list collection and whether or not the list collection was
 // successfully parsed.
 func (v *parser) parseInlineItems() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var item abs.ComponentLike
+	var value abs.ComponentLike
 	var list = col.List[abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
@@ -199,9 +199,9 @@ func (v *parser) parseInlineItems() (abs.ListLike[abs.ComponentLike], *Token, bo
 		v.backupOne() // Put back the ']' token.
 		return list, token, true
 	}
-	item, token, ok = v.parseComponent()
+	value, token, ok = v.parseComponent()
 	if !ok {
-		// A non-empty list must have at least one component item.
+		// A non-empty list must have at least one component value.
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$component",
 			"$list",
@@ -209,14 +209,14 @@ func (v *parser) parseInlineItems() (abs.ListLike[abs.ComponentLike], *Token, bo
 		panic(message)
 	}
 	for {
-		list.AddItem(item)
-		// Every subsequent item must be preceded by a ','.
+		list.AddItem(value)
+		// Every subsequent value must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
-			// No more items.
+			// No more values.
 			break
 		}
-		item, token, ok = v.parseComponent()
+		value, token, ok = v.parseComponent()
 		if !ok {
 			var message = v.formatError("An unexpected token was received by the parser:", token)
 			message += generateGrammar("$component",
@@ -228,8 +228,8 @@ func (v *parser) parseInlineItems() (abs.ListLike[abs.ComponentLike], *Token, bo
 	return list, token, true
 }
 
-// This method attempts to parse a list of items. It returns the
-// list of items and whether or not the list of items was
+// This method attempts to parse a list of values. It returns the
+// list of values and whether or not the list of values was
 // successfully parsed.
 func (v *parser) parseList() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 	var ok bool
@@ -273,15 +273,15 @@ func (v *formatter) formatList(list abs.ListLike[abs.ComponentLike]) {
 	case 0:
 		v.state.AppendString(" ")
 	case 1:
-		var item = list.GetItem(1)
-		v.formatAny(item)
+		var value = list.GetItem(1)
+		v.formatAny(value)
 	default:
 		var iterator = age.Iterator[abs.ComponentLike](list)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
-			var item = iterator.GetNext()
-			v.formatAny(item)
+			var value = iterator.GetNext()
+			v.formatAny(value)
 		}
 		v.state.DecrementDepth()
 		v.state.AppendNewline()
@@ -324,17 +324,17 @@ func (v *parser) parseMultilineAssociations() (abs.CatalogLike[abs.KeyLike, abs.
 	return catalog, token, true
 }
 
-// This method attempts to parse a list collection with multiline items. It
+// This method attempts to parse a list collection with multiline values. It
 // returns the list collection and whether or not the list collection was
 // successfully parsed.
 func (v *parser) parseMultilineItems() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var item abs.ComponentLike
+	var value abs.ComponentLike
 	var list = col.List[abs.ComponentLike]()
-	item, token, ok = v.parseComponent()
+	value, token, ok = v.parseComponent()
 	if !ok {
-		// A non-empty list must have at least one item.
+		// A non-empty list must have at least one value.
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$component",
 			"$list",
@@ -342,8 +342,8 @@ func (v *parser) parseMultilineItems() (abs.ListLike[abs.ComponentLike], *Token,
 		panic(message)
 	}
 	for {
-		list.AddItem(item)
-		// Every item must be followed by an EOL.
+		list.AddItem(value)
+		// Every value must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
 			var message = v.formatError("An unexpected token was received by the parser:", token)
@@ -352,9 +352,9 @@ func (v *parser) parseMultilineItems() (abs.ListLike[abs.ComponentLike], *Token,
 				"$component")
 			panic(message)
 		}
-		item, token, ok = v.parseComponent()
+		value, token, ok = v.parseComponent()
 		if !ok {
-			// No more items.
+			// No more values.
 			break
 		}
 	}
@@ -363,11 +363,11 @@ func (v *parser) parseMultilineItems() (abs.ListLike[abs.ComponentLike], *Token,
 
 // This method attempts to parse a primitive. It returns the primitive and
 // whether or not the primitive was successfully parsed.
-func (v *parser) parsePrimitive() (abs.ItemLike, *Token, bool) {
+func (v *parser) parsePrimitive() (abs.ValueLike, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
-	var primitive abs.ItemLike
+	var primitive abs.ValueLike
 	primitive, token, ok = v.parseElement()
 	if !ok {
 		primitive, token, ok = v.parseString()
@@ -381,14 +381,14 @@ func (v *parser) parsePrimitive() (abs.ItemLike, *Token, bool) {
 
 // This method attempts to parse a range collection. It returns the range
 // collection and whether or not the range collection was successfully parsed.
-func (v *parser) parseRange() (abs.RangeLike[abs.ItemLike], *Token, bool) {
+func (v *parser) parseRange() (abs.RangeLike[abs.ValueLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var left, right string
-	var first abs.ItemLike
+	var first abs.ValueLike
 	var extent abs.Extent
-	var last abs.ItemLike
-	var rng abs.RangeLike[abs.ItemLike]
+	var last abs.ValueLike
+	var rng abs.RangeLike[abs.ValueLike]
 	left, token, ok = v.parseDelimiter("[")
 	if !ok {
 		left, token, ok = v.parseDelimiter("(")
@@ -438,7 +438,7 @@ func (v *parser) parseRange() (abs.RangeLike[abs.ItemLike], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(rng abs.RangeLike[abs.ItemLike]) {
+func (v *formatter) formatRange(rng abs.RangeLike[abs.ValueLike]) {
 	var extent = rng.GetExtent()
 	var left, right string
 	switch extent {

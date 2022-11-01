@@ -146,7 +146,7 @@ func TestListsWithConcatenate(t *tes.T) {
 	var list3 = lists.Concatenate(list1, list2)
 	var list4 = col.List[int]()
 	list4.AddItems(onethrusix)
-	ass.True(t, age.CompareItems(list3, list4))
+	ass.True(t, age.CompareValues(list3, list4))
 }
 
 func TestListsWithEmptyLists(t *tes.T) {
@@ -154,7 +154,7 @@ func TestListsWithEmptyLists(t *tes.T) {
 	var list1 = col.List[int]()
 	var list2 = col.List[int]()
 	var list3 = lists.Concatenate(list1, list2)
-	ass.True(t, age.CompareItems(list1, list2))
-	ass.True(t, age.CompareItems(list2, list3))
-	ass.True(t, age.CompareItems(list3, list1))
+	ass.True(t, age.CompareValues(list1, list2))
+	ass.True(t, age.CompareValues(list2, list3))
+	ass.True(t, age.CompareValues(list3, list1))
 }

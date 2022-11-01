@@ -528,7 +528,7 @@ func (v *parser) parseRecursive() (abs.ExpressionLike, *Token, bool) {
 	}
 	expression, token, ok = v.parseInvocation(expression)
 	if !ok {
-		expression, token, ok = v.parseValue(expression)
+		expression, token, ok = v.parseItem(expression)
 	}
 	if !ok {
 		expression, token, ok = v.parseChaining(expression)
@@ -549,7 +549,7 @@ func (v *parser) parseRecursive() (abs.ExpressionLike, *Token, bool) {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("operator",
 			"$invocation",
-			"$value",
+			"$item",
 			"$chaining",
 			"$exponential",
 			"$arithmetic",
@@ -560,24 +560,25 @@ func (v *parser) parseRecursive() (abs.ExpressionLike, *Token, bool) {
 	return expression, token, true
 }
 
-// This method attempts to parse an value expression. It returns the
-// value expression and whether or not the value expression was
-// successfully parsed.
-func (v *parser) parseValue(composite abs.ExpressionLike) (abs.ValueLike, *Token, bool) {
+// This method attempts to parse an item expression. It returns the
+// item expression and whether or not the item expression was successfully
+// parsed.
+func (v *parser) parseItem(composite abs.ExpressionLike) (abs.ItemLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var indices abs.ListLike[abs.ExpressionLike]
-	var expression abs.ValueLike
+	var expression abs.ItemLike
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
-		// This is not an value expression.
+		// This is not an item expression.
 		return expression, token, false
 	}
 	indices, token, ok = v.parseIndices()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$expression",
-			"$value",
+			"$item",
+			"$composite",
 			"$indices")
 		panic(message)
 	}
@@ -585,7 +586,8 @@ func (v *parser) parseValue(composite abs.ExpressionLike) (abs.ValueLike, *Token
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("]",
-			"$value",
+			"$item",
+			"$composite",
 			"$indices")
 		panic(message)
 	}

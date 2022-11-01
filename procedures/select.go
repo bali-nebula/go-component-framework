@@ -52,7 +52,7 @@ func (v *selectClause) GetOption(index int) abs.BlockLike {
 // This method sets the option at the specified index for this select clause.
 func (v *selectClause) SetOption(index int, option abs.BlockLike) {
 	if option == nil {
-		panic("Each option in a select clause requires a value.")
+		panic("Each index in a select clause requires a option block.")
 	}
 	v.options.SetItem(index, option)
 }

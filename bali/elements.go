@@ -87,28 +87,28 @@ func (v *parser) parseDuration() (ele.Duration, *Token, bool) {
 		if match != "" {
 			var stype = match[len(match)-1:] // Strip off the time span.
 			var tspan = match[:len(match)-1] // Strip off the span type.
-			var value, _ = stc.ParseFloat(tspan, 64)
+			var float, _ = stc.ParseFloat(tspan, 64)
 			switch stype {
 			case "-":
 				sign = -1
 			case "W":
-				milliseconds += value * float64(ele.MillisecondsPerWeek)
+				milliseconds += float * float64(ele.MillisecondsPerWeek)
 			case "Y":
-				milliseconds += value * float64(ele.MillisecondsPerYear)
+				milliseconds += float * float64(ele.MillisecondsPerYear)
 			case "M":
 				if isTime {
-					milliseconds += value * float64(ele.MillisecondsPerMinute)
+					milliseconds += float * float64(ele.MillisecondsPerMinute)
 				} else {
-					milliseconds += value * float64(ele.MillisecondsPerMonth)
+					milliseconds += float * float64(ele.MillisecondsPerMonth)
 				}
 			case "D":
-				milliseconds += value * float64(ele.MillisecondsPerDay)
+				milliseconds += float * float64(ele.MillisecondsPerDay)
 			case "T":
 				isTime = true
 			case "H":
-				milliseconds += value * float64(ele.MillisecondsPerHour)
+				milliseconds += float * float64(ele.MillisecondsPerHour)
 			case "S":
-				milliseconds += value * float64(ele.MillisecondsPerSecond)
+				milliseconds += float * float64(ele.MillisecondsPerSecond)
 			}
 		}
 	}
@@ -731,14 +731,14 @@ var isoFormats = [...]string{
 //	https://en.wikipedia.org/wiki/Holocene_calendar#Conversion
 //
 // we must resort to some hacking...
-func hackedParseDate(value string) tim.Time {
+func hackedParseDate(moment string) tim.Time {
 
 	// First, we replace the year with year zero.
-	var matches = scanMoment([]byte(value))
+	var matches = scanMoment([]byte(moment))
 	var yearString = matches[2]
-	var patched = sts.Replace(value, yearString, "0000", 1)
+	var patched = sts.Replace(moment, yearString, "0000", 1)
 
-	// Next, we attempt to parse the patched value using our formats.
+	// Next, we attempt to parse the patched moment using our Go based formats.
 	for _, format := range isoFormats {
 		var date, err = tim.Parse(format, patched) // Parsed in UTC.
 		if err == nil {
@@ -758,7 +758,7 @@ func hackedParseDate(value string) tim.Time {
 	}
 
 	// This panic will only happen if the scanner regular expressions are out
-	// of sync with the ISO 8601 standard formats. The value has already been
+	// of sync with the ISO 8601 standard formats. The moment has already been
 	// succussfully scanned by the the scanner.
-	panic(fmt.Sprintf("The moment does not match a known format: %v", value))
+	panic(fmt.Sprintf("The moment does not match a known format: %v", moment))
 }
