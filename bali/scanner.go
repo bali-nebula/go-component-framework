@@ -78,7 +78,8 @@ func (v TokenType) String() string {
 		"Resource",
 		"Symbol",
 		"Tag",
-		"Version"}[v]
+		"Version",
+	}[v]
 }
 
 // This type defines the structure and methods for each token returned by the
