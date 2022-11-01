@@ -42,7 +42,7 @@ var grammar = map[string]string{
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
-	"$composit":       `expression`,
+	"$composite":      `expression`,
 	"$condition":      `expression`,
 	"$context":        `"(" parameters ")"`,
 	"$continueClause": `"continue" "loop"`,
