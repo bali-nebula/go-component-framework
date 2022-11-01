@@ -26,7 +26,7 @@ func TestRoundtripWithComponents(t *tes.T) {
 
 	for index, s := range componentStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, componentStrings[index], s)
 	}
 }

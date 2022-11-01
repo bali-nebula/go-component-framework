@@ -33,7 +33,7 @@ func TestRoundtripWithBinaries(t *tes.T) {
 
 	for index, s := range binaryStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, binaryStrings[index], s)
 	}
 }
@@ -47,7 +47,7 @@ func TestRoundtripWithMonikers(t *tes.T) {
 
 	for index, s := range monikerStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, monikerStrings[index], s)
 	}
 }
@@ -66,7 +66,7 @@ func TestRoundtripWithNarratives(t *tes.T) {
 
 	for index, s := range narrativeStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, narrativeStrings[index], s)
 	}
 }
@@ -80,7 +80,7 @@ func TestRoundtripWithQuotes(t *tes.T) {
 
 	for index, s := range quoteStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, quoteStrings[index], s)
 	}
 }
@@ -94,7 +94,7 @@ func TestRoundtripWithVersions(t *tes.T) {
 
 	for index, s := range versionStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, versionStrings[index], s)
 	}
 }

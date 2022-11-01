@@ -80,7 +80,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 // This function parses a source string rather than the bytes from a BDN
 // document file. It is useful when parsing strings within source code.
 func ParseSource(source string) abs.ComponentLike {
-	var document = []byte(source + "\n")
+	var document = []byte(source + "\n") // Append the POSIX compliant EOL character.
 	return ParseDocument(document)
 }
 

@@ -75,19 +75,6 @@ type SorterLike[T ItemLike] interface {
 // array of items using a ranking function.
 type Sort[T ItemLike] func(array []T, rank RankingFunction)
 
-// FORMATTING INTERFACES
-
-// This interface defines the methods supported by all agents that can generate
-// a canonical string representation for a value.
-type FormatterLike interface {
-	GetIndentation() int
-	FormatValue(value any) string
-}
-
-// This type defines the function signature for any function that can format
-// a value as a canoncial string.
-type Format func(value any) string
-
 // AGENT STATE
 
 // This interface defines the methods that all formatter states must implement.

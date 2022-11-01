@@ -20,7 +20,7 @@ import (
 // RANGE IMPLEMENTATION
 
 // This constructor creates a new range of items covering the specified endpoints.
-func Range[T abs.PrimitiveLike](first T, extent abs.Extent, last T) abs.RangeLike[T] {
+func Range[T abs.ItemLike](first T, extent abs.Extent, last T) abs.RangeLike[T] {
 	switch extent {
 	case abs.INCLUSIVE:
 	case abs.LEFT:
@@ -37,7 +37,7 @@ func Range[T abs.PrimitiveLike](first T, extent abs.Extent, last T) abs.RangeLik
 // This type defines the structure and methods associated with a range of items.
 // This type is parameterized as follows:
 //   - T is any primitive type.
-type ranje[T abs.PrimitiveLike] struct {
+type ranje[T abs.ItemLike] struct {
 	first  T
 	extent abs.Extent
 	last   T
@@ -191,7 +191,7 @@ func (v *ranje[T]) indexToItem(index int) T {
 
 // This function converts the type of the specified item to an integer type.
 func (v *ranje[T]) itemToIndex(item T) int {
-	var value abs.PrimitiveLike = item
+	var value abs.ItemLike = item
 	switch index := value.(type) {
 	case uint8:
 		return int(index)

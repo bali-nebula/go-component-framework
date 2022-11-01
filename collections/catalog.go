@@ -18,7 +18,7 @@ import (
 // ASSOCIATION IMPLEMENTATION
 
 // This constructor creates a new association with the specified key and value.
-func Association[K abs.PrimitiveLike, V abs.EntityLike](key K, value V) abs.AssociationLike[K, V] {
+func Association[K abs.KeyLike, V abs.ItemLike](key K, value V) abs.AssociationLike[K, V] {
 	return &association[K, V]{key, value}
 }
 
@@ -28,7 +28,7 @@ func Association[K abs.PrimitiveLike, V abs.EntityLike](key K, value V) abs.Asso
 //   - V is any type of entity.
 //
 // This structure is used by the catalog type to maintain its associations.
-type association[K abs.PrimitiveLike, V abs.EntityLike] struct {
+type association[K abs.KeyLike, V abs.ItemLike] struct {
 	key   K
 	value V
 }
@@ -49,8 +49,8 @@ func (v *association[K, V]) SetValue(value V) {
 }
 
 // This constructor creates a new empty catalog.
-func Catalog[K abs.PrimitiveLike, V abs.EntityLike]() abs.CatalogLike[K, V] {
-	var keys = map[abs.PrimitiveLike]abs.AssociationLike[K, V]{}
+func Catalog[K abs.KeyLike, V abs.ItemLike]() abs.CatalogLike[K, V] {
+	var keys = map[abs.KeyLike]abs.AssociationLike[K, V]{}
 	var associations = List[abs.AssociationLike[K, V]]()
 	return &catalog[K, V]{associations, associations, associations, keys}
 }
@@ -61,12 +61,12 @@ func Catalog[K abs.PrimitiveLike, V abs.EntityLike]() abs.CatalogLike[K, V] {
 // key-value pair associations. This type is parameterized as follows:
 //   - K is a primitive type of key.
 //   - V is any type of entity.
-type catalog[K abs.PrimitiveLike, V abs.EntityLike] struct {
+type catalog[K abs.KeyLike, V abs.ItemLike] struct {
 	// Note: The delegated methods don't see the real collection type.
 	abs.Sequential[abs.AssociationLike[K, V]]
 	abs.Indexed[abs.AssociationLike[K, V]]
 	associations abs.ListLike[abs.AssociationLike[K, V]]
-	keys         map[abs.PrimitiveLike]abs.AssociationLike[K, V]
+	keys         map[abs.KeyLike]abs.AssociationLike[K, V]
 }
 
 // ASSOCIATIVE INTERFACE
@@ -166,7 +166,7 @@ func (v *catalog[K, V]) RemoveValues(keys abs.Sequential[K]) abs.Sequential[V] {
 
 // This method removes all associations from this catalog.
 func (v *catalog[K, V]) RemoveAll() {
-	v.keys = map[abs.PrimitiveLike]abs.AssociationLike[K, V]{}
+	v.keys = map[abs.KeyLike]abs.AssociationLike[K, V]{}
 	v.associations.RemoveAll()
 }
 
@@ -191,7 +191,7 @@ func (v *catalog[K, V]) ReverseAssociations() {
 
 // This constructor creates a new catalogs library for the specified generic
 // key and value types.
-func Catalogs[K abs.PrimitiveLike, V abs.EntityLike]() *catalogs[K, V] {
+func Catalogs[K abs.KeyLike, V abs.ItemLike]() *catalogs[K, V] {
 	return &catalogs[K, V]{}
 }
 
@@ -200,7 +200,7 @@ func Catalogs[K abs.PrimitiveLike, V abs.EntityLike]() *catalogs[K, V] {
 // parameterized as follows:
 //   - K is a primitive type of key.
 //   - V is any type of entity.
-type catalogs[K abs.PrimitiveLike, V abs.EntityLike] struct{}
+type catalogs[K abs.KeyLike, V abs.ItemLike] struct{}
 
 // BLENDABLE INTERFACE
 

@@ -58,22 +58,22 @@ func TestParserWithElementTypes(t *tes.T) {
 	// Duration
 	component = bdn.ParseSource(d)
 	var duration ele.Duration = component.GetEntity().(ele.Duration)
-	ass.Equal(t, d, bdn.FormatValue(duration))
+	ass.Equal(t, d, bdn.FormatEntity(duration))
 
 	// Moment
 	component = bdn.ParseSource(m)
 	var moment ele.Moment = component.GetEntity().(ele.Moment)
-	ass.Equal(t, m, bdn.FormatValue(moment))
+	ass.Equal(t, m, bdn.FormatEntity(moment))
 
 	// Number
 	component = bdn.ParseSource("(3, -i)")
 	var number ele.Number = component.GetEntity().(ele.Number)
-	ass.Equal(t, "(3, -i)", bdn.FormatValue(number))
+	ass.Equal(t, "(3, -i)", bdn.FormatEntity(number))
 
 	// Pattern
 	component = bdn.ParseSource(p)
 	var pattern ele.Pattern = component.GetEntity().(ele.Pattern)
-	ass.Equal(t, p, bdn.FormatValue(pattern))
+	ass.Equal(t, p, bdn.FormatEntity(pattern))
 
 	// Percentage
 	component = bdn.ParseSource("50%")
@@ -88,12 +88,12 @@ func TestParserWithElementTypes(t *tes.T) {
 	// Resource
 	component = bdn.ParseSource(r)
 	var resource ele.Resource = component.GetEntity().(ele.Resource)
-	ass.Equal(t, r, bdn.FormatValue(resource))
+	ass.Equal(t, r, bdn.FormatEntity(resource))
 
 	// Tag
 	component = bdn.ParseSource("#ABC")
 	var tag ele.Tag = component.GetEntity().(ele.Tag)
-	ass.Equal(t, "#ABC", bdn.FormatValue(tag))
+	ass.Equal(t, "#ABC", bdn.FormatEntity(tag))
 }
 
 func TestParserWithStringTypes(t *tes.T) {
@@ -112,22 +112,22 @@ func TestParserWithStringTypes(t *tes.T) {
 	// Narrative
 	component = bdn.ParseSource(n + c)
 	var narrative str.Narrative = component.GetEntity().(str.Narrative)
-	ass.Equal(t, n, bdn.FormatValue(narrative))
+	ass.Equal(t, n, bdn.FormatEntity(narrative))
 
 	// Quote
 	component = bdn.ParseSource(`"Hello World!"`)
 	var quote str.Quote = component.GetEntity().(str.Quote)
-	ass.Equal(t, `"Hello World!"`, bdn.FormatValue(quote))
+	ass.Equal(t, `"Hello World!"`, bdn.FormatEntity(quote))
 
 	// Symbol
 	component = bdn.ParseSource(s)
 	var symbol ele.Symbol = component.GetEntity().(ele.Symbol)
-	ass.Equal(t, s, bdn.FormatValue(symbol))
+	ass.Equal(t, s, bdn.FormatEntity(symbol))
 
 	// Version
 	component = bdn.ParseSource(v)
 	var version str.Version = component.GetEntity().(str.Version)
-	ass.Equal(t, v, bdn.FormatValue(version))
+	ass.Equal(t, v, bdn.FormatEntity(version))
 }
 
 const l = `[
@@ -163,67 +163,67 @@ func TestParserWithSequenceTypes(t *tes.T) {
 
 	// Catalog
 	component = bdn.ParseSource("[:]")
-	var catalog = component.GetEntity().(abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike])
+	var catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 0, catalog.GetSize())
 
 	component = bdn.ParseSource("[0: false]")
-	catalog = component.GetEntity().(abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike])
+	catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 1, catalog.GetSize())
 
 	component = bdn.ParseSource("[0: false, 1: true]")
-	catalog = component.GetEntity().(abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike])
+	catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 2, catalog.GetSize())
 
 	component = bdn.ParseSource(k)
-	catalog = component.GetEntity().(abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike])
+	catalog = component.GetEntity().(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	ass.Equal(t, 2, catalog.GetSize())
 
 	// Range
 	component = bdn.ParseSource("[1..1]")
-	var rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	var rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 1, rng.GetSize())
 
 	component = bdn.ParseSource("(1..1]")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bdn.ParseSource("(1..1)")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bdn.ParseSource("[1..1)")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bdn.ParseSource("[-1..5]")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 7, rng.GetSize())
 
 	component = bdn.ParseSource("(-1..5]")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 6, rng.GetSize())
 
 	component = bdn.ParseSource("(-1..5)")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 5, rng.GetSize())
 
 	component = bdn.ParseSource("[-1..5)")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 6, rng.GetSize())
 
 	component = bdn.ParseSource("[..]")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bdn.ParseSource("(..]")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bdn.ParseSource("(..)")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 
 	component = bdn.ParseSource("[..)")
-	rng = component.GetEntity().(abs.RangeLike[abs.PrimitiveLike])
+	rng = component.GetEntity().(abs.RangeLike[abs.ItemLike])
 	ass.Equal(t, 0, rng.GetSize())
 }

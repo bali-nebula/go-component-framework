@@ -131,7 +131,7 @@ var grammar = map[string]string{
 	"$saveClause":     `"save" document "as" recipient`,
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
 	"$sequence":       `expression`,
-	"$source":         `component EOL EOF  ! EOF is the end-of-file marker.`,
+	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
 	"$statement":      `[annotation EOL] [mainClause] [onClause] [NOTE]`,
 	"$statements": `
     statement {";" statement} |

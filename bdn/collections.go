@@ -20,10 +20,10 @@ import (
 // This method attempts to parse an association between a key and value. It
 // returns the association and whether or not the association was successfully
 // parsed.
-func (v *parser) parseAssociation() (abs.AssociationLike[abs.PrimitiveLike, abs.ComponentLike], *Token, bool) {
+func (v *parser) parseAssociation() (abs.AssociationLike[abs.KeyLike, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var key abs.PrimitiveLike
+	var key abs.KeyLike
 	var value abs.ComponentLike
 	key, token, ok = v.parsePrimitive()
 	if !ok {
@@ -46,13 +46,13 @@ func (v *parser) parseAssociation() (abs.AssociationLike[abs.PrimitiveLike, abs.
 			"$component")
 		panic(message)
 	}
-	var association = col.Association[abs.PrimitiveLike, abs.ComponentLike](key, value)
+	var association = col.Association[abs.KeyLike, abs.ComponentLike](key, value)
 	return association, token, true
 }
 
 // This method adds the canonical format for the specified association to the
 // state of the formatter.
-func (v *formatter) formatAssociation(association abs.AssociationLike[abs.PrimitiveLike, abs.ComponentLike]) {
+func (v *formatter) formatAssociation(association abs.AssociationLike[abs.KeyLike, abs.ComponentLike]) {
 	var key = association.GetKey()
 	v.formatAny(key)
 	v.state.AppendString(": ")
@@ -63,10 +63,10 @@ func (v *formatter) formatAssociation(association abs.AssociationLike[abs.Primit
 // This method attempts to parse a catalog collection. It returns the
 // catalog collection and whether or not the catalog collection was
 // successfully parsed.
-func (v *parser) parseCatalog() (abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike], *Token, bool) {
+func (v *parser) parseCatalog() (abs.CatalogLike[abs.KeyLike, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var catalog = col.Catalog[abs.PrimitiveLike, abs.ComponentLike]()
+	var catalog = col.Catalog[abs.KeyLike, abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		return catalog, token, false
@@ -99,7 +99,7 @@ func (v *parser) parseCatalog() (abs.CatalogLike[abs.PrimitiveLike, abs.Componen
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatCatalog(catalog abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike]) {
+func (v *formatter) formatCatalog(catalog abs.CatalogLike[abs.KeyLike, abs.ComponentLike]) {
 	v.state.AppendString("[")
 	switch catalog.GetSize() {
 	case 0:
@@ -108,7 +108,7 @@ func (v *formatter) formatCatalog(catalog abs.CatalogLike[abs.PrimitiveLike, abs
 		var association = catalog.GetItem(1)
 		v.formatAssociation(association)
 	default:
-		var iterator = age.Iterator[abs.AssociationLike[abs.PrimitiveLike, abs.ComponentLike]](catalog)
+		var iterator = age.Iterator[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]](catalog)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
@@ -123,10 +123,10 @@ func (v *formatter) formatCatalog(catalog abs.CatalogLike[abs.PrimitiveLike, abs
 
 // This method attempts to parse a collection of items. It returns the
 // collection and whether or not the collection was successfully parsed.
-func (v *parser) parseCollection() (abs.CollectionLike, *Token, bool) {
+func (v *parser) parseCollection() (abs.SequenceLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var collection abs.CollectionLike
+	var collection abs.SequenceLike
 	collection, token, ok = v.parseCatalog()
 	if !ok {
 		collection, token, ok = v.parseRange()
@@ -142,11 +142,11 @@ func (v *parser) parseCollection() (abs.CollectionLike, *Token, bool) {
 // This method attempts to parse a catalog collection with inline associations.
 // It returns the catalog collection and whether or not the catalog collection
 // was successfully parsed.
-func (v *parser) parseInlineAssociations() (abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike], *Token, bool) {
+func (v *parser) parseInlineAssociations() (abs.CatalogLike[abs.KeyLike, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var association abs.AssociationLike[abs.PrimitiveLike, abs.ComponentLike]
-	var catalog = col.Catalog[abs.PrimitiveLike, abs.ComponentLike]()
+	var association abs.AssociationLike[abs.KeyLike, abs.ComponentLike]
+	var catalog = col.Catalog[abs.KeyLike, abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
 		// This is an empty catalog.
@@ -292,11 +292,11 @@ func (v *formatter) formatList(list abs.ListLike[abs.ItemLike]) {
 // This method attempts to parse a catalog collection with multiline associations.
 // It returns the catalog collection and whether or not the catalog collection
 // was successfully parsed.
-func (v *parser) parseMultilineAssociations() (abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike], *Token, bool) {
+func (v *parser) parseMultilineAssociations() (abs.CatalogLike[abs.KeyLike, abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var association abs.AssociationLike[abs.PrimitiveLike, abs.ComponentLike]
-	var catalog = col.Catalog[abs.PrimitiveLike, abs.ComponentLike]()
+	var association abs.AssociationLike[abs.KeyLike, abs.ComponentLike]
+	var catalog = col.Catalog[abs.KeyLike, abs.ComponentLike]()
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty catalog must have at least one association.
@@ -363,11 +363,11 @@ func (v *parser) parseMultilineItems() (abs.ListLike[abs.ItemLike], *Token, bool
 
 // This method attempts to parse a primitive. It returns the primitive and
 // whether or not the primitive was successfully parsed.
-func (v *parser) parsePrimitive() (abs.PrimitiveLike, *Token, bool) {
+func (v *parser) parsePrimitive() (abs.ItemLike, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
-	var primitive abs.PrimitiveLike
+	var primitive abs.ItemLike
 	primitive, token, ok = v.parseElement()
 	if !ok {
 		primitive, token, ok = v.parseString()
@@ -381,14 +381,14 @@ func (v *parser) parsePrimitive() (abs.PrimitiveLike, *Token, bool) {
 
 // This method attempts to parse a range collection. It returns the range
 // collection and whether or not the range collection was successfully parsed.
-func (v *parser) parseRange() (abs.RangeLike[abs.PrimitiveLike], *Token, bool) {
+func (v *parser) parseRange() (abs.RangeLike[abs.ItemLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var left, right string
-	var first abs.PrimitiveLike
+	var first abs.ItemLike
 	var extent abs.Extent
-	var last abs.PrimitiveLike
-	var rng abs.RangeLike[abs.PrimitiveLike]
+	var last abs.ItemLike
+	var rng abs.RangeLike[abs.ItemLike]
 	left, token, ok = v.parseDelimiter("[")
 	if !ok {
 		left, token, ok = v.parseDelimiter("(")
@@ -438,7 +438,7 @@ func (v *parser) parseRange() (abs.RangeLike[abs.PrimitiveLike], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(rng abs.RangeLike[abs.PrimitiveLike]) {
+func (v *formatter) formatRange(rng abs.RangeLike[abs.ItemLike]) {
 	var extent = rng.GetExtent()
 	var left, right string
 	switch extent {

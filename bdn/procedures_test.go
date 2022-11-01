@@ -24,7 +24,7 @@ func TestRoundtripWithStatements(t *tes.T) {
 
 	for index, s := range statementStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, statementStrings[index], s)
 	}
 }

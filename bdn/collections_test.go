@@ -29,7 +29,7 @@ func TestRoundtripWithCatalogs(t *tes.T) {
 
 	for index, s := range catalogStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, catalogStrings[index], s)
 	}
 }
@@ -46,7 +46,7 @@ func TestRoundtripWithLists(t *tes.T) {
 
 	for index, s := range listStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, listStrings[index], s)
 	}
 }
@@ -65,7 +65,7 @@ func TestRoundtripWithRanges(t *tes.T) {
 
 	for index, s := range rangeStrings {
 		var component = bdn.ParseSource(s).(abs.ComponentLike)
-		var s = bdn.FormatValue(component)
+		var s = bdn.FormatComponent(component)
 		ass.Equal(t, rangeStrings[index], s)
 	}
 }

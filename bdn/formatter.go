@@ -20,26 +20,32 @@ import (
 
 // FORMATTER INTERFACE
 
-// This function returns a canonical BDN string for the specified value.
-func FormatValue(value any) string {
-	var v = Formatter()
-	return v.FormatValue(value)
+// This function returns a canonical BDN string for the specified entity.
+func FormatEntity(entity abs.EntityLike) string {
+	var v = Formatter(0)
+	return v.FormatEntity(entity)
 }
 
-// This constructor creates a new instance of a formatter that can be used to
-// generate the canonical string format for any value.
-func Formatter() abs.FormatterLike {
-	return FormatterWithIndentation(0)
+// This function returns a canonical BDN string for the specified component.
+func FormatComponent(component abs.ComponentLike) string {
+	var v = Formatter(0)
+	return v.FormatComponent(component)
 }
 
-// This constructor creates a new instance of a formatter that can be used to
-// generate the canonical string format for any value using the specified
-// initial indentation level.
-func FormatterWithIndentation(indentation int) abs.FormatterLike {
-	return &formatter{abs.FormatterStateWithIndentation(indentation)}
+// This function returns a canonical BDN string for the specified component
+// using the specified indentation.
+func FormatComponentWithIndentation(component abs.ComponentLike, indentation int) string {
+	var v = Formatter(indentation)
+	return v.FormatComponent(component)
 }
 
 // FORMATTER IMPLEMENTATION
+
+// This constructor creates a new formatter using the specified indentation.
+func Formatter(indentation int) *formatter {
+	var v = &formatter{abs.FormatterStateWithIndentation(indentation)}
+	return v
+}
 
 // This type defines the structure and methods for a canonical formatting agent.
 type formatter struct {
@@ -52,9 +58,15 @@ func (v *formatter) GetIndentation() int {
 	return v.state.GetIndentation()
 }
 
-// This method returns the canonical string for the specified value.
-func (v *formatter) FormatValue(value any) string {
-	v.formatAny(value)
+// This method returns the canonical string for the specified entity.
+func (v *formatter) FormatEntity(entity abs.EntityLike) string {
+	v.formatAny(entity)
+	return v.state.GetResult()
+}
+
+// This method returns the canonical string for the specified component.
+func (v *formatter) FormatComponent(component abs.ComponentLike) string {
+	v.formatComponent(component)
 	return v.state.GetResult()
 }
 
@@ -259,12 +271,12 @@ func (v *formatter) formatInterface(value any) {
 		v.formatComponent(component)
 		return
 	}
-	association, ok := value.(abs.AssociationLike[abs.PrimitiveLike, abs.ComponentLike])
+	association, ok := value.(abs.AssociationLike[abs.KeyLike, abs.ComponentLike])
 	if ok {
 		v.formatAssociation(association)
 		return
 	}
-	catalog, ok := value.(abs.CatalogLike[abs.PrimitiveLike, abs.ComponentLike])
+	catalog, ok := value.(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
 	if ok {
 		v.formatCatalog(catalog)
 		return
@@ -274,7 +286,7 @@ func (v *formatter) formatInterface(value any) {
 		v.formatList(list)
 		return
 	}
-	rng, ok := value.(abs.RangeLike[abs.PrimitiveLike])
+	rng, ok := value.(abs.RangeLike[abs.ItemLike])
 	if ok {
 		v.formatRange(rng)
 		return

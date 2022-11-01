@@ -142,13 +142,13 @@ func (v *formatter) formatQuote(quote str.Quote) {
 	v.state.AppendString(s)
 }
 
-// This method attempts to parse a string primitive. It returns the
-// string primitive and whether or not the string primitive was
+// This method attempts to parse a string sequence. It returns the
+// string sequence and whether or not the string sequence was
 // successfully parsed.
-func (v *parser) parseString() (abs.StringLike, *Token, bool) {
+func (v *parser) parseString() (abs.SequenceLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var s abs.StringLike
+	var s abs.SequenceLike
 	s, token, ok = v.parseQuote()
 	if !ok {
 		s, token, ok = v.parseMoniker()

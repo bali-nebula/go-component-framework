@@ -11,18 +11,44 @@
 package abstractions
 
 import (
-	syn "sync"
+	fmt "fmt"
 )
 
-// COLLECTION INTERFACES
+// SEQUENCE INTERFACES
 
-type PrimitiveLike any
+type KeyLike any
 
-type EntityLike any
+type ItemLike any
 
-type CollectionLike any
+type SequenceLike any
 
-// This interface defines the methods supported by all searchable collections of
+// This interface defines the methods supported by all sequences of items.
+type Sequential[T ItemLike] interface {
+	IsEmpty() bool
+	GetSize() int
+	AsArray() []T
+}
+
+// This interface defines the methods supported by all sequences whose items can
+// be indexed. The indices of an indexed sequence are ORDINAL rather than ZERO
+// based (which is "SO last century"). This allows for positive indices starting
+// at the beginning of the sequence, and negative indices starting at the end of
+// the sequence as follows:
+//
+//	    1          2          3            N
+//	[item 1] . [item 2] . [item 3] ... [item N]
+//	   -N       -(N-1)     -(N-2)         -1
+//
+// Notice that because the indices are ordinal based, the positive and negative
+// indices are symmetrical.
+type Indexed[T ItemLike] interface {
+	SetComparer(compare ComparisonFunction)
+	GetItem(index int) T
+	GetItems(first int, last int) Sequential[T]
+	GetIndex(item T) int
+}
+
+// This interface defines the methods supported by all searchable sequences of
 // items.
 type Searchable[T ItemLike] interface {
 	ContainsItem(item T) bool
@@ -30,14 +56,14 @@ type Searchable[T ItemLike] interface {
 	ContainsAll(items Sequential[T]) bool
 }
 
-// This interface defines the methods supported by all updatable collections of
+// This interface defines the methods supported by all updatable sequences of
 // items.
 type Updatable[T ItemLike] interface {
 	SetItem(index int, item T)
 	SetItems(index int, items Sequential[T])
 }
 
-// This interface defines the methods supported by all collections of items that
+// This interface defines the methods supported by all sequences of items that
 // allow their endpoints to be changed.
 type Elastic[T ItemLike] interface {
 	IsEnumerable() bool
@@ -49,7 +75,7 @@ type Elastic[T ItemLike] interface {
 	SetLast(T)
 }
 
-// This interface defines the methods supported by all collections of items that
+// This interface defines the methods supported by all sequences of items that
 // allow items to be added and removed.
 type Flexible[T ItemLike] interface {
 	SetRanker(rank RankingFunction)
@@ -60,8 +86,8 @@ type Flexible[T ItemLike] interface {
 	RemoveAll()
 }
 
-// This interface defines the methods supported by all collections whose items
-// may be modified, inserted, removed, or reordered.
+// This interface defines the methods supported by all sequences whose items may
+// be modified, inserted, removed, or reordered.
 type Malleable[T ItemLike] interface {
 	AddItem(item T)
 	AddItems(items Sequential[T])
@@ -76,9 +102,9 @@ type Malleable[T ItemLike] interface {
 	ReverseItems()
 }
 
-// This interface defines the methods supported by all associative collections
+// This interface defines the methods supported by all associative sequences
 // whose items consist of key-value pair associations.
-type Associative[K PrimitiveLike, V EntityLike] interface {
+type Associative[K KeyLike, V ItemLike] interface {
 	AddAssociation(association AssociationLike[K, V])
 	AddAssociations(associations Sequential[AssociationLike[K, V]])
 	GetKeys() Sequential[K]
@@ -93,7 +119,7 @@ type Associative[K PrimitiveLike, V EntityLike] interface {
 	ReverseAssociations()
 }
 
-// This interface defines the methods supported by all collections whose items
+// This interface defines the methods supported by all sequences whose items
 // are accessed using first-in-first-out (FIFO) semantics.
 type FIFO[T ItemLike] interface {
 	GetCapacity() int
@@ -103,7 +129,7 @@ type FIFO[T ItemLike] interface {
 	CloseQueue()
 }
 
-// This interface defines the methods supported by all collections whose items
+// This interface defines the methods supported by all sequences whose items
 // are accessed using last-in-first-out (LIFO) semantics.
 type LIFO[T ItemLike] interface {
 	GetCapacity() int
@@ -117,7 +143,7 @@ type LIFO[T ItemLike] interface {
 // CONSOLIDATED INTERFACES
 
 // This interface consolidates all the interfaces supported by array-like
-// collections.
+// sequences.
 type ArrayLike[T ItemLike] interface {
 	Sequential[T]
 	Indexed[T]
@@ -127,22 +153,22 @@ type ArrayLike[T ItemLike] interface {
 
 // This interface defines the methods supported by all association-like types.
 // An association associates a key with an setable value.
-type AssociationLike[K PrimitiveLike, V EntityLike] interface {
+type AssociationLike[K KeyLike, V ItemLike] interface {
 	GetKey() K
 	GetValue() V
 	SetValue(value V)
 }
 
 // This interface consolidates all the interfaces supported by catalog-like
-// collections.
-type CatalogLike[K PrimitiveLike, V EntityLike] interface {
+// sequences.
+type CatalogLike[K KeyLike, V ItemLike] interface {
 	Sequential[AssociationLike[K, V]]
 	Indexed[AssociationLike[K, V]]
 	Associative[K, V]
 }
 
 // This interface consolidates all the interfaces supported by list-like
-// collections.
+// sequences.
 type ListLike[T ItemLike] interface {
 	Sequential[T]
 	Indexed[T]
@@ -152,14 +178,14 @@ type ListLike[T ItemLike] interface {
 }
 
 // This interface consolidates all of the interfaces supported by queue-like
-// collections.
+// sequences.
 type QueueLike[T ItemLike] interface {
 	Sequential[T]
 	FIFO[T]
 }
 
 // This interface consolidates all the interfaces supported by set-like
-// collections.
+// sequences.
 type SetLike[T ItemLike] interface {
 	Sequential[T]
 	Indexed[T]
@@ -168,38 +194,21 @@ type SetLike[T ItemLike] interface {
 }
 
 // This interface consolidates all the interfaces supported by range-like
-// collections.
-type RangeLike[T PrimitiveLike] interface {
+// sequences.
+type RangeLike[T ItemLike] interface {
 	Sequential[T]
 	Indexed[T]
 	Elastic[T]
 }
 
 // This interface consolidates all the interfaces supported by stack-like
-// collections.
+// sequences.
 type StackLike[T ItemLike] interface {
 	Sequential[T]
 	LIFO[T]
 }
 
-// LIBRARY INTERFACES
-
-// This library interface defines the functions supported by all libraries that
-// can disect and combine associative collections.
-type Blendable[K PrimitiveLike, V EntityLike] interface {
-	Merge(first, second CatalogLike[K, V]) CatalogLike[K, V]
-	Extract(catalog CatalogLike[K, V], keys Sequential[K]) CatalogLike[K, V]
-}
-
-// This library interface defines the functions supported by all libraries that
-// can combine queue-like collections in interesting ways.
-type Routeable[T ItemLike] interface {
-	Fork(wg *syn.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
-	Split(wg *syn.WaitGroup, input FIFO[T], size int) Sequential[FIFO[T]]
-	Join(wg *syn.WaitGroup, inputs Sequential[FIFO[T]]) FIFO[T]
-}
-
-// EXTENT CONSTANTS
+// CONSTANTS
 
 type Extent int
 
@@ -210,3 +219,32 @@ const (
 	RIGHT
 	EXCLUSIVE
 )
+
+// FUNCTIONS
+
+// This function normalizes an index to match the Go (zero based) indexing. The
+// following transformation is performed:
+//
+//	[-length..-1] and [1..length] => [0..length)
+//
+// Notice that the specified index cannot be zero since zero is not an ORDINAL.
+func NormalizedIndex(index int, length int) int {
+	switch {
+	case index < -length || index == 0 || index > length:
+		// The index is outside the bounds of the specified range.
+		panic(fmt.Sprintf(
+			"The specified index is outside the allowed ranges [-%v..-1] and [1..%v]: %v",
+			length,
+			length,
+			index))
+	case index < 0:
+		// Convert a negative index.
+		return index + length
+	case index > 0:
+		// Convert a positive index.
+		return index - 1
+	default:
+		// This should never happen so time to panic...
+		panic(fmt.Sprintf("Compiler problem, unexpected index value: %v", index))
+	}
+}
