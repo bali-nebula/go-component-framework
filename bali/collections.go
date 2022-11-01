@@ -101,14 +101,14 @@ func (v *parser) parseCatalog() (abs.CatalogLike[abs.KeyLike, abs.ComponentLike]
 // state of the formatter.
 func (v *formatter) formatCatalog(catalog abs.CatalogLike[abs.KeyLike, abs.ComponentLike]) {
 	v.state.AppendString("[")
+	var iterator = age.Iterator[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]](catalog)
 	switch catalog.GetSize() {
 	case 0:
 		v.state.AppendString(":")
 	case 1:
-		var association = catalog.GetItem(1)
+		var association = iterator.GetNext()
 		v.formatAssociation(association)
 	default:
-		var iterator = age.Iterator[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]](catalog)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
@@ -188,7 +188,7 @@ func (v *parser) parseInlineAssociations() (abs.CatalogLike[abs.KeyLike, abs.Com
 // This method attempts to parse a list collection with inline values. It returns
 // the list collection and whether or not the list collection was
 // successfully parsed.
-func (v *parser) parseInlineItems() (abs.ListLike[abs.ComponentLike], *Token, bool) {
+func (v *parser) parseInlineValues() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
@@ -209,7 +209,7 @@ func (v *parser) parseInlineItems() (abs.ListLike[abs.ComponentLike], *Token, bo
 		panic(message)
 	}
 	for {
-		list.AddItem(value)
+		list.AddValue(value)
 		// Every subsequent value must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -241,13 +241,13 @@ func (v *parser) parseList() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 	}
 	_, token, ok = v.parseEOL()
 	if !ok {
-		list, token, ok = v.parseInlineItems()
+		list, token, ok = v.parseInlineValues()
 		if !ok {
 			v.backupOne() // Put back the '[' character.
 			return list, token, false
 		}
 	} else {
-		list, token, ok = v.parseMultilineItems()
+		list, token, ok = v.parseMultilineValues()
 		if !ok {
 			v.backupOne() // Put back the EOL character.
 			v.backupOne() // Put back the '[' character.
@@ -273,7 +273,7 @@ func (v *formatter) formatList(list abs.ListLike[abs.ComponentLike]) {
 	case 0:
 		v.state.AppendString(" ")
 	case 1:
-		var value = list.GetItem(1)
+		var value = list.GetValue(1)
 		v.formatAny(value)
 	default:
 		var iterator = age.Iterator[abs.ComponentLike](list)
@@ -327,7 +327,7 @@ func (v *parser) parseMultilineAssociations() (abs.CatalogLike[abs.KeyLike, abs.
 // This method attempts to parse a list collection with multiline values. It
 // returns the list collection and whether or not the list collection was
 // successfully parsed.
-func (v *parser) parseMultilineItems() (abs.ListLike[abs.ComponentLike], *Token, bool) {
+func (v *parser) parseMultilineValues() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
@@ -342,7 +342,7 @@ func (v *parser) parseMultilineItems() (abs.ListLike[abs.ComponentLike], *Token,
 		panic(message)
 	}
 	for {
-		list.AddItem(value)
+		list.AddValue(value)
 		// Every value must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {

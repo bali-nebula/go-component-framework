@@ -54,19 +54,19 @@ func (v *stack[T]) GetCapacity() int {
 }
 
 // This method adds the specified value to the top of this stack.
-func (v *stack[T]) AddItem(value T) {
+func (v *stack[T]) AddValue(value T) {
 	if v.values.GetSize() == v.capacity {
 		panic("Attempted to add an value onto a stack that has reached its capacity!")
 	}
-	v.values.AddItem(value)
+	v.values.AddValue(value)
 }
 
 // This method adds the specified values to the top of this stack.
-func (v *stack[T]) AddItems(values abs.Sequential[T]) {
+func (v *stack[T]) AddValues(values abs.Sequential[T]) {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
-		v.AddItem(value) // We must call this explicitly to get the capacity check.
+		v.AddValue(value) // We must call this explicitly to get the capacity check.
 	}
 }
 
@@ -75,7 +75,7 @@ func (v *stack[T]) GetTop() T {
 	if v.values.IsEmpty() {
 		panic("Attempted to retrieve the top of an empty stack!")
 	}
-	return v.values.GetItem(-1)
+	return v.values.GetValue(-1)
 }
 
 // This method removes from this stack the value that is on top of it.
@@ -83,7 +83,7 @@ func (v *stack[T]) RemoveTop() T {
 	if v.values.IsEmpty() {
 		panic("Attempted to remove the top of an empty stack!")
 	}
-	return v.values.RemoveItem(-1)
+	return v.values.RemoveValue(-1)
 }
 
 // This method removes all values from this stack.

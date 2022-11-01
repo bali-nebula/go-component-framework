@@ -46,7 +46,7 @@ func (v *ifClause) SetCondition(condition abs.ExpressionLike) {
 
 // This method returns the statement at the specified index from this if clause.
 func (v *ifClause) GetStatement(index int) abs.StatementLike {
-	return v.statements.GetItem(index)
+	return v.statements.GetValue(index)
 }
 
 // This method sets the statement at the specified index for this if clause.
@@ -54,7 +54,7 @@ func (v *ifClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each index in an if clause requires a statement.")
 	}
-	v.statements.SetItem(index, statement)
+	v.statements.SetValue(index, statement)
 }
 
 // This method returns the list of statements for this if clause.

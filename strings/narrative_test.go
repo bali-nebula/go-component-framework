@@ -38,9 +38,9 @@ func TestNarrative(t *tes.T) {
 	ass.Equal(t, n1, string(v))
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 10, v.GetSize())
-	ass.Equal(t, 'a', v.GetItem(2))
-	ass.Equal(t, '4', v.GetItem(-1))
-	ass.Equal(t, n2, string(str.Narrative(string(v.GetItems(5, 7)))))
+	ass.Equal(t, 'a', v.GetValue(2))
+	ass.Equal(t, '4', v.GetValue(-1))
+	ass.Equal(t, n2, string(str.Narrative(string(v.GetValues(5, 7)))))
 	ass.Equal(t, 6, v.GetIndex('本'))
 }
 

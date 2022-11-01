@@ -88,20 +88,20 @@ func (v *queue[T]) GetCapacity() int {
 }
 
 // This method adds the specified value to the end of this queue.
-func (v *queue[T]) AddItem(value T) {
+func (v *queue[T]) AddValue(value T) {
 	v.mutex.Lock()
-	v.values.AddItem(value)
+	v.values.AddValue(value)
 	v.mutex.Unlock()
 	v.available <- true // Will block if at capacity.
 }
 
 // This method adds the specified values to the top of this queue.
-func (v *queue[T]) AddItems(values abs.Sequential[T]) {
+func (v *queue[T]) AddValues(values abs.Sequential[T]) {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		v.mutex.Lock()
-		v.values.AddItem(value)
+		v.values.AddValue(value)
 		v.mutex.Unlock()
 		v.available <- true // Will block if at capacity.
 	}
@@ -116,7 +116,7 @@ func (v *queue[T]) RemoveHead() (head T, ok bool) {
 	_, ok = <-v.available // Will block until an value is available.
 	if ok {
 		v.mutex.Lock()
-		head = v.values.RemoveItem(1)
+		head = v.values.RemoveValue(1)
 		v.mutex.Unlock()
 	}
 
@@ -163,7 +163,7 @@ func (l *queues[T]) Fork(wg *syn.WaitGroup, input abs.FIFO[T], size int) abs.Seq
 	var capacity = input.GetCapacity()
 	var outputs = List[abs.FIFO[T]]()
 	for i := 0; i < size; i++ {
-		outputs.AddItem(abs.FIFO[T](QueueWithCapacity[T](capacity)))
+		outputs.AddValue(abs.FIFO[T](QueueWithCapacity[T](capacity)))
 	}
 
 	// Connect up the input queue to the output queues in a separate goroutine.
@@ -185,7 +185,7 @@ func (l *queues[T]) Fork(wg *syn.WaitGroup, input abs.FIFO[T], size int) abs.Seq
 			iterator.ToStart()
 			for iterator.HasNext() {
 				var output = iterator.GetNext()
-				output.AddItem(value) // Will block when full.
+				output.AddValue(value) // Will block when full.
 			}
 		}
 
@@ -217,7 +217,7 @@ func (l *queues[T]) Split(wg *syn.WaitGroup, input abs.FIFO[T], size int) abs.Se
 	var capacity = input.GetCapacity()
 	var outputs = List[abs.FIFO[T]]()
 	for i := 0; i < size; i++ {
-		outputs.AddItem(abs.FIFO[T](QueueWithCapacity[T](capacity)))
+		outputs.AddValue(abs.FIFO[T](QueueWithCapacity[T](capacity)))
 	}
 
 	// Connect up the input queue to the output queues.
@@ -237,7 +237,7 @@ func (l *queues[T]) Split(wg *syn.WaitGroup, input abs.FIFO[T], size int) abs.Se
 
 			// Write to the next output queue.
 			var output = iterator.GetNext()
-			output.AddItem(value) // Will block when full.
+			output.AddValue(value) // Will block when full.
 			if !iterator.HasNext() {
 				iterator.ToStart()
 			}
@@ -284,7 +284,7 @@ func (l *queues[T]) Join(wg *syn.WaitGroup, inputs abs.Sequential[abs.FIFO[T]]) 
 			if !ok {
 				break // The input queue has been closed.
 			}
-			output.AddItem(value) // Will block when full.
+			output.AddValue(value) // Will block when full.
 			if !iterator.HasNext() {
 				iterator.ToStart()
 			}

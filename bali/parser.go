@@ -124,7 +124,7 @@ func (v *parser) nextToken() *Token {
 	} else {
 		next = v.next.RemoveTop()
 	}
-	v.previous.AddItem(next)
+	v.previous.AddValue(next)
 	return next
 }
 
@@ -135,7 +135,7 @@ func (v *parser) backupOne() {
 		panic("Attempted to put back a previous token that does not exist.")
 	}
 	var previous = v.previous.RemoveTop()
-	v.next.AddItem(previous)
+	v.next.AddValue(previous)
 }
 
 // This method returns an error message containing the context for a parsing

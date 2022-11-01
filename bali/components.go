@@ -341,14 +341,14 @@ func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, abs.ComponentL
 // This method adds the canonical format for the specified parameters to the
 // state of the formatter.
 func (v *formatter) formatParameters(parameters abs.CatalogLike[abs.Symbolic, abs.ComponentLike]) {
+	var iterator = age.Iterator[abs.AssociationLike[abs.Symbolic, abs.ComponentLike]](parameters)
 	switch parameters.GetSize() {
 	case 0:
 		panic("A context must have at least one parameter.")
 	case 1:
-		var parameter = parameters.GetItem(1)
+		var parameter = iterator.GetNext()
 		v.formatParameter(parameter)
 	default:
-		var iterator = age.Iterator[abs.AssociationLike[abs.Symbolic, abs.ComponentLike]](parameters)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()

@@ -44,7 +44,7 @@ func (v Narrative) AsArray() []rune {
 
 // This method retrieves from this string the rune that is associated
 // with the specified index.
-func (v Narrative) GetItem(index int) rune {
+func (v Narrative) GetValue(index int) rune {
 	var runes = v.AsArray()
 	var length = len(runes)
 	index = abs.NormalizedIndex(index, length)
@@ -53,7 +53,7 @@ func (v Narrative) GetItem(index int) rune {
 
 // This method retrieves from this string all runes from the first index
 // through the last index (inclusive).
-func (v Narrative) GetItems(first int, last int) []rune {
+func (v Narrative) GetValues(first int, last int) []rune {
 	var runes = v.AsArray()
 	var length = len(runes)
 	first = abs.NormalizedIndex(first, length)

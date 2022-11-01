@@ -46,7 +46,7 @@ func (v *onClause) SetException(exception abs.Symbolic) {
 
 // This method returns the handler at the specified index from this on clause.
 func (v *onClause) GetHandler(index int) abs.BlockLike {
-	return v.handlers.GetItem(index)
+	return v.handlers.GetValue(index)
 }
 
 // This method sets the handler at the specified index for this on clause.
@@ -54,7 +54,7 @@ func (v *onClause) SetHandler(index int, handler abs.BlockLike) {
 	if handler == nil {
 		panic("Each index in an on clause requires a handler block.")
 	}
-	v.handlers.SetItem(index, handler)
+	v.handlers.SetValue(index, handler)
 }
 
 // This method returns the list of handlers for this on clause.

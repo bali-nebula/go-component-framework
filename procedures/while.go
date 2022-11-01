@@ -47,7 +47,7 @@ func (v *whileClause) SetCondition(condition abs.ExpressionLike) {
 // This method returns the statement at the specified index from this while
 // clause.
 func (v *whileClause) GetStatement(index int) abs.StatementLike {
-	return v.statements.GetItem(index)
+	return v.statements.GetValue(index)
 }
 
 // This method sets the statement at the specified index for this while clause.
@@ -55,7 +55,7 @@ func (v *whileClause) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each index in a while clause requires a statement.")
 	}
-	v.statements.SetItem(index, statement)
+	v.statements.SetValue(index, statement)
 }
 
 // This method returns the list of statements for this while clause.

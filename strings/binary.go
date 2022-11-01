@@ -53,7 +53,7 @@ func (v Binary) AsArray() []byte {
 
 // This method retrieves from this string the byte that is associated
 // with the specified index.
-func (v Binary) GetItem(index int) byte {
+func (v Binary) GetValue(index int) byte {
 	var bytes = v.AsArray()
 	var length = len(bytes)
 	index = abs.NormalizedIndex(index, length)
@@ -62,7 +62,7 @@ func (v Binary) GetItem(index int) byte {
 
 // This method retrieves from this string all bytes from the first index
 // through the last index (inclusive).
-func (v Binary) GetItems(first int, last int) []byte {
+func (v Binary) GetValues(first int, last int) []byte {
 	var bytes = v.AsArray()
 	var length = len(bytes)
 	first = abs.NormalizedIndex(first, length)

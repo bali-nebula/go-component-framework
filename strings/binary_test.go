@@ -29,10 +29,10 @@ func TestBinary(t *tes.T) {
 	ass.Equal(t, "abcd1234", string(v))
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
-	ass.Equal(t, byte(0x69), v.GetItem(1))
-	ass.Equal(t, byte(0xf8), v.GetItem(-1))
+	ass.Equal(t, byte(0x69), v.GetValue(1))
+	ass.Equal(t, byte(0xf8), v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), str.BinaryFromBytes(v.AsArray()).AsArray())
-	ass.Equal(t, "abcd", string(str.BinaryFromBytes(v.GetItems(1, 3))))
+	ass.Equal(t, "abcd", string(str.BinaryFromBytes(v.GetValues(1, 3))))
 	ass.Equal(t, 1, v.GetIndex(byte(0x69)))
 }
 

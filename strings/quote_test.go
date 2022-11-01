@@ -28,10 +28,10 @@ func TestQuote(t *tes.T) {
 	ass.Equal(t, "abcd本1234", string(v))
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 9, v.GetSize())
-	ass.Equal(t, 'a', v.GetItem(1))
-	ass.Equal(t, '4', v.GetItem(-1))
+	ass.Equal(t, 'a', v.GetValue(1))
+	ass.Equal(t, '4', v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), str.QuoteFromRunes(v.AsArray()).AsArray())
-	ass.Equal(t, "d本1", string(str.QuoteFromRunes(v.GetItems(4, 6))))
+	ass.Equal(t, "d本1", string(str.QuoteFromRunes(v.GetValues(4, 6))))
 	ass.Equal(t, 5, v.GetIndex('本'))
 }
 

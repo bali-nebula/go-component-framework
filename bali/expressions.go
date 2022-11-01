@@ -31,7 +31,7 @@ func (v *parser) parseArguments() (abs.ListLike[abs.ExpressionLike], *Token, boo
 	}
 	argument, token, ok = v.parseExpression()
 	for ok {
-		arguments.AddItem(argument)
+		arguments.AddValue(argument)
 		// Every subsequent argument must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {

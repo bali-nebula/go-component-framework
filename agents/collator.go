@@ -48,17 +48,17 @@ type collator struct {
 
 // This method determines whether or not the specified values are equal.
 func (v *collator) CompareValues(first abs.ValueLike, second abs.ValueLike) bool {
-	return v.compareItems(ref.ValueOf(first), ref.ValueOf(second))
+	return v.compareValues(ref.ValueOf(first), ref.ValueOf(second))
 }
 
 // This method ranks the specified values using their natural ordering.
 func (v *collator) RankValues(first abs.ValueLike, second abs.ValueLike) int {
-	return v.rankItems(ref.ValueOf(first), ref.ValueOf(second))
+	return v.rankValues(ref.ValueOf(first), ref.ValueOf(second))
 }
 
 // This function determines whether or not the specified reflective values are
 // equal using reflection and a recursive descent algorithm.
-func (v *collator) compareItems(first ref.Value, second ref.Value) bool {
+func (v *collator) compareValues(first ref.Value, second ref.Value) bool {
 	// Handle nil values.
 	if !first.IsValid() {
 		return !second.IsValid()
@@ -105,7 +105,7 @@ func (v *collator) compareItems(first ref.Value, second ref.Value) bool {
 			// The values are pointers to the values to be compared.
 			first = first.Elem()
 			second = second.Elem()
-			return v.compareItems(first, second)
+			return v.compareValues(first, second)
 		}
 
 	default:
@@ -136,7 +136,7 @@ func (v *collator) compareArrays(first ref.Value, second ref.Value) bool {
 	}
 	for i := 0; i < size; i++ {
 		v.state.IncrementDepth()
-		if !v.compareItems(first.Index(i), second.Index(i)) {
+		if !v.compareValues(first.Index(i), second.Index(i)) {
 			// Two of the values in the arrays are different.
 			v.state.DecrementDepth()
 			return false
@@ -163,7 +163,7 @@ func (v *collator) compareMaps(first ref.Value, second ref.Value) bool {
 		var key = iterator.Key()
 		var firstValue = iterator.Value()
 		var secondValue = second.MapIndex(key)
-		if !v.compareItems(firstValue, secondValue) {
+		if !v.compareValues(firstValue, secondValue) {
 			// The values don't match.
 			v.state.DecrementDepth()
 			return false
@@ -181,7 +181,7 @@ func (v *collator) compareAssociations(first ref.Value, second ref.Value) bool {
 	// Compare the keys of the two associations.
 	var firstKey = first.MethodByName("GetKey").Call([]ref.Value{})[0]
 	var secondKey = second.MethodByName("GetKey").Call([]ref.Value{})[0]
-	if !v.compareItems(firstKey, secondKey) {
+	if !v.compareValues(firstKey, secondKey) {
 		// The keys don't match.
 		return false
 	}
@@ -189,7 +189,7 @@ func (v *collator) compareAssociations(first ref.Value, second ref.Value) bool {
 	// The keys match so compare the values of the two associations.
 	var firstValue = first.MethodByName("GetValue").Call([]ref.Value{})[0]
 	var secondValue = second.MethodByName("GetValue").Call([]ref.Value{})[0]
-	return v.compareItems(firstValue, secondValue)
+	return v.compareValues(firstValue, secondValue)
 }
 
 // This private method determines whether or not the specified collections
@@ -206,12 +206,12 @@ func (v *collator) compareCollections(first ref.Value, second ref.Value) bool {
 func (v *collator) rankReflective(first abs.ValueLike, second abs.ValueLike) int {
 	var firstValue = first.(ref.Value)
 	var secondValue = second.(ref.Value)
-	return v.rankItems(firstValue, secondValue)
+	return v.rankValues(firstValue, secondValue)
 }
 
 // This private method returns the ranking order of the specified values using
 // reflection and a recursive descent algorithm.
-func (v *collator) rankItems(first ref.Value, second ref.Value) int {
+func (v *collator) rankValues(first ref.Value, second ref.Value) int {
 	if !first.IsValid() {
 		if !second.IsValid() {
 			// Both values are nil.
@@ -306,7 +306,7 @@ func (v *collator) rankItems(first ref.Value, second ref.Value) int {
 			// The values are pointers to the values to be ranked.
 			first = first.Elem()
 			second = second.Elem()
-			return v.rankItems(first, second)
+			return v.rankValues(first, second)
 		}
 
 	default:
@@ -335,7 +335,7 @@ func (v *collator) rankArrays(first ref.Value, second ref.Value) int {
 	// Iterate through the smallest array.
 	for i := 0; i < firstSize; i++ {
 		v.state.IncrementDepth()
-		var rank = v.rankItems(first.Index(i), second.Index(i))
+		var rank = v.rankValues(first.Index(i), second.Index(i))
 		if rank < 0 {
 			// The value in the first array comes before its matching value.
 			v.state.DecrementDepth()
@@ -387,7 +387,7 @@ func (v *collator) rankMaps(first ref.Value, second ref.Value) int {
 		// Rank the two keys.
 		var firstKey = firstKeys[i]
 		var secondKey = secondKeys[i]
-		var keyRank = v.rankItems(firstKey, secondKey)
+		var keyRank = v.rankValues(firstKey, secondKey)
 		if keyRank < 0 {
 			// The key in the first map comes before its matching key.
 			return -1
@@ -400,7 +400,7 @@ func (v *collator) rankMaps(first ref.Value, second ref.Value) int {
 		// The two keys match so rank the corresponding values.
 		var firstValue = first.MapIndex(firstKey)
 		var secondValue = second.MapIndex(secondKey)
-		var valueRank = v.rankItems(firstValue, secondValue)
+		var valueRank = v.rankValues(firstValue, secondValue)
 		if valueRank < 0 {
 			// The value in the first map comes before its matching value.
 			return -1
@@ -426,7 +426,7 @@ func (v *collator) rankAssociations(first ref.Value, second ref.Value) int {
 	// Rank the keys of the two associations.
 	var firstKey = first.MethodByName("GetKey").Call([]ref.Value{})[0]
 	var secondKey = second.MethodByName("GetKey").Call([]ref.Value{})[0]
-	var keyRank = v.rankItems(firstKey, secondKey)
+	var keyRank = v.rankValues(firstKey, secondKey)
 	if keyRank < 0 {
 		// The key in the first association comes before the second.
 		return -1
@@ -439,7 +439,7 @@ func (v *collator) rankAssociations(first ref.Value, second ref.Value) int {
 	// The keys match so rank the values of the two associations.
 	var firstValue = first.MethodByName("GetValue").Call([]ref.Value{})[0]
 	var secondValue = second.MethodByName("GetValue").Call([]ref.Value{})[0]
-	return v.rankItems(firstValue, secondValue)
+	return v.rankValues(firstValue, secondValue)
 }
 
 // This private method returns the ranking order of the specified collections

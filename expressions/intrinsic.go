@@ -48,7 +48,7 @@ func (v *intrinsicExpression) SetFunction(function string) {
 // This method returns the argument at the specified index from this intrinsic
 // expression.
 func (v *intrinsicExpression) GetArgument(index int) abs.ExpressionLike {
-	return v.arguments.GetItem(index)
+	return v.arguments.GetValue(index)
 }
 
 // This method sets the argument at the specified index for this intrinsic
@@ -57,7 +57,7 @@ func (v *intrinsicExpression) SetArgument(index int, argument abs.ExpressionLike
 	if argument == nil {
 		panic("Each argument for an intrinsic expression requires a value.")
 	}
-	v.arguments.SetItem(index, argument)
+	v.arguments.SetValue(index, argument)
 }
 
 // This method returns the list of arguments for this intrinsic expression.

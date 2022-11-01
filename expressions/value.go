@@ -48,7 +48,7 @@ func (v *itemExpression) SetComposite(composite abs.ExpressionLike) {
 // This method returns the index at the specified index from this item
 // expression.
 func (v *itemExpression) GetIndex(index int) abs.ExpressionLike {
-	return v.indices.GetItem(index)
+	return v.indices.GetValue(index)
 }
 
 // This method sets the expression at the specified index for this item
@@ -57,7 +57,7 @@ func (v *itemExpression) SetIndex(index int, expression abs.ExpressionLike) {
 	if expression == nil {
 		panic("Each index for an item expression requires an expression.")
 	}
-	v.indices.SetItem(index, expression)
+	v.indices.SetValue(index, expression)
 }
 
 // This method returns the list of indices for this item expression.

@@ -52,7 +52,7 @@ func (v Moniker) AsArray() []string {
 
 // This method retrieves from this string the name that is associated with the
 // specified index.
-func (v Moniker) GetItem(index int) string {
+func (v Moniker) GetValue(index int) string {
 	var names = v.AsArray()
 	var length = len(names)
 	index = abs.NormalizedIndex(index, length)
@@ -61,7 +61,7 @@ func (v Moniker) GetItem(index int) string {
 
 // This method retrieves from this string all names from the first index through
 // the last index (inclusive).
-func (v Moniker) GetItems(first int, last int) []string {
+func (v Moniker) GetValues(first int, last int) []string {
 	var names = v.AsArray()
 	var length = len(names)
 	first = abs.NormalizedIndex(first, length)

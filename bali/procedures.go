@@ -421,7 +421,7 @@ func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool)
 		panic(message)
 	}
 	for {
-		indices.AddItem(index)
+		indices.AddValue(index)
 		// Every subsequent index must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -476,7 +476,7 @@ func (v *parser) parseInlineStatements() (abs.ListLike[abs.StatementLike], *Toke
 		panic(message)
 	}
 	for {
-		statements.AddItem(statement)
+		statements.AddValue(statement)
 		// Every subsequent statement must be preceded by a ';'.
 		_, token, ok = v.parseDelimiter(";")
 		if !ok {
@@ -576,7 +576,7 @@ func (v *parser) parseMultilineStatements() (abs.ListLike[abs.StatementLike], *T
 		panic(message)
 	}
 	for {
-		statements.AddItem(statement)
+		statements.AddValue(statement)
 		// Every statement must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -678,7 +678,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 				"$procedure")
 			panic(message)
 		}
-		blocks.AddItem(block)
+		blocks.AddValue(block)
 	}
 	// There must be at least one matching block expression.
 	if blocks.IsEmpty() {
@@ -1034,7 +1034,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 				"$procedure")
 			panic(message)
 		}
-		blocks.AddItem(block)
+		blocks.AddValue(block)
 	}
 	// There must be at least one matching block expression.
 	if blocks.IsEmpty() {

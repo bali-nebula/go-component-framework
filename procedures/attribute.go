@@ -46,7 +46,7 @@ func (v *attribute) SetVariable(variable string) {
 
 // This method returns the index at the specified index from this attribute.
 func (v *attribute) GetIndex(index int) abs.ExpressionLike {
-	return v.indices.GetItem(index)
+	return v.indices.GetValue(index)
 }
 
 // This method sets the expression at the specified index for this attribute.
@@ -54,7 +54,7 @@ func (v *attribute) SetIndex(index int, expression abs.ExpressionLike) {
 	if expression == nil {
 		panic("Each index for an attribute requires an expression.")
 	}
-	v.indices.SetItem(index, expression)
+	v.indices.SetValue(index, expression)
 }
 
 // This method returns the list of indices for this attribute.

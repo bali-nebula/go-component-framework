@@ -43,15 +43,15 @@ type Sequential[T ValueLike] interface {
 // indices are symmetrical.
 type Indexed[T ValueLike] interface {
 	SetComparer(compare ComparisonFunction)
-	GetItem(index int) T
-	GetItems(first int, last int) Sequential[T]
+	GetValue(index int) T
+	GetValues(first int, last int) Sequential[T]
 	GetIndex(value T) int
 }
 
 // This interface defines the methods supported by all searchable sequences of
 // values.
 type Searchable[T ValueLike] interface {
-	ContainsItem(value T) bool
+	ContainsValue(value T) bool
 	ContainsAny(values Sequential[T]) bool
 	ContainsAll(values Sequential[T]) bool
 }
@@ -59,8 +59,8 @@ type Searchable[T ValueLike] interface {
 // This interface defines the methods supported by all updatable sequences of
 // values.
 type Updatable[T ValueLike] interface {
-	SetItem(index int, value T)
-	SetItems(index int, values Sequential[T])
+	SetValue(index int, value T)
+	SetValues(index int, values Sequential[T])
 }
 
 // This interface defines the methods supported by all sequences of values that
@@ -79,27 +79,27 @@ type Elastic[T ValueLike] interface {
 // allow values to be added and removed.
 type Flexible[T ValueLike] interface {
 	SetRanker(rank RankingFunction)
-	AddItem(value T)
-	AddItems(values Sequential[T])
-	RemoveItem(value T)
-	RemoveItems(values Sequential[T])
+	AddValue(value T)
+	AddValues(values Sequential[T])
+	RemoveValue(value T)
+	RemoveValues(values Sequential[T])
 	RemoveAll()
 }
 
 // This interface defines the methods supported by all sequences whose values may
 // be modified, inserted, removed, or reordered.
 type Malleable[T ValueLike] interface {
-	AddItem(value T)
-	AddItems(values Sequential[T])
-	InsertItem(slot int, value T)
-	InsertItems(slot int, values Sequential[T])
-	RemoveItem(index int) T
-	RemoveItems(first int, last int) Sequential[T]
+	AddValue(value T)
+	AddValues(values Sequential[T])
+	InsertValue(slot int, value T)
+	InsertValues(slot int, values Sequential[T])
+	RemoveValue(index int) T
+	RemoveValues(first int, last int) Sequential[T]
 	RemoveAll()
-	ShuffleItems()
-	SortItems()
-	SortItemsWithRanker(ranker RankingFunction)
-	ReverseItems()
+	ShuffleValues()
+	SortValues()
+	SortValuesWithRanker(ranker RankingFunction)
+	ReverseValues()
 }
 
 // This interface defines the methods supported by all associative sequences
@@ -123,8 +123,8 @@ type Associative[K KeyLike, V ValueLike] interface {
 // are accessed using first-in-first-out (FIFO) semantics.
 type FIFO[T ValueLike] interface {
 	GetCapacity() int
-	AddItem(value T)
-	AddItems(values Sequential[T])
+	AddValue(value T)
+	AddValues(values Sequential[T])
 	RemoveHead() (head T, ok bool)
 	CloseQueue()
 }
@@ -133,8 +133,8 @@ type FIFO[T ValueLike] interface {
 // are accessed using last-in-first-out (LIFO) semantics.
 type LIFO[T ValueLike] interface {
 	GetCapacity() int
-	AddItem(value T)
-	AddItems(values Sequential[T])
+	AddValue(value T)
+	AddValues(values Sequential[T])
 	GetTop() T
 	RemoveTop() T
 	RemoveAll()
@@ -163,7 +163,6 @@ type AssociationLike[K KeyLike, V ValueLike] interface {
 // sequences.
 type CatalogLike[K KeyLike, V ValueLike] interface {
 	Sequential[AssociationLike[K, V]]
-	Indexed[AssociationLike[K, V]]
 	Associative[K, V]
 }
 

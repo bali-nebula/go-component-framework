@@ -30,7 +30,7 @@ func Set[T abs.ValueLike]() abs.SetLike[T] {
 func SetFromArray[T abs.ValueLike](array []T) abs.SetLike[T] {
 	var v = Set[T]()
 	for _, value := range array {
-		v.AddItem(value)
+		v.AddValue(value)
 	}
 	return v
 }
@@ -51,7 +51,7 @@ type set[T abs.ValueLike] struct {
 // SEARCHABLE INTERFACE
 
 // This method determines whether or not this set contains the specified value.
-func (v *set[T]) ContainsItem(value T) bool {
+func (v *set[T]) ContainsValue(value T) bool {
 	var _, found = v.search(value)
 	return found
 }
@@ -62,7 +62,7 @@ func (v *set[T]) ContainsAny(values abs.Sequential[T]) bool {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
-		if v.ContainsItem(value) {
+		if v.ContainsValue(value) {
 			// This set contains at least one of the values.
 			return true
 		}
@@ -77,7 +77,7 @@ func (v *set[T]) ContainsAll(values abs.Sequential[T]) bool {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
-		if !v.ContainsItem(value) {
+		if !v.ContainsValue(value) {
 			// This set is missing at least one of the values.
 			return false
 		}
@@ -98,41 +98,41 @@ func (v *set[T]) SetRanker(rank abs.RankingFunction) {
 
 // This method adds the specified value to this set if it is not already a
 // member of the set.
-func (v *set[T]) AddItem(value T) {
+func (v *set[T]) AddValue(value T) {
 	var slot, found = v.search(value)
 	if !found {
 		// The value is not already a member, so add it.
-		v.values.InsertItem(slot, value)
+		v.values.InsertValue(slot, value)
 	}
 }
 
 // This method adds the specified values to this set if they are not already
 // members of the set.
-func (v *set[T]) AddItems(values abs.Sequential[T]) {
+func (v *set[T]) AddValues(values abs.Sequential[T]) {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
-		v.AddItem(value)
+		v.AddValue(value)
 	}
 }
 
 // This method removes the specified value from this set. It returns true if the
 // value was in the set and false otherwise.
-func (v *set[T]) RemoveItem(value T) {
+func (v *set[T]) RemoveValue(value T) {
 	var index, found = v.search(value)
 	if found {
 		// The value is a member, so remove it.
-		v.values.RemoveItem(index)
+		v.values.RemoveValue(index)
 	}
 }
 
 // This method removes the specified values from this set. It returns the number
 // of values that were removed.
-func (v *set[T]) RemoveItems(values abs.Sequential[T]) {
+func (v *set[T]) RemoveValues(values abs.Sequential[T]) {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
-		v.RemoveItem(value)
+		v.RemoveValue(value)
 	}
 }
 
@@ -161,7 +161,7 @@ func (v *set[T]) search(value T) (index int, found bool) {
 	var size = last        // Initially all values are candidates.
 	for size > 0 {
 		var middle = first + size/2 // Rounds down to the nearest integer.
-		var candidate = v.GetItem(middle)
+		var candidate = v.GetValue(middle)
 		switch v.rank(value, candidate) {
 		case -1:
 			// The index of the value is less than the middle
@@ -211,8 +211,8 @@ func (l *sets[T]) And(first, second abs.SetLike[T]) abs.SetLike[T] {
 	var iterator = age.Iterator[T](first)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
-		if second.ContainsItem(value) {
-			result.AddItem(value)
+		if second.ContainsValue(value) {
+			result.AddValue(value)
 		}
 	}
 	return result
@@ -222,16 +222,16 @@ func (l *sets[T]) And(first, second abs.SetLike[T]) abs.SetLike[T] {
 // specified sets.
 func (l *sets[T]) Sans(first, second abs.SetLike[T]) abs.SetLike[T] {
 	var result = Set[T]()
-	result.AddItems(first)
-	result.RemoveItems(second)
+	result.AddValues(first)
+	result.RemoveValues(second)
 	return result
 }
 
 // This library function returns the logical disjunction of the specified sets.
 func (l *sets[T]) Or(first, second abs.SetLike[T]) abs.SetLike[T] {
 	var result = Set[T]()
-	result.AddItems(first)
-	result.AddItems(second)
+	result.AddValues(first)
+	result.AddValues(second)
 	return result
 }
 

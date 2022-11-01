@@ -51,7 +51,7 @@ func (v Quote) AsArray() []rune {
 
 // This method retrieves from this string the rune that is associated
 // with the specified index.
-func (v Quote) GetItem(index int) rune {
+func (v Quote) GetValue(index int) rune {
 	var runes = v.AsArray()
 	var length = len(runes)
 	index = abs.NormalizedIndex(index, length)
@@ -60,7 +60,7 @@ func (v Quote) GetItem(index int) rune {
 
 // This method retrieves from this string all runes from the first index
 // through the last index (inclusive).
-func (v Quote) GetItems(first int, last int) []rune {
+func (v Quote) GetValues(first int, last int) []rune {
 	var runes = v.AsArray()
 	var length = len(runes)
 	first = abs.NormalizedIndex(first, length)

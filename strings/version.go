@@ -70,7 +70,7 @@ func (v Version) AsArray() []int {
 
 // This method retrieves from this string the ordinal number that is associated
 // with the specified index.
-func (v Version) GetItem(index int) int {
+func (v Version) GetValue(index int) int {
 	var ordinals = v.AsArray()
 	var length = len(ordinals)
 	index = abs.NormalizedIndex(index, length)
@@ -79,7 +79,7 @@ func (v Version) GetItem(index int) int {
 
 // This method retrieves from this string all ordinals from the first index
 // through the last index (inclusive).
-func (v Version) GetItems(first int, last int) []int {
+func (v Version) GetValues(first int, last int) []int {
 	var ordinals = v.AsArray()
 	var length = len(ordinals)
 	first = abs.NormalizedIndex(first, length)

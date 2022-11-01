@@ -52,7 +52,7 @@ func (v *association[K, V]) SetValue(value V) {
 func Catalog[K abs.KeyLike, V abs.ValueLike]() abs.CatalogLike[K, V] {
 	var keys = map[abs.KeyLike]abs.AssociationLike[K, V]{}
 	var associations = List[abs.AssociationLike[K, V]]()
-	return &catalog[K, V]{associations, associations, associations, keys}
+	return &catalog[K, V]{associations, associations, keys}
 }
 
 // CATALOG IMPLEMENTATION
@@ -64,7 +64,6 @@ func Catalog[K abs.KeyLike, V abs.ValueLike]() abs.CatalogLike[K, V] {
 type catalog[K abs.KeyLike, V abs.ValueLike] struct {
 	// Note: The delegated methods don't see the real collection type.
 	abs.Sequential[abs.AssociationLike[K, V]]
-	abs.Indexed[abs.AssociationLike[K, V]]
 	associations abs.ListLike[abs.AssociationLike[K, V]]
 	keys         map[abs.KeyLike]abs.AssociationLike[K, V]
 }
@@ -93,7 +92,7 @@ func (v *catalog[K, V]) GetKeys() abs.Sequential[K] {
 	var iterator = age.Iterator[abs.AssociationLike[K, V]](v.associations)
 	for iterator.HasNext() {
 		var association = iterator.GetNext()
-		keys.AddItem(association.GetKey())
+		keys.AddValue(association.GetKey())
 	}
 	return keys
 }
@@ -118,7 +117,7 @@ func (v *catalog[K, V]) GetValues(keys abs.Sequential[K]) abs.Sequential[V] {
 	var iterator = age.Iterator(keys)
 	for iterator.HasNext() {
 		var key = iterator.GetNext()
-		values.AddItem(v.GetValue(key))
+		values.AddValue(v.GetValue(key))
 	}
 	return values
 }
@@ -133,7 +132,7 @@ func (v *catalog[K, V]) SetValue(key K, value V) {
 	} else {
 		// Add a new association.
 		association = Association[K, V](key, value)
-		v.associations.AddItem(association)
+		v.associations.AddValue(association)
 		v.keys[key] = association
 	}
 }
@@ -145,7 +144,7 @@ func (v *catalog[K, V]) RemoveValue(key K) V {
 	var association, exists = v.keys[key]
 	if exists {
 		var index = v.associations.GetIndex(association)
-		v.associations.RemoveItem(index)
+		v.associations.RemoveValue(index)
 		old = association.GetValue()
 		delete(v.keys, key)
 	}
@@ -159,7 +158,7 @@ func (v *catalog[K, V]) RemoveValues(keys abs.Sequential[K]) abs.Sequential[V] {
 	var iterator = age.Iterator(keys)
 	for iterator.HasNext() {
 		var key = iterator.GetNext()
-		values.AddItem(v.RemoveValue(key))
+		values.AddValue(v.RemoveValue(key))
 	}
 	return values
 }
@@ -173,18 +172,18 @@ func (v *catalog[K, V]) RemoveAll() {
 // This method sorts this catalog using the canonical rank function to compare
 // the keys.
 func (v *catalog[K, V]) SortAssociations() {
-	v.associations.SortItems()
+	v.associations.SortValues()
 }
 
 // This method sorts this catalog using the specified rank function to compare
 // the keys.
 func (v *catalog[K, V]) SortAssociationsWithRanker(rank abs.RankingFunction) {
-	v.associations.SortItemsWithRanker(rank)
+	v.associations.SortValuesWithRanker(rank)
 }
 
 // This method reverses the order of all associations in this catalog.
 func (v *catalog[K, V]) ReverseAssociations() {
-	v.associations.ReverseItems()
+	v.associations.ReverseValues()
 }
 
 // CATALOGS LIBRARY

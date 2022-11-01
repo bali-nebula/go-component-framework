@@ -95,7 +95,7 @@ func (v *invocationExpression) SetMessage(message string) {
 // This method returns the argument at the specified index from this invocation
 // expression.
 func (v *invocationExpression) GetArgument(index int) abs.ExpressionLike {
-	return v.arguments.GetItem(index)
+	return v.arguments.GetValue(index)
 }
 
 // This method sets the argument at the specified index for this invocation
@@ -104,7 +104,7 @@ func (v *invocationExpression) SetArgument(index int, argument abs.ExpressionLik
 	if argument == nil {
 		panic("Each argument for an invocation expression requires a value.")
 	}
-	v.arguments.SetItem(index, argument)
+	v.arguments.SetValue(index, argument)
 }
 
 // This method returns the list of arguments for this invocation expression.

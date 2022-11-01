@@ -84,7 +84,7 @@ func (v *ranje[T]) SetComparer(compare abs.ComparisonFunction) {
 
 // This method retrieves from this range the value that is associated with the
 // specified index.
-func (v *ranje[T]) GetItem(index int) T {
+func (v *ranje[T]) GetValue(index int) T {
 	var offset = abs.NormalizedIndex(index, v.size)
 	var first = v.effectiveFirst()
 	var value = v.indexToValue(first + offset)
@@ -93,11 +93,11 @@ func (v *ranje[T]) GetItem(index int) T {
 
 // This method retrieves from this range all values from the first index through
 // the last index (inclusive).
-func (v *ranje[T]) GetItems(first int, last int) abs.Sequential[T] {
+func (v *ranje[T]) GetValues(first int, last int) abs.Sequential[T] {
 	var values = List[T]()
 	for index := first; index <= last; index++ {
 		var value = v.indexToValue(index)
-		values.AddItem(value)
+		values.AddValue(value)
 	}
 	return values
 }

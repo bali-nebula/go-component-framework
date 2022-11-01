@@ -46,7 +46,7 @@ func (v *block) SetExpression(expression abs.ExpressionLike) {
 
 // This method returns the statement at the specified index from this block.
 func (v *block) GetStatement(index int) abs.StatementLike {
-	return v.procedure.GetItem(index)
+	return v.procedure.GetValue(index)
 }
 
 // This method sets the statement at the specified index for this block.
@@ -54,7 +54,7 @@ func (v *block) SetStatement(index int, statement abs.StatementLike) {
 	if statement == nil {
 		panic("Each index in a procedure requires a statement.")
 	}
-	v.procedure.SetItem(index, statement)
+	v.procedure.SetValue(index, statement)
 }
 
 // This method returns the procedure for this block.

@@ -32,7 +32,7 @@ func TestQueueWithConcurrency(t *tes.T) {
 
 	// Add values to the queue in bulk.
 	for i := 1; i < 10; i++ {
-		queue.AddItem(i)
+		queue.AddValue(i)
 	}
 	ass.Equal(t, 9, queue.GetSize())
 
@@ -48,7 +48,7 @@ func TestQueueWithConcurrency(t *tes.T) {
 
 	// Add more values to the queue.
 	for i := 10; i < 101; i++ {
-		queue.AddItem(i)
+		queue.AddValue(i)
 	}
 }
 
@@ -81,7 +81,7 @@ func TestQueueWithFork(t *tes.T) {
 
 	// Add values to the input queue.
 	for i := 1; i < 11; i++ {
-		input.AddItem(i)
+		input.AddValue(i)
 	}
 	input.CloseQueue()
 }
@@ -111,7 +111,7 @@ func TestQueueWithSplitAndJoin(t *tes.T) {
 
 	// Add values to the input queue.
 	for i := 1; i < 21; i++ {
-		input.AddItem(i)
+		input.AddValue(i)
 	}
 	input.CloseQueue()
 }

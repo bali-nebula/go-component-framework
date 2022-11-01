@@ -34,25 +34,25 @@ func TestListsWithStrings(t *tes.T) {
 	var list = col.List[string]()
 	ass.True(t, list.IsEmpty())
 	ass.Equal(t, 0, list.GetSize())
-	ass.False(t, list.ContainsItem("bax"))
+	ass.False(t, list.ContainsValue("bax"))
 	ass.Equal(t, []string{}, list.AsArray())
 	var iterator = age.Iterator[string](list)
 	ass.False(t, iterator.HasNext())
 	ass.False(t, iterator.HasPrevious())
 	iterator.ToStart()
 	iterator.ToEnd()
-	list.ShuffleItems()
-	list.SortItems()
-	list.RemoveAll()                             //        [ ]
-	list.AddItem("foo")                          //        ["foo"]
-	ass.False(t, list.IsEmpty())                 //        ["foo"]
-	ass.Equal(t, 1, list.GetSize())              //        ["foo"]
-	ass.Equal(t, "foo", string(list.GetItem(1))) //        ["foo"]
-	list.AddItems(barbaz)                        //        ["foo", "bar", "baz"]
-	ass.Equal(t, 3, list.GetSize())              //        ["foo", "bar", "baz"]
-	ass.Equal(t, "foo", string(list.GetItem(1))) //        ["foo", "bar", "baz"]
-	ass.Equal(t, barbaz.AsArray(), list.GetItems(2, 3).AsArray())
-	ass.Equal(t, foo.AsArray(), list.GetItems(1, 1).AsArray())
+	list.ShuffleValues()
+	list.SortValues()
+	list.RemoveAll()                              //       [ ]
+	list.AddValue("foo")                          //       ["foo"]
+	ass.False(t, list.IsEmpty())                  //       ["foo"]
+	ass.Equal(t, 1, list.GetSize())               //       ["foo"]
+	ass.Equal(t, "foo", string(list.GetValue(1))) //       ["foo"]
+	list.AddValues(barbaz)                        //       ["foo", "bar", "baz"]
+	ass.Equal(t, 3, list.GetSize())               //       ["foo", "bar", "baz"]
+	ass.Equal(t, "foo", string(list.GetValue(1))) //       ["foo", "bar", "baz"]
+	ass.Equal(t, barbaz.AsArray(), list.GetValues(2, 3).AsArray())
+	ass.Equal(t, foo.AsArray(), list.GetValues(1, 1).AsArray())
 	iterator = age.Iterator[string](list)               // ["foo", "bar", "baz"]
 	ass.True(t, iterator.HasNext())                     // ["foo", "bar", "baz"]
 	ass.False(t, iterator.HasPrevious())                // ["foo", "bar", "baz"]
@@ -63,75 +63,75 @@ func TestListsWithStrings(t *tes.T) {
 	ass.True(t, iterator.HasPrevious())                 // ["foo", "bar", "baz"]
 	ass.Equal(t, "baz", string(iterator.GetPrevious())) // ["foo", "bar", "baz"]
 	ass.True(t, iterator.HasNext())                     // ["foo", "bar", "baz"]
-	list.ShuffleItems()                                 // [ ?, ?, ? ]
+	list.ShuffleValues()                                // [ ?, ?, ? ]
 	list.RemoveAll()                                    // [ ]
 	ass.True(t, list.IsEmpty())                         // [ ]
 	ass.Equal(t, 0, list.GetSize())                     // [ ]
-	list.InsertItem(0, "baz")                           // ["baz"]
+	list.InsertValue(0, "baz")                          // ["baz"]
 	ass.Equal(t, 1, list.GetSize())                     // ["baz"]
-	ass.Equal(t, "baz", string(list.GetItem(-1)))       // ["baz"]
-	list.InsertItems(0, foobar)                         // ["foo", "bar", "baz"]
+	ass.Equal(t, "baz", string(list.GetValue(-1)))      // ["baz"]
+	list.InsertValues(0, foobar)                        // ["foo", "bar", "baz"]
 	ass.Equal(t, 3, list.GetSize())                     // ["foo", "bar", "baz"]
-	ass.Equal(t, "foo", string(list.GetItem(-3)))       // ["foo", "bar", "baz"]
-	ass.Equal(t, "bar", string(list.GetItem(-2)))       // ["foo", "bar", "baz"]
-	ass.Equal(t, "baz", string(list.GetItem(-1)))       // ["foo", "bar", "baz"]
-	list.ReverseItems()                                 // ["baz", "bar", "foo"]
-	ass.Equal(t, "foo", string(list.GetItem(-1)))       // ["baz", "bar", "foo"]
-	ass.Equal(t, "bar", string(list.GetItem(-2)))       // ["baz", "bar", "foo"]
-	ass.Equal(t, "baz", string(list.GetItem(-3)))       // ["baz", "bar", "foo"]
-	list.ReverseItems()                                 // ["foo", "bar", "baz"]
+	ass.Equal(t, "foo", string(list.GetValue(-3)))      // ["foo", "bar", "baz"]
+	ass.Equal(t, "bar", string(list.GetValue(-2)))      // ["foo", "bar", "baz"]
+	ass.Equal(t, "baz", string(list.GetValue(-1)))      // ["foo", "bar", "baz"]
+	list.ReverseValues()                                // ["baz", "bar", "foo"]
+	ass.Equal(t, "foo", string(list.GetValue(-1)))      // ["baz", "bar", "foo"]
+	ass.Equal(t, "bar", string(list.GetValue(-2)))      // ["baz", "bar", "foo"]
+	ass.Equal(t, "baz", string(list.GetValue(-3)))      // ["baz", "bar", "foo"]
+	list.ReverseValues()                                // ["foo", "bar", "baz"]
 	ass.Equal(t, 0, list.GetIndex("foz"))               // ["foo", "bar", "baz"]
 	ass.Equal(t, 3, list.GetIndex("baz"))               // ["foo", "bar", "baz"]
-	ass.True(t, list.ContainsItem("baz"))               // ["foo", "bar", "baz"]
-	ass.False(t, list.ContainsItem("bax"))              // ["foo", "bar", "baz"]
+	ass.True(t, list.ContainsValue("baz"))              // ["foo", "bar", "baz"]
+	ass.False(t, list.ContainsValue("bax"))             // ["foo", "bar", "baz"]
 	ass.True(t, list.ContainsAny(baxbaz))               // ["foo", "bar", "baz"]
 	ass.False(t, list.ContainsAny(baxbez))              // ["foo", "bar", "baz"]
 	ass.True(t, list.ContainsAll(barbaz))               // ["foo", "bar", "baz"]
 	ass.False(t, list.ContainsAll(baxbaz))              // ["foo", "bar", "baz"]
-	list.SetItem(3, "bax")                              // ["foo", "bar", "bax"]
-	list.InsertItems(3, baz)                            // ["foo", "bar", "bax", "baz"]
+	list.SetValue(3, "bax")                             // ["foo", "bar", "bax"]
+	list.InsertValues(3, baz)                           // ["foo", "bar", "bax", "baz"]
 	ass.Equal(t, 4, list.GetSize())                     // ["foo", "bar", "bax", "baz"]
-	ass.Equal(t, "baz", string(list.GetItem(4)))        // ["foo", "bar", "bax", "baz"]
-	list.InsertItem(4, "bar")                           // ["foo", "bar", "bax", "baz", "bar"]
+	ass.Equal(t, "baz", string(list.GetValue(4)))       // ["foo", "bar", "bax", "baz"]
+	list.InsertValue(4, "bar")                          // ["foo", "bar", "bax", "baz", "bar"]
 	ass.Equal(t, 5, list.GetSize())                     // ["foo", "bar", "bax", "baz", "bar"]
-	ass.Equal(t, "bar", string(list.GetItem(5)))        // ["foo", "bar", "bax", "baz", "bar"]
-	list.InsertItem(2, "foo")                           // ["foo", "bar", "foo", "bax", "baz", "bar"]
+	ass.Equal(t, "bar", string(list.GetValue(5)))       // ["foo", "bar", "bax", "baz", "bar"]
+	list.InsertValue(2, "foo")                          // ["foo", "bar", "foo", "bax", "baz", "bar"]
 	ass.Equal(t, 6, list.GetSize())                     // ["foo", "bar", "foo", "bax", "baz", "bar"]
-	ass.Equal(t, "bar", string(list.GetItem(2)))        // ["foo", "bar", "foo", "bax", "baz", "bar"]
-	ass.Equal(t, "foo", string(list.GetItem(3)))        // ["foo", "bar", "foo", "bax", "baz", "bar"]
-	ass.Equal(t, "bax", string(list.GetItem(4)))        // ["foo", "bar", "foo", "bax", "baz", "bar"]
-	ass.Equal(t, bar.AsArray(), list.GetItems(6, 6).AsArray())
-	list.InsertItems(5, baz)                     //  ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
-	ass.Equal(t, 7, list.GetSize())              //  ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
-	ass.Equal(t, "bax", string(list.GetItem(4))) //  ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
-	ass.Equal(t, "baz", string(list.GetItem(5))) //  ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
-	ass.Equal(t, "baz", string(list.GetItem(6))) //  ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
-	ass.Equal(t, barfoobax.AsArray(), list.GetItems(2, -4).AsArray())
-	list.SetItems(2, foobazbar) //                      ["foo", "foo", "baz", "bar", "baz", "baz", "bar"]
-	ass.Equal(t, foobazbar.AsArray(), list.GetItems(2, -4).AsArray())
-	list.SetItems(-1, foz)
-	ass.Equal(t, "foz", string(list.GetItem(-1))) // ["foo", "foo", "baz", "bar", "baz", "baz", "foz"]
-	list.SortItems()                              // ["bar", "baz", "baz", "baz", "foo", "foo", "foz"]
+	ass.Equal(t, "bar", string(list.GetValue(2)))       // ["foo", "bar", "foo", "bax", "baz", "bar"]
+	ass.Equal(t, "foo", string(list.GetValue(3)))       // ["foo", "bar", "foo", "bax", "baz", "bar"]
+	ass.Equal(t, "bax", string(list.GetValue(4)))       // ["foo", "bar", "foo", "bax", "baz", "bar"]
+	ass.Equal(t, bar.AsArray(), list.GetValues(6, 6).AsArray())
+	list.InsertValues(5, baz)                     //       ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
+	ass.Equal(t, 7, list.GetSize())               //       ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
+	ass.Equal(t, "bax", string(list.GetValue(4))) //       ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
+	ass.Equal(t, "baz", string(list.GetValue(5))) //       ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
+	ass.Equal(t, "baz", string(list.GetValue(6))) //       ["foo", "bar", "foo", "bax", "baz", "baz", "bar"]
+	ass.Equal(t, barfoobax.AsArray(), list.GetValues(2, -4).AsArray())
+	list.SetValues(2, foobazbar) //                        ["foo", "foo", "baz", "bar", "baz", "baz", "bar"]
+	ass.Equal(t, foobazbar.AsArray(), list.GetValues(2, -4).AsArray())
+	list.SetValues(-1, foz)
+	ass.Equal(t, "foz", string(list.GetValue(-1))) //      ["foo", "foo", "baz", "bar", "baz", "baz", "foz"]
+	list.SortValues()                              //      ["bar", "baz", "baz", "baz", "foo", "foo", "foz"]
 
-	ass.Equal(t, bazbaz.AsArray(), list.RemoveItems(2, -5).AsArray()) // ["bar", "baz", "foo", "foo", "foz"]
-	ass.Equal(t, barbaz.AsArray(), list.RemoveItems(1, 2).AsArray())  // ["foo", "foo", "foz"]
-	ass.Equal(t, "foz", string(list.RemoveItem(-1)))                  // ["foo", "foo"]
-	ass.Equal(t, 2, list.GetSize())                                   // ["foo", "foo"]
-	list.RemoveAll()                                                  // [ ]
-	ass.Equal(t, 0, list.GetSize())                                   // [ ]
-	list.SortItems()                                                  // [ ]
-	list.AddItems(foobarbaz)                                          // ["foo", "bar", "baz"]
-	list.SortItems()                                                  // ["bar", "baz", "foo"]
-	ass.Equal(t, barbazfoo.AsArray(), list.AsArray())                 // ["bar", "baz", "foo"]
-	list.RemoveAll()                                                  // [ ]
-	list.AddItem("foo")                                               // ["foo"]
-	list.SortItems()                                                  // ["foo"]
-	ass.Equal(t, 1, list.GetSize())                                   // ["foo"]
-	ass.Equal(t, "foo", string(list.GetItem(1)))                      // ["foo"]
-	list.AddItem("bar")                                               // ["foo", "bar"]
-	list.SortItems()                                                  // ["bar", "foo"]
-	ass.Equal(t, 2, list.GetSize())                                   // ["bar", "foo"]
-	ass.Equal(t, "bar", string(list.GetItem(1)))                      // ["bar", "foo"]
+	ass.Equal(t, bazbaz.AsArray(), list.RemoveValues(2, -5).AsArray()) // ["bar", "baz", "foo", "foo", "foz"]
+	ass.Equal(t, barbaz.AsArray(), list.RemoveValues(1, 2).AsArray())  // ["foo", "foo", "foz"]
+	ass.Equal(t, "foz", string(list.RemoveValue(-1)))                  // ["foo", "foo"]
+	ass.Equal(t, 2, list.GetSize())                                    // ["foo", "foo"]
+	list.RemoveAll()                                                   // [ ]
+	ass.Equal(t, 0, list.GetSize())                                    // [ ]
+	list.SortValues()                                                  // [ ]
+	list.AddValues(foobarbaz)                                          // ["foo", "bar", "baz"]
+	list.SortValues()                                                  // ["bar", "baz", "foo"]
+	ass.Equal(t, barbazfoo.AsArray(), list.AsArray())                  // ["bar", "baz", "foo"]
+	list.RemoveAll()                                                   // [ ]
+	list.AddValue("foo")                                               // ["foo"]
+	list.SortValues()                                                  // ["foo"]
+	ass.Equal(t, 1, list.GetSize())                                    // ["foo"]
+	ass.Equal(t, "foo", string(list.GetValue(1)))                      // ["foo"]
+	list.AddValue("bar")                                               // ["foo", "bar"]
+	list.SortValues()                                                  // ["bar", "foo"]
+	ass.Equal(t, 2, list.GetSize())                                    // ["bar", "foo"]
+	ass.Equal(t, "bar", string(list.GetValue(1)))                      // ["bar", "foo"]
 }
 
 func TestListsWithConcatenate(t *tes.T) {
@@ -140,12 +140,12 @@ func TestListsWithConcatenate(t *tes.T) {
 	var onetwothree = col.ListFromArray([]int{1, 2, 3})
 	var fourfivesix = col.ListFromArray([]int{4, 5, 6})
 	var onethrusix = col.ListFromArray([]int{1, 2, 3, 4, 5, 6})
-	list1.AddItems(onetwothree)
+	list1.AddValues(onetwothree)
 	var list2 = col.List[int]()
-	list2.AddItems(fourfivesix)
+	list2.AddValues(fourfivesix)
 	var list3 = lists.Concatenate(list1, list2)
 	var list4 = col.List[int]()
-	list4.AddItems(onethrusix)
+	list4.AddValues(onethrusix)
 	ass.True(t, age.CompareValues(list3, list4))
 }
 

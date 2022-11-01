@@ -38,7 +38,7 @@ const p = `"ca+t"?`
 
 const r = "<https://google.com>"
 
-const s = "$getItem"
+const s = "$getValue"
 
 const v = "v1.2.3"
 
