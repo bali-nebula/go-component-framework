@@ -62,7 +62,7 @@ var grammar = map[string]string{
     variable    |  ! IDENTIFIER
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
-    invocation  |  ! expression ("." | "<~") method arguments
+    invocation  |  ! expression ("." | "<-") method arguments
     value       |  ! expression "[" indices "]"
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
@@ -77,7 +77,7 @@ var grammar = map[string]string{
 	"$indices":    `expression {"," expression}`,
 	"$intrinsic":  `function arguments`,
 	"$inversion":  `("-" | "/" | "*") expression`,
-	"$invocation": `target ("." | "<~") method arguments`,
+	"$invocation": `target ("." | "<-") method arguments`,
 	"$item":       `SYMBOL`,
 	"$items": `
     component {"," component} |
@@ -156,7 +156,7 @@ var grammar = map[string]string{
 	"$DATES":       `[TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]`,
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
 	"$DELIMITER": `
-    "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "<~" | "<" |
+    "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "<-" | "<" |
 	";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," |
 	"+=" | "+" | "*=" | "*" | ")" | "(" | "&"`,
 	"$DURATION":   `"~" [SIGN] "P" (WEEKS | DATES [TIMES])`,
@@ -184,7 +184,7 @@ var grammar = map[string]string{
 	"$NAME":        `LETTER {[SEPARATOR] (LETTER | DIGIT)}`,
 	"$NARRATIVE":   `'">' EOL {NARRATIVE | ~'<"'} EOL {SPACE} '<"'`,
 	"$NONE":        `"none"`,
-	"$NOTE":        `"! " <~EOL>`,
+	"$NOTE":        `"! " {~EOL}`,
 	"$NUMBER":      `INFINITY | IMAGINARY | REAL | ZERO | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"`,
 	"$ONE":         `"1."`,
 	"$ORDINAL":     `"1".."9" {"0".."9"}`,

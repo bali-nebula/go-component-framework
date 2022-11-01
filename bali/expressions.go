@@ -374,7 +374,7 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 	var expression abs.InvocationLike
 	delimiter, token, ok = v.parseDelimiter(".")
 	if !ok {
-		delimiter, token, ok = v.parseDelimiter("<~")
+		delimiter, token, ok = v.parseDelimiter("<-")
 	}
 	if !ok {
 		// This is not an message expression.
@@ -401,7 +401,7 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 	switch delimiter {
 	case ".":
 		expression = exp.Invocation(target, message, arguments)
-	case "<~":
+	case "<-":
 		expression = exp.AsynchronousInvocation(target, message, arguments)
 	}
 	return expression, token, true
