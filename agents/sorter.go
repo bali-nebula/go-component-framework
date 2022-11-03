@@ -18,26 +18,26 @@ import (
 
 // This function sorts the specified array of values using the specified ranking
 // function.
-func SortArray[T abs.ValueLike](array []T, rank abs.RankingFunction) {
-	var v = Sorter[T](rank)
+func SortArray[V abs.ValueLike](array []V, rank abs.RankingFunction) {
+	var v = Sorter[V](rank)
 	v.SortArray(array)
 }
 
 // This constructor creates a new instance of a sorter that can be used to
 // sort an array using a specific ranking function.
-func Sorter[T abs.ValueLike](rank abs.RankingFunction) abs.SorterLike[T] {
-	return &sorter[T]{rank: rank}
+func Sorter[V abs.ValueLike](rank abs.RankingFunction) abs.SorterLike[V] {
+	return &sorter[V]{rank: rank}
 }
 
 // SORTER IMPLEMENTATION
 
 // This type defines the structure and methods for a merge sorter agent.
-type sorter[T abs.ValueLike] struct {
+type sorter[V abs.ValueLike] struct {
 	rank abs.RankingFunction
 }
 
 // This method sorts an array of values and returns the sorted array.
-func (v *sorter[T]) SortArray(array []T) {
+func (v *sorter[V]) SortArray(array []V) {
 	v.sortArray(array)
 }
 
@@ -49,10 +49,10 @@ func (v *sorter[T]) SortArray(array []T) {
 // O[nlog(n)] time and O[n] space performance. The algorithm is documented here:
 //   - https://en.wikipedia.org/wiki/Merge_sort#Bottom-up_implementation
 
-func (v *sorter[T]) sortArray(array []T) {
+func (v *sorter[V]) sortArray(array []V) {
 	// Create a buffer array.
 	var length = len(array)
-	var buffer = make([]T, length)
+	var buffer = make([]V, length)
 	copy(buffer, array) // Make a copy of the original unsorted array.
 
 	// Iterate through subarray widths of 2, 4, 8, ... length.
@@ -88,7 +88,7 @@ func (v *sorter[T]) sortArray(array []T) {
 	copy(array, buffer) // Both arrays are now sorted.
 }
 
-func (v *sorter[T]) mergeArrays(left []T, right []T, merged []T) {
+func (v *sorter[V]) mergeArrays(left []V, right []V, merged []V) {
 	var leftIndex = 0
 	var leftLength = len(left)
 	var rightIndex = 0

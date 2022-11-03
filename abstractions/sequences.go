@@ -23,10 +23,10 @@ type ValueLike any
 type SequenceLike any
 
 // This interface defines the methods supported by all sequences of values.
-type Sequential[T ValueLike] interface {
+type Sequential[V ValueLike] interface {
 	IsEmpty() bool
 	GetSize() int
-	AsArray() []T
+	AsArray() []V
 }
 
 // This interface defines the methods supported by all sequences whose values can
@@ -41,60 +41,60 @@ type Sequential[T ValueLike] interface {
 //
 // Notice that because the indices are ordinal based, the positive and negative
 // indices are symmetrical.
-type Indexed[T ValueLike] interface {
+type Indexed[V ValueLike] interface {
 	SetComparer(compare ComparisonFunction)
-	GetValue(index int) T
-	GetValues(first int, last int) Sequential[T]
-	GetIndex(value T) int
+	GetValue(index int) V
+	GetValues(first int, last int) Sequential[V]
+	GetIndex(value V) int
 }
 
 // This interface defines the methods supported by all searchable sequences of
 // values.
-type Searchable[T ValueLike] interface {
-	ContainsValue(value T) bool
-	ContainsAny(values Sequential[T]) bool
-	ContainsAll(values Sequential[T]) bool
+type Searchable[V ValueLike] interface {
+	ContainsValue(value V) bool
+	ContainsAny(values Sequential[V]) bool
+	ContainsAll(values Sequential[V]) bool
 }
 
 // This interface defines the methods supported by all updatable sequences of
 // values.
-type Updatable[T ValueLike] interface {
-	SetValue(index int, value T)
-	SetValues(index int, values Sequential[T])
+type Updatable[V ValueLike] interface {
+	SetValue(index int, value V)
+	SetValues(index int, values Sequential[V])
 }
 
 // This interface defines the methods supported by all sequences of values that
 // allow their endpoints to be changed.
-type Elastic[T ValueLike] interface {
+type Elastic[V ValueLike] interface {
 	IsEnumerable() bool
-	GetFirst() T
-	SetFirst(T)
+	GetFirst() V
+	SetFirst(V)
 	GetExtent() Extent
 	SetExtent(extent Extent)
-	GetLast() T
-	SetLast(T)
+	GetLast() V
+	SetLast(V)
 }
 
 // This interface defines the methods supported by all sequences of values that
 // allow values to be added and removed.
-type Flexible[T ValueLike] interface {
+type Flexible[V ValueLike] interface {
 	SetRanker(rank RankingFunction)
-	AddValue(value T)
-	AddValues(values Sequential[T])
-	RemoveValue(value T)
-	RemoveValues(values Sequential[T])
+	AddValue(value V)
+	AddValues(values Sequential[V])
+	RemoveValue(value V)
+	RemoveValues(values Sequential[V])
 	RemoveAll()
 }
 
 // This interface defines the methods supported by all sequences whose values may
 // be modified, inserted, removed, or reordered.
-type Malleable[T ValueLike] interface {
-	AddValue(value T)
-	AddValues(values Sequential[T])
-	InsertValue(slot int, value T)
-	InsertValues(slot int, values Sequential[T])
-	RemoveValue(index int) T
-	RemoveValues(first int, last int) Sequential[T]
+type Malleable[V ValueLike] interface {
+	AddValue(value V)
+	AddValues(values Sequential[V])
+	InsertValue(slot int, value V)
+	InsertValues(slot int, values Sequential[V])
+	RemoveValue(index int) V
+	RemoveValues(first int, last int) Sequential[V]
 	RemoveAll()
 	ShuffleValues()
 	SortValues()
@@ -121,22 +121,22 @@ type Associative[K KeyLike, V ValueLike] interface {
 
 // This interface defines the methods supported by all sequences whose values
 // are accessed using first-in-first-out (FIFO) semantics.
-type FIFO[T ValueLike] interface {
+type FIFO[V ValueLike] interface {
 	GetCapacity() int
-	AddValue(value T)
-	AddValues(values Sequential[T])
-	RemoveHead() (head T, ok bool)
+	AddValue(value V)
+	AddValues(values Sequential[V])
+	RemoveHead() (head V, ok bool)
 	CloseQueue()
 }
 
 // This interface defines the methods supported by all sequences whose values
 // are accessed using last-in-first-out (LIFO) semantics.
-type LIFO[T ValueLike] interface {
+type LIFO[V ValueLike] interface {
 	GetCapacity() int
-	AddValue(value T)
-	AddValues(values Sequential[T])
-	GetTop() T
-	RemoveTop() T
+	AddValue(value V)
+	AddValues(values Sequential[V])
+	GetTop() V
+	RemoveTop() V
 	RemoveAll()
 }
 
@@ -144,11 +144,11 @@ type LIFO[T ValueLike] interface {
 
 // This interface consolidates all the interfaces supported by array-like
 // sequences.
-type ArrayLike[T ValueLike] interface {
-	Sequential[T]
-	Indexed[T]
-	Searchable[T]
-	Updatable[T]
+type ArrayLike[V ValueLike] interface {
+	Sequential[V]
+	Indexed[V]
+	Searchable[V]
+	Updatable[V]
 }
 
 // This interface defines the methods supported by all association-like types.
@@ -168,43 +168,43 @@ type CatalogLike[K KeyLike, V ValueLike] interface {
 
 // This interface consolidates all the interfaces supported by list-like
 // sequences.
-type ListLike[T ValueLike] interface {
-	Sequential[T]
-	Indexed[T]
-	Searchable[T]
-	Updatable[T]
-	Malleable[T]
+type ListLike[V ValueLike] interface {
+	Sequential[V]
+	Indexed[V]
+	Searchable[V]
+	Updatable[V]
+	Malleable[V]
 }
 
 // This interface consolidates all of the interfaces supported by queue-like
 // sequences.
-type QueueLike[T ValueLike] interface {
-	Sequential[T]
-	FIFO[T]
+type QueueLike[V ValueLike] interface {
+	Sequential[V]
+	FIFO[V]
 }
 
 // This interface consolidates all the interfaces supported by set-like
 // sequences.
-type SetLike[T ValueLike] interface {
-	Sequential[T]
-	Indexed[T]
-	Searchable[T]
-	Flexible[T]
+type SetLike[V ValueLike] interface {
+	Sequential[V]
+	Indexed[V]
+	Searchable[V]
+	Flexible[V]
 }
 
 // This interface consolidates all the interfaces supported by range-like
 // sequences.
-type RangeLike[T ValueLike] interface {
-	Sequential[T]
-	Indexed[T]
-	Elastic[T]
+type RangeLike[V ValueLike] interface {
+	Sequential[V]
+	Indexed[V]
+	Elastic[V]
 }
 
 // This interface consolidates all the interfaces supported by stack-like
 // sequences.
-type StackLike[T ValueLike] interface {
-	Sequential[T]
-	LIFO[T]
+type StackLike[V ValueLike] interface {
+	Sequential[V]
+	LIFO[V]
 }
 
 // CONSTANTS

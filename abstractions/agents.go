@@ -31,15 +31,15 @@ import (
 //
 // It moves from slot to slot and has access to the values (if they exist) on
 // each side of the slot.
-type IteratorLike[T ValueLike] interface {
+type IteratorLike[V ValueLike] interface {
 	GetSlot() int
 	ToSlot(slot int)
 	ToStart()
 	ToEnd()
 	HasPrevious() bool
-	GetPrevious() T
+	GetPrevious() V
 	HasNext() bool
-	GetNext() T
+	GetNext() V
 }
 
 // COLLATION INTERFACES
@@ -67,13 +67,13 @@ type RankingFunction func(first ValueLike, second ValueLike) int
 
 // This interface defines the methods supported by all sorter-like agents that
 // can sort an array of values using a ranking function.
-type SorterLike[T ValueLike] interface {
-	SortArray(array []T)
+type SorterLike[V ValueLike] interface {
+	SortArray(array []V)
 }
 
 // This type defines the function signature for any function that can sort an
 // array of values using a ranking function.
-type Sort[T ValueLike] func(array []T, rank RankingFunction)
+type Sort[V ValueLike] func(array []V, rank RankingFunction)
 
 // AGENT STATE
 

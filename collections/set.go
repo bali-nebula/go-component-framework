@@ -19,16 +19,16 @@ import (
 
 // This constructor creates a new empty set that uses the canonical rank
 // function.
-func Set[T abs.ValueLike]() abs.SetLike[T] {
+func Set[V abs.ValueLike]() abs.SetLike[V] {
 	var rank = age.RankValues
-	var values = List[T]()
-	return &set[T]{values, values, values, rank}
+	var values = List[V]()
+	return &set[V]{values, values, values, rank}
 }
 
 // This constructor creates a new set from the specified array that uses the
 // canonical rank function.
-func SetFromArray[T abs.ValueLike](array []T) abs.SetLike[T] {
-	var v = Set[T]()
+func SetFromArray[V abs.ValueLike](array []V) abs.SetLike[V] {
+	var v = Set[V]()
 	for _, value := range array {
 		v.AddValue(value)
 	}
@@ -39,26 +39,26 @@ func SetFromArray[T abs.ValueLike](array []T) abs.SetLike[T] {
 // The set uses ORDINAL based indexing rather than ZERO based indexing (see
 // the description of what this means in the Sequential interface definition).
 // This type is parameterized as follows:
-//   - T is any type of value.
-type set[T abs.ValueLike] struct {
+//   - V is any type of value.
+type set[V abs.ValueLike] struct {
 	// Note: The delegated methods don't see the real collection type.
-	abs.Sequential[T]
-	abs.Indexed[T]
-	values abs.ListLike[T]
+	abs.Sequential[V]
+	abs.Indexed[V]
+	values abs.ListLike[V]
 	rank   abs.RankingFunction
 }
 
 // SEARCHABLE INTERFACE
 
 // This method determines whether or not this set contains the specified value.
-func (v *set[T]) ContainsValue(value T) bool {
+func (v *set[V]) ContainsValue(value V) bool {
 	var _, found = v.search(value)
 	return found
 }
 
 // This method determines whether or not this set contains ANY of the
 // specified values.
-func (v *set[T]) ContainsAny(values abs.Sequential[T]) bool {
+func (v *set[V]) ContainsAny(values abs.Sequential[V]) bool {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
@@ -73,7 +73,7 @@ func (v *set[T]) ContainsAny(values abs.Sequential[T]) bool {
 
 // This method determines whether or not this set contains ALL of the
 // specified values.
-func (v *set[T]) ContainsAll(values abs.Sequential[T]) bool {
+func (v *set[V]) ContainsAll(values abs.Sequential[V]) bool {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
@@ -89,7 +89,7 @@ func (v *set[T]) ContainsAll(values abs.Sequential[T]) bool {
 // FLEXIBLE INTERFACE
 
 // This method sets the ranker function for this set.
-func (v *set[T]) SetRanker(rank abs.RankingFunction) {
+func (v *set[V]) SetRanker(rank abs.RankingFunction) {
 	if rank == nil {
 		rank = age.RankValues
 	}
@@ -98,7 +98,7 @@ func (v *set[T]) SetRanker(rank abs.RankingFunction) {
 
 // This method adds the specified value to this set if it is not already a
 // member of the set.
-func (v *set[T]) AddValue(value T) {
+func (v *set[V]) AddValue(value V) {
 	var slot, found = v.search(value)
 	if !found {
 		// The value is not already a member, so add it.
@@ -108,7 +108,7 @@ func (v *set[T]) AddValue(value T) {
 
 // This method adds the specified values to this set if they are not already
 // members of the set.
-func (v *set[T]) AddValues(values abs.Sequential[T]) {
+func (v *set[V]) AddValues(values abs.Sequential[V]) {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
@@ -118,7 +118,7 @@ func (v *set[T]) AddValues(values abs.Sequential[T]) {
 
 // This method removes the specified value from this set. It returns true if the
 // value was in the set and false otherwise.
-func (v *set[T]) RemoveValue(value T) {
+func (v *set[V]) RemoveValue(value V) {
 	var index, found = v.search(value)
 	if found {
 		// The value is a member, so remove it.
@@ -128,7 +128,7 @@ func (v *set[T]) RemoveValue(value T) {
 
 // This method removes the specified values from this set. It returns the number
 // of values that were removed.
-func (v *set[T]) RemoveValues(values abs.Sequential[T]) {
+func (v *set[V]) RemoveValues(values abs.Sequential[V]) {
 	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
@@ -137,7 +137,7 @@ func (v *set[T]) RemoveValues(values abs.Sequential[T]) {
 }
 
 // This method removes all values from this set.
-func (v *set[T]) RemoveAll() {
+func (v *set[V]) RemoveAll() {
 	v.values.RemoveAll()
 }
 
@@ -150,7 +150,7 @@ func (v *set[T]) RemoveAll() {
 //   - found: A boolean stating whether or not the value was found.
 //
 // The algoritm performs a true O[log(n)] worst case search.
-func (v *set[T]) search(value T) (index int, found bool) {
+func (v *set[V]) search(value V) (index int, found bool) {
 	// We use iteration instead of recursion for better performance.
 	//    start        first      middle       last          end
 	//    |-------------||----------||----------||-------------|
@@ -188,27 +188,27 @@ func (v *set[T]) search(value T) (index int, found bool) {
 
 // This constructor creates a new sets library for the specified generic
 // value type.
-func Sets[T abs.ValueLike]() *sets[T] {
-	return &sets[T]{}
+func Sets[V abs.ValueLike]() *sets[V] {
+	return &sets[V]{}
 }
 
 // This type defines the library functions that operate on sets. Since
 // sets have a parameterized value type this library type is also
 // parameterized as follows:
-//   - T is any type of value.
-type sets[T abs.ValueLike] struct{}
+//   - V is any type of value.
+type sets[V abs.ValueLike] struct{}
 
 // LOGICAL INTERFACE
 
 // This library function returns the logical inverse of the specified set.
-func (l *sets[T]) Not(set abs.SetLike[T]) abs.SetLike[T] {
+func (l *sets[V]) Not(set abs.SetLike[V]) abs.SetLike[V] {
 	panic("Not(set) is meaningless, use Sans(fullSet, set) instead.")
 }
 
 // This library function returns the logical conjunction of the specified sets.
-func (l *sets[T]) And(first, second abs.SetLike[T]) abs.SetLike[T] {
-	var result = Set[T]()
-	var iterator = age.Iterator[T](first)
+func (l *sets[V]) And(first, second abs.SetLike[V]) abs.SetLike[V] {
+	var result = Set[V]()
+	var iterator = age.Iterator[V](first)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if second.ContainsValue(value) {
@@ -220,16 +220,16 @@ func (l *sets[T]) And(first, second abs.SetLike[T]) abs.SetLike[T] {
 
 // This library function returns the logical material non-implication of the
 // specified sets.
-func (l *sets[T]) Sans(first, second abs.SetLike[T]) abs.SetLike[T] {
-	var result = Set[T]()
+func (l *sets[V]) Sans(first, second abs.SetLike[V]) abs.SetLike[V] {
+	var result = Set[V]()
 	result.AddValues(first)
 	result.RemoveValues(second)
 	return result
 }
 
 // This library function returns the logical disjunction of the specified sets.
-func (l *sets[T]) Or(first, second abs.SetLike[T]) abs.SetLike[T] {
-	var result = Set[T]()
+func (l *sets[V]) Or(first, second abs.SetLike[V]) abs.SetLike[V] {
+	var result = Set[V]()
 	result.AddValues(first)
 	result.AddValues(second)
 	return result
@@ -237,7 +237,7 @@ func (l *sets[T]) Or(first, second abs.SetLike[T]) abs.SetLike[T] {
 
 // This library function returns the logical exclusive disjunction of the
 // specified sets.
-func (l *sets[T]) Xor(first, second abs.SetLike[T]) abs.SetLike[T] {
+func (l *sets[V]) Xor(first, second abs.SetLike[V]) abs.SetLike[V] {
 	var result = l.Or(l.Sans(first, second), l.Sans(second, first))
 	return result
 }

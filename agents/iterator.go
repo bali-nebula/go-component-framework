@@ -18,29 +18,29 @@ import (
 
 // This constructor creates a new instance of an iterator that can be used to
 // traverse the values in the specified array.
-func Iterator[T abs.ValueLike](sequence abs.Sequential[T]) abs.IteratorLike[T] {
+func Iterator[V abs.ValueLike](sequence abs.Sequential[V]) abs.IteratorLike[V] {
 	var values = sequence.AsArray() // The returned array is immutable.
 	var size = len(values)
 	var slot = 0
-	return &iterator[T]{values, size, slot}
+	return &iterator[V]{values, size, slot}
 }
 
 // This type defines the structure and methods for a sequence iterator. The
 // iterator operates on a sequence of values and is backed by a native Go array.
-type iterator[T abs.ValueLike] struct {
-	values []T // The array of values is immutable.
+type iterator[V abs.ValueLike] struct {
+	values []V // The array of values is immutable.
 	size   int // So we can safely cache the size.
 	slot   int // The default slot is zero.
 }
 
 // This method returns the current slot between values that this iterator is
 // currently locked into.
-func (v *iterator[T]) GetSlot() int {
+func (v *iterator[V]) GetSlot() int {
 	return v.slot
 }
 
 // This method moves this iterator to the specified slot between values.
-func (v *iterator[T]) ToSlot(slot int) {
+func (v *iterator[V]) ToSlot(slot int) {
 	if slot > v.size {
 		slot = v.size
 	}
@@ -54,24 +54,24 @@ func (v *iterator[T]) ToSlot(slot int) {
 }
 
 // This method moves this iterator to the slot before the first value.
-func (v *iterator[T]) ToStart() {
+func (v *iterator[V]) ToStart() {
 	v.slot = 0
 }
 
 // This method moves this iterator to the slot after the last value.
-func (v *iterator[T]) ToEnd() {
+func (v *iterator[V]) ToEnd() {
 	v.slot = v.size
 }
 
 // This method determines whether or not there is an value before the current
 // slot.
-func (v *iterator[T]) HasPrevious() bool {
+func (v *iterator[V]) HasPrevious() bool {
 	return v.slot > 0
 }
 
 // This method retrieves the value before the current slot.
-func (v *iterator[T]) GetPrevious() T {
-	var result T
+func (v *iterator[V]) GetPrevious() V {
+	var result V
 	if v.slot > 0 {
 		result = v.values[v.slot-1] // convert to ZERO based indexing
 		v.slot = v.slot - 1
@@ -81,13 +81,13 @@ func (v *iterator[T]) GetPrevious() T {
 
 // This method determines whether or not there is an value after the current
 // slot.
-func (v *iterator[T]) HasNext() bool {
+func (v *iterator[V]) HasNext() bool {
 	return v.slot < v.size
 }
 
 // This method retrieves the value after the current slot.
-func (v *iterator[T]) GetNext() T {
-	var result T
+func (v *iterator[V]) GetNext() V {
+	var result V
 	if v.slot < v.size {
 		v.slot = v.slot + 1
 		result = v.values[v.slot-1] // convert to ZERO based indexing
