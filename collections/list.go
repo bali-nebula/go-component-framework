@@ -120,7 +120,7 @@ func (v *list[V]) ContainsValue(value V) bool {
 // This method determines whether or not this list contains ANY of the specified
 // values.
 func (v *list[V]) ContainsAny(values abs.Sequential[V]) bool {
-	var iterator = age.Iterator[V](values)
+	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var candidate = iterator.GetNext()
 		if v.GetIndex(candidate) > 0 {
@@ -135,7 +135,7 @@ func (v *list[V]) ContainsAny(values abs.Sequential[V]) bool {
 // This method determines whether or not this list contains ALL of the specified
 // values.
 func (v *list[V]) ContainsAll(values abs.Sequential[V]) bool {
-	var iterator = age.Iterator[V](values)
+	var iterator = age.Iterator(values)
 	for iterator.HasNext() {
 		var candidate = iterator.GetNext()
 		if v.GetIndex(candidate) == 0 {

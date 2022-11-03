@@ -12,6 +12,7 @@ package bali
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	exp "github.com/craterdog-bali/go-bali-document-notation/expressions"
 )
@@ -58,15 +59,32 @@ func (v *parser) parseArguments() (abs.ListLike[abs.ExpressionLike], *Token, boo
 	return arguments, token, true
 }
 
+// This method adds the canonical format for the specified chaining expression
+// to the state of the formatter.
+func (v *formatter) formatArguments(arguments abs.Sequential[abs.ExpressionLike]) {
+	v.state.AppendString("(")
+	var iterator = age.Iterator(arguments)
+	if iterator.HasNext() {
+		var argument = iterator.GetNext()
+		v.formatExpression(argument)
+	}
+	for iterator.HasNext() {
+		v.state.AppendString(", ")
+		var argument = iterator.GetNext()
+		v.formatExpression(argument)
+	}
+	v.state.AppendString(")")
+}
+
 // This method attempts to parse a arithmetic expression. It returns the
 // arithmetic expression and whether or not the arithmetic expression was
 // successfully parsed.
-func (v *parser) parseArithmetic(left abs.ExpressionLike) (abs.ArithmeticLike, *Token, bool) {
+func (v *parser) parseArithmetic(first abs.ExpressionLike) (abs.ArithmeticLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var operator abs.Operator
-	var right abs.ExpressionLike
+	var second abs.ExpressionLike
 	var expression abs.ArithmeticLike
 	delimiter, token, ok = v.parseDelimiter("*")
 	if !ok {
@@ -85,7 +103,7 @@ func (v *parser) parseArithmetic(left abs.ExpressionLike) (abs.ArithmeticLike, *
 		// This is not an arithmetic expression.
 		return expression, token, false
 	}
-	right, token, ok = v.parseExpression()
+	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$expression",
@@ -104,43 +122,53 @@ func (v *parser) parseArithmetic(left abs.ExpressionLike) (abs.ArithmeticLike, *
 	case "-":
 		operator = abs.DIFFERENCE
 	}
-	expression = exp.Arithmetic(left, operator, right)
+	expression = exp.Arithmetic(first, operator, second)
 	return expression, token, true
 }
 
 // This method attempts to parse a chain expression. It returns the
 // chain expression and whether or not the chain expression was
 // successfully parsed.
-func (v *parser) parseChaining(left abs.ExpressionLike) (abs.ChainingLike, *Token, bool) {
+func (v *parser) parseChaining(first abs.ExpressionLike) (abs.ChainingLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var right abs.ExpressionLike
+	var second abs.ExpressionLike
 	var expression abs.ChainingLike
 	_, token, ok = v.parseDelimiter("&")
 	if !ok {
 		// This is not a chain expression.
 		return expression, token, false
 	}
-	right, token, ok = v.parseExpression()
+	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$expression",
 			"$chaining")
 		panic(message)
 	}
-	expression = exp.Chaining(left, right)
+	expression = exp.Chaining(first, second)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified chaining expression
+// to the state of the formatter.
+func (v *formatter) formatChaining(chaining abs.ChainingLike) {
+	var first = chaining.GetFirst()
+	v.formatExpression(first)
+	v.state.AppendString(" & ")
+	var second = chaining.GetSecond()
+	v.formatExpression(second)
 }
 
 // This method attempts to parse a comparison expression. It returns the
 // comparison expression and whether or not the comparison expression was
 // successfully parsed.
-func (v *parser) parseComparison(left abs.ExpressionLike) (abs.ComparisonLike, *Token, bool) {
+func (v *parser) parseComparison(first abs.ExpressionLike) (abs.ComparisonLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var operator abs.Operator
-	var right abs.ExpressionLike
+	var second abs.ExpressionLike
 	var expression abs.ComparisonLike
 	delimiter, token, ok = v.parseDelimiter("<")
 	if !ok {
@@ -162,7 +190,7 @@ func (v *parser) parseComparison(left abs.ExpressionLike) (abs.ComparisonLike, *
 		// This is not a comparison expression.
 		return expression, token, false
 	}
-	right, token, ok = v.parseExpression()
+	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$expression",
@@ -183,7 +211,7 @@ func (v *parser) parseComparison(left abs.ExpressionLike) (abs.ComparisonLike, *
 	case "MATCHES":
 		operator = abs.MATCHES
 	}
-	expression = exp.Comparison(left, operator, right)
+	expression = exp.Comparison(first, operator, second)
 	return expression, token, true
 }
 
@@ -410,12 +438,12 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 // This method attempts to parse a logical expression. It returns the
 // logical expression and whether or not the logical expression was
 // successfully parsed.
-func (v *parser) parseLogical(left abs.ExpressionLike) (abs.LogicalLike, *Token, bool) {
+func (v *parser) parseLogical(first abs.ExpressionLike) (abs.LogicalLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var delimiter string
 	var operator abs.Operator
-	var right abs.ExpressionLike
+	var second abs.ExpressionLike
 	var expression abs.LogicalLike
 	delimiter, token, ok = v.parseKeyword("AND")
 	if !ok {
@@ -431,7 +459,7 @@ func (v *parser) parseLogical(left abs.ExpressionLike) (abs.LogicalLike, *Token,
 		// This is not a logical expression.
 		return expression, token, false
 	}
-	right, token, ok = v.parseExpression()
+	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$expression",
@@ -448,7 +476,7 @@ func (v *parser) parseLogical(left abs.ExpressionLike) (abs.LogicalLike, *Token,
 	case "OR":
 		operator = abs.OR
 	}
-	expression = exp.Logical(left, operator, right)
+	expression = exp.Logical(first, operator, second)
 	return expression, token, true
 }
 

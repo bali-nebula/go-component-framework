@@ -441,14 +441,14 @@ func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool)
 
 // This method adds the canonical format for the specified indices to the
 // state of the formatter.
-func (v *formatter) formatIndices(indices abs.ListLike[abs.ExpressionLike]) {
-	var iterator = age.Iterator[abs.ExpressionLike](indices)
+func (v *formatter) formatIndices(indices abs.Sequential[abs.ExpressionLike]) {
+	var iterator = age.Iterator(indices)
 	var index = iterator.GetNext() // There is always at least one index.
-	v.formatAny(index)
+	v.formatExpression(index)
 	for iterator.HasNext() {
 		v.state.AppendString(", ")
 		index = iterator.GetNext()
-		v.formatAny(index)
+		v.formatExpression(index)
 	}
 }
 
@@ -780,13 +780,13 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 
 // This method adds the canonical format for the specified procedure to the
 // state of the formatter.
-func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
+func (v *formatter) formatProcedure(procedure abs.Sequential[abs.StatementLike]) {
 	v.state.AppendString("{")
 	switch procedure.GetSize() {
 	case 0:
 		v.state.AppendString(" ")
 	default:
-		var iterator = age.Iterator[abs.StatementLike](procedure)
+		var iterator = age.Iterator(procedure)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()

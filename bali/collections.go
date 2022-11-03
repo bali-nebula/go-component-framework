@@ -99,9 +99,9 @@ func (v *parser) parseCatalog() (abs.CatalogLike[abs.KeyLike, abs.ComponentLike]
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatCatalog(catalog abs.CatalogLike[abs.KeyLike, abs.ComponentLike]) {
+func (v *formatter) formatCatalog(catalog abs.Sequential[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]]) {
 	v.state.AppendString("[")
-	var iterator = age.Iterator[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]](catalog)
+	var iterator = age.Iterator(catalog)
 	switch catalog.GetSize() {
 	case 0:
 		v.state.AppendString(":")
@@ -267,21 +267,21 @@ func (v *parser) parseList() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatList(list abs.ListLike[abs.ComponentLike]) {
+func (v *formatter) formatList(list abs.Sequential[abs.ComponentLike]) {
 	v.state.AppendString("[")
+	var iterator = age.Iterator(list)
 	switch list.GetSize() {
 	case 0:
 		v.state.AppendString(" ")
 	case 1:
-		var value = list.GetValue(1)
-		v.formatAny(value)
+		var value = iterator.GetNext()
+		v.formatComponent(value)
 	default:
-		var iterator = age.Iterator[abs.ComponentLike](list)
 		v.state.IncrementDepth()
 		for iterator.HasNext() {
 			v.state.AppendNewline()
 			var value = iterator.GetNext()
-			v.formatAny(value)
+			v.formatComponent(value)
 		}
 		v.state.DecrementDepth()
 		v.state.AppendNewline()
