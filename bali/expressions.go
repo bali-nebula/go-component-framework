@@ -11,6 +11,7 @@
 package bali
 
 import (
+	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
@@ -59,7 +60,7 @@ func (v *parser) parseArguments() (abs.ListLike[abs.ExpressionLike], *Token, boo
 	return arguments, token, true
 }
 
-// This method adds the canonical format for the specified chaining expression
+// This method adds the canonical format for the specified sequence of arguments
 // to the state of the formatter.
 func (v *formatter) formatArguments(arguments abs.Sequential[abs.ExpressionLike]) {
 	v.state.AppendString("(")
@@ -82,25 +83,17 @@ func (v *formatter) formatArguments(arguments abs.Sequential[abs.ExpressionLike]
 func (v *parser) parseArithmetic(first abs.ExpressionLike) (abs.ArithmeticLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var delimiter string
 	var operator abs.Operator
 	var second abs.ExpressionLike
 	var expression abs.ArithmeticLike
-	delimiter, token, ok = v.parseDelimiter("*")
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("/")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("//")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("+")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("-")
-	}
+	operator, token, ok = v.parseOperator()
 	if !ok {
 		// This is not an arithmetic expression.
+		return expression, token, false
+	}
+	if operator < abs.PLUS || operator > abs.MODULO {
+		// This is not an arithmetic expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -110,20 +103,19 @@ func (v *parser) parseArithmetic(first abs.ExpressionLike) (abs.ArithmeticLike, 
 			"$arithmetic")
 		panic(message)
 	}
-	switch delimiter {
-	case "*":
-		operator = abs.PRODUCT
-	case "/":
-		operator = abs.QUOTIENT
-	case "//":
-		operator = abs.REMAINDER
-	case "+":
-		operator = abs.SUM
-	case "-":
-		operator = abs.DIFFERENCE
-	}
 	expression = exp.Arithmetic(first, operator, second)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified arithmetic expression
+// to the state of the formatter.
+func (v *formatter) formatArithmetic(arithmetic abs.ArithmeticLike) {
+	var first = arithmetic.GetFirst()
+	v.formatExpression(first)
+	var operator = arithmetic.GetOperator()
+	v.formatOperator(operator)
+	var second = arithmetic.GetSecond()
+	v.formatExpression(second)
 }
 
 // This method attempts to parse a chain expression. It returns the
@@ -132,11 +124,17 @@ func (v *parser) parseArithmetic(first abs.ExpressionLike) (abs.ArithmeticLike, 
 func (v *parser) parseChaining(first abs.ExpressionLike) (abs.ChainingLike, *Token, bool) {
 	var ok bool
 	var token *Token
+	var operator abs.Operator
 	var second abs.ExpressionLike
 	var expression abs.ChainingLike
-	_, token, ok = v.parseDelimiter("&")
+	operator, token, ok = v.parseOperator()
 	if !ok {
-		// This is not a chain expression.
+		// This is not a chaining expression.
+		return expression, token, false
+	}
+	if operator != abs.AMPERSAND {
+		// This is not a chaining expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -166,28 +164,17 @@ func (v *formatter) formatChaining(chaining abs.ChainingLike) {
 func (v *parser) parseComparison(first abs.ExpressionLike) (abs.ComparisonLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var delimiter string
 	var operator abs.Operator
 	var second abs.ExpressionLike
 	var expression abs.ComparisonLike
-	delimiter, token, ok = v.parseDelimiter("<")
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("=")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter(">")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("≠")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseKeyword("IS")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseKeyword("MATCHES")
-	}
+	operator, token, ok = v.parseOperator()
 	if !ok {
 		// This is not a comparison expression.
+		return expression, token, false
+	}
+	if operator < abs.LESS || operator > abs.MATCHES {
+		// This is not a comparison expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -196,20 +183,6 @@ func (v *parser) parseComparison(first abs.ExpressionLike) (abs.ComparisonLike, 
 		message += generateGrammar("$expression",
 			"$comparison")
 		panic(message)
-	}
-	switch delimiter {
-	case "<":
-		operator = abs.LESS
-	case "=":
-		operator = abs.EQUAL
-	case ">":
-		operator = abs.MORE
-	case "≠":
-		operator = abs.UNEQUAL
-	case "IS":
-		operator = abs.IS
-	case "MATCHES":
-		operator = abs.MATCHES
 	}
 	expression = exp.Comparison(first, operator, second)
 	return expression, token, true
@@ -245,11 +218,19 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 	var ok bool
 	var token *Token
+	var operator abs.Operator
 	var reference abs.ExpressionLike
 	var expression abs.DereferenceLike
-	_, token, ok = v.parseDelimiter("@")
+	operator, token, ok = v.parseOperator()
 	if !ok {
-		// This is not an dereference expression.
+		// This is not a dereference expression.
+		return expression, token, false
+	}
+	switch operator {
+	case abs.AT:
+		// Found a valid operator.
+	default:
+		// This is not a dereference expression.
 		return expression, token, false
 	}
 	reference, token, ok = v.parseExpression()
@@ -269,11 +250,17 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 func (v *parser) parseExponential(base abs.ExpressionLike) (abs.ExponentialLike, *Token, bool) {
 	var ok bool
 	var token *Token
+	var operator abs.Operator
 	var exponent abs.ExpressionLike
 	var expression abs.ExponentialLike
-	_, token, ok = v.parseDelimiter("^")
+	operator, token, ok = v.parseOperator()
 	if !ok {
-		// This is not a power expression.
+		// This is not an exponential expression.
+		return expression, token, false
+	}
+	if operator  != abs.CARET {
+		// This is not an exponential expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	exponent, token, ok = v.parseExpression()
@@ -356,19 +343,17 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var delimiter string
 	var operator abs.Operator
 	var numeric abs.ExpressionLike
 	var expression abs.InversionLike
-	delimiter, token, ok = v.parseDelimiter("-")
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("/")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseDelimiter("*")
-	}
+	operator, token, ok = v.parseOperator()
 	if !ok {
 		// This is not an inversion expression.
+		return expression, token, false
+	}
+	if operator < abs.PLUS || operator > abs.STAR {
+		// This is not an inversion expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	numeric, token, ok = v.parseExpression()
@@ -377,14 +362,6 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 		message += generateGrammar("$expression",
 			"$inversion")
 		panic(message)
-	}
-	switch delimiter {
-	case "-":
-		operator = abs.INVERSE
-	case "/":
-		operator = abs.RECIPROCAL
-	case "*":
-		operator = abs.CONJUGATE
 	}
 	expression = exp.Inversion(operator, numeric)
 	return expression, token, true
@@ -396,16 +373,18 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var delimiter string
+	var operator abs.Operator
 	var message string
 	var arguments abs.ListLike[abs.ExpressionLike]
 	var expression abs.InvocationLike
-	delimiter, token, ok = v.parseDelimiter(".")
+	operator, token, ok = v.parseOperator()
 	if !ok {
-		delimiter, token, ok = v.parseDelimiter("<-")
+		// This is not an invocation expression.
+		return expression, token, false
 	}
-	if !ok {
-		// This is not an message expression.
+	if operator < abs.DOT || operator > abs.ARROW {
+		// This is not an invocation expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	message, token, ok = v.parseIdentifier()
@@ -426,12 +405,7 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 			"$arguments")
 		panic(message)
 	}
-	switch delimiter {
-	case ".":
-		expression = exp.Invocation(target, message, arguments)
-	case "<-":
-		expression = exp.AsynchronousInvocation(target, message, arguments)
-	}
+	expression = exp.Invocation(target, operator, message, arguments)
 	return expression, token, true
 }
 
@@ -441,22 +415,17 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 func (v *parser) parseLogical(first abs.ExpressionLike) (abs.LogicalLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var delimiter string
 	var operator abs.Operator
 	var second abs.ExpressionLike
 	var expression abs.LogicalLike
-	delimiter, token, ok = v.parseKeyword("AND")
-	if !ok {
-		delimiter, token, ok = v.parseKeyword("SANS")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseKeyword("XOR")
-	}
-	if !ok {
-		delimiter, token, ok = v.parseKeyword("OR")
-	}
+	operator, token, ok = v.parseOperator()
 	if !ok {
 		// This is not a logical expression.
+		return expression, token, false
+	}
+	if operator < abs.NOT || operator > abs.XOR {
+		// This is not a logical expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -465,16 +434,6 @@ func (v *parser) parseLogical(first abs.ExpressionLike) (abs.LogicalLike, *Token
 		message += generateGrammar("$expression",
 			"$logical")
 		panic(message)
-	}
-	switch delimiter {
-	case "AND":
-		operator = abs.AND
-	case "SANS":
-		operator = abs.SANS
-	case "XOR":
-		operator = abs.XOR
-	case "OR":
-		operator = abs.OR
 	}
 	expression = exp.Logical(first, operator, second)
 	return expression, token, true
@@ -621,6 +580,147 @@ func (v *parser) parseItem(composite abs.ExpressionLike) (abs.ItemLike, *Token, 
 	}
 	expression = exp.Value(composite, indices)
 	return expression, token, true
+}
+
+// This method attempts to parse the an operator. It returns the operator and
+// whether or not the operator was successfully parsed.
+func (v *parser) parseOperator() (abs.Operator, *Token, bool) {
+	var token = v.nextToken()
+	var operator abs.Operator
+	if token.Type != TokenDelimiter {
+		v.backupOne()
+		return operator, token, false
+	}
+	switch token.Value {
+	case "&":
+		operator = abs.AMPERSAND
+	case "<-":
+		operator = abs.ARROW
+	case ":=":
+		operator = abs.ASSIGN
+	case "@":
+		operator = abs.AT
+	case "|":
+		operator = abs.BAR
+	case "^":
+		operator = abs.CARET
+	case "?=":
+		operator = abs.DEFAULT
+	case "-=":
+		operator = abs.DIFFERENCE
+	case ".":
+		operator = abs.DOT
+	case "=":
+		operator = abs.EQUAL
+	case "IS":
+		operator = abs.IS
+	case "<":
+		operator = abs.LESS
+	case "MATCHES":
+		operator = abs.MATCHES
+	case "-":
+		operator = abs.MINUS
+	case "//":
+		operator = abs.MODULO
+	case ">":
+		operator = abs.MORE
+	case "NOT":
+		operator = abs.NOT
+	case "OR":
+		operator = abs.OR
+	case "+":
+		operator = abs.PLUS
+	case "*=":
+		operator = abs.PRODUCT
+	case "/=":
+		operator = abs.QUOTIENT
+	case "SANS":
+		operator = abs.SANS
+	case "/":
+		operator = abs.SLASH
+	case "*":
+		operator = abs.STAR
+	case "+=":
+		operator = abs.SUM
+	case "~":
+		operator = abs.TILDA
+	case "≠":
+		operator = abs.UNEQUAL
+	case "XOR":
+		operator = abs.XOR
+	default:
+		var message = v.formatError("An unexpected operator token was received by the parser:", token)
+		message += generateGrammar("operator",
+			"$expression")
+		panic(message)
+	}
+	return operator, token, true
+}
+
+// This method adds the canonical format for the specified operator to the
+// state of the formatter.
+func (v *formatter) formatOperator(operator abs.Operator) {
+	switch operator {
+	case abs.AMPERSAND:
+		v.state.AppendString("&")
+	case abs.ARROW:
+		v.state.AppendString("<-")
+	case abs.ASSIGN:
+		v.state.AppendString(":=")
+	case abs.AT:
+		v.state.AppendString("@")
+	case abs.BAR:
+		v.state.AppendString("|")
+	case abs.CARET:
+		v.state.AppendString("^")
+	case abs.DEFAULT:
+		v.state.AppendString("?=")
+	case abs.DIFFERENCE:
+		v.state.AppendString("-=")
+	case abs.DOT:
+		v.state.AppendString(".")
+	case abs.EQUAL:
+		v.state.AppendString("=")
+	case abs.IS:
+		v.state.AppendString("IS")
+	case abs.LESS:
+		v.state.AppendString("<")
+	case abs.MATCHES:
+		v.state.AppendString("MATCHES")
+	case abs.MINUS:
+		v.state.AppendString("-")
+	case abs.MODULO:
+		v.state.AppendString("//")
+	case abs.MORE:
+		v.state.AppendString(">")
+	case abs.NOT:
+		v.state.AppendString("NOT")
+	case abs.OR:
+		v.state.AppendString("OR")
+	case abs.PLUS:
+		v.state.AppendString("+")
+	case abs.PRODUCT:
+		v.state.AppendString("*=")
+	case abs.QUOTIENT:
+		v.state.AppendString("/=")
+	case abs.SANS:
+		v.state.AppendString("SANS")
+	case abs.SLASH:
+		v.state.AppendString("/")
+	case abs.STAR:
+		v.state.AppendString("*")
+	case abs.SUM:
+		v.state.AppendString("+=")
+	case abs.TILDA:
+		v.state.AppendString("~")
+	case abs.UNEQUAL:
+		v.state.AppendString("≠")
+	case abs.XOR:
+		v.state.AppendString("XOR")
+	default:
+		var message = fmt.Sprintf("An unexpected operator token was received by the formatter: %v\n", operator)
+		panic(message)
+	}
 }
 
 // This method attempts to parse an identifier. It returns the identifier

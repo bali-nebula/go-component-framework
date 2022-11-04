@@ -157,9 +157,9 @@ var grammar = map[string]string{
 	"$DATES":       `[TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]`,
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
 	"$DELIMITER": `
-    "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "<-" | "<" |
-	";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," |
-	"+=" | "+" | "*=" | "*" | ")" | "(" | "&"`,
+    "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "≠" | "<-" | "<" |
+	";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" |
+	"*=" | "*" | ")" | "(" | "&" | "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
 	"$DURATION":   `"~" [SIGN] "P" (WEEKS | DATES [TIMES])`,
 	"$E":          `"e"`,
 	"$EOL":        `"\n"`,
@@ -172,12 +172,9 @@ var grammar = map[string]string{
 	"$IMAGINARY":  ` [SIGN | REAL] "i"`,
 	"$INFINITY":   `"infinity" | "∞"`,
 	"$KEYWORD": `
-    "with" | "while" | "to" | "throw" | "select" | "save" |
-    "return" | "retrieve" | "reject" | "publish" | "post" |
-    "on" | "notarize" | "matching" | "loop" | "level" | "in" |
-    "if" | "from" | "each" | "do" | "discard" | "continue" |
-    "checkout" | "break" | "at" | "as" | "accept" |
-    "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
+    "with" | "while" | "to" | "throw" | "select" | "save" | "return" | "retrieve" | "reject" |
+	"publish" | "post" | "on" | "notarize" | "matching" | "loop" | "level" | "in" | "if" | "from" |
+	"each" | "do" | "discard" | "continue" | "checkout" | "break" | "at" | "as" | "accept"`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
 	"$MOMENT":      `"<" [SIGN] YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
 	"$MONIKER":     `<"/" NAME>`,

@@ -10,20 +10,6 @@
 
 package abstractions
 
-// ASSIGNMENT CONSTANTS
-
-type Assignment int
-
-const (
-	_ Assignment = iota
-	REGULAR
-	DEFAULT
-	TIMES
-	DIVIDE
-	PLUS
-	MINUS
-)
-
 // PROCEDURE INTERFACES
 
 type ClauseLike any
@@ -82,8 +68,10 @@ type DiscardClauseLike interface {
 
 // This interface defines the methods supported by all evaluate-clause-like types.
 type EvaluateClauseLike interface {
-	GetRecipient() (recipient RecipientLike, assignment Assignment)
-	SetRecipient(recipient RecipientLike, assignment Assignment)
+	GetRecipient() RecipientLike
+	SetRecipient(recipient RecipientLike)
+	GetOperator() Operator
+	SetOperator(operator Operator)
 	GetExpression() ExpressionLike
 	SetExpression(expression ExpressionLike)
 }

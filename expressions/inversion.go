@@ -40,7 +40,7 @@ func (v *inversionExpression) GetOperator() abs.Operator {
 // This method sets the inversion operator in this inversion expression to the
 // specified value.
 func (v *inversionExpression) SetOperator(operator abs.Operator) {
-	if operator < abs.INVERSE || operator > abs.CONJUGATE {
+	if operator < abs.MINUS || operator > abs.SLASH {
 		panic("The operator in an inversion expression must be a valid inversion operation.")
 	}
 	v.operator = operator

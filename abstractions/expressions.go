@@ -83,9 +83,10 @@ type InversionLike interface {
 // This interface defines the methods supported by all invocation-like expressions.
 type InvocationLike interface {
 	IsSynchronous() bool
-	SetSynchronous(isSynchronous bool)
 	GetTarget() ExpressionLike
 	SetTarget(target ExpressionLike)
+	GetOperator() Operator
+	SetOperator(operator Operator)
 	GetMessage() string
 	SetMessage(message string)
 	GetArgument(index int) ExpressionLike           // Ordinal based indexing.
@@ -136,27 +137,34 @@ type VariableLike interface {
 type Operator int
 
 const (
-	_ Operator = iota
-	AND
-	AT
-	CHAIN
-	CONJUGATE
-	DIFFERENCE
-	EQUAL
-	INVERSE
-	IS
-	LESS
-	MATCHES
-	MORE
-	NOT
-	OR
-	POWER
-	PRODUCT
-	QUOTIENT
-	RECIPROCAL
-	REMAINDER
-	SANS
-	SUM
-	UNEQUAL
-	XOR
+	_          Operator = iota // Invalid
+	ASSIGN                     // :=
+	DEFAULT                    // ?=
+	SUM                        // +=
+	DIFFERENCE                 // -=
+	PRODUCT                    // *=
+	QUOTIENT                   // /=
+	DOT                        // .
+	ARROW                      // <-
+	AMPERSAND                  // &
+	AT                         // @
+	BAR                        // |
+	TILDA                      // ~
+	PLUS                       // +
+	MINUS                      // -
+	STAR                       // *
+	SLASH                      // /
+	MODULO                     // //
+	CARET                      // ^
+	LESS                       // <
+	EQUAL                      // =
+	UNEQUAL                    // ≠
+	MORE                       // >
+	IS                         // IS
+	MATCHES                    // MATCHES
+	NOT                        // NOT
+	AND                        // AND
+	SANS                       // SANS
+	OR                         // OR
+	XOR                        // XOR
 )

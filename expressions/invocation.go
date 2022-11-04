@@ -16,31 +16,17 @@ import (
 
 // INVOCATION EXPRESSION IMPLEMENTATION
 
-// This constructor creates a new asynchronous invocation expression.
-func AsynchronousInvocation(
-	target abs.ExpressionLike,
-	message string,
-	arguments abs.ListLike[abs.ExpressionLike],
-) abs.InvocationLike {
-	var v = &invocationExpression{}
-	// Perform argument validation.
-	v.SetSynchronous(false)
-	v.SetTarget(target)
-	v.SetMessage(message)
-	v.SetArguments(arguments)
-	return v
-}
-
 // This constructor creates a new invocation expression.
 func Invocation(
 	target abs.ExpressionLike,
+	operator abs.Operator,
 	message string,
 	arguments abs.ListLike[abs.ExpressionLike],
 ) abs.InvocationLike {
 	var v = &invocationExpression{}
 	// Perform argument validation.
-	v.SetSynchronous(true)
 	v.SetTarget(target)
+	v.SetOperator(operator)
 	v.SetMessage(message)
 	v.SetArguments(arguments)
 	return v
@@ -49,21 +35,16 @@ func Invocation(
 // This type defines the structure and methods associated with an invocation
 // expression.
 type invocationExpression struct {
-	isSynchronous bool
-	target        abs.ExpressionLike
-	message       string
-	arguments     abs.ListLike[abs.ExpressionLike]
+	target    abs.ExpressionLike
+	operator  abs.Operator
+	message   string
+	arguments abs.ListLike[abs.ExpressionLike]
 }
 
 // This method determines whether or not this invocation expression is
 // synchronous.
 func (v *invocationExpression) IsSynchronous() bool {
-	return v.isSynchronous
-}
-
-// This method sets whether or not this invocation expression is synchronous.
-func (v *invocationExpression) SetSynchronous(isSynchronous bool) {
-	v.isSynchronous = isSynchronous
+	return v.operator == abs.ARROW
 }
 
 // This method returns the target expression for this invocation expression.
@@ -77,6 +58,19 @@ func (v *invocationExpression) SetTarget(target abs.ExpressionLike) {
 		panic("An invocation expression requires a target expression for the message.")
 	}
 	v.target = target
+}
+
+// This method returns the operator for this invocation expression.
+func (v *invocationExpression) GetOperator() abs.Operator {
+	return v.operator
+}
+
+// This method sets the target expression for this invocation expression.
+func (v *invocationExpression) SetOperator(operator abs.Operator) {
+	if operator < abs.DOT || operator > abs.ARROW {
+		panic("An invocation expression requires a valid operator.")
+	}
+	v.operator = operator
 }
 
 // This method returns the message name for this invocation expression.

@@ -310,36 +310,25 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var recipient abs.RecipientLike
-	var delimiter string
-	var operator abs.Assignment
+	var operator abs.Operator
 	var expression abs.ExpressionLike
 	var clause abs.EvaluateClauseLike
 	recipient, token, ok = v.parseRecipient()
-	if ok {
-		delimiter, token, ok = v.parseDelimiter(":=")
-		if !ok {
-			delimiter, token, ok = v.parseDelimiter("+=")
-		}
-		if !ok {
-			delimiter, token, ok = v.parseDelimiter("-=")
-		}
-		if !ok {
-			delimiter, token, ok = v.parseDelimiter("*=")
-		}
-		if !ok {
-			delimiter, token, ok = v.parseDelimiter("/=")
-		}
-		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
-			message += generateGrammar("operator",
-				"$evaluateClause",
-				"$recipient",
-				"$name",
-				"$attribute",
-				"$variable",
-				"$indices")
-			panic(message)
-		}
+	if !ok {
+		// This is not an evaluate clause.
+		return clause, token, false
+	}
+	operator, token, ok = v.parseOperator()
+	if !ok || operator < abs.ASSIGN || operator > abs.QUOTIENT {
+		var message = v.formatError("An unexpected token was received by the parser:", token)
+		message += generateGrammar("operator",
+			"$evaluateClause",
+			"$recipient",
+			"$name",
+			"$attribute",
+			"$variable",
+			"$indices")
+		panic(message)
 	}
 	expression, token, ok = v.parseExpression()
 	if !ok {
@@ -357,21 +346,7 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 		// This is not an evaluate clause.
 		return clause, token, false
 	}
-	switch delimiter {
-	case ":=":
-		operator = abs.REGULAR
-	case "?=":
-		operator = abs.DEFAULT
-	case "*=":
-		operator = abs.TIMES
-	case "/=":
-		operator = abs.DIVIDE
-	case "+=":
-		operator = abs.PLUS
-	case "-=":
-		operator = abs.MINUS
-	}
-	clause = pro.EvaluateClauseWithRecipient(recipient, operator, expression)
+	clause = pro.EvaluateClause(recipient, operator, expression)
 	return clause, token, true
 }
 

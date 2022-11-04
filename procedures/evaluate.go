@@ -17,18 +17,11 @@ import (
 // EVALUATE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new evaluate clause.
-func EvaluateClause(expression abs.ExpressionLike) abs.EvaluateClauseLike {
+func EvaluateClause(recipient abs.RecipientLike, operator abs.Operator, expression abs.ExpressionLike) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
-	v.SetExpression(expression)
-	return v
-}
-
-// This constructor creates a new evaluate clause.
-func EvaluateClauseWithRecipient(recipient abs.RecipientLike, assignment abs.Assignment, expression abs.ExpressionLike) abs.EvaluateClauseLike {
-	var v = &evaluateClause{}
-	// Perform argument validation.
-	v.SetRecipient(recipient, assignment)
+	v.SetRecipient(recipient)
+	v.SetOperator(operator)
 	v.SetExpression(expression)
 	return v
 }
@@ -37,24 +30,34 @@ func EvaluateClauseWithRecipient(recipient abs.RecipientLike, assignment abs.Ass
 // clause.
 type evaluateClause struct {
 	recipient  abs.RecipientLike
-	assignment abs.Assignment
+	operator   abs.Operator
 	expression abs.ExpressionLike
 }
 
-// This method returns the recipient (with assignment type) for this evaluate
-// clause.
-func (v *evaluateClause) GetRecipient() (recipient abs.RecipientLike, assignment abs.Assignment) {
-	return v.recipient, v.assignment
+// This method returns the recipient for this evaluate clause.
+func (v *evaluateClause) GetRecipient() abs.RecipientLike {
+	return v.recipient
 }
 
-// This method sets the recipient (with assignment type) for this evaluate
-// clause.
-func (v *evaluateClause) SetRecipient(recipient abs.RecipientLike, assignment abs.Assignment) {
-	if recipient == nil || assignment < abs.REGULAR || assignment > abs.MINUS {
-		panic("An evaluate clause requires a recipient and valid assignment type.")
+// This method sets the recipient for this evaluate clause.
+func (v *evaluateClause) SetRecipient(recipient abs.RecipientLike) {
+	if recipient == nil {
+		panic("An evaluate clause requires a recipient.")
 	}
 	v.recipient = recipient
-	v.assignment = assignment
+}
+
+// This method returns the assignment operator for this evaluate clause.
+func (v *evaluateClause) GetOperator() abs.Operator {
+	return v.operator
+}
+
+// This method sets the assignment operator for this evaluate clause.
+func (v *evaluateClause) SetOperator(operator abs.Operator) {
+	if operator < abs.ASSIGN || operator > abs.QUOTIENT {
+		panic("An evaluate clause requires a valid assignment operator.")
+	}
+	v.operator = operator
 }
 
 // This method returns the expression for this evaluate clause.
