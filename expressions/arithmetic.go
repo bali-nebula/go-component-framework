@@ -57,7 +57,7 @@ func (v *arithmeticExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *arithmeticExpression) SetOperator(operator abs.Operator) {
 	if operator < abs.PRODUCT || operator > abs.DIFFERENCE {
-		panic("The operator in an arithmetic expression must be a valid arithmetic operation.")
+		panic("The operator in an arithmetic expression must be a valid arithmetic operator.")
 	}
 	v.operator = operator
 }

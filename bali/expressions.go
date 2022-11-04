@@ -112,8 +112,10 @@ func (v *parser) parseArithmetic(first abs.ExpressionLike) (abs.ArithmeticLike, 
 func (v *formatter) formatArithmetic(arithmetic abs.ArithmeticLike) {
 	var first = arithmetic.GetFirst()
 	v.formatExpression(first)
+	v.state.AppendString(" ")
 	var operator = arithmetic.GetOperator()
 	v.formatOperator(operator)
+	v.state.AppendString(" ")
 	var second = arithmetic.GetSecond()
 	v.formatExpression(second)
 }
@@ -144,7 +146,7 @@ func (v *parser) parseChaining(first abs.ExpressionLike) (abs.ChainingLike, *Tok
 			"$chaining")
 		panic(message)
 	}
-	expression = exp.Chaining(first, second)
+	expression = exp.Chaining(first, operator, second)
 	return expression, token, true
 }
 
@@ -153,7 +155,10 @@ func (v *parser) parseChaining(first abs.ExpressionLike) (abs.ChainingLike, *Tok
 func (v *formatter) formatChaining(chaining abs.ChainingLike) {
 	var first = chaining.GetFirst()
 	v.formatExpression(first)
-	v.state.AppendString(" & ")
+	v.state.AppendString(" ")
+	var operator = chaining.GetOperator()
+	v.formatOperator(operator)
+	v.state.AppendString(" ")
 	var second = chaining.GetSecond()
 	v.formatExpression(second)
 }
@@ -188,17 +193,36 @@ func (v *parser) parseComparison(first abs.ExpressionLike) (abs.ComparisonLike, 
 	return expression, token, true
 }
 
+// This method adds the canonical format for the specified comparison expression
+// to the state of the formatter.
+func (v *formatter) formatComparison(comparison abs.ComparisonLike) {
+	var first = comparison.GetFirst()
+	v.formatExpression(first)
+	v.state.AppendString(" ")
+	var operator = comparison.GetOperator()
+	v.formatOperator(operator)
+	v.state.AppendString(" ")
+	var second = comparison.GetSecond()
+	v.formatExpression(second)
+}
+
 // This method attempts to parse a complement expression. It returns the
 // complement expression and whether or not the complement expression was
 // successfully parsed.
 func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 	var ok bool
 	var token *Token
+	var operator abs.Operator
 	var logical abs.ExpressionLike
 	var expression abs.ComplementLike
-	_, token, ok = v.parseKeyword("NOT")
+	operator, token, ok = v.parseOperator()
 	if !ok {
-		// This is not an complement expression.
+		// This is not a complement expression.
+		return expression, token, false
+	}
+	if operator != abs.NOT {
+		// This is not a complement expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	logical, token, ok = v.parseExpression()
@@ -208,8 +232,17 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 			"$complement")
 		panic(message)
 	}
-	expression = exp.Complement(logical)
+	expression = exp.Complement(operator, logical)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified complement expression
+// to the state of the formatter.
+func (v *formatter) formatComplement(complement abs.ComplementLike) {
+	var operator = complement.GetOperator()
+	v.formatOperator(operator)
+	var expression = complement.GetExpression()
+	v.formatExpression(expression)
 }
 
 // This method attempts to parse a dereference expression. It returns the
@@ -226,11 +259,9 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 		// This is not a dereference expression.
 		return expression, token, false
 	}
-	switch operator {
-	case abs.AT:
-		// Found a valid operator.
-	default:
+	if operator != abs.AT {
 		// This is not a dereference expression.
+		v.backupOne() // Put back the operator token.
 		return expression, token, false
 	}
 	reference, token, ok = v.parseExpression()
@@ -240,8 +271,17 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 			"$dereference")
 		panic(message)
 	}
-	expression = exp.Dereference(reference)
+	expression = exp.Dereference(operator, reference)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified dereference expression
+// to the state of the formatter.
+func (v *formatter) formatDereference(dereference abs.DereferenceLike) {
+	var operator = dereference.GetOperator()
+	v.formatOperator(operator)
+	var expression = dereference.GetExpression()
+	v.formatExpression(expression)
 }
 
 // This method attempts to parse a power expression. It returns the
@@ -270,8 +310,19 @@ func (v *parser) parseExponential(base abs.ExpressionLike) (abs.ExponentialLike,
 			"$exponential")
 		panic(message)
 	}
-	expression = exp.Exponential(base, exponent)
+	expression = exp.Exponential(base, operator, exponent)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified exponential expression
+// to the state of the formatter.
+func (v *formatter) formatExponential(exponential abs.ExponentialLike) {
+	var base = exponential.GetBase()
+	v.formatExpression(base)
+	var operator = exponential.GetOperator()
+	v.formatOperator(operator)
+	var exponent = exponential.GetExponent()
+	v.formatExpression(exponent)
 }
 
 // This method attempts to parse an expression. It returns the expression and
@@ -283,7 +334,7 @@ func (v *parser) parseExpression() (abs.ExpressionLike, *Token, bool) {
 	var expression abs.ExpressionLike
 	expression, token, ok = v.parseComponent()
 	if !ok {
-		// This must come before the parseIdentifier() for a variable.
+		// This must come before parseVariable().
 		expression, token, ok = v.parseIntrinsic()
 	}
 	if !ok {
@@ -308,6 +359,86 @@ func (v *parser) parseExpression() (abs.ExpressionLike, *Token, bool) {
 		expression, token, ok = v.parseComplement()
 	}
 	return expression, token, ok
+}
+
+// This method adds the canonical format for the specified expression to the
+// state of the formatter.
+func (v *formatter) formatExpression(expression abs.ExpressionLike) {
+	component, ok := expression.(abs.ComponentLike)
+	if ok {
+		v.formatComponent(component)
+		return
+	}
+	intrinsic, ok := expression.(abs.IntrinsicLike)
+	if ok {
+		v.formatIntrinsic(intrinsic)
+		return
+	}
+	variable, ok := expression.(abs.VariableLike)
+	if ok {
+		v.formatVariable(variable)
+		return
+	}
+	precedence, ok := expression.(abs.PrecedenceLike)
+	if ok {
+		v.formatPrecedence(precedence)
+		return
+	}
+	dereference, ok := expression.(abs.DereferenceLike)
+	if ok {
+		v.formatDereference(dereference)
+		return
+	}
+	invocation, ok := expression.(abs.InvocationLike)
+	if ok {
+		v.formatInvocation(invocation)
+		return
+	}
+	item, ok := expression.(abs.ItemLike)
+	if ok {
+		v.formatItem(item)
+		return
+	}
+	chaining, ok := expression.(abs.ChainingLike)
+	if ok {
+		v.formatChaining(chaining)
+		return
+	}
+	exponential, ok := expression.(abs.ExponentialLike)
+	if ok {
+		v.formatExponential(exponential)
+		return
+	}
+	inversion, ok := expression.(abs.InversionLike)
+	if ok {
+		v.formatInversion(inversion)
+		return
+	}
+	arithmetic, ok := expression.(abs.ArithmeticLike)
+	if ok {
+		v.formatArithmetic(arithmetic)
+		return
+	}
+	magnitude, ok := expression.(abs.MagnitudeLike)
+	if ok {
+		v.formatMagnitude(magnitude)
+		return
+	}
+	comparison, ok := expression.(abs.ComparisonLike)
+	if ok {
+		v.formatComparison(comparison)
+		return
+	}
+	complement, ok := expression.(abs.ComplementLike)
+	if ok {
+		v.formatComplement(complement)
+		return
+	}
+	logical, ok := expression.(abs.LogicalLike)
+	if ok {
+		v.formatLogical(logical)
+		return
+	}
 }
 
 // This method attempts to parse a function expression. It returns the
@@ -335,6 +466,15 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 	}
 	expression = exp.Intrinsic(function, arguments)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified intrinsic function
+// expression to the state of the formatter.
+func (v *formatter) formatIntrinsic(dereference abs.IntrinsicLike) {
+	var function = dereference.GetFunction()
+	v.state.AppendString(function)
+	var arguments = dereference.GetArguments()
+	v.formatArguments(arguments)
 }
 
 // This method attempts to parse a inversion expression. It returns the
@@ -365,6 +505,15 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	}
 	expression = exp.Inversion(operator, numeric)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified inversion expression
+// to the state of the formatter.
+func (v *formatter) formatInversion(inversion abs.InversionLike) {
+	var operator = inversion.GetOperator()
+	v.formatOperator(operator)
+	var expression = inversion.GetExpression()
+	v.formatExpression(expression)
 }
 
 // This method attempts to parse a message expression. It returns the
@@ -409,6 +558,19 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 	return expression, token, true
 }
 
+// This method adds the canonical format for the specified invocation expression
+// to the state of the formatter.
+func (v *formatter) formatInvocation(invocation abs.InvocationLike) {
+	var target = invocation.GetTarget()
+	v.formatExpression(target)
+	var operator = invocation.GetOperator()
+	v.formatOperator(operator)
+	var message = invocation.GetMessage()
+	v.state.AppendString(message)
+	var arguments = invocation.GetArguments()
+	v.formatArguments(arguments)
+}
+
 // This method attempts to parse a logical expression. It returns the
 // logical expression and whether or not the logical expression was
 // successfully parsed.
@@ -437,6 +599,19 @@ func (v *parser) parseLogical(first abs.ExpressionLike) (abs.LogicalLike, *Token
 	}
 	expression = exp.Logical(first, operator, second)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified logical expression
+// to the state of the formatter.
+func (v *formatter) formatLogical(logical abs.LogicalLike) {
+	var first = logical.GetFirst()
+	v.formatExpression(first)
+	v.state.AppendString(" ")
+	var operator = logical.GetOperator()
+	v.formatOperator(operator)
+	v.state.AppendString(" ")
+	var second = logical.GetSecond()
+	v.formatExpression(second)
 }
 
 // This method attempts to parse a magnitude expression. It returns the
@@ -470,6 +645,15 @@ func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 	return expression, token, true
 }
 
+// This method adds the canonical format for the specified magnitude expression
+// to the state of the formatter.
+func (v *formatter) formatMagnitude(magnitude abs.MagnitudeLike) {
+	v.state.AppendString("|")
+	var expression = magnitude.GetExpression()
+	v.formatExpression(expression)
+	v.state.AppendString("|")
+}
+
 // This method attempts to parse a precedence expression. It returns the
 // precedence expression and whether or not the precedence expression was
 // successfully parsed.
@@ -499,6 +683,15 @@ func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 	}
 	expression = exp.Precedence(inner)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified precedence expression
+// to the state of the formatter.
+func (v *formatter) formatPrecedence(precedence abs.PrecedenceLike) {
+	v.state.AppendString("(")
+	var expression = precedence.GetExpression()
+	v.formatExpression(expression)
+	v.state.AppendString(")")
 }
 
 // This method attempts to parse a left recursive expression. It returns
@@ -578,8 +771,17 @@ func (v *parser) parseItem(composite abs.ExpressionLike) (abs.ItemLike, *Token, 
 			"$indices")
 		panic(message)
 	}
-	expression = exp.Value(composite, indices)
+	expression = exp.Item(composite, indices)
 	return expression, token, true
+}
+
+// This method adds the canonical format for the specified item expression
+// to the state of the formatter.
+func (v *formatter) formatItem(item abs.ItemLike) {
+	var composite = item.GetComposite()
+	v.formatExpression(composite)
+	var indices = item.GetIndices()
+	v.formatIndices(indices)
 }
 
 // This method attempts to parse the an operator. It returns the operator and

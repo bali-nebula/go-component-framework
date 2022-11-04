@@ -17,10 +17,11 @@ import (
 // CHAINING EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new chaining expression.
-func Chaining(first, second abs.ExpressionLike) abs.ChainingLike {
+func Chaining(first abs.ExpressionLike, operator abs.Operator, second abs.ExpressionLike) abs.ChainingLike {
 	var v = &chainingExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
+	v.SetOperator(operator)
 	v.SetSecond(second)
 	return v
 }
@@ -28,8 +29,9 @@ func Chaining(first, second abs.ExpressionLike) abs.ChainingLike {
 // This type defines the structure and methods associated with a chaining
 // expression.
 type chainingExpression struct {
-	first  abs.ExpressionLike
-	second abs.ExpressionLike
+	first    abs.ExpressionLike
+	operator abs.Operator
+	second   abs.ExpressionLike
 }
 
 // This method returns the first expression in this chaining expression.
@@ -44,6 +46,20 @@ func (v *chainingExpression) SetFirst(first abs.ExpressionLike) {
 		panic("The first expression in a chaining expression cannot be nil.")
 	}
 	v.first = first
+}
+
+// This method returns the comparison operator in this chaining expression.
+func (v *chainingExpression) GetOperator() abs.Operator {
+	return v.operator
+}
+
+// This method sets the comparison operator in this chaining expression to the
+// specified value.
+func (v *chainingExpression) SetOperator(operator abs.Operator) {
+	if operator != abs.AMPERSAND {
+		panic("The operator in an comparison expression must be a valid chaining operator.")
+	}
+	v.operator = operator
 }
 
 // This method returns the second expression in this chaining expression.

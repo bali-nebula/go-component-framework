@@ -12,7 +12,9 @@ package bali
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
+	ref "reflect"
 	stc "strconv"
 	sts "strings"
 	uni "unicode"
@@ -167,6 +169,59 @@ func (v *parser) parseString() (abs.SequenceLike, *Token, bool) {
 		s = nil
 	}
 	return s, token, ok
+}
+
+// This method adds the canonical string format for the specified Go string
+// to the state of the formatter.
+func (v *formatter) formatString(sequence abs.SequenceLike) {
+	pattern, ok := sequence.(ele.Pattern)
+	if ok {
+		v.formatPattern(pattern)
+		return
+	}
+	resource, ok := sequence.(ele.Resource)
+	if ok {
+		v.formatResource(resource)
+		return
+	}
+	symbol, ok := sequence.(ele.Symbol)
+	if ok {
+		v.formatSymbol(symbol)
+		return
+	}
+	tag, ok := sequence.(ele.Tag)
+	if ok {
+		v.formatTag(tag)
+		return
+	}
+	binary, ok := sequence.(str.Binary)
+	if ok {
+		v.formatBinary(binary)
+		return
+	}
+	moniker, ok := sequence.(str.Moniker)
+	if ok {
+		v.formatMoniker(moniker)
+		return
+	}
+	narrative, ok := sequence.(str.Narrative)
+	if ok {
+		v.formatNarrative(narrative)
+		return
+	}
+	quote, ok := sequence.(str.Quote)
+	if ok {
+		v.formatQuote(quote)
+		return
+	}
+	version, ok := sequence.(str.Version)
+	if ok {
+		v.formatVersion(version)
+		return
+	}
+	var s = ref.ValueOf(sequence).String()
+	quote = str.Quote(`"` + s + `"`)
+	v.formatQuote(quote)
 }
 
 // This method attempts to parse a version string. It returns the version

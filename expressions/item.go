@@ -14,10 +14,10 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// VALUE EXPRESSION IMPLEMENTATION
+// ITEM EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new item expression.
-func Value(composite abs.ExpressionLike, indices abs.ListLike[abs.ExpressionLike]) abs.ItemLike {
+func Item(composite abs.ExpressionLike, indices abs.ListLike[abs.ExpressionLike]) abs.ItemLike {
 	var v = &itemExpression{}
 	// Perform argument validation.
 	v.SetComposite(composite)

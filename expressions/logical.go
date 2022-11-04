@@ -57,7 +57,7 @@ func (v *logicalExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *logicalExpression) SetOperator(operator abs.Operator) {
 	if operator < abs.AND || operator > abs.OR {
-		panic("The operator in a logical expression must be a valid logical operation.")
+		panic("The operator in a logical expression must be a valid logical operator.")
 	}
 	v.operator = operator
 }

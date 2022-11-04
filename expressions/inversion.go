@@ -41,7 +41,7 @@ func (v *inversionExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *inversionExpression) SetOperator(operator abs.Operator) {
 	if operator < abs.MINUS || operator > abs.SLASH {
-		panic("The operator in an inversion expression must be a valid inversion operation.")
+		panic("The operator in an inversion expression must be a valid inversion operator.")
 	}
 	v.operator = operator
 }

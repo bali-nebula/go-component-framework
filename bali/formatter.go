@@ -14,7 +14,6 @@ import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ref "reflect"
 )
 
@@ -190,59 +189,6 @@ func (v *formatter) formatFloat(value any) {
 	var float = ref.ValueOf(value).Float()
 	var number = ele.Number(complex(float64(float), 0))
 	v.formatNumber(number)
-}
-
-// This method adds the canonical primitive format for the specified Go string
-// to the state of the formatter.
-func (v *formatter) formatString(value any) {
-	pattern, ok := value.(ele.Pattern)
-	if ok {
-		v.formatPattern(pattern)
-		return
-	}
-	resource, ok := value.(ele.Resource)
-	if ok {
-		v.formatResource(resource)
-		return
-	}
-	symbol, ok := value.(ele.Symbol)
-	if ok {
-		v.formatSymbol(symbol)
-		return
-	}
-	tag, ok := value.(ele.Tag)
-	if ok {
-		v.formatTag(tag)
-		return
-	}
-	binary, ok := value.(str.Binary)
-	if ok {
-		v.formatBinary(binary)
-		return
-	}
-	moniker, ok := value.(str.Moniker)
-	if ok {
-		v.formatMoniker(moniker)
-		return
-	}
-	narrative, ok := value.(str.Narrative)
-	if ok {
-		v.formatNarrative(narrative)
-		return
-	}
-	quote, ok := value.(str.Quote)
-	if ok {
-		v.formatQuote(quote)
-		return
-	}
-	version, ok := value.(str.Version)
-	if ok {
-		v.formatVersion(version)
-		return
-	}
-	var s = ref.ValueOf(value).String()
-	quote = str.Quote(`"` + s + `"`)
-	v.formatQuote(quote)
 }
 
 // This method adds the canonical element format for the specified Go int to

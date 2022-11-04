@@ -57,7 +57,7 @@ func (v *comparisonExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *comparisonExpression) SetOperator(operator abs.Operator) {
 	if operator < abs.LESS || operator > abs.MATCHES {
-		panic("The operator in an comparison expression must be a valid comparison operation.")
+		panic("The operator in an comparison expression must be a valid comparison operator.")
 	}
 	v.operator = operator
 }

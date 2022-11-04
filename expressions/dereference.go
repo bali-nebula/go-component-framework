@@ -17,9 +17,10 @@ import (
 // DEREFERENCE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new dereference expression.
-func Dereference(expression abs.ExpressionLike) abs.DereferenceLike {
+func Dereference(operator abs.Operator, expression abs.ExpressionLike) abs.DereferenceLike {
 	var v = &dereferenceExpression{}
 	// Perform argument validation.
+	v.SetOperator(operator)
 	v.SetExpression(expression)
 	return v
 }
@@ -27,7 +28,22 @@ func Dereference(expression abs.ExpressionLike) abs.DereferenceLike {
 // This type defines the structure and methods associated with a dereference
 // expression.
 type dereferenceExpression struct {
+	operator   abs.Operator
 	expression abs.ExpressionLike
+}
+
+// This method returns the dereference operator in this dereference expression.
+func (v *dereferenceExpression) GetOperator() abs.Operator {
+	return v.operator
+}
+
+// This method sets the dereference operator in this dereference expression to the
+// specified value.
+func (v *dereferenceExpression) SetOperator(operator abs.Operator) {
+	if operator != abs.AT {
+		panic("The operator in an dereference expression must be a valid dereference operator.")
+	}
+	v.operator = operator
 }
 
 // This method returns the expression to be operated on by this dereference

@@ -28,6 +28,8 @@ type ArithmeticLike interface {
 type ChainingLike interface {
 	GetFirst() ExpressionLike
 	SetFirst(first ExpressionLike)
+	GetOperator() Operator
+	SetOperator(operator Operator)
 	GetSecond() ExpressionLike
 	SetSecond(second ExpressionLike)
 }
@@ -44,12 +46,16 @@ type ComparisonLike interface {
 
 // This interface defines the methods supported by all complement-like expressions.
 type ComplementLike interface {
+	GetOperator() Operator
+	SetOperator(operator Operator)
 	GetExpression() ExpressionLike
 	SetExpression(expression ExpressionLike)
 }
 
 // This interface defines the methods supported by all dereference-like expressions.
 type DereferenceLike interface {
+	GetOperator() Operator
+	SetOperator(operator Operator)
 	GetExpression() ExpressionLike
 	SetExpression(expression ExpressionLike)
 }
@@ -58,6 +64,8 @@ type DereferenceLike interface {
 type ExponentialLike interface {
 	GetBase() ExpressionLike
 	SetBase(base ExpressionLike)
+	GetOperator() Operator
+	SetOperator(operator Operator)
 	GetExponent() ExpressionLike
 	SetExponent(exponent ExpressionLike)
 }

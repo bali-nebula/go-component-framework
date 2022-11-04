@@ -1112,6 +1112,7 @@ var keywords = [][]byte{
 // This array contains the full set of delimiters used by the Bali Document
 // Notation™ (BDN). They are in reverse order for proper matching.
 var delimiters = [][]byte{
+	[]byte("~"),
 	[]byte("}"),
 	[]byte("|"),
 	[]byte("{"),

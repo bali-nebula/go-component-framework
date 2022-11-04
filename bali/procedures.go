@@ -350,11 +350,6 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
-// This method adds the canonical format for the specified expression to the
-// state of the formatter.
-func (v *formatter) formatExpression(expression abs.ExpressionLike) {
-}
-
 // This method attempts to parse an if clause. It returns the if clause and
 // whether or not the if clause was successfully parsed.
 func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
