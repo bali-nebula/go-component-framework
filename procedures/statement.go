@@ -35,19 +35,19 @@ func StatementWithHandler(mainClause abs.ClauseLike, onClause abs.OnClauseLike) 
 
 // This type defines the structure and methods associated with a statement.
 type statement struct {
-	annotation string
+	annotation abs.AnnotationLike
 	mainClause abs.ClauseLike
 	onClause   abs.OnClauseLike
-	note       string
+	note       abs.NoteLike
 }
 
 // This method returns the annotation for this statement.
-func (v *statement) GetAnnotation() string {
+func (v *statement) GetAnnotation() abs.AnnotationLike {
 	return v.annotation
 }
 
 // This method sets the annotation for this statement.
-func (v *statement) SetAnnotation(annotation string) {
+func (v *statement) SetAnnotation(annotation abs.AnnotationLike) {
 	v.annotation = annotation
 }
 
@@ -62,12 +62,12 @@ func (v *statement) SetMainClause(mainClause abs.ClauseLike) {
 }
 
 // This method returns the note for this statement.
-func (v *statement) GetNote() string {
+func (v *statement) GetNote() abs.NoteLike {
 	return v.note
 }
 
 // This method sets the note for this statement.
-func (v *statement) SetNote(note string) {
+func (v *statement) SetNote(note abs.NoteLike) {
 	v.note = note
 }
 

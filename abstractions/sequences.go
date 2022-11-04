@@ -20,7 +20,9 @@ type KeyLike any
 
 type ValueLike any
 
-type SequenceLike any
+type StringLike any
+
+type CollectionLike any
 
 // This interface defines the methods supported by all sequences of values.
 type Sequential[V ValueLike] interface {

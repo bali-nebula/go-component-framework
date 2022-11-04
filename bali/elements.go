@@ -223,6 +223,66 @@ func (v *parser) parseElement() (abs.ElementLike, *Token, bool) {
 	return element, token, ok
 }
 
+// This method adds the canonical format for the specified element to the
+// state of the formatter.
+func (v *formatter) formatElement(element abs.ElementLike) {
+	angle, ok := element.(ele.Angle)
+	if ok {
+		v.formatAngle(angle)
+		return
+	}
+	boolean, ok := element.(ele.Boolean)
+	if ok {
+		v.formatBoolean(boolean)
+		return
+	}
+	duration, ok := element.(ele.Duration)
+	if ok {
+		v.formatDuration(duration)
+		return
+	}
+	moment, ok := element.(ele.Moment)
+	if ok {
+		v.formatMoment(moment)
+		return
+	}
+	number, ok := element.(ele.Number)
+	if ok {
+		v.formatNumber(number)
+		return
+	}
+	pattern, ok := element.(ele.Pattern)
+	if ok {
+		v.formatPattern(pattern)
+		return
+	}
+	percentage, ok := element.(ele.Percentage)
+	if ok {
+		v.formatPercentage(percentage)
+		return
+	}
+	probability, ok := element.(ele.Probability)
+	if ok {
+		v.formatProbability(probability)
+		return
+	}
+	resource, ok := element.(ele.Resource)
+	if ok {
+		v.formatResource(resource)
+		return
+	}
+	symbol, ok := element.(ele.Symbol)
+	if ok {
+		v.formatSymbol(symbol)
+		return
+	}
+	tag, ok := element.(ele.Tag)
+	if ok {
+		v.formatTag(tag)
+		return
+	}
+}
+
 // This method adds the canonical format for the specified imaginary number to
 // the state of the formatter.
 func (v *formatter) formatImaginary(i float64) {

@@ -146,10 +146,10 @@ func (v *formatter) formatQuote(quote str.Quote) {
 // This method attempts to parse a string sequence. It returns the
 // string sequence and whether or not the string sequence was
 // successfully parsed.
-func (v *parser) parseString() (abs.SequenceLike, *Token, bool) {
+func (v *parser) parseString() (abs.StringLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var s abs.SequenceLike
+	var s abs.StringLike
 	s, token, ok = v.parseQuote()
 	if !ok {
 		s, token, ok = v.parseMoniker()
@@ -170,50 +170,50 @@ func (v *parser) parseString() (abs.SequenceLike, *Token, bool) {
 	return s, token, ok
 }
 
-// This method adds the canonical string format for the specified Go string
-// to the state of the formatter.
-func (v *formatter) formatString(sequence abs.SequenceLike) {
-	pattern, ok := sequence.(ele.Pattern)
+// This method adds the canonical string format for the specified string to the
+// state of the formatter.
+func (v *formatter) formatString(s abs.StringLike) {
+	pattern, ok := s.(ele.Pattern)
 	if ok {
 		v.formatPattern(pattern)
 		return
 	}
-	resource, ok := sequence.(ele.Resource)
+	resource, ok := s.(ele.Resource)
 	if ok {
 		v.formatResource(resource)
 		return
 	}
-	symbol, ok := sequence.(ele.Symbol)
+	symbol, ok := s.(ele.Symbol)
 	if ok {
 		v.formatSymbol(symbol)
 		return
 	}
-	tag, ok := sequence.(ele.Tag)
+	tag, ok := s.(ele.Tag)
 	if ok {
 		v.formatTag(tag)
 		return
 	}
-	binary, ok := sequence.(str.Binary)
+	binary, ok := s.(str.Binary)
 	if ok {
 		v.formatBinary(binary)
 		return
 	}
-	moniker, ok := sequence.(str.Moniker)
+	moniker, ok := s.(str.Moniker)
 	if ok {
 		v.formatMoniker(moniker)
 		return
 	}
-	narrative, ok := sequence.(str.Narrative)
+	narrative, ok := s.(str.Narrative)
 	if ok {
 		v.formatNarrative(narrative)
 		return
 	}
-	quote, ok := sequence.(str.Quote)
+	quote, ok := s.(str.Quote)
 	if ok {
 		v.formatQuote(quote)
 		return
 	}
-	version, ok := sequence.(str.Version)
+	version, ok := s.(str.Version)
 	if ok {
 		v.formatVersion(version)
 		return

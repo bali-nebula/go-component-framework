@@ -123,10 +123,10 @@ func (v *formatter) formatCatalog(catalog abs.Sequential[abs.AssociationLike[abs
 
 // This method attempts to parse a collection of values. It returns the
 // collection and whether or not the collection was successfully parsed.
-func (v *parser) parseCollection() (abs.SequenceLike, *Token, bool) {
+func (v *parser) parseCollection() (abs.CollectionLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var collection abs.SequenceLike
+	var collection abs.CollectionLike
 	collection, token, ok = v.parseCatalog()
 	if !ok {
 		collection, token, ok = v.parseRange()
@@ -137,6 +137,27 @@ func (v *parser) parseCollection() (abs.SequenceLike, *Token, bool) {
 		collection, token, ok = v.parseList()
 	}
 	return collection, token, ok
+}
+
+// This method adds the canonical string format for the specified collection to
+// the state of the formatter.
+func (v *formatter) formatCollection(collection abs.CollectionLike) {
+	catalog, ok := collection.(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
+	if ok {
+		v.formatCatalog(catalog)
+		return
+	}
+	list, ok := collection.(abs.ListLike[abs.ComponentLike])
+	if ok {
+		v.formatList(list)
+		return
+	}
+	rng, ok := collection.(abs.RangeLike[abs.ValueLike])
+	if ok {
+		v.formatRange(rng)
+		return
+	}
+	panic("An invalid collection was passed to the formatter.")
 }
 
 // This method attempts to parse a catalog collection with inline associations.

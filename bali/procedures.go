@@ -585,6 +585,102 @@ func (v *parser) parseMainClause() (abs.ClauseLike, *Token, bool) {
 	return mainClause, token, ok
 }
 
+// This method adds the canonical format for the specified main clause to the
+// state of the formatter.
+func (v *formatter) formatMainClause(mainClause abs.ClauseLike) {
+	acceptClause, ok := mainClause.(abs.AcceptClauseLike)
+	if ok {
+		v.formatAcceptClause(acceptClause)
+		return
+	}
+	breakClause, ok := mainClause.(abs.BreakClauseLike)
+	if ok {
+		v.formatBreakClause(breakClause)
+		return
+	}
+	checkoutClause, ok := mainClause.(abs.CheckoutClauseLike)
+	if ok {
+		v.formatCheckoutClause(checkoutClause)
+		return
+	}
+	continueClause, ok := mainClause.(abs.ContinueClauseLike)
+	if ok {
+		v.formatContinueClause(continueClause)
+		return
+	}
+	discardClause, ok := mainClause.(abs.DiscardClauseLike)
+	if ok {
+		v.formatDiscardClause(discardClause)
+		return
+	}
+	evaluateClause, ok := mainClause.(abs.EvaluateClauseLike)
+	if ok {
+		v.formatEvaluateClause(evaluateClause)
+		return
+	}
+	ifClause, ok := mainClause.(abs.IfClauseLike)
+	if ok {
+		v.formatIfClause(ifClause)
+		return
+	}
+	notarizeClause, ok := mainClause.(abs.NotarizeClauseLike)
+	if ok {
+		v.formatNotarizeClause(notarizeClause)
+		return
+	}
+	postClause, ok := mainClause.(abs.PostClauseLike)
+	if ok {
+		v.formatPostClause(postClause)
+		return
+	}
+	publishClause, ok := mainClause.(abs.PublishClauseLike)
+	if ok {
+		v.formatPublishClause(publishClause)
+		return
+	}
+	rejectClause, ok := mainClause.(abs.RejectClauseLike)
+	if ok {
+		v.formatRejectClause(rejectClause)
+		return
+	}
+	retrieveClause, ok := mainClause.(abs.RetrieveClauseLike)
+	if ok {
+		v.formatRetrieveClause(retrieveClause)
+		return
+	}
+	returnClause, ok := mainClause.(abs.ReturnClauseLike)
+	if ok {
+		v.formatReturnClause(returnClause)
+		return
+	}
+	saveClause, ok := mainClause.(abs.SaveClauseLike)
+	if ok {
+		v.formatSaveClause(saveClause)
+		return
+	}
+	selectClause, ok := mainClause.(abs.SelectClauseLike)
+	if ok {
+		v.formatSelectClause(selectClause)
+		return
+	}
+	throwClause, ok := mainClause.(abs.ThrowClauseLike)
+	if ok {
+		v.formatThrowClause(throwClause)
+		return
+	}
+	whileClause, ok := mainClause.(abs.WhileClauseLike)
+	if ok {
+		v.formatWhileClause(whileClause)
+		return
+	}
+	withClause, ok := mainClause.(abs.WithClauseLike)
+	if ok {
+		v.formatWithClause(withClause)
+		return
+	}
+	panic("An invalid main clause was passed to the formatter.")
+}
+
 // This method attempts to parse a list of multiline statements. It returns the
 // list of statements and whether or not the list of statements was successfully
 // parsed.
@@ -1212,6 +1308,23 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 // This method adds the canonical format for the specified statement to the
 // state of the formatter.
 func (v *formatter) formatStatement(statement abs.StatementLike) {
+	var annotation = statement.GetAnnotation()
+	if annotation != nil {
+		v.formatAnnotation(annotation)
+		v.state.AppendNewline()
+	}
+	var mainClause = statement.GetMainClause()
+	if mainClause != nil {
+		v.formatMainClause(mainClause)
+	}
+	var onClause = statement.GetOnClause()
+	if onClause != nil {
+		v.formatOnClause(onClause)
+	}
+	var note = statement.GetNote()
+	if len(note) > 0 {
+		v.formatNote(note)
+	}
 }
 
 // This method attempts to parse a throw clause. It returns the throw

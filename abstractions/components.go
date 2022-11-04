@@ -12,6 +12,12 @@ package abstractions
 
 // COMPONENT INTERFACES
 
+type NoteLike string
+
+type CommentLike string
+
+type AnnotationLike any
+
 type EntityLike any
 
 // This interface defines the methods supported by all component-like types.
@@ -20,8 +26,8 @@ type ComponentLike interface {
 	IsAnnotated() bool
 	GetEntity() EntityLike
 	GetContext() ContextLike
-	GetNote() string
-	SetNote(note string)
+	GetNote() NoteLike
+	SetNote(note NoteLike)
 }
 
 // This interface defines the methods supported by all context-like types.

@@ -28,10 +28,10 @@ import (
 
 // This method attempts to parse annotation. It returns the annotation and
 // whether or not the annotation was successfully parsed.
-func (v *parser) parseAnnotation() (string, *Token, bool) {
+func (v *parser) parseAnnotation() (abs.AnnotationLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var annotation string
+	var annotation abs.AnnotationLike
 	annotation, token, ok = v.parseNote()
 	if !ok {
 		annotation, token, ok = v.parseComment()
@@ -39,23 +39,39 @@ func (v *parser) parseAnnotation() (string, *Token, bool) {
 	return annotation, token, ok
 }
 
+// This method adds the canonical format for the specified annotation to the
+// state of the formatter.
+func (v *formatter) formatAnnotation(annotation abs.AnnotationLike) {
+	note, ok := annotation.(abs.NoteLike)
+	if ok {
+		v.formatNote(note)
+		return
+	}
+	comment, ok := annotation.(abs.CommentLike)
+	if ok {
+		v.formatComment(comment)
+		return
+	}
+	panic("An invalid annotation was passed to the formatter.")
+}
+
 // This method attempts to parse a comment. It returns a string containing the
 // comment and whether or not the comment was successfully parsed.
-func (v *parser) parseComment() (string, *Token, bool) {
-	var comment string
+func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
+	var comment abs.CommentLike
 	var token = v.nextToken()
 	if token.Type != TokenComment {
 		v.backupOne()
 		return comment, token, false
 	}
-	comment = trimIndentation(token.Value)
+	comment = abs.CommentLike(trimIndentation(token.Value))
 	return comment, token, true
 }
 
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
-func (v *formatter) formatComment(comment string) {
-	var lines = sts.Split(comment, "\n")
+func (v *formatter) formatComment(comment abs.CommentLike) {
+	var lines = sts.Split(string(comment), "\n")
 	v.state.AppendString(`!>`)
 	for _, line := range lines {
 		v.state.AppendNewline()
@@ -70,7 +86,7 @@ func (v *formatter) formatComment(comment string) {
 func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 	var component abs.ComponentLike
 	var context abs.ContextLike
-	var note string
+	var note abs.NoteLike
 	var entity, token, ok = v.parseEntity()
 	if ok {
 		context, token, _ = v.parseContext() // The context is optional.
@@ -85,7 +101,7 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComponent(component abs.ComponentLike) {
 	var entity = component.GetEntity()
-	v.formatAny(entity)
+	v.formatEntity(entity)
 	if component.IsGeneric() {
 		var context = component.GetContext()
 		v.formatContext(context)
@@ -172,6 +188,32 @@ func (v *parser) parseEntity() (abs.EntityLike, *Token, bool) {
 	return entity, token, ok
 }
 
+// This method adds the canonical format for the specified entity to the
+// state of the formatter.
+func (v *formatter) formatEntity(entity abs.EntityLike) {
+	element, ok := entity.(abs.ElementLike)
+	if ok {
+		v.formatElement(element)
+		return
+	}
+	s, ok := entity.(abs.StringLike)
+	if ok {
+		v.formatString(s)
+		return
+	}
+	collection, ok := entity.(abs.CollectionLike)
+	if ok {
+		v.formatCollection(collection)
+		return
+	}
+	procedure, ok := entity.(abs.ProcedureLike)
+	if ok {
+		v.formatProcedure(procedure)
+		return
+	}
+	panic("An invalid entity was passed to the formatter.")
+}
+
 // This method attempts to parse the end-of-file (EOF) marker. It returns
 // the token and whether or not an EOL token was found.
 func (v *parser) parseEOF() (*Token, *Token, bool) {
@@ -226,22 +268,22 @@ func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
 
 // This method attempts to parse a note. It returns a string containing the
 // note and whether or not the note was successfully parsed.
-func (v *parser) parseNote() (string, *Token, bool) {
-	var note string
+func (v *parser) parseNote() (abs.NoteLike, *Token, bool) {
+	var note abs.NoteLike
 	var token = v.nextToken()
 	if token.Type != TokenNote {
 		v.backupOne()
 		return note, token, false
 	}
-	note = token.Value[2:] // Remove the leading "! ".
+	note = abs.NoteLike(token.Value[2:]) // Remove the leading "! ".
 	return note, token, true
 }
 
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
-func (v *formatter) formatNote(note string) {
+func (v *formatter) formatNote(note abs.NoteLike) {
 	v.state.AppendString("! ")
-	v.state.AppendString(note)
+	v.state.AppendString(string(note))
 }
 
 // This method attempts to parse a parameter containing a name and value. It

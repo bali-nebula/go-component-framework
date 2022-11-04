@@ -37,7 +37,7 @@ func ComponentWithContext(entity abs.EntityLike, context abs.ContextLike) abs.Co
 type component struct {
 	entity  abs.EntityLike
 	context abs.ContextLike
-	note    string
+	note    abs.NoteLike
 }
 
 // COMPONENT IMPLEMENTATION
@@ -75,11 +75,11 @@ func (v *component) SetContext(context abs.ContextLike) {
 }
 
 // This method returns the note for this component.
-func (v *component) GetNote() string {
+func (v *component) GetNote() abs.NoteLike {
 	return v.note
 }
 
 // This method sets the note for this component.
-func (v *component) SetNote(note string) {
+func (v *component) SetNote(note abs.NoteLike) {
 	v.note = note
 }
