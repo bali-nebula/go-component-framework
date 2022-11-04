@@ -627,7 +627,7 @@ func (v *parser) parseMultilineStatements() (abs.ListLike[abs.StatementLike], *T
 func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var draft abs.ExpressionLike
+	var document abs.ExpressionLike
 	var moniker abs.ExpressionLike
 	var clause abs.NotarizeClauseLike
 	_, token, ok = v.parseKeyword("notarize")
@@ -635,7 +635,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 		// This is not a notarize clause.
 		return clause, token, false
 	}
-	draft, token, ok = v.parseExpression()
+	document, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$document",
@@ -662,8 +662,19 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 			"$moniker")
 		panic(message)
 	}
-	clause = pro.NotarizeClause(draft, moniker)
+	clause = pro.NotarizeClause(document, moniker)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified notarize clause to the
+// state of the formatter.
+func (v *formatter) formatNotarizeClause(clause abs.NotarizeClauseLike) {
+	v.state.AppendString("notarize ")
+	var document = clause.GetDocument()
+	v.formatExpression(document)
+	v.state.AppendString(" as ")
+	var moniker = clause.GetMoniker()
+	v.formatExpression(moniker)
 }
 
 // This method attempts to parse an exception clause. It returns the exception
@@ -721,6 +732,23 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified on clause to the
+// state of the formatter.
+func (v *formatter) formatOnClause(clause abs.OnClauseLike) {
+	v.state.AppendString("on ")
+	var exception = clause.GetException()
+	var identifier = exception.GetIdentifier()
+	v.state.AppendString("$")
+	v.formatIdentifier(identifier)
+	var blocks = clause.GetBlocks()
+	var iterator = age.Iterator(blocks)
+	for iterator.HasNext() {
+		var block = iterator.GetNext()
+		v.state.AppendString(" matching ")
+		v.formatBlock(block)
+	}
+}
+
 // This method attempts to parse a post clause. It returns the post
 // clause and whether or not the post clause was successfully parsed.
 func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
@@ -763,6 +791,17 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	}
 	clause = pro.PostClause(message, bag)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified post clause to the
+// state of the formatter.
+func (v *formatter) formatPostClause(clause abs.PostClauseLike) {
+	v.state.AppendString("post ")
+	var message = clause.GetMessage()
+	v.formatExpression(message)
+	v.state.AppendString(" to ")
+	var bag = clause.GetBag()
+	v.formatExpression(bag)
 }
 
 // This method attempts to parse a list of statements. It returns the
@@ -850,6 +889,14 @@ func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified publish clause to the
+// state of the formatter.
+func (v *formatter) formatPublishClause(clause abs.PublishClauseLike) {
+	v.state.AppendString("publish ")
+	var event = clause.GetEvent()
+	v.formatExpression(event)
+}
+
 // This method attempts to parse a recipient. It returns the recipient and
 // whether or not the recipient was successfully parsed.
 func (v *parser) parseRecipient() (abs.RecipientLike, *Token, bool) {
@@ -901,6 +948,14 @@ func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 	}
 	clause = pro.RejectClause(message)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified reject clause to the
+// state of the formatter.
+func (v *formatter) formatRejectClause(clause abs.RejectClauseLike) {
+	v.state.AppendString("reject ")
+	var message = clause.GetMessage()
+	v.formatExpression(message)
 }
 
 // This method attempts to parse a retrieve clause. It returns the retrieve
@@ -959,6 +1014,17 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified retrieve clause to the
+// state of the formatter.
+func (v *formatter) formatRetrieveClause(clause abs.RetrieveClauseLike) {
+	v.state.AppendString("retrieve ")
+	var recipient = clause.GetRecipient()
+	v.formatRecipient(recipient)
+	v.state.AppendString(" from ")
+	var bag = clause.GetBag()
+	v.formatExpression(bag)
+}
+
 // This method attempts to parse a return clause. It returns the return
 // clause and whether or not the return clause was successfully parsed.
 func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
@@ -983,12 +1049,20 @@ func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified return clause to the
+// state of the formatter.
+func (v *formatter) formatReturnClause(clause abs.ReturnClauseLike) {
+	v.state.AppendString("return ")
+	var result = clause.GetResult()
+	v.formatExpression(result)
+}
+
 // This method attempts to parse a save clause. It returns the save
 // clause and whether or not the save clause was successfully parsed.
 func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var draft abs.ExpressionLike
+	var document abs.ExpressionLike
 	var recipient abs.RecipientLike
 	var clause abs.SaveClauseLike
 	_, token, ok = v.parseKeyword("save")
@@ -996,7 +1070,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		// This is not a save clause.
 		return clause, token, false
 	}
-	draft, token, ok = v.parseExpression()
+	document, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$document",
@@ -1035,8 +1109,19 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 			"$indices")
 		panic(message)
 	}
-	clause = pro.SaveClause(draft, recipient)
+	clause = pro.SaveClause(document, recipient)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified save clause to the
+// state of the formatter.
+func (v *formatter) formatSaveClause(clause abs.SaveClauseLike) {
+	v.state.AppendString("save ")
+	var document = clause.GetDocument()
+	v.formatExpression(document)
+	v.state.AppendString(" as ")
+	var recipient = clause.GetRecipient()
+	v.formatRecipient(recipient)
 }
 
 // This method attempts to parse an select clause. It returns the select clause
@@ -1044,7 +1129,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var control abs.ExpressionLike
+	var target abs.ExpressionLike
 	var block abs.BlockLike
 	var blocks abs.ListLike[abs.BlockLike]
 	var clause abs.SelectClauseLike
@@ -1053,7 +1138,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 		// This is not a select clause.
 		return clause, token, false
 	}
-	control, token, ok = v.parseExpression()
+	target, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError("An unexpected token was received by the parser:", token)
 		message += generateGrammar("$target",
@@ -1088,8 +1173,23 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 			"$pattern")
 		panic(message)
 	}
-	clause = pro.SelectClause(control, blocks)
+	clause = pro.SelectClause(target, blocks)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified select clause to the
+// state of the formatter.
+func (v *formatter) formatSelectClause(clause abs.SelectClauseLike) {
+	v.state.AppendString("select ")
+	var target = clause.GetTarget()
+	v.formatExpression(target)
+	var blocks = clause.GetBlocks()
+	var iterator = age.Iterator(blocks)
+	for iterator.HasNext() {
+		var block = iterator.GetNext()
+		v.state.AppendString(" matching ")
+		v.formatBlock(block)
+	}
 }
 
 // This method attempts to parse a statement. It returns the statement and
@@ -1136,6 +1236,14 @@ func (v *parser) parseThrowClause() (abs.ThrowClauseLike, *Token, bool) {
 	}
 	clause = pro.ThrowClause(exception)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified throw clause to the
+// state of the formatter.
+func (v *formatter) formatThrowClause(clause abs.ThrowClauseLike) {
+	v.state.AppendString("throw ")
+	var exception = clause.GetException()
+	v.formatExpression(exception)
 }
 
 // This method attempts to parse a while clause. It returns the while clause and

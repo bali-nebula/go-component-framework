@@ -17,55 +17,55 @@ import (
 // SELECT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new select clause.
-func SelectClause(control abs.ExpressionLike, options abs.ListLike[abs.BlockLike]) abs.SelectClauseLike {
+func SelectClause(target abs.ExpressionLike, blocks abs.ListLike[abs.BlockLike]) abs.SelectClauseLike {
 	var v = &selectClause{}
 	// Perform argument validation.
-	v.SetControl(control)
-	v.SetOptions(options)
+	v.SetTarget(target)
+	v.SetBlocks(blocks)
 	return v
 }
 
 // This type defines the structure and methods associated with a select clause.
 type selectClause struct {
-	control abs.ExpressionLike
-	options abs.ListLike[abs.BlockLike]
+	target abs.ExpressionLike
+	blocks abs.ListLike[abs.BlockLike]
 }
 
-// This method returns the control expression for this select clause.
-func (v *selectClause) GetControl() abs.ExpressionLike {
-	return v.control
+// This method returns the target expression for this select clause.
+func (v *selectClause) GetTarget() abs.ExpressionLike {
+	return v.target
 }
 
-// This method sets the control expression for this select clause.
-func (v *selectClause) SetControl(control abs.ExpressionLike) {
-	if control == nil {
-		panic("A select clause requires an control expression.")
+// This method sets the target expression for this select clause.
+func (v *selectClause) SetTarget(target abs.ExpressionLike) {
+	if target == nil {
+		panic("A select clause requires a target expression.")
 	}
-	v.control = control
+	v.target = target
 }
 
-// This method returns the list of options for this select clause.
-func (v *selectClause) GetOptions() abs.ListLike[abs.BlockLike] {
-	return v.options
+// This method returns the list of blocks for this select clause.
+func (v *selectClause) GetBlocks() abs.Sequential[abs.BlockLike] {
+	return v.blocks
 }
 
-// This method sets the list of options for this select clause.
-func (v *selectClause) SetOptions(options abs.ListLike[abs.BlockLike]) {
-	if options == nil || options.IsEmpty() {
-		panic("A select clause requires at least one option.")
+// This method sets the list of blocks for this select clause.
+func (v *selectClause) SetBlocks(blocks abs.ListLike[abs.BlockLike]) {
+	if blocks == nil || blocks.IsEmpty() {
+		panic("A select clause requires at least one block.")
 	}
-	v.options = options
+	v.blocks = blocks
 }
 
-// This method returns the option at the specified index from this select clause.
-func (v *selectClause) GetOption(index int) abs.BlockLike {
-	return v.options.GetValue(index)
+// This method returns the block at the specified index from this select clause.
+func (v *selectClause) GetBlock(index int) abs.BlockLike {
+	return v.blocks.GetValue(index)
 }
 
-// This method sets the option at the specified index for this select clause.
-func (v *selectClause) SetOption(index int, option abs.BlockLike) {
-	if option == nil {
-		panic("Each index in a select clause requires a option block.")
+// This method sets the block at the specified index for this select clause.
+func (v *selectClause) SetBlock(index int, block abs.BlockLike) {
+	if block == nil {
+		panic("Each index in a select clause requires a block block.")
 	}
-	v.options.SetValue(index, option)
+	v.blocks.SetValue(index, block)
 }

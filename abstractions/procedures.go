@@ -28,7 +28,7 @@ type AttributeLike interface {
 	SetVariable(variable string)
 	GetIndex(index int) ExpressionLike
 	SetIndex(index int, expression ExpressionLike)
-	GetIndices() ListLike[ExpressionLike]
+	GetIndices() Sequential[ExpressionLike]
 	SetIndices(indices ListLike[ExpressionLike])
 }
 
@@ -90,8 +90,8 @@ type IfClauseLike interface {
 
 // This interface defines the methods supported by all notarize-clause-like types.
 type NotarizeClauseLike interface {
-	GetDraft() ExpressionLike
-	SetDraft(draft ExpressionLike)
+	GetDocument() ExpressionLike
+	SetDocument(document ExpressionLike)
 	GetMoniker() ExpressionLike
 	SetMoniker(moniker ExpressionLike)
 }
@@ -100,10 +100,10 @@ type NotarizeClauseLike interface {
 type OnClauseLike interface {
 	GetException() Symbolic
 	SetException(exception Symbolic)
-	GetHandler(index int) BlockLike
-	SetHandler(index int, handler BlockLike)
-	GetHandlers() ListLike[BlockLike]
-	SetHandlers(blocks ListLike[BlockLike])
+	GetBlock(index int) BlockLike
+	SetBlock(index int, handler BlockLike)
+	GetBlocks() Sequential[BlockLike]
+	SetBlocks(blocks ListLike[BlockLike])
 }
 
 // This interface defines the methods supported by all post-clause-like types.
@@ -151,20 +151,20 @@ type ReturnClauseLike interface {
 
 // This interface defines the methods supported by all save-clause-like types.
 type SaveClauseLike interface {
-	GetDraft() ExpressionLike
-	SetDraft(draft ExpressionLike)
+	GetDocument() ExpressionLike
+	SetDocument(document ExpressionLike)
 	GetRecipient() RecipientLike
 	SetRecipient(recipient RecipientLike)
 }
 
 // This interface defines the methods supported by all select-clause-like types.
 type SelectClauseLike interface {
-	GetControl() ExpressionLike
-	SetControl(control ExpressionLike)
-	GetOption(index int) BlockLike
-	SetOption(index int, option BlockLike)
-	GetOptions() ListLike[BlockLike]
-	SetOptions(blocks ListLike[BlockLike])
+	GetTarget() ExpressionLike
+	SetTarget(control ExpressionLike)
+	GetBlock(index int) BlockLike
+	SetBlock(index int, option BlockLike)
+	GetBlocks() Sequential[BlockLike]
+	SetBlocks(blocks ListLike[BlockLike])
 }
 
 // This interface defines the methods supported by all statement-like types.

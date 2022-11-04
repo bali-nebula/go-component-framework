@@ -17,10 +17,10 @@ import (
 // NOTARIZE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new notarize clause.
-func NotarizeClause(draft, moniker abs.ExpressionLike) abs.NotarizeClauseLike {
+func NotarizeClause(document, moniker abs.ExpressionLike) abs.NotarizeClauseLike {
 	var v = &notarizeClause{}
 	// Perform argument validation.
-	v.SetDraft(draft)
+	v.SetDocument(document)
 	v.SetMoniker(moniker)
 	return v
 }
@@ -28,21 +28,21 @@ func NotarizeClause(draft, moniker abs.ExpressionLike) abs.NotarizeClauseLike {
 // This type defines the structure and methods associated with a notarize
 // clause.
 type notarizeClause struct {
-	draft   abs.ExpressionLike
-	moniker abs.ExpressionLike
+	document abs.ExpressionLike
+	moniker  abs.ExpressionLike
 }
 
-// This method returns the draft expression for this notarize clause.
-func (v *notarizeClause) GetDraft() abs.ExpressionLike {
-	return v.draft
+// This method returns the document expression for this notarize clause.
+func (v *notarizeClause) GetDocument() abs.ExpressionLike {
+	return v.document
 }
 
-// This method sets the draft expression for this notarize clause.
-func (v *notarizeClause) SetDraft(draft abs.ExpressionLike) {
-	if draft == nil {
-		panic("A notarize clause requires a draft expression.")
+// This method sets the document expression for this notarize clause.
+func (v *notarizeClause) SetDocument(document abs.ExpressionLike) {
+	if document == nil {
+		panic("A notarize clause requires a document expression.")
 	}
-	v.draft = draft
+	v.document = document
 }
 
 // This method returns the citation moniker for this notarize clause.

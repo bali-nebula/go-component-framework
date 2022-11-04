@@ -58,7 +58,7 @@ func (v *attribute) SetIndex(index int, expression abs.ExpressionLike) {
 }
 
 // This method returns the list of indices for this attribute.
-func (v *attribute) GetIndices() abs.ListLike[abs.ExpressionLike] {
+func (v *attribute) GetIndices() abs.Sequential[abs.ExpressionLike] {
 	return v.indices
 }
 
