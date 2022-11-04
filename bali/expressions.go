@@ -258,7 +258,7 @@ func (v *parser) parseExponential(base abs.ExpressionLike) (abs.ExponentialLike,
 		// This is not an exponential expression.
 		return expression, token, false
 	}
-	if operator  != abs.CARET {
+	if operator != abs.CARET {
 		// This is not an exponential expression.
 		v.backupOne() // Put back the operator token.
 		return expression, token, false

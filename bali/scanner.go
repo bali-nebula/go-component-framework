@@ -1107,13 +1107,7 @@ var keywords = [][]byte{
 	[]byte("as"),
 	[]byte("any"),
 	[]byte("accept"),
-	[]byte("XOR"),
-	[]byte("SANS"),
-	[]byte("OR"),
-	[]byte("NOT"),
-	[]byte("MATCHES"),
-	[]byte("IS"),
-	[]byte("AND")}
+}
 
 // This array contains the full set of delimiters used by the Bali Document
 // Notation™ (BDN). They are in reverse order for proper matching.
@@ -1147,7 +1141,15 @@ var delimiters = [][]byte{
 	[]byte("*"),
 	[]byte(")"),
 	[]byte("("),
-	[]byte("&")}
+	[]byte("&"),
+	[]byte("XOR"),
+	[]byte("SANS"),
+	[]byte("OR"),
+	[]byte("NOT"),
+	[]byte("MATCHES"),
+	[]byte("IS"),
+	[]byte("AND"),
+}
 
 // PRIVATE FUNCTIONS
 
