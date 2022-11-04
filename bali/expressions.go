@@ -439,6 +439,7 @@ func (v *formatter) formatExpression(expression abs.ExpressionLike) {
 		v.formatLogical(logical)
 		return
 	}
+	panic("An invalid expression was passed to the formatter.")
 }
 
 // This method attempts to parse a function expression. It returns the

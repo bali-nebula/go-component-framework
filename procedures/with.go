@@ -17,20 +17,18 @@ import (
 // WITH CLAUSE IMPLEMENTATION
 
 // This constructor creates a new with clause.
-func WithClause(value abs.Symbolic, sequence abs.ExpressionLike, statements abs.ProcedureLike) abs.WithClauseLike {
+func WithClause(value abs.Symbolic, block abs.BlockLike) abs.WithClauseLike {
 	var v = &withClause{}
 	// Perform argument validation.
 	v.SetValue(value)
-	v.SetSequence(sequence)
-	v.SetStatements(statements)
+	v.SetBlock(block)
 	return v
 }
 
 // This type defines the structure and methods associated with a with clause.
 type withClause struct {
-	value      abs.Symbolic
-	sequence   abs.ExpressionLike
-	statements abs.ProcedureLike
+	value abs.Symbolic
+	block abs.BlockLike
 }
 
 // This method returns the value symbol for this with clause.
@@ -46,42 +44,45 @@ func (v *withClause) SetValue(value abs.Symbolic) {
 	v.value = value
 }
 
+// This method returns the block for this with clause.
+func (v *withClause) GetBlock() abs.BlockLike {
+	return v.block
+}
+
+// This method sets the block for this with clause.
+func (v *withClause) SetBlock(block abs.BlockLike) {
+	if block == nil {
+		panic("A with clause requires a block.")
+	}
+	v.block = block
+}
+
 // This method returns the sequence expression for this with clause.
 func (v *withClause) GetSequence() abs.ExpressionLike {
-	return v.sequence
+	return v.block.GetExpression()
 }
 
 // This method sets the sequence expression for this with clause.
 func (v *withClause) SetSequence(sequence abs.ExpressionLike) {
-	if sequence == nil {
-		panic("A with clause requires a sequence expression.")
-	}
-	v.sequence = sequence
+	v.block.SetExpression(sequence)
 }
 
-// This method returns the statement at the specified index from this while
-// clause.
+// This method returns the statement at the specified index from this with clause.
 func (v *withClause) GetStatement(index int) abs.StatementLike {
-	return v.statements.GetValue(index)
+	return v.block.GetStatement(index)
 }
 
 // This method sets the statement at the specified index for this with clause.
 func (v *withClause) SetStatement(index int, statement abs.StatementLike) {
-	if statement == nil {
-		panic("Each index in a with clause requires a statement.")
-	}
-	v.statements.SetValue(index, statement)
+	v.block.SetStatement(index, statement)
 }
 
 // This method returns the list of statements for this with clause.
-func (v *withClause) GetStatements() abs.ProcedureLike {
-	return v.statements
+func (v *withClause) GetProcedure() abs.ProcedureLike {
+	return v.block.GetProcedure()
 }
 
 // This method sets the list of statements for this with clause.
-func (v *withClause) SetStatements(statements abs.ProcedureLike) {
-	if statements == nil {
-		panic("A with clause requires a list of statements.")
-	}
-	v.statements = statements
+func (v *withClause) SetProcedure(statements abs.ProcedureLike) {
+	v.block.SetProcedure(statements)
 }

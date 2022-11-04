@@ -78,12 +78,14 @@ type EvaluateClauseLike interface {
 
 // This interface defines the methods supported by all if-clause-like types.
 type IfClauseLike interface {
+	GetBlock() BlockLike
+	SetBlock(block BlockLike)
 	GetCondition() ExpressionLike
 	SetCondition(condition ExpressionLike)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
-	GetStatements() ProcedureLike
-	SetStatements(statements ProcedureLike)
+	GetProcedure() ProcedureLike
+	SetProcedure(procedure ProcedureLike)
 }
 
 // This interface defines the methods supported by all notarize-clause-like types.
@@ -185,22 +187,26 @@ type ThrowClauseLike interface {
 
 // This interface defines the methods supported by all while-clause-like types.
 type WhileClauseLike interface {
+	GetBlock() BlockLike
+	SetBlock(block BlockLike)
 	GetCondition() ExpressionLike
 	SetCondition(condition ExpressionLike)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
-	GetStatements() ProcedureLike
-	SetStatements(statements ProcedureLike)
+	GetProcedure() ProcedureLike
+	SetProcedure(procedure ProcedureLike)
 }
 
 // This interface defines the methods supported by all with-clause-like types.
 type WithClauseLike interface {
 	GetValue() Symbolic
 	SetValue(exception Symbolic)
+	GetBlock() BlockLike
+	SetBlock(block BlockLike)
 	GetSequence() ExpressionLike
 	SetSequence(sequence ExpressionLike)
 	GetStatement(index int) StatementLike
 	SetStatement(index int, statement StatementLike)
-	GetStatements() ProcedureLike
-	SetStatements(statements ProcedureLike)
+	GetProcedure() ProcedureLike
+	SetProcedure(procedure ProcedureLike)
 }

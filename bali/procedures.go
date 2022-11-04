@@ -167,6 +167,12 @@ func (v *parser) parseBreakClause() (abs.BreakClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified break clause to the
+// state of the formatter.
+func (v *formatter) formatBreakClause(clause abs.BreakClauseLike) {
+	v.state.AppendString("break loop")
+}
+
 // This method attempts to parse a checkout clause. It returns the checkout
 // clause and whether or not the checkout clause was successfully parsed.
 func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
@@ -259,6 +265,22 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified checkout clause to the
+// state of the formatter.
+func (v *formatter) formatCheckoutClause(clause abs.CheckoutClauseLike) {
+	v.state.AppendString("checkout ")
+	var recipient = clause.GetRecipient()
+	v.formatRecipient(recipient)
+	var level = clause.GetLevel()
+	if level != nil {
+		v.state.AppendString(" at level ")
+		v.formatExpression(level)
+	}
+	v.state.AppendString(" from ")
+	var moniker = clause.GetMoniker()
+	v.formatExpression(moniker)
+}
+
 // This method attempts to parse a continue clause. It returns the continue
 // clause and whether or not the continue clause was successfully parsed.
 func (v *parser) parseContinueClause() (abs.ContinueClauseLike, *Token, bool) {
@@ -278,6 +300,12 @@ func (v *parser) parseContinueClause() (abs.ContinueClauseLike, *Token, bool) {
 		panic(message)
 	}
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified continue clause to the
+// state of the formatter.
+func (v *formatter) formatContinueClause(clause abs.ContinueClauseLike) {
+	v.state.AppendString("continue loop")
 }
 
 // This method attempts to parse a discard clause. It returns the discard
@@ -302,6 +330,14 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 	}
 	clause = pro.DiscardClause(citation)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified discard clause to the
+// state of the formatter.
+func (v *formatter) formatDiscardClause(clause abs.DiscardClauseLike) {
+	v.state.AppendString("discard ")
+	var citation = clause.GetCitation()
+	v.formatExpression(citation)
 }
 
 // This method attempts to parse an evaluate clause. It returns the evaluate
@@ -350,6 +386,19 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	return clause, token, true
 }
 
+// This method adds the canonical format for the specified evaluate clause to the
+// state of the formatter.
+func (v *formatter) formatEvaluateClause(clause abs.EvaluateClauseLike) {
+	var recipient = clause.GetRecipient()
+	v.formatRecipient(recipient)
+	v.state.AppendString(" ")
+	var operator = clause.GetOperator()
+	v.formatOperator(operator)
+	v.state.AppendString(" ")
+	var expression = clause.GetExpression()
+	v.formatExpression(expression)
+}
+
 // This method attempts to parse an if clause. It returns the if clause and
 // whether or not the if clause was successfully parsed.
 func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
@@ -371,8 +420,16 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = pro.IfClause(block.GetExpression(), block.GetProcedure())
+	clause = pro.IfClause(block)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified if clause to the
+// state of the formatter.
+func (v *formatter) formatIfClause(clause abs.IfClauseLike) {
+	v.state.AppendString("if ")
+	var block = clause.GetBlock()
+	v.formatBlock(block)
 }
 
 // This method attempts to parse a sequence of indices. It returns a list of
@@ -806,6 +863,22 @@ func (v *parser) parseRecipient() (abs.RecipientLike, *Token, bool) {
 	return recipient, token, ok
 }
 
+// This method adds the canonical format for the specified recipient to the
+// state of the formatter.
+func (v *formatter) formatRecipient(recipient abs.RecipientLike) {
+	symbol, ok := recipient.(ele.Symbol)
+	if ok {
+		v.formatSymbol(symbol)
+		return
+	}
+	attribute, ok := recipient.(abs.AttributeLike)
+	if ok {
+		v.formatAttribute(attribute)
+		return
+	}
+	panic("An invalid recipient was passed to the formatter.")
+}
+
 // This method attempts to parse a reject clause. It returns the reject
 // clause and whether or not the reject clause was successfully parsed.
 func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
@@ -1086,8 +1159,16 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = pro.WhileClause(block.GetExpression(), block.GetProcedure())
+	clause = pro.WhileClause(block)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified while clause to the
+// state of the formatter.
+func (v *formatter) formatWhileClause(clause abs.WhileClauseLike) {
+	v.state.AppendString("while ")
+	var block = clause.GetBlock()
+	v.formatBlock(block)
 }
 
 // This method attempts to parse a with clause. It returns the with clause and
@@ -1140,6 +1221,19 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 			"$procedure")
 		panic(message)
 	}
-	clause = pro.WithClause(value, block.GetExpression(), block.GetProcedure())
+	clause = pro.WithClause(value, block)
 	return clause, token, true
+}
+
+// This method adds the canonical format for the specified with clause to the
+// state of the formatter.
+func (v *formatter) formatWithClause(clause abs.WithClauseLike) {
+	v.state.AppendString("with each ")
+	var value = clause.GetValue()
+	var identifier = value.GetIdentifier()
+	v.state.AppendString("$")
+	v.formatIdentifier(identifier)
+	v.state.AppendString(" in ")
+	var block = clause.GetBlock()
+	v.formatBlock(block)
 }

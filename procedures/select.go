@@ -44,19 +44,6 @@ func (v *selectClause) SetControl(control abs.ExpressionLike) {
 	v.control = control
 }
 
-// This method returns the option at the specified index from this select clause.
-func (v *selectClause) GetOption(index int) abs.BlockLike {
-	return v.options.GetValue(index)
-}
-
-// This method sets the option at the specified index for this select clause.
-func (v *selectClause) SetOption(index int, option abs.BlockLike) {
-	if option == nil {
-		panic("Each index in a select clause requires a option block.")
-	}
-	v.options.SetValue(index, option)
-}
-
 // This method returns the list of options for this select clause.
 func (v *selectClause) GetOptions() abs.ListLike[abs.BlockLike] {
 	return v.options
@@ -68,4 +55,17 @@ func (v *selectClause) SetOptions(options abs.ListLike[abs.BlockLike]) {
 		panic("A select clause requires at least one option.")
 	}
 	v.options = options
+}
+
+// This method returns the option at the specified index from this select clause.
+func (v *selectClause) GetOption(index int) abs.BlockLike {
+	return v.options.GetValue(index)
+}
+
+// This method sets the option at the specified index for this select clause.
+func (v *selectClause) SetOption(index int, option abs.BlockLike) {
+	if option == nil {
+		panic("Each index in a select clause requires a option block.")
+	}
+	v.options.SetValue(index, option)
 }

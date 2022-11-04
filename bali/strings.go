@@ -14,7 +14,6 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
-	ref "reflect"
 	stc "strconv"
 	sts "strings"
 	uni "unicode"
@@ -219,9 +218,7 @@ func (v *formatter) formatString(sequence abs.SequenceLike) {
 		v.formatVersion(version)
 		return
 	}
-	var s = ref.ValueOf(sequence).String()
-	quote = str.Quote(`"` + s + `"`)
-	v.formatQuote(quote)
+	panic("An invalid string was passed to the formatter.")
 }
 
 // This method attempts to parse a version string. It returns the version

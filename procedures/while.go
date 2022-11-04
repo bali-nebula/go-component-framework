@@ -17,56 +17,57 @@ import (
 // WHILE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new while clause.
-func WhileClause(condition abs.ExpressionLike, statements abs.ProcedureLike) abs.WhileClauseLike {
+func WhileClause(block abs.BlockLike) abs.WhileClauseLike {
 	var v = &whileClause{}
 	// Perform argument validation.
-	v.SetCondition(condition)
-	v.SetStatements(statements)
+	v.SetBlock(block)
 	return v
 }
 
 // This type defines the structure and methods associated with a while clause.
 type whileClause struct {
-	condition  abs.ExpressionLike
-	statements abs.ProcedureLike
+	block abs.BlockLike
+}
+
+// This method returns the block for this while clause.
+func (v *whileClause) GetBlock() abs.BlockLike {
+	return v.block
+}
+
+// This method sets the block for this while clause.
+func (v *whileClause) SetBlock(block abs.BlockLike) {
+	if block == nil {
+		panic("A while clause requires a block.")
+	}
+	v.block = block
 }
 
 // This method returns the condition expression for this while clause.
 func (v *whileClause) GetCondition() abs.ExpressionLike {
-	return v.condition
+	return v.block.GetExpression()
 }
 
 // This method sets the condition expression for this while clause.
 func (v *whileClause) SetCondition(condition abs.ExpressionLike) {
-	if condition == nil {
-		panic("A while clause requires a condition expression.")
-	}
-	v.condition = condition
+	v.block.SetExpression(condition)
 }
 
-// This method returns the statement at the specified index from this while
-// clause.
+// This method returns the statement at the specified index from this while clause.
 func (v *whileClause) GetStatement(index int) abs.StatementLike {
-	return v.statements.GetValue(index)
+	return v.block.GetStatement(index)
 }
 
 // This method sets the statement at the specified index for this while clause.
 func (v *whileClause) SetStatement(index int, statement abs.StatementLike) {
-	if statement == nil {
-		panic("Each index in a while clause requires a statement.")
-	}
-	v.statements.SetValue(index, statement)
+	v.block.SetStatement(index, statement)
 }
 
 // This method returns the list of statements for this while clause.
-func (v *whileClause) GetStatements() abs.ProcedureLike {
-	return v.statements
+func (v *whileClause) GetProcedure() abs.ProcedureLike {
+	return v.block.GetProcedure()
 }
 
 // This method sets the list of statements for this while clause.
-func (v *whileClause) SetStatements(statements abs.ProcedureLike) {
-	if statements == nil {
-		panic("A while clause requires a list of statements.")
-	}
-	v.statements = statements
+func (v *whileClause) SetProcedure(statements abs.ProcedureLike) {
+	v.block.SetProcedure(statements)
 }
