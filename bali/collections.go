@@ -142,12 +142,12 @@ func (v *parser) parseCollection() (abs.CollectionLike, *Token, bool) {
 // This method adds the canonical string format for the specified collection to
 // the state of the formatter.
 func (v *formatter) formatCollection(collection abs.CollectionLike) {
-	catalog, ok := collection.(abs.CatalogLike[abs.KeyLike, abs.ComponentLike])
+	catalog, ok := collection.(abs.Sequential[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]])
 	if ok {
 		v.formatCatalog(catalog)
 		return
 	}
-	list, ok := collection.(abs.ListLike[abs.ComponentLike])
+	list, ok := collection.(abs.Sequential[abs.ComponentLike])
 	if ok {
 		v.formatList(list)
 		return

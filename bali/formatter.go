@@ -95,7 +95,7 @@ func (v *formatter) formatAny(value any) {
 	case ref.Complex64, ref.Complex128:
 		v.formatComplex(value)
 	case ref.String:
-		v.formatString(value)
+		v.formatGoString(value)
 
 	// Handle all interfaces and pointers.
 	case ref.Interface, ref.Pointer:
@@ -281,6 +281,36 @@ func (v *formatter) formatMap(value any) {
 // state of the formatter.
 func (v *formatter) formatNil() {
 	v.state.AppendString("none")
+}
+
+// This method adds the canonical element format for the specified Go string to
+// the state of the formatter.
+func (v *formatter) formatGoString(value any) {
+	pattern, ok := value.(ele.Pattern)
+	if ok {
+		v.formatPattern(pattern)
+		return
+	}
+	symbol, ok := value.(ele.Symbol)
+	if ok {
+		v.formatSymbol(symbol)
+		return
+	}
+	resource, ok := value.(ele.Resource)
+	if ok {
+		v.formatResource(resource)
+		return
+	}
+	tag, ok := value.(ele.Tag)
+	if ok {
+		v.formatTag(tag)
+		return
+	}
+	s, ok := value.(abs.StringLike)
+	if ok {
+		v.formatString(s)
+		return
+	}
 }
 
 // This method adds the canonical entity format for the specified Go struct to

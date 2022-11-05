@@ -101,7 +101,7 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComponent(component abs.ComponentLike) {
 	var entity = component.GetEntity()
-	v.formatEntity(entity)
+	v.formatAny(entity)
 	if component.IsGeneric() {
 		var context = component.GetContext()
 		v.formatContext(context)
