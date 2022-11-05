@@ -45,17 +45,14 @@ func (v *parser) parseAnnotation() (abs.AnnotationLike, *Token, bool) {
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
 func (v *formatter) formatAnnotation(annotation abs.AnnotationLike) {
-	note, ok := annotation.(abs.NoteLike)
-	if ok {
-		v.formatNote(note)
-		return
+	switch value := annotation.(type) {
+	case abs.NoteLike:
+		v.formatNote(value)
+	case abs.CommentLike:
+		v.formatComment(value)
+	default:
+		panic(fmt.Sprintf("An invalid annotation (of type %T) was passed to the formatter: %v", value, value))
 	}
-	comment, ok := annotation.(abs.CommentLike)
-	if ok {
-		v.formatComment(comment)
-		return
-	}
-	panic("An invalid annotation was passed to the formatter.")
 }
 
 // This method attempts to parse a comment. It returns a string containing the
@@ -67,14 +64,14 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 		v.backupOne()
 		return comment, token, false
 	}
-	comment = abs.CommentLike(trimIndentation(token.Value))
+	comment = com.Comment(trimIndentation(token.Value))
 	return comment, token, true
 }
 
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
 func (v *formatter) formatComment(comment abs.CommentLike) {
-	var lines = sts.Split(string(comment), "\n")
+	var lines = comment.AsLines()
 	v.state.AppendString(`!>`)
 	for _, line := range lines {
 		v.state.AppendNewline()
@@ -306,7 +303,7 @@ func (v *parser) parseNote() (abs.NoteLike, *Token, bool) {
 		v.backupOne()
 		return note, token, false
 	}
-	note = abs.NoteLike(token.Value[2:]) // Remove the leading "! ".
+	note = com.Note(token.Value[2:]) // Remove the leading "! ".
 	return note, token, true
 }
 
@@ -314,7 +311,7 @@ func (v *parser) parseNote() (abs.NoteLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatNote(note abs.NoteLike) {
 	v.state.AppendString("! ")
-	v.state.AppendString(string(note))
+	v.state.AppendString(note.AsString())
 }
 
 // This method attempts to parse a parameter containing a name and value. It

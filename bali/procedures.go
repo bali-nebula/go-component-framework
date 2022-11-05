@@ -964,17 +964,14 @@ func (v *parser) parseRecipient() (abs.RecipientLike, *Token, bool) {
 // This method adds the canonical format for the specified recipient to the
 // state of the formatter.
 func (v *formatter) formatRecipient(recipient abs.RecipientLike) {
-	symbol, ok := recipient.(ele.Symbol)
-	if ok {
-		v.formatSymbol(symbol)
-		return
+	switch value := recipient.(type) {
+	case ele.Symbol:
+		v.formatSymbol(value)
+	case abs.AttributeLike:
+		v.formatAttribute(value)
+	default:
+		panic(fmt.Sprintf("An invalid recipient (of type %T) was passed to the formatter: %v", value, value))
 	}
-	attribute, ok := recipient.(abs.AttributeLike)
-	if ok {
-		v.formatAttribute(attribute)
-		return
-	}
-	panic("An invalid recipient was passed to the formatter.")
 }
 
 // This method attempts to parse a reject clause. It returns the reject
@@ -1277,7 +1274,7 @@ func (v *formatter) formatStatement(statement abs.StatementLike) {
 		v.formatOnClause(onClause)
 	}
 	var note = statement.GetNote()
-	if len(note) > 0 {
+	if note != nil {
 		v.formatNote(note)
 	}
 }

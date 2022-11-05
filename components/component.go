@@ -48,7 +48,7 @@ func (v *component) IsGeneric() bool {
 }
 
 func (v *component) IsAnnotated() bool {
-	return len(v.note) > 0
+	return v.note != nil
 }
 
 // This method returns the entity for this component.

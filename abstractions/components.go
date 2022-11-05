@@ -12,13 +12,14 @@ package abstractions
 
 // COMPONENT INTERFACES
 
-type NoteLike string
-
-type CommentLike string
-
 type AnnotationLike any
 
 type EntityLike any
+
+// This interface defines the methods supported by all symbolic types.
+type Symbolic interface {
+	GetIdentifier() string
+}
 
 // This interface defines the methods supported by all component-like types.
 type ComponentLike interface {
@@ -39,7 +40,18 @@ type ContextLike interface {
 	SetParameters(parameters CatalogLike[Symbolic, ComponentLike])
 }
 
-// This interface defines the methods supported by all symbolic types.
-type Symbolic interface {
-	GetIdentifier() string
+// This interface defines the methods supported by all note-like types.
+type NoteLike interface {
+	IsEmpty() bool
+	GetSize() int
+	AsArray() []rune
+	AsString() string
+}
+
+// This interface defines the methods supported by all comment-like types.
+type CommentLike interface {
+	IsEmpty() bool
+	GetSize() int
+	AsArray() []rune
+	AsLines() []string
 }
