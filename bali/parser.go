@@ -92,8 +92,8 @@ func Parser(source []byte) *parser {
 	Scanner(source, tokens) // Starts scanning in a go routine.
 	var p = &parser{
 		source:   source,
-		previous: col.Stack[*Token](),
-		next:     col.Stack[*Token](),
+		previous: col.StackWithCapacity[*Token](256),
+		next:     col.StackWithCapacity[*Token](256),
 		tokens:   tokens}
 	return p
 }

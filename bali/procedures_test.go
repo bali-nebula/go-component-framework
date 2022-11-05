@@ -23,6 +23,13 @@ func TestRoundtripWithStatements(t *tes.T) {
 		`{
     return none
 }`,
+		`{
+    $foo := "bar"
+    throw [
+        $type: $bad
+        $kind: $worse
+    ]
+}`,
 	}
 
 	for index, s := range statementStrings {

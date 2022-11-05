@@ -230,6 +230,7 @@ func (v *scanner) emitToken(tType TokenType) TokenType {
 		}
 	}
 	var token = Token{tType, tValue, v.line, v.position}
+	//fmt.Println(token)
 	v.tokens <- token
 	v.firstByte = v.nextByte
 	v.position += sts.Count(tValue, "") - 1 // Add the number of runes in the token.
