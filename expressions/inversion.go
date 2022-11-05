@@ -32,6 +32,11 @@ type inversionExpression struct {
 	expression abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *inversionExpression) IsInversion() bool {
+	return true
+}
+
 // This method returns the inversion operator in this inversion expression.
 func (v *inversionExpression) GetOperator() abs.Operator {
 	return v.operator

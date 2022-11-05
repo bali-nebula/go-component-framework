@@ -32,6 +32,11 @@ type dereferenceExpression struct {
 	expression abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *dereferenceExpression) IsDereference() bool {
+	return true
+}
+
 // This method returns the dereference operator in this dereference expression.
 func (v *dereferenceExpression) GetOperator() abs.Operator {
 	return v.operator

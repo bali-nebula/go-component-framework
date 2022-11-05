@@ -12,6 +12,7 @@ package strings
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	sts "strings"
 )
 
 // NARRATIVE STRING INTERFACE
@@ -38,6 +39,12 @@ func (v Narrative) GetSize() int {
 // are in the same order as they are in the string.
 func (v Narrative) AsArray() []rune {
 	return []rune(v)
+}
+
+// This method returns all the lines in this string. The lines retrieved
+// are in the same order as they are in the string.
+func (v Narrative) AsLines() []string {
+	return sts.Split(string(v), "\n")
 }
 
 // INDEXED INTERFACE

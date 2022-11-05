@@ -30,6 +30,11 @@ type precedenceExpression struct {
 	expression abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *precedenceExpression) IsPrecedence() bool {
+	return true
+}
+
 // This method returns the expression wrapped by this precedence expression.
 func (v *precedenceExpression) GetExpression() abs.ExpressionLike {
 	return v.expression

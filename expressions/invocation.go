@@ -41,6 +41,11 @@ type invocationExpression struct {
 	arguments abs.ListLike[abs.ExpressionLike]
 }
 
+// This method is a dummy method that always returns true.
+func (v *invocationExpression) IsInvocation() bool {
+	return true
+}
+
 // This method determines whether or not this invocation expression is
 // synchronous.
 func (v *invocationExpression) IsSynchronous() bool {

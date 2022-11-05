@@ -30,6 +30,11 @@ type variableExpression struct {
 	identifier string
 }
 
+// This method is a dummy method that always returns true.
+func (v *variableExpression) IsVariable() bool {
+	return true
+}
+
 // This method returns the identifier for this variable expression.
 func (v *variableExpression) GetIdentifier() string {
 	return v.identifier

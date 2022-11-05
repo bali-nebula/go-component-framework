@@ -28,5 +28,25 @@ func TagOfSize(size int) Tag {
 }
 
 // This type defines the methods associated with a tag identifier that extends
-// the native Go byte array type.
+// the native Go string type.
 type Tag string
+
+// SEQUENTIAL INTERFACE
+
+// This method determines whether or not this tag is empty.
+func (v Tag) IsEmpty() bool {
+	return false
+}
+
+// This method returns the number of bytes contained in this tag.
+func (v Tag) GetSize() int {
+	return len(v.AsArray())
+}
+
+// This method returns all the bytes in this tag. The bytes retrieved
+// are in the same order as they are in the tag.
+func (v Tag) AsArray() []byte {
+	var encoded = string(v)
+	var bytes = uti.Base64Decode(encoded)
+	return bytes
+}

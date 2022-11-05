@@ -34,6 +34,11 @@ type chainingExpression struct {
 	second   abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *chainingExpression) IsChaining() bool {
+	return true
+}
+
 // This method returns the first expression in this chaining expression.
 func (v *chainingExpression) GetFirst() abs.ExpressionLike {
 	return v.first

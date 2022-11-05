@@ -589,6 +589,11 @@ func (v *parser) parseMainClause() (abs.ClauseLike, *Token, bool) {
 // This method adds the canonical format for the specified main clause to the
 // state of the formatter.
 func (v *formatter) formatMainClause(mainClause abs.ClauseLike) {
+	// NOTE: A type switch will only work if each case specifies a unique
+	// interface. If two different interfaces define the same method signatures
+	// they are indistinguishable as types. To get around this we have added as
+	// necessary a unique "dummy" method to each interface to guarantee that it
+	// is unique.
 	switch value := mainClause.(type) {
 	case abs.AcceptClauseLike:
 		v.formatAcceptClause(value)

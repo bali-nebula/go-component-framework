@@ -32,6 +32,11 @@ type itemExpression struct {
 	indices   abs.ListLike[abs.ExpressionLike]
 }
 
+// This method is a dummy method that always returns true.
+func (v *itemExpression) IsItem() bool {
+	return true
+}
+
 // This method returns the composite for this item expression.
 func (v *itemExpression) GetComposite() abs.ExpressionLike {
 	return v.composite

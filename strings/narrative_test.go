@@ -31,6 +31,8 @@ func TestEmptyNarrative(t *tes.T) {
 	ass.Equal(t, n0, string(v))
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
+	ass.Equal(t, 0, len(v.AsArray()))
+	ass.Equal(t, 1, len(v.AsLines()))
 }
 
 func TestNarrative(t *tes.T) {
@@ -42,6 +44,8 @@ func TestNarrative(t *tes.T) {
 	ass.Equal(t, '4', v.GetValue(-1))
 	ass.Equal(t, n2, string(str.Narrative(string(v.GetValues(5, 7)))))
 	ass.Equal(t, 6, v.GetIndex('本'))
+	ass.Equal(t, 10, len(v.AsArray()))
+	ass.Equal(t, 1, len(v.AsLines()))
 }
 
 func TestNarrativesLibrary(t *tes.T) {

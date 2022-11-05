@@ -364,82 +364,45 @@ func (v *parser) parseExpression() (abs.ExpressionLike, *Token, bool) {
 // This method adds the canonical format for the specified expression to the
 // state of the formatter.
 func (v *formatter) formatExpression(expression abs.ExpressionLike) {
-	component, ok := expression.(abs.ComponentLike)
-	if ok {
-		v.formatComponent(component)
-		return
+	// NOTE: A type switch will only work if each case specifies a unique
+	// interface. If two different interfaces define the same method signatures
+	// they are indistinguishable as types. To get around this we have added as
+	// necessary a unique "dummy" method to each interface to guarantee that it
+	// is unique.
+	switch value := expression.(type) {
+	case abs.ComponentLike:
+		v.formatComponent(value)
+	case abs.IntrinsicLike:
+		v.formatIntrinsic(value)
+	case abs.VariableLike:
+		v.formatVariable(value)
+	case abs.PrecedenceLike:
+		v.formatPrecedence(value)
+	case abs.DereferenceLike:
+		v.formatDereference(value)
+	case abs.InvocationLike:
+		v.formatInvocation(value)
+	case abs.ItemLike:
+		v.formatItem(value)
+	case abs.ChainingLike:
+		v.formatChaining(value)
+	case abs.ExponentialLike:
+		v.formatExponential(value)
+	case abs.InversionLike:
+		v.formatInversion(value)
+	case abs.ArithmeticLike:
+		v.formatArithmetic(value)
+	case abs.MagnitudeLike:
+		v.formatMagnitude(value)
+	case abs.ComparisonLike:
+		v.formatComparison(value)
+	case abs.ComplementLike:
+		v.formatComplement(value)
+	case abs.LogicalLike:
+		v.formatLogical(value)
+	default:
+		panic(fmt.Sprintf("An invalid expression (of type %T) was passed to the formatter: %v", value, value))
 	}
-	intrinsic, ok := expression.(abs.IntrinsicLike)
-	if ok {
-		v.formatIntrinsic(intrinsic)
-		return
-	}
-	variable, ok := expression.(abs.VariableLike)
-	if ok {
-		v.formatVariable(variable)
-		return
-	}
-	precedence, ok := expression.(abs.PrecedenceLike)
-	if ok {
-		v.formatPrecedence(precedence)
-		return
-	}
-	dereference, ok := expression.(abs.DereferenceLike)
-	if ok {
-		v.formatDereference(dereference)
-		return
-	}
-	invocation, ok := expression.(abs.InvocationLike)
-	if ok {
-		v.formatInvocation(invocation)
-		return
-	}
-	item, ok := expression.(abs.ItemLike)
-	if ok {
-		v.formatItem(item)
-		return
-	}
-	chaining, ok := expression.(abs.ChainingLike)
-	if ok {
-		v.formatChaining(chaining)
-		return
-	}
-	exponential, ok := expression.(abs.ExponentialLike)
-	if ok {
-		v.formatExponential(exponential)
-		return
-	}
-	inversion, ok := expression.(abs.InversionLike)
-	if ok {
-		v.formatInversion(inversion)
-		return
-	}
-	arithmetic, ok := expression.(abs.ArithmeticLike)
-	if ok {
-		v.formatArithmetic(arithmetic)
-		return
-	}
-	magnitude, ok := expression.(abs.MagnitudeLike)
-	if ok {
-		v.formatMagnitude(magnitude)
-		return
-	}
-	comparison, ok := expression.(abs.ComparisonLike)
-	if ok {
-		v.formatComparison(comparison)
-		return
-	}
-	complement, ok := expression.(abs.ComplementLike)
-	if ok {
-		v.formatComplement(complement)
-		return
-	}
-	logical, ok := expression.(abs.LogicalLike)
-	if ok {
-		v.formatLogical(logical)
-		return
-	}
-	panic("An invalid expression was passed to the formatter.")
 }
 
 // This method attempts to parse a function expression. It returns the
