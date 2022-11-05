@@ -18,6 +18,8 @@ import (
 
 type KeyLike any
 
+type PrimitiveLike any
+
 type ValueLike any
 
 type StringLike any

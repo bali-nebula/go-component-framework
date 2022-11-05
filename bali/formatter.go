@@ -14,6 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	ref "reflect"
 )
 
@@ -59,7 +60,7 @@ func (v *formatter) GetIndentation() int {
 
 // This method returns the canonical string for the specified entity.
 func (v *formatter) FormatEntity(entity abs.EntityLike) string {
-	v.formatAny(entity)
+	v.formatEntity(entity)
 	return v.state.GetResult()
 }
 
@@ -95,7 +96,7 @@ func (v *formatter) formatAny(value any) {
 	case ref.Complex64, ref.Complex128:
 		v.formatComplex(value)
 	case ref.String:
-		v.formatGoString(value)
+		v.formatString(value)
 
 	// Handle all interfaces and pointers.
 	case ref.Interface, ref.Pointer:
@@ -232,7 +233,7 @@ func (v *formatter) formatInterface(value any) {
 		v.formatList(list)
 		return
 	}
-	rng, ok := value.(abs.RangeLike[abs.ValueLike])
+	rng, ok := value.(abs.RangeLike[abs.PrimitiveLike])
 	if ok {
 		v.formatRange(rng)
 		return
@@ -285,31 +286,28 @@ func (v *formatter) formatNil() {
 
 // This method adds the canonical element format for the specified Go string to
 // the state of the formatter.
-func (v *formatter) formatGoString(value any) {
-	pattern, ok := value.(ele.Pattern)
-	if ok {
-		v.formatPattern(pattern)
-		return
-	}
-	symbol, ok := value.(ele.Symbol)
-	if ok {
-		v.formatSymbol(symbol)
-		return
-	}
-	resource, ok := value.(ele.Resource)
-	if ok {
-		v.formatResource(resource)
-		return
-	}
-	tag, ok := value.(ele.Tag)
-	if ok {
-		v.formatTag(tag)
-		return
-	}
-	s, ok := value.(abs.StringLike)
-	if ok {
-		v.formatString(s)
-		return
+func (v *formatter) formatString(s any) {
+	switch value := s.(type) {
+	case ele.Pattern:
+		v.formatPattern(value)
+	case ele.Symbol:
+		v.formatSymbol(value)
+	case ele.Resource:
+		v.formatResource(value)
+	case ele.Tag:
+		v.formatTag(value)
+	case str.Binary:
+		v.formatBinary(value)
+	case str.Moniker:
+		v.formatMoniker(value)
+	case str.Narrative:
+		v.formatNarrative(value)
+	case str.Quote:
+		v.formatQuote(value)
+	case str.Version:
+		v.formatVersion(value)
+	default:
+		panic(fmt.Sprintf("An invalid string was passed to the formatter: %v", value))
 	}
 }
 

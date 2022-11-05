@@ -11,10 +11,13 @@
 package bali
 
 import (
+	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	com "github.com/craterdog-bali/go-bali-document-notation/components"
+	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	sts "strings"
 )
 
@@ -101,7 +104,7 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComponent(component abs.ComponentLike) {
 	var entity = component.GetEntity()
-	v.formatAny(entity)
+	v.formatEntity(entity)
 	if component.IsGeneric() {
 		var context = component.GetContext()
 		v.formatContext(context)
@@ -191,27 +194,50 @@ func (v *parser) parseEntity() (abs.EntityLike, *Token, bool) {
 // This method adds the canonical format for the specified entity to the
 // state of the formatter.
 func (v *formatter) formatEntity(entity abs.EntityLike) {
-	element, ok := entity.(abs.ElementLike)
-	if ok {
-		v.formatElement(element)
-		return
+	switch value := entity.(type) {
+	case ele.Angle:
+		v.formatAngle(value)
+	case ele.Boolean:
+		v.formatBoolean(value)
+	case ele.Duration:
+		v.formatDuration(value)
+	case ele.Moment:
+		v.formatMoment(value)
+	case ele.Number:
+		v.formatNumber(value)
+	case ele.Pattern:
+		v.formatPattern(value)
+	case ele.Percentage:
+		v.formatPercentage(value)
+	case ele.Probability:
+		v.formatProbability(value)
+	case ele.Resource:
+		v.formatResource(value)
+	case ele.Symbol:
+		v.formatSymbol(value)
+	case ele.Tag:
+		v.formatTag(value)
+	case str.Binary:
+		v.formatBinary(value)
+	case str.Moniker:
+		v.formatMoniker(value)
+	case str.Narrative:
+		v.formatNarrative(value)
+	case str.Quote:
+		v.formatQuote(value)
+	case str.Version:
+		v.formatVersion(value)
+	case abs.Sequential[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]]:
+		v.formatCatalog(value)
+	case abs.Sequential[abs.ComponentLike]:
+		v.formatList(value)
+	case abs.RangeLike[abs.PrimitiveLike]:
+		v.formatRange(value)
+	case abs.Sequential[abs.StatementLike]:
+		v.formatProcedure(value)
+	default:
+		panic(fmt.Sprintf("An invalid entity (of type %T) was passed to the formatter: %v", value, value))
 	}
-	s, ok := entity.(abs.StringLike)
-	if ok {
-		v.formatString(s)
-		return
-	}
-	collection, ok := entity.(abs.CollectionLike)
-	if ok {
-		v.formatCollection(collection)
-		return
-	}
-	procedure, ok := entity.(abs.ProcedureLike)
-	if ok {
-		v.formatProcedure(procedure)
-		return
-	}
-	panic("An invalid entity was passed to the formatter.")
 }
 
 // This method attempts to parse the end-of-file (EOF) marker. It returns

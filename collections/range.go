@@ -20,7 +20,7 @@ import (
 // RANGE IMPLEMENTATION
 
 // This constructor creates a new range of values covering the specified endpoints.
-func Range[V abs.ValueLike](first V, extent abs.Extent, last V) abs.RangeLike[V] {
+func Range[V abs.PrimitiveLike](first V, extent abs.Extent, last V) abs.RangeLike[V] {
 	switch extent {
 	case abs.INCLUSIVE:
 	case abs.LEFT:
@@ -37,7 +37,7 @@ func Range[V abs.ValueLike](first V, extent abs.Extent, last V) abs.RangeLike[V]
 // This type defines the structure and methods associated with a range of values.
 // This type is parameterized as follows:
 //   - V is any primitive type.
-type ranje[V abs.ValueLike] struct {
+type ranje[V abs.PrimitiveLike] struct {
 	first  V
 	extent abs.Extent
 	last   V
@@ -160,7 +160,7 @@ func (v *ranje[V]) SetLast(value V) {
 // type T.
 func (v *ranje[V]) indexToValue(index int) V {
 	var template V
-	var value abs.ValueLike = template
+	var value abs.PrimitiveLike = template
 	switch value.(type) {
 	case uint8:
 		value = uint8(index)
@@ -184,7 +184,7 @@ func (v *ranje[V]) indexToValue(index int) V {
 
 // This function converts the type of the specified value to an integer type.
 func (v *ranje[V]) valueToIndex(value V) int {
-	var template abs.ValueLike = value
+	var template abs.PrimitiveLike = value
 	switch index := template.(type) {
 	case uint8:
 		return int(index)

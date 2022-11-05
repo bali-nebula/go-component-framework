@@ -11,7 +11,6 @@
 package bali
 
 import (
-	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 	stc "strconv"
@@ -168,37 +167,6 @@ func (v *parser) parseString() (abs.StringLike, *Token, bool) {
 		s = nil
 	}
 	return s, token, ok
-}
-
-// This method adds the canonical string format for the specified string to the
-// state of the formatter.
-func (v *formatter) formatString(s abs.StringLike) {
-	binary, ok := s.(str.Binary)
-	if ok {
-		v.formatBinary(binary)
-		return
-	}
-	moniker, ok := s.(str.Moniker)
-	if ok {
-		v.formatMoniker(moniker)
-		return
-	}
-	narrative, ok := s.(str.Narrative)
-	if ok {
-		v.formatNarrative(narrative)
-		return
-	}
-	quote, ok := s.(str.Quote)
-	if ok {
-		v.formatQuote(quote)
-		return
-	}
-	version, ok := s.(str.Version)
-	if ok {
-		v.formatVersion(version)
-		return
-	}
-	panic(fmt.Sprintf("An invalid string was passed to the formatter: %v", s))
 }
 
 // This method attempts to parse a version string. It returns the version

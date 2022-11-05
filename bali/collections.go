@@ -15,6 +15,8 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	str "github.com/craterdog-bali/go-bali-document-notation/strings"
 )
 
 // This method attempts to parse an association between a key and value. It
@@ -54,7 +56,7 @@ func (v *parser) parseAssociation() (abs.AssociationLike[abs.KeyLike, abs.Compon
 // state of the formatter.
 func (v *formatter) formatAssociation(association abs.AssociationLike[abs.KeyLike, abs.ComponentLike]) {
 	var key = association.GetKey()
-	v.formatAny(key)
+	v.formatPrimitive(key)
 	v.state.AppendString(": ")
 	var value = association.GetValue()
 	v.formatComponent(value)
@@ -137,27 +139,6 @@ func (v *parser) parseCollection() (abs.CollectionLike, *Token, bool) {
 		collection, token, ok = v.parseList()
 	}
 	return collection, token, ok
-}
-
-// This method adds the canonical string format for the specified collection to
-// the state of the formatter.
-func (v *formatter) formatCollection(collection abs.CollectionLike) {
-	catalog, ok := collection.(abs.Sequential[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]])
-	if ok {
-		v.formatCatalog(catalog)
-		return
-	}
-	list, ok := collection.(abs.Sequential[abs.ComponentLike])
-	if ok {
-		v.formatList(list)
-		return
-	}
-	rng, ok := collection.(abs.RangeLike[abs.ValueLike])
-	if ok {
-		v.formatRange(rng)
-		return
-	}
-	panic("An invalid collection was passed to the formatter.")
 }
 
 // This method attempts to parse a catalog collection with inline associations.
@@ -384,11 +365,11 @@ func (v *parser) parseMultilineValues() (abs.ListLike[abs.ComponentLike], *Token
 
 // This method attempts to parse a primitive. It returns the primitive and
 // whether or not the primitive was successfully parsed.
-func (v *parser) parsePrimitive() (abs.ValueLike, *Token, bool) {
+func (v *parser) parsePrimitive() (abs.PrimitiveLike, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
-	var primitive abs.ValueLike
+	var primitive abs.PrimitiveLike
 	primitive, token, ok = v.parseElement()
 	if !ok {
 		primitive, token, ok = v.parseString()
@@ -400,16 +381,57 @@ func (v *parser) parsePrimitive() (abs.ValueLike, *Token, bool) {
 	return primitive, token, ok
 }
 
+// This method adds the canonical format for the specified primitive to the
+// state of the formatter.
+func (v *formatter) formatPrimitive(primitive abs.PrimitiveLike) {
+	switch value := primitive.(type) {
+	case ele.Angle:
+		v.formatAngle(value)
+	case ele.Boolean:
+		v.formatBoolean(value)
+	case ele.Duration:
+		v.formatDuration(value)
+	case ele.Moment:
+		v.formatMoment(value)
+	case ele.Number:
+		v.formatNumber(value)
+	case ele.Pattern:
+		v.formatPattern(value)
+	case ele.Percentage:
+		v.formatPercentage(value)
+	case ele.Probability:
+		v.formatProbability(value)
+	case ele.Resource:
+		v.formatResource(value)
+	case ele.Symbol:
+		v.formatSymbol(value)
+	case ele.Tag:
+		v.formatTag(value)
+	case str.Binary:
+		v.formatBinary(value)
+	case str.Moniker:
+		v.formatMoniker(value)
+	case str.Narrative:
+		v.formatNarrative(value)
+	case str.Quote:
+		v.formatQuote(value)
+	case str.Version:
+		v.formatVersion(value)
+	default:
+		panic(fmt.Sprintf("An invalid primitive (of type %T) was passed to the formatter: %v", value, value))
+	}
+}
+
 // This method attempts to parse a range collection. It returns the range
 // collection and whether or not the range collection was successfully parsed.
-func (v *parser) parseRange() (abs.RangeLike[abs.ValueLike], *Token, bool) {
+func (v *parser) parseRange() (abs.RangeLike[abs.PrimitiveLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var left, right string
-	var first abs.ValueLike
+	var first abs.PrimitiveLike
 	var extent abs.Extent
-	var last abs.ValueLike
-	var rng abs.RangeLike[abs.ValueLike]
+	var last abs.PrimitiveLike
+	var rng abs.RangeLike[abs.PrimitiveLike]
 	left, token, ok = v.parseDelimiter("[")
 	if !ok {
 		left, token, ok = v.parseDelimiter("(")
@@ -459,7 +481,7 @@ func (v *parser) parseRange() (abs.RangeLike[abs.ValueLike], *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(rng abs.RangeLike[abs.ValueLike]) {
+func (v *formatter) formatRange(rng abs.RangeLike[abs.PrimitiveLike]) {
 	var extent = rng.GetExtent()
 	var left, right string
 	switch extent {
@@ -477,12 +499,12 @@ func (v *formatter) formatRange(rng abs.RangeLike[abs.ValueLike]) {
 	v.state.AppendString(left)
 	var first = rng.GetFirst()
 	if first != nil {
-		v.formatAny(first)
+		v.formatPrimitive(first)
 	}
 	v.state.AppendString("..")
 	var last = rng.GetLast()
 	if last != nil {
-		v.formatAny(last)
+		v.formatPrimitive(last)
 	}
 	v.state.AppendString(right)
 }
