@@ -27,7 +27,7 @@ var grammar = map[string]string{
 	"$annotation":   `NOTE | COMMENT`,
 	"$arguments":    `"(" [expression {"," expression}] ")"`,
 	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
-	"$association":  `primitive ":" component`,
+	"$association":  `key ":" value`,
 	"$associations": `
     association {"," association} |
     EOL <association EOL> |
@@ -80,28 +80,29 @@ var grammar = map[string]string{
 	"$inversion":  `("-" | "/" | "*") expression`,
 	"$invocation": `target ("." | "<-") method arguments`,
 	"$item":       `composite "[" indices "]"`,
+	"$key":        `primitive`,
 	"$list":       `"[" values "]"`,
 	"$logical":    `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitude":  `"|" expression "|"`,
 	"$mainClause": `
-    ifClause |
-    selectClause |
-    withClause |
-    whileClause |
-    continueClause |
-    breakClause |
-    returnClause |
-    throwClause |
-    saveClause |
-    discardClause |
-    notarizeClause |
-    checkoutClause |
-    publishClause |
-    postClause |
-    retrieveClause |
-    acceptClause |
-    rejectClause |
-    evaluateClause`,
+    acceptClause   |  ! "accept" message
+    breakClause    |  ! "break" "loop"
+    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
+    continueClause |  ! "continue" "loop"
+    discardClause  |  ! "discard" document
+    evaluateClause |  ! recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=") expression
+    ifClause       |  ! "if" condition "do" procedure
+    notarizeClause |  ! "notarize" document "as" moniker
+    postClause     |  ! "post" message "to" bag
+    publishClause  |  ! "publish" event
+    rejectClause   |  ! "reject" message
+    retrieveClause |  ! "retrieve" recipient "from" bag
+    returnClause   |  ! "return" result
+    saveClause     |  ! "save" document "as" recipient
+    selectClause   |  ! "select" target <"matching" pattern "do" procedure>
+    throwClause    |  ! "throw" exception
+    whileClause    |  ! "while" condition "do" procedure
+    withClause        ! "with" "each" segment "in" sequence "do" procedure`,
 	"$message":        `expression`,
 	"$method":         `IDENTIFIER`,
 	"$moniker":        `expression`,
@@ -109,7 +110,7 @@ var grammar = map[string]string{
 	"$notarizeClause": `"notarize" document "as" moniker`,
 	"$onClause":       `"on" "$exception" <"matching" pattern "do" procedure>`,
 	"$ordinal":        `expression`,
-	"$parameter":      `name ":" component`,
+	"$parameter":      `name ":" value`,
 	"$parameters": `
     parameter {"," parameter} |
     EOL <parameter EOL>  ! At least one parameter is required.`,
@@ -126,6 +127,7 @@ var grammar = map[string]string{
 	"$retrieveClause": `"retrieve" recipient "from" bag`,
 	"$returnClause":   `"return" result`,
 	"$saveClause":     `"save" document "as" recipient`,
+	"$segment":        `SYMBOL`,
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
 	"$sequence":       `expression`,
 	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
@@ -137,14 +139,14 @@ var grammar = map[string]string{
 	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$target":      `expression`,
 	"$throwClause": `"throw" exception`,
-	"$value":       `SYMBOL`,
+	"$value":       `component`,
 	"$values": `
     component {"," component} |
     EOL <component EOL>       |
     ! No components.`,
 	"$variable":    `IDENTIFIER`,
 	"$whileClause": `"while" condition "do" procedure`,
-	"$withClause":  `"with" "each" value "in" sequence "do" procedure`,
+	"$withClause":  `"with" "each" segment "in" sequence "do" procedure`,
 	"$ANGLE":       `"~" (REAL | ZERO)`,
 	"$ANY":         `"any"`,
 	"$AUTHORITY":   `<~"/">`,
