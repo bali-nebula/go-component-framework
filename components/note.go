@@ -10,14 +10,12 @@
 
 package components
 
-// NOTE INTERFACE
+// NOTE IMPLEMENTATION
 
 // This type defines the methods associated with a note annotation that
 // extends the native Go string type and represents the string of runes that
 // make up the note.
 type Note string
-
-// SEQUENTIAL INTERFACE
 
 // This method determines whether or not this note is empty.
 func (v Note) IsEmpty() bool {

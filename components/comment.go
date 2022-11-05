@@ -14,14 +14,12 @@ import (
 	sts "strings"
 )
 
-// COMMENT INTERFACE
+// COMMENT IMPLEMENTATION
 
 // This type defines the methods associated with a comment annotation that
 // extends the native Go string type and represents the string of runes that
 // make up the comment.
 type Comment string
-
-// SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.
 func (v Comment) IsEmpty() bool {
