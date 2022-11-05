@@ -30,6 +30,11 @@ type discardClause struct {
 	citation abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *discardClause) IsDiscardClause() bool {
+	return true
+}
+
 // This method returns the citation expression for this discard clause.
 func (v *discardClause) GetCitation() abs.ExpressionLike {
 	return v.citation

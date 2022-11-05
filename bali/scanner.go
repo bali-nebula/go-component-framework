@@ -104,7 +104,7 @@ func (v Token) String() string {
 	default:
 		s = fmt.Sprintf("%q", v.Value)
 	}
-	return fmt.Sprintf("Token [type: %s, line: %2d, position: %2d]: %s", v.Type, v.Line, v.Position, s)
+	return fmt.Sprintf("Token [type: %s, line: %d, position: %d]: %s", v.Type, v.Line, v.Position, s)
 }
 
 // SCANNER
@@ -230,7 +230,6 @@ func (v *scanner) emitToken(tType TokenType) TokenType {
 		}
 	}
 	var token = Token{tType, tValue, v.line, v.position}
-	//fmt.Println(token)
 	v.tokens <- token
 	v.firstByte = v.nextByte
 	v.position += sts.Count(tValue, "") - 1 // Add the number of runes in the token.

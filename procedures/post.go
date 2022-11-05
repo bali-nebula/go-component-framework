@@ -32,6 +32,11 @@ type postClause struct {
 	bag     abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *postClause) IsPostClause() bool {
+	return true
+}
+
 // This method returns the message expression for this post clause.
 func (v *postClause) GetMessage() abs.ExpressionLike {
 	return v.message

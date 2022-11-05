@@ -11,6 +11,7 @@
 package bali
 
 import (
+	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
@@ -32,7 +33,7 @@ func (v *parser) parseAcceptClause() (abs.AcceptClauseLike, *Token, bool) {
 	}
 	message, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$message",
 			"$acceptClause",
 			"$message")
@@ -71,7 +72,7 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 	}
 	indices, token, ok = v.parseIndices()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$indices",
 			"$attribute",
 			"$variable",
@@ -80,7 +81,7 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("]",
 			"$attribute",
 			"$variable",
@@ -112,7 +113,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	var block abs.BlockLike
 	expression, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$ifClause",
 			"$selectClause",
@@ -123,7 +124,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	}
 	statements, token, ok = v.parseProcedure()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$statements",
 			"$ifClause",
 			"$selectClause",
@@ -159,7 +160,7 @@ func (v *parser) parseBreakClause() (abs.BreakClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("loop")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("loop",
 			"$breakClause")
 		panic(message)
@@ -189,7 +190,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	}
 	recipient, token, ok = v.parseRecipient()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$recipient",
 			"$checkoutClause",
 			"$recipient",
@@ -206,7 +207,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 		// There is an at level part to this clause.
 		_, token, ok = v.parseKeyword("level")
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("level",
 				"$checkoutClause",
 				"$recipient",
@@ -220,7 +221,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 		}
 		level, token, ok = v.parseExpression()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$expression",
 				"$checkoutClause",
 				"$recipient",
@@ -235,7 +236,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("from")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("from",
 			"$checkoutClause",
 			"$recipient",
@@ -249,7 +250,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	}
 	moniker, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$moniker",
 			"$checkoutClause",
 			"$recipient",
@@ -294,7 +295,7 @@ func (v *parser) parseContinueClause() (abs.ContinueClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("loop")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("loop",
 			"$continueClause")
 		panic(message)
@@ -322,7 +323,7 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 	}
 	citation, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$document",
 			"$discardClause",
 			"$document")
@@ -356,7 +357,7 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	}
 	operator, token, ok = v.parseOperator()
 	if !ok || operator < abs.ASSIGN || operator > abs.QUOTIENT {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("operator",
 			"$evaluateClause",
 			"$recipient",
@@ -369,7 +370,7 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	expression, token, ok = v.parseExpression()
 	if !ok {
 		if token != nil {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$expression",
 				"$evaluateClause",
 				"$recipient",
@@ -413,7 +414,7 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 	}
 	block, token, ok = v.parseBlock()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$condition",
 			"$ifClause",
 			"$condition",
@@ -442,7 +443,7 @@ func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool)
 	index, token, ok = v.parseExpression()
 	// There must be at least one index.
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$indices")
 		panic(message)
@@ -457,7 +458,7 @@ func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool)
 		}
 		index, token, ok = v.parseExpression()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$expression",
 				"$indices")
 			panic(message)
@@ -496,7 +497,7 @@ func (v *parser) parseInlineStatements() (abs.ListLike[abs.StatementLike], *Toke
 	statement, token, ok = v.parseStatement()
 	if !ok {
 		// A non-empty list must have at least one statement.
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$statement",
 			"$statements",
 			"$statement")
@@ -512,7 +513,7 @@ func (v *parser) parseInlineStatements() (abs.ListLike[abs.StatementLike], *Toke
 		}
 		statement, token, ok = v.parseStatement()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$statement",
 				"$statements",
 				"$statement")
@@ -588,97 +589,46 @@ func (v *parser) parseMainClause() (abs.ClauseLike, *Token, bool) {
 // This method adds the canonical format for the specified main clause to the
 // state of the formatter.
 func (v *formatter) formatMainClause(mainClause abs.ClauseLike) {
-	acceptClause, ok := mainClause.(abs.AcceptClauseLike)
-	if ok {
-		v.formatAcceptClause(acceptClause)
-		return
+	switch value := mainClause.(type) {
+	case abs.AcceptClauseLike:
+		v.formatAcceptClause(value)
+	case abs.BreakClauseLike:
+		v.formatBreakClause(value)
+	case abs.CheckoutClauseLike:
+		v.formatCheckoutClause(value)
+	case abs.ContinueClauseLike:
+		v.formatContinueClause(value)
+	case abs.DiscardClauseLike:
+		v.formatDiscardClause(value)
+	case abs.EvaluateClauseLike:
+		v.formatEvaluateClause(value)
+	case abs.IfClauseLike:
+		v.formatIfClause(value)
+	case abs.NotarizeClauseLike:
+		v.formatNotarizeClause(value)
+	case abs.PostClauseLike:
+		v.formatPostClause(value)
+	case abs.PublishClauseLike:
+		v.formatPublishClause(value)
+	case abs.RejectClauseLike:
+		v.formatRejectClause(value)
+	case abs.RetrieveClauseLike:
+		v.formatRetrieveClause(value)
+	case abs.ReturnClauseLike:
+		v.formatReturnClause(value)
+	case abs.SaveClauseLike:
+		v.formatSaveClause(value)
+	case abs.SelectClauseLike:
+		v.formatSelectClause(value)
+	case abs.ThrowClauseLike:
+		v.formatThrowClause(value)
+	case abs.WhileClauseLike:
+		v.formatWhileClause(value)
+	case abs.WithClauseLike:
+		v.formatWithClause(value)
+	default:
+		panic(fmt.Sprintf("An invalid main clause (of type %T) was passed to the formatter: %v", value, value))
 	}
-	breakClause, ok := mainClause.(abs.BreakClauseLike)
-	if ok {
-		v.formatBreakClause(breakClause)
-		return
-	}
-	checkoutClause, ok := mainClause.(abs.CheckoutClauseLike)
-	if ok {
-		v.formatCheckoutClause(checkoutClause)
-		return
-	}
-	continueClause, ok := mainClause.(abs.ContinueClauseLike)
-	if ok {
-		v.formatContinueClause(continueClause)
-		return
-	}
-	discardClause, ok := mainClause.(abs.DiscardClauseLike)
-	if ok {
-		v.formatDiscardClause(discardClause)
-		return
-	}
-	evaluateClause, ok := mainClause.(abs.EvaluateClauseLike)
-	if ok {
-		v.formatEvaluateClause(evaluateClause)
-		return
-	}
-	ifClause, ok := mainClause.(abs.IfClauseLike)
-	if ok {
-		v.formatIfClause(ifClause)
-		return
-	}
-	notarizeClause, ok := mainClause.(abs.NotarizeClauseLike)
-	if ok {
-		v.formatNotarizeClause(notarizeClause)
-		return
-	}
-	postClause, ok := mainClause.(abs.PostClauseLike)
-	if ok {
-		v.formatPostClause(postClause)
-		return
-	}
-	publishClause, ok := mainClause.(abs.PublishClauseLike)
-	if ok {
-		v.formatPublishClause(publishClause)
-		return
-	}
-	rejectClause, ok := mainClause.(abs.RejectClauseLike)
-	if ok {
-		v.formatRejectClause(rejectClause)
-		return
-	}
-	retrieveClause, ok := mainClause.(abs.RetrieveClauseLike)
-	if ok {
-		v.formatRetrieveClause(retrieveClause)
-		return
-	}
-	returnClause, ok := mainClause.(abs.ReturnClauseLike)
-	if ok {
-		v.formatReturnClause(returnClause)
-		return
-	}
-	saveClause, ok := mainClause.(abs.SaveClauseLike)
-	if ok {
-		v.formatSaveClause(saveClause)
-		return
-	}
-	selectClause, ok := mainClause.(abs.SelectClauseLike)
-	if ok {
-		v.formatSelectClause(selectClause)
-		return
-	}
-	throwClause, ok := mainClause.(abs.ThrowClauseLike)
-	if ok {
-		v.formatThrowClause(throwClause)
-		return
-	}
-	whileClause, ok := mainClause.(abs.WhileClauseLike)
-	if ok {
-		v.formatWhileClause(whileClause)
-		return
-	}
-	withClause, ok := mainClause.(abs.WithClauseLike)
-	if ok {
-		v.formatWithClause(withClause)
-		return
-	}
-	panic("An invalid main clause was passed to the formatter.")
 }
 
 // This method attempts to parse a list of multiline statements. It returns the
@@ -692,8 +642,8 @@ func (v *parser) parseMultilineStatements() (abs.ListLike[abs.StatementLike], *T
 	statement, token, ok = v.parseStatement()
 	if !ok {
 		// A non-empty list must have at least one statement.
-		var message = v.formatError("An unexpected token was received by the parser:", token)
-		message += generateGrammar("$component",
+		var message = v.formatError(token)
+		message += generateGrammar("$statement",
 			"$statements",
 			"$statement")
 		panic(message)
@@ -703,7 +653,7 @@ func (v *parser) parseMultilineStatements() (abs.ListLike[abs.StatementLike], *T
 		// Every statement must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("EOL",
 				"$statements",
 				"$statement")
@@ -733,7 +683,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	}
 	document, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$document",
 			"$notarizeClause",
 			"$document",
@@ -742,7 +692,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("as")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("as",
 			"$notarizeClause",
 			"$document",
@@ -751,7 +701,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	}
 	moniker, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$moniker",
 			"$notarizeClause",
 			"$document",
@@ -789,7 +739,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	}
 	exception, token, ok = v.parseSymbol()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$exception",
 			"$onClause",
 			"$exception",
@@ -804,7 +754,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 		}
 		block, token, ok = v.parseBlock()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$pattern",
 				"$onClause",
 				"$exception",
@@ -816,7 +766,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	}
 	// There must be at least one matching block expression.
 	if blocks.IsEmpty() {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$pattern",
 			"$onClause",
 			"$exception",
@@ -860,7 +810,7 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	}
 	message, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$message",
 			"$postClause",
 			"$message",
@@ -869,7 +819,7 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("to")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("to",
 			"$postClause",
 			"$message",
@@ -878,7 +828,7 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 	}
 	bag, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$bag",
 			"$postClause",
 			"$message",
@@ -929,7 +879,7 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter("}")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("}",
 			"$procedure",
 			"$statements",
@@ -975,7 +925,7 @@ func (v *parser) parsePublishClause() (abs.PublishClauseLike, *Token, bool) {
 	}
 	event, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$event",
 			"$publishClause",
 			"$event")
@@ -1036,7 +986,7 @@ func (v *parser) parseRejectClause() (abs.RejectClauseLike, *Token, bool) {
 	}
 	message, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$message",
 			"$rejectClause",
 			"$message")
@@ -1069,7 +1019,7 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 	}
 	recipient, token, ok = v.parseRecipient()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$recipient",
 			"$retrieveClause",
 			"$recipient",
@@ -1082,7 +1032,7 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("from")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("from",
 			"$retrieveClause",
 			"$recipient",
@@ -1095,7 +1045,7 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 	}
 	bag, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$bag",
 			"$retrieveClause",
 			"$recipient",
@@ -1135,7 +1085,7 @@ func (v *parser) parseReturnClause() (abs.ReturnClauseLike, *Token, bool) {
 	}
 	result, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$result",
 			"$returnClause",
 			"$result")
@@ -1168,7 +1118,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	}
 	document, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$document",
 			"$saveClause",
 			"$document",
@@ -1181,7 +1131,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("as")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("as",
 			"$saveClause",
 			"$document",
@@ -1194,7 +1144,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 	}
 	recipient, token, ok = v.parseRecipient()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$recipient",
 			"$saveClause",
 			"$document",
@@ -1236,7 +1186,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	}
 	target, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$target",
 			"$selectClause",
 			"$target",
@@ -1250,7 +1200,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 		}
 		block, token, ok = v.parseBlock()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$pattern",
 				"$selectClause",
 				"$target",
@@ -1262,7 +1212,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	}
 	// There must be at least one matching block expression.
 	if blocks.IsEmpty() {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$pattern",
 			"$selectClause",
 			"$target",
@@ -1341,7 +1291,7 @@ func (v *parser) parseThrowClause() (abs.ThrowClauseLike, *Token, bool) {
 	}
 	exception, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$exception",
 			"$throwClause",
 			"$exception")
@@ -1373,7 +1323,7 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 	}
 	block, token, ok = v.parseBlock()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$condition",
 			"$whileClause",
 			"$condition",
@@ -1407,7 +1357,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("each")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("each",
 			"$withClause",
 			"$value",
@@ -1416,7 +1366,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	}
 	value, token, ok = v.parseSymbol()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$value",
 			"$withClause",
 			"$value",
@@ -1425,7 +1375,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	}
 	_, token, ok = v.parseKeyword("in")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("in",
 			"$withClause",
 			"$value",
@@ -1434,7 +1384,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	}
 	block, token, ok = v.parseBlock()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$sequence",
 			"$withClause",
 			"$value",

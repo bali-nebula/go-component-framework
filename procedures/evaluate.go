@@ -34,6 +34,11 @@ type evaluateClause struct {
 	expression abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *evaluateClause) IsEvaluateClause() bool {
+	return true
+}
+
 // This method returns the recipient for this evaluate clause.
 func (v *evaluateClause) GetRecipient() abs.RecipientLike {
 	return v.recipient

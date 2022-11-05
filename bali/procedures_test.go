@@ -20,6 +20,9 @@ import (
 func TestRoundtripWithStatements(t *tes.T) {
 	var statementStrings = []string{
 		`{ }`,
+		`{
+    return none
+}`,
 	}
 
 	for index, s := range statementStrings {

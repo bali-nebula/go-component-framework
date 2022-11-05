@@ -38,7 +38,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 	if ok {
 		_, token, ok = parser.parseEOL() // Required by POSIX.
 		if !ok {
-			var message = parser.formatError("An unexpected token was received by the parser:", token)
+			var message = parser.formatError(token)
 			message += generateGrammar("EOL",
 				"$source",
 				"$component",
@@ -51,7 +51,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 		}
 		_, token, ok = parser.parseEOF()
 		if !ok {
-			var message = parser.formatError("An unexpected token was received by the parser:", token)
+			var message = parser.formatError(token)
 			message += generateGrammar("EOF",
 				"$source",
 				"$component",
@@ -63,7 +63,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 			panic(message)
 		}
 	} else {
-		var message = parser.formatError("An unexpected token was received by the parser:", token)
+		var message = parser.formatError(token)
 		message += generateGrammar("$component",
 			"$source",
 			"$component",
@@ -115,12 +115,11 @@ func (v *parser) nextToken() *Token {
 		if !ok {
 			panic("The token channel terminated without an EOF or error token.")
 		}
-		if token.Type == TokenError {
-			panic(v.formatError(
-				"An unexpected character was encountered while scanning the input: '"+token.Value+"'",
-				&token))
-		}
 		next = &token
+		if next.Type == TokenError {
+			var message = v.formatError(next)
+			panic(message)
+		}
 	} else {
 		next = v.next.RemoveTop()
 	}
@@ -140,8 +139,8 @@ func (v *parser) backupOne() {
 
 // This method returns an error message containing the context for a parsing
 // error.
-func (v *parser) formatError(message string, token *Token) string {
-	message += "\n\n"
+func (v *parser) formatError(token *Token) string {
+	var message = fmt.Sprintf("An unexpected token was received by the parser: %v\n\n", token)
 	var line = token.Line
 	var lines = sts.Split(string(v.source), "\n")
 

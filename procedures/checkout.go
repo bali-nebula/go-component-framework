@@ -34,6 +34,11 @@ type checkoutClause struct {
 	moniker   abs.ExpressionLike // A moniker to the citation for the document to be checked out.
 }
 
+// This method is a dummy method that always returns true.
+func (v *checkoutClause) IsCheckoutClause() bool {
+	return true
+}
+
 // This method returns the recipient for this checkout clause.
 func (v *checkoutClause) GetRecipient() abs.RecipientLike {
 	return v.recipient

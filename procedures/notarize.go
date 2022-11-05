@@ -32,6 +32,11 @@ type notarizeClause struct {
 	moniker  abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *notarizeClause) IsNotarizeClause() bool {
+	return true
+}
+
 // This method returns the document expression for this notarize clause.
 func (v *notarizeClause) GetDocument() abs.ExpressionLike {
 	return v.document

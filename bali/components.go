@@ -130,7 +130,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	}
 	parameters, token, ok = v.parseParameters()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$parameter",
 			"$context",
 			"$parameters",
@@ -140,7 +140,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar(")",
 			"$context",
 			"$parameters",
@@ -285,7 +285,7 @@ func (v *formatter) formatIdentifier(identifier string) {
 // the token and whether or not the keyword was found.
 func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
 	var token = v.nextToken()
-	if token.Type == TokenKeyword || token.Value != keyword {
+	if token.Type != TokenKeyword || token.Value != keyword {
 		v.backupOne()
 		return keyword, token, false
 	}

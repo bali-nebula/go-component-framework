@@ -41,7 +41,7 @@ func (v *parser) parseAssociation() (abs.AssociationLike[abs.KeyLike, abs.Compon
 	// This must be an association.
 	value, token, ok = v.parseComponent()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$component",
 			"$association",
 			"$primitive",
@@ -90,7 +90,7 @@ func (v *parser) parseCatalog() (abs.CatalogLike[abs.KeyLike, abs.ComponentLike]
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("]",
 			"$collection",
 			"$values")
@@ -175,7 +175,7 @@ func (v *parser) parseInlineAssociations() (abs.CatalogLike[abs.KeyLike, abs.Com
 		}
 		association, token, ok = v.parseAssociation()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$association",
 				"$catalog",
 				"$association",
@@ -204,7 +204,7 @@ func (v *parser) parseInlineValues() (abs.ListLike[abs.ComponentLike], *Token, b
 	value, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty list must have at least one component value.
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$component",
 			"$list",
 			"$component")
@@ -220,7 +220,7 @@ func (v *parser) parseInlineValues() (abs.ListLike[abs.ComponentLike], *Token, b
 		}
 		value, token, ok = v.parseComponent()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$component",
 				"$list",
 				"$component")
@@ -258,7 +258,7 @@ func (v *parser) parseList() (abs.ListLike[abs.ComponentLike], *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("]",
 			"$list",
 			"$component")
@@ -309,7 +309,7 @@ func (v *parser) parseMultilineAssociations() (abs.CatalogLike[abs.KeyLike, abs.
 		// Every association must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("EOL",
 				"$catalog",
 				"$association",
@@ -337,7 +337,7 @@ func (v *parser) parseMultilineValues() (abs.ListLike[abs.ComponentLike], *Token
 	value, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty list must have at least one value.
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$component",
 			"$list",
 			"$component")
@@ -348,7 +348,7 @@ func (v *parser) parseMultilineValues() (abs.ListLike[abs.ComponentLike], *Token
 		// Every value must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("EOL",
 				"$list",
 				"$component")
@@ -454,7 +454,7 @@ func (v *parser) parseRange() (abs.RangeLike[abs.PrimitiveLike], *Token, bool) {
 	if !ok {
 		right, token, ok = v.parseDelimiter(")")
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("right bracket",
 				"$range",
 				"$primitive")

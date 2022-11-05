@@ -42,7 +42,7 @@ func (v *parser) parseArguments() (abs.ListLike[abs.ExpressionLike], *Token, boo
 		}
 		argument, token, ok = v.parseExpression()
 		if !ok {
-			var message = v.formatError("An unexpected token was received by the parser:", token)
+			var message = v.formatError(token)
 			message += generateGrammar("$expression",
 				"$arguments")
 			panic(message)
@@ -50,7 +50,7 @@ func (v *parser) parseArguments() (abs.ListLike[abs.ExpressionLike], *Token, boo
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar(")",
 			"$intrinsic",
 			"$function",
@@ -98,7 +98,7 @@ func (v *parser) parseArithmetic(first abs.ExpressionLike) (abs.ArithmeticLike, 
 	}
 	second, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$arithmetic")
 		panic(message)
@@ -141,7 +141,7 @@ func (v *parser) parseChaining(first abs.ExpressionLike) (abs.ChainingLike, *Tok
 	}
 	second, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$chaining")
 		panic(message)
@@ -184,7 +184,7 @@ func (v *parser) parseComparison(first abs.ExpressionLike) (abs.ComparisonLike, 
 	}
 	second, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$comparison")
 		panic(message)
@@ -227,7 +227,7 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 	}
 	logical, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$complement")
 		panic(message)
@@ -266,7 +266,7 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 	}
 	reference, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$dereference")
 		panic(message)
@@ -305,7 +305,7 @@ func (v *parser) parseExponential(base abs.ExpressionLike) (abs.ExponentialLike,
 	}
 	exponent, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$exponential")
 		panic(message)
@@ -458,7 +458,7 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 	}
 	arguments, token, ok = v.parseArguments()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$intrinsic",
 			"$function",
@@ -499,7 +499,7 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	}
 	numeric, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$inversion")
 		panic(message)
@@ -539,7 +539,7 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 	}
 	message, token, ok = v.parseIdentifier()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$method",
 			"$invocation",
 			"$method",
@@ -548,7 +548,7 @@ func (v *parser) parseInvocation(target abs.ExpressionLike) (abs.InvocationLike,
 	}
 	arguments, token, ok = v.parseArguments()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$invocation",
 			"$method",
@@ -593,7 +593,7 @@ func (v *parser) parseLogical(first abs.ExpressionLike) (abs.LogicalLike, *Token
 	}
 	second, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$logical")
 		panic(message)
@@ -630,14 +630,14 @@ func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 	}
 	numeric, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$magnitude")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("|")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("|",
 			"$magnitude")
 		panic(message)
@@ -670,14 +670,14 @@ func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 	}
 	inner, token, ok = v.parseExpression()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$precedence")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$precedence")
 		panic(message)
@@ -727,7 +727,7 @@ func (v *parser) parseRecursive() (abs.ExpressionLike, *Token, bool) {
 		expression, token, ok = v.parseLogical(expression)
 	}
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("operator",
 			"$invocation",
 			"$item",
@@ -756,7 +756,7 @@ func (v *parser) parseItem(composite abs.ExpressionLike) (abs.ItemLike, *Token, 
 	}
 	indices, token, ok = v.parseIndices()
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("$expression",
 			"$item",
 			"$composite",
@@ -765,7 +765,7 @@ func (v *parser) parseItem(composite abs.ExpressionLike) (abs.ItemLike, *Token, 
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
-		var message = v.formatError("An unexpected token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("]",
 			"$item",
 			"$composite",
@@ -852,7 +852,7 @@ func (v *parser) parseOperator() (abs.Operator, *Token, bool) {
 	case "XOR":
 		operator = abs.XOR
 	default:
-		var message = v.formatError("An unexpected operator token was received by the parser:", token)
+		var message = v.formatError(token)
 		message += generateGrammar("operator",
 			"$expression")
 		panic(message)

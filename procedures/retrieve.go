@@ -32,6 +32,11 @@ type retrieveClause struct {
 	bag       abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *retrieveClause) IsRetrieveClause() bool {
+	return true
+}
+
 // This method returns the recipient expression for this retrieve clause.
 func (v *retrieveClause) GetRecipient() abs.RecipientLike {
 	return v.recipient

@@ -30,6 +30,11 @@ type publishClause struct {
 	event abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *publishClause) IsPublishClause() bool {
+	return true
+}
+
 // This method returns the event expression for this publish clause.
 func (v *publishClause) GetEvent() abs.ExpressionLike {
 	return v.event

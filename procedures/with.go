@@ -31,6 +31,11 @@ type withClause struct {
 	block abs.BlockLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *withClause) IsWithClause() bool {
+	return true
+}
+
 // This method returns the value symbol for this with clause.
 func (v *withClause) GetValue() abs.Symbolic {
 	return v.value

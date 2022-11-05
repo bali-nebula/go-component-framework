@@ -29,6 +29,11 @@ type whileClause struct {
 	block abs.BlockLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *whileClause) IsWhileClause() bool {
+	return true
+}
+
 // This method returns the block for this while clause.
 func (v *whileClause) GetBlock() abs.BlockLike {
 	return v.block

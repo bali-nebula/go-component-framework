@@ -25,3 +25,8 @@ func ContinueClause() abs.ContinueClauseLike {
 // This type defines the structure and methods associated with a continue clause.
 type continueClause struct {
 }
+
+// This method is a dummy method that always returns true.
+func (v *continueClause) IsContinueClause() bool {
+	return true
+}

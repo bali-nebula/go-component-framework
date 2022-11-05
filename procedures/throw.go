@@ -30,6 +30,11 @@ type throwClause struct {
 	exception abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *throwClause) IsThrowClause() bool {
+	return true
+}
+
 // This method returns the exception expression for this throw clause.
 func (v *throwClause) GetException() abs.ExpressionLike {
 	return v.exception

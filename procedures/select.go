@@ -31,6 +31,11 @@ type selectClause struct {
 	blocks abs.ListLike[abs.BlockLike]
 }
 
+// This method is a dummy method that always returns true.
+func (v *selectClause) IsSelectClause() bool {
+	return true
+}
+
 // This method returns the target expression for this select clause.
 func (v *selectClause) GetTarget() abs.ExpressionLike {
 	return v.target

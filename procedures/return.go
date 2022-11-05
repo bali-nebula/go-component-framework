@@ -30,6 +30,11 @@ type returnClause struct {
 	result abs.ExpressionLike
 }
 
+// This method is a dummy method that always returns true.
+func (v *returnClause) IsReturnClause() bool {
+	return true
+}
+
 // This method returns the result expression for this return clause.
 func (v *returnClause) GetResult() abs.ExpressionLike {
 	return v.result
