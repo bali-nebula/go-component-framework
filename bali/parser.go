@@ -140,26 +140,28 @@ func (v *parser) backupOne() {
 // This method returns an error message containing the context for a parsing
 // error.
 func (v *parser) formatError(token *Token) string {
-	var message = fmt.Sprintf("An unexpected token was received by the parser: %v\n\n", token)
+	var message = fmt.Sprintf("An unexpected token was received by the parser: %v\n", token)
 	var line = token.Line
 	var lines = sts.Split(string(v.source), "\n")
 
+	message += "\033[36m"
 	if line > 1 {
 		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + "\n"
 	}
 	message += fmt.Sprintf("%04d: ", line) + string(lines[line-1]) + "\n"
 
-	message += " >>>─"
+	message += " \033[32m>>>─"
 	var count = 0
 	for count < token.Position {
 		message += "─"
 		count++
 	}
-	message += "⌃\n"
+	message += "⌃\033[36m\n"
 
 	if line < len(lines) {
 		message += fmt.Sprintf("%04d: ", line+1) + string(lines[line]) + "\n"
 	}
+	message += "\033[0m\n"
 
 	return message
 }

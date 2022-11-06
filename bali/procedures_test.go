@@ -30,6 +30,11 @@ func TestRoundtripWithStatements(t *tes.T) {
         $kind: $worse
     ]
 }`,
+		`{
+    if NOT list.isEmpty() do {
+        $first := list[1]
+    }
+}`,
 	}
 
 	for index, s := range statementStrings {

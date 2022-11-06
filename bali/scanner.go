@@ -15,6 +15,7 @@ import (
 	fmt "fmt"
 	reg "regexp"
 	sts "strings"
+	uni "unicode"
 	utf "unicode/utf8"
 )
 
@@ -435,9 +436,13 @@ func (v *scanner) foundNumber() bool {
 	var s = v.source[v.nextByte:]
 	var matches = scanNumber(s)
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenNumber)
-		return true
+		// Check to see if the match is part of an identifier or keyword.
+		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
+		if !uni.IsLetter(r) {
+			v.nextByte += len(matches[0])
+			v.emitToken(TokenNumber)
+			return true
+		}
 	}
 	return false
 }
@@ -1107,6 +1112,13 @@ var keywords = [][]byte{
 	[]byte("as"),
 	[]byte("any"),
 	[]byte("accept"),
+	[]byte("XOR"),
+	[]byte("SANS"),
+	[]byte("OR"),
+	[]byte("NOT"),
+	[]byte("MATCHES"),
+	[]byte("IS"),
+	[]byte("AND"),
 }
 
 // This array contains the full set of delimiters used by the Bali Document
@@ -1143,13 +1155,6 @@ var delimiters = [][]byte{
 	[]byte(")"),
 	[]byte("("),
 	[]byte("&"),
-	[]byte("XOR"),
-	[]byte("SANS"),
-	[]byte("OR"),
-	[]byte("NOT"),
-	[]byte("MATCHES"),
-	[]byte("IS"),
-	[]byte("AND"),
 }
 
 // PRIVATE FUNCTIONS

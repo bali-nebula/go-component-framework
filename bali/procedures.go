@@ -57,36 +57,18 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var variable string
-	var indices abs.ListLike[abs.ExpressionLike]
+	var indices = col.List[abs.ExpressionLike]()
 	var attribute abs.AttributeLike
 	variable, token, ok = v.parseIdentifier()
 	if !ok {
 		// This is not an attribute.
 		return attribute, token, false
 	}
-	_, token, ok = v.parseDelimiter("[")
-	if !ok {
-		// This is not an attribute.
-		v.backupOne() // Put back the variable token.
-		return attribute, token, false
-	}
 	indices, token, ok = v.parseIndices()
 	if !ok {
-		var message = v.formatError(token)
-		message += generateGrammar("$indices",
-			"$attribute",
-			"$variable",
-			"$indices")
-		panic(message)
-	}
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
-		var message = v.formatError(token)
-		message += generateGrammar("]",
-			"$attribute",
-			"$variable",
-			"$indices")
-		panic(message)
+		// This is not an attribute.
+		v.backupOne() // Put back the identifier token.
+		return attribute, token, false
 	}
 	attribute = pro.Attribute(variable, indices)
 	return attribute, token, true
@@ -97,10 +79,8 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 func (v *formatter) formatAttribute(attribute abs.AttributeLike) {
 	var variable = attribute.GetVariable()
 	v.state.AppendString(variable)
-	v.state.AppendString("[")
 	var indices = attribute.GetIndices()
 	v.formatIndices(indices)
-	v.state.AppendString("]")
 }
 
 // This method attempts to parse a do block. It returns the do block and whether
@@ -109,7 +89,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var expression abs.ExpressionLike
-	var statements abs.ProcedureLike
+	var procedure abs.ProcedureLike
 	var block abs.BlockLike
 	expression, token, ok = v.parseExpression()
 	if !ok {
@@ -122,10 +102,10 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 			"$onClause")
 		panic(message)
 	}
-	statements, token, ok = v.parseProcedure()
+	_, token, ok = v.parseKeyword("do")
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$statements",
+		message += generateGrammar("do",
 			"$ifClause",
 			"$selectClause",
 			"$withClause",
@@ -133,7 +113,16 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 			"$onClause")
 		panic(message)
 	}
-	block = pro.Block(expression, statements)
+	procedure, token, ok = v.parseProcedure()
+	if !ok {
+		var message = v.formatError(token)
+		message += generateGrammar("$procedure",
+			"$procedure",
+			"$statements",
+			"$statement")
+		panic(message)
+	}
+	block = pro.Block(expression, procedure)
 	return block, token, true
 }
 
@@ -142,7 +131,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 func (v *formatter) formatBlock(block abs.BlockLike) {
 	var expression = block.GetExpression()
 	v.formatExpression(expression)
-	v.state.AppendString(" ")
+	v.state.AppendString(" do ")
 	var procedure = block.GetProcedure()
 	v.formatProcedure(procedure)
 }
@@ -439,13 +428,19 @@ func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool)
 	var ok bool
 	var token *Token
 	var index abs.ExpressionLike
-	var indices abs.ListLike[abs.ExpressionLike]
+	var indices = col.List[abs.ExpressionLike]()
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		// This is not a list of indices.
+		return indices, token, false
+	}
 	index, token, ok = v.parseExpression()
 	// There must be at least one index.
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("$expression",
-			"$indices")
+			"$indices",
+			"$expression")
 		panic(message)
 	}
 	for {
@@ -460,9 +455,18 @@ func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool)
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("$expression",
-				"$indices")
+				"$indices",
+				"$expression")
 			panic(message)
 		}
+	}
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		var message = v.formatError(token)
+		message += generateGrammar("]",
+			"$indices",
+			"$expression")
+		panic(message)
 	}
 	return indices, token, true
 }
@@ -470,6 +474,7 @@ func (v *parser) parseIndices() (abs.ListLike[abs.ExpressionLike], *Token, bool)
 // This method adds the canonical format for the specified indices to the
 // state of the formatter.
 func (v *formatter) formatIndices(indices abs.Sequential[abs.ExpressionLike]) {
+	v.state.AppendString("[")
 	var iterator = age.Iterator(indices)
 	var index = iterator.GetNext() // There is always at least one index.
 	v.formatExpression(index)
@@ -478,6 +483,7 @@ func (v *formatter) formatIndices(indices abs.Sequential[abs.ExpressionLike]) {
 		index = iterator.GetNext()
 		v.formatExpression(index)
 	}
+	v.state.AppendString("]")
 }
 
 // This method attempts to parse a list of inline statements. It returns
@@ -735,7 +741,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	var token *Token
 	var exception ele.Symbol
 	var block abs.BlockLike
-	var blocks abs.ListLike[abs.BlockLike]
+	var blocks = col.List[abs.BlockLike]()
 	var clause abs.OnClauseLike
 	_, token, ok = v.parseKeyword("on")
 	if !ok {
@@ -776,7 +782,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 			"$onClause",
 			"$exception",
 			"$pattern",
-			"$statements")
+			"$procedure")
 		panic(message)
 	}
 	clause = pro.OnClause(exception, blocks)
@@ -1179,7 +1185,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	var token *Token
 	var target abs.ExpressionLike
 	var block abs.BlockLike
-	var blocks abs.ListLike[abs.BlockLike]
+	var blocks = col.List[abs.BlockLike]()
 	var clause abs.SelectClauseLike
 	_, token, ok = v.parseKeyword("select")
 	if !ok {

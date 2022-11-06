@@ -228,7 +228,7 @@ var grammar = map[string]string{
 func generateGrammar(expected string, symbols ...string) string {
 	var message = "Was expecting '" + expected + "' from:\n"
 	for _, symbol := range symbols {
-		message += fmt.Sprintf("  %v: %v\n\n", symbol, grammar[symbol])
+		message += fmt.Sprintf("  \033[32m%v: \033[33m%v\033[0m\n\n", symbol, grammar[symbol])
 	}
 	return message
 }
