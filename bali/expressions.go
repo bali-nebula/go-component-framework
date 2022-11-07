@@ -361,7 +361,7 @@ func (v *parser) parseExpression() (abs.ExpressionLike, *Token, bool) {
 		expression, token, ok = v.parseVariable()
 	}
 	if ok {
-		expression, token, ok = v.parseRecursive(expression)
+		expression, token = v.parseRecursive(expression)
 	}
 	return expression, token, ok
 }
@@ -685,35 +685,35 @@ func (v *formatter) formatPrecedence(precedence abs.PrecedenceLike) {
 	v.state.AppendString(")")
 }
 
-// This method attempts to parse a left recursive expression. It returns
-// the left recursive expression and whether or not the left recursive
-// expression was successfully parsed.
-func (v *parser) parseRecursive(expression abs.ExpressionLike) (abs.ExpressionLike, *Token, bool) {
+// This method attempts to parse a recursive expression using the specified left
+// expression. It returns the recursive expression.
+func (v *parser) parseRecursive(left abs.ExpressionLike) (abs.ExpressionLike, *Token) {
 	var ok bool
 	var token *Token
-	expression, token, ok = v.parseInvocation(expression)
+	var expression abs.ExpressionLike
+	expression, token, ok = v.parseInvocation(left)
 	if !ok {
-		expression, token, ok = v.parseItem(expression)
+		expression, token, ok = v.parseItem(left)
 	}
 	if !ok {
-		expression, token, ok = v.parseChaining(expression)
+		expression, token, ok = v.parseChaining(left)
 	}
 	if !ok {
-		expression, token, ok = v.parseExponential(expression)
+		expression, token, ok = v.parseExponential(left)
 	}
 	if !ok {
-		expression, token, ok = v.parseArithmetic(expression)
+		expression, token, ok = v.parseArithmetic(left)
 	}
 	if !ok {
-		expression, token, ok = v.parseComparison(expression)
+		expression, token, ok = v.parseComparison(left)
 	}
 	if !ok {
-		expression, token, ok = v.parseLogical(expression)
+		expression, token, ok = v.parseLogical(left)
 	}
 	if ok {
-		expression, token, ok = v.parseRecursive(expression)
+		expression, token = v.parseRecursive(expression)
 	}
-	return expression, token, true
+	return expression, token
 }
 
 // This method attempts to parse the an operator. It returns the operator and
