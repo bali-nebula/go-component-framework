@@ -808,6 +808,8 @@ func (v *formatter) formatOperator(operator abs.Operator) {
 	switch operator {
 	case abs.AMPERSAND:
 		v.state.AppendString("&")
+	case abs.AND:
+		v.state.AppendString("AND")
 	case abs.ARROW:
 		v.state.AppendString("<-")
 	case abs.ASSIGN:

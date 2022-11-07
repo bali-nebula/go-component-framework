@@ -339,28 +339,13 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 	var operator abs.Operator
 	var expression abs.ExpressionLike
 	var clause abs.EvaluateClauseLike
-	recipient, token, ok = v.parseRecipient()
-	if !ok {
-		// This is not an evaluate clause.
-		return clause, token, false
-	}
-	operator, token, ok = v.parseOperator()
-	if !ok || operator < abs.ASSIGN || operator > abs.QUOTIENT {
-		var message = v.formatError(token)
-		message += generateGrammar("operator",
-			"$evaluateClause",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices")
-		panic(message)
-	}
-	expression, token, ok = v.parseExpression()
-	if !ok {
-		if token != nil {
+	recipient, token, ok = v.parseRecipient() // The recipient is optional.
+	if ok {
+		// The recipient requires an operator.
+		operator, token, ok = v.parseOperator()
+		if !ok || operator < abs.ASSIGN || operator > abs.QUOTIENT {
 			var message = v.formatError(token)
-			message += generateGrammar("$expression",
+			message += generateGrammar("operator",
 				"$evaluateClause",
 				"$recipient",
 				"$name",
@@ -369,22 +354,26 @@ func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
 				"$indices")
 			panic(message)
 		}
+	}
+	expression, token, ok = v.parseExpression()
+	if !ok {
 		// This is not an evaluate clause.
 		return clause, token, false
 	}
-	clause = pro.EvaluateClause(recipient, operator, expression)
+	clause = pro.EvaluateClauseWithRecipient(recipient, operator, expression)
 	return clause, token, true
 }
 
 // This method adds the canonical format for the specified evaluate clause to the
 // state of the formatter.
 func (v *formatter) formatEvaluateClause(clause abs.EvaluateClauseLike) {
-	var recipient = clause.GetRecipient()
-	v.formatRecipient(recipient)
-	v.state.AppendString(" ")
-	var operator = clause.GetOperator()
-	v.formatOperator(operator)
-	v.state.AppendString(" ")
+	if clause.HasRecipient() {
+		var recipient, operator = clause.GetRecipient()
+		v.formatRecipient(recipient)
+		v.state.AppendString(" ")
+		v.formatOperator(operator)
+		v.state.AppendString(" ")
+	}
 	var expression = clause.GetExpression()
 	v.formatExpression(expression)
 }

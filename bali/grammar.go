@@ -32,7 +32,7 @@ var grammar = map[string]string{
     association {"," association} |
     EOL <association EOL> |
     ":"  ! No associations.`,
-	"$attribute":      `variable "[" indices "]"`,
+	"$attribute":      `variable indices`,
 	"$bag":            `expression`,
 	"$breakClause":    `"break" "loop"`,
 	"$catalog":        `"[" associations "]"`,
@@ -64,7 +64,7 @@ var grammar = map[string]string{
     precedence  |  ! "(" expression ")"
     dereference |  ! "@" expression
     invocation  |  ! target ("." | "<-") method arguments
-    item        |  ! composite "[" indices "]"
+    item        |  ! composite indices
     chaining    |  ! expression "&" expression
     exponential |  ! expression "^" expression
     inversion   |  ! ("-" | "/" | "*") expression
@@ -75,11 +75,11 @@ var grammar = map[string]string{
     logical        ! expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$function":   `IDENTIFIER`,
 	"$ifClause":   `"if" condition "do" procedure`,
-	"$indices":    `expression {"," expression}`,
+	"$indices":    `"[" expression {"," expression} "]"`,
 	"$intrinsic":  `function arguments`,
 	"$inversion":  `("-" | "/" | "*") expression`,
 	"$invocation": `target ("." | "<-") method arguments`,
-	"$item":       `composite "[" indices "]"`,
+	"$item":       `composite indices`,
 	"$key":        `primitive`,
 	"$list":       `"[" values "]"`,
 	"$logical":    `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
@@ -90,7 +90,7 @@ var grammar = map[string]string{
     checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
     continueClause |  ! "continue" "loop"
     discardClause  |  ! "discard" document
-    evaluateClause |  ! recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=") expression
+    evaluateClause |  ! [recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
     ifClause       |  ! "if" condition "do" procedure
     notarizeClause |  ! "notarize" document "as" moniker
     postClause     |  ! "post" message "to" bag

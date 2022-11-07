@@ -17,11 +17,17 @@ import (
 // EVALUATE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new evaluate clause.
-func EvaluateClause(recipient abs.RecipientLike, operator abs.Operator, expression abs.ExpressionLike) abs.EvaluateClauseLike {
+func EvaluateClause(expression abs.ExpressionLike) abs.EvaluateClauseLike {
 	var v = &evaluateClause{}
 	// Perform argument validation.
-	v.SetRecipient(recipient)
-	v.SetOperator(operator)
+	v.SetExpression(expression)
+	return v
+}
+// This constructor creates a new evaluate clause.
+func EvaluateClauseWithRecipient(recipient abs.RecipientLike, operator abs.Operator, expression abs.ExpressionLike) abs.EvaluateClauseLike {
+	var v = &evaluateClause{}
+	// Perform argument validation.
+	v.SetRecipient(recipient, operator)
 	v.SetExpression(expression)
 	return v
 }
@@ -39,30 +45,25 @@ func (v *evaluateClause) IsEvaluateClause() bool {
 	return true
 }
 
+// This method is a dummy method that always returns true.
+func (v *evaluateClause) HasRecipient() bool {
+	return v.recipient != nil
+}
+
 // This method returns the recipient for this evaluate clause.
-func (v *evaluateClause) GetRecipient() abs.RecipientLike {
-	return v.recipient
+func (v *evaluateClause) GetRecipient() (abs.RecipientLike, abs.Operator) {
+	return v.recipient, v.operator
 }
 
 // This method sets the recipient for this evaluate clause.
-func (v *evaluateClause) SetRecipient(recipient abs.RecipientLike) {
-	if recipient == nil {
-		panic("An evaluate clause requires a recipient.")
+func (v *evaluateClause) SetRecipient(recipient abs.RecipientLike, operator abs.Operator) {
+	if recipient != nil && operator >= abs.ASSIGN && operator <= abs.QUOTIENT {
+		v.recipient = recipient
+		v.operator = operator
+	} else {
+		v.recipient = nil
+		v.operator = 0
 	}
-	v.recipient = recipient
-}
-
-// This method returns the assignment operator for this evaluate clause.
-func (v *evaluateClause) GetOperator() abs.Operator {
-	return v.operator
-}
-
-// This method sets the assignment operator for this evaluate clause.
-func (v *evaluateClause) SetOperator(operator abs.Operator) {
-	if operator < abs.ASSIGN || operator > abs.QUOTIENT {
-		panic("An evaluate clause requires a valid assignment operator.")
-	}
-	v.operator = operator
 }
 
 // This method returns the expression for this evaluate clause.
