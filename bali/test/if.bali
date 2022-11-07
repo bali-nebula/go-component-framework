@@ -1,0 +1,16 @@
+{
+    if true do { }
+    if ok do { }
+    if flip() do {
+        return $coin
+    }
+    if list.isEmpty() AND value ≠ none {
+        list.addValue(value)
+    }
+    if NOT successful do {
+        throw [
+            $type: $bad
+            $kind: "worse"
+        ]
+    }
+}

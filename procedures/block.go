@@ -64,8 +64,8 @@ func (v *block) GetProcedure() abs.ProcedureLike {
 
 // This method sets the procedure for this block.
 func (v *block) SetProcedure(procedure abs.ProcedureLike) {
-	if procedure == nil || procedure.IsEmpty() {
-		panic("A block requires at least one statement.")
+	if procedure == nil {
+		panic("A block requires a procedure.")
 	}
 	v.procedure = procedure
 }
