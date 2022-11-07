@@ -290,6 +290,7 @@ func (v *parser) parseContinueClause() (abs.ContinueClauseLike, *Token, bool) {
 			"$continueClause")
 		panic(message)
 	}
+	clause = pro.ContinueClause()
 	return clause, token, true
 }
 

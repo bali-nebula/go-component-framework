@@ -30,7 +30,9 @@ func Range[V abs.PrimitiveLike](first V, extent abs.Extent, last V) abs.RangeLik
 		panic(fmt.Sprintf("Received an invalid range extent: %v", extent))
 	}
 	var v = ranje[V]{first: first, extent: extent, last: last}
-	v.size = v.calculateSize()
+	if ref.ValueOf(first).IsValid() && ref.ValueOf(last).IsValid() {
+		v.size = v.calculateSize()
+	}
 	return &v
 }
 

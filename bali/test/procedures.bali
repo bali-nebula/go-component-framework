@@ -5,12 +5,32 @@
         if index > maximum do {
             break loop
         }
+        continue loop
     }
-    select flip() matching true do {
+    with each $index in [1..5] do {
+        array[index] += index
+    }
+    if flip() do {
         checkout $draft from /bali/tests/Procedures/v1.2
-    } matching false do {
-        checkout $draft at level 3 from /bali/tests/Procedures/v1.2
     }
+    checkout $draft at level 3 from /bali/tests/Procedures/v1.2
+    save draft as $citation
+    discard draft
+    notarize document as /bali/test/Contract/v.1
+    select attribute[$first, 3] matching 0 do {
+        attribute[$first, 3] := 5
+    } matching ~π do {
+        attribute[$first, 3] += ∞
+    } matching ~π do {
+        attribute[$first, 3] -= 50%
+    } matching ~π do {
+        attribute[$first, 3] *= .5
+    } matching ~π do {
+        attribute[$first, 3] /= 1.
+    } matching none do {
+        attribute[$first, 3] ?= undefined
+    }
+    list.addValue(value)
     if list.isEmpty() AND value ≠ none do {
         list.addValue(value)
     }
@@ -25,4 +45,11 @@
             foobar()
         }
     }
+    post messages[last] to bag
+    publish [
+        $type: $messagePosted
+        $messageId: #ABCD
+    ]
+    reject message
+    retrieve $message from bag
 }
