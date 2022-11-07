@@ -35,7 +35,8 @@ func TestParsingRoundtrips(t *tes.T) {
 			var document, _ = osx.ReadFile(filename)
 			var component = bal.ParseDocument(document)
 			var source = bal.FormatComponent(component)
-			ass.Equal(t, source, string(document[:len(document)-1])) // Remove POSIX EOL character.
+			var expected = string(document[:len(document)-1]) // Remove POSIX EOL character.
+			ass.Equal(t, expected, source)
 		}
 	}
 }

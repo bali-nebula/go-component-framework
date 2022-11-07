@@ -154,6 +154,7 @@ func (v *parser) parseBreakClause() (abs.BreakClauseLike, *Token, bool) {
 			"$breakClause")
 		panic(message)
 	}
+	clause = pro.BreakClause()
 	return clause, token, true
 }
 

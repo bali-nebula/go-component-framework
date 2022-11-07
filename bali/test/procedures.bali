@@ -1,0 +1,28 @@
+{
+    if true do { }
+    while ok do {
+        accept messages[index]
+        if index > maximum do {
+            break loop
+        }
+    }
+    select flip() matching true do {
+        checkout $draft from /bali/tests/Procedures/v1.2
+    } matching false do {
+        checkout $draft at level 3 from /bali/tests/Procedures/v1.2
+    }
+    if list.isEmpty() AND value ≠ none do {
+        list.addValue(value)
+    }
+    if NOT successful do {
+        throw [
+            $type: $bad
+            $kind: "worse"
+        ]
+    }
+    if foo do {
+        if bar do {
+            foobar()
+        }
+    }
+}

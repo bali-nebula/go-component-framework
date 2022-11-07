@@ -370,9 +370,13 @@ func (v *scanner) foundKeyword() bool {
 	var s = v.source[v.nextByte:]
 	var matches = scanKeyword(s)
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenKeyword)
-		return true
+		// Check to see if the match is part of an identifier.
+		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
+		if !uni.IsLetter(r) {
+			v.nextByte += len(matches[0])
+			v.emitToken(TokenKeyword)
+			return true
+		}
 	}
 	return false
 }
