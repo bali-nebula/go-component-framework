@@ -4,7 +4,7 @@
     if flip() do {
         return $coin
     }
-    if list.isEmpty() AND value ≠ none {
+    if list.isEmpty() AND value ≠ none do {
         list.addValue(value)
     }
     if NOT successful do {

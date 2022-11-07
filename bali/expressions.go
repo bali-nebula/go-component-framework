@@ -710,6 +710,9 @@ func (v *parser) parseRecursive(expression abs.ExpressionLike) (abs.ExpressionLi
 	if !ok {
 		expression, token, ok = v.parseLogical(expression)
 	}
+	if ok {
+		expression, token, ok = v.parseRecursive(expression)
+	}
 	return expression, token, true
 }
 
