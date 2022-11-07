@@ -16,7 +16,7 @@
     checkout $draft at level 3 from /bali/tests/Procedures/v1.2
     save draft as $citation
     discard draft
-    notarize document as /bali/test/Contract/v.1
+    notarize document as /bali/test/Contract/v1
     select attribute[$first, 3] matching 0 do {
         attribute[$first, 3] := 5
     } matching ~π do {

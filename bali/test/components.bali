@@ -1,0 +1,25 @@
+[
+    ~π($units: $radians)
+    true($granularity: $boolean)  ! This is a note.
+    '1234abcd'  ! This is base 64 encoded.
+    ~P13W
+    <1000-12-30>
+    /bali/abstractions/Sequential/v1($valueType: /bali/elements/Quote/v1)
+    ">
+        This is a multiline
+        narrative with " marks
+        in it.
+    <"
+    ∞  ! This is infinity.
+    "ca+t"?  ! This is a pattern.
+    50%($units: $voters)
+    .25  ! Somewhat unlikely.
+    "And this is a quote"
+    <https://google.com>
+    $symbol
+    #ABCD  ! Tag, your it!
+    v1.2.3
+    [ ]
+    [:]
+    (..)
+]
