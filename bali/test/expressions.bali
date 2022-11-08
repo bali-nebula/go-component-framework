@@ -3,4 +3,15 @@
     sum(a, b)
     foo
     NOT (p AND q) OR (p OR NOT q) XOR (p SANS q)
+    @reference
+    list.addValue(value)
+    remote<-notify()
+    customer[$address, $province]
+    a & b & c
+    base^exponent
+    -/*z
+    (x + y - z) * (x / y // z)
+    |z|
+    a < b OR b = c OR c ≠ d OR d > e OR e IS f OR f MATCHES g
+    NOT p
 }

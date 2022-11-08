@@ -11,6 +11,7 @@
 package expressions
 
 import (
+	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
@@ -61,8 +62,8 @@ func (v *logicalExpression) GetOperator() abs.Operator {
 // This method sets the logical operator in this logical expression to the
 // specified value.
 func (v *logicalExpression) SetOperator(operator abs.Operator) {
-	if operator < abs.AND || operator > abs.OR {
-		panic("The operator in a logical expression must be a valid logical operator.")
+	if operator < abs.AND || operator > abs.XOR {
+		panic(fmt.Sprintf("The operator in a logical expression must be a valid logical operator: %v", operator))
 	}
 	v.operator = operator
 }
