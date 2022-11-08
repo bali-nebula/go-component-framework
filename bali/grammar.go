@@ -27,6 +27,8 @@ var grammar = map[string]string{
 	"$annotation":   `NOTE | COMMENT`,
 	"$arguments":    `"(" [expression {"," expression}] ")"`,
 	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
+	"$assignClause": `
+	letClause         ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$association":  `key ":" value`,
 	"$associations": `
     association {"," association} |
@@ -46,9 +48,23 @@ var grammar = map[string]string{
 	"$condition":      `expression`,
 	"$context":        `"(" parameters ")"`,
 	"$continueClause": `"continue" "loop"`,
+	"$controlClause": `
+	ifClause       |  ! "if" condition "do" procedure
+	selectClause   |  ! "select" target <"matching" pattern "do" procedure>
+	whileClause    |  ! "while" condition "do" procedure
+	withClause     |  ! "with" "each" value "in" sequence "do" procedure
+	continueClause |  ! "continue" "loop"
+	breakClause    |  ! "break" "loop"
+	returnClause   |  ! "return" result
+	throwClause       ! "throw" exception`,
 	"$dereference":    `"@" expression`,
 	"$discardClause":  `"discard" document`,
 	"$document":       `expression`,
+	"$documentClause": `
+	checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
+	saveClause     |  ! "save" document "as" recipient
+	discardClause  |  ! "discard" document
+	notarizeClause    ! "notarize" document "as" moniker`,
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
@@ -85,25 +101,17 @@ var grammar = map[string]string{
 	"$logical":    `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
 	"$magnitude":  `"|" expression "|"`,
 	"$mainClause": `
-    acceptClause   |  ! "accept" message
-    breakClause    |  ! "break" "loop"
-    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
-    continueClause |  ! "continue" "loop"
-    discardClause  |  ! "discard" document
-    letClause      |  ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
-    ifClause       |  ! "if" condition "do" procedure
-    notarizeClause |  ! "notarize" document "as" moniker
-    postClause     |  ! "post" message "to" bag
-    publishClause  |  ! "publish" event
-    rejectClause   |  ! "reject" message
-    retrieveClause |  ! "retrieve" recipient "from" bag
-    returnClause   |  ! "return" result
-    saveClause     |  ! "save" document "as" recipient
-    selectClause   |  ! "select" target <"matching" pattern "do" procedure>
-    throwClause    |  ! "throw" exception
-    whileClause    |  ! "while" condition "do" procedure
-    withClause        ! "with" "each" segment "in" sequence "do" procedure`,
+	assignClause   |
+	controlClause  |
+	documentClause |
+	messageClause`,
 	"$message":        `expression`,
+	"$messageClause": `
+	postClause     |  ! "post" message "to" bag
+	retrieveClause |  ! "retrieve" recipient "from" bag
+	acceptClause   |  ! "accept" message
+	rejectClause   |  ! "reject" message
+	publishClause     ! "publish" event`,
 	"$method":         `IDENTIFIER`,
 	"$moniker":        `expression`,
 	"$name":           `SYMBOL`,
