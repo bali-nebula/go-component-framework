@@ -1,0 +1,11 @@
+[
+    '1234abcd'
+    /bali/abstractions/Sequential/v1
+    ">
+        This is a multiline
+        narrative with " marks
+        in it.
+    <"
+    "And this is a quote"
+    v1.2.3
+]
