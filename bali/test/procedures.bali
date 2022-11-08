@@ -8,7 +8,7 @@
         continue loop
     }
     with each $index in [1..5] do {
-        array[index] += index
+        let array[index]+=index
     }
     if flip() do {
         checkout $draft from /bali/tests/Procedures/v1.2
@@ -18,17 +18,17 @@
     discard draft
     notarize document as /bali/test/Contract/v1
     select attribute[$first, 3] matching 0 do {
-        attribute[$first, 3] := 5
+        let attribute[$first, 3]:=5
     } matching ~π do {
-        attribute[$first, 3] += ∞
+        let attribute[$first, 3]+=∞
     } matching ~π do {
-        attribute[$first, 3] -= 50%
+        let attribute[$first, 3]-=50%
     } matching ~π do {
-        attribute[$first, 3] *= .5
+        let attribute[$first, 3]*=.5
     } matching ~π do {
-        attribute[$first, 3] /= 1.
+        let attribute[$first, 3]/=1.
     } matching none do {
-        attribute[$first, 3] ?= undefined
+        let attribute[$first, 3]?=undefined
     }
     list.addValue(value)
     if list.isEmpty() AND value ≠ none do {

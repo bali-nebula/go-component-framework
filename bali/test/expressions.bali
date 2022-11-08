@@ -1,5 +1,5 @@
 {
-    $foo := ~π($units: $radians)  ! This is a component expression.
+    ~π($units: $radians)  ! This is a component expression.
     sum(a, b)
     foo
     NOT (p AND q) OR (p OR NOT q) XOR (p SANS q)

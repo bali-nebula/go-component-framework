@@ -24,7 +24,7 @@ func TestRoundtripWithStatements(t *tes.T) {
     return none
 }`,
 		`{
-    $foo := "bar"
+    let $foo:="bar"
     throw [
         $type: $bad
         $kind: $worse
@@ -32,7 +32,7 @@ func TestRoundtripWithStatements(t *tes.T) {
 }`,
 		`{
     if NOT list.isEmpty() do {
-        $first := list[1]
+        let $first:=list[1]
     }
 }`,
 	}

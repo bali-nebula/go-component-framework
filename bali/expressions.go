@@ -457,7 +457,7 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 		// This is not an inversion expression.
 		return expression, token, false
 	}
-	if operator < abs.PLUS || operator > abs.STAR {
+	if operator < abs.MINUS || operator > abs.SLASH {
 		// This is not an inversion expression.
 		v.backupOne() // Put back the operator token.
 		return expression, token, false

@@ -14,49 +14,48 @@ import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
-// EVALUATE CLAUSE IMPLEMENTATION
+// LET CLAUSE IMPLEMENTATION
 
-// This constructor creates a new evaluate clause.
-func EvaluateClause(expression abs.ExpressionLike) abs.EvaluateClauseLike {
-	var v = &evaluateClause{}
+// This constructor creates a new let clause.
+func LetClause(expression abs.ExpressionLike) abs.LetClauseLike {
+	var v = &letClause{}
 	// Perform argument validation.
 	v.SetExpression(expression)
 	return v
 }
-// This constructor creates a new evaluate clause.
-func EvaluateClauseWithRecipient(recipient abs.RecipientLike, operator abs.Operator, expression abs.ExpressionLike) abs.EvaluateClauseLike {
-	var v = &evaluateClause{}
+// This constructor creates a new let clause.
+func LetClauseWithRecipient(recipient abs.RecipientLike, operator abs.Operator, expression abs.ExpressionLike) abs.LetClauseLike {
+	var v = &letClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient, operator)
 	v.SetExpression(expression)
 	return v
 }
 
-// This type defines the structure and methods associated with an evaluate
-// clause.
-type evaluateClause struct {
+// This type defines the structure and methods associated with a let clause.
+type letClause struct {
 	recipient  abs.RecipientLike
 	operator   abs.Operator
 	expression abs.ExpressionLike
 }
 
 // This method is a dummy method that always returns true.
-func (v *evaluateClause) IsEvaluateClause() bool {
+func (v *letClause) IsLetClause() bool {
 	return true
 }
 
 // This method is a dummy method that always returns true.
-func (v *evaluateClause) HasRecipient() bool {
+func (v *letClause) HasRecipient() bool {
 	return v.recipient != nil
 }
 
-// This method returns the recipient for this evaluate clause.
-func (v *evaluateClause) GetRecipient() (abs.RecipientLike, abs.Operator) {
+// This method returns the recipient for this let clause.
+func (v *letClause) GetRecipient() (abs.RecipientLike, abs.Operator) {
 	return v.recipient, v.operator
 }
 
-// This method sets the recipient for this evaluate clause.
-func (v *evaluateClause) SetRecipient(recipient abs.RecipientLike, operator abs.Operator) {
+// This method sets the recipient for this let clause.
+func (v *letClause) SetRecipient(recipient abs.RecipientLike, operator abs.Operator) {
 	if recipient != nil && operator >= abs.ASSIGN && operator <= abs.QUOTIENT {
 		v.recipient = recipient
 		v.operator = operator
@@ -66,15 +65,15 @@ func (v *evaluateClause) SetRecipient(recipient abs.RecipientLike, operator abs.
 	}
 }
 
-// This method returns the expression for this evaluate clause.
-func (v *evaluateClause) GetExpression() abs.ExpressionLike {
+// This method returns the expression for this let clause.
+func (v *letClause) GetExpression() abs.ExpressionLike {
 	return v.expression
 }
 
-// This method sets the expression for this evaluate clause.
-func (v *evaluateClause) SetExpression(expression abs.ExpressionLike) {
+// This method sets the expression for this let clause.
+func (v *letClause) SetExpression(expression abs.ExpressionLike) {
 	if expression == nil {
-		panic("An evaluate clause requires an expression.")
+		panic("A let clause requires an expression.")
 	}
 	v.expression = expression
 }

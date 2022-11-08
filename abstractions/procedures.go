@@ -71,16 +71,6 @@ type DiscardClauseLike interface {
 	SetCitation(citation ExpressionLike)
 }
 
-// This interface defines the methods supported by all evaluate-clause-like types.
-type EvaluateClauseLike interface {
-	IsEvaluateClause() bool
-	HasRecipient() bool
-	GetRecipient() (RecipientLike, Operator)
-	SetRecipient(recipient RecipientLike, operator Operator)
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
-}
-
 // This interface defines the methods supported by all if-clause-like types.
 type IfClauseLike interface {
 	IsIfClause() bool
@@ -92,6 +82,16 @@ type IfClauseLike interface {
 	SetStatement(index int, statement StatementLike)
 	GetProcedure() ProcedureLike
 	SetProcedure(procedure ProcedureLike)
+}
+
+// This interface defines the methods supported by all let-clause-like types.
+type LetClauseLike interface {
+	IsLetClause() bool
+	HasRecipient() bool
+	GetRecipient() (RecipientLike, Operator)
+	SetRecipient(recipient RecipientLike, operator Operator)
+	GetExpression() ExpressionLike
+	SetExpression(expression ExpressionLike)
 }
 
 // This interface defines the methods supported by all notarize-clause-like types.

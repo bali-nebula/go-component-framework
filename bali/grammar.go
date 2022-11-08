@@ -53,7 +53,7 @@ var grammar = map[string]string{
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
 	"$entity":         `element | string | collection | procedure`,
-	"$evaluateClause": `[recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
+	"$letClause":      `["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$event":          `expression`,
 	"$exception":      `expression`,
 	"$exponential":    `expression "^" expression`,
@@ -90,7 +90,7 @@ var grammar = map[string]string{
     checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
     continueClause |  ! "continue" "loop"
     discardClause  |  ! "discard" document
-    evaluateClause |  ! [recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
+    letClause      |  ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression
     ifClause       |  ! "if" condition "do" procedure
     notarizeClause |  ! "notarize" document "as" moniker
     postClause     |  ! "post" message "to" bag
@@ -175,8 +175,8 @@ var grammar = map[string]string{
 	"$INFINITY":   `"infinity" | "∞"`,
 	"$KEYWORD": `
     "with" | "while" | "to" | "throw" | "select" | "save" | "return" | "retrieve" | "reject" |
-	"publish" | "post" | "on" | "notarize" | "matching" | "loop" | "level" | "in" | "if" | "from" |
-	"each" | "do" | "discard" | "continue" | "checkout" | "break" | "at" | "as" | "accept"`,
+	"publish" | "post" | "on" | "notarize" | "matching" | "loop" | "level" | "let" | "in" | "if" |
+	"from" | "each" | "do" | "discard" | "continue" | "checkout" | "break" | "at" | "as" | "accept"`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
 	"$MOMENT":      `"<" [SIGN] YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
 	"$MONIKER":     `<"/" NAME>`,

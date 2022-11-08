@@ -1103,6 +1103,7 @@ var keywords = [][]byte{
 	[]byte("matching"),
 	[]byte("loop"),
 	[]byte("level"),
+	[]byte("let"),
 	[]byte("in"),
 	[]byte("if"),
 	[]byte("from"),

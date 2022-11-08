@@ -332,54 +332,6 @@ func (v *formatter) formatDiscardClause(clause abs.DiscardClauseLike) {
 	v.formatExpression(citation)
 }
 
-// This method attempts to parse an evaluate clause. It returns the evaluate
-// clause and whether or not the evaluate clause was successfully parsed.
-func (v *parser) parseEvaluateClause() (abs.EvaluateClauseLike, *Token, bool) {
-	var ok bool
-	var token *Token
-	var recipient abs.RecipientLike
-	var operator abs.Operator
-	var expression abs.ExpressionLike
-	var clause abs.EvaluateClauseLike
-	recipient, token, ok = v.parseRecipient() // The recipient is optional.
-	if ok {
-		// The recipient requires an operator.
-		operator, token, ok = v.parseOperator()
-		if !ok || operator < abs.ASSIGN || operator > abs.QUOTIENT {
-			var message = v.formatError(token)
-			message += generateGrammar("operator",
-				"$evaluateClause",
-				"$recipient",
-				"$name",
-				"$attribute",
-				"$variable",
-				"$indices")
-			panic(message)
-		}
-	}
-	expression, token, ok = v.parseExpression()
-	if !ok {
-		// This is not an evaluate clause.
-		return clause, token, false
-	}
-	clause = pro.EvaluateClauseWithRecipient(recipient, operator, expression)
-	return clause, token, true
-}
-
-// This method adds the canonical format for the specified evaluate clause to the
-// state of the formatter.
-func (v *formatter) formatEvaluateClause(clause abs.EvaluateClauseLike) {
-	if clause.HasRecipient() {
-		var recipient, operator = clause.GetRecipient()
-		v.formatRecipient(recipient)
-		v.state.AppendString(" ")
-		v.formatOperator(operator)
-		v.state.AppendString(" ")
-	}
-	var expression = clause.GetExpression()
-	v.formatExpression(expression)
-}
-
 // This method attempts to parse an if clause. It returns the if clause and
 // whether or not the if clause was successfully parsed.
 func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
@@ -520,6 +472,66 @@ func (v *parser) parseInlineStatements() (abs.ListLike[abs.StatementLike], *Toke
 	return statements, token, true
 }
 
+// This method attempts to parse a let clause. It returns the let
+// clause and whether or not the let clause was successfully parsed.
+func (v *parser) parseLetClause() (abs.LetClauseLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var recipient abs.RecipientLike
+	var operator abs.Operator
+	var expression abs.ExpressionLike
+	var clause abs.LetClauseLike
+	// The recipient part is optional.
+	_, token, ok = v.parseKeyword("let")
+	if ok {
+		recipient, token, ok = v.parseRecipient()
+		if !ok {
+			var message = v.formatError(token)
+			message += generateGrammar("$recipient",
+				"$letClause",
+				"$recipient",
+				"$name",
+				"$attribute",
+				"$variable",
+				"$indices")
+			panic(message)
+		}
+		// The recipient requires an operator.
+		operator, token, ok = v.parseOperator()
+		if !ok || operator < abs.ASSIGN || operator > abs.QUOTIENT {
+			var message = v.formatError(token)
+			message += generateGrammar("operator",
+				"$letClause",
+				"$recipient",
+				"$name",
+				"$attribute",
+				"$variable",
+				"$indices")
+			panic(message)
+		}
+	}
+	expression, token, ok = v.parseExpression()
+	if !ok {
+		// This is not a let clause.
+		return clause, token, false
+	}
+	clause = pro.LetClauseWithRecipient(recipient, operator, expression)
+	return clause, token, true
+}
+
+// This method adds the canonical format for the specified let clause to the
+// state of the formatter.
+func (v *formatter) formatLetClause(clause abs.LetClauseLike) {
+	if clause.HasRecipient() {
+		v.state.AppendString("let ")
+		var recipient, operator = clause.GetRecipient()
+		v.formatRecipient(recipient)
+		v.formatOperator(operator)
+	}
+	var expression = clause.GetExpression()
+	v.formatExpression(expression)
+}
+
 // This method attempts to parse a main clause. It returns the main clause and
 // whether or not the main clause was successfully parsed.
 func (v *parser) parseMainClause() (abs.ClauseLike, *Token, bool) {
@@ -578,7 +590,7 @@ func (v *parser) parseMainClause() (abs.ClauseLike, *Token, bool) {
 	}
 	if !ok {
 		// This clause should be checked last since it is slower to fail.
-		mainClause, token, ok = v.parseEvaluateClause()
+		mainClause, token, ok = v.parseLetClause()
 	}
 	return mainClause, token, ok
 }
@@ -602,10 +614,10 @@ func (v *formatter) formatMainClause(mainClause abs.ClauseLike) {
 		v.formatContinueClause(value)
 	case abs.DiscardClauseLike:
 		v.formatDiscardClause(value)
-	case abs.EvaluateClauseLike:
-		v.formatEvaluateClause(value)
 	case abs.IfClauseLike:
 		v.formatIfClause(value)
+	case abs.LetClauseLike:
+		v.formatLetClause(value)
 	case abs.NotarizeClauseLike:
 		v.formatNotarizeClause(value)
 	case abs.PostClauseLike:

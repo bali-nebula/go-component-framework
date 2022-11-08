@@ -11,6 +11,7 @@
 package expressions
 
 import (
+	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 )
 
@@ -61,8 +62,8 @@ func (v *arithmeticExpression) GetOperator() abs.Operator {
 // This method sets the arithmetic operator in this arithmetic expression to the
 // specified value.
 func (v *arithmeticExpression) SetOperator(operator abs.Operator) {
-	if operator < abs.PRODUCT || operator > abs.DIFFERENCE {
-		panic("The operator in an arithmetic expression must be a valid arithmetic operator.")
+	if operator < abs.PLUS || operator > abs.MODULO {
+		panic(fmt.Sprintf("The operator in an arithmetic expression must be valid: %v", operator))
 	}
 	v.operator = operator
 }
