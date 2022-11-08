@@ -526,7 +526,9 @@ func (v *formatter) formatLetClause(clause abs.LetClauseLike) {
 		v.state.AppendString("let ")
 		var recipient, operator = clause.GetRecipient()
 		v.formatRecipient(recipient)
+		v.state.AppendString(" ")
 		v.formatOperator(operator)
+		v.state.AppendString(" ")
 	}
 	var expression = clause.GetExpression()
 	v.formatExpression(expression)

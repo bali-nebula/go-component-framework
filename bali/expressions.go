@@ -325,8 +325,10 @@ func (v *parser) parseExponential(base abs.ExpressionLike) (abs.ExpressionLike, 
 func (v *formatter) formatExponential(exponential abs.ExponentialLike) {
 	var base = exponential.GetBase()
 	v.formatExpression(base)
+	v.state.AppendString(" ")
 	var operator = exponential.GetOperator()
 	v.formatOperator(operator)
+	v.state.AppendString(" ")
 	var exponent = exponential.GetExponent()
 	v.formatExpression(exponent)
 }

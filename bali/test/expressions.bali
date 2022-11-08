@@ -8,7 +8,7 @@
     remote<-notify()
     customer[$address, $province]
     a & b & c
-    base^exponent
+    base ^ exponent
     -/*z
     (x + y - z) * (x / y // z)
     |z|
