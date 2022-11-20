@@ -13,15 +13,23 @@ package strings
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // BINARY STRING INTERFACE
 
-// This constructor attempts to create a new binary string from the specified
-// byte array. It returns the corresponding binary string.
-func BinaryFromBytes(v []byte) Binary {
-	var encoded = uti.Base64Encode(v)
+// This constructor creates a new binary string from the specified byte array.
+// It returns the corresponding binary string.
+func BinaryFromArray(array []byte) Binary {
+	var encoded = uti.Base64Encode(array)
 	return Binary(encoded)
+}
+
+// This constructor creates a new binary string from the specified byte
+// sequence. It returns the corresponding binary string.
+func BinaryFromSequence(sequence abs.Bytes) Binary {
+	var array = sequence.AsArray()
+	return BinaryFromArray(array)
 }
 
 // This type defines the methods associated with a binary string that extends
@@ -54,75 +62,73 @@ func (v Binary) AsArray() []byte {
 // This method retrieves from this string the byte that is associated
 // with the specified index.
 func (v Binary) GetValue(index int) byte {
-	var bytes = v.AsArray()
-	var length = len(bytes)
-	index = abs.NormalizedIndex(index, length)
-	return bytes[index]
+	var array = v.AsArray()
+	var bytes = col.Array[byte](array)
+	return bytes.GetValue(index)
 }
 
 // This method retrieves from this string all bytes from the first index
 // through the last index (inclusive).
-func (v Binary) GetValues(first int, last int) []byte {
-	var bytes = v.AsArray()
-	var length = len(bytes)
-	first = abs.NormalizedIndex(first, length)
-	last = abs.NormalizedIndex(last, length)
-	return bytes[first : last+1]
+func (v Binary) GetValues(first int, last int) abs.Bytes {
+	var array = v.AsArray()
+	var bytes = col.Array[byte](array)
+	return bytes.GetValues(first, last)
 }
 
 // This method returns the index of the FIRST occurence of the specified byte
 // in this string, or zero if this string does not contain the byte.
 func (v Binary) GetIndex(b byte) int {
-	var bytes = v.AsArray()
-	for index, candidate := range bytes {
-		if candidate == b {
-			// Found the byte.
-			return index + 1 // Convert to an ORDINAL based index.
-		}
-	}
-	// The byte was not found.
-	return 0
+	var array = v.AsArray()
+	var bytes = col.Array[byte](array)
+	return bytes.GetIndex(b)
 }
 
-// BINARIES LIBRARY
+// This method normalizes an index to match the Go (zero based) indexing. The
+// following transformation is performed:
+//
+//	[-length..-1] and [1..length] => [0..length)
+//
+// Notice that the specified index cannot be zero since zero is not an ORDINAL.
+func (v Binary) GoIndex(index int) int {
+	var array = v.AsArray()
+	var bytes = col.Array[byte](array)
+	return bytes.GoIndex(index)
+}
 
-// This singleton creates a unique name space for the library functions for
-// binaries.
-var Binaries = &binaries{}
+// LIBRARY FUNCTIONS
 
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for binaries.
-type binaries struct{}
+// This constant defines a namespace within this package for all binary string
+// library functions.
+const Binaries binaries = false
 
-// CHAINABLE INTERFACE
+// This type defines the library functions associated with binary strings.
+type binaries bool
 
-// This library function returns the concatenation of the two specified binary
+// This function returns the concatenation of the two specified binary
 // strings.
-func (l *binaries) Concatenate(first Binary, second Binary) Binary {
+func (l binaries) Concatenate(first Binary, second Binary) Binary {
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
 	var allBytes = make([]byte, len(firstBytes)+len(secondBytes))
 	copy(allBytes, firstBytes)
 	copy(allBytes[len(firstBytes):], secondBytes)
-	return BinaryFromBytes(allBytes)
+	return BinaryFromArray(allBytes)
 }
 
-// LOGICAL INTERFACE
-
-// This library function returns the logical (bitwise) inverse of the specified
+// This function returns the logical (bitwise) inverse of the specified
 // binary string.
-func (l *binaries) Not(binary Binary) Binary {
+func (l binaries) Not(binary Binary) Binary {
 	var bytes = binary.AsArray()
 	var size = len(bytes)
 	for i := 0; i < size; i++ {
 		bytes[i] = ^bytes[i]
 	}
-	return BinaryFromBytes(bytes)
+	return BinaryFromArray(bytes)
 }
 
-// This library function returns the logical (bitwise) conjunction of the
+// This function returns the logical (bitwise) conjunction of the
 // specified binary strings.
-func (l *binaries) And(first Binary, second Binary) Binary {
+func (l binaries) And(first Binary, second Binary) Binary {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
@@ -140,12 +146,12 @@ func (l *binaries) And(first Binary, second Binary) Binary {
 	for i := 0; i < size; i++ {
 		result[i] = firstBytes[i] & secondBytes[i]
 	}
-	return BinaryFromBytes(result)
+	return BinaryFromArray(result)
 }
 
-// This library function returns the logical (bitwise) material non-implication
+// This function returns the logical (bitwise) material non-implication
 // of the specified binary strings.
-func (l *binaries) Sans(first Binary, second Binary) Binary {
+func (l binaries) Sans(first Binary, second Binary) Binary {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
@@ -163,12 +169,12 @@ func (l *binaries) Sans(first Binary, second Binary) Binary {
 	for i := 0; i < size; i++ {
 		result[i] = firstBytes[i] &^ secondBytes[i]
 	}
-	return BinaryFromBytes(result)
+	return BinaryFromArray(result)
 }
 
-// This library function returns the logical (bitwise) disjunction of the
+// This function returns the logical (bitwise) disjunction of the
 // specified binary strings.
-func (l *binaries) Or(first Binary, second Binary) Binary {
+func (l binaries) Or(first Binary, second Binary) Binary {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
@@ -186,12 +192,12 @@ func (l *binaries) Or(first Binary, second Binary) Binary {
 	for i := 0; i < size; i++ {
 		result[i] = firstBytes[i] | secondBytes[i]
 	}
-	return BinaryFromBytes(result)
+	return BinaryFromArray(result)
 }
 
-// This library function returns the logical (bitwise) exclusive disjunction of
+// This function returns the logical (bitwise) exclusive disjunction of
 // the specified binary strings.
-func (l *binaries) Xor(first Binary, second Binary) Binary {
+func (l binaries) Xor(first Binary, second Binary) Binary {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
@@ -209,5 +215,5 @@ func (l *binaries) Xor(first Binary, second Binary) Binary {
 	for i := 0; i < size; i++ {
 		result[i] = firstBytes[i] ^ secondBytes[i]
 	}
-	return BinaryFromBytes(result)
+	return BinaryFromArray(result)
 }

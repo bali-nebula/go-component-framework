@@ -61,33 +61,3 @@ func (v *withClause) SetBlock(block abs.BlockLike) {
 	}
 	v.block = block
 }
-
-// This method returns the sequence expression for this with clause.
-func (v *withClause) GetSequence() abs.ExpressionLike {
-	return v.block.GetExpression()
-}
-
-// This method sets the sequence expression for this with clause.
-func (v *withClause) SetSequence(sequence abs.ExpressionLike) {
-	v.block.SetExpression(sequence)
-}
-
-// This method returns the statement at the specified index from this with clause.
-func (v *withClause) GetStatement(index int) abs.StatementLike {
-	return v.block.GetStatement(index)
-}
-
-// This method sets the statement at the specified index for this with clause.
-func (v *withClause) SetStatement(index int, statement abs.StatementLike) {
-	v.block.SetStatement(index, statement)
-}
-
-// This method returns the list of statements for this with clause.
-func (v *withClause) GetProcedure() abs.ProcedureLike {
-	return v.block.GetProcedure()
-}
-
-// This method sets the list of statements for this with clause.
-func (v *withClause) SetProcedure(statements abs.ProcedureLike) {
-	v.block.SetProcedure(statements)
-}

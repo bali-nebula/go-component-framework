@@ -12,6 +12,7 @@ package strings
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // QUOTE STRING INTERFACE
@@ -19,8 +20,16 @@ import (
 // This constructor attempts to create a new quote string from the specified
 // array of runes. It returns a quote string and whether or not the
 // resulting string contained a valid quote.
-func QuoteFromRunes(v []rune) Quote {
-	var quote = Quote(string(v))
+func QuoteFromArray(array []rune) Quote {
+	var quote = Quote(string(array))
+	return quote
+}
+
+// This constructor creates a new quote string from the specified sequence of
+// runes. It returns the corresponding quote string.
+func QuoteFromSequence(sequence abs.Runes) Quote {
+	var array = sequence.AsArray()
+	var quote = QuoteFromArray(array)
 	return quote
 }
 
@@ -52,50 +61,49 @@ func (v Quote) AsArray() []rune {
 // This method retrieves from this string the rune that is associated
 // with the specified index.
 func (v Quote) GetValue(index int) rune {
-	var runes = v.AsArray()
-	var length = len(runes)
-	index = abs.NormalizedIndex(index, length)
-	return runes[index]
+	var array = v.AsArray()
+	var runes = col.Array[rune](array)
+	return runes.GetValue(index)
 }
 
 // This method retrieves from this string all runes from the first index
 // through the last index (inclusive).
-func (v Quote) GetValues(first int, last int) []rune {
-	var runes = v.AsArray()
-	var length = len(runes)
-	first = abs.NormalizedIndex(first, length)
-	last = abs.NormalizedIndex(last, length)
-	return runes[first : last+1]
+func (v Quote) GetValues(first int, last int) abs.Runes {
+	var array = v.AsArray()
+	var runes = col.Array[rune](array)
+	return runes.GetValues(first, last)
 }
 
 // This method returns the index of the FIRST occurence of the specified rune
 // in this string, or zero if this string does not contain the rune.
-func (v Quote) GetIndex(b rune) int {
-	var runes = v.AsArray()
-	for index, candidate := range runes {
-		if candidate == b {
-			// Found the rune.
-			return index + 1 // Convert to an ORDINAL based index.
-		}
-	}
-	// The rune was not found.
-	return 0
+func (v Quote) GetIndex(r rune) int {
+	var array = v.AsArray()
+	var runes = col.Array[rune](array)
+	return runes.GetIndex(r)
 }
 
-// QUOTES LIBRARY
+// This method normalizes an index to match the Go (zero based) indexing. The
+// following transformation is performed:
+//
+//	[-length..-1] and [1..length] => [0..length)
+//
+// Notice that the specified index cannot be zero since zero is not an ORDINAL.
+func (v Quote) GoIndex(index int) int {
+	var array = v.AsArray()
+	var runes = col.Array[rune](array)
+	return runes.GoIndex(index)
+}
 
-// This singleton creates a unique name space for the library functions for
-// quotes.
-var Quotes = &quotes{}
+// LIBRARY FUNCTIONS
 
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for quotes.
-type quotes struct{}
+// This constant defines a namespace within this package for all quote string
+// library functions.
+const Quotes quotes = false
 
-// CHAINABLE INTERFACE
+// This type defines the library functions associated with quote strings.
+type quotes bool
 
-// This library function returns the concatenation of the two specified quote
-// strings.
-func (l *quotes) Concatenate(first Quote, second Quote) Quote {
+// This function returns the concatenation of the two specified quote strings.
+func (l quotes) Concatenate(first Quote, second Quote) Quote {
 	return Quote(first + second)
 }

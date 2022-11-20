@@ -18,10 +18,10 @@ import (
 
 // This constructor creates a new invocation expression.
 func Invocation(
-	target abs.ExpressionLike,
+	target abs.Expression,
 	operator abs.Operator,
 	message string,
-	arguments abs.ListLike[abs.ExpressionLike],
+	arguments abs.Arguments,
 ) abs.InvocationLike {
 	var v = &invocationExpression{}
 	// Perform argument validation.
@@ -35,10 +35,10 @@ func Invocation(
 // This type defines the structure and methods associated with an invocation
 // expression.
 type invocationExpression struct {
-	target    abs.ExpressionLike
+	target    abs.Expression
 	operator  abs.Operator
 	message   string
-	arguments abs.ListLike[abs.ExpressionLike]
+	arguments abs.Arguments
 }
 
 // This method is a dummy method that always returns true.
@@ -53,12 +53,12 @@ func (v *invocationExpression) IsSynchronous() bool {
 }
 
 // This method returns the target expression for this invocation expression.
-func (v *invocationExpression) GetTarget() abs.ExpressionLike {
+func (v *invocationExpression) GetTarget() abs.Expression {
 	return v.target
 }
 
 // This method sets the target expression for this invocation expression.
-func (v *invocationExpression) SetTarget(target abs.ExpressionLike) {
+func (v *invocationExpression) SetTarget(target abs.Expression) {
 	if target == nil {
 		panic("An invocation expression requires a target expression for the message.")
 	}
@@ -91,28 +91,13 @@ func (v *invocationExpression) SetMessage(message string) {
 	v.message = message
 }
 
-// This method returns the argument at the specified index from this invocation
-// expression.
-func (v *invocationExpression) GetArgument(index int) abs.ExpressionLike {
-	return v.arguments.GetValue(index)
-}
-
-// This method sets the argument at the specified index for this invocation
-// expression.
-func (v *invocationExpression) SetArgument(index int, argument abs.ExpressionLike) {
-	if argument == nil {
-		panic("Each argument for an invocation expression requires a value.")
-	}
-	v.arguments.SetValue(index, argument)
-}
-
 // This method returns the list of arguments for this invocation expression.
-func (v *invocationExpression) GetArguments() abs.ListLike[abs.ExpressionLike] {
+func (v *invocationExpression) GetArguments() abs.Arguments {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this invocation expression.
-func (v *invocationExpression) SetArguments(arguments abs.ListLike[abs.ExpressionLike]) {
+func (v *invocationExpression) SetArguments(arguments abs.Arguments) {
 	if arguments == nil {
 		panic("An invocation expression requires an array (possibly empty) of arguments.")
 	}

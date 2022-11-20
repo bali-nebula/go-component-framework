@@ -10,9 +10,13 @@
 
 package abstractions
 
-// ELEMENT INTERFACES
+// TYPE ALIASES
 
-type ElementLike any
+type (
+	Element = any
+)
+
+// INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all discrete elements.
 type Discrete interface {

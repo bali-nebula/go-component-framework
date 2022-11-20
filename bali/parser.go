@@ -13,7 +13,7 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -91,19 +91,19 @@ func Parser(source []byte) *parser {
 	var tokens = make(chan Token, 256)
 	Scanner(source, tokens) // Starts scanning in a go routine.
 	var p = &parser{
-		source:   source,
-		next:     col.StackWithCapacity[*Token](4),
-		tokens:   tokens,
+		source: source,
+		next:   col.StackWithCapacity[*Token](4),
+		tokens: tokens,
 	}
 	return p
 }
 
 // This type defines the structure and methods for the parser agent.
 type parser struct {
-	source   []byte
-	next     abs.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
-	tokens   chan Token            // The queue of unread tokens coming from the scanner.
-	p1, p2, p3, p4 *Token          // The previous four tokens that have been retrieved.
+	source         []byte
+	next           col.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
+	tokens         chan Token            // The queue of unread tokens coming from the scanner.
+	p1, p2, p3, p4 *Token                // The previous four tokens that have been retrieved.
 }
 
 // This method attempts to read the next token from the token stream and return

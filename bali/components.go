@@ -13,11 +13,10 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	age "github.com/craterdog-bali/go-bali-document-notation/agents"
-	col "github.com/craterdog-bali/go-bali-document-notation/collections"
 	com "github.com/craterdog-bali/go-bali-document-notation/components"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
 	str "github.com/craterdog-bali/go-bali-document-notation/strings"
+	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -31,10 +30,10 @@ import (
 
 // This method attempts to parse annotation. It returns the annotation and
 // whether or not the annotation was successfully parsed.
-func (v *parser) parseAnnotation() (abs.AnnotationLike, *Token, bool) {
+func (v *parser) parseAnnotation() (abs.Annotation, *Token, bool) {
 	var ok bool
 	var token *Token
-	var annotation abs.AnnotationLike
+	var annotation abs.Annotation
 	annotation, token, ok = v.parseNote()
 	if !ok {
 		annotation, token, ok = v.parseComment()
@@ -44,7 +43,7 @@ func (v *parser) parseAnnotation() (abs.AnnotationLike, *Token, bool) {
 
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
-func (v *formatter) formatAnnotation(annotation abs.AnnotationLike) {
+func (v *formatter) formatAnnotation(annotation abs.Annotation) {
 	switch value := annotation.(type) {
 	case abs.NoteLike:
 		v.formatNote(value)
@@ -71,14 +70,15 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
 func (v *formatter) formatComment(comment abs.CommentLike) {
-	var lines = comment.AsLines()
-	v.state.AppendString(`!>`)
-	for _, line := range lines {
-		v.state.AppendNewline()
-		v.state.AppendString(line)
+	v.AppendString(`!>`)
+	var iterator = col.Iterator[string](comment)
+	for iterator.HasNext() {
+		var line = iterator.GetNext()
+		v.AppendNewline()
+		v.AppendString(line)
 	}
-	v.state.AppendNewline()
-	v.state.AppendString(`<!`)
+	v.AppendNewline()
+	v.AppendString(`<!`)
 }
 
 // This method attempts to parse a component. It returns the component and
@@ -107,7 +107,7 @@ func (v *formatter) formatComponent(component abs.ComponentLike) {
 		v.formatContext(context)
 	}
 	if component.IsAnnotated() {
-		v.state.AppendString("  ")
+		v.AppendString("  ")
 		var note = component.GetNote()
 		v.formatNote(note)
 	}
@@ -119,7 +119,7 @@ func (v *formatter) formatComponent(component abs.ComponentLike) {
 func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameters abs.CatalogLike[abs.Symbolic, abs.ComponentLike]
+	var parameters abs.Parameters
 	var context abs.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
@@ -152,10 +152,10 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 // This method adds the canonical format for the specified context to the
 // state of the formatter.
 func (v *formatter) formatContext(context abs.ContextLike) {
-	v.state.AppendString("(")
+	v.AppendString("(")
 	var parameters = context.GetParameters()
 	v.formatParameters(parameters)
-	v.state.AppendString(")")
+	v.AppendString(")")
 }
 
 // This method attempts to parse the specified delimiter. It returns
@@ -171,10 +171,10 @@ func (v *parser) parseDelimiter(delimiter string) (string, *Token, bool) {
 
 // This method attempts to parse a component entity. It returns the component
 // entity and whether or not the component entity was successfully parsed.
-func (v *parser) parseEntity() (abs.EntityLike, *Token, bool) {
+func (v *parser) parseEntity() (abs.Entity, *Token, bool) {
 	var ok bool
 	var token *Token
-	var entity abs.EntityLike
+	var entity abs.Entity
 	entity, token, ok = v.parseElement()
 	if !ok {
 		entity, token, ok = v.parseString()
@@ -190,7 +190,7 @@ func (v *parser) parseEntity() (abs.EntityLike, *Token, bool) {
 
 // This method adds the canonical format for the specified entity to the
 // state of the formatter.
-func (v *formatter) formatEntity(entity abs.EntityLike) {
+func (v *formatter) formatEntity(entity abs.Entity) {
 	// NOTE: A type switch will only work if each case specifies a unique
 	// interface. If two different interfaces define the same method signatures
 	// they are indistinguishable as types. To get around this we have added as
@@ -229,13 +229,13 @@ func (v *formatter) formatEntity(entity abs.EntityLike) {
 		v.formatQuote(value)
 	case str.Version:
 		v.formatVersion(value)
-	case abs.Sequential[abs.AssociationLike[abs.KeyLike, abs.ComponentLike]]:
+	case abs.CatalogLike:
 		v.formatCatalog(value)
-	case abs.Sequential[abs.ComponentLike]:
+	case abs.ListLike:
 		v.formatList(value)
-	case abs.RangeLike[abs.PrimitiveLike]:
+	case abs.RangeLike[abs.Primitive]:
 		v.formatRange(value)
-	case abs.Sequential[abs.StatementLike]:
+	case abs.ProcedureLike:
 		v.formatProcedure(value)
 	default:
 		panic(fmt.Sprintf("An invalid entity (of type %T) was passed to the formatter: %v", value, value))
@@ -280,7 +280,7 @@ func (v *parser) parseIdentifier() (string, *Token, bool) {
 // This method adds the canonical format for the specified identifier to the
 // state of the formatter.
 func (v *formatter) formatIdentifier(identifier string) {
-	v.state.AppendString(identifier)
+	v.AppendString(identifier)
 }
 
 // This method attempts to parse the specified keyword. It returns
@@ -310,14 +310,14 @@ func (v *parser) parseNote() (abs.NoteLike, *Token, bool) {
 // This method adds the canonical format for the specified annotation to the
 // state of the formatter.
 func (v *formatter) formatNote(note abs.NoteLike) {
-	v.state.AppendString("! ")
-	v.state.AppendString(note.AsString())
+	v.AppendString("! ")
+	v.AppendString(string(note.AsArray()))
 }
 
 // This method attempts to parse a parameter containing a name and value. It
 // returns the parameter and whether or not the parameter was successfully
 // parsed.
-func (v *parser) parseParameter() (abs.AssociationLike[abs.Symbolic, abs.ComponentLike], *Token, bool) {
+func (v *parser) parseParameter() (abs.Parameter, *Token, bool) {
 	var ok bool
 	var token *Token
 	var name abs.Symbolic
@@ -338,17 +338,17 @@ func (v *parser) parseParameter() (abs.AssociationLike[abs.Symbolic, abs.Compone
 	if !ok {
 		panic("Expected a value after the ':' character.")
 	}
-	var parameter = col.Association[abs.Symbolic, abs.ComponentLike](name, value)
+	var parameter = col.Association(name, value)
 	return parameter, token, true
 }
 
 // This method adds the canonical format for the specified parameter to the
 // state of the formatter.
-func (v *formatter) formatParameter(parameter abs.AssociationLike[abs.Symbolic, abs.ComponentLike]) {
+func (v *formatter) formatParameter(parameter abs.Parameter) {
 	var key = parameter.GetKey()
-	v.state.AppendString("$")
+	v.AppendString("$")
 	v.formatIdentifier(key.GetIdentifier())
-	v.state.AppendString(": ")
+	v.AppendString(": ")
 	var value = parameter.GetValue()
 	v.formatComponent(value)
 }
@@ -356,10 +356,10 @@ func (v *formatter) formatParameter(parameter abs.AssociationLike[abs.Symbolic, 
 // This method attempts to parse context parameters. It returns the
 // context parameters and whether or not the context parameters were
 // successfully parsed.
-func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, abs.ComponentLike], *Token, bool) {
+func (v *parser) parseParameters() (abs.Parameters, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameter abs.AssociationLike[abs.Symbolic, abs.ComponentLike]
+	var parameter abs.Parameter
 	var parameters = col.Catalog[abs.Symbolic, abs.ComponentLike]()
 	_, token, ok = v.parseEOL()
 	if !ok {
@@ -410,8 +410,8 @@ func (v *parser) parseParameters() (abs.CatalogLike[abs.Symbolic, abs.ComponentL
 
 // This method adds the canonical format for the specified parameters to the
 // state of the formatter.
-func (v *formatter) formatParameters(parameters abs.Sequential[abs.AssociationLike[abs.Symbolic, abs.ComponentLike]]) {
-	var iterator = age.Iterator(parameters)
+func (v *formatter) formatParameters(parameters abs.Parameters) {
+	var iterator = col.Iterator[abs.Parameter](parameters)
 	switch parameters.GetSize() {
 	case 0:
 		panic("A context must have at least one parameter.")
@@ -419,14 +419,14 @@ func (v *formatter) formatParameters(parameters abs.Sequential[abs.AssociationLi
 		var parameter = iterator.GetNext()
 		v.formatParameter(parameter)
 	default:
-		v.state.IncrementDepth()
+		v.depth++
 		for iterator.HasNext() {
-			v.state.AppendNewline()
+			v.AppendNewline()
 			var parameter = iterator.GetNext()
 			v.formatParameter(parameter)
 		}
-		v.state.DecrementDepth()
-		v.state.AppendNewline()
+		v.depth--
+		v.AppendNewline()
 	}
 }
 

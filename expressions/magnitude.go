@@ -17,7 +17,7 @@ import (
 // MAGNITUDE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new magnitude expression.
-func Magnitude(expression abs.ExpressionLike) abs.MagnitudeLike {
+func Magnitude(expression abs.Expression) abs.MagnitudeLike {
 	var v = &magnitudeExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)
@@ -27,7 +27,7 @@ func Magnitude(expression abs.ExpressionLike) abs.MagnitudeLike {
 // This type defines the structure and methods associated with a magnitude
 // expression.
 type magnitudeExpression struct {
-	expression abs.ExpressionLike
+	expression abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -37,13 +37,13 @@ func (v *magnitudeExpression) IsMagnitude() bool {
 
 // This method returns the expression to be operated on by this magnitude
 // expression.
-func (v *magnitudeExpression) GetExpression() abs.ExpressionLike {
+func (v *magnitudeExpression) GetExpression() abs.Expression {
 	return v.expression
 }
 
 // This method sets the expression to be operated on by this magnitude
 // expression to the specified value.
-func (v *magnitudeExpression) SetExpression(expression abs.ExpressionLike) {
+func (v *magnitudeExpression) SetExpression(expression abs.Expression) {
 	if expression == nil {
 		panic("The expression to be operated on cannot be nil.")
 	}

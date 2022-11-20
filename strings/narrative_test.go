@@ -18,38 +18,34 @@ import (
 
 const n0 = ""
 
-const n1 = "	abcd本1234"
+const n1 = "	abcd本\n1234"
 
-const n2 = "d本1"
+const n2 = "	abcd本"
 
-const n3 = "	abcd本"
-
-const n4 = "1234"
+const n3 = "1234"
 
 func TestEmptyNarrative(t *tes.T) {
 	var v = str.Narrative(n0)
 	ass.Equal(t, n0, string(v))
 	ass.True(t, v.IsEmpty())
-	ass.Equal(t, 0, v.GetSize())
-	ass.Equal(t, 0, len(v.AsArray()))
-	ass.Equal(t, 1, len(v.AsLines()))
+	ass.Equal(t, 1, v.GetSize())
+	ass.Equal(t, 1, len(v.AsArray()))
 }
 
 func TestNarrative(t *tes.T) {
 	var v = str.Narrative(n1)
 	ass.Equal(t, n1, string(v))
 	ass.False(t, v.IsEmpty())
-	ass.Equal(t, 10, v.GetSize())
-	ass.Equal(t, 'a', v.GetValue(2))
-	ass.Equal(t, '4', v.GetValue(-1))
-	ass.Equal(t, n2, string(str.Narrative(string(v.GetValues(5, 7)))))
-	ass.Equal(t, 6, v.GetIndex('本'))
-	ass.Equal(t, 10, len(v.AsArray()))
-	ass.Equal(t, 1, len(v.AsLines()))
+	ass.Equal(t, 2, v.GetSize())
+	ass.Equal(t, n2, v.GetValue(1))
+	ass.Equal(t, n3, v.GetValue(-1))
+	ass.Equal(t, n1, string(str.NarrativeFromArray([]string{n2, n3})))
+	ass.Equal(t, 2, v.GetIndex(n3))
+	ass.Equal(t, 2, len(v.AsArray()))
 }
 
 func TestNarrativesLibrary(t *tes.T) {
-	var v1 = str.Narrative(n3)
-	var v2 = str.Narrative(n4)
+	var v1 = str.Narrative(n2)
+	var v2 = str.Narrative(n3)
 	ass.Equal(t, n1, string(str.Narratives.Concatenate(v1, v2)))
 }

@@ -46,33 +46,3 @@ func (v *whileClause) SetBlock(block abs.BlockLike) {
 	}
 	v.block = block
 }
-
-// This method returns the condition expression for this while clause.
-func (v *whileClause) GetCondition() abs.ExpressionLike {
-	return v.block.GetExpression()
-}
-
-// This method sets the condition expression for this while clause.
-func (v *whileClause) SetCondition(condition abs.ExpressionLike) {
-	v.block.SetExpression(condition)
-}
-
-// This method returns the statement at the specified index from this while clause.
-func (v *whileClause) GetStatement(index int) abs.StatementLike {
-	return v.block.GetStatement(index)
-}
-
-// This method sets the statement at the specified index for this while clause.
-func (v *whileClause) SetStatement(index int, statement abs.StatementLike) {
-	v.block.SetStatement(index, statement)
-}
-
-// This method returns the list of statements for this while clause.
-func (v *whileClause) GetProcedure() abs.ProcedureLike {
-	return v.block.GetProcedure()
-}
-
-// This method sets the list of statements for this while clause.
-func (v *whileClause) SetProcedure(statements abs.ProcedureLike) {
-	v.block.SetProcedure(statements)
-}

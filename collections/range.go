@@ -14,13 +14,14 @@ import (
 	fmt "fmt"
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
 	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	col "github.com/craterdog/go-collection-framework"
 	ref "reflect"
 )
 
 // RANGE IMPLEMENTATION
 
 // This constructor creates a new range of values covering the specified endpoints.
-func Range[V abs.PrimitiveLike](first V, extent abs.Extent, last V) abs.RangeLike[V] {
+func Range[V abs.Primitive](first V, extent abs.Extent, last V) abs.RangeLike[V] {
 	switch extent {
 	case abs.INCLUSIVE:
 	case abs.LEFT:
@@ -39,7 +40,7 @@ func Range[V abs.PrimitiveLike](first V, extent abs.Extent, last V) abs.RangeLik
 // This type defines the structure and methods associated with a range of values.
 // This type is parameterized as follows:
 //   - V is any primitive type.
-type ranje[V abs.PrimitiveLike] struct {
+type ranje[V abs.Primitive] struct {
 	first  V
 	extent abs.Extent
 	last   V
@@ -79,7 +80,7 @@ func (v *ranje[V]) AsArray() []V {
 // INDEXED INTERFACE
 
 // This method sets the comparer function for this list.
-func (v *ranje[V]) SetComparer(compare abs.ComparisonFunction) {
+func (v *ranje[V]) SetComparer(compare col.ComparisonFunction) {
 	// This method does nothing since range values are either sequential or only
 	// have meaning within the context of a set. We may revisit this...
 }
@@ -87,7 +88,7 @@ func (v *ranje[V]) SetComparer(compare abs.ComparisonFunction) {
 // This method retrieves from this range the value that is associated with the
 // specified index.
 func (v *ranje[V]) GetValue(index int) V {
-	var offset = abs.NormalizedIndex(index, v.size)
+	var offset = v.GoIndex(index)
 	var first = v.effectiveFirst()
 	var value = v.indexToValue(first + offset)
 	return value
@@ -95,8 +96,8 @@ func (v *ranje[V]) GetValue(index int) V {
 
 // This method retrieves from this range all values from the first index through
 // the last index (inclusive).
-func (v *ranje[V]) GetValues(first int, last int) abs.Sequential[V] {
-	var values = List[V]()
+func (v *ranje[V]) GetValues(first int, last int) col.Sequential[V] {
+	var values = col.List[V]()
 	for index := first; index <= last; index++ {
 		var value = v.indexToValue(index)
 		values.AddValue(value)
@@ -117,6 +118,34 @@ func (v *ranje[V]) GetIndex(value V) int {
 		return 0
 	}
 	return offset
+}
+
+// This method normalizes an index to match the Go (zero based) indexing. The
+// following transformation is performed:
+//
+//	[-length..-1] and [1..length] => [0..length)
+//
+// Notice that the specified index cannot be zero since zero is not an ORDINAL.
+func (v *ranje[V]) GoIndex(index int) int {
+	var length = v.size
+	switch {
+	case index < -length || index == 0 || index > length:
+		// The index is outside the bounds of the specified range.
+		panic(fmt.Sprintf(
+			"The specified index is outside the allowed ranges [-%v..-1] and [1..%v]: %v",
+			length,
+			length,
+			index))
+	case index < 0:
+		// Convert a negative index.
+		return index + length
+	case index > 0:
+		// Convert a positive index.
+		return index - 1
+	default:
+		// This should never happen so time to panic...
+		panic(fmt.Sprintf("Compiler problem, unexpected index value: %v", index))
+	}
 }
 
 // ELASTIC INTERFACE
@@ -162,7 +191,7 @@ func (v *ranje[V]) SetLast(value V) {
 // type T.
 func (v *ranje[V]) indexToValue(index int) V {
 	var template V
-	var value abs.PrimitiveLike = template
+	var value abs.Primitive = template
 	switch value.(type) {
 	case uint8:
 		value = uint8(index)
@@ -186,7 +215,7 @@ func (v *ranje[V]) indexToValue(index int) V {
 
 // This function converts the type of the specified value to an integer type.
 func (v *ranje[V]) valueToIndex(value V) int {
-	var template abs.PrimitiveLike = value
+	var template abs.Primitive = value
 	switch index := template.(type) {
 	case uint8:
 		return int(index)

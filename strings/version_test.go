@@ -23,9 +23,9 @@ func TestVersion(t *tes.T) {
 	ass.Equal(t, 3, v1.GetSize())
 	ass.Equal(t, 1, v1.GetValue(1))
 	ass.Equal(t, 3, v1.GetValue(-1))
-	var v2 = str.VersionFromOrdinals(v1.AsArray())
+	var v2 = str.VersionFromArray(v1.AsArray())
 	ass.Equal(t, string(v1), string(v2))
-	var v3 = str.VersionFromOrdinals(v1.GetValues(1, 2))
+	var v3 = str.VersionFromSequence(v1.GetValues(1, 2))
 	ass.Equal(t, "1.2", string(v3))
 	ass.Equal(t, 3, v1.GetIndex(3))
 }

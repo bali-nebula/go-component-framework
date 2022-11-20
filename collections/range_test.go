@@ -12,8 +12,8 @@ package collections_test
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	age "github.com/craterdog-bali/go-bali-document-notation/agents"
 	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	co2 "github.com/craterdog/go-collection-framework"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -29,7 +29,7 @@ func TestRangesWithIntegers(t *tes.T) {
 	ass.Equal(t, 5, s.GetIndex(7))
 	ass.Equal(t, 0, s.GetIndex(8))
 	ass.Equal(t, []int{3, 4, 5, 6, 7}, s.AsArray())
-	var iterator = age.Iterator[int](s)
+	var iterator = co2.Iterator[int](s)
 	ass.Equal(t, 3, iterator.GetNext())
 	iterator.ToEnd()
 	ass.Equal(t, 7, iterator.GetPrevious())
@@ -72,7 +72,7 @@ func TestRangesWithRunes(t *tes.T) {
 	ass.Equal(t, 'd', s.GetValue(4))
 	ass.Equal(t, 13, s.GetIndex('m'))
 
-	var a = col.List[rune]()
+	var a = co2.List[rune]()
 	var values = s.AsArray()
 	a.AddValues(s)
 	ass.Equal(t, values, a.AsArray())

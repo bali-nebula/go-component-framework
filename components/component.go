@@ -17,7 +17,7 @@ import (
 // COMPONENT IMPLEMENTATION
 
 // This constructor creates a new component.
-func Component(entity abs.EntityLike) abs.ComponentLike {
+func Component(entity abs.Entity) abs.ComponentLike {
 	var v = &component{}
 	// Perform argument validation.
 	v.SetEntity(entity)
@@ -25,7 +25,7 @@ func Component(entity abs.EntityLike) abs.ComponentLike {
 }
 
 // This constructor creates a new component with the specified context.
-func ComponentWithContext(entity abs.EntityLike, context abs.ContextLike) abs.ComponentLike {
+func ComponentWithContext(entity abs.Entity, context abs.ContextLike) abs.ComponentLike {
 	var v = &component{}
 	// Perform argument validation.
 	v.SetEntity(entity)
@@ -35,33 +35,29 @@ func ComponentWithContext(entity abs.EntityLike, context abs.ContextLike) abs.Co
 
 // This type defines the structure and methods associated with a component.
 type component struct {
-	entity  abs.EntityLike
+	entity  abs.Entity
 	context abs.ContextLike
 	note    abs.NoteLike
 }
 
 // COMPONENT IMPLEMENTATION
 
-// This method determines whether or not this component is parameterized.
-func (v *component) IsGeneric() bool {
-	return v.context != nil
-}
-
-func (v *component) IsAnnotated() bool {
-	return v.note != nil
-}
-
 // This method returns the entity for this component.
-func (v *component) GetEntity() abs.EntityLike {
+func (v *component) GetEntity() abs.Entity {
 	return v.entity
 }
 
 // This method sets the entity for this component.
-func (v *component) SetEntity(entity abs.EntityLike) {
+func (v *component) SetEntity(entity abs.Entity) {
 	if entity == nil {
 		panic("A component requires an entity.")
 	}
 	v.entity = entity
+}
+
+// This method determines whether or not this component is parameterized.
+func (v *component) IsGeneric() bool {
+	return v.context != nil
 }
 
 // This method returns the context for this component.
@@ -72,6 +68,11 @@ func (v *component) GetContext() abs.ContextLike {
 // This method sets the context for this component.
 func (v *component) SetContext(context abs.ContextLike) {
 	v.context = context
+}
+
+// This method determines whether or not this component is annotated.
+func (v *component) IsAnnotated() bool {
+	return v.note != nil
 }
 
 // This method returns the note for this component.

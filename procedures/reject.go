@@ -18,13 +18,13 @@ import (
 // message that was previously retrieved from a named message bag so that it
 // can be retrieved by another party.
 type Reject struct {
-	Message abs.ExpressionLike
+	Message abs.Expression
 }
 
 // REJECT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new reject clause.
-func RejectClause(message abs.ExpressionLike) abs.RejectClauseLike {
+func RejectClause(message abs.Expression) abs.RejectClauseLike {
 	var v = &rejectClause{}
 	// Perform argument validation.
 	v.SetMessage(message)
@@ -34,7 +34,7 @@ func RejectClause(message abs.ExpressionLike) abs.RejectClauseLike {
 // This type defines the structure and methods associated with an reject
 // clause.
 type rejectClause struct {
-	message abs.ExpressionLike
+	message abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -43,12 +43,12 @@ func (v *rejectClause) IsRejectClause() bool {
 }
 
 // This method returns the message expression for this reject clause.
-func (v *rejectClause) GetMessage() abs.ExpressionLike {
+func (v *rejectClause) GetMessage() abs.Expression {
 	return v.message
 }
 
 // This method sets the message expression for this reject clause.
-func (v *rejectClause) SetMessage(message abs.ExpressionLike) {
+func (v *rejectClause) SetMessage(message abs.Expression) {
 	if message == nil {
 		panic("An reject clause requires a message.")
 	}

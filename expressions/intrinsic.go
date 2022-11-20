@@ -17,7 +17,7 @@ import (
 // INTRINSIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new intrinsic expression.
-func Intrinsic(function string, arguments abs.ListLike[abs.ExpressionLike]) abs.IntrinsicLike {
+func Intrinsic(function string, arguments abs.Arguments) abs.IntrinsicLike {
 	var v = &intrinsicExpression{}
 	// Perform argument validation.
 	v.SetFunction(function)
@@ -29,7 +29,7 @@ func Intrinsic(function string, arguments abs.ListLike[abs.ExpressionLike]) abs.
 // expression.
 type intrinsicExpression struct {
 	function  string
-	arguments abs.ListLike[abs.ExpressionLike]
+	arguments abs.Arguments
 }
 
 // This method is a dummy method that always returns true.
@@ -50,28 +50,13 @@ func (v *intrinsicExpression) SetFunction(function string) {
 	v.function = function
 }
 
-// This method returns the argument at the specified index from this intrinsic
-// expression.
-func (v *intrinsicExpression) GetArgument(index int) abs.ExpressionLike {
-	return v.arguments.GetValue(index)
-}
-
-// This method sets the argument at the specified index for this intrinsic
-// expression.
-func (v *intrinsicExpression) SetArgument(index int, argument abs.ExpressionLike) {
-	if argument == nil {
-		panic("Each argument for an intrinsic expression requires a value.")
-	}
-	v.arguments.SetValue(index, argument)
-}
-
 // This method returns the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) GetArguments() abs.ListLike[abs.ExpressionLike] {
+func (v *intrinsicExpression) GetArguments() abs.Arguments {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) SetArguments(arguments abs.ListLike[abs.ExpressionLike]) {
+func (v *intrinsicExpression) SetArguments(arguments abs.Arguments) {
 	if arguments == nil {
 		panic("An intrinsic expression requires an array (possibly empty) of arguments.")
 	}

@@ -44,7 +44,7 @@ func (v *formatter) formatAngle(angle ele.Angle) {
 	} else {
 		s = "~" + stc.FormatFloat(float64(angle), 'G', -1, 64)
 	}
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a boolean element. It returns the boolean
@@ -66,7 +66,7 @@ func (v *parser) parseBoolean() (ele.Boolean, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatBoolean(boolean ele.Boolean) {
 	var s = stc.FormatBool(bool(boolean))
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a duration element. It returns the duration
@@ -130,7 +130,7 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 		// It is an exact number of weeks.
 		result.WriteString(stc.FormatInt(int64(weeks), 10))
 		result.WriteString("W")
-		v.state.AppendString(result.String())
+		v.AppendString(result.String())
 		return
 	}
 	var years = duration.GetYears()
@@ -154,7 +154,7 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 	var milliseconds = duration.GetMilliseconds()
 	if hours+minutes+seconds+milliseconds == 0 {
 		// There is no time part of the duration.
-		v.state.AppendString(result.String())
+		v.AppendString(result.String())
 		return
 	}
 	result.WriteString("T")
@@ -174,17 +174,17 @@ func (v *formatter) formatDuration(duration ele.Duration) {
 		}
 		result.WriteString("S")
 	}
-	v.state.AppendString(result.String())
+	v.AppendString(result.String())
 }
 
 // This method attempts to parse an element primitive. It returns the
 // element primitive and whether or not the element primitive was
 // successfully parsed.
-func (v *parser) parseElement() (abs.ElementLike, *Token, bool) {
+func (v *parser) parseElement() (abs.Element, *Token, bool) {
 	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
-	var element abs.ElementLike
+	var element abs.Element
 	element, token, ok = v.parseAngle()
 	if !ok {
 		element, token, ok = v.parseBoolean()
@@ -251,7 +251,7 @@ func (v *formatter) formatImaginary(i float64) {
 	default:
 		s = stc.FormatFloat(i, 'G', -1, 64) + "i"
 	}
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a moment element. It returns the moment
@@ -309,7 +309,7 @@ func (v *formatter) formatMoment(moment ele.Moment) {
 	}
 	result.WriteString(">")
 	var s = result.String()
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a number element. It returns the number
@@ -402,11 +402,11 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 func (v *formatter) formatNumber(number ele.Number) {
 	switch {
 	case number.IsZero():
-		v.state.AppendString("0")
+		v.AppendString("0")
 	case number.IsInfinite():
-		v.state.AppendString("∞")
+		v.AppendString("∞")
 	case number.IsUndefined():
-		v.state.AppendString("undefined")
+		v.AppendString("undefined")
 	default:
 		var realPart = number.GetReal()
 		var imagPart = number.GetImaginary()
@@ -416,11 +416,11 @@ func (v *formatter) formatNumber(number ele.Number) {
 		case realPart == 0:
 			v.formatImaginary(imagPart)
 		default:
-			v.state.AppendString("(")
+			v.AppendString("(")
 			v.formatReal(realPart)
-			v.state.AppendString(", ")
+			v.AppendString(", ")
 			v.formatImaginary(imagPart)
-			v.state.AppendString(")")
+			v.AppendString(")")
 		}
 	}
 }
@@ -434,7 +434,7 @@ func (v *formatter) formatPhase(p ele.Angle) {
 	} else {
 		s = "~" + stc.FormatFloat(float64(p), 'G', -1, 64) + "i"
 	}
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method adds the canonical format for the specified element to the state
@@ -442,11 +442,11 @@ func (v *formatter) formatPhase(p ele.Angle) {
 func (v *formatter) formatPolar(number ele.Number) {
 	switch {
 	case number.IsZero():
-		v.state.AppendString("0")
+		v.AppendString("0")
 	case number.IsInfinite():
-		v.state.AppendString("∞")
+		v.AppendString("∞")
 	case number.IsUndefined():
-		v.state.AppendString("undefined")
+		v.AppendString("undefined")
 	default:
 		var magnitude = number.GetMagnitude()
 		var phase = number.GetPhase()
@@ -454,13 +454,13 @@ func (v *formatter) formatPolar(number ele.Number) {
 		case phase.IsZero():
 			v.formatReal(magnitude)
 		case magnitude == 0:
-			v.state.AppendString("0")
+			v.AppendString("0")
 		default:
-			v.state.AppendString("(")
+			v.AppendString("(")
 			v.formatReal(magnitude)
-			v.state.AppendString("e^")
+			v.AppendString("e^")
 			v.formatPhase(phase)
-			v.state.AppendString(")")
+			v.AppendString(")")
 		}
 	}
 }
@@ -498,7 +498,7 @@ func (v *formatter) formatPattern(pattern ele.Pattern) {
 	case `.*`:
 		s = `any`
 	}
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a percentage element. It returns the percentage
@@ -521,7 +521,7 @@ func (v *parser) parsePercentage() (ele.Percentage, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatPercentage(percentage ele.Percentage) {
 	var s = stc.FormatFloat(float64(percentage), 'G', -1, 64) + "%"
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a probability element. It returns the probability
@@ -555,7 +555,7 @@ func (v *formatter) formatProbability(probability ele.Probability) {
 	default:
 		s = s[1:]
 	}
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method adds the canonical format for the specified real number to the
@@ -582,7 +582,7 @@ func (v *formatter) formatReal(r float64) {
 	default:
 		s = stc.FormatFloat(r, 'G', -1, 64)
 	}
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a resource element. It returns the
@@ -605,7 +605,7 @@ func (v *parser) parseResource() (ele.Resource, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatResource(resource ele.Resource) {
 	var s = "<" + string(resource) + ">"
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a probability element. It returns the
@@ -630,7 +630,7 @@ func (v *parser) parseSymbol() (ele.Symbol, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatSymbol(symbol ele.Symbol) {
 	var s = "$" + string(symbol)
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a tag element. It returns the
@@ -653,7 +653,7 @@ func (v *parser) parseTag() (ele.Tag, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatTag(tag ele.Tag) {
 	var s = "#" + string(tag)
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // PRIVATE FUNCTIONS

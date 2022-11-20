@@ -12,6 +12,7 @@ package strings
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -19,9 +20,16 @@ import (
 
 // This constructor attempts to create a new moniker string from the specified
 // array of names. It returns the corresponding moniker string.
-func MonikerFromNames(v []string) Moniker {
-	var moniker = Moniker("/" + sts.Join(v, "/"))
+func MonikerFromArray(array []string) Moniker {
+	var moniker = Moniker("/" + sts.Join(array, "/"))
 	return moniker
+}
+
+// This constructor creates a new moniker string from the specified name space
+// sequence. It returns the corresponding moniker string.
+func MonikerFromSequence(sequence abs.Names) Moniker {
+	var array = sequence.AsArray()
+	return MonikerFromArray(array)
 }
 
 // This type defines the methods associated with a moniker string that
@@ -53,52 +61,51 @@ func (v Moniker) AsArray() []string {
 // This method retrieves from this string the name that is associated with the
 // specified index.
 func (v Moniker) GetValue(index int) string {
-	var names = v.AsArray()
-	var length = len(names)
-	index = abs.NormalizedIndex(index, length)
-	return names[index]
+	var array = v.AsArray()
+	var names = col.Array[string](array)
+	return names.GetValue(index)
 }
 
 // This method retrieves from this string all names from the first index through
 // the last index (inclusive).
-func (v Moniker) GetValues(first int, last int) []string {
-	var names = v.AsArray()
-	var length = len(names)
-	first = abs.NormalizedIndex(first, length)
-	last = abs.NormalizedIndex(last, length)
-	var size = last - first + 1
-	return names[first:size]
+func (v Moniker) GetValues(first int, last int) abs.Names {
+	var array = v.AsArray()
+	var names = col.Array[string](array)
+	return names.GetValues(first, last)
 }
 
 // This method returns the index of the FIRST occurence of the specified name in
 // this string, or zero if this string does not contain the name.
 func (v Moniker) GetIndex(name string) int {
-	var names = v.AsArray()
-	for index, candidate := range names {
-		if candidate == name {
-			// Found the name.
-			return index + 1 // Convert to an ORDINAL based index.
-		}
-	}
-	// The name was not found.
-	return 0
+	var array = v.AsArray()
+	var names = col.Array[string](array)
+	return names.GetIndex(name)
 }
 
-// MONIKERS LIBRARY
+// This method normalizes an index to match the Go (zero based) indexing. The
+// following transformation is performed:
+//
+//	[-length..-1] and [1..length] => [0..length)
+//
+// Notice that the specified index cannot be zero since zero is not an ORDINAL.
+func (v Moniker) GoIndex(index int) int {
+	var array = v.AsArray()
+	var names = col.Array[string](array)
+	return names.GoIndex(index)
+}
 
-// This singleton creates a unique name space for the library functions for
-// monikers.
-var Monikers = &monikers{}
+// LIBRARY FUNCTIONS
 
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for monikers.
-type monikers struct{}
+// This constant defines a namespace within this package for all moniker string
+// library functions.
+const Monikers monikers = false
 
-// CHAINABLE INTERFACE
+// This type defines the library functions associated with moniker strings.
+type monikers bool
 
-// This library function returns the concatenation of the two specified moniker
+// This function returns the concatenation of the two specified moniker
 // strings.
-func (l *monikers) Concatenate(first Moniker, second Moniker) Moniker {
+func (l monikers) Concatenate(first Moniker, second Moniker) Moniker {
 	var moniker = first + second
 	return Moniker(moniker)
 }

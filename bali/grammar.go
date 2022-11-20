@@ -29,7 +29,7 @@ var grammar = map[string]string{
 	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
 	"$assignClause": `
 	letClause         ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
-	"$association":  `key ":" value`,
+	"$association": `key ":" value`,
 	"$associations": `
     association {"," association} |
     EOL <association EOL> |
@@ -57,9 +57,9 @@ var grammar = map[string]string{
 	breakClause    |  ! "break" "loop"
 	returnClause   |  ! "return" result
 	throwClause       ! "throw" exception`,
-	"$dereference":    `"@" expression`,
-	"$discardClause":  `"discard" document`,
-	"$document":       `expression`,
+	"$dereference":   `"@" expression`,
+	"$discardClause": `"discard" document`,
+	"$document":      `expression`,
 	"$documentClause": `
 	checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
 	saveClause     |  ! "save" document "as" recipient
@@ -68,11 +68,11 @@ var grammar = map[string]string{
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
-	"$entity":         `element | string | collection | procedure`,
-	"$letClause":      `["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
-	"$event":          `expression`,
-	"$exception":      `expression`,
-	"$exponential":    `expression "^" expression`,
+	"$entity":      `element | string | collection | procedure`,
+	"$letClause":   `["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
+	"$event":       `expression`,
+	"$exception":   `expression`,
+	"$exponential": `expression "^" expression`,
 	"$expression": `
     component   |  ! entity [context] [NOTE]
     intrinsic   |  ! function arguments
@@ -105,7 +105,7 @@ var grammar = map[string]string{
 	controlClause  |
 	documentClause |
 	messageClause`,
-	"$message":        `expression`,
+	"$message": `expression`,
 	"$messageClause": `
 	postClause     |  ! "post" message "to" bag
 	retrieveClause |  ! "retrieve" recipient "from" bag

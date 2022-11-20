@@ -17,7 +17,7 @@ import (
 // DEREFERENCE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new dereference expression.
-func Dereference(operator abs.Operator, expression abs.ExpressionLike) abs.DereferenceLike {
+func Dereference(operator abs.Operator, expression abs.Expression) abs.DereferenceLike {
 	var v = &dereferenceExpression{}
 	// Perform argument validation.
 	v.SetOperator(operator)
@@ -29,7 +29,7 @@ func Dereference(operator abs.Operator, expression abs.ExpressionLike) abs.Deref
 // expression.
 type dereferenceExpression struct {
 	operator   abs.Operator
-	expression abs.ExpressionLike
+	expression abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -53,13 +53,13 @@ func (v *dereferenceExpression) SetOperator(operator abs.Operator) {
 
 // This method returns the expression to be operated on by this dereference
 // expression.
-func (v *dereferenceExpression) GetExpression() abs.ExpressionLike {
+func (v *dereferenceExpression) GetExpression() abs.Expression {
 	return v.expression
 }
 
 // This method sets the expression to be operated on by this dereference
 // expression to the specified value.
-func (v *dereferenceExpression) SetExpression(expression abs.ExpressionLike) {
+func (v *dereferenceExpression) SetExpression(expression abs.Expression) {
 	if expression == nil {
 		panic("The expression to be operated on cannot be nil.")
 	}

@@ -17,7 +17,7 @@ import (
 // PUBLISH CLAUSE IMPLEMENTATION
 
 // This constructor creates a new publish clause.
-func PublishClause(event abs.ExpressionLike) abs.PublishClauseLike {
+func PublishClause(event abs.Expression) abs.PublishClauseLike {
 	var v = &publishClause{}
 	// Perform argument validation.
 	v.SetEvent(event)
@@ -27,7 +27,7 @@ func PublishClause(event abs.ExpressionLike) abs.PublishClauseLike {
 // This type defines the structure and methods associated with a publish
 // clause.
 type publishClause struct {
-	event abs.ExpressionLike
+	event abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -36,12 +36,12 @@ func (v *publishClause) IsPublishClause() bool {
 }
 
 // This method returns the event expression for this publish clause.
-func (v *publishClause) GetEvent() abs.ExpressionLike {
+func (v *publishClause) GetEvent() abs.Expression {
 	return v.event
 }
 
 // This method sets the event expression for this publish clause.
-func (v *publishClause) SetEvent(event abs.ExpressionLike) {
+func (v *publishClause) SetEvent(event abs.Expression) {
 	if event == nil {
 		panic("A publish clause requires an event.")
 	}

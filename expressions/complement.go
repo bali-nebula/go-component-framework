@@ -17,7 +17,7 @@ import (
 // COMPLEMENT EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new complement expression.
-func Complement(operator abs.Operator, expression abs.ExpressionLike) abs.ComplementLike {
+func Complement(operator abs.Operator, expression abs.Expression) abs.ComplementLike {
 	var v = &complementExpression{}
 	// Perform argument validation.
 	v.SetOperator(operator)
@@ -29,7 +29,7 @@ func Complement(operator abs.Operator, expression abs.ExpressionLike) abs.Comple
 // expression.
 type complementExpression struct {
 	operator   abs.Operator
-	expression abs.ExpressionLike
+	expression abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -53,13 +53,13 @@ func (v *complementExpression) SetOperator(operator abs.Operator) {
 
 // This method returns the expression to be operated on by this complement
 // expression.
-func (v *complementExpression) GetExpression() abs.ExpressionLike {
+func (v *complementExpression) GetExpression() abs.Expression {
 	return v.expression
 }
 
 // This method sets the expression to be operated on by this complement
 // expression to the specified value.
-func (v *complementExpression) SetExpression(expression abs.ExpressionLike) {
+func (v *complementExpression) SetExpression(expression abs.Expression) {
 	if expression == nil {
 		panic("The expression to be operated on cannot be nil.")
 	}

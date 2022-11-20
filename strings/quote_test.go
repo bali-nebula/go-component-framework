@@ -30,8 +30,8 @@ func TestQuote(t *tes.T) {
 	ass.Equal(t, 9, v.GetSize())
 	ass.Equal(t, 'a', v.GetValue(1))
 	ass.Equal(t, '4', v.GetValue(-1))
-	ass.Equal(t, v.AsArray(), str.QuoteFromRunes(v.AsArray()).AsArray())
-	ass.Equal(t, "d本1", string(str.QuoteFromRunes(v.GetValues(4, 6))))
+	ass.Equal(t, v.AsArray(), str.QuoteFromArray(v.AsArray()).AsArray())
+	ass.Equal(t, "d本1", string(str.QuoteFromSequence(v.GetValues(4, 6))))
 	ass.Equal(t, 5, v.GetIndex('本'))
 }
 

@@ -10,41 +10,55 @@
 
 package abstractions
 
-// EXPRESSION INTERFACES
+import (
+	col "github.com/craterdog/go-collection-framework"
+)
 
-type ExpressionLike any
+// TYPE ALIASES
+
+// These type assignments hide the dependencies on the package used to implement
+// the collection types. It preserves the collection interfaces in a way that
+// will allow them to evolve separately as needed. Currently, the interfaces are
+// synchronized.
+type (
+	Expression = any
+	Arguments  = col.Sequential[Expression]
+	Indices    = col.Sequential[Expression]
+)
+
+// INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all arithmetic-like expressions.
 type ArithmeticLike interface {
 	IsArithmetic() bool
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all chaining-like expressions.
 type ChainingLike interface {
 	IsChaining() bool
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all comparison-like expressions.
 type ComparisonLike interface {
 	IsComparison() bool
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all complement-like expressions.
@@ -52,8 +66,8 @@ type ComplementLike interface {
 	IsComplement() bool
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all dereference-like expressions.
@@ -61,19 +75,19 @@ type DereferenceLike interface {
 	IsDereference() bool
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all exponential-like expressions.
 type ExponentialLike interface {
 	IsExponential() bool
-	GetBase() ExpressionLike
-	SetBase(base ExpressionLike)
+	GetBase() Expression
+	SetBase(base Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetExponent() ExpressionLike
-	SetExponent(exponent ExpressionLike)
+	GetExponent() Expression
+	SetExponent(exponent Expression)
 }
 
 // This interface defines the methods supported by all intrinsic-like expressions.
@@ -81,10 +95,8 @@ type IntrinsicLike interface {
 	IsIntrinsic() bool
 	GetFunction() string
 	SetFunction(function string)
-	GetArgument(index int) ExpressionLike           // Ordinal based indexing.
-	SetArgument(index int, argument ExpressionLike) // Ordinal based indexing.
-	GetArguments() ListLike[ExpressionLike]
-	SetArguments(arguments ListLike[ExpressionLike])
+	GetArguments() Arguments
+	SetArguments(arguments Arguments)
 }
 
 // This interface defines the methods supported by all inversion-like expressions.
@@ -92,60 +104,56 @@ type InversionLike interface {
 	IsInversion() bool
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all invocation-like expressions.
 type InvocationLike interface {
 	IsInvocation() bool
 	IsSynchronous() bool
-	GetTarget() ExpressionLike
-	SetTarget(target ExpressionLike)
+	GetTarget() Expression
+	SetTarget(target Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
 	GetMessage() string
 	SetMessage(message string)
-	GetArgument(index int) ExpressionLike           // Ordinal based indexing.
-	SetArgument(index int, argument ExpressionLike) // Ordinal based indexing.
-	GetArguments() ListLike[ExpressionLike]
-	SetArguments(arguments ListLike[ExpressionLike])
+	GetArguments() Arguments
+	SetArguments(arguments Arguments)
 }
 
 // This interface defines the methods supported by all logical-like expressions.
 type LogicalLike interface {
 	IsLogical() bool
-	GetFirst() ExpressionLike
-	SetFirst(first ExpressionLike)
+	GetFirst() Expression
+	SetFirst(first Expression)
 	GetOperator() Operator
 	SetOperator(operator Operator)
-	GetSecond() ExpressionLike
-	SetSecond(second ExpressionLike)
+	GetSecond() Expression
+	SetSecond(second Expression)
 }
 
 // This interface defines the methods supported by all magnitude-like expressions.
 type MagnitudeLike interface {
 	IsMagnitude() bool
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all precedence-like expressions.
 type PrecedenceLike interface {
 	IsPrecedence() bool
-	GetExpression() ExpressionLike
-	SetExpression(expression ExpressionLike)
+	GetExpression() Expression
+	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all item-like expressions.
 type ItemLike interface {
 	IsItem() bool
-	GetComposite() ExpressionLike
-	SetComposite(composite ExpressionLike)
-	GetIndex(index int) ExpressionLike
-	SetIndex(index int, expression ExpressionLike)
-	GetIndices() ListLike[ExpressionLike]
-	SetIndices(indices ListLike[ExpressionLike])
+	GetComposite() Expression
+	SetComposite(composite Expression)
+	GetIndices() Indices
+	SetIndices(indices Indices)
 }
 
 // This interface defines the methods supported by all variable-like expressions.

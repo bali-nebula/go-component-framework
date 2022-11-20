@@ -8,29 +8,17 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package collections_test
+package abstractions
 
 import (
-	col "github.com/craterdog-bali/go-bali-document-notation/collections"
-	ass "github.com/stretchr/testify/assert"
-	tes "testing"
+	col "github.com/craterdog/go-collection-framework"
 )
 
-func TestStacksWithStrings(t *tes.T) {
-	var stack = col.Stack[string]()
-	ass.True(t, stack.IsEmpty())
-	ass.Equal(t, 0, stack.GetSize())
-	stack.RemoveAll()
-	stack.AddValue("foo")
-	stack.AddValue("bar")
-	stack.AddValue("baz")
-	ass.Equal(t, 3, stack.GetSize())
-	ass.Equal(t, "baz", string(stack.GetTop()))
-	ass.Equal(t, "baz", string(stack.RemoveTop()))
-	ass.Equal(t, 2, stack.GetSize())
-	ass.Equal(t, "bar", string(stack.GetTop()))
-	ass.Equal(t, "bar", string(stack.RemoveTop()))
-	ass.Equal(t, 1, stack.GetSize())
-	ass.Equal(t, "foo", string(stack.GetTop()))
-	stack.RemoveAll()
-}
+// TYPE ALIASES
+
+type (
+	String   = any
+	Bytes    = col.Sequential[byte]
+	Names    = col.Sequential[string]
+	Ordinals = col.Sequential[int]
+)

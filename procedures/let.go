@@ -17,14 +17,15 @@ import (
 // LET CLAUSE IMPLEMENTATION
 
 // This constructor creates a new let clause.
-func LetClause(expression abs.ExpressionLike) abs.LetClauseLike {
+func LetClause(expression abs.Expression) abs.LetClauseLike {
 	var v = &letClause{}
 	// Perform argument validation.
 	v.SetExpression(expression)
 	return v
 }
+
 // This constructor creates a new let clause.
-func LetClauseWithRecipient(recipient abs.RecipientLike, operator abs.Operator, expression abs.ExpressionLike) abs.LetClauseLike {
+func LetClauseWithRecipient(recipient abs.Recipient, operator abs.Operator, expression abs.Expression) abs.LetClauseLike {
 	var v = &letClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient, operator)
@@ -34,9 +35,9 @@ func LetClauseWithRecipient(recipient abs.RecipientLike, operator abs.Operator, 
 
 // This type defines the structure and methods associated with a let clause.
 type letClause struct {
-	recipient  abs.RecipientLike
+	recipient  abs.Recipient
 	operator   abs.Operator
-	expression abs.ExpressionLike
+	expression abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -50,12 +51,12 @@ func (v *letClause) HasRecipient() bool {
 }
 
 // This method returns the recipient for this let clause.
-func (v *letClause) GetRecipient() (abs.RecipientLike, abs.Operator) {
+func (v *letClause) GetRecipient() (abs.Recipient, abs.Operator) {
 	return v.recipient, v.operator
 }
 
 // This method sets the recipient for this let clause.
-func (v *letClause) SetRecipient(recipient abs.RecipientLike, operator abs.Operator) {
+func (v *letClause) SetRecipient(recipient abs.Recipient, operator abs.Operator) {
 	if recipient != nil && operator >= abs.ASSIGN && operator <= abs.QUOTIENT {
 		v.recipient = recipient
 		v.operator = operator
@@ -66,12 +67,12 @@ func (v *letClause) SetRecipient(recipient abs.RecipientLike, operator abs.Opera
 }
 
 // This method returns the expression for this let clause.
-func (v *letClause) GetExpression() abs.ExpressionLike {
+func (v *letClause) GetExpression() abs.Expression {
 	return v.expression
 }
 
 // This method sets the expression for this let clause.
-func (v *letClause) SetExpression(expression abs.ExpressionLike) {
+func (v *letClause) SetExpression(expression abs.Expression) {
 	if expression == nil {
 		panic("A let clause requires an expression.")
 	}

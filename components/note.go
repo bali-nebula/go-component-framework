@@ -32,8 +32,3 @@ func (v Note) GetSize() int {
 func (v Note) AsArray() []rune {
 	return []rune(v)
 }
-
-// This method returns all this note as a Go string.
-func (v Note) AsString() string {
-	return string(v)
-}

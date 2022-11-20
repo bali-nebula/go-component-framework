@@ -18,7 +18,7 @@ import (
 // ARITHMETIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new arithmetic expression.
-func Arithmetic(first abs.ExpressionLike, operator abs.Operator, second abs.ExpressionLike) abs.ArithmeticLike {
+func Arithmetic(first abs.Expression, operator abs.Operator, second abs.Expression) abs.ArithmeticLike {
 	var v = &arithmeticExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -30,9 +30,9 @@ func Arithmetic(first abs.ExpressionLike, operator abs.Operator, second abs.Expr
 // This type defines the structure and methods associated with an arithmetic
 // expression.
 type arithmeticExpression struct {
-	first    abs.ExpressionLike
+	first    abs.Expression
 	operator abs.Operator
-	second   abs.ExpressionLike
+	second   abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -41,13 +41,13 @@ func (v *arithmeticExpression) IsArithmetic() bool {
 }
 
 // This method returns the first expression in this arithmetic expression.
-func (v *arithmeticExpression) GetFirst() abs.ExpressionLike {
+func (v *arithmeticExpression) GetFirst() abs.Expression {
 	return v.first
 }
 
 // This method sets the first expression in this arithmetic expression to the
 // specified value.
-func (v *arithmeticExpression) SetFirst(first abs.ExpressionLike) {
+func (v *arithmeticExpression) SetFirst(first abs.Expression) {
 	if first == nil {
 		panic("The first expression in an arithmetic expression cannot be nil.")
 	}
@@ -69,13 +69,13 @@ func (v *arithmeticExpression) SetOperator(operator abs.Operator) {
 }
 
 // This method returns the second expression in this arithmetic expression.
-func (v *arithmeticExpression) GetSecond() abs.ExpressionLike {
+func (v *arithmeticExpression) GetSecond() abs.Expression {
 	return v.second
 }
 
 // This method sets the second expression in this arithmetic expression to the
 // specified value.
-func (v *arithmeticExpression) SetSecond(second abs.ExpressionLike) {
+func (v *arithmeticExpression) SetSecond(second abs.Expression) {
 	if second == nil {
 		panic("The second expression in an arithmetic expression cannot be nil.")
 	}

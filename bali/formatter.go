@@ -12,12 +12,13 @@ package bali
 
 import (
 	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	sts "strings"
 )
 
 // FORMATTER INTERFACE
 
 // This function returns a canonical BDN string for the specified entity.
-func FormatEntity(entity abs.EntityLike) string {
+func FormatEntity(entity abs.Entity) string {
 	var v = Formatter(0)
 	return v.FormatEntity(entity)
 }
@@ -39,29 +40,53 @@ func FormatComponentWithIndentation(component abs.ComponentLike, indentation int
 
 // This constructor creates a new formatter using the specified indentation.
 func Formatter(indentation int) *formatter {
-	var v = &formatter{abs.FormatterStateWithIndentation(indentation)}
+	var v = &formatter{indentation: indentation, depth: 0}
 	return v
 }
 
 // This type defines the structure and methods for a canonical formatting agent.
 type formatter struct {
-	state abs.FormatterStateLike
+	indentation int
+	depth       int
+	result      sts.Builder
 }
 
 // This method returns the number of levels that each line is indented in the
 // resulting canonical string.
 func (v *formatter) GetIndentation() int {
-	return v.state.GetIndentation()
+	return v.indentation
+}
+
+// This method appends the specified string to the result.
+func (v *formatter) AppendString(s string) {
+	v.result.WriteString(s)
+}
+
+// This method appends a properly indented newline to the result.
+func (v *formatter) AppendNewline() {
+	var separator = "\n"
+	var levels = v.depth + v.indentation
+	for level := 0; level < levels; level++ {
+		separator += "    "
+	}
+	v.result.WriteString(separator)
+}
+
+// This method returns the canonically formatted string result.
+func (v *formatter) GetResult() string {
+	var result = v.result.String()
+	v.result.Reset()
+	return result
 }
 
 // This method returns the canonical string for the specified entity.
-func (v *formatter) FormatEntity(entity abs.EntityLike) string {
+func (v *formatter) FormatEntity(entity abs.Entity) string {
 	v.formatEntity(entity)
-	return v.state.GetResult()
+	return v.GetResult()
 }
 
 // This method returns the canonical string for the specified component.
 func (v *formatter) FormatComponent(component abs.ComponentLike) string {
 	v.formatComponent(component)
-	return v.state.GetResult()
+	return v.GetResult()
 }

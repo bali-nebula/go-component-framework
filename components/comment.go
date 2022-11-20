@@ -26,19 +26,14 @@ func (v Comment) IsEmpty() bool {
 	return len(v) == 0
 }
 
-// This method returns the number of runes contained in this comment.
+// This method returns the number of lines contained in this comment.
 func (v Comment) GetSize() int {
 	return len(v.AsArray())
 }
 
-// This method returns all the runes in this comment. The runes retrieved
-// are in the same order as they are in the comment.
-func (v Comment) AsArray() []rune {
-	return []rune(v)
-}
-
 // This method returns all the lines in this comment. The lines retrieved
 // are in the same order as they are in the comment.
-func (v Comment) AsLines() []string {
-	return sts.Split(string(v), "\n")
+func (v Comment) AsArray() []string {
+	var array = sts.Split(string(v), "\n")
+	return array
 }

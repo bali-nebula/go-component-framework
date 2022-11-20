@@ -17,15 +17,27 @@ import (
 // PROCEDURE IMPLEMENTATION
 
 // This constructor creates a new procedure.
-func Procedure(statements abs.ListLike[abs.StatementLike]) abs.ProcedureLike {
-	var v = &procedure{statements, statements, statements, statements}
+func Procedure(statements abs.Statements) abs.ProcedureLike {
+	var v = &procedure{}
+	// Perform argument validation.
+	v.SetStatements(statements)
 	return v
 }
 
 // This type defines the structure and methods associated with a procedure.
 type procedure struct {
-	abs.Sequential[abs.StatementLike]
-	abs.Indexed[abs.StatementLike]
-	abs.Updatable[abs.StatementLike]
-	abs.Malleable[abs.StatementLike]
+	statements abs.Statements
+}
+
+// This method returns the catalog of statements for this procedure.
+func (v *procedure) GetStatements() abs.Statements {
+	return v.statements
+}
+
+// This method sets the catalog of statements for this procedure.
+func (v *procedure) SetStatements(statements abs.Statements) {
+	if statements == nil {
+		panic("A procedure requires a (potentially empty) statement block.")
+	}
+	v.statements = statements
 }

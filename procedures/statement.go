@@ -17,7 +17,7 @@ import (
 // STATEMENT IMPLEMENTATION
 
 // This constructor creates a new statement.
-func Statement(mainClause abs.ClauseLike) abs.StatementLike {
+func Statement(mainClause abs.Clause) abs.StatementLike {
 	var v = &statement{}
 	// Perform argument validation.
 	v.SetMainClause(mainClause)
@@ -25,7 +25,7 @@ func Statement(mainClause abs.ClauseLike) abs.StatementLike {
 }
 
 // This constructor creates a new statement.
-func StatementWithHandler(mainClause abs.ClauseLike, onClause abs.OnClauseLike) abs.StatementLike {
+func StatementWithHandler(mainClause abs.Clause, onClause abs.OnClauseLike) abs.StatementLike {
 	var v = &statement{}
 	// Perform argument validation.
 	v.SetMainClause(mainClause)
@@ -35,29 +35,29 @@ func StatementWithHandler(mainClause abs.ClauseLike, onClause abs.OnClauseLike) 
 
 // This type defines the structure and methods associated with a statement.
 type statement struct {
-	annotation abs.AnnotationLike
-	mainClause abs.ClauseLike
+	annotation abs.Annotation
+	mainClause abs.Clause
 	onClause   abs.OnClauseLike
 	note       abs.NoteLike
 }
 
 // This method returns the annotation for this statement.
-func (v *statement) GetAnnotation() abs.AnnotationLike {
+func (v *statement) GetAnnotation() abs.Annotation {
 	return v.annotation
 }
 
 // This method sets the annotation for this statement.
-func (v *statement) SetAnnotation(annotation abs.AnnotationLike) {
+func (v *statement) SetAnnotation(annotation abs.Annotation) {
 	v.annotation = annotation
 }
 
 // This method returns the main clause for this statement.
-func (v *statement) GetMainClause() abs.ClauseLike {
+func (v *statement) GetMainClause() abs.Clause {
 	return v.mainClause
 }
 
 // This method sets the main clause for this statement.
-func (v *statement) SetMainClause(mainClause abs.ClauseLike) {
+func (v *statement) SetMainClause(mainClause abs.Clause) {
 	v.mainClause = mainClause
 }
 

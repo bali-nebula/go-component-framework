@@ -44,27 +44,27 @@ const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
 func (v *formatter) formatBinary(binary str.Binary) {
-	v.state.AppendString("'")
+	v.AppendString("'")
 	var s = string(binary)
 	var length = len(s)
 	if length > lineLength {
 		// Spans multiple lines.
-		v.state.IncrementDepth()
+		v.depth++
 		for index := 0; index < length; {
-			v.state.AppendNewline()
+			v.AppendNewline()
 			var next = index + lineLength
 			if next > length {
 				next = length
 			}
-			v.state.AppendString(s[index:next])
+			v.AppendString(s[index:next])
 			index = next
 		}
-		v.state.DecrementDepth()
-		v.state.AppendNewline()
+		v.depth--
+		v.AppendNewline()
 	} else {
-		v.state.AppendString(s)
+		v.AppendString(s)
 	}
-	v.state.AppendString("'")
+	v.AppendString("'")
 }
 
 // This method attempts to parse a moniker string. It returns the moniker string
@@ -86,7 +86,7 @@ func (v *parser) parseMoniker() (str.Moniker, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatMoniker(moniker str.Moniker) {
 	var s = string(moniker)
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a narrative string. It returns the narrative
@@ -108,13 +108,13 @@ func (v *parser) parseNarrative() (str.Narrative, *Token, bool) {
 func (v *formatter) formatNarrative(narrative str.Narrative) {
 	var s = string(narrative)
 	var lines = sts.Split(s, "\n")
-	v.state.AppendString(`">`)
+	v.AppendString(`">`)
 	for _, line := range lines {
-		v.state.AppendNewline()
-		v.state.AppendString(line)
+		v.AppendNewline()
+		v.AppendString(line)
 	}
-	v.state.AppendNewline()
-	v.state.AppendString(`<"`)
+	v.AppendNewline()
+	v.AppendString(`<"`)
 }
 
 // This method attempts to parse a quote string. It returns the quote string
@@ -139,16 +139,16 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 func (v *formatter) formatQuote(quote str.Quote) {
 	// We must requote the string string properly.
 	var s = stc.Quote(string(quote))
-	v.state.AppendString(s)
+	v.AppendString(s)
 }
 
 // This method attempts to parse a string sequence. It returns the
 // string sequence and whether or not the string sequence was
 // successfully parsed.
-func (v *parser) parseString() (abs.StringLike, *Token, bool) {
+func (v *parser) parseString() (abs.String, *Token, bool) {
 	var ok bool
 	var token *Token
-	var s abs.StringLike
+	var s abs.String
 	s, token, ok = v.parseQuote()
 	if !ok {
 		s, token, ok = v.parseMoniker()
@@ -188,5 +188,5 @@ func (v *parser) parseVersion() (str.Version, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatVersion(version str.Version) {
 	var s = "v" + string(version)
-	v.state.AppendString(s)
+	v.AppendString(s)
 }

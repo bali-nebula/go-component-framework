@@ -46,33 +46,3 @@ func (v *ifClause) SetBlock(block abs.BlockLike) {
 	}
 	v.block = block
 }
-
-// This method returns the condition expression for this if clause.
-func (v *ifClause) GetCondition() abs.ExpressionLike {
-	return v.block.GetExpression()
-}
-
-// This method sets the condition expression for this if clause.
-func (v *ifClause) SetCondition(condition abs.ExpressionLike) {
-	v.block.SetExpression(condition)
-}
-
-// This method returns the statement at the specified index from this if clause.
-func (v *ifClause) GetStatement(index int) abs.StatementLike {
-	return v.block.GetStatement(index)
-}
-
-// This method sets the statement at the specified index for this if clause.
-func (v *ifClause) SetStatement(index int, statement abs.StatementLike) {
-	v.block.SetStatement(index, statement)
-}
-
-// This method returns the list of statements for this if clause.
-func (v *ifClause) GetProcedure() abs.ProcedureLike {
-	return v.block.GetProcedure()
-}
-
-// This method sets the list of statements for this if clause.
-func (v *ifClause) SetProcedure(statements abs.ProcedureLike) {
-	v.block.SetProcedure(statements)
-}

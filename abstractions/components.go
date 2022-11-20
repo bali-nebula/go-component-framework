@@ -10,48 +10,68 @@
 
 package abstractions
 
-// COMPONENT INTERFACES
+import (
+	col "github.com/craterdog/go-collection-framework"
+)
 
-type AnnotationLike any
+// TYPE ALIASES
 
-type EntityLike any
+// These type assignments hide the dependencies on the package used to implement
+// the collection types. It preserves the collection interfaces in a way that
+// will allow them to evolve separately as needed. Currently, the interfaces are
+// synchronized.
+type (
+	Annotation = any
+	Entity     = any
+	Runes      = col.Sequential[rune]
+	Lines      = col.Sequential[string]
+	Parameter  = col.Binding[Symbolic, ComponentLike]
+	Parameters = col.Sequential[col.Binding[Symbolic, ComponentLike]]
+)
+
+// INDIVIDUAL INTERFACES
+
+// This interface defines the methods supported by all component-like types.
+type Encapsulated interface {
+	GetEntity() Entity
+	SetEntity(entity Entity)
+	IsGeneric() bool
+	GetContext() ContextLike
+	SetContext(context ContextLike)
+	IsAnnotated() bool
+	GetNote() NoteLike
+	SetNote(note NoteLike)
+}
 
 // This interface defines the methods supported by all symbolic types.
 type Symbolic interface {
 	GetIdentifier() string
 }
 
-// This interface defines the methods supported by all component-like types.
+// This interface defines the methods supported by all generic types.
+type Generic interface {
+	GetParameters() Parameters
+	SetParameters(parameters Parameters)
+}
+
+// CONSOLIDATED INTERFACES
+
+// This interface defines the interfaces supported by all component-like types.
 type ComponentLike interface {
-	IsGeneric() bool
-	IsAnnotated() bool
-	GetEntity() EntityLike
-	GetContext() ContextLike
-	GetNote() NoteLike
-	SetNote(note NoteLike)
+	Encapsulated
 }
 
-// This interface defines the methods supported by all context-like types.
+// This interface defines the interfaces supported by all context-like types.
 type ContextLike interface {
-	GetNames() Sequential[Symbolic]
-	GetValue(name Symbolic) ComponentLike
-	SetValue(name Symbolic, value ComponentLike)
-	GetParameters() CatalogLike[Symbolic, ComponentLike]
-	SetParameters(parameters CatalogLike[Symbolic, ComponentLike])
+	Generic
 }
 
-// This interface defines the methods supported by all note-like types.
+// This interface defines the interfaces supported by all note-like types.
 type NoteLike interface {
-	IsEmpty() bool
-	GetSize() int
-	AsArray() []rune
-	AsString() string
+	Runes
 }
 
-// This interface defines the methods supported by all comment-like types.
+// This interface defines the interfaces supported by all comment-like types.
 type CommentLike interface {
-	IsEmpty() bool
-	GetSize() int
-	AsArray() []rune
-	AsLines() []string
+	Lines
 }
