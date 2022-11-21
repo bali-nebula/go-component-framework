@@ -11,7 +11,7 @@
 package elements_test
 
 import (
-	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	ele "github.com/craterdog-bali/go-component-framework/elements"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
 	tes "testing"

@@ -11,7 +11,7 @@
 package elements
 
 import (
-	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
+	uti "github.com/craterdog-bali/go-component-framework/utilities"
 	mat "math"
 )
 

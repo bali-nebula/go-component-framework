@@ -12,7 +12,7 @@ package expressions
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
 )
 
 // ARITHMETIC EXPRESSION IMPLEMENTATION

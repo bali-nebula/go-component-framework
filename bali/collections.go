@@ -12,10 +12,10 @@ package bali
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	col "github.com/craterdog-bali/go-bali-document-notation/collections"
-	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
-	str "github.com/craterdog-bali/go-bali-document-notation/strings"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	col "github.com/craterdog-bali/go-component-framework/collections"
+	ele "github.com/craterdog-bali/go-component-framework/elements"
+	str "github.com/craterdog-bali/go-component-framework/strings"
 	co2 "github.com/craterdog/go-collection-framework"
 )
 

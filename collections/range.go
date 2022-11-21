@@ -12,8 +12,8 @@ package collections
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	ele "github.com/craterdog-bali/go-bali-document-notation/elements"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	ele "github.com/craterdog-bali/go-component-framework/elements"
 	col "github.com/craterdog/go-collection-framework"
 	ref "reflect"
 )

@@ -12,8 +12,8 @@ package bali
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	exp "github.com/craterdog-bali/go-bali-document-notation/expressions"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	exp "github.com/craterdog-bali/go-component-framework/expressions"
 	col "github.com/craterdog/go-collection-framework"
 )
 

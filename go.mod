@@ -1,4 +1,4 @@
-module github.com/craterdog-bali/go-bali-document-notation
+module github.com/craterdog-bali/go-component-framework
 
 go 1.19
 

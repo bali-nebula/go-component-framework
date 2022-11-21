@@ -12,7 +12,7 @@ package strings
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework"
 	stc "strconv"
 	sts "strings"

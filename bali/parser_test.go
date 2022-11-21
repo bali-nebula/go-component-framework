@@ -12,7 +12,7 @@ package bali_test
 
 import (
 	fmt "fmt"
-	bal "github.com/craterdog-bali/go-bali-document-notation/bali"
+	bal "github.com/craterdog-bali/go-component-framework/bali"
 	ass "github.com/stretchr/testify/assert"
 	osx "os"
 	sts "strings"

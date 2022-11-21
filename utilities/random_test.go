@@ -11,7 +11,7 @@
 package utilities_test
 
 import (
-	uti "github.com/craterdog-bali/go-bali-document-notation/utilities"
+	uti "github.com/craterdog-bali/go-component-framework/utilities"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )

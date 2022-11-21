@@ -11,8 +11,8 @@
 package bali_test
 
 import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	bal "github.com/craterdog-bali/go-bali-document-notation/bali"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	bal "github.com/craterdog-bali/go-component-framework/bali"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )

@@ -11,8 +11,8 @@
 package collections_test
 
 import (
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
-	col "github.com/craterdog-bali/go-bali-document-notation/collections"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	col "github.com/craterdog-bali/go-component-framework/collections"
 	co2 "github.com/craterdog/go-collection-framework"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"

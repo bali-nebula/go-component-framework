@@ -23,7 +23,7 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-bali-document-notation/abstractions"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
 	mat "math"
 	cmp "math/cmplx"
 	stc "strconv"
