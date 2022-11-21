@@ -7,9 +7,11 @@ you are interested in this project or have suggestions on how to improve it feel
 free to contact us at [craterdog@gmail.com](mailto:craterdog@gmail.com)._
 
 ### Overview
-This project is a Go language binding for Bali Document Notation™ (BDN for short).
-It allows round-trip transformations between the Go based parse tree for a Bali
-component and the corresponding BDN document.
+This project provides a rich set of components that can be used to construct
+[abstract syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
+(ASTs) from documents containing _Bali Document Notation™_ (BDN for short). The
+syntax trees can then be processed by agents like compilers, interpreters and
+formatters for different document types (BDN, HTML, JSON, XML, etc.)
 
 ### Quick Links
 For more information on this project click on the following links:
@@ -21,13 +23,15 @@ For more information on this project click on the following links:
 To include the Go packages for this module use the following import statement:
 ```go
 import (
-	"github.com/craterdog-bali/go-component-framework/abstractions"
-	"github.com/craterdog-bali/go-component-framework/agents"
-	"github.com/craterdog-bali/go-component-framework/collections"
-	"github.com/craterdog-bali/go-component-framework/elements"
-	"github.com/craterdog-bali/go-component-framework/grammar"
-	"github.com/craterdog-bali/go-component-framework/strings"
-	"github.com/craterdog-bali/go-component-framework/utilities"
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	bdn "github.com/craterdog-bali/go-component-framework/bdn"
+	col "github.com/craterdog-bali/go-component-framework/collections"
+	ele "github.com/craterdog-bali/go-component-framework/elements"
+	htm "github.com/craterdog-bali/go-component-framework/html"
+	jso "github.com/craterdog-bali/go-component-framework/json"
+	str "github.com/craterdog-bali/go-component-framework/strings"
+	uti "github.com/craterdog-bali/go-component-framework/utilities"
+	xml "github.com/craterdog-bali/go-component-framework/xml"
 )
 ```
 
