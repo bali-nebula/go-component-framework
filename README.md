@@ -15,29 +15,29 @@ formatters for different document types (BDN, HTML, JSON, XML, etc.)
 
 ### Quick Links
 For more information on this project click on the following links:
- * [project documentation](https://github.com/craterdog-bali/go-component-framework/wiki)
- * [release notes](https://github.com/craterdog-bali/go-component-framework/wiki/release-notes)
- * [code examples](https://github.com/craterdog-bali/go-component-framework/wiki/code-examples)
+ * [project documentation](https://github.com/bali-nebula/go-component-framework/wiki)
+ * [release notes](https://github.com/bali-nebula/go-component-framework/wiki/release-notes)
+ * [code examples](https://github.com/bali-nebula/go-component-framework/wiki/code-examples)
 
 ### Getting Started
 To include the Go packages for this module use the following import statement:
 ```go
 import (
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	bdn "github.com/craterdog-bali/go-component-framework/bdn"
-	col "github.com/craterdog-bali/go-component-framework/collections"
-	ele "github.com/craterdog-bali/go-component-framework/elements"
-	htm "github.com/craterdog-bali/go-component-framework/html"
-	jso "github.com/craterdog-bali/go-component-framework/json"
-	str "github.com/craterdog-bali/go-component-framework/strings"
-	uti "github.com/craterdog-bali/go-component-framework/utilities"
-	xml "github.com/craterdog-bali/go-component-framework/xml"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	bdn "github.com/bali-nebula/go-component-framework/bdn"
+	col "github.com/bali-nebula/go-component-framework/collections"
+	ele "github.com/bali-nebula/go-component-framework/elements"
+	htm "github.com/bali-nebula/go-component-framework/html"
+	jso "github.com/bali-nebula/go-component-framework/json"
+	str "github.com/bali-nebula/go-component-framework/strings"
+	uti "github.com/bali-nebula/go-component-framework/utilities"
+	xml "github.com/bali-nebula/go-component-framework/xml"
 )
 ```
 
 ### Contributing
 Project contributors are always welcome. Create a
-[fork](https://github.com/craterdog-bali/go-component-framework) of the project and add cool
+[fork](https://github.com/bali-nebula/go-component-framework) of the project and add cool
 new things to the framework. When you are ready to contribute the changes create a subsequent
 ["pull request"](https://help.github.com/articles/about-pull-requests/). Any questions and
 comments can be sent to [craterdog@gmail.com](mailto:craterdog@gmail.com).
