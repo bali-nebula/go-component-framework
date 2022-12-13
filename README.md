@@ -1,4 +1,3 @@
-## Bali Document Notation™ (BDN)
 <img src="https://craterdog.com/images/CraterDog.png" width="50%">
 
 ### _\* \* \* NOTICE \* \* \*_
@@ -9,9 +8,9 @@ free to contact us at [craterdog@gmail.com](mailto:craterdog@gmail.com)._
 ### Overview
 This project provides a rich set of components that can be used to construct
 [abstract syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
-(ASTs) from documents containing _Bali Document Notation™_ (BDN for short). The
+(ASTs) from documents containing _Bali Document Notation™_ (Bali for short). The
 syntax trees can then be processed by agents like compilers, interpreters and
-formatters for different document types (BDN, HTML, JSON, XML, etc.)
+formatters for different document types (Bali, HTML, JSON, XML, etc.)
 
 ### Quick Links
 For more information on this project click on the following links:
