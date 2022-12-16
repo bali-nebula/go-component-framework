@@ -26,7 +26,7 @@ type (
 	Runes      = col.Sequential[rune]
 	Lines      = col.Sequential[string]
 	Parameter  = col.Binding[Symbolic, ComponentLike]
-	Parameters = col.Sequential[col.Binding[Symbolic, ComponentLike]]
+	Parameters = col.Sequential[Parameter]
 )
 
 // INDIVIDUAL INTERFACES
