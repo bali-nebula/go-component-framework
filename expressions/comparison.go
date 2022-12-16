@@ -26,7 +26,7 @@ func Comparison(first abs.Expression, operator abs.Operator, second abs.Expressi
 	return v
 }
 
-// This type defines the structure and methods associated with an comparison
+// This type defines the structure and methods associated with a comparison
 // expression.
 type comparisonExpression struct {
 	first    abs.Expression
@@ -48,7 +48,7 @@ func (v *comparisonExpression) GetFirst() abs.Expression {
 // specified value.
 func (v *comparisonExpression) SetFirst(first abs.Expression) {
 	if first == nil {
-		panic("The first expression in an comparison expression cannot be nil.")
+		panic("The first expression in a comparison expression cannot be nil.")
 	}
 	v.first = first
 }
@@ -62,7 +62,7 @@ func (v *comparisonExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *comparisonExpression) SetOperator(operator abs.Operator) {
 	if operator < abs.LESS || operator > abs.MATCHES {
-		panic("The operator in an comparison expression must be a valid comparison operator.")
+		panic("The operator in a comparison expression must be a valid comparison operator.")
 	}
 	v.operator = operator
 }
@@ -76,7 +76,7 @@ func (v *comparisonExpression) GetSecond() abs.Expression {
 // specified value.
 func (v *comparisonExpression) SetSecond(second abs.Expression) {
 	if second == nil {
-		panic("The second expression in an comparison expression cannot be nil.")
+		panic("The second expression in a comparison expression cannot be nil.")
 	}
 	v.second = second
 }

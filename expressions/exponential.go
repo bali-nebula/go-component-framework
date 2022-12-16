@@ -62,7 +62,7 @@ func (v *exponentialExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *exponentialExpression) SetOperator(operator abs.Operator) {
 	if operator != abs.CARET {
-		panic("The operator in an comparison expression must be a valid exponential operator.")
+		panic("The operator in a comparison expression must be a valid exponential operator.")
 	}
 	v.operator = operator
 }

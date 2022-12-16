@@ -24,7 +24,7 @@ func ReturnClause(result abs.Expression) abs.ReturnClauseLike {
 	return v
 }
 
-// This type defines the structure and methods associated with an return
+// This type defines the structure and methods associated with a return
 // clause.
 type returnClause struct {
 	result abs.Expression

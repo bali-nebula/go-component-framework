@@ -24,7 +24,7 @@ func ThrowClause(exception abs.Expression) abs.ThrowClauseLike {
 	return v
 }
 
-// This type defines the structure and methods associated with an throw
+// This type defines the structure and methods associated with a throw
 // clause.
 type throwClause struct {
 	exception abs.Expression

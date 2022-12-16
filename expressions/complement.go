@@ -46,7 +46,7 @@ func (v *complementExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *complementExpression) SetOperator(operator abs.Operator) {
 	if operator != abs.NOT {
-		panic("The operator in an complement expression must be a valid complement operator.")
+		panic("The operator in a complement expression must be a valid complement operator.")
 	}
 	v.operator = operator
 }

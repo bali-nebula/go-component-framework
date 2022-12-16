@@ -31,7 +31,7 @@ func RejectClause(message abs.Expression) abs.RejectClauseLike {
 	return v
 }
 
-// This type defines the structure and methods associated with an reject
+// This type defines the structure and methods associated with a reject
 // clause.
 type rejectClause struct {
 	message abs.Expression

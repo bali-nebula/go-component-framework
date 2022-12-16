@@ -1170,7 +1170,7 @@ func (v *formatter) formatSaveClause(clause abs.SaveClauseLike) {
 	v.formatRecipient(recipient)
 }
 
-// This method attempts to parse an select clause. It returns the select clause
+// This method attempts to parse a select clause. It returns the select clause
 // and whether or not the select clause was successfully parsed.
 func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	var ok bool

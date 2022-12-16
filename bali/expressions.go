@@ -616,7 +616,7 @@ func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 	var expression abs.MagnitudeLike
 	_, token, ok = v.parseDelimiter("|")
 	if !ok {
-		// This is not an magnitude expression.
+		// This is not a magnitude expression.
 		return expression, token, false
 	}
 	numeric, token, ok = v.parseExpression()
@@ -656,7 +656,7 @@ func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 	var expression abs.PrecedenceLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
-		// This is not an precedence expression.
+		// This is not a precedence expression.
 		return expression, token, false
 	}
 	inner, token, ok = v.parseExpression()

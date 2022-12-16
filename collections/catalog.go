@@ -32,13 +32,7 @@ func Catalog() abs.CatalogLike {
 // This constructor creates a new catalog from the specified array of
 // components.
 func CatalogFromArray(array []abs.Binding) abs.CatalogLike {
-	// TODO: The Go Collection Framework Catalog type is missing a CatalogFromArray
-	//       method so we have to do it by hand for now...
-	var v = Catalog()
-	for _, association := range array {
-		v.AddAssociation(association)
-	}
-	return v
+	return col.CatalogFromArray[abs.Primitive, abs.ComponentLike](array)
 }
 
 // This constructor creates a new catalog from the specified sequence of

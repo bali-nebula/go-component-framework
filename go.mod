@@ -3,7 +3,7 @@ module github.com/craterdog-bali/go-component-framework
 go 1.19
 
 require (
-	github.com/craterdog/go-collection-framework v1.7.0
+	github.com/craterdog/go-collection-framework v1.8.0
 	github.com/stretchr/testify v1.8.1
 )
 

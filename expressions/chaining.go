@@ -62,7 +62,7 @@ func (v *chainingExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *chainingExpression) SetOperator(operator abs.Operator) {
 	if operator != abs.AMPERSAND {
-		panic("The operator in an comparison expression must be a valid chaining operator.")
+		panic("The operator in a comparison expression must be a valid chaining operator.")
 	}
 	v.operator = operator
 }

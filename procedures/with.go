@@ -44,7 +44,7 @@ func (v *withClause) GetValue() abs.Symbolic {
 // This method sets the value symbol for this with clause.
 func (v *withClause) SetValue(value abs.Symbolic) {
 	if value == nil {
-		panic("A with clause requires an value symbol.")
+		panic("A with clause requires a value symbol.")
 	}
 	v.value = value
 }

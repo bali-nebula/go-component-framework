@@ -46,7 +46,7 @@ func (v *dereferenceExpression) GetOperator() abs.Operator {
 // specified value.
 func (v *dereferenceExpression) SetOperator(operator abs.Operator) {
 	if operator != abs.AT {
-		panic("The operator in an dereference expression must be a valid dereference operator.")
+		panic("The operator in a dereference expression must be a valid dereference operator.")
 	}
 	v.operator = operator
 }
