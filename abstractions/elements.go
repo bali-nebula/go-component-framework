@@ -27,16 +27,15 @@ type Discrete interface {
 
 // This interface defines the methods supported by all continuous elements.
 type Continuous interface {
-	IsZero() bool
+	IsInfinite() bool
+	IsUndefined() bool
 	AsReal() float64
 }
 
-// This interface defines the methods supported by all polar elements.
+// This interface defines the methods supported by all complex elements.
 type Complex interface {
 	AsRectangular() string
 	AsPolar() string
-	IsInfinite() bool
-	IsUndefined() bool
 	GetReal() float64
 	GetImaginary() float64
 	GetMagnitude() float64
