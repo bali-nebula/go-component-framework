@@ -19,6 +19,8 @@ import (
 type (
 	String   = any
 	Bytes    = col.Sequential[byte]
-	Names    = col.Sequential[string]
-	Ordinals = col.Sequential[int]
+	Name     = string
+	Names    = col.Sequential[Name]
+	Ordinal  = uint
+	Ordinals = col.Sequential[Ordinal]
 )

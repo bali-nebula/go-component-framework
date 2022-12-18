@@ -187,8 +187,8 @@ func (v *ranje[V]) SetLast(value V) {
 
 // PRIVATE INTERFACE
 
-// This function converts the type of the specified index to the parameterized
-// type T.
+// This method converts the type of the specified index to the parameterized
+// type V.
 func (v *ranje[V]) indexToValue(index int) V {
 	var template V
 	var value abs.Primitive = template
@@ -213,7 +213,7 @@ func (v *ranje[V]) indexToValue(index int) V {
 	return value.(V)
 }
 
-// This function converts the type of the specified value to an integer type.
+// This method converts the type of the specified value to an integer type.
 func (v *ranje[V]) valueToIndex(value V) int {
 	var template abs.Primitive = value
 	switch index := template.(type) {
@@ -244,7 +244,7 @@ func (v *ranje[V]) valueToIndex(value V) int {
 	}
 }
 
-// This function returns the effective first value in the range based on its
+// This method returns the effective first value in the range based on its
 // extent type. It can only be called when the parameterized value type V is
 // an integer type.
 func (v *ranje[V]) effectiveFirst() int {
@@ -258,7 +258,7 @@ func (v *ranje[V]) effectiveFirst() int {
 	return first
 }
 
-// This function returns the effective last value in the range based on its
+// This method returns the effective last value in the range based on its
 // extent type. It can only be called when the parameterized value type V is
 // an integer type.
 func (v *ranje[V]) effectiveLast() int {
@@ -272,7 +272,7 @@ func (v *ranje[V]) effectiveLast() int {
 	return last
 }
 
-// This function calulates the effective size of the range assuming the
+// This method calulates the effective size of the range assuming the
 // parameterized type V is an integer type. If it is not an integer type
 // the effective size is zero.
 func (v *ranje[V]) calculateSize() int {

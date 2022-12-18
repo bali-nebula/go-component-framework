@@ -82,18 +82,6 @@ func (v Moniker) GetIndex(name string) int {
 	return names.GetIndex(name)
 }
 
-// This method normalizes an index to match the Go (zero based) indexing. The
-// following transformation is performed:
-//
-//	[-length..-1] and [1..length] => [0..length)
-//
-// Notice that the specified index cannot be zero since zero is not an ORDINAL.
-func (v Moniker) GoIndex(index int) int {
-	var array = v.AsArray()
-	var names = col.Array[string](array)
-	return names.GoIndex(index)
-}
-
 // LIBRARY FUNCTIONS
 
 // This constant defines a namespace within this package for all moniker string

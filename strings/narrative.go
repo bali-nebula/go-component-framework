@@ -85,18 +85,6 @@ func (v Narrative) GetIndex(line string) int {
 	return lines.GetIndex(line)
 }
 
-// This method normalizes an index to match the Go (zero based) indexing. The
-// following transformation is performed:
-//
-//	[-length..-1] and [1..length] => [0..length)
-//
-// Notice that the specified index cannot be zero since zero is not an ORDINAL.
-func (v Narrative) GoIndex(index int) int {
-	var array = v.AsArray()
-	var lines = col.Array[string](array)
-	return lines.GoIndex(index)
-}
-
 // LIBRARY FUNCTIONS
 
 // This constant defines a namespace within this package for all narrative string

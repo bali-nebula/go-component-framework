@@ -82,18 +82,6 @@ func (v Quote) GetIndex(r rune) int {
 	return runes.GetIndex(r)
 }
 
-// This method normalizes an index to match the Go (zero based) indexing. The
-// following transformation is performed:
-//
-//	[-length..-1] and [1..length] => [0..length)
-//
-// Notice that the specified index cannot be zero since zero is not an ORDINAL.
-func (v Quote) GoIndex(index int) int {
-	var array = v.AsArray()
-	var runes = col.Array[rune](array)
-	return runes.GoIndex(index)
-}
-
 // LIBRARY FUNCTIONS
 
 // This constant defines a namespace within this package for all quote string

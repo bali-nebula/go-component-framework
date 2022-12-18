@@ -83,18 +83,6 @@ func (v Binary) GetIndex(b byte) int {
 	return bytes.GetIndex(b)
 }
 
-// This method normalizes an index to match the Go (zero based) indexing. The
-// following transformation is performed:
-//
-//	[-length..-1] and [1..length] => [0..length)
-//
-// Notice that the specified index cannot be zero since zero is not an ORDINAL.
-func (v Binary) GoIndex(index int) int {
-	var array = v.AsArray()
-	var bytes = col.Array[byte](array)
-	return bytes.GoIndex(index)
-}
-
 // LIBRARY FUNCTIONS
 
 // This constant defines a namespace within this package for all binary string

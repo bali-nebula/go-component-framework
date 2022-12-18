@@ -11,6 +11,7 @@
 package strings_test
 
 import (
+	abs "github.com/craterdog-bali/go-component-framework/abstractions"
 	str "github.com/craterdog-bali/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -21,8 +22,8 @@ func TestVersion(t *tes.T) {
 	ass.Equal(t, "1.2.3", string(v1))
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 3, v1.GetSize())
-	ass.Equal(t, 1, v1.GetValue(1))
-	ass.Equal(t, 3, v1.GetValue(-1))
+	ass.Equal(t, abs.Ordinal(1), v1.GetValue(1))
+	ass.Equal(t, abs.Ordinal(3), v1.GetValue(-1))
 	var v2 = str.VersionFromArray(v1.AsArray())
 	ass.Equal(t, string(v1), string(v2))
 	var v3 = str.VersionFromSequence(v1.GetValues(1, 2))

@@ -22,14 +22,14 @@ import (
 
 // This constructor attempts to create a new version string from the specified
 // array of ordinal numbers. It returns the corresponding version string.
-func VersionFromArray(array []int) Version {
+func VersionFromArray(array []abs.Ordinal) Version {
 	var length = len(array)
 	var version string
 	for i, ordinal := range array {
 		if ordinal < 1 {
 			panic(fmt.Sprintf("All version numbers must be greater than zero: %v", array))
 		}
-		version += stc.FormatInt(int64(ordinal), 10)
+		version += stc.FormatUint(uint64(ordinal), 10)
 		if i < length-1 {
 			version += "."
 		}
@@ -63,12 +63,12 @@ func (v Version) GetSize() int {
 
 // This method returns all the ordinals in this string. The ordinals retrieved
 // are in the same order as they are in the string.
-func (v Version) AsArray() []int {
-	var ordinals []int
+func (v Version) AsArray() []abs.Ordinal {
+	var ordinals []abs.Ordinal
 	var levels = sts.Split(string(v), ".")
 	for _, level := range levels {
-		var ordinal, _ = stc.ParseInt(level, 10, 0)
-		ordinals = append(ordinals, int(ordinal))
+		var ordinal, _ = stc.ParseUint(level, 10, 0)
+		ordinals = append(ordinals, abs.Ordinal(ordinal))
 	}
 	return ordinals
 }
@@ -77,9 +77,9 @@ func (v Version) AsArray() []int {
 
 // This method retrieves from this string the ordinal number that is associated
 // with the specified index.
-func (v Version) GetValue(index int) int {
+func (v Version) GetValue(index int) abs.Ordinal {
 	var array = v.AsArray()
-	var ordinals = col.Array[int](array)
+	var ordinals = col.Array[abs.Ordinal](array)
 	return ordinals.GetValue(index)
 }
 
@@ -87,29 +87,17 @@ func (v Version) GetValue(index int) int {
 // through the last index (inclusive).
 func (v Version) GetValues(first int, last int) abs.Ordinals {
 	var array = v.AsArray()
-	var ordinals = col.Array[int](array)
+	var ordinals = col.Array[abs.Ordinal](array)
 	return ordinals.GetValues(first, last)
 }
 
 // This method returns the index of the FIRST occurence of the specified ordinal
 // number in this string, or zero if this string does not contain the ordinal
 // number.
-func (v Version) GetIndex(ordinal int) int {
+func (v Version) GetIndex(ordinal abs.Ordinal) int {
 	var array = v.AsArray()
-	var ordinals = col.Array[int](array)
+	var ordinals = col.Array[abs.Ordinal](array)
 	return ordinals.GetIndex(ordinal)
-}
-
-// This method normalizes an index to match the Go (zero based) indexing. The
-// following transformation is performed:
-//
-//	[-length..-1] and [1..length] => [0..length)
-//
-// Notice that the specified index cannot be zero since zero is not an ORDINAL.
-func (v Version) GoIndex(index int) int {
-	var array = v.AsArray()
-	var ordinals = col.Array[int](array)
-	return ordinals.GoIndex(index)
 }
 
 // LIBRARY FUNCTIONS
@@ -139,10 +127,10 @@ func (l versions) Concatenate(first Version, second Version) Version {
 // version string being incremented. A level that is greater than the size of
 // current version will result in a new level with the value of `1` being
 // appended to the copy of the current version string.
-func (l versions) GetNextVersion(current Version, level int) Version {
+func (l versions) GetNextVersion(current Version, level abs.Ordinal) Version {
 	// Adjust the size of the ordinals as needed.
 	var ordinals = current.AsArray()
-	var size = len(ordinals)
+	var size = abs.Ordinal(len(ordinals))
 	switch {
 	case level < 1:
 		panic("The level of the next version must be positive!")
@@ -189,8 +177,8 @@ func (l versions) IsValidNextVersion(current Version, next Version) bool {
 	}
 
 	// Iterate through the versions comparing level values.
-	var currentIterator = col.Iterator[int](current)
-	var nextIterator = col.Iterator[int](next)
+	var currentIterator = col.Iterator[abs.Ordinal](current)
+	var nextIterator = col.Iterator[abs.Ordinal](next)
 	for currentIterator.HasNext() && nextIterator.HasNext() {
 		var currentLevel = currentIterator.GetNext()
 		var nextLevel = nextIterator.GetNext()
