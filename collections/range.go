@@ -336,6 +336,8 @@ func (v *ranje[V]) indexToValue(index int) V {
 		value = ele.Duration(index)
 	case ele.Moment:
 		value = ele.Moment(index)
+	case Rune:
+		value = Rune(index)
 	default:
 		panic(fmt.Sprintf("The value is not a numeric type: %T", template))
 	}
