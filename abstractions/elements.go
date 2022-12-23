@@ -18,17 +18,14 @@ type (
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all discrete elements.
-type Discrete interface {
+// This interface defines the methods supported by all numeric elements.
+type Numeric interface {
+	IsDiscrete() bool
 	IsZero() bool
-	AsBoolean() bool
-	AsInteger() int
-}
-
-// This interface defines the methods supported by all continuous elements.
-type Continuous interface {
 	IsInfinite() bool
 	IsUndefined() bool
+	AsBoolean() bool
+	AsInteger() int
 	AsReal() float64
 }
 

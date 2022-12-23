@@ -37,33 +37,63 @@ const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsP
 
 // DURATION INTERFACE
 
+// This constructor returns the minimum value for a duration.
+func MinimumDuration() Duration {
+	return Duration(0)
+}
+
+// This constructor returns the maximum value for a duration.
+func MaximumDuration() Duration {
+	return Duration(mat.MaxInt)
+}
+
 // This type defines the methods associated with time duration elements. It
 // extends the native Go `int` type and its value represents the number of
 // milliseconds for the entire duration of time. Durations can be negative.
 type Duration int
 
-// DISCRETE INTERFACE
+// NUMERIC INTERFACE
 
-// This method determines whether or not this duration is zero.
+// This method determines whether or not this numeric element is discrete.
+func (v Duration) IsDiscrete() bool {
+	return true
+}
+
+// This method determines whether or not this numeric element is zero.
 func (v Duration) IsZero() bool {
 	return v == 0
 }
 
-// This method returns a boolean value for this discrete element.
+// This method determines whether or not this numeric element is infinite.
+func (v Duration) IsInfinite() bool {
+	return false
+}
+
+// This method determines whether or not this numeric element is undefined.
+func (v Duration) IsUndefined() bool {
+	return false
+}
+
+// This method returns a boolean value for this numeric element.
 func (v Duration) AsBoolean() bool {
 	return v != 0
 }
 
-// This method returns an integer value for this discrete element.
+// This method returns an integer value for this numeric element.
 func (v Duration) AsInteger() int {
 	return int(v)
+}
+
+// This method returns a real value for this numeric element.
+func (v Duration) AsReal() float64 {
+	return float64(v)
 }
 
 // POLARIZED INTERFACE
 
 // This method determines whether or not this polarized component is negative.
 func (v Duration) IsNegative() bool {
-	return v < 0.0
+	return v < 0
 }
 
 // TEMPORAL INTERFACE
@@ -169,7 +199,7 @@ func (v Duration) GetMonths() int {
 // This method returns the years part of this duration.
 func (v Duration) GetYears() int {
 	var milliseconds = magnitude(int(v))
-	var years = milliseconds / MillisecondsPerYear // Slice off the months and below.
+	var years = milliseconds / MillisecondsPerYear // Strip off the months and below.
 	return years
 }
 

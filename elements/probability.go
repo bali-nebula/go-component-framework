@@ -36,31 +36,54 @@ func ProbabilityFromBoolean(v bool) Probability {
 	return Probability(0)
 }
 
+// This constructor returns the minimum value for a probability.
+func MinimumProbability() Probability {
+	return Probability(0)
+}
+
+// This constructor returns the maximum value for a probability.
+func MaximumProbability() Probability {
+	return Probability(1)
+}
+
 // This type defines the methods associated with probability elements. It
 // extends the native Go float64 type and represents a probability in the range
 // [0..1].
 type Probability float64
 
-// DISCRETE INTERFACE
+// NUMERIC INTERFACE
 
-// This method returns a boolean value for this discrete element.
-func (v Probability) AsBoolean() bool {
-	return v.AsInteger() > 0
+// This method determines whether or not this numeric element is discrete.
+func (v Probability) IsDiscrete() bool {
+	return false
 }
 
-// This method returns an integer value for this discrete element.
-func (v Probability) AsInteger() int {
-	return int(mat.Round(float64(v)))
-}
-
-// CONTINUOUS INTERFACE
-
-// This method determines whether or not this probability is zero.
+// This method determines whether or not this numeric element is zero.
 func (v Probability) IsZero() bool {
 	return v == 0
 }
 
-// This method returns a real value for this continuous component.
+// This method determines whether or not this numeric element is infinite.
+func (v Probability) IsInfinite() bool {
+	return false
+}
+
+// This method determines whether or not this numeric element is undefined.
+func (v Probability) IsUndefined() bool {
+	return false
+}
+
+// This method returns a boolean value for this numeric element.
+func (v Probability) AsBoolean() bool {
+	return v > 0.55555555555555555 // Half way between 0.5 and 0.6.
+}
+
+// This method returns an integer value for this numeric element.
+func (v Probability) AsInteger() int {
+	return int(mat.Round(float64(v)))
+}
+
+// This method returns a real value for this numeric element.
 func (v Probability) AsReal() float64 {
 	return float64(v)
 }

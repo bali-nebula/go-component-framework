@@ -233,7 +233,7 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatCatalog(value)
 	case abs.ListLike:
 		v.formatList(value)
-	case abs.RangeLike[abs.Primitive]:
+	case abs.RangeLike[abs.Numeric]:
 		v.formatRange(value)
 	case abs.ProcedureLike:
 		v.formatProcedure(value)

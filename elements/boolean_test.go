@@ -19,15 +19,11 @@ import (
 func TestFalseBooleans(t *tes.T) {
 	var v = ele.Boolean(false)
 	ass.False(t, bool(v))
-	ass.False(t, v.AsBoolean())
-	ass.Equal(t, 0, v.AsInteger())
 }
 
 func TestTrueBooleans(t *tes.T) {
 	var v = ele.Boolean(true)
 	ass.True(t, bool(v))
-	ass.True(t, v.AsBoolean())
-	ass.Equal(t, 1, v.AsInteger())
 }
 
 func TestBooleansLibrary(t *tes.T) {

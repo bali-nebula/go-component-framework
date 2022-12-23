@@ -11,6 +11,7 @@
 package elements
 
 import (
+	mat "math"
 	tim "time"
 )
 
@@ -23,11 +24,58 @@ func Now() Moment {
 	return Moment(now)
 }
 
+// This constructor returns the earliest value for a moment.
+func MinimumMoment() Moment {
+	return Moment(mat.MinInt)
+}
+
+// This constructor returns the latest value for a moment.
+func MaximumMoment() Moment {
+	return Moment(mat.MaxInt)
+}
+
 // This type defines the methods associated with moment in time elements. It
 // extends the native Go int type and represents the number of milliseconds
 // after the UNIX epoc (Midnight, January 1, 1970 UTC) for a moment of tim.
 // All moments are based on UTC.
 type Moment int
+
+// NUMERIC INTERFACE
+
+// This method determines whether or not this numeric element is discrete.
+func (v Moment) IsDiscrete() bool {
+	return true
+}
+
+// This method determines whether or not this numeric element is zero.
+func (v Moment) IsZero() bool {
+	return v == 0
+}
+
+// This method determines whether or not this numeric element is infinite.
+func (v Moment) IsInfinite() bool {
+	return false
+}
+
+// This method determines whether or not this numeric element is undefined.
+func (v Moment) IsUndefined() bool {
+	return false
+}
+
+// This method returns a boolean value for this numeric element.
+func (v Moment) AsBoolean() bool {
+	return v != 0
+}
+
+// This method returns an integer value for this numeric element.
+func (v Moment) AsInteger() int {
+	return int(v)
+}
+
+// This method returns a real value for this numeric element.
+func (v Moment) AsReal() float64 {
+	return float64(v)
+}
 
 // TEMPORAL INTERFACE
 

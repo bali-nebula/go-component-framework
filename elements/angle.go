@@ -16,19 +16,35 @@ import (
 
 // ANGLE INTERFACE
 
+// See "The Tau Manifesto" at https://tauday.com/tau-manifesto
+const tau = 2.0 * mat.Pi
+
+var Pi = Angle(mat.Pi)
+var Tau = Angle(tau)
+
 // This constructor creates a new angle from the specified value and normalizes
-// the value to be in the allowed range for angles [0..2π).
+// the value to be in the allowed range for angles [0..τ).
 func AngleFromFloat(v float64) Angle {
-	var twoPi = 2.0 * mat.Pi
-	if v < -twoPi || v >= twoPi {
-		// Normalize the angle to the range [-2π..2π).
-		v = mat.Remainder(v, twoPi)
+	var tau = 2.0 * mat.Pi
+	if v < -tau || v >= tau {
+		// Normalize the angle to the range [-τ..τ).
+		v = mat.Remainder(v, tau)
 	}
 	if v < 0.0 {
-		// Normalize the angle to the range [0..2π).
-		v = v + twoPi
+		// Normalize the angle to the range [0..τ).
+		v = v + tau
 	}
 	return Angle(lockPhase(v))
+}
+
+// This constructor returns the minimum value for an angle.
+func MinimumAngle() Angle {
+	return Angle(0)
+}
+
+// This constructor returns the maximum value for an angle.
+func MaximumAngle() Angle {
+	return Tau
 }
 
 // This type defines the methods associated with angle elements. It extends the
@@ -36,21 +52,44 @@ func AngleFromFloat(v float64) Angle {
 // [0..2π).
 type Angle float64
 
-// CONTINUOUS INTERFACE
+// NUMERIC INTERFACE
 
-// This method determines whether or not this angle is zero.
-func (v Angle) IsZero() bool {
-	return v == 0
+// This method determines whether or not this numeric element is discrete.
+func (v Angle) IsDiscrete() bool {
+	return false
 }
 
-// This method returns a real value for this continuous component.
+// This method determines whether or not this numeric element is zero.
+func (v Angle) IsZero() bool {
+	return v == 0 || v == Tau
+}
+
+// This method determines whether or not this numeric element is infinite.
+func (v Angle) IsInfinite() bool {
+	return false
+}
+
+// This method determines whether or not this numeric element is undefined.
+func (v Angle) IsUndefined() bool {
+	return false
+}
+
+// This method returns a boolean value for this numeric element.
+func (v Angle) AsBoolean() bool {
+	return !v.IsZero()
+}
+
+// This method returns an integer value for this numeric element.
+func (v Angle) AsInteger() int {
+	return int(mat.Round(float64(v)))
+}
+
+// This method returns a real value for this numeric element.
 func (v Angle) AsReal() float64 {
 	return float64(v)
 }
 
 // ANGLES LIBRARY
-
-var Pi = Angle(complex(mat.Pi, 0.0))
 
 // This singleton creates a unique name space for the library functions for
 // angle elements.
@@ -64,7 +103,7 @@ type angles struct{}
 
 // This library function returns the inverse of the specified angle.
 func (l *angles) Inverse(angle Angle) Angle {
-	return AngleFromFloat(float64(angle) + mat.Pi)
+	return AngleFromFloat(float64(angle) - mat.Pi)
 }
 
 // This library function returns the sum of the specified angles.
@@ -123,6 +162,8 @@ func (l *angles) Cosine(angle Angle) float64 {
 		return 0.0
 	case mat.Pi * 1.75:
 		return 0.5 * mat.Sqrt2
+	case tau:
+		return 1.0
 	default:
 		return mat.Cos(float64(angle))
 	}
@@ -153,6 +194,8 @@ func (l *angles) Sine(angle Angle) float64 {
 		return -1.0
 	case mat.Pi * 1.75:
 		return -0.5 * mat.Sqrt2
+	case tau:
+		return 0.0
 	default:
 		return mat.Sin(float64(angle))
 	}
@@ -184,6 +227,8 @@ func (l *angles) Tangent(angle Angle) float64 {
 		return mat.Inf(1)
 	case mat.Pi * 1.75:
 		return -1.0
+	case tau:
+		return 0.0
 	default:
 		return mat.Tan(float64(angle))
 	}

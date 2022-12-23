@@ -17,6 +17,10 @@ import (
 	ele "github.com/craterdog-bali/go-component-framework/elements"
 	str "github.com/craterdog-bali/go-component-framework/strings"
 	co2 "github.com/craterdog/go-collection-framework"
+	mat "math"
+	ref "reflect"
+	stc "strconv"
+	utf "unicode/utf8"
 )
 
 // This method attempts to parse an association between a key and value. It
@@ -363,10 +367,69 @@ func (v *parser) parseMultilineValues() (abs.ListLike, *Token, bool) {
 	return list, token, true
 }
 
+// This method attempts to parse a numeric element. It returns the numeric
+// element and whether or not the numeric element was successfully parsed.
+func (v *parser) parseNumeric() (abs.Numeric, *Token, bool) {
+	var ok bool
+	var token *Token
+	var numeric abs.Numeric
+	numeric, token, ok = v.parseAngle()
+	if !ok {
+		numeric, token, ok = v.parseDuration()
+	}
+	if !ok {
+		numeric, token, ok = v.parseMoment()
+	}
+	if !ok {
+		numeric, token, ok = v.parsePercentage()
+	}
+	if !ok {
+		numeric, token, ok = v.parseProbability()
+	}
+	if !ok {
+		numeric, token, ok = v.parseReal()
+	}
+	if !ok {
+		numeric, token, ok = v.parseRune()
+	}
+	if !ok {
+		// Override any zero values returned from failed parsing attempts.
+		numeric = nil
+	}
+	return numeric, token, ok
+}
+
+// This method adds the canonical format for the specified numeric element to
+// the state of the formatter.
+func (v *formatter) formatNumeric(numeric abs.Numeric) {
+	// NOTE: A type switch will only work if each case specifies a unique
+	// interface. If two different interfaces define the same method signatures
+	// they are indistinguishable as types. To get around this we have added as
+	// necessary a unique "dummy" method to each interface to guarantee that it
+	// is unique.
+	switch value := numeric.(type) {
+	case ele.Angle:
+		v.formatAngle(value)
+	case ele.Duration:
+		v.formatDuration(value)
+	case ele.Moment:
+		v.formatMoment(value)
+	case ele.Percentage:
+		v.formatPercentage(value)
+	case ele.Probability:
+		v.formatProbability(value)
+	case col.Real:
+		v.formatReal(value)
+	case col.Rune:
+		v.formatRune(value)
+	default:
+		panic(fmt.Sprintf("An invalid numeric (of type %T) was passed to the formatter: %v", value, value))
+	}
+}
+
 // This method attempts to parse a primitive. It returns the primitive and
 // whether or not the primitive was successfully parsed.
 func (v *parser) parsePrimitive() (abs.Primitive, *Token, bool) {
-	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
 	var primitive abs.Primitive
@@ -429,22 +492,22 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 
 // This method attempts to parse a range collection. It returns the range
 // collection and whether or not the range collection was successfully parsed.
-func (v *parser) parseRange() (abs.RangeLike[abs.Primitive], *Token, bool) {
+func (v *parser) parseRange() (abs.RangeLike[abs.Numeric], *Token, bool) {
 	var ok bool
 	var token *Token
 	var left, right string
-	var first abs.Primitive
+	var first abs.Numeric
 	var extent abs.Extent
-	var last abs.Primitive
-	var rng abs.RangeLike[abs.Primitive]
+	var last abs.Numeric
+	var range_ abs.RangeLike[abs.Numeric]
 	left, token, ok = v.parseDelimiter("[")
 	if !ok {
 		left, token, ok = v.parseDelimiter("(")
 		if !ok {
-			return rng, token, false
+			return range_, token, false
 		}
 	}
-	first, token, _ = v.parsePrimitive() // The first value is optional.
+	first, token, _ = v.parseNumeric() // The first value is optional.
 	_, token, ok = v.parseDelimiter("..")
 	if !ok {
 		// This is not a range collection.
@@ -452,9 +515,9 @@ func (v *parser) parseRange() (abs.RangeLike[abs.Primitive], *Token, bool) {
 			v.backupOne() // Put back the first value token.
 		}
 		v.backupOne() // Put back the left bracket character.
-		return rng, token, false
+		return range_, token, false
 	}
-	last, token, _ = v.parsePrimitive() // The last value is optional.
+	last, token, _ = v.parseNumeric() // The last value is optional.
 	right, token, ok = v.parseDelimiter("]")
 	if !ok {
 		right, token, ok = v.parseDelimiter(")")
@@ -480,14 +543,19 @@ func (v *parser) parseRange() (abs.RangeLike[abs.Primitive], *Token, bool) {
 		var message = fmt.Sprintf("Expected valid range brackets but received:%q and %q\n\n", left, right)
 		panic(message)
 	}
-	rng = col.Range(first, extent, last)
-	return rng, token, true
+	if !ref.ValueOf(first).IsValid() && !ref.ValueOf(last).IsValid() {
+		// Default to real endpoints if neither is specified.
+		first = col.MinimumReal()
+		last = col.MaximumReal()
+	}
+	range_ = col.Range(first, extent, last)
+	return range_, token, true
 }
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(rng abs.RangeLike[abs.Primitive]) {
-	var extent = rng.GetExtent()
+func (v *formatter) formatRange(range_ abs.RangeLike[abs.Numeric]) {
+	var extent = range_.GetExtent()
 	var left, right string
 	switch extent {
 	case abs.INCLUSIVE:
@@ -502,14 +570,83 @@ func (v *formatter) formatRange(rng abs.RangeLike[abs.Primitive]) {
 		panic(fmt.Sprintf("The range contains an unknown extent: %v", extent))
 	}
 	v.AppendString(left)
-	var first = rng.GetFirst()
-	if first != nil {
-		v.formatPrimitive(first)
+	var first = range_.GetFirst()
+	if first != range_.GetMinimum() {
+		v.formatNumeric(first)
 	}
 	v.AppendString("..")
-	var last = rng.GetLast()
-	if last != nil {
-		v.formatPrimitive(last)
+	var last = range_.GetLast()
+	if last != range_.GetMaximum() {
+		v.formatNumeric(last)
 	}
 	v.AppendString(right)
+}
+
+// This method attempts to parse a real number. It returns the real number
+// and whether or not the real number was successfully parsed.
+func (v *parser) parseReal() (col.Real, *Token, bool) {
+	var number col.Real
+	var token = v.nextToken()
+	if token.Type != TokenNumber {
+		v.backupOne()
+		return number, token, false
+	}
+	var err any
+	var r float64
+	var matches = scanReal([]byte(token.Value))
+	switch {
+	case matches[0] == "undefined":
+		r = mat.NaN()
+	case matches[0] == "infinity" || matches[0] == "∞":
+		r = mat.Inf(1)
+	case matches[0] == "pi", matches[0] == "-pi", matches[0] == "phi", matches[0] == "-phi":
+		r = stringToFloat(matches[0])
+	default:
+		r, err = stc.ParseFloat(matches[0], 64)
+		if err != nil {
+			r = stringToFloat(matches[0])
+		}
+	}
+	number = col.Real(r)
+	return number, token, true
+}
+
+// This method adds the canonical format for the specified real number to the
+// state of the formatter.
+func (v *formatter) formatReal(number col.Real) {
+	switch {
+	case number.IsZero():
+		v.AppendString("0")
+	case number.IsInfinite():
+		if number.IsNegative() {
+			v.AppendString("-")
+		}
+		v.AppendString("∞")
+	case number.IsUndefined():
+		v.AppendString("undefined")
+	default:
+		v.formatFloat(float64(number))
+	}
+}
+
+// This method attempts to parse a rune. It returns the rune and whether or not
+// the rune was successfully parsed.
+func (v *parser) parseRune() (col.Rune, *Token, bool) {
+	var number = col.Rune(-1)
+	var quote, token, ok = v.parseQuote()
+	if !ok {
+		return number, token, false
+	}
+	var r, _ = utf.DecodeRuneInString(string(quote))
+
+	number = col.Rune(r)
+	return number, token, true
+}
+
+// This method adds the canonical format for the specified rune to the state of
+// the formatter.
+func (v *formatter) formatRune(number col.Rune) {
+	var runes = []rune{rune(number)}
+	var quote = str.Quote(string(runes))
+	v.formatQuote(quote)
 }

@@ -59,7 +59,7 @@ func TestOtherProbabilities(t *tes.T) {
 	ass.Equal(t, 0.25, float64(v1))
 
 	var v2 = ele.ProbabilityFromFloat(0.5)
-	ass.True(t, v2.AsBoolean())
+	ass.False(t, v2.AsBoolean())
 	ass.Equal(t, 1, v2.AsInteger())
 	ass.Equal(t, 0.5, v2.AsReal())
 	ass.Equal(t, 0.5, float64(v2))

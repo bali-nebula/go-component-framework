@@ -54,13 +54,13 @@ func TestRoundtripWithLists(t *tes.T) {
 func TestRoundtripWithRanges(t *tes.T) {
 	var rangeStrings = []string{
 		`[..]`,
-		`[0..∞)`,
-		`(-π..π]`,
+		`[1..]`,
+		`[..0)`,
+		`[..~π)`,
+		`[~π..)`,
 		`[1..100]`,
 		`(-1..1)`,
-		`[1....5)  ! Two probability endpoints.`,
-		`[v1.2..v1.5]`,
-		`[/bali/elements/Angle/v1../bali/elements/Tag/v1]`,
+		`[.25..75)`,
 	}
 
 	for index, s := range rangeStrings {

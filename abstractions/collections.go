@@ -53,11 +53,13 @@ type (
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all sequences of primitive
-// values that allow their endpoints to be changed. The type is parameterized
-// to force the first and last primitive values to be the same type.
-type Elastic[V Primitive] interface {
+// This interface defines the methods supported by all ranges of numeric values
+// that allow their endpoints to be changed. The type is parameterized to force
+// the first and last endpoint values to be the same type.
+type Elastic[V Numeric] interface {
 	IsEnumerable() bool
+	GetMinimum() V
+	GetMaximum() V
 	GetFirst() V
 	SetFirst(V)
 	GetExtent() Extent
@@ -70,7 +72,7 @@ type Elastic[V Primitive] interface {
 
 // This interface consolidates all of the interfaces supported by range-like
 // sequences.
-type RangeLike[V Primitive] interface {
+type RangeLike[V Numeric] interface {
 	col.Sequential[V]
 	col.Indexed[V]
 	Elastic[V]

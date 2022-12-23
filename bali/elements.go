@@ -31,7 +31,12 @@ func (v *parser) parseAngle() (ele.Angle, *Token, bool) {
 		v.backupOne()
 		return angle, token, false
 	}
-	angle = ele.AngleFromFloat(stringToFloat(token.Value[1:]))
+	var value = stringToFloat(token.Value[1:])
+	if value == 2.0*mat.Pi {
+		angle = ele.Tau
+	} else {
+		angle = ele.AngleFromFloat(value)
+	}
 	return angle, token, true
 }
 
@@ -39,9 +44,12 @@ func (v *parser) parseAngle() (ele.Angle, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatAngle(angle ele.Angle) {
 	var s string
-	if float64(angle) == mat.Pi {
+	switch angle {
+	case ele.Pi:
 		s = "~π"
-	} else {
+	case ele.Tau:
+		s = "~τ"
+	default:
 		s = "~" + stc.FormatFloat(float64(angle), 'G', -1, 64)
 	}
 	v.AppendString(s)
@@ -338,12 +346,12 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 		c = complex(0, -1)
 	case matches[0] == "pi", matches[0] == "-pi", matches[0] == "phi", matches[0] == "-phi":
 		// The value is a pure real constant ending in "i" so it must be handled first.
-		var realPart = stringToFloat(matches[0])
+		realPart = stringToFloat(matches[0])
 		c = complex(realPart, 0)
 	case matches[0][len(matches[0])-1] == 'i':
 		// The value is pure imaginary.
 		var match = matches[0][:len(matches[0])-1] // Strip off the trailing "i".
-		var imaginaryPart, err = stc.ParseFloat(match, 64)
+		imaginaryPart, err = stc.ParseFloat(match, 64)
 		if err != nil {
 			// The value is a pure imaginary constant.
 			imaginaryPart = stringToFloat(match)
@@ -412,12 +420,12 @@ func (v *formatter) formatNumber(number ele.Number) {
 		var imagPart = number.GetImaginary()
 		switch {
 		case imagPart == 0:
-			v.formatReal(realPart)
+			v.formatFloat(realPart)
 		case realPart == 0:
 			v.formatImaginary(imagPart)
 		default:
 			v.AppendString("(")
-			v.formatReal(realPart)
+			v.formatFloat(realPart)
 			v.AppendString(", ")
 			v.formatImaginary(imagPart)
 			v.AppendString(")")
@@ -452,12 +460,12 @@ func (v *formatter) formatPolar(number ele.Number) {
 		var phase = number.GetPhase()
 		switch {
 		case phase.IsZero():
-			v.formatReal(magnitude)
+			v.formatFloat(magnitude)
 		case magnitude == 0:
 			v.AppendString("0")
 		default:
 			v.AppendString("(")
-			v.formatReal(magnitude)
+			v.formatFloat(magnitude)
 			v.AppendString("e^")
 			v.formatPhase(phase)
 			v.AppendString(")")
@@ -560,7 +568,7 @@ func (v *formatter) formatProbability(probability ele.Probability) {
 
 // This method adds the canonical format for the specified real number to the
 // state of the formatter.
-func (v *formatter) formatReal(r float64) {
+func (v *formatter) formatFloat(r float64) {
 	var s string
 	switch r {
 	case mat.E:

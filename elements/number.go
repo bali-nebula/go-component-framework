@@ -18,6 +18,17 @@ import (
 
 // NUMBER INTERFACE
 
+var zero = complex(0, 0)
+var infinity = cmp.Inf()
+var undefined = cmp.NaN()
+
+var I = Number(complex(0.0, 1.0))
+var One = Number(complex(1.0, 0.0))
+var Phi = Number(complex(mat.Phi, 0.0))
+var Zero = Number(zero)
+var Infinity = Number(infinity)
+var Undefined = Number(undefined)
+
 // This constructor creates a new number that is mapped to the Riemann Sphere.
 //   - https://en.wikipedia.org/wiki/Riemann_sphere
 //
@@ -97,12 +108,42 @@ func NumberFromPolar(m float64, p Angle) Number {
 	return NumberFromComplex(v)
 }
 
+// This constructor returns the minimum value for a number.
+func MinimumNumber() Number {
+	return Zero
+}
+
+// This constructor returns the maximum value for a number.
+func MaximumNumber() Number {
+	return Infinity
+}
+
 // This type defines the methods associated with number elements. It extends the
 // native Go complex128 type and may represent an integer, real, or complex
 // number.
 type Number complex128
 
-// DISCRETE INTERFACE
+// NUMERIC INTERFACE
+
+// This method determines whether or not this numeric element is discrete.
+func (v Number) IsDiscrete() bool {
+	return imag(v) == 0 && mat.Round(real(v)) == real(v)
+}
+
+// This method determines whether or not this number is zero.
+func (v Number) IsZero() bool {
+	return real(v) == 0 && imag(v) == 0
+}
+
+// This method determines whether or not this number is infinite.
+func (v Number) IsInfinite() bool {
+	return mat.IsInf(real(v), 0) || mat.IsInf(imag(v), 0)
+}
+
+// This method determines whether or not this number is undefined.
+func (v Number) IsUndefined() bool {
+	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
+}
 
 // This method returns a boolean value for this discrete element.
 func (v Number) AsBoolean() bool {
@@ -120,29 +161,19 @@ func (v Number) AsInteger() int {
 	return int(mat.Round(v.AsReal()))
 }
 
-// CONTINUOUS INTERFACE
-
-// This method determines whether or not this number is zero.
-func (v Number) IsZero() bool {
-	return real(v) == 0 && imag(v) == 0
-}
-
 // This method returns a real value for this continuous component.
 func (v Number) AsReal() float64 {
 	return real(v)
 }
 
+// POLARIZED INTERFACE
+
+// This method determines whether or not this polarized component is negative.
+func (v Number) IsNegative() bool {
+	return real(v) < 0
+}
+
 // COMPLEX INTERFACE
-
-// This method determines whether or not this number is infinite.
-func (v Number) IsInfinite() bool {
-	return mat.IsInf(real(v), 0) || mat.IsInf(imag(v), 0)
-}
-
-// This method determines whether or not this number is undefined.
-func (v Number) IsUndefined() bool {
-	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
-}
 
 // This method returns the real part of this complex component.
 func (v Number) GetReal() float64 {
@@ -164,25 +195,7 @@ func (v Number) GetPhase() Angle {
 	return AngleFromFloat(cmp.Phase(complex128(v)))
 }
 
-// POLARIZED INTERFACE
-
-// This method determines whether or not this polarized component is negative.
-func (v Number) IsNegative() bool {
-	return real(v) < 0
-}
-
 // NUMBERS LIBRARY
-
-var zero = complex(0, 0)
-var infinity = cmp.Inf()
-var undefined = cmp.NaN()
-
-var I = Number(complex(0.0, 1.0))
-var One = Number(complex(1.0, 0.0))
-var Phi = Number(complex(mat.Phi, 0.0))
-var Zero = Number(zero)
-var Infinity = Number(infinity)
-var Undefined = Number(undefined)
 
 // This singleton creates a unique name space for the library functions for
 // number elements.

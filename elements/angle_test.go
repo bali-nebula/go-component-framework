@@ -48,12 +48,14 @@ func TestAnglesLibrary(t *tes.T) {
 	var v5 = ele.AngleFromFloat(mat.Pi * 1.25)
 	var v6 = ele.AngleFromFloat(mat.Pi * 1.5)
 	var v7 = ele.AngleFromFloat(mat.Pi * 1.75)
+	var v8 = ele.Tau
 
 	ass.Equal(t, v4, ele.Angles.Inverse(v0))
 	ass.Equal(t, v5, ele.Angles.Inverse(v1))
 	ass.Equal(t, v6, ele.Angles.Inverse(v2))
 	ass.Equal(t, v7, ele.Angles.Inverse(v3))
 	ass.Equal(t, v0, ele.Angles.Inverse(v4))
+	ass.Equal(t, v4, ele.Angles.Inverse(v8))
 
 	ass.Equal(t, v1, ele.Angles.Sum(v0, v1))
 	ass.Equal(t, v0, ele.Angles.Difference(v1, v1))
@@ -63,22 +65,27 @@ func TestAnglesLibrary(t *tes.T) {
 	ass.Equal(t, v2, ele.Angles.Difference(v5, v3))
 	ass.Equal(t, v7, ele.Angles.Sum(v3, v4))
 	ass.Equal(t, v3, ele.Angles.Difference(v7, v4))
+	ass.Equal(t, v1, ele.Angles.Sum(v8, v1))
+	ass.Equal(t, v0, ele.Angles.Difference(v8, v8))
 
 	ass.Equal(t, v3, ele.Angles.Scaled(v1, 3.0))
 	ass.Equal(t, v0, ele.Angles.Scaled(v4, 2.0))
 	ass.Equal(t, v4, ele.Angles.Scaled(v4, -1.0))
+	ass.Equal(t, v0, ele.Angles.Scaled(v8, 1.0))
 
 	ass.Equal(t, v0, ele.Angles.ArcCosine(ele.Angles.Cosine(v0)))
 	ass.Equal(t, v1, ele.Angles.ArcCosine(ele.Angles.Cosine(v1)))
 	ass.Equal(t, v2, ele.Angles.ArcCosine(ele.Angles.Cosine(v2)))
 	ass.Equal(t, v3, ele.Angles.ArcCosine(ele.Angles.Cosine(v3)))
 	ass.Equal(t, v4, ele.Angles.ArcCosine(ele.Angles.Cosine(v4)))
+	ass.Equal(t, v0, ele.Angles.ArcCosine(ele.Angles.Cosine(v8)))
 
 	ass.Equal(t, v0, ele.Angles.ArcSine(ele.Angles.Sine(v0)))
 	ass.Equal(t, v1, ele.Angles.ArcSine(ele.Angles.Sine(v1)))
 	ass.Equal(t, v2, ele.Angles.ArcSine(ele.Angles.Sine(v2)))
 	ass.Equal(t, v6, ele.Angles.ArcSine(ele.Angles.Sine(v6)))
 	ass.Equal(t, v7, ele.Angles.ArcSine(ele.Angles.Sine(v7)))
+	ass.Equal(t, v0, ele.Angles.ArcSine(ele.Angles.Sine(v8)))
 
 	ass.Equal(t, v0, ele.Angles.ArcTangent(ele.Angles.Cosine(v0), ele.Angles.Sine(v0)))
 	ass.Equal(t, v1, ele.Angles.ArcTangent(ele.Angles.Cosine(v1), ele.Angles.Sine(v1)))
@@ -86,4 +93,5 @@ func TestAnglesLibrary(t *tes.T) {
 	ass.Equal(t, v3, ele.Angles.ArcTangent(ele.Angles.Cosine(v3), ele.Angles.Sine(v3)))
 	ass.Equal(t, v4, ele.Angles.ArcTangent(ele.Angles.Cosine(v4), ele.Angles.Sine(v4)))
 	ass.Equal(t, v5, ele.Angles.ArcTangent(ele.Angles.Cosine(v5), ele.Angles.Sine(v5)))
+	ass.Equal(t, v0, ele.Angles.ArcTangent(ele.Angles.Cosine(v8), ele.Angles.Sine(v8)))
 }

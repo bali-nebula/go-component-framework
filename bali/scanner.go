@@ -569,18 +569,18 @@ func (v *scanner) foundVersion() bool {
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Angle
 const (
-	e        = `e`
-	pi       = `pi|π`
-	phi      = `phi|φ`
-	tau      = `tau|τ`
-	sign     = `[+-]`
-	zero     = `0`
-	ordinal  = `[1-9][0-9]*`
-	fraction = `\.[0-9]+`
-	exponent = `E` + sign + `?` + ordinal
-	scalar   = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
-	real     = sign + `?(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
-	angle    = `~(` + real + `|` + zero + `)`
+	e         = `e`
+	pi        = `pi|π`
+	phi       = `phi|φ`
+	tau       = `tau|τ`
+	sign      = `[+-]`
+	zero      = `0`
+	ordinal   = `[1-9][0-9]*`
+	fraction  = `\.[0-9]+`
+	exponent  = `E` + sign + `?` + ordinal
+	scalar    = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
+	magnitude = `(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
+	angle     = `~(` + magnitude + `|` + zero + `)`
 )
 
 // This scanner is used for matching angle entities.
@@ -886,13 +886,15 @@ func scanNote(v []byte) []string {
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Number
 const (
-	infinity    = `infinity|∞`
+	infinity    = sign + `?(?:infinity|∞)`
 	undefined   = `undefined`
-	imaginary   = `(?:` + sign + `|` + real + `)?i`
-	rectangular = `(` + real + `)(, )(` + imaginary + `)`
-	polar       = `(` + real + `)(e\^)(` + angle + `i)`
-	number      = infinity + `|` + imaginary + `|` + real + `|` + zero + `|` + undefined + `|` +
-		`\((?:` + rectangular + `|` + polar + `)\)`
+	float       = sign + `?` + magnitude
+	imaginary   = sign + `?` + magnitude + `?i`
+	rectangular = `(` + float + `)(, )(` + imaginary + `)`
+	polar       = `(` + magnitude + `)(e\^)(` + angle + `i)`
+	real_       = undefined + `|` + infinity + `|` + float + `|` + zero
+	complex_    = `\((?:` + rectangular + `|` + polar + `)\)`
+	number      = imaginary + `|` + real_ + `|` + complex_
 )
 
 // This scanner is used for matching number entities.
@@ -905,6 +907,16 @@ func scanNumber(v []byte) []string {
 	return bytesToStrings(numberScanner.FindSubmatch(v))
 }
 
+// This scanner is used for matching real numbers.
+var realScanner = reg.MustCompile(`^(?:` + real_ + `)`)
+
+// This function returns for the specified string an array of the matching
+// subgroups for a real number. The first string in the array is the entire
+// matched string.
+func scanReal(v []byte) []string {
+	return bytesToStrings(realScanner.FindSubmatch(v))
+}
+
 // PATTERN ELEMENT SYNTAX
 
 // These constants are used to form a regular expression for valid pattern
@@ -914,9 +926,9 @@ func scanNumber(v []byte) []string {
 const (
 	base16  = `[0-9a-f]`
 	unicode = `u` + base16 + `{4}`
-	escape  = `\\(?:` + unicode + `|[bfrnt\\])`
-	roon    = `(?:` + escape + `|\\"|[^"\r\n]` + `)`
-	regex   = `"(` + roon + `+)"\?`
+	escape  = `\\(?:` + unicode + `|["frnt\\])`
+	rune_   = `(?:` + escape + `|[^"\f\r\n\t]` + `)`
+	regex   = `"(` + rune_ + `+)"\?`
 	pattern = `none` + `|` + regex + `|` + `any`
 )
 
@@ -937,7 +949,7 @@ func scanPattern(v []byte) []string {
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Percentage
 const (
-	percentage = `(` + real + `|` + zero + `)%`
+	percentage = `(` + real_ + `)%`
 )
 
 // This scanner is used for matching percentage entities.
@@ -977,7 +989,7 @@ func scanProbability(v []byte) []string {
 //
 //	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification#Quote
 const (
-	quote = `"(` + roon + `*)"`
+	quote = `"(` + rune_ + `*)"`
 )
 
 // This scanner is used for matching quoted strings.
