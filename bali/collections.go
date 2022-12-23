@@ -637,8 +637,13 @@ func (v *parser) parseRune() (col.Rune, *Token, bool) {
 	if !ok {
 		return number, token, false
 	}
-	var r, _ = utf.DecodeRuneInString(string(quote))
-
+	var s = string(quote)
+	var r, size = utf.DecodeRuneInString(s)
+	if len(s) != size {
+		// This is not a rune.
+		v.backupOne() // Put back the quote token.
+		return number, token, false
+	}
 	number = col.Rune(r)
 	return number, token, true
 }
