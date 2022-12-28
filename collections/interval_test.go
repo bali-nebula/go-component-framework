@@ -19,8 +19,8 @@ import (
 	tes "testing"
 )
 
-func TestRangesWithIntegers(t *tes.T) {
-	var s = col.Range[ele.Duration](3, abs.INCLUSIVE, 7)
+func TestIntervalsWithDurations(t *tes.T) {
+	var s = col.Interval[ele.Duration](3, abs.INCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
 	ass.Equal(t, 5, int(s.GetValue(3)))
@@ -34,8 +34,10 @@ func TestRangesWithIntegers(t *tes.T) {
 	ass.Equal(t, 3, int(iterator.GetNext()))
 	iterator.ToEnd()
 	ass.Equal(t, 7, int(iterator.GetPrevious()))
+}
 
-	s = col.Range[ele.Duration](3, abs.RIGHT, 7)
+func TestIntervalsWithMoments(t *tes.T) {
+	var s = col.Interval[ele.Moment](3, abs.RIGHT, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())
 	ass.Equal(t, 4, int(s.GetValue(1)))
@@ -44,9 +46,9 @@ func TestRangesWithIntegers(t *tes.T) {
 	ass.Equal(t, 2, s.GetIndex(5))
 	ass.Equal(t, 4, s.GetIndex(7))
 	ass.Equal(t, 0, s.GetIndex(8))
-	ass.Equal(t, []ele.Duration{4, 5, 6, 7}, s.AsArray())
+	ass.Equal(t, []ele.Moment{4, 5, 6, 7}, s.AsArray())
 
-	s = col.Range[ele.Duration](3, abs.EXCLUSIVE, 7)
+	s = col.Interval[ele.Moment](3, abs.EXCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 3, s.GetSize())
 	ass.Equal(t, 4, int(s.GetValue(1)))
@@ -54,29 +56,16 @@ func TestRangesWithIntegers(t *tes.T) {
 	ass.Equal(t, 1, s.GetIndex(4))
 	ass.Equal(t, 3, s.GetIndex(6))
 	ass.Equal(t, 0, s.GetIndex(7))
-	ass.Equal(t, []ele.Duration{4, 5, 6}, s.AsArray())
-
-	s = col.Range[ele.Duration](3, abs.LEFT, 7)
-	ass.False(t, s.IsEmpty())
-	ass.Equal(t, 4, s.GetSize())
-	ass.Equal(t, 3, int(s.GetValue(1)))
-	ass.Equal(t, 1, s.GetIndex(3))
-	ass.Equal(t, 4, s.GetIndex(6))
-	ass.Equal(t, 0, s.GetIndex(7))
-	ass.Equal(t, []ele.Duration{3, 4, 5, 6}, s.AsArray())
+	ass.Equal(t, []ele.Moment{4, 5, 6}, s.AsArray())
 }
 
-/*
-func TestRangesWithRunes(t *tes.T) {
-	var s = col.Range[rune]('a', abs.INCLUSIVE, 'z')
+func TestIntervalsWithRunes(t *tes.T) {
+	var s = col.Interval[col.Rune]('a', abs.LEFT, 'f')
 	ass.False(t, s.IsEmpty())
-	ass.Equal(t, 26, s.GetSize())
-	ass.Equal(t, 'd', s.GetValue(4))
-	ass.Equal(t, 13, s.GetIndex('m'))
-
-	var a = co2.List[rune]()
-	var values = s.AsArray()
-	a.AddValues(s)
-	ass.Equal(t, values, a.AsArray())
+	ass.Equal(t, 5, s.GetSize())
+	ass.Equal(t, 'a', rune(s.GetValue(1)))
+	ass.Equal(t, 1, s.GetIndex('a'))
+	ass.Equal(t, 4, s.GetIndex('d'))
+	ass.Equal(t, 0, s.GetIndex('f'))
+	ass.Equal(t, []col.Rune{'a', 'b', 'c', 'd', 'e'}, s.AsArray())
 }
-*/
