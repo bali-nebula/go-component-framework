@@ -291,6 +291,7 @@ func (v *ranje[V]) SetLast(value V) {
 // This method determines whether or not the first and last endpoints are
 // invalid.
 func (v *ranje[V]) validateRange() {
+	// Validate the extent.
 	switch v.extent {
 	case abs.INCLUSIVE:
 	case abs.LEFT:
@@ -299,29 +300,31 @@ func (v *ranje[V]) validateRange() {
 	default:
 		panic(fmt.Sprintf("Received an invalid range extent: %v", v.extent))
 	}
+
+	// Set default endpoints if necessary.
 	if !ref.ValueOf(v.first).IsValid() {
 		v.first = v.GetMinimum()
 	}
 	if !ref.ValueOf(v.last).IsValid() {
 		v.last = v.GetMaximum()
 	}
-	if v.first.IsDiscrete() {
-		var firstIndex = v.firstIndex()
-		var lastIndex = v.lastIndex()
-		if col.RankValues(firstIndex, lastIndex) > 0 {
-			fmt.Printf("first: %v, last: %v\n", firstIndex, lastIndex)
-			panic("The effective first value in the range must not be more than the effective last value.")
-		}
-		v.size = lastIndex - firstIndex + 1
-	} else {
-		var firstValue = v.firstValue()
-		var lastValue = v.lastValue()
-		if col.RankValues(firstValue, lastValue) > 0 {
-			fmt.Printf("first: %v, last: %v\n", firstValue, lastValue)
-			panic("The first value in the range must not be more than the last value.")
-		}
+
+	// Calculate the effective size.
+	var first = v.effectiveFirst()
+	var last = v.effectiveLast()
+	switch first.(type) {
+	case int:
+		v.size = last.(int) - first.(int) + 1
+	case float64, string:
 		v.size = -1
 	}
+
+	// Validate the endpoints.
+	if col.RankValues(first, last) > 0 {
+		fmt.Printf("first: %v, last: %v\n", first, last)
+		panic("The effective first value in the range must not be more than the effective last value.")
+	}
+
 }
 
 // This method converts the type of the specified index to the parameterized
@@ -330,23 +333,20 @@ func (v *ranje[V]) indexToValue(index int) V {
 	var template V
 	var value abs.Numeric = template
 	switch value.(type) {
-	case ele.Angle:
-		value = ele.Angle(index)
 	case ele.Duration:
 		value = ele.Duration(index)
 	case ele.Moment:
 		value = ele.Moment(index)
 	case Rune:
 		value = Rune(index)
-	default:
-		panic(fmt.Sprintf("The value is not a numeric type: %T", template))
 	}
 	return value.(V)
 }
 
 // This method converts the type of the specified value to an index.
 func (v *ranje[V]) valueToIndex(value V) int {
-	var index = value.AsInteger()
+	var r any = v.asNative(value)
+	var index = r.(int)
 	return index
 }
 
@@ -354,38 +354,58 @@ func (v *ranje[V]) valueToIndex(value V) int {
 // extent type. It can only be called when the parameterized value type V is
 // an integer type.
 func (v *ranje[V]) firstIndex() int {
-	var firstIndex = v.valueToIndex(v.first)
-	switch v.extent {
-	case abs.RIGHT:
-		firstIndex++
-	case abs.EXCLUSIVE:
-		firstIndex++
+	var firstIndex = v.effectiveFirst()
+	return firstIndex.(int)
+}
+
+// This method returns the effective first value in the range.
+func (v *ranje[V]) effectiveFirst() any {
+	var first = v.asNative(v.first)
+	switch first.(type) {
+	case int:
+		switch v.extent {
+		case abs.RIGHT, abs.EXCLUSIVE:
+			first = first.(int) + 1
+		}
 	}
-	return firstIndex
+	return first
 }
 
-// This method returns the effective last value in the range based on its
-// extent type. It can only be called when the parameterized value type V is
-// an integer type.
-func (v *ranje[V]) lastIndex() int {
-	var lastIndex = v.valueToIndex(v.last)
-	switch v.extent {
-	case abs.LEFT:
-		lastIndex--
-	case abs.EXCLUSIVE:
-		lastIndex--
+// This method returns the effective last value in the range.
+func (v *ranje[V]) effectiveLast() any {
+	var last = v.asNative(v.last)
+	switch last.(type) {
+	case int:
+		switch v.extent {
+		case abs.LEFT, abs.EXCLUSIVE:
+			last = last.(int) - 1
+		}
 	}
-	return lastIndex
+	return last
 }
 
-// This method returns the first value in the continuous range as a float64 type.
-func (v *ranje[V]) firstValue() float64 {
-	return v.first.AsReal()
-}
-
-// This method returns the last value in the continuous range as a float64 type.
-func (v *ranje[V]) lastValue() float64 {
-	return v.last.AsReal()
+// This method returns the Go native value for the specified numeric value.
+func (v *ranje[V]) asNative(numeric abs.Numeric) any {
+	var native any
+	switch value := numeric.(type) {
+	case ele.Duration:
+		native = int(ele.Duration(value))
+	case ele.Moment:
+		native = int(ele.Moment(value))
+	case Rune:
+		native = int(Rune(value))
+	case ele.Angle:
+		native = float64(value)
+	case ele.Percentage:
+		native = float64(value)
+	case ele.Probability:
+		native = float64(value)
+	case Real:
+		native = float64(value)
+	default:
+		panic(fmt.Sprintf("The endpoint is not a supported type: %T", value))
+	}
+	return native
 }
 
 // This method normalizes an index to match the Go (zero based) indexing. The
