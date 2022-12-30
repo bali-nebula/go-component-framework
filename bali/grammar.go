@@ -12,6 +12,7 @@ package bali
 
 import (
 	fmt "fmt"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // This map captures the syntax rules for the Bali Document Notation™ (BDN)
@@ -27,8 +28,8 @@ var grammar = map[string]string{
 	"$annotation":   `NOTE | COMMENT`,
 	"$arguments":    `"(" [expression {"," expression}] ")"`,
 	"$arithmetic":   `expression ("*" | "/" | "//" | "+" | "-") expression`,
-	"$assignClause": `
-	letClause         ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
+	"$assignment": `
+    letClause  ! ["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$association": `key ":" value`,
 	"$associations": `
     association {"," association} |
@@ -37,10 +38,9 @@ var grammar = map[string]string{
 	"$attribute":      `variable indices`,
 	"$bag":            `expression`,
 	"$breakClause":    `"break" "loop"`,
-	"$catalog":        `"[" associations "]"`,
 	"$chaining":       `expression "&" expression`,
 	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
-	"$collection":     `catalog | list | range`,
+	"$collection":     `range | sequence | structure`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
@@ -48,70 +48,64 @@ var grammar = map[string]string{
 	"$condition":      `expression`,
 	"$context":        `"(" parameters ")"`,
 	"$continueClause": `"continue" "loop"`,
-	"$controlClause": `
-	ifClause       |  ! "if" condition "do" procedure
-	selectClause   |  ! "select" target <"matching" pattern "do" procedure>
-	whileClause    |  ! "while" condition "do" procedure
-	withClause     |  ! "with" "each" value "in" sequence "do" procedure
-	continueClause |  ! "continue" "loop"
-	breakClause    |  ! "break" "loop"
-	returnClause   |  ! "return" result
-	throwClause       ! "throw" exception`,
+	"$control": `
+    ifClause       |  ! "if" condition "do" procedure
+    selectClause   |  ! "select" target <"matching" pattern "do" procedure>
+    whileClause    |  ! "while" condition "do" procedure
+    withClause     |  ! "with" "each" item "in" series "do" procedure
+    continueClause |  ! "continue" "loop"
+    breakClause    |  ! "break" "loop"
+    returnClause   |  ! "return" result
+    throwClause       ! "throw" exception`,
 	"$dereference":   `"@" expression`,
 	"$discardClause": `"discard" document`,
 	"$document":      `expression`,
-	"$documentClause": `
-	checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
-	saveClause     |  ! "save" document "as" recipient
-	discardClause  |  ! "discard" document
-	notarizeClause    ! "notarize" document "as" moniker`,
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
 	"$entity":      `element | string | collection | procedure`,
-	"$letClause":   `["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
 	"$event":       `expression`,
 	"$exception":   `expression`,
 	"$exponential": `expression "^" expression`,
 	"$expression": `
-    component   |  ! entity [context] [NOTE]
-    intrinsic   |  ! function arguments
-    variable    |  ! IDENTIFIER
-    precedence  |  ! "(" expression ")"
-    dereference |  ! "@" expression
-    invocation  |  ! target ("." | "<-") method arguments
-    item        |  ! composite indices
-    chaining    |  ! expression "&" expression
-    exponential |  ! expression "^" expression
-    inversion   |  ! ("-" | "/" | "*") expression
-    arithmetic  |  ! expression ("*" | "/" | "//" | "+" | "-") expression
-    magnitude   |  ! "|" expression "|"
-    comparison  |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
-    complement  |  ! "NOT" expression
-    logical        ! expression ("AND" | "SANS" | "XOR" | "OR") expression`,
-	"$function":   `IDENTIFIER`,
-	"$ifClause":   `"if" condition "do" procedure`,
-	"$indices":    `"[" expression {"," expression} "]"`,
-	"$intrinsic":  `function arguments`,
-	"$inversion":  `("-" | "/" | "*") expression`,
-	"$invocation": `target ("." | "<-") method arguments`,
-	"$item":       `composite indices`,
-	"$key":        `primitive`,
-	"$list":       `"[" values "]"`,
-	"$logical":    `expression ("AND" | "SANS" | "XOR" | "OR") expression`,
-	"$magnitude":  `"|" expression "|"`,
+    component    |  ! entity [context] [NOTE]
+    intrinsic    |  ! function arguments
+    variable     |  ! IDENTIFIER
+    precedence   |  ! "(" expression ")"
+    dereference  |  ! "@" expression
+    invocation   |  ! target ("." | "<-") method arguments
+    subcomponent |  ! composite indices
+    chaining     |  ! expression "&" expression
+    exponential  |  ! expression "^" expression
+    inversion    |  ! ("-" | "/" | "*") expression
+    arithmetic   |  ! expression ("*" | "/" | "//" | "+" | "-") expression
+    magnitude    |  ! "|" expression "|"
+    comparison   |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
+    complement   |  ! "NOT" expression
+    logical         ! expression ("AND" | "SANS" | "OR" | "XOR") expression`,
+	"$function":     `IDENTIFIER`,
+	"$ifClause":     `"if" condition "do" procedure`,
+	"$indices":      `"[" expression {"," expression} "]"`,
+	"$intrinsic":    `function arguments`,
+	"$inversion":    `("-" | "/" | "*") expression`,
+	"$invocation":   `target ("." | "<-") method arguments`,
+	"$item":         `SYMBOL`,
+	"$key":          `primitive`,
+	"$letClause":    `["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
+	"$logical":      `expression ("AND" | "SANS" | "OR" | "XOR") expression`,
+	"$magnitude":    `"|" expression "|"`,
 	"$mainClause": `
-	assignClause   |
-	controlClause  |
-	documentClause |
-	messageClause`,
+    control    |
+    assignment |
+    messaging  |
+    repository`,
 	"$message": `expression`,
-	"$messageClause": `
-	postClause     |  ! "post" message "to" bag
-	retrieveClause |  ! "retrieve" recipient "from" bag
-	acceptClause   |  ! "accept" message
-	rejectClause   |  ! "reject" message
-	publishClause     ! "publish" event`,
+	"$messaging": `
+    postClause     |  ! "post" message "to" bag
+    retrieveClause |  ! "retrieve" recipient "from" bag
+    acceptClause   |  ! "accept" message
+    rejectClause   |  ! "reject" message
+    publishClause     ! "publish" event`,
 	"$method":         `IDENTIFIER`,
 	"$moniker":        `expression`,
 	"$name":           `SYMBOL`,
@@ -128,34 +122,41 @@ var grammar = map[string]string{
 	"$primitive":      `element | string`,
 	"$procedure":      `"{" statements "}"`,
 	"$publishClause":  `"publish" event`,
-	"$range":          `( "[" | "(" ) [primitive] ".." [primitive] ( ")" | "]" )`,
+	"$range":          `( "[" | "(" ) primitive ".." primitive ( ")" | "]" )`,
 	"$recipient":      `name | attribute`,
 	"$rejectClause":   `"reject" message`,
+	"$repository": `
+    checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
+    saveClause     |  ! "save" document "as" recipient
+    discardClause  |  ! "discard" document
+    notarizeClause    ! "notarize" document "as" moniker`,
 	"$result":         `expression`,
 	"$retrieveClause": `"retrieve" recipient "from" bag`,
 	"$returnClause":   `"return" result`,
 	"$saveClause":     `"save" document "as" recipient`,
-	"$segment":        `SYMBOL`,
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
-	"$sequence":       `expression`,
+	"$series":         `expression`,
+	"$sequence":       `"[" values "]"`,
 	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
-	"$statement":      `[annotation EOL] [mainClause] [onClause] [NOTE]`,
+	"$statement":      `[annotation EOL] [mainClause [onClause] [NOTE]]`,
 	"$statements": `
     statement {";" statement} |
-    EOL {(annotation | statement) EOL} |
+    EOL {statement EOL} |
     ! An empty procedure.`,
-	"$string":      `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
-	"$target":      `expression`,
-	"$throwClause": `"throw" exception`,
-	"$value":       `component`,
+	"$string":       `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
+	"$structure":    `"[" associations "]"`,
+	"$subcomponent": `composite indices`,
+	"$target":       `expression`,
+	"$throwClause":  `"throw" exception`,
+	"$value":        `component`,
 	"$values": `
     component {"," component} |
-    EOL <component EOL>       |
+    EOL <component EOL> |
     ! No components.`,
 	"$variable":    `IDENTIFIER`,
 	"$whileClause": `"while" condition "do" procedure`,
-	"$withClause":  `"with" "each" segment "in" sequence "do" procedure`,
-	"$ANGLE":       `"~" (REAL | ZERO)`,
+	"$withClause":  `"with" "each" item "in" series "do" procedure`,
+	"$ANGLE":       `"~" (ZERO | MAGNITUDE)`,
 	"$ANY":         `"any"`,
 	"$AUTHORITY":   `<~"/">`,
 	"$BASE16":      `"0".."9" | "a".."f"`,
@@ -163,28 +164,31 @@ var grammar = map[string]string{
 	"$BASE64":      `"A".."Z" | "a".."z" | "0".."9" | "+" | "/"`,
 	"$BINARY":      `"'" {BASE64 | SPACE | EOL} "'"`,
 	"$BOOLEAN":     `"false" | "true"`,
-	"$COMMENT":     `"!>" EOL  {COMMENT | ~"<!"} EOL {SPACE} "<!"`,
+	"$COMMENT":     `"!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.`,
+	"$COMPLEX":     `"(" (RECTANGULAR | POLAR) ")"`,
 	"$DATES":       `[TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]`,
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
 	"$DELIMITER": `
     "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "≠" | "<-" | "<" |
-	";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" |
-	"*=" | "*" | ")" | "(" | "&" | "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
+    ";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" |
+    "*=" | "*" | ")" | "(" | "&" | "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
 	"$DURATION":   `"~" [SIGN] "P" (WEEKS | DATES [TIMES])`,
 	"$E":          `"e"`,
 	"$EOL":        `"\n"`,
 	"$ESCAPE":     `'\' ('\' | 'a' | 'b' | 'f' | 'n' | 'r' | 't' | 'v' | '"' | "'" | UNICODE)`,
 	"$EXPONENT":   `"E" [SIGN] ORDINAL`,
+	"$FLOAT":      `[SIGN] MAGNITUDE`,
 	"$FRACTION":   `"." <"0".."9">`,
 	"$FRAGMENT":   `{~">"}`,
 	"$HOUR":       `"0".."1" "0".."9" | "2" "0".."3"`,
 	"$IDENTIFIER": `LETTER {LETTER | DIGIT}`,
-	"$IMAGINARY":  ` [SIGN | REAL] "i"`,
-	"$INFINITY":   `"infinity" | "∞"`,
+	"$IMAGINARY":  `[SIGN] [MAGNITUDE] "i"`,
+	"$INFINITY":   `[SIGN] ("infinity" | "∞")`,
 	"$KEYWORD": `
     "with" | "while" | "to" | "throw" | "select" | "save" | "return" | "retrieve" | "reject" |
-	"publish" | "post" | "on" | "notarize" | "matching" | "loop" | "level" | "let" | "in" | "if" |
-	"from" | "each" | "do" | "discard" | "continue" | "checkout" | "break" | "at" | "as" | "accept"`,
+    "publish" | "post" | "on" | "notarize" | "matching" | "loop" | "level" | "let" | "in" | "if" |
+    "from" | "each" | "do" | "discard" | "continue" | "checkout" | "break" | "at" | "as" | "accept"`,
+	"$MAGNITUDE":   `E | PI | PHI | TAU | SCALAR`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
 	"$MOMENT":      `"<" [SIGN] YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
 	"$MONIKER":     `<"/" NAME>`,
@@ -193,24 +197,24 @@ var grammar = map[string]string{
 	"$NARRATIVE":   `'">' EOL {NARRATIVE | ~'<"'} EOL {SPACE} '<"'`,
 	"$NONE":        `"none"`,
 	"$NOTE":        `"! " {~EOL}`,
-	"$NUMBER":      `INFINITY | IMAGINARY | REAL | ZERO | UNDEFINED | "(" (RECTANGULAR | POLAR) ")"`,
+	"$NUMBER":      `REAL | IMAGINARY | COMPLEX`,
 	"$ONE":         `"1."`,
 	"$ORDINAL":     `"1".."9" {"0".."9"}`,
 	"$PATH":        `{~("?" | "#" | ">")}`,
 	"$PATTERN":     `NONE | REGEX | ANY`,
-	"$PERCENTAGE":  `(REAL | ZERO) "%"`,
+	"$PERCENTAGE":  `REAL "%"`,
 	"$PHI":         `"phi" | "φ"`,
 	"$PI":          `"pi" | "π"`,
-	"$POLAR":       `REAL "e^" ANGLE "i"`,
+	"$POLAR":       `MAGNITUDE "e^" ANGLE "i"`,
 	"$PROBABILITY": `FRACTION | ONE`,
 	"$QUERY":       `{~("#" | ">")}`,
 	"$QUOTE":       `'"' {RUNE} '"'`,
-	"$REAL":        `[SIGN] (E | PI | PHI | TAU | SCALAR)`,
-	"$RECTANGULAR": ` REAL ", " IMAGINARY`,
+	"$REAL":        `ZERO | FLOAT | INFINITY | UNDEFINED`,
+	"$RECTANGULAR": `FLOAT ", " FLOAT "i"`,
 	"$REGEX":       `'"' <RUNE> '"?'`,
 	"$RESOURCE":    `"<" SCHEME ":" ["//" AUTHORITY] "/" PATH ["?" QUERY] ["#" FRAGMENT] ">"`,
-	"$RUNE":        `ESCAPE | ~EOL`,
-	"$SCALAR":      `(ORDINAL [FRACTION] | ZERO FRACTION) [EXPONENT]`,
+	"$RUNE":        `ESCAPE | ~('"' | EOL)`,
+	"$SCALAR":      `(ZERO FRACTION | ORDINAL [FRACTION]) [EXPONENT]`,
 	"$SCHEME":      `("a".."z" | "A".."Z") {"a".."z" | "A".."Z" | "0".."9" | "+" | "-" | "."}`,
 	"$SECOND":      `"0".."5" "0".."9" | "6" "0".."1"`,
 	"$SEPARATOR":   `"-" | "+" | "."`,
@@ -227,8 +231,25 @@ var grammar = map[string]string{
     "U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16`,
 	"$VERSION": `"v" ORDINAL {"." ORDINAL}`,
 	"$WEEKS":   `TIMESPAN "W"`,
-	"$YEAR":    `ORDINAL | ZERO`,
+	"$YEAR":    `ZERO | ORDINAL`,
 	"$ZERO":    `"0"`,
+}
+
+func PrintGrammar() {
+	var unsorted = make([]string, len(grammar))
+	var index = 0
+	for key := range grammar {
+		unsorted[index] = key
+		index++
+	}
+	var keys = col.ListFromArray(unsorted)
+	keys.SortValues()
+	var iterator = col.Iterator[string](keys)
+	for iterator.HasNext() {
+		var key = iterator.GetNext()
+		var value = grammar[key]
+		fmt.Printf("%s: %s\n\n", key, value)
+	}
 }
 
 // PRIVATE FUNCTIONS

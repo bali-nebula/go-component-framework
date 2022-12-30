@@ -229,13 +229,13 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatQuote(value)
 	case str.Version:
 		v.formatVersion(value)
-	case abs.CatalogLike:
-		v.formatCatalog(value)
-	case abs.ListLike:
-		v.formatList(value)
-	case abs.RangeLike[abs.Numeric]:
+	case abs.Structural:
+		v.formatStructure(value)
+	case abs.Sequential:
+		v.formatSequence(value)
+	case abs.Limited[abs.Endpoint]:
 		v.formatRange(value)
-	case abs.ProcedureLike:
+	case abs.Procedural:
 		v.formatProcedure(value)
 	default:
 		panic(fmt.Sprintf("An invalid entity (of type %T) was passed to the formatter: %v", value, value))

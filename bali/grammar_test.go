@@ -8,18 +8,13 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package collections
+package bali_test
 
 import (
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	tem "github.com/craterdog-bali/go-component-framework/temporary"
+	bal "github.com/craterdog-bali/go-component-framework/bali"
+	tes "testing"
 )
 
-// CONTINUUM IMPLEMENTATION
-
-// This constructor creates a new continuous range of values covering the
-// specified endpoints with the specified extent.
-func Continuum(first abs.Continuous, extent abs.Extent, last abs.Continuous) abs.ContinuumLike {
-	return tem.Continuum[abs.Continuous](first, extent, last)
+func TestPrintFullGrammar(t *tes.T) {
+	bal.PrintGrammar()
 }
-

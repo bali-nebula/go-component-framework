@@ -29,6 +29,12 @@ type (
 
 // INDIVIDUAL INTERFACES
 
+// This interface defines the methods supported by all procedural types.
+type Procedural interface {
+	GetStatements() Statements
+	SetStatements(statements Statements)
+}
+
 // This interface defines the methods supported by all accept-clause-like types.
 type AcceptClauseLike interface {
 	IsAcceptClause() bool
@@ -48,8 +54,8 @@ type AttributeLike interface {
 type BlockLike interface {
 	GetExpression() Expression
 	SetExpression(expression Expression)
-	GetProcedure() ProcedureLike
-	SetProcedure(procedure ProcedureLike)
+	GetProcedure() Procedural
+	SetProcedure(procedure Procedural)
 }
 
 // This interface defines the methods supported by all break-clause-like types.
@@ -121,13 +127,6 @@ type PostClauseLike interface {
 	SetMessage(message Expression)
 	GetBag() Expression
 	SetBag(bag Expression)
-}
-
-// This interface consolidates all the interfaces supported by procedure-like
-// types.
-type ProcedureLike interface {
-	GetStatements() Statements
-	SetStatements(statements Statements)
 }
 
 // This interface defines the methods supported by all publish-clause-like types.

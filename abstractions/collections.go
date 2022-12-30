@@ -11,19 +11,8 @@
 package abstractions
 
 import (
+	tem "github.com/craterdog-bali/go-component-framework/temporary"
 	col "github.com/craterdog/go-collection-framework"
-)
-
-// CONSTANTS
-
-type Extent int
-
-const (
-	_ Extent = iota
-	INCLUSIVE
-	LEFT
-	RIGHT
-	EXCLUSIVE
 )
 
 // TYPE ALIASES
@@ -35,12 +24,15 @@ const (
 type (
 	Primitive       = col.Key
 	Collection      = col.Value
+	Extent          = tem.Extent
+	Sequential      = col.Sequential[ComponentLike]
 	Searchable      = col.Searchable[ComponentLike]
 	Updatable       = col.Updatable[ComponentLike]
 	Flexible        = col.Flexible[ComponentLike]
 	Malleable       = col.Malleable[ComponentLike]
 	Binding         = col.Binding[Primitive, ComponentLike]
 	Associative     = col.Associative[Primitive, ComponentLike]
+	Structural      = col.Sequential[Binding]
 	FIFO            = col.FIFO[ComponentLike]
 	LIFO            = col.LIFO[ComponentLike]
 	AssociationLike = col.AssociationLike[Primitive, ComponentLike]
@@ -49,35 +41,13 @@ type (
 	QueueLike       = col.QueueLike[ComponentLike]
 	SetLike         = col.SetLike[ComponentLike]
 	StackLike       = col.StackLike[ComponentLike]
+	IntervalLike    = tem.IntervalLike[Discrete]
+	SpectrumLike    = tem.SpectrumLike[Spectral]
+	ContinuumLike   = tem.ContinuumLike[Continuous]
 )
 
-// INDIVIDUAL INTERFACES
+// INDIVIDUAL TYPES
 
-// This interface defines the methods supported by all ranges of numeric values
-// that allow their endpoints to be changed. The type is parameterized to force
-// the first and last endpoint values to be the same type.
-type Elastic[V Primitive] interface {
-	GetFirst() V
-	SetFirst(V)
-	GetExtent() Extent
-	SetExtent(extent Extent)
-	GetLast() V
-	SetLast(V)
-}
-
-// CONSOLIDATED INTERFACES
-
-// This interface consolidates all of the interfaces supported by continuum-like
-// ranges.
-type ContinuumLike[V Primitive] interface {
-	col.Sequential[V]
-	Elastic[V]
-}
-
-// This interface consolidates all of the interfaces supported by interval-like
-// ranges.
-type IntervalLike[V Primitive] interface {
-	col.Sequential[V]
-	col.Indexed[V]
-	Elastic[V]
-}
+type Discrete int
+type Spectral string
+type Continuous float64

@@ -17,7 +17,7 @@ import (
 // PROCEDURE IMPLEMENTATION
 
 // This constructor creates a new procedure.
-func Procedure(statements abs.Statements) abs.ProcedureLike {
+func Procedure(statements abs.Statements) abs.Procedural {
 	var v = &procedure{}
 	// Perform argument validation.
 	v.SetStatements(statements)

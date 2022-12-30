@@ -88,7 +88,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var expression abs.Expression
-	var procedure abs.ProcedureLike
+	var procedure abs.Procedural
 	var block abs.BlockLike
 	expression, token, ok = v.parseExpression()
 	if !ok {
@@ -868,10 +868,10 @@ func (v *formatter) formatPostClause(clause abs.PostClauseLike) {
 // This method attempts to parse a list of statements. It returns the
 // list of statements and whether or not the list of statements was
 // successfully parsed.
-func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
+func (v *parser) parseProcedure() (abs.Procedural, *Token, bool) {
 	var ok bool
 	var token *Token
-	var procedure abs.ProcedureLike
+	var procedure abs.Procedural
 	var statements abs.Statements
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
@@ -907,7 +907,7 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 
 // This method adds the canonical format for the specified procedure to the
 // state of the formatter.
-func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
+func (v *formatter) formatProcedure(procedure abs.Procedural) {
 	v.AppendString("{")
 	var statements = procedure.GetStatements()
 	v.formatStatements(statements)

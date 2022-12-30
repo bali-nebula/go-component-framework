@@ -1,0 +1,71 @@
+/*******************************************************************************
+ *   Copyright (c) 2009-2022 Crater Dog Technologies™.  All Rights Reserved.   *
+ *******************************************************************************
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.               *
+ *                                                                             *
+ * This code is free software; you can redistribute it and/or modify it under  *
+ * the terms of The MIT License (MIT), as published by the Open Source         *
+ * Initiative. (See http://opensource.org/licenses/MIT)                        *
+ *******************************************************************************/
+
+package temporary
+
+import (
+	col "github.com/craterdog/go-collection-framework"
+)
+
+// INDIVIDUAL INTERFACES
+
+// This interface applies to all interfaces that extent the Go native integer types.
+type Discrete interface {~int | ~int8 | ~int16 | ~int32 | ~int64}
+
+// This interface applies to all interfaces that extent the Go native string type.
+type Spectral interface {~string}
+
+// This interface applies to all interfaces that extent the Go native float types.
+type Continuous interface {~float32 | ~float64}
+
+// This type and its associated constants define whether or not each endpoint in
+// a bounded collection is included in the range of possible values.
+type Extent int
+const (
+	_ Extent = iota
+	INCLUSIVE
+	LEFT
+	RIGHT
+	EXCLUSIVE
+)
+
+// This interface defines the methods supported by all ranges of numeric values
+// that allow their endpoints to be changed. The type is parameterized to force
+// the first and last endpoint values to be the same type.
+type Bounded[V Discrete | Continuous | Spectral] interface {
+	GetFirst() V
+	SetFirst(V)
+	GetExtent() Extent
+	SetExtent(extent Extent)
+	GetLast() V
+	SetLast(V)
+}
+
+// CONSOLIDATED INTERFACES
+
+// This interface consolidates all of the interfaces supported by interval-like
+// ranges.
+type IntervalLike[V Discrete] interface {
+	col.Sequential[V]
+	col.Indexed[V]
+	Bounded[V]
+}
+
+// This interface consolidates all of the interfaces supported by spectum-like
+// ranges.
+type SpectrumLike[V Spectral] interface {
+	Bounded[V]
+}
+
+// This interface consolidates all of the interfaces supported by continuum-like
+// ranges.
+type ContinuumLike[V Continuous] interface {
+	Bounded[V]
+}

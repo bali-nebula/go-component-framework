@@ -8,11 +8,10 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package collections_test
+package temporary_test
 
 import (
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	col "github.com/craterdog-bali/go-component-framework/collections"
+	tem "github.com/craterdog-bali/go-component-framework/temporary"
 	ele "github.com/craterdog-bali/go-component-framework/elements"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
@@ -20,29 +19,29 @@ import (
 )
 
 func TestContinuaWithAngles(t *tes.T) {
-	var s = col.Continuum(0, abs.LEFT, ele.Pi)
-	ass.False(t, s.IsEmpty())
-	ass.Equal(t, -1, s.GetSize())
-	ass.Equal(t, []ele.Angle{}, s.AsArray())
+	var s = tem.Continuum[ele.Angle](0, tem.LEFT, ele.Pi)
+	ass.Equal(t, ele.Angle(0), s.GetFirst())
+	ass.Equal(t, tem.LEFT, s.GetExtent())
+	ass.Equal(t, ele.Pi, s.GetLast())
 }
 
 func TestContinuaWithPercentages(t *tes.T) {
-	var s = col.Continuum(0, abs.INCLUSIVE, ele.Percentage(100))
-	ass.False(t, s.IsEmpty())
-	ass.Equal(t, -1, s.GetSize())
-	ass.Equal(t, []ele.Percentage{}, s.AsArray())
+	var s = tem.Continuum[ele.Percentage](-25, tem.INCLUSIVE, 100)
+	ass.Equal(t, ele.Percentage(-25), s.GetFirst())
+	ass.Equal(t, tem.INCLUSIVE, s.GetExtent())
+	ass.Equal(t, ele.Percentage(100), s.GetLast())
 }
 
 func TestContinuaWithProbabilities(t *tes.T) {
-	var s = col.Continuum(0, abs.RIGHT, ele.Probability(1))
-	ass.False(t, s.IsEmpty())
-	ass.Equal(t, -1, s.GetSize())
-	ass.Equal(t, []ele.Probability{}, s.AsArray())
+	var s = tem.Continuum[ele.Probability](0, tem.RIGHT, 1)
+	ass.Equal(t, ele.Probability(0), s.GetFirst())
+	ass.Equal(t, tem.RIGHT, s.GetExtent())
+	ass.Equal(t, ele.Probability(1), s.GetLast())
 }
 
 func TestContinuaWithReals(t *tes.T) {
-	var s = col.Continuum(col.Real(mat.Inf(-1)), abs.EXCLUSIVE, col.Real(mat.Inf(1)))
-	ass.False(t, s.IsEmpty())
-	ass.Equal(t, -1, s.GetSize())
-	ass.Equal(t, []col.Real{}, s.AsArray())
+	var s = tem.Continuum[tem.Real](tem.Real(mat.Inf(-1)), tem.EXCLUSIVE, tem.Real(mat.Inf(1)))
+	ass.Equal(t, tem.Real(mat.Inf(-1)), s.GetFirst())
+	ass.Equal(t, tem.EXCLUSIVE, s.GetExtent())
+	ass.Equal(t, tem.Real(mat.Inf(1)), s.GetLast())
 }
