@@ -11,7 +11,7 @@
 package bali_test
 
 import (
-	bal "github.com/craterdog-bali/go-component-framework/bali"
+	bal "github.com/bali-nebula/go-component-framework/bali"
 	tes "testing"
 )
 

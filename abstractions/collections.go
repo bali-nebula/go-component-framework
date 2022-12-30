@@ -11,7 +11,7 @@
 package abstractions
 
 import (
-	tem "github.com/craterdog-bali/go-component-framework/temporary"
+	tem "github.com/bali-nebula/go-component-framework/temporary"
 	col "github.com/craterdog/go-collection-framework"
 )
 

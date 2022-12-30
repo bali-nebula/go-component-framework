@@ -20,7 +20,7 @@ import (
 // the UPPERCASE identifiers represent tokens returned by the scanner. The
 // official definition of the language grammar is here:
 //
-//	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
+//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification
 //
 // This map is useful when creating scanner and parser error messages.
 var grammar = map[string]string{

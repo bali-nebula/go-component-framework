@@ -11,7 +11,7 @@
 package procedures
 
 import (
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 )
 
 // This type defines the node structure associated with a clause that rejects a

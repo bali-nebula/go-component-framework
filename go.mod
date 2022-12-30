@@ -1,4 +1,4 @@
-module github.com/craterdog-bali/go-component-framework
+module github.com/bali-nebula/go-component-framework
 
 go 1.19
 

@@ -11,8 +11,8 @@
 package temporary_test
 
 import (
-	tem "github.com/craterdog-bali/go-component-framework/temporary"
-	ele "github.com/craterdog-bali/go-component-framework/elements"
+	tem "github.com/bali-nebula/go-component-framework/temporary"
+	ele "github.com/bali-nebula/go-component-framework/elements"
 	co2 "github.com/craterdog/go-collection-framework"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"

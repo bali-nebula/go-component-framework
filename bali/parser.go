@@ -12,7 +12,7 @@ package bali
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
@@ -23,7 +23,7 @@ import (
 // bytes retrieved from a POSIX compliant file and returns the corresponding
 // abstract syntax tree as defined in the language specification:
 //
-//	https://github.com/craterdog-bali/bali-nebula/wiki/Language-Specification
+//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification
 //
 // All parser rules in the specification are shown in lowerCamelCase and scanner
 // tokens shown in UPPERCASE.

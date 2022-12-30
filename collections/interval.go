@@ -11,8 +11,8 @@
 package collections
 
 import (
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	tem "github.com/craterdog-bali/go-component-framework/temporary"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	tem "github.com/bali-nebula/go-component-framework/temporary"
 )
 
 // INTERVAL IMPLEMENTATION

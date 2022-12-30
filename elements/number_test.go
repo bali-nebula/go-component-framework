@@ -11,7 +11,7 @@
 package elements_test
 
 import (
-	ele "github.com/craterdog-bali/go-component-framework/elements"
+	ele "github.com/bali-nebula/go-component-framework/elements"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
 	cmp "math/cmplx"

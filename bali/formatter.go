@@ -11,7 +11,7 @@
 package bali
 
 import (
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	sts "strings"
 )
 

@@ -12,8 +12,8 @@ package bali
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	ele "github.com/craterdog-bali/go-component-framework/elements"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	ele "github.com/bali-nebula/go-component-framework/elements"
 	mat "math"
 	cmp "math/cmplx"
 	stc "strconv"

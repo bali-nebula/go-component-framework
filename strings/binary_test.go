@@ -11,7 +11,7 @@
 package strings_test
 
 import (
-	str "github.com/craterdog-bali/go-component-framework/strings"
+	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )

@@ -11,8 +11,8 @@
 package strings
 
 import (
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	uti "github.com/craterdog-bali/go-component-framework/utilities"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	uti "github.com/bali-nebula/go-component-framework/utilities"
 	col "github.com/craterdog/go-collection-framework"
 )
 

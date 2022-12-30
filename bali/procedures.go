@@ -12,9 +12,9 @@ package bali
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	ele "github.com/craterdog-bali/go-component-framework/elements"
-	pro "github.com/craterdog-bali/go-component-framework/procedures"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	ele "github.com/bali-nebula/go-component-framework/elements"
+	pro "github.com/bali-nebula/go-component-framework/procedures"
 	col "github.com/craterdog/go-collection-framework"
 )
 

@@ -12,10 +12,10 @@ package bali
 
 import (
 	fmt "fmt"
-	abs "github.com/craterdog-bali/go-component-framework/abstractions"
-	col "github.com/craterdog-bali/go-component-framework/collections"
-	ele "github.com/craterdog-bali/go-component-framework/elements"
-	str "github.com/craterdog-bali/go-component-framework/strings"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	col "github.com/bali-nebula/go-component-framework/collections"
+	ele "github.com/bali-nebula/go-component-framework/elements"
+	str "github.com/bali-nebula/go-component-framework/strings"
 	co2 "github.com/craterdog/go-collection-framework"
 	mat "math"
 	stc "strconv"
