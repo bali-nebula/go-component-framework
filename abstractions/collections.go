@@ -11,7 +11,6 @@
 package abstractions
 
 import (
-	tem "github.com/bali-nebula/go-component-framework/temporary"
 	col "github.com/craterdog/go-collection-framework"
 )
 
@@ -23,9 +22,6 @@ import (
 // synchronized.
 type (
 	Primitive       = col.Key
-	Collection      = col.Value
-	Extent          = tem.Extent
-	Sequential      = col.Sequential[ComponentLike]
 	Searchable      = col.Searchable[ComponentLike]
 	Updatable       = col.Updatable[ComponentLike]
 	Flexible        = col.Flexible[ComponentLike]
@@ -35,19 +31,12 @@ type (
 	Structural      = col.Sequential[Binding]
 	FIFO            = col.FIFO[ComponentLike]
 	LIFO            = col.LIFO[ComponentLike]
-	AssociationLike = col.AssociationLike[Primitive, ComponentLike]
-	CatalogLike     = col.CatalogLike[Primitive, ComponentLike]
+	SequenceLike    = col.ArrayLike[ComponentLike]
 	ListLike        = col.ListLike[ComponentLike]
 	QueueLike       = col.QueueLike[ComponentLike]
 	SetLike         = col.SetLike[ComponentLike]
 	StackLike       = col.StackLike[ComponentLike]
-	IntervalLike    = tem.IntervalLike[Discrete]
-	SpectrumLike    = tem.SpectrumLike[Spectral]
-	ContinuumLike   = tem.ContinuumLike[Continuous]
+	AssociationLike = col.AssociationLike[Primitive, ComponentLike]
+	StructureLike   = col.MapLike[Primitive, ComponentLike]
+	CatalogLike     = col.CatalogLike[Primitive, ComponentLike]
 )
-
-// INDIVIDUAL TYPES
-
-type Discrete int
-type Spectral string
-type Continuous float64

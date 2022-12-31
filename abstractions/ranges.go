@@ -8,26 +8,29 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package temporary
+package abstractions
 
 import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
-// INDIVIDUAL INTERFACES
+// INDIVIDUAL TYPES
 
 // This interface applies to all interfaces that extent the Go native integer types.
-type Discrete interface {~int | ~int8 | ~int16 | ~int32 | ~int64}
+type Discrete interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64
+}
 
 // This interface applies to all interfaces that extent the Go native string type.
-type Spectral interface {~string}
+type Spectral interface{ ~string }
 
 // This interface applies to all interfaces that extent the Go native float types.
-type Continuous interface {~float32 | ~float64}
+type Continuous interface{ ~float32 | ~float64 }
 
 // This type and its associated constants define whether or not each endpoint in
 // a bounded collection is included in the range of possible values.
 type Extent int
+
 const (
 	_ Extent = iota
 	INCLUSIVE
@@ -36,10 +39,10 @@ const (
 	EXCLUSIVE
 )
 
-// This interface defines the methods supported by all ranges of numeric values
-// that allow their endpoints to be changed. The type is parameterized to force
-// the first and last endpoint values to be the same type.
-type Bounded[V Discrete | Continuous | Spectral] interface {
+// This interface defines the methods supported by all ranges of primitive
+// values that allow their endpoints to be changed. The type is parameterized to
+// force the first and last endpoint values to be the same type.
+type Bounded[V Primitive] interface {
 	GetFirst() V
 	SetFirst(V)
 	GetExtent() Extent
@@ -49,6 +52,12 @@ type Bounded[V Discrete | Continuous | Spectral] interface {
 }
 
 // CONSOLIDATED INTERFACES
+
+// This interface consolidates all of the interfaces supported by range-like
+// collections.
+type RangeLike[V Primitive] interface {
+	Bounded[V]
+}
 
 // This interface consolidates all of the interfaces supported by interval-like
 // ranges.

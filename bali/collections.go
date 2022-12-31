@@ -85,10 +85,10 @@ func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 
 // This method attempts to parse an endpoint. It returns the endpoint and
 // whether or not the endpoint was successfully parsed.
-func (v *parser) parseEndpoint() (abs.Endpoint, *Token, bool) {
+func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 	var ok bool
 	var token *Token
-	var endpoint abs.Endpoint
+	var endpoint abs.Primitive
 	endpoint, token, ok = v.parseAngle()
 	if !ok {
 		endpoint, token, ok = v.parseDuration()
@@ -135,7 +135,7 @@ func (v *parser) parseEndpoint() (abs.Endpoint, *Token, bool) {
 
 // This method adds the canonical format for the specified endpoint to the
 // state of the formatter.
-func (v *formatter) formatEndpoint(endpoint abs.Endpoint) {
+func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 	// NOTE: A type switch will only work if each case specifies a unique
 	// interface. If two different interfaces define the same method signatures
 	// they are indistinguishable as types. To get around this we have added as

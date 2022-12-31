@@ -8,14 +8,118 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package temporary
+package ranges
 
 import (
 	fmt "fmt"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework"
 	mat "math"
-	ref "reflect"
 )
+
+// CONTINUUM IMPLEMENTATION
+
+// This constructor creates a new continuous range of values covering the
+// specified endpoints. Note that at least one of the endpoints must be non-nil
+// so that the endpoint type may be determined.
+func Continuum[V abs.Continuous](first V, extent abs.Extent, last V) abs.ContinuumLike[V] {
+	var v = continuum[V]{first: first, extent: extent, last: last}
+	v.validateContinuum()
+	return &v
+}
+
+// This type defines the structure and methods associated with a continuous
+// range of values. This type is parameterized as follows:
+//   - V is any endpoint type.
+type continuum[V abs.Continuous] struct {
+	first  V
+	extent abs.Extent
+	last   V
+	size   int
+}
+
+// SEQUENTIAL INTERFACE
+
+// This method determines whether or not this continuous range is empty.
+func (v *continuum[V]) IsEmpty() bool {
+	return v.size == 0
+}
+
+// This method returns the number of values contained in this continuous range.
+func (v *continuum[V]) GetSize() int {
+	return v.size
+}
+
+// This method returns up to the first 256 values in this continuous range. The
+// values retrieved are in the same order as they are in the continuous range.
+func (v *continuum[V]) AsArray() []V {
+	var array = make([]V, 0)
+	return array
+}
+
+// ELASTIC INTERFACE
+
+// This method returns the first value in this continuous range.
+func (v *continuum[V]) GetFirst() V {
+	return v.first
+}
+
+// This method sets the first value in this continuous range.
+func (v *continuum[V]) SetFirst(value V) {
+	v.first = value
+	v.validateContinuum()
+}
+
+// This method returns the extent for this continuous range.
+func (v *continuum[V]) GetExtent() abs.Extent {
+	return v.extent
+}
+
+// This method sets the extent for this continuous range.
+func (v *continuum[V]) SetExtent(extent abs.Extent) {
+	v.extent = extent
+	v.validateContinuum()
+}
+
+// This method returns the last value in this continuous range.
+func (v *continuum[V]) GetLast() V {
+	return v.last
+}
+
+// This method sets the last value in this continuous range.
+func (v *continuum[V]) SetLast(value V) {
+	v.last = value
+	v.validateContinuum()
+}
+
+// PRIVATE INTERFACE
+
+// This method determines whether or not the first and last endpoints are
+// invalid.
+func (v *continuum[V]) validateContinuum() {
+	// Validate the extent.
+	switch v.extent {
+	case abs.INCLUSIVE:
+	case abs.LEFT:
+	case abs.RIGHT:
+	case abs.EXCLUSIVE:
+	default:
+		panic(fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent))
+	}
+
+	// Validate the endpoints.
+	var first = float64(v.first)
+	var last = float64(v.last)
+	var rank = col.RankValues(first, last)
+	switch {
+	case rank < 0:
+		v.size = -1 // The size of a continuum is infinite.
+	case rank == 0:
+		v.size = 0
+	default:
+		panic("The first value in the continuous range must not be more than the last value.")
+	}
+}
 
 // REAL IMPLEMENTATION
 
@@ -81,111 +185,4 @@ func (v Real) AsReal() float64 {
 // This method determines whether or not this real number is negative.
 func (v Real) IsNegative() bool {
 	return v < 0
-}
-
-// CONTINUUM IMPLEMENTATION
-
-// This constructor creates a new continuous range of values covering the
-// specified endpoints. Note that at least one of the endpoints must be non-nil
-// so that the endpoint type may be determined.
-func Continuum[V Continuous](first V, extent Extent, last V) ContinuumLike[V] {
-	var v = continuum[V]{first: first, extent: extent, last: last}
-	v.validateContinuum()
-	return &v
-}
-
-// This type defines the structure and methods associated with a continuous
-// range of values. This type is parameterized as follows:
-//   - V is any endpoint type.
-type continuum[V Continuous] struct {
-	first  V
-	extent Extent
-	last   V
-	size   int
-}
-
-// SEQUENTIAL INTERFACE
-
-// This method determines whether or not this continuous range is empty.
-func (v *continuum[V]) IsEmpty() bool {
-	return v.size == 0
-}
-
-// This method returns the number of values contained in this continuous range.
-func (v *continuum[V]) GetSize() int {
-	return v.size
-}
-
-// This method returns up to the first 256 values in this continuous range. The
-// values retrieved are in the same order as they are in the continuous range.
-func (v *continuum[V]) AsArray() []V {
-	var array = make([]V, 0)
-	return array
-}
-
-// ELASTIC INTERFACE
-
-// This method returns the first value in this continuous range.
-func (v *continuum[V]) GetFirst() V {
-	return v.first
-}
-
-// This method sets the first value in this continuous range.
-func (v *continuum[V]) SetFirst(value V) {
-	v.first = value
-	v.validateContinuum()
-}
-
-// This method returns the extent for this continuous range.
-func (v *continuum[V]) GetExtent() Extent {
-	return v.extent
-}
-
-// This method sets the extent for this continuous range.
-func (v *continuum[V]) SetExtent(extent Extent) {
-	v.extent = extent
-	v.validateContinuum()
-}
-
-// This method returns the last value in this continuous range.
-func (v *continuum[V]) GetLast() V {
-	return v.last
-}
-
-// This method sets the last value in this continuous range.
-func (v *continuum[V]) SetLast(value V) {
-	v.last = value
-	v.validateContinuum()
-}
-
-// PRIVATE INTERFACE
-
-// This method determines whether or not the first and last endpoints are
-// invalid.
-func (v *continuum[V]) validateContinuum() {
-	// Validate the extent.
-	switch v.extent {
-	case INCLUSIVE:
-	case LEFT:
-	case RIGHT:
-	case EXCLUSIVE:
-	default:
-		panic(fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent))
-	}
-
-	// Validate the endpoints.
-	if !ref.ValueOf(v.first).IsValid() || !ref.ValueOf(v.last).IsValid() {
-		panic("A continuous range requires first and last endpoints.")
-	}
-	var first = float64(v.first)
-	var last = float64(v.last)
-	var rank = col.RankValues(first, last)
-	switch {
-	case rank < 0:
-		v.size = -1 // The size of a continuum is infinite.
-	case rank == 0:
-		v.size = 0
-	default:
-		panic("The first value in the continuous range must not be more than the last value.")
-	}
 }

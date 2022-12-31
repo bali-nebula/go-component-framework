@@ -8,18 +8,17 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package collections
+package components
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	tem "github.com/bali-nebula/go-component-framework/temporary"
+	col "github.com/craterdog/go-collection-framework"
 )
 
-// INTERVAL IMPLEMENTATION
+// ITERATOR IMPLEMENTATION
 
-// This constructor creates a new discrete range of values covering the
-// specified endpoints with the specified extent.
-func Interval(first abs.Discrete, extent abs.Extent, last abs.Discrete) abs.IntervalLike {
-	return tem.Interval[abs.Discrete](first, extent, last)
+// This constructor creates a new instance of an iterator that can be used to
+// traverse the values in the specified sequence.
+func Iterator[V abs.Value](sequence col.Sequential[V]) abs.IteratorLike[V] {
+	return col.Iterator[V](sequence)
 }
-

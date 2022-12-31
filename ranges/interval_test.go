@@ -8,18 +8,36 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package temporary_test
+package ranges_test
 
 import (
-	tem "github.com/bali-nebula/go-component-framework/temporary"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
-	co2 "github.com/craterdog/go-collection-framework"
+	ran "github.com/bali-nebula/go-component-framework/ranges"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
+func TestIntervalsWithIntegers(t *tes.T) {
+	var s = ran.Interval[int](3, abs.INCLUSIVE, 7)
+	ass.False(t, s.IsEmpty())
+	ass.Equal(t, 5, s.GetSize())
+	ass.Equal(t, 5, s.GetValue(3))
+	ass.Equal(t, 0, s.GetIndex(2))
+	ass.Equal(t, 1, s.GetIndex(3))
+	ass.Equal(t, 3, s.GetIndex(5))
+	ass.Equal(t, 5, s.GetIndex(7))
+	ass.Equal(t, 0, s.GetIndex(8))
+	ass.Equal(t, []int{3, 4, 5, 6, 7}, s.AsArray())
+	var iterator = com.Iterator[int](s)
+	ass.Equal(t, 3, iterator.GetNext())
+	iterator.ToEnd()
+	ass.Equal(t, 7, iterator.GetPrevious())
+}
+
 func TestIntervalsWithDurations(t *tes.T) {
-	var s = tem.Interval[ele.Duration](3, tem.INCLUSIVE, 7)
+	var s = ran.Interval[ele.Duration](3, abs.INCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
 	ass.Equal(t, ele.Duration(5), s.GetValue(3))
@@ -29,14 +47,14 @@ func TestIntervalsWithDurations(t *tes.T) {
 	ass.Equal(t, 5, s.GetIndex(7))
 	ass.Equal(t, 0, s.GetIndex(8))
 	ass.Equal(t, []ele.Duration{3, 4, 5, 6, 7}, s.AsArray())
-	var iterator = co2.Iterator[ele.Duration](s)
+	var iterator = com.Iterator[ele.Duration](s)
 	ass.Equal(t, ele.Duration(3), iterator.GetNext())
 	iterator.ToEnd()
 	ass.Equal(t, ele.Duration(7), iterator.GetPrevious())
 }
 
 func TestIntervalsWithMoments(t *tes.T) {
-	var s = tem.Interval[ele.Moment](3, tem.RIGHT, 7)
+	var s = ran.Interval[ele.Moment](3, abs.RIGHT, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())
 	ass.Equal(t, ele.Moment(4), s.GetValue(1))
@@ -47,7 +65,7 @@ func TestIntervalsWithMoments(t *tes.T) {
 	ass.Equal(t, 0, s.GetIndex(8))
 	ass.Equal(t, []ele.Moment{4, 5, 6, 7}, s.AsArray())
 
-	s = tem.Interval[ele.Moment](3, tem.EXCLUSIVE, 7)
+	s = ran.Interval[ele.Moment](3, abs.EXCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 3, s.GetSize())
 	ass.Equal(t, ele.Moment(4), s.GetValue(1))
@@ -59,12 +77,12 @@ func TestIntervalsWithMoments(t *tes.T) {
 }
 
 func TestIntervalsWithRunes(t *tes.T) {
-	var s = tem.Interval[tem.Rune]('a', tem.LEFT, 'f')
+	var s = ran.Interval[ran.Rune]('a', abs.LEFT, 'f')
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
-	ass.Equal(t, tem.Rune('a'), s.GetValue(1))
+	ass.Equal(t, ran.Rune('a'), s.GetValue(1))
 	ass.Equal(t, 1, s.GetIndex('a'))
 	ass.Equal(t, 4, s.GetIndex('d'))
 	ass.Equal(t, 0, s.GetIndex('f'))
-	ass.Equal(t, []tem.Rune{'a', 'b', 'c', 'd', 'e'}, s.AsArray())
+	ass.Equal(t, []ran.Rune{'a', 'b', 'c', 'd', 'e'}, s.AsArray())
 }

@@ -8,81 +8,21 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package temporary
+package ranges
 
 import (
 	fmt "fmt"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework"
 	mat "math"
 	uni "unicode"
 )
 
-// RUNE IMPLEMENTATION
-
-// This constructor returns the minimum value for a rune.
-func MinimumRune() Rune {
-	return Rune(0)
-}
-
-// This constructor returns the maximum value for a rune.
-func MaximumRune() Rune {
-	return Rune(mat.MaxInt32)
-}
-
-// This type defines the methods associated with runes. It extends the
-// native Go int32 type.
-type Rune int32
-
-// NUMERIC INTERFACE
-
-// This method determines whether or not this rune is discrete.
-func (v Rune) IsDiscrete() bool {
-	return true
-}
-
-// This method determines whether or not this rune is zero.
-func (v Rune) IsZero() bool {
-	return v == 0
-}
-
-// This method determines whether or not this rune is infinite.
-func (v Rune) IsInfinite() bool {
-	return false
-}
-
-// This method determines whether or not this rune is undefined.
-func (v Rune) IsUndefined() bool {
-	return !uni.IsPrint(rune(v))
-}
-
-// This method returns a boolean value for this rune.
-func (v Rune) AsBoolean() bool {
-	return v > -1
-}
-
-// This method returns an integer value for this rune.
-func (v Rune) AsInteger() int {
-	return int(v)
-}
-
-// This method returns a real value for this rune.
-func (v Rune) AsReal() float64 {
-	return float64(v)
-}
-
-// POLARIZED INTERFACE
-
-// This method determines whether or not this rune is negative.
-func (v Rune) IsNegative() bool {
-	return v < 0
-}
-
 // INTERVAL IMPLEMENTATION
 
 // This constructor creates a new interval range of values covering the
-// specified endpoints. Note that at least one of the endpoints must be non-nil
-// so that the endpoint type may be determined.
-func Interval[V Discrete](first V, extent Extent, last V) IntervalLike[V] {
+// specified endpoints.
+func Interval[V abs.Discrete](first V, extent abs.Extent, last V) abs.IntervalLike[V] {
 	var v = interval[V]{first: first, extent: extent, last: last}
 	v.validateInterval()
 	return &v
@@ -91,9 +31,9 @@ func Interval[V Discrete](first V, extent Extent, last V) IntervalLike[V] {
 // This type defines the structure and methods associated with an interval range
 // of values. This type is parameterized as follows:
 //   - V is any endpoint type.
-type interval[V Discrete] struct {
+type interval[V abs.Discrete] struct {
 	first  V
-	extent Extent
+	extent abs.Extent
 	last   V
 	size   int
 }
@@ -180,12 +120,12 @@ func (v *interval[V]) SetFirst(value V) {
 }
 
 // This method returns the extent for this interval range.
-func (v *interval[V]) GetExtent() Extent {
+func (v *interval[V]) GetExtent() abs.Extent {
 	return v.extent
 }
 
 // This method sets the extent for this interval range.
-func (v *interval[V]) SetExtent(extent Extent) {
+func (v *interval[V]) SetExtent(extent abs.Extent) {
 	v.extent = extent
 	v.validateInterval()
 }
@@ -208,10 +148,10 @@ func (v *interval[V]) SetLast(value V) {
 func (v *interval[V]) validateInterval() {
 	// Validate the extent.
 	switch v.extent {
-	case INCLUSIVE:
-	case LEFT:
-	case RIGHT:
-	case EXCLUSIVE:
+	case abs.INCLUSIVE:
+	case abs.LEFT:
+	case abs.RIGHT:
+	case abs.EXCLUSIVE:
 	default:
 		panic(fmt.Sprintf("Received an invalid interval range extent: %v", v.extent))
 	}
@@ -238,7 +178,7 @@ func (v *interval[V]) firstIndex() int {
 func (v *interval[V]) effectiveFirst() int {
 	var first = int(v.first)
 	switch v.extent {
-	case RIGHT, EXCLUSIVE:
+	case abs.RIGHT, abs.EXCLUSIVE:
 		first++
 	}
 	return first
@@ -248,7 +188,7 @@ func (v *interval[V]) effectiveFirst() int {
 func (v *interval[V]) effectiveLast() int {
 	var last = int(v.last)
 	switch v.extent {
-	case LEFT, EXCLUSIVE:
+	case abs.LEFT, abs.EXCLUSIVE:
 		last--
 	}
 	return last
@@ -276,4 +216,64 @@ func (v *interval[V]) GoIndex(index int) int {
 		// This should never happen so time to panic...
 		panic(fmt.Sprintf("Compiler problem, unexpected index value: %v", index))
 	}
+}
+
+// RUNE IMPLEMENTATION
+
+// This constructor returns the minimum value for a rune.
+func MinimumRune() Rune {
+	return Rune(0)
+}
+
+// This constructor returns the maximum value for a rune.
+func MaximumRune() Rune {
+	return Rune(mat.MaxInt32)
+}
+
+// This type defines the methods associated with runes. It extends the
+// native Go int32 type.
+type Rune int32
+
+// NUMERIC INTERFACE
+
+// This method determines whether or not this rune is discrete.
+func (v Rune) IsDiscrete() bool {
+	return true
+}
+
+// This method determines whether or not this rune is zero.
+func (v Rune) IsZero() bool {
+	return v == 0
+}
+
+// This method determines whether or not this rune is infinite.
+func (v Rune) IsInfinite() bool {
+	return false
+}
+
+// This method determines whether or not this rune is undefined.
+func (v Rune) IsUndefined() bool {
+	return !uni.IsPrint(rune(v))
+}
+
+// This method returns a boolean value for this rune.
+func (v Rune) AsBoolean() bool {
+	return v > -1
+}
+
+// This method returns an integer value for this rune.
+func (v Rune) AsInteger() int {
+	return int(v)
+}
+
+// This method returns a real value for this rune.
+func (v Rune) AsReal() float64 {
+	return float64(v)
+}
+
+// POLARIZED INTERFACE
+
+// This method determines whether or not this rune is negative.
+func (v Rune) IsNegative() bool {
+	return v < 0
 }
