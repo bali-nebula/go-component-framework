@@ -20,7 +20,7 @@ import (
 
 // This constructor attempts to create a new moniker string from the specified
 // array of names. It returns the corresponding moniker string.
-func MonikerFromArray(array []string) Moniker {
+func MonikerFromArray(array []abs.Name) Moniker {
 	var moniker = Moniker("/" + sts.Join(array, "/"))
 	return moniker
 }
@@ -52,7 +52,7 @@ func (v Moniker) GetSize() int {
 
 // This method returns all the names in this string. The names retrieved are in
 // the same order as they are in the string.
-func (v Moniker) AsArray() []string {
+func (v Moniker) AsArray() []abs.Name {
 	return sts.Split(string(v[1:]), "/")
 }
 
@@ -60,9 +60,9 @@ func (v Moniker) AsArray() []string {
 
 // This method retrieves from this string the name that is associated with the
 // specified index.
-func (v Moniker) GetValue(index int) string {
+func (v Moniker) GetValue(index int) abs.Name {
 	var array = v.AsArray()
-	var names = col.Array[string](array)
+	var names = col.Array[abs.Name](array)
 	return names.GetValue(index)
 }
 
@@ -70,15 +70,15 @@ func (v Moniker) GetValue(index int) string {
 // the last index (inclusive).
 func (v Moniker) GetValues(first int, last int) abs.Names {
 	var array = v.AsArray()
-	var names = col.Array[string](array)
+	var names = col.Array[abs.Name](array)
 	return names.GetValues(first, last)
 }
 
 // This method returns the index of the FIRST occurence of the specified name in
 // this string, or zero if this string does not contain the name.
-func (v Moniker) GetIndex(name string) int {
+func (v Moniker) GetIndex(name abs.Name) int {
 	var array = v.AsArray()
-	var names = col.Array[string](array)
+	var names = col.Array[abs.Name](array)
 	return names.GetIndex(name)
 }
 

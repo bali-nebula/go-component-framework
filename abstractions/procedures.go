@@ -14,6 +14,13 @@ import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
+// TYPE DEFINITIONS
+
+type (
+	Clause    any
+	Recipient any
+)
+
 // TYPE ALIASES
 
 // These type assignments hide the dependencies on the package used to implement
@@ -21,8 +28,6 @@ import (
 // will allow them to evolve separately as needed. Currently, the interfaces are
 // synchronized.
 type (
-	Clause     = any
-	Recipient  = any
 	Blocks     = col.Sequential[BlockLike]
 	Statements = col.Sequential[StatementLike]
 )

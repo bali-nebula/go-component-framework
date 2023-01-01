@@ -40,7 +40,7 @@ var grammar = map[string]string{
 	"$breakClause":    `"break" "loop"`,
 	"$chaining":       `expression "&" expression`,
 	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
-	"$collection":     `range | sequence | structure`,
+	"$collection":     `sequence | structure`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
@@ -63,7 +63,7 @@ var grammar = map[string]string{
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
     PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
-	"$entity":      `element | string | collection | procedure`,
+	"$entity":      `element | string | range | collection | procedure`,
 	"$event":       `expression`,
 	"$exception":   `expression`,
 	"$exponential": `expression "^" expression`,

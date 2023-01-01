@@ -14,6 +14,16 @@ import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
+// TYPE DEFINITIONS
+
+type (
+	Annotation            any
+	Value                 any
+	Entity                any
+	Sequential[V Value]   col.Sequential[V]
+	IteratorLike[V Value] col.IteratorLike[V]
+)
+
 // TYPE ALIASES
 
 // These type assignments hide the dependencies on the package used to implement
@@ -21,7 +31,6 @@ import (
 // will allow them to evolve separately as needed. Currently, the interfaces are
 // synchronized.
 type (
-	Value      = col.Value
 	Runes      = col.Sequential[rune]
 	Lines      = col.Sequential[string]
 	Parameter  = col.Binding[Symbolic, ComponentLike]
@@ -29,14 +38,6 @@ type (
 )
 
 // INDIVIDUAL INTERFACES
-
-type Annotation any
-
-type Entity any
-
-type Sequential[V Value] col.Sequential[Value]
-
-type IteratorLike[V Value] col.IteratorLike[V]
 
 // This interface defines the methods supported by all component-like types.
 type Encapsulated interface {

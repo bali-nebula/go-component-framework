@@ -14,18 +14,7 @@ import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
-// INDIVIDUAL TYPES
-
-// This interface applies to all interfaces that extent the Go native integer types.
-type Discrete interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64
-}
-
-// This interface applies to all interfaces that extent the Go native string type.
-type Spectral interface{ ~string }
-
-// This interface applies to all interfaces that extent the Go native float types.
-type Continuous interface{ ~float32 | ~float64 }
+// TYPE DEFINITIONS
 
 // This type and its associated constants define whether or not each endpoint in
 // a bounded collection is included in the range of possible values.
@@ -38,6 +27,21 @@ const (
 	RIGHT
 	EXCLUSIVE
 )
+
+// TYPE CONSTAINTS
+
+// This type constraint applies to all interfaces that extent the Go native integer types.
+type Discrete interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
+// This type constraint applies to all interfaces that extent the Go native string type.
+type Spectral interface{ ~string }
+
+// This type constraint applies to all interfaces that extent the Go native float types.
+type Continuous interface{ ~float32 | ~float64 }
+
+// INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all ranges of primitive
 // values that allow their endpoints to be changed. The type is parameterized to

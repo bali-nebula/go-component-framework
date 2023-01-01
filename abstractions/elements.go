@@ -10,10 +10,10 @@
 
 package abstractions
 
-// TYPE ALIASES
+// TYPE DEFINITIONS
 
 type (
-	Element = any
+	Element any
 )
 
 // INDIVIDUAL INTERFACES

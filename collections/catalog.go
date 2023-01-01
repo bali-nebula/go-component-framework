@@ -37,6 +37,7 @@ func CatalogFromArray(array []abs.Binding) abs.CatalogLike {
 
 // This constructor creates a new catalog from the specified sequence of
 // components.
-func CatalogFromSequence(sequence col.Sequential[abs.Binding]) abs.CatalogLike {
-	return col.CatalogFromSequence[abs.Primitive, abs.ComponentLike](sequence)
+func CatalogFromSequence(sequence abs.Sequential[abs.Binding]) abs.CatalogLike {
+	var raw = sequence.(col.Sequential[abs.Binding])
+	return col.CatalogFromSequence[abs.Primitive, abs.ComponentLike](raw)
 }

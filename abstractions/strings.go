@@ -14,13 +14,22 @@ import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
-// TYPE ALIASES
+// TYPE DEFINITIONS
 
 type (
-	String   = any
+	String any
+	Ordinal uint
+)
+
+// TYPE ALIASES
+
+// These type assignments hide the dependencies on the package used to implement
+// the collection types. It preserves the collection interfaces in a way that
+// will allow them to evolve separately as needed. Currently, the interfaces are
+// synchronized.
+type (
 	Bytes    = col.Sequential[byte]
 	Name     = string
 	Names    = col.Sequential[Name]
-	Ordinal  = uint
 	Ordinals = col.Sequential[Ordinal]
 )

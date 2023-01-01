@@ -25,7 +25,7 @@ func List() abs.ListLike {
 
 // This constructor creates a new empty list that uses the specified compare
 // function.
-func ListWithComparer(compare col.ComparisonFunction) abs.ListLike {
+func ListWithComparer(compare abs.ComparisonFunction) abs.ListLike {
 	return col.ListWithComparer[abs.ComponentLike](compare)
 }
 
@@ -37,6 +37,7 @@ func ListFromArray(array []abs.ComponentLike) abs.ListLike {
 
 // This constructor creates a new list from the specified sequence. The list
 // uses the natural compare function.
-func ListFromSequence(sequence col.Sequential[abs.ComponentLike]) abs.ListLike {
-	return col.ListFromSequence[abs.ComponentLike](sequence)
+func ListFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.ListLike {
+	var raw = sequence.(col.Sequential[abs.ComponentLike])
+	return col.ListFromSequence[abs.ComponentLike](raw)
 }

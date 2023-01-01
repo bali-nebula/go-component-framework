@@ -14,6 +14,13 @@ import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
+// TYPE DEFINITIONS
+
+type (
+	Primitive  any
+	Collection any
+)
+
 // TYPE ALIASES
 
 // These type assignments hide the dependencies on the package used to implement
@@ -21,22 +28,23 @@ import (
 // will allow them to evolve separately as needed. Currently, the interfaces are
 // synchronized.
 type (
-	Primitive       = col.Key
-	Searchable      = col.Searchable[ComponentLike]
-	Updatable       = col.Updatable[ComponentLike]
-	Flexible        = col.Flexible[ComponentLike]
-	Malleable       = col.Malleable[ComponentLike]
-	Binding         = col.Binding[Primitive, ComponentLike]
-	Associative     = col.Associative[Primitive, ComponentLike]
-	Structural      = col.Sequential[Binding]
-	FIFO            = col.FIFO[ComponentLike]
-	LIFO            = col.LIFO[ComponentLike]
-	SequenceLike    = col.ArrayLike[ComponentLike]
-	ListLike        = col.ListLike[ComponentLike]
-	QueueLike       = col.QueueLike[ComponentLike]
-	SetLike         = col.SetLike[ComponentLike]
-	StackLike       = col.StackLike[ComponentLike]
-	AssociationLike = col.AssociationLike[Primitive, ComponentLike]
-	StructureLike   = col.MapLike[Primitive, ComponentLike]
-	CatalogLike     = col.CatalogLike[Primitive, ComponentLike]
+	Searchable         = col.Searchable[ComponentLike]
+	Updatable          = col.Updatable[ComponentLike]
+	Flexible           = col.Flexible[ComponentLike]
+	Malleable          = col.Malleable[ComponentLike]
+	Binding            = col.Binding[Primitive, ComponentLike]
+	Associative        = col.Associative[Primitive, ComponentLike]
+	FIFO               = col.FIFO[ComponentLike]
+	LIFO               = col.LIFO[ComponentLike]
+	ComparisonFunction = col.ComparisonFunction
+	RankingFunction    = col.RankingFunction
+	Structural         = col.Sequential[Binding]
+	SequenceLike       = col.ArrayLike[ComponentLike]
+	ListLike           = col.ListLike[ComponentLike]
+	QueueLike          = col.QueueLike[ComponentLike]
+	SetLike            = col.SetLike[ComponentLike]
+	StackLike          = col.StackLike[ComponentLike]
+	AssociationLike    = col.AssociationLike[Primitive, ComponentLike]
+	StructureLike      = col.MapLike[Primitive, ComponentLike]
+	CatalogLike        = col.CatalogLike[Primitive, ComponentLike]
 )

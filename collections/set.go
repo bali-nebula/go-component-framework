@@ -25,7 +25,7 @@ func Set() abs.SetLike {
 
 // This constructor creates a new empty set that uses the specified ranking
 // function.
-func SetWithRanker(rank col.RankingFunction) abs.SetLike {
+func SetWithRanker(rank abs.RankingFunction) abs.SetLike {
 	return col.SetWithRanker[abs.ComponentLike](rank)
 }
 
@@ -37,6 +37,7 @@ func SetFromArray(array []abs.ComponentLike) abs.SetLike {
 
 // This constructor creates a new set from the specified sequence. The set
 // uses the natural ranking function.
-func SetFromSequence(sequence col.Sequential[abs.ComponentLike]) abs.SetLike {
-	return col.SetFromSequence[abs.ComponentLike](sequence)
+func SetFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.SetLike {
+	var raw = sequence.(col.Sequential[abs.ComponentLike])
+	return col.SetFromSequence[abs.ComponentLike](raw)
 }

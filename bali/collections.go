@@ -14,10 +14,12 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/bali-nebula/go-component-framework/collections"
+	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
+	ran "github.com/bali-nebula/go-component-framework/ranges"
 	str "github.com/bali-nebula/go-component-framework/strings"
-	co2 "github.com/craterdog/go-collection-framework"
 	mat "math"
+	ref "reflect"
 	stc "strconv"
 	utf "unicode/utf8"
 )
@@ -158,11 +160,11 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 		v.formatPercentage(value)
 	case ele.Probability:
 		v.formatProbability(value)
-	case col.Real:
+	case ran.Real:
 		v.formatReal(value)
 	case ele.Resource:
 		v.formatResource(value)
-	case col.Rune:
+	case ran.Rune:
 		v.formatRune(value)
 	case ele.Symbol:
 		v.formatSymbol(value)
@@ -375,7 +377,7 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 		v.formatPercentage(value)
 	case ele.Probability:
 		v.formatProbability(value)
-	case col.Real:
+	case ran.Real:
 		v.formatReal(value)
 	case ele.Resource:
 		v.formatResource(value)
@@ -461,32 +463,34 @@ func (v *parser) parseRange() (abs.Collection, *Token, bool) {
 		var message = fmt.Sprintf("Expected valid range brackets but received:%q and %q\n\n", left, right)
 		panic(message)
 	}
-	var firstType = fmt.Sprintf("%T", first)
-	var lastType = fmt.Sprintf("%T", last)
-	if firstType != lastType {
-		var message = fmt.Sprintf("The endpoints have two different types: %v and %v\n", firstType, lastType)
+	if ref.TypeOf(first) != ref.TypeOf(first) {
+		var message = fmt.Sprintf("The range endpoints have two different types: %T and %T\n", first, last)
 		panic(message)
 	}
-	// NOTE: A type switch will only work if each case specifies a unique
-	// interface. If two different interfaces define the same method signatures
-	// they are indistinguishable as types. To get around this we have added as
-	// necessary a unique "dummy" method to each interface to guarantee that it
-	// is unique.
-	switch value := first.(type) {
-	case ele.Duration, ele.Moment, col.Rune:
-		range_ = col.Interval(first, extent, last)
-	case ele.Angle, col.Real, ele.Percentage, ele.Probability:
-		range_ = col.Continuum(first, extent, last)
-	default:
-		var message = fmt.Sprintf("An invalid endpoint (of type %T) was parsed: %v", value, value)
-		panic(message)
+	if discreteFirst, ok := first.(int); ok {
+		var discreteLast = last.(int)
+		range_ = ran.Interval(discreteFirst, extent, discreteLast)
+		return range_, token, true
 	}
-	return range_, token, true
+	/*
+	if spectrumFirst, ok := first.(string); ok {
+		var spectrumLast = last.(string)
+		range_ = ran.Spectrum(spectrumFirst, extent, spectrumLast)
+		return range_, token, true
+	}
+	*/
+	if continuumFirst, ok := first.(float64); ok {
+		var continuumLast = last.(float64)
+		range_ = ran.Continuum(continuumFirst, extent, continuumLast)
+		return range_, token, true
+	}
+	var message = fmt.Sprintf("An invalid endpoint (of type %T) was parsed: %v", first, first)
+	panic(message)
 }
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(range_ abs.Bounded) {
+func (v *formatter) formatRange(range_ abs.Bounded[abs.Primitive]) {
 	var extent = range_.GetExtent()
 	var left, right string
 	switch extent {
@@ -513,8 +517,8 @@ func (v *formatter) formatRange(range_ abs.Bounded) {
 // This method attempts to parse a structure collection with inline associations.
 // This method attempts to parse a real number. It returns the real number
 // and whether or not the real number was successfully parsed.
-func (v *parser) parseReal() (col.Real, *Token, bool) {
-	var number col.Real
+func (v *parser) parseReal() (ran.Real, *Token, bool) {
+	var number ran.Real
 	var token = v.nextToken()
 	if token.Type != TokenNumber {
 		v.backupOne()
@@ -538,13 +542,13 @@ func (v *parser) parseReal() (col.Real, *Token, bool) {
 			r = stringToFloat(matches[0])
 		}
 	}
-	number = col.Real(r)
+	number = ran.Real(r)
 	return number, token, true
 }
 
 // This method adds the canonical format for the specified real number to the
 // state of the formatter.
-func (v *formatter) formatReal(number col.Real) {
+func (v *formatter) formatReal(number ran.Real) {
 	switch {
 	case number.IsZero():
 		v.AppendString("0")
@@ -564,8 +568,8 @@ func (v *formatter) formatReal(number col.Real) {
 
 // This method attempts to parse a rune. It returns the rune and whether or not
 // the rune was successfully parsed.
-func (v *parser) parseRune() (col.Rune, *Token, bool) {
-	var number = col.Rune(-1)
+func (v *parser) parseRune() (ran.Rune, *Token, bool) {
+	var number = ran.Rune(-1)
 	var quote, token, ok = v.parseQuote()
 	if !ok {
 		return number, token, false
@@ -577,13 +581,13 @@ func (v *parser) parseRune() (col.Rune, *Token, bool) {
 		v.backupOne() // Put back the quote token.
 		return number, token, false
 	}
-	number = col.Rune(r)
+	number = ran.Rune(r)
 	return number, token, true
 }
 
 // This method adds the canonical format for the specified rune to the state of
 // the formatter.
-func (v *formatter) formatRune(number col.Rune) {
+func (v *formatter) formatRune(number ran.Rune) {
 	var runes = []rune{rune(number)}
 	var quote = str.Quote(string(runes))
 	v.formatQuote(quote)
@@ -628,9 +632,9 @@ func (v *parser) parseSequence() (abs.Collection, *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatSequence(sequence abs.Sequential) {
+func (v *formatter) formatSequence(sequence abs.Sequential[abs.ComponentLike]) {
 	v.AppendString("[")
-	var iterator = co2.Iterator[abs.ComponentLike](sequence)
+	var iterator = com.Iterator[abs.ComponentLike](sequence)
 	switch sequence.GetSize() {
 	case 0:
 		v.AppendString(" ")
@@ -691,7 +695,7 @@ func (v *parser) parseStructure() (abs.Collection, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatStructure(structure abs.Structural) {
 	v.AppendString("[")
-	var iterator = co2.Iterator[abs.Binding](structure)
+	var iterator = com.Iterator[abs.Binding](structure)
 	switch structure.GetSize() {
 	case 0:
 		v.AppendString(":")

@@ -231,9 +231,9 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatVersion(value)
 	case abs.Structural:
 		v.formatStructure(value)
-	case abs.Sequential:
+	case abs.Sequential[abs.ComponentLike]:
 		v.formatSequence(value)
-	case abs.Limited[abs.Endpoint]:
+	case abs.Bounded[abs.Primitive]:
 		v.formatRange(value)
 	case abs.Procedural:
 		v.formatProcedure(value)

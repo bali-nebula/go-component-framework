@@ -19,6 +19,7 @@ import (
 
 // This constructor creates a new instance of an iterator that can be used to
 // traverse the values in the specified sequence.
-func Iterator[V abs.Value](sequence col.Sequential[V]) abs.IteratorLike[V] {
-	return col.Iterator[V](sequence)
+func Iterator[V abs.Value](sequence abs.Sequential[V]) abs.IteratorLike[V] {
+	var raw = sequence.(col.Sequential[V])
+	return col.Iterator[V](raw)
 }

@@ -14,6 +14,12 @@ import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
+// TYPE DEFINITIONS
+
+type (
+	Expression any
+)
+
 // TYPE ALIASES
 
 // These type assignments hide the dependencies on the package used to implement
@@ -21,9 +27,8 @@ import (
 // will allow them to evolve separately as needed. Currently, the interfaces are
 // synchronized.
 type (
-	Expression = any
-	Arguments  = col.Sequential[Expression]
-	Indices    = col.Sequential[Expression]
+	Arguments = col.Sequential[Expression]
+	Indices   = col.Sequential[Expression]
 )
 
 // INDIVIDUAL INTERFACES
