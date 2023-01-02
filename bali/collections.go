@@ -457,30 +457,22 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 		extent = abs.EXCLUSIVE
 	default:
 		// This should never happen unless there is a bug in the parser.
-		var message = fmt.Sprintf("Expected valid range brackets but received:%q and %q\n\n", left, right)
+		var message = fmt.Sprintf("Expected valid range brackets but received:%q and %q\n", left, right)
 		panic(message)
 	}
 	if ref.TypeOf(first) != ref.TypeOf(first) {
 		var message = fmt.Sprintf("The range endpoints have two different types: %T and %T\n", first, last)
 		panic(message)
 	}
-	var nativeFirst = asNative(first)
-	var nativeLast = asNative(last)
-	switch nativeFirst.(type) {
-	case int:
-		var discreteFirst = nativeFirst.(int)
-		var discreteLast = nativeLast.(int)
-		range_ = ran.Interval(discreteFirst, extent, discreteLast)
+	switch first.(type) {
+	case abs.Discrete:
+		range_ = ran.Interval(first.(abs.Discrete), extent, last.(abs.Discrete))
 	/*
-	case string:
-		var spectrumFirst = nativeFirst.(string)
-		var spectrumLast = nativeLast.(string)
-		range_ = ran.Spectrum(spectrumFirst, extent, spectrumLast)
+	case abs.Spectral:
+		range_ = ran.Spectrum(first.(abs.Spectral), extent, last.(abs.Spectral))
 	*/
-	case float64:
-		var continuumFirst = nativeFirst.(float64)
-		var continuumLast = nativeLast.(float64)
-		range_ = ran.Continuum(continuumFirst, extent, continuumLast)
+	case abs.Continuous:
+		range_ = ran.Continuum(first.(abs.Continuous), extent, last.(abs.Continuous))
 	default:
 		var message = fmt.Sprintf("An invalid range endpoint (of type %T) was parsed: %v", first, first)
 		panic(message)
@@ -490,7 +482,7 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatInterval(interval abs.IntervalLike[int]) {
+func (v *formatter) formatInterval(interval abs.IntervalLike[abs.Discrete]) {
 	var extent = interval.GetExtent()
 	var left, right string
 	switch extent {
@@ -516,7 +508,7 @@ func (v *formatter) formatInterval(interval abs.IntervalLike[int]) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatContinuum(continuum abs.ContinuumLike[float64]) {
+func (v *formatter) formatContinuum(continuum abs.ContinuumLike[abs.Continuous]) {
 	var extent = continuum.GetExtent()
 	var left, right string
 	switch extent {
