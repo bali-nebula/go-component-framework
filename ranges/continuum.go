@@ -108,8 +108,8 @@ func (v *continuum[V]) validateContinuum() {
 	}
 
 	// Validate the endpoints.
-	var first = float64(v.first)
-	var last = float64(v.last)
+	var first = v.first.AsReal()
+	var last = v.last.AsReal()
 	var rank = col.RankValues(first, last)
 	switch {
 	case rank < 0:
@@ -137,12 +137,7 @@ func MaximumReal() Real {
 // native Go float64 type.
 type Real float64
 
-// NUMERIC INTERFACE
-
-// This method determines whether or not this real number is discrete.
-func (v Real) IsDiscrete() bool {
-	return !mat.IsInf(float64(v), 0) && mat.Round(float64(v)) == float64(v)
-}
+// CONTINUOUS INTERFACE
 
 // This method determines whether or not this real number is zero.
 func (v Real) IsZero() bool {
@@ -157,22 +152,6 @@ func (v Real) IsInfinite() bool {
 // This method determines whether or not this real number is undefined.
 func (v Real) IsUndefined() bool {
 	return mat.IsNaN(float64(v))
-}
-
-// This method returns a boolean value for this real number.
-func (v Real) AsBoolean() bool {
-	return v != 0
-}
-
-// This method returns an integer value for this real number.
-func (v Real) AsInteger() int {
-	if v.IsInfinite() {
-		return mat.MaxInt
-	}
-	if v.IsUndefined() {
-		return mat.MinInt
-	}
-	return int(mat.Round(float64(v)))
 }
 
 // This method returns a real value for this real number.

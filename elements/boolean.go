@@ -16,6 +16,21 @@ package elements
 // the native Go bool type.
 type Boolean bool
 
+// DISCRETE INTERFACE
+
+// This method returns a boolean value for this discrete element.
+func (v Boolean) AsBoolean() bool {
+	return bool(v)
+}
+
+// This method returns an integer value for this discrete element.
+func (v Boolean) AsInteger() int {
+	if v {
+		return 1
+	}
+	return 0
+}
+
 // BOOLEANS LIBRARY
 
 // This singleton creates a unique name space for the library functions for

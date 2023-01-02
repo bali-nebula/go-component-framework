@@ -19,23 +19,6 @@ import (
 	tes "testing"
 )
 
-func TestIntervalsWithIntegers(t *tes.T) {
-	var s = ran.Interval[int](3, abs.INCLUSIVE, 7)
-	ass.False(t, s.IsEmpty())
-	ass.Equal(t, 5, s.GetSize())
-	ass.Equal(t, 5, s.GetValue(3))
-	ass.Equal(t, 0, s.GetIndex(2))
-	ass.Equal(t, 1, s.GetIndex(3))
-	ass.Equal(t, 3, s.GetIndex(5))
-	ass.Equal(t, 5, s.GetIndex(7))
-	ass.Equal(t, 0, s.GetIndex(8))
-	ass.Equal(t, []int{3, 4, 5, 6, 7}, s.AsArray())
-	var iterator = com.Iterator[int](s)
-	ass.Equal(t, 3, iterator.GetNext())
-	iterator.ToEnd()
-	ass.Equal(t, 7, iterator.GetPrevious())
-}
-
 func TestIntervalsWithDurations(t *tes.T) {
 	var s = ran.Interval[ele.Duration](3, abs.INCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())

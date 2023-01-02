@@ -37,6 +37,13 @@ func BinaryFromSequence(sequence abs.Bytes) Binary {
 // the binary string.
 type Binary string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Binary) AsString() string {
+	return string(v)
+}
+
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

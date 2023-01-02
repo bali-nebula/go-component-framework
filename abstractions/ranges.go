@@ -32,19 +32,6 @@ const (
 	EXCLUSIVE
 )
 
-// TYPE CONSTAINTS
-
-// This type constraint applies to all interfaces that extent the Go native integer types.
-type Discrete interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64
-}
-
-// This type constraint applies to all interfaces that extent the Go native string type.
-type Spectral interface{ ~string }
-
-// This type constraint applies to all interfaces that extent the Go native float types.
-type Continuous interface{ ~float32 | ~float64 }
-
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all ranges of primitive

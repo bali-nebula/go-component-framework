@@ -13,9 +13,9 @@ package ranges
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	ele "github.com/bali-nebula/go-component-framework/elements"
 	col "github.com/craterdog/go-collection-framework"
 	mat "math"
-	uni "unicode"
 )
 
 // INTERVAL IMPLEMENTATION
@@ -61,7 +61,7 @@ func (v *interval[V]) AsArray() []V {
 	if size > 0 {
 		var first = v.firstIndex()
 		for i := 0; i < size; i++ {
-			var value = V(first + i)
+			var value = v.indexToValue(first + i)
 			array[i] = value
 		}
 	}
@@ -78,7 +78,7 @@ func (v *interval[V]) GetValue(index int) V {
 		panic("The index is outside the interval range of values.")
 	}
 	var first = v.firstIndex()
-	var value = V(first + offset)
+	var value = v.indexToValue(first + offset)
 	return value
 }
 
@@ -87,7 +87,7 @@ func (v *interval[V]) GetValue(index int) V {
 func (v *interval[V]) GetValues(first int, last int) col.Sequential[V] {
 	var values = col.List[V]()
 	for index := first; index <= last; index++ {
-		var value V = V(index)
+		var value V = v.indexToValue(index)
 		values.AddValue(value)
 	}
 	return values
@@ -97,7 +97,7 @@ func (v *interval[V]) GetValues(first int, last int) col.Sequential[V] {
 // in this interval range, or zero if this interval range does not contain the
 // value.
 func (v *interval[V]) GetIndex(value V) int {
-	var index = int(value)
+	var index = value.AsInteger()
 	var first = v.firstIndex()
 	var offset = index - first + 1
 	if offset < 0 || offset > v.size {
@@ -176,7 +176,7 @@ func (v *interval[V]) firstIndex() int {
 
 // This method returns the effective first value in the interval range.
 func (v *interval[V]) effectiveFirst() int {
-	var first = int(v.first)
+	var first = v.first.AsInteger()
 	switch v.extent {
 	case abs.RIGHT, abs.EXCLUSIVE:
 		first++
@@ -186,12 +186,27 @@ func (v *interval[V]) effectiveFirst() int {
 
 // This method returns the effective last value in the interval range.
 func (v *interval[V]) effectiveLast() int {
-	var last = int(v.last)
+	var last = v.last.AsInteger()
 	switch v.extent {
 	case abs.LEFT, abs.EXCLUSIVE:
 		last--
 	}
 	return last
+}
+
+// This method returns the value associated with the specified index.
+func (v *interval[V]) indexToValue(index int) V {
+	var template V
+	var primitive abs.Primitive = template
+	switch primitive.(type) {
+	case ele.Duration:
+		primitive = ele.Duration(index)
+	case ele.Moment:
+		primitive = ele.Moment(index)
+	case Rune:
+		primitive = Rune(index)
+	}
+	return primitive.(V)
 }
 
 // This method normalizes an index to match the Go (zero based) indexing. The
@@ -234,27 +249,7 @@ func MaximumRune() Rune {
 // native Go int32 type.
 type Rune int32
 
-// NUMERIC INTERFACE
-
-// This method determines whether or not this rune is discrete.
-func (v Rune) IsDiscrete() bool {
-	return true
-}
-
-// This method determines whether or not this rune is zero.
-func (v Rune) IsZero() bool {
-	return v == 0
-}
-
-// This method determines whether or not this rune is infinite.
-func (v Rune) IsInfinite() bool {
-	return false
-}
-
-// This method determines whether or not this rune is undefined.
-func (v Rune) IsUndefined() bool {
-	return !uni.IsPrint(rune(v))
-}
+// DISCRETE INTERFACE
 
 // This method returns a boolean value for this rune.
 func (v Rune) AsBoolean() bool {
@@ -264,11 +259,6 @@ func (v Rune) AsBoolean() bool {
 // This method returns an integer value for this rune.
 func (v Rune) AsInteger() int {
 	return int(v)
-}
-
-// This method returns a real value for this rune.
-func (v Rune) AsReal() float64 {
-	return float64(v)
 }
 
 // POLARIZED INTERFACE

@@ -22,6 +22,13 @@ type (
 	Ordinal uint
 )
 
+// INDIVIDUAL INTERFACES
+
+// This interface defines the methods supported by all numeric elements.
+type Spectral interface {
+	AsString() string
+}
+
 // TYPE ALIASES
 
 // These type assignments hide the dependencies on the package used to implement

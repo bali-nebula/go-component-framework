@@ -40,41 +40,16 @@ func MaximumMoment() Moment {
 // All moments are based on UTC.
 type Moment int
 
-// NUMERIC INTERFACE
+// DISCRETE INTERFACE
 
-// This method determines whether or not this numeric element is discrete.
-func (v Moment) IsDiscrete() bool {
-	return true
-}
-
-// This method determines whether or not this numeric element is zero.
-func (v Moment) IsZero() bool {
-	return v == 0
-}
-
-// This method determines whether or not this numeric element is infinite.
-func (v Moment) IsInfinite() bool {
-	return false
-}
-
-// This method determines whether or not this numeric element is undefined.
-func (v Moment) IsUndefined() bool {
-	return false
-}
-
-// This method returns a boolean value for this numeric element.
+// This method returns a boolean value for this discrete element.
 func (v Moment) AsBoolean() bool {
 	return v != 0
 }
 
-// This method returns an integer value for this numeric element.
+// This method returns an integer value for this discrete element.
 func (v Moment) AsInteger() int {
 	return int(v)
-}
-
-// This method returns a real value for this numeric element.
-func (v Moment) AsReal() float64 {
-	return float64(v)
 }
 
 // TEMPORAL INTERFACE

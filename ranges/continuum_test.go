@@ -19,13 +19,6 @@ import (
 	tes "testing"
 )
 
-func TestContinuaWithFloats(t *tes.T) {
-	var s = ran.Continuum[float64](0, abs.LEFT, 100)
-	ass.Equal(t, 0.0, s.GetFirst())
-	ass.Equal(t, abs.LEFT, s.GetExtent())
-	ass.Equal(t, 100.0, s.GetLast())
-}
-
 func TestContinuaWithAngles(t *tes.T) {
 	var s = ran.Continuum[ele.Angle](0, abs.LEFT, ele.Pi)
 	ass.Equal(t, ele.Angle(0), s.GetFirst())

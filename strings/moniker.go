@@ -41,6 +41,13 @@ func MonikerFromSequence(sequence abs.Names) Moniker {
 // make up the moniker.
 type Moniker string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Moniker) AsString() string {
+	return string(v)
+}
+
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

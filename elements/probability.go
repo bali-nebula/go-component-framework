@@ -12,7 +12,6 @@ package elements
 
 import (
 	uti "github.com/bali-nebula/go-component-framework/utilities"
-	mat "math"
 )
 
 // PROBABILITY INTERFACE
@@ -51,39 +50,24 @@ func MaximumProbability() Probability {
 // [0..1].
 type Probability float64
 
-// NUMERIC INTERFACE
+// CONTINUOUS INTERFACE
 
-// This method determines whether or not this numeric element is discrete.
-func (v Probability) IsDiscrete() bool {
-	return false
-}
-
-// This method determines whether or not this numeric element is zero.
+// This method determines whether or not this continuous element is zero.
 func (v Probability) IsZero() bool {
 	return v == 0
 }
 
-// This method determines whether or not this numeric element is infinite.
+// This method determines whether or not this continuous element is infinite.
 func (v Probability) IsInfinite() bool {
 	return false
 }
 
-// This method determines whether or not this numeric element is undefined.
+// This method determines whether or not this continuous element is undefined.
 func (v Probability) IsUndefined() bool {
 	return false
 }
 
-// This method returns a boolean value for this numeric element.
-func (v Probability) AsBoolean() bool {
-	return v > 0.55555555555555555 // Half way between 0.5 and 0.6.
-}
-
-// This method returns an integer value for this numeric element.
-func (v Probability) AsInteger() int {
-	return int(mat.Round(float64(v)))
-}
-
-// This method returns a real value for this numeric element.
+// This method returns a real value for this continuous element.
 func (v Probability) AsReal() float64 {
 	return float64(v)
 }

@@ -123,12 +123,7 @@ func MaximumNumber() Number {
 // number.
 type Number complex128
 
-// NUMERIC INTERFACE
-
-// This method determines whether or not this numeric element is discrete.
-func (v Number) IsDiscrete() bool {
-	return imag(v) == 0 && mat.Round(real(v)) == real(v)
-}
+// CONTINUOUS INTERFACE
 
 // This method determines whether or not this number is zero.
 func (v Number) IsZero() bool {
@@ -143,22 +138,6 @@ func (v Number) IsInfinite() bool {
 // This method determines whether or not this number is undefined.
 func (v Number) IsUndefined() bool {
 	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
-}
-
-// This method returns a boolean value for this discrete element.
-func (v Number) AsBoolean() bool {
-	return v != 0
-}
-
-// This method returns an integer value for this discrete element.
-func (v Number) AsInteger() int {
-	if v.IsInfinite() {
-		return mat.MaxInt
-	}
-	if v.IsUndefined() {
-		return mat.MinInt
-	}
-	return int(mat.Round(v.AsReal()))
 }
 
 // This method returns a real value for this continuous component.

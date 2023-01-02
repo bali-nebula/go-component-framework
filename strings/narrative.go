@@ -40,6 +40,13 @@ func NarrativeFromSequence(sequence abs.Lines) Narrative {
 // For valid string formats for this type see `../abstractions/language.go`.
 type Narrative string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Narrative) AsString() string {
+	return string(v)
+}
+
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

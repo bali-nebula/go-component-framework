@@ -49,6 +49,13 @@ func VersionFromSequence(sequence abs.Ordinals) Version {
 // the version string.
 type Version string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Version) AsString() string {
+	return string(v)
+}
+
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

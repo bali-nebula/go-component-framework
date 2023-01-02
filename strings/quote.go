@@ -38,6 +38,13 @@ func QuoteFromSequence(sequence abs.Runes) Quote {
 // the quote string.
 type Quote string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Quote) AsString() string {
+	return string(v)
+}
+
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

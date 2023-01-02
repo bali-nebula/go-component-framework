@@ -52,41 +52,16 @@ func MaximumDuration() Duration {
 // milliseconds for the entire duration of time. Durations can be negative.
 type Duration int
 
-// NUMERIC INTERFACE
+// DISCRETE INTERFACE
 
-// This method determines whether or not this numeric element is discrete.
-func (v Duration) IsDiscrete() bool {
-	return true
-}
-
-// This method determines whether or not this numeric element is zero.
-func (v Duration) IsZero() bool {
-	return v == 0
-}
-
-// This method determines whether or not this numeric element is infinite.
-func (v Duration) IsInfinite() bool {
-	return false
-}
-
-// This method determines whether or not this numeric element is undefined.
-func (v Duration) IsUndefined() bool {
-	return false
-}
-
-// This method returns a boolean value for this numeric element.
+// This method returns a boolean value for this discrete element.
 func (v Duration) AsBoolean() bool {
 	return v != 0
 }
 
-// This method returns an integer value for this numeric element.
+// This method returns an integer value for this discrete element.
 func (v Duration) AsInteger() int {
 	return int(v)
-}
-
-// This method returns a real value for this numeric element.
-func (v Duration) AsReal() float64 {
-	return float64(v)
 }
 
 // POLARIZED INTERFACE

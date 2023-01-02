@@ -31,39 +31,24 @@ func MaximumPercentage() Percentage {
 // negative.
 type Percentage float64
 
-// NUMERIC INTERFACE
+// CONTINUOUS INTERFACE
 
-// This method determines whether or not this numeric element is discrete.
-func (v Percentage) IsDiscrete() bool {
-	return false
-}
-
-// This method determines whether or not this numeric element is zero.
+// This method determines whether or not this continuous element is zero.
 func (v Percentage) IsZero() bool {
 	return v == 0
 }
 
-// This method determines whether or not this numeric element is infinite.
+// This method determines whether or not this continuous element is infinite.
 func (v Percentage) IsInfinite() bool {
 	return mat.IsInf(float64(v), 0)
 }
 
-// This method determines whether or not this numeric element is undefined.
+// This method determines whether or not this continuous element is undefined.
 func (v Percentage) IsUndefined() bool {
 	return mat.IsNaN(float64(v))
 }
 
-// This method returns a boolean value for this numeric element.
-func (v Percentage) AsBoolean() bool {
-	return v != 0
-}
-
-// This method returns an integer value for this numeric element.
-func (v Percentage) AsInteger() int {
-	return int(mat.Round(float64(v)))
-}
-
-// This method returns a real value for this numeric element.
+// This method returns a real value for this continuous element.
 func (v Percentage) AsReal() float64 {
 	return float64(v / 100.0)
 }

@@ -18,55 +18,40 @@ import (
 
 func TestBooleanProbabilities(t *tes.T) {
 	var v1 = ele.ProbabilityFromBoolean(false)
-	ass.False(t, v1.AsBoolean())
-	ass.Equal(t, 0, v1.AsInteger())
 	ass.Equal(t, 0.0, v1.AsReal())
 	ass.Equal(t, 0.0, float64(v1))
 
 	var v2 = ele.ProbabilityFromBoolean(true)
-	ass.True(t, v2.AsBoolean())
-	ass.Equal(t, 1, v2.AsInteger())
 	ass.Equal(t, 1.0, v2.AsReal())
 	ass.Equal(t, 1.0, float64(v2))
 }
 
 func TestZeroProbabilities(t *tes.T) {
 	var v = ele.ProbabilityFromFloat(0.0)
-	ass.False(t, v.AsBoolean())
-	ass.Equal(t, 0, v.AsInteger())
 	ass.Equal(t, 0.0, v.AsReal())
 	ass.Equal(t, 0.0, float64(v))
 }
 
 func TestOneProbabilities(t *tes.T) {
 	var v = ele.ProbabilityFromFloat(1.0)
-	ass.True(t, v.AsBoolean())
-	ass.Equal(t, 1, v.AsInteger())
 	ass.Equal(t, 1.0, v.AsReal())
 	ass.Equal(t, 1.0, float64(v))
 }
 
 func TestRandomProbabilities(t *tes.T) {
-	var v = ele.Probabilities.Random()
-	ass.True(t, v.AsBoolean() || !v.AsBoolean())
+	ele.Probabilities.Random()
 }
 
 func TestOtherProbabilities(t *tes.T) {
 	var v1 = ele.ProbabilityFromFloat(0.25)
-	ass.False(t, v1.AsBoolean())
-	ass.Equal(t, 0, v1.AsInteger())
 	ass.Equal(t, 0.25, v1.AsReal())
 	ass.Equal(t, 0.25, float64(v1))
 
 	var v2 = ele.ProbabilityFromFloat(0.5)
-	ass.False(t, v2.AsBoolean())
-	ass.Equal(t, 1, v2.AsInteger())
 	ass.Equal(t, 0.5, v2.AsReal())
 	ass.Equal(t, 0.5, float64(v2))
 
 	var v3 = ele.ProbabilityFromFloat(0.75)
-	ass.True(t, v3.AsBoolean())
-	ass.Equal(t, 1, v3.AsInteger())
 	ass.Equal(t, 0.75, v3.AsReal())
 	ass.Equal(t, 0.75, float64(v3))
 }

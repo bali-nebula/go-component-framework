@@ -52,39 +52,24 @@ func MaximumAngle() Angle {
 // [0..2π).
 type Angle float64
 
-// NUMERIC INTERFACE
+// CONTINUOUS INTERFACE
 
-// This method determines whether or not this numeric element is discrete.
-func (v Angle) IsDiscrete() bool {
-	return false
-}
-
-// This method determines whether or not this numeric element is zero.
+// This method determines whether or not this continuous element is zero.
 func (v Angle) IsZero() bool {
 	return v == 0 || v == Tau
 }
 
-// This method determines whether or not this numeric element is infinite.
+// This method determines whether or not this continuous element is infinite.
 func (v Angle) IsInfinite() bool {
 	return false
 }
 
-// This method determines whether or not this numeric element is undefined.
+// This method determines whether or not this continuous element is undefined.
 func (v Angle) IsUndefined() bool {
 	return false
 }
 
-// This method returns a boolean value for this numeric element.
-func (v Angle) AsBoolean() bool {
-	return !v.IsZero()
-}
-
-// This method returns an integer value for this numeric element.
-func (v Angle) AsInteger() int {
-	return int(mat.Round(float64(v)))
-}
-
-// This method returns a real value for this numeric element.
+// This method returns a real value for this continuous element.
 func (v Angle) AsReal() float64 {
 	return float64(v)
 }
