@@ -238,6 +238,8 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatSeries(value)
 	case abs.IntervalLike[abs.Discrete]:
 		v.formatInterval(value)
+	case abs.SpectrumLike[abs.Spectral]:
+		v.formatSpectrum(value)
 	case abs.ContinuumLike[abs.Continuous]:
 		v.formatContinuum(value)
 	case abs.Procedural:

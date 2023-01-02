@@ -17,36 +17,20 @@ import (
 	tes "testing"
 )
 
-func TestRoundtripWithCatalogs(t *tes.T) {
-	var catalogStrings = []string{
-		`[:]`,
-		"[$key: \"value\"]",
-		"[\n" +
-		"    $foo: 5\n" +
-		"    $bar: ~π\n" +
-		"]",
+func TestRoundtripWithRanges(t *tes.T) {
+	var rangeStrings = []string{
+		`[1..+∞]`,
+		`[-∞..0)`,
+		`[~0..~π)`,
+		`[~π..~τ)`,
+		`[1..100]`,
+		`(-1..1)`,
+		`[.25...75)`,
 	}
 
-	for index, s := range catalogStrings {
+	for index, s := range rangeStrings {
 		var component = bal.ParseSource(s).(abs.ComponentLike)
 		var s = bal.FormatComponent(component)
-		ass.Equal(t, catalogStrings[index], s)
-	}
-}
-
-func TestRoundtripWithLists(t *tes.T) {
-	var listStrings = []string{
-		`[ ]`,
-		"[42]",
-		"[\n" +
-		"    $foo\n" +
-		"    $bar\n" +
-		"]",
-	}
-
-	for index, s := range listStrings {
-		var component = bal.ParseSource(s).(abs.ComponentLike)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, listStrings[index], s)
+		ass.Equal(t, rangeStrings[index], s)
 	}
 }
