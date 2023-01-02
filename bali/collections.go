@@ -75,12 +75,9 @@ func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 	var collection abs.Collection
 	collection, token, ok = v.parseStructure()
 	if !ok {
-		collection, token, ok = v.parseRange()
-	}
-	if !ok {
-		// The sequence must be attempted last since it may start with a component
+		// The series must be attempted last since it may start with a component
 		// which cannot be put back as a single token.
-		collection, token, ok = v.parseSequence()
+		collection, token, ok = v.parseSeries()
 	}
 	return collection, token, ok
 }
@@ -189,7 +186,7 @@ func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
-		// This is an empty sequence.
+		// This is an empty series.
 		v.backupOne() // Put back the ']' character.
 		return structure, token, false
 	}
@@ -220,31 +217,31 @@ func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 	return structure, token, true
 }
 
-// This method attempts to parse a sequence collection with inline values. It
-// returns the sequence collection and whether or not the sequence collection was
+// This method attempts to parse a series collection with inline values. It
+// returns the series collection and whether or not the series collection was
 // successfully parsed.
 func (v *parser) parseInlineValues() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var sequence = col.List()
+	var series = col.List()
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
-		// This is an empty sequence.
+		// This is an empty series.
 		v.backupOne() // Put back the ']' token.
-		return sequence, token, true
+		return series, token, true
 	}
 	value, token, ok = v.parseComponent()
 	if !ok {
-		// A non-empty sequence must have at least one component value.
+		// A non-empty series must have at least one component value.
 		var message = v.formatError(token)
 		message += generateGrammar("$component",
-			"$sequence",
+			"$series",
 			"$component")
 		panic(message)
 	}
 	for {
-		sequence.AddValue(value)
+		series.AddValue(value)
 		// Every subsequent value must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -255,12 +252,12 @@ func (v *parser) parseInlineValues() (abs.Collection, *Token, bool) {
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("$component",
-				"$sequence",
+				"$series",
 				"$component")
 			panic(message)
 		}
 	}
-	return sequence, token, true
+	return series, token, true
 }
 
 // This method attempts to parse a structure collection with multiline associations.
@@ -298,31 +295,31 @@ func (v *parser) parseMultilineAssociations() (abs.Collection, *Token, bool) {
 	return structure, token, true
 }
 
-// This method attempts to parse a sequence collection with multiline values. It
-// returns the sequence collection and whether or not the sequence collection was
+// This method attempts to parse a series collection with multiline values. It
+// returns the series collection and whether or not the series collection was
 // successfully parsed.
 func (v *parser) parseMultilineValues() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var sequence = col.List()
+	var series = col.List()
 	value, token, ok = v.parseComponent()
 	if !ok {
-		// A non-empty sequence must have at least one value.
+		// A non-empty series must have at least one value.
 		var message = v.formatError(token)
 		message += generateGrammar("$component",
-			"$sequence",
+			"$series",
 			"$component")
 		panic(message)
 	}
 	for {
-		sequence.AddValue(value)
+		series.AddValue(value)
 		// Every value must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
-				"$sequence",
+				"$series",
 				"$component")
 			panic(message)
 		}
@@ -332,7 +329,7 @@ func (v *parser) parseMultilineValues() (abs.Collection, *Token, bool) {
 			break
 		}
 	}
-	return sequence, token, true
+	return series, token, true
 }
 
 // This method attempts to parse a primitive. It returns the primitive and
@@ -402,14 +399,14 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 
 // This method attempts to parse a range collection. It returns the range
 // collection and whether or not the range collection was successfully parsed.
-func (v *parser) parseRange() (abs.Collection, *Token, bool) {
+func (v *parser) parseRange() (abs.Range, *Token, bool) {
 	var ok bool
 	var token *Token
 	var left, right string
 	var first abs.Primitive
 	var extent abs.Extent
 	var last abs.Primitive
-	var range_ abs.Collection
+	var range_ abs.Range
 	left, token, ok = v.parseDelimiter("[")
 	if !ok {
 		left, token, ok = v.parseDelimiter("(")
@@ -467,31 +464,34 @@ func (v *parser) parseRange() (abs.Collection, *Token, bool) {
 		var message = fmt.Sprintf("The range endpoints have two different types: %T and %T\n", first, last)
 		panic(message)
 	}
-	if discreteFirst, ok := first.(int); ok {
-		var discreteLast = last.(int)
+	var nativeFirst = asNative(first)
+	var nativeLast = asNative(last)
+	switch nativeFirst.(type) {
+	case int:
+		var discreteFirst = nativeFirst.(int)
+		var discreteLast = nativeLast.(int)
 		range_ = ran.Interval(discreteFirst, extent, discreteLast)
-		return range_, token, true
-	}
 	/*
-	if spectrumFirst, ok := first.(string); ok {
-		var spectrumLast = last.(string)
+	case string:
+		var spectrumFirst = nativeFirst.(string)
+		var spectrumLast = nativeLast.(string)
 		range_ = ran.Spectrum(spectrumFirst, extent, spectrumLast)
-		return range_, token, true
-	}
 	*/
-	if continuumFirst, ok := first.(float64); ok {
-		var continuumLast = last.(float64)
+	case float64:
+		var continuumFirst = nativeFirst.(float64)
+		var continuumLast = nativeLast.(float64)
 		range_ = ran.Continuum(continuumFirst, extent, continuumLast)
-		return range_, token, true
+	default:
+		var message = fmt.Sprintf("An invalid range endpoint (of type %T) was parsed: %v", first, first)
+		panic(message)
 	}
-	var message = fmt.Sprintf("An invalid endpoint (of type %T) was parsed: %v", first, first)
-	panic(message)
+	return range_, token, true
 }
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatRange(range_ abs.Bounded[abs.Primitive]) {
-	var extent = range_.GetExtent()
+func (v *formatter) formatInterval(interval abs.IntervalLike[int]) {
+	var extent = interval.GetExtent()
 	var left, right string
 	switch extent {
 	case abs.INCLUSIVE:
@@ -506,10 +506,36 @@ func (v *formatter) formatRange(range_ abs.Bounded[abs.Primitive]) {
 		panic(fmt.Sprintf("The range contains an unknown extent type: %v", extent))
 	}
 	v.AppendString(left)
-	var first = range_.GetFirst()
+	var first = interval.GetFirst()
 	v.formatEndpoint(first)
 	v.AppendString("..")
-	var last = range_.GetLast()
+	var last = interval.GetLast()
+	v.formatEndpoint(last)
+	v.AppendString(right)
+}
+
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatContinuum(continuum abs.ContinuumLike[float64]) {
+	var extent = continuum.GetExtent()
+	var left, right string
+	switch extent {
+	case abs.INCLUSIVE:
+		left, right = "[", "]"
+	case abs.RIGHT:
+		left, right = "(", "]"
+	case abs.LEFT:
+		left, right = "[", ")"
+	case abs.EXCLUSIVE:
+		left, right = "(", ")"
+	default:
+		panic(fmt.Sprintf("The range contains an unknown extent type: %v", extent))
+	}
+	v.AppendString(left)
+	var first = continuum.GetFirst()
+	v.formatEndpoint(first)
+	v.AppendString("..")
+	var last = continuum.GetLast()
 	v.formatEndpoint(last)
 	v.AppendString(right)
 }
@@ -593,49 +619,49 @@ func (v *formatter) formatRune(number ran.Rune) {
 	v.formatQuote(quote)
 }
 
-// This method attempts to parse a sequence of values. It returns the
-// sequence of values and whether or not the sequence of values was
+// This method attempts to parse a series of values. It returns the
+// series of values and whether or not the series of values was
 // successfully parsed.
-func (v *parser) parseSequence() (abs.Collection, *Token, bool) {
+func (v *parser) parseSeries() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
-	var sequence abs.Collection
+	var series abs.Collection
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
-		return sequence, token, false
+		return series, token, false
 	}
 	_, token, ok = v.parseEOL()
 	if !ok {
-		sequence, token, ok = v.parseInlineValues()
+		series, token, ok = v.parseInlineValues()
 		if !ok {
 			v.backupOne() // Put back the '[' character.
-			return sequence, token, false
+			return series, token, false
 		}
 	} else {
-		sequence, token, ok = v.parseMultilineValues()
+		series, token, ok = v.parseMultilineValues()
 		if !ok {
 			v.backupOne() // Put back the EOL character.
 			v.backupOne() // Put back the '[' character.
-			return sequence, token, false
+			return series, token, false
 		}
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("]",
-			"$sequence",
+			"$series",
 			"$component")
 		panic(message)
 	}
-	return sequence, token, ok
+	return series, token, ok
 }
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatSequence(sequence abs.Sequential[abs.ComponentLike]) {
+func (v *formatter) formatSeries(series abs.SeriesLike) {
 	v.AppendString("[")
-	var iterator = com.Iterator[abs.ComponentLike](sequence)
-	switch sequence.GetSize() {
+	var iterator = com.Iterator[abs.ComponentLike](series)
+	switch series.GetSize() {
 	case 0:
 		v.AppendString(" ")
 	case 1:
@@ -693,7 +719,7 @@ func (v *parser) parseStructure() (abs.Collection, *Token, bool) {
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatStructure(structure abs.Structural) {
+func (v *formatter) formatStructure(structure abs.StructureLike) {
 	v.AppendString("[")
 	var iterator = com.Iterator[abs.Binding](structure)
 	switch structure.GetSize() {
@@ -713,4 +739,38 @@ func (v *formatter) formatStructure(structure abs.Structural) {
 		v.AppendNewline()
 	}
 	v.AppendString("]")
+}
+
+func asNative(primitive abs.Primitive) any {
+	switch value := primitive.(type) {
+	case ele.Duration:
+		return int(value)
+	case ele.Moment:
+		return int(value)
+	case ran.Rune:
+		return int(value)
+	case str.Binary:
+		return string(value)
+	case str.Moniker:
+		return string(value)
+	case ele.Pattern:
+		return string(value)
+	case ele.Resource:
+		return string(value)
+	case ele.Symbol:
+		return string(value)
+	case str.Version:
+		return string(value)
+	case ele.Angle:
+		return float64(value)
+	case ele.Percentage:
+		return float64(value)
+	case ele.Probability:
+		return float64(value)
+	case ran.Real:
+		return float64(value)
+	default:
+		var message = fmt.Sprintf("An invalid primitive (of type %T) was found: %v", value, value)
+		panic(message)
+	}
 }

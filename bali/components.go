@@ -15,6 +15,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
+	ran "github.com/bali-nebula/go-component-framework/ranges"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
@@ -180,6 +181,9 @@ func (v *parser) parseEntity() (abs.Entity, *Token, bool) {
 		entity, token, ok = v.parseString()
 	}
 	if !ok {
+		entity, token, ok = v.parseRange()
+	}
+	if !ok {
 		entity, token, ok = v.parseCollection()
 	}
 	if !ok {
@@ -229,12 +233,16 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatQuote(value)
 	case str.Version:
 		v.formatVersion(value)
-	case abs.Structural:
+	case abs.StructureLike:
 		v.formatStructure(value)
-	case abs.Sequential[abs.ComponentLike]:
-		v.formatSequence(value)
-	case abs.Bounded[abs.Primitive]:
-		v.formatRange(value)
+	case abs.SeriesLike:
+		v.formatSeries(value)
+	case abs.IntervalLike[ele.Duration], abs.IntervalLike[ele.Moment],
+	abs.IntervalLike[ran.Rune]:
+		v.formatInterval(value.(abs.IntervalLike[int]))
+	case abs.ContinuumLike[ele.Angle], abs.ContinuumLike[ele.Percentage],
+	abs.ContinuumLike[ele.Probability], abs.ContinuumLike[ran.Real]:
+		v.formatContinuum(value.(abs.ContinuumLike[float64]))
 	case abs.Procedural:
 		v.formatProcedure(value)
 	default:

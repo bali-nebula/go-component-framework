@@ -11,6 +11,7 @@
 package strings_test
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -21,8 +22,8 @@ func TestMoniker(t *tes.T) {
 	ass.Equal(t, "/bali/abstractions/String/v1.2.3", string(v1))
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 4, v1.GetSize())
-	ass.Equal(t, "bali", v1.GetValue(1))
-	ass.Equal(t, "v1.2.3", v1.GetValue(-1))
+	ass.Equal(t, abs.Name("bali"), v1.GetValue(1))
+	ass.Equal(t, abs.Name("v1.2.3"), v1.GetValue(-1))
 	var v2 = str.MonikerFromArray(v1.AsArray())
 	ass.Equal(t, string(v1), string(v2))
 	var v3 = str.MonikerFromSequence(v1.GetValues(1, 2))

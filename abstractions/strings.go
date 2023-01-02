@@ -17,7 +17,8 @@ import (
 // TYPE DEFINITIONS
 
 type (
-	String any
+	String  any
+	Name    string
 	Ordinal uint
 )
 
@@ -29,7 +30,6 @@ type (
 // synchronized.
 type (
 	Bytes    = col.Sequential[byte]
-	Name     = string
 	Names    = col.Sequential[Name]
 	Ordinals = col.Sequential[Ordinal]
 )

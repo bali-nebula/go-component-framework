@@ -21,7 +21,11 @@ import (
 // This constructor attempts to create a new moniker string from the specified
 // array of names. It returns the corresponding moniker string.
 func MonikerFromArray(array []abs.Name) Moniker {
-	var moniker = Moniker("/" + sts.Join(array, "/"))
+	var builder sts.Builder
+	for _, name := range array {
+		builder.WriteString("/" + string(name))
+	}
+	var moniker = Moniker(builder.String())
 	return moniker
 }
 
@@ -53,7 +57,12 @@ func (v Moniker) GetSize() int {
 // This method returns all the names in this string. The names retrieved are in
 // the same order as they are in the string.
 func (v Moniker) AsArray() []abs.Name {
-	return sts.Split(string(v[1:]), "/")
+	var names = sts.Split(string(v[1:]), "/")
+	var array = make([]abs.Name, len(names))
+	for index, name := range names {
+		array[index] = abs.Name(name)
+	}
+	return array
 }
 
 // INDEXED INTERFACE

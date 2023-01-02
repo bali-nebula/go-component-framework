@@ -16,9 +16,13 @@ import (
 
 // TYPE DEFINITIONS
 
-// This type and its associated constants define whether or not each endpoint in
-// a bounded collection is included in the range of possible values.
-type Extent int
+type (
+	Range any
+
+	// This type and its associated constants define whether or not each endpoint in
+	// a bounded collection is included in the range of possible values.
+	Extent int
+)
 
 const (
 	_ Extent = iota
@@ -57,12 +61,6 @@ type Bounded[V Primitive] interface {
 
 // CONSOLIDATED INTERFACES
 
-// This interface consolidates all of the interfaces supported by range-like
-// collections.
-type RangeLike[V Primitive] interface {
-	Bounded[V]
-}
-
 // This interface consolidates all of the interfaces supported by interval-like
 // ranges.
 type IntervalLike[V Discrete] interface {
@@ -71,7 +69,7 @@ type IntervalLike[V Discrete] interface {
 	Bounded[V]
 }
 
-// This interface consolidates all of the interfaces supported by spectum-like
+// This interface consolidates all of the interfaces supported by spectrum-like
 // ranges.
 type SpectrumLike[V Spectral] interface {
 	Bounded[V]

@@ -38,8 +38,7 @@ type (
 	LIFO               = col.LIFO[ComponentLike]
 	ComparisonFunction = col.ComparisonFunction
 	RankingFunction    = col.RankingFunction
-	Structural         = col.Sequential[Binding]
-	SequenceLike       = col.ArrayLike[ComponentLike]
+	SeriesLike         = col.ArrayLike[ComponentLike]
 	ListLike           = col.ListLike[ComponentLike]
 	QueueLike          = col.QueueLike[ComponentLike]
 	SetLike            = col.SetLike[ComponentLike]
