@@ -40,7 +40,7 @@ var grammar = map[string]string{
 	"$breakClause":    `"break" "loop"`,
 	"$chaining":       `expression "&" expression`,
 	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
-	"$collection":     `sequence | structure`,
+	"$collection":     `series | structure`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
@@ -52,7 +52,7 @@ var grammar = map[string]string{
     ifClause       |  ! "if" condition "do" procedure
     selectClause   |  ! "select" target <"matching" pattern "do" procedure>
     whileClause    |  ! "while" condition "do" procedure
-    withClause     |  ! "with" "each" item "in" series "do" procedure
+    withClause     |  ! "with" "each" item "in" sequence "do" procedure
     continueClause |  ! "continue" "loop"
     breakClause    |  ! "break" "loop"
     returnClause   |  ! "return" result
@@ -135,8 +135,8 @@ var grammar = map[string]string{
 	"$returnClause":   `"return" result`,
 	"$saveClause":     `"save" document "as" recipient`,
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
-	"$series":         `expression`,
-	"$sequence":       `"[" values "]"`,
+	"$sequence":       `expression`,
+	"$series":         `"[" values "]"`,
 	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
 	"$statement":      `[annotation EOL] [mainClause [onClause] [NOTE]]`,
 	"$statements": `
@@ -155,7 +155,7 @@ var grammar = map[string]string{
     ! No components.`,
 	"$variable":    `IDENTIFIER`,
 	"$whileClause": `"while" condition "do" procedure`,
-	"$withClause":  `"with" "each" item "in" series "do" procedure`,
+	"$withClause":  `"with" "each" item "in" sequence "do" procedure`,
 	"$ANGLE":       `"~" (ZERO | MAGNITUDE)`,
 	"$ANY":         `"any"`,
 	"$AUTHORITY":   `<~"/">`,
