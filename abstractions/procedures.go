@@ -87,8 +87,8 @@ type ContinueClauseLike interface {
 // This interface defines the methods supported by all discard-clause-like types.
 type DiscardClauseLike interface {
 	IsDiscardClause() bool
-	GetCitation() Expression
-	SetCitation(citation Expression)
+	GetDocument() Expression
+	SetDocument(document Expression)
 }
 
 // This interface defines the methods supported by all if-clause-like types.
@@ -119,8 +119,8 @@ type NotarizeClauseLike interface {
 
 // This interface defines the methods supported by all on-clause-like types.
 type OnClauseLike interface {
-	GetException() Symbolic
-	SetException(exception Symbolic)
+	GetFailure() Symbolic
+	SetFailure(failure Symbolic)
 	GetBlocks() Blocks
 	SetBlocks(blocks Blocks)
 }
@@ -211,8 +211,8 @@ type WhileClauseLike interface {
 // This interface defines the methods supported by all with-clause-like types.
 type WithClauseLike interface {
 	IsWithClause() bool
-	GetValue() Symbolic
-	SetValue(exception Symbolic)
+	GetItem() Symbolic
+	SetItem(item Symbolic)
 	GetBlock() BlockLike
 	SetBlock(block BlockLike)
 }

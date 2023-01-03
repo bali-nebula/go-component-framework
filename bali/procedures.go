@@ -304,14 +304,14 @@ func (v *formatter) formatContinueClause(clause abs.ContinueClauseLike) {
 func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var citation abs.Expression
+	var document abs.Expression
 	var clause abs.DiscardClauseLike
 	_, token, ok = v.parseKeyword("discard")
 	if !ok {
 		// This is not a discard clause.
 		return clause, token, false
 	}
-	citation, token, ok = v.parseExpression()
+	document, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("$document",
@@ -319,7 +319,7 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 			"$document")
 		panic(message)
 	}
-	clause = pro.DiscardClause(citation)
+	clause = pro.DiscardClause(document)
 	return clause, token, true
 }
 
@@ -327,8 +327,8 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatDiscardClause(clause abs.DiscardClauseLike) {
 	v.AppendString("discard ")
-	var citation = clause.GetCitation()
-	v.formatExpression(citation)
+	var document = clause.GetDocument()
+	v.formatExpression(document)
 }
 
 // This method attempts to parse an if clause. It returns the if clause and
@@ -738,26 +738,26 @@ func (v *formatter) formatNotarizeClause(clause abs.NotarizeClauseLike) {
 	v.formatExpression(moniker)
 }
 
-// This method attempts to parse an exception clause. It returns the exception
-// clause and whether or not the exception clause was successfully parsed.
+// This method attempts to parse an on clause. It returns the on clause
+// and whether or not the on clause was successfully parsed.
 func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var exception ele.Symbol
+	var failure ele.Symbol
 	var block abs.BlockLike
 	var blocks = col.List[abs.BlockLike]()
 	var clause abs.OnClauseLike
 	_, token, ok = v.parseKeyword("on")
 	if !ok {
-		// This is not an exception clause.
+		// This is not an on clause.
 		return clause, token, false
 	}
-	exception, token, ok = v.parseSymbol()
+	failure, token, ok = v.parseSymbol()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$exception",
+		message += generateGrammar("$failure",
 			"$onClause",
-			"$exception",
+			"$failure",
 			"$pattern",
 			"$statements")
 		panic(message)
@@ -772,7 +772,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 			var message = v.formatError(token)
 			message += generateGrammar("$pattern",
 				"$onClause",
-				"$exception",
+				"$failure",
 				"$pattern",
 				"$procedure")
 			panic(message)
@@ -784,12 +784,12 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("$pattern",
 			"$onClause",
-			"$exception",
+			"$failure",
 			"$pattern",
 			"$procedure")
 		panic(message)
 	}
-	clause = pro.OnClause(exception, blocks)
+	clause = pro.OnClause(failure, blocks)
 	return clause, token, true
 }
 
@@ -797,8 +797,8 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatOnClause(clause abs.OnClauseLike) {
 	v.AppendString("on ")
-	var exception = clause.GetException()
-	var identifier = exception.GetIdentifier()
+	var failure = clause.GetFailure()
+	var identifier = failure.GetIdentifier()
 	v.AppendString("$")
 	v.formatIdentifier(identifier)
 	var blocks = clause.GetBlocks()
@@ -1366,7 +1366,7 @@ func (v *formatter) formatWhileClause(clause abs.WhileClauseLike) {
 func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var value ele.Symbol
+	var item ele.Symbol
 	var block abs.BlockLike
 	var clause abs.WithClauseLike
 	_, token, ok = v.parseKeyword("with")
@@ -1379,16 +1379,16 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("each",
 			"$withClause",
-			"$value",
+			"$item",
 			"$sequence")
 		panic(message)
 	}
-	value, token, ok = v.parseSymbol()
+	item, token, ok = v.parseSymbol()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$value",
+		message += generateGrammar("$item",
 			"$withClause",
-			"$value",
+			"$item",
 			"$sequence")
 		panic(message)
 	}
@@ -1397,7 +1397,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("in",
 			"$withClause",
-			"$value",
+			"$item",
 			"$sequence")
 		panic(message)
 	}
@@ -1406,12 +1406,12 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("$sequence",
 			"$withClause",
-			"$value",
+			"$item",
 			"$sequence",
 			"$procedure")
 		panic(message)
 	}
-	clause = pro.WithClause(value, block)
+	clause = pro.WithClause(item, block)
 	return clause, token, true
 }
 
@@ -1419,8 +1419,8 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatWithClause(clause abs.WithClauseLike) {
 	v.AppendString("with each ")
-	var value = clause.GetValue()
-	var identifier = value.GetIdentifier()
+	var item = clause.GetItem()
+	var identifier = item.GetIdentifier()
 	v.AppendString("$")
 	v.formatIdentifier(identifier)
 	v.AppendString(" in ")

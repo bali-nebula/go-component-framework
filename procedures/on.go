@@ -17,31 +17,31 @@ import (
 // ON CLAUSE IMPLEMENTATION
 
 // This constructor creates a new on clause.
-func OnClause(exception abs.Symbolic, blocks abs.Blocks) abs.OnClauseLike {
+func OnClause(failure abs.Symbolic, blocks abs.Blocks) abs.OnClauseLike {
 	var v = &onClause{}
 	// Perform argument validation.
-	v.SetException(exception)
+	v.SetFailure(failure)
 	v.SetBlocks(blocks)
 	return v
 }
 
 // This type defines the structure and methods associated with an on clause.
 type onClause struct {
-	exception abs.Symbolic
+	failure abs.Symbolic
 	blocks    abs.Blocks
 }
 
-// This method returns the exception symbol for this on clause.
-func (v *onClause) GetException() abs.Symbolic {
-	return v.exception
+// This method returns the symbol for the failure for this on clause.
+func (v *onClause) GetFailure() abs.Symbolic {
+	return v.failure
 }
 
-// This method sets the exception symbol for this on clause.
-func (v *onClause) SetException(exception abs.Symbolic) {
-	if exception == nil {
-		panic("An on clause requires an exception symbol.")
+// This method sets the symbol for the failure for this on clause.
+func (v *onClause) SetFailure(failure abs.Symbolic) {
+	if failure == nil {
+		panic("An on clause requires a symbol for the failure.")
 	}
-	v.exception = exception
+	v.failure = failure
 }
 
 // This method returns the list of blocks for this on clause.

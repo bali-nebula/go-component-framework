@@ -83,6 +83,7 @@ var grammar = map[string]string{
     comparison   |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
     complement   |  ! "NOT" expression
     logical         ! expression ("AND" | "SANS" | "OR" | "XOR") expression`,
+	"$failure":      `SYMBOL`,
 	"$function":     `IDENTIFIER`,
 	"$ifClause":     `"if" condition "do" procedure`,
 	"$indices":      `"[" expression {"," expression} "]"`,
@@ -110,7 +111,7 @@ var grammar = map[string]string{
 	"$moniker":        `expression`,
 	"$name":           `SYMBOL`,
 	"$notarizeClause": `"notarize" document "as" moniker`,
-	"$onClause":       `"on" "$exception" <"matching" pattern "do" procedure>`,
+	"$onClause":       `"on" failure <"matching" pattern "do" procedure>`,
 	"$ordinal":        `expression`,
 	"$parameter":      `name ":" value`,
 	"$parameters": `

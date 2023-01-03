@@ -17,17 +17,17 @@ import (
 // DISCARD CLAUSE IMPLEMENTATION
 
 // This constructor creates a new discard clause.
-func DiscardClause(citation abs.Expression) abs.DiscardClauseLike {
+func DiscardClause(document abs.Expression) abs.DiscardClauseLike {
 	var v = &discardClause{}
 	// Perform argument validation.
-	v.SetCitation(citation)
+	v.SetDocument(document)
 	return v
 }
 
 // This type defines the structure and methods associated with a discard
 // clause.
 type discardClause struct {
-	citation abs.Expression
+	document abs.Expression
 }
 
 // This method is a dummy method that always returns true.
@@ -35,15 +35,15 @@ func (v *discardClause) IsDiscardClause() bool {
 	return true
 }
 
-// This method returns the citation expression for this discard clause.
-func (v *discardClause) GetCitation() abs.Expression {
-	return v.citation
+// This method returns the document expression for this discard clause.
+func (v *discardClause) GetDocument() abs.Expression {
+	return v.document
 }
 
-// This method sets the citation expression for this discard clause.
-func (v *discardClause) SetCitation(citation abs.Expression) {
-	if citation == nil {
-		panic("A discard clause requires a citation.")
+// This method sets the document expression for this discard clause.
+func (v *discardClause) SetDocument(document abs.Expression) {
+	if document == nil {
+		panic("A discard clause requires a document.")
 	}
-	v.citation = citation
+	v.document = document
 }
