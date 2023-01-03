@@ -166,13 +166,13 @@ var grammar = map[string]string{
 	"$BOOLEAN":     `"false" | "true"`,
 	"$COMMENT":     `"!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.`,
 	"$COMPLEX":     `"(" (RECTANGULAR | POLAR) ")"`,
-	"$DATES":       `[TIMESPAN "Y"] [TIMESPAN "M"] [TIMESPAN "D"]`,
 	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
+	"$DAYS":        `TIMESPAN "D"`,
 	"$DELIMITER": `
     "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "≠" | "<-" | "<" |
     ";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" |
     "*=" | "*" | ")" | "(" | "&" | "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
-	"$DURATION":   `"~" [SIGN] "P" (WEEKS | DATES [TIMES])`,
+	"$DURATION":   `"~" [SIGN] "P" (WEEKS | [YEARS] [MONTHS] [DAYS] ["T" [HOURS] [MINUTES] [SECONDS]])`,
 	"$E":          `"e"`,
 	"$EOL":        `"\n"`,
 	"$ESCAPE":     `'\' ('\' | 'a' | 'b' | 'f' | 'n' | 'r' | 't' | 'v' | '"' | "'" | UNICODE)`,
@@ -181,6 +181,7 @@ var grammar = map[string]string{
 	"$FRACTION":   `"." <"0".."9">`,
 	"$FRAGMENT":   `{~">"}`,
 	"$HOUR":       `"0".."1" "0".."9" | "2" "0".."3"`,
+	"$HOURS":      `TIMESPAN "H"`,
 	"$IDENTIFIER": `LETTER {LETTER | DIGIT}`,
 	"$IMAGINARY":  `[SIGN] [MAGNITUDE] "i"`,
 	"$INFINITY":   `[SIGN] ("infinity" | "∞")`,
@@ -190,9 +191,11 @@ var grammar = map[string]string{
     "from" | "each" | "do" | "discard" | "continue" | "checkout" | "break" | "at" | "as" | "accept"`,
 	"$MAGNITUDE":   `E | PI | PHI | TAU | SCALAR`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
+	"$MINUTES":     `TIMESPAN "M"`,
 	"$MOMENT":      `"<" [SIGN] YEAR ["-" MONTH ["-" DAY ["T" HOUR [":" MINUTE [":" SECOND [FRACTION]]]]]] ">"`,
 	"$MONIKER":     `<"/" NAME>`,
 	"$MONTH":       `"0" "1".."9" | "1" "0".."2"`,
+	"$MONTHS":      `TIMESPAN "M"`,
 	"$NAME":        `LETTER {[SEPARATOR] (LETTER | DIGIT)}`,
 	"$NARRATIVE":   `'">' EOL {NARRATIVE | ~'<"'} EOL {SPACE} '<"'`,
 	"$NONE":        `"none"`,
@@ -217,13 +220,13 @@ var grammar = map[string]string{
 	"$SCALAR":      `(ZERO FRACTION | ORDINAL [FRACTION]) [EXPONENT]`,
 	"$SCHEME":      `("a".."z" | "A".."Z") {"a".."z" | "A".."Z" | "0".."9" | "+" | "-" | "."}`,
 	"$SECOND":      `"0".."5" "0".."9" | "6" "0".."1"`,
+	"$SECONDS":     `TIMESPAN "S"`,
 	"$SEPARATOR":   `"-" | "+" | "."`,
 	"$SIGN":        `"+" | "-"`,
 	"$SPACE":       `" "`,
 	"$SYMBOL":      `"$" IDENTIFIER`,
 	"$TAG":         `"#" <BASE32>`,
 	"$TAU":         `"tau" | "τ"`,
-	"$TIMES":       `"T" [TIMESPAN "H"] [TIMESPAN "M"] [TIMESPAN "S"]`,
 	"$TIMESPAN":    `ZERO | ORDINAL [FRACTION]`,
 	"$UNDEFINED":   `"undefined"`,
 	"$UNICODE": `
@@ -232,6 +235,7 @@ var grammar = map[string]string{
 	"$VERSION": `"v" ORDINAL {"." ORDINAL}`,
 	"$WEEKS":   `TIMESPAN "W"`,
 	"$YEAR":    `ZERO | ORDINAL`,
+	"$YEARS":   `TIMESPAN "Y"`,
 	"$ZERO":    `"0"`,
 }
 
