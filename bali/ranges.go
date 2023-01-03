@@ -97,6 +97,8 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 		v.formatPercentage(value)
 	case ele.Probability:
 		v.formatProbability(value)
+	case str.Quote:
+		v.formatQuote(value)
 	case ran.Real:
 		v.formatReal(value)
 	case ele.Resource:
