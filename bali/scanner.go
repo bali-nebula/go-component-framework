@@ -709,8 +709,14 @@ func scanDelimiter(v []byte) []string {
 const (
 	tspan    = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
 	weeks    = `(` + tspan + `W)`
-	dates    = `(` + tspan + `Y)?(` + tspan + `M)?(` + tspan + `D)?`
-	times    = `(T)(` + tspan + `H)?(` + tspan + `M)?(` + tspan + `S)?`
+	years    = `(` + tspan + `Y)`
+	months   = `(` + tspan + `M)`
+	days     = `(` + tspan + `D)`
+	hours    = `(` + tspan + `H)`
+	minutes  = `(` + tspan + `M)`
+	seconds  = `(` + tspan + `S)`
+	dates    = years + `?` + months + `?` + days + `?`
+	times    = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
 	duration = `~(` + sign + `?)P(?:` + weeks + `|` + dates + `(?:` + times + `)?)`
 )
 
