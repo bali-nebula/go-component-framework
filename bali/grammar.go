@@ -139,10 +139,10 @@ var grammar = map[string]string{
 	"$sequence":       `expression`,
 	"$series":         `"[" values "]"`,
 	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
-	"$statement":      `[annotation EOL] [mainClause [onClause] [NOTE]]`,
+	"$statement":      `[annotation EOL] mainClause [onClause] [NOTE]`,
 	"$statements": `
     statement {";" statement} |
-    EOL {statement EOL} |
+    EOL <statement EOL> |
     ! An empty procedure.`,
 	"$string":       `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$structure":    `"[" associations "]"`,
