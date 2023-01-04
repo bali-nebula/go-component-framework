@@ -143,7 +143,7 @@ var grammar = map[string]string{
 	"$statement":      `[annotation EOL] mainClause [onClause] [NOTE]`,
 	"$statements": `
     statement {";" statement} |
-    EOL <statement EOL> |
+    EOL <[statement] EOL> |  ! Allows blank lines.
     ! An empty procedure.`,
 	"$string":       `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
 	"$structure":    `"[" associations "]"`,

@@ -642,37 +642,24 @@ func (v *formatter) formatMainClause(mainClause abs.Clause) {
 
 // This method attempts to parse a list of multiline statements. It returns the
 // list of statements and whether or not the list of statements was successfully
-// parsed.
+// parsed. Note that to support blank lines nil values will be added to the list
+// of statements for each blank line.
 func (v *parser) parseMultilineStatements() (abs.Statements, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
 	var statements = col.List[abs.StatementLike]()
-	statement, token, ok = v.parseStatement()
-	if !ok {
-		// A multiline procedure requires at least one statement.
-		var message = v.formatError(token)
-		message += generateGrammar("statement",
-			"$procedure",
-			"$statements",
-			"$statement")
-		panic(message)
-	}
-	for ok {
-		statements.AddValue(statement)
+	statement, token, _ = v.parseStatement()
+	for {
 		// Every statement must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			var message = v.formatError(token)
-			message += generateGrammar("EOL",
-				"$procedure",
-				"$statements",
-				"$statement")
-			panic(message)
+			// There are no more statements in this block.
+			return statements, token, true
 		}
-		statement, token, ok = v.parseStatement()
+		statements.AddValue(statement)
+		statement, token, _ = v.parseStatement()
 	}
-	return statements, token, true
 }
 
 // This method attempts to parse a notarize clause. It returns the notarize
@@ -1253,7 +1240,7 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	}
 	mainClause, token, ok = v.parseMainClause()
 	if !ok {
-		// This is not an attribute.
+		// This is not a statement.
 		return statement, token, false
 	}
 	onClause, token, _ = v.parseOnClause()  // This is optional.
@@ -1296,7 +1283,10 @@ func (v *formatter) formatStatements(statements abs.Statements) {
 		for iterator.HasNext() {
 			v.AppendNewline()
 			var statement = iterator.GetNext()
-			v.formatStatement(statement)
+			if statement != nil {
+				// This is not a blank line so format the statement.
+				v.formatStatement(statement)
+			}
 		}
 		v.depth--
 		v.AppendNewline()
