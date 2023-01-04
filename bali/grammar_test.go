@@ -11,10 +11,18 @@
 package bali_test
 
 import (
+	fmt "fmt"
 	bal "github.com/bali-nebula/go-component-framework/bali"
+	osx "os"
 	tes "testing"
 )
 
-func TestPrintFullGrammar(t *tes.T) {
-	bal.PrintGrammar()
+const specifications = "../../specifications/bali.bwsn"
+
+func TestGenerateGrammar(t *tes.T) {
+	var err = osx.WriteFile(specifications, []byte(bal.FormatGrammar()), 0644)
+	if err != nil {
+		var message = fmt.Sprintf("Could not create the specifications file: %v.", err)
+		panic(message)
+	}
 }

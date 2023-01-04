@@ -13,6 +13,7 @@ package bali
 import (
 	fmt "fmt"
 	col "github.com/craterdog/go-collection-framework"
+	sts "strings"
 )
 
 // This map captures the syntax rules for the Bali Document Notation™ (BDN)
@@ -240,7 +241,20 @@ var grammar = map[string]string{
 	"$ZERO":    `"0"`,
 }
 
-func PrintGrammar() {
+const header = `!>
+    A formal definition of Bali Document Notation™ (Bali) using Bali Wirth
+    Syntax Notation™ (BWSN):
+        <https://github.com/bali-nebula/specifications/blob/main/bwsn.bwsn>
+    The token names are identified by all CAPITAL characters and the rule names
+    are identified by lowerCamelCase characters. The token and rule definitions
+    have been alphabetized to make it easier to locate specific definitions.
+    The top-level rule is "$source".
+<!
+
+`
+func FormatGrammar() string {
+	var builder sts.Builder
+	builder.WriteString(header)
 	var unsorted = make([]string, len(grammar))
 	var index = 0
 	for key := range grammar {
@@ -253,8 +267,9 @@ func PrintGrammar() {
 	for iterator.HasNext() {
 		var key = iterator.GetNext()
 		var value = grammar[key]
-		fmt.Printf("%s: %s\n\n", key, value)
+		builder.WriteString(fmt.Sprintf("%s: %s\n\n", key, value))
 	}
+	return builder.String()
 }
 
 // PRIVATE FUNCTIONS
