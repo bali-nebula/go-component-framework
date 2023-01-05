@@ -173,7 +173,7 @@ var grammar = map[string]string{
 	"$DELIMITER": `
     "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "≠" | "<-" | "<" |
     ";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" |
-    "*=" | "*" | ")" | "(" | "&" | "XOR" | "SANS" | "OR" | "NOT" | "MATCHES" | "IS" | "AND"`,
+    "*=" | "*" | ")" | "(" | "&" | "NOT" | "AND" | "SANS" | "OR" | "XOR" | "IS" | "MATCHES"`,
 	"$DURATION":   `"~" [SIGN] "P" (WEEKS | [YEARS] [MONTHS] [DAYS] ["T" [HOURS] [MINUTES] [SECONDS]])`,
 	"$E":          `"e"`,
 	"$EOL":        `"\n"`,
@@ -188,9 +188,9 @@ var grammar = map[string]string{
 	"$IMAGINARY":  `[SIGN] [MAGNITUDE] "i"`,
 	"$INFINITY":   `[SIGN] ("infinity" | "∞")`,
 	"$KEYWORD": `
-    "with" | "while" | "to" | "throw" | "select" | "save" | "return" | "retrieve" | "reject" |
-    "publish" | "post" | "on" | "notarize" | "matching" | "loop" | "level" | "let" | "in" | "if" |
-    "from" | "each" | "do" | "discard" | "continue" | "checkout" | "break" | "at" | "as" | "accept"`,
+    "accept" | "as" | "at" | "break" | "checkout" | "continue" | "discard" | "do" | "each" | "from" |
+    "if" | "in" | "let" | "level" | "loop" | "matching" | "notarize" | "on" | "post" | "publish" |
+    "reject" | "retrieve" | "return" | "save" | "select" | "throw" | "to" | "while" | "with"`,
 	"$MAGNITUDE":   `E | PI | PHI | TAU | SCALAR`,
 	"$MINUTE":      `"0".."5" "0".."9"`,
 	"$MINUTES":     `TIMESPAN "M"`,
