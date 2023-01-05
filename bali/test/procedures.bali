@@ -9,6 +9,8 @@
         }
         continue loop
     }
+    
+    
     !>
     This is an annotation.
     <!
@@ -19,9 +21,13 @@
         checkout $draft from /bali/tests/Procedures/v1.2
     }
     checkout $draft at level 3 from /bali/tests/Procedures/v1.2
+    checkout $draft from /bali/tests/Procedures/v1.2
     save draft as $citation
     discard draft
     notarize document as /bali/test/Contract/v1
+    select foo matching any do {
+        return foo
+    }
     select attribute[$first, 3] matching 0 do {
         let attribute[$first, 3] := 5
     } matching ~π do {
@@ -49,6 +55,12 @@
         if bar do {
             foobar()
         }
+    } on $failure matching $bad do {
+        
+    } matching $worse do {
+        
+    } matching $worst do {
+        
     }
     post messages[last] to bag
     publish [

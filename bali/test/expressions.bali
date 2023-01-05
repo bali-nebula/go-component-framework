@@ -5,8 +5,8 @@
     NOT (p AND q) OR (p OR NOT q) XOR (p SANS q)
     @reference
     list.addValue(value)
-    remote<-notify()
-    customer[$address, $province]
+    remote<-notify(event)
+    customer[42, $address, $province]
     a & b & c
     base ^ exponent
     -/*z

@@ -31,6 +31,13 @@ func TagOfSize(size int) Tag {
 // the native Go string type.
 type Tag string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Tag) AsString() string {
+	return string(v)
+}
+
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this tag is empty.

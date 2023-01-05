@@ -282,33 +282,33 @@ func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatMoment(moment ele.Moment) {
 	var result sts.Builder
-	result.WriteString("<")
 	var year = moment.GetYears()
-	result.WriteString(stc.FormatInt(int64(year), 10))
 	var month = moment.GetMonths()
-	if month > 1 {
+	var day = moment.GetDays()
+	var hour = moment.GetHours()
+	var minute = moment.GetMinutes()
+	var second = moment.GetSeconds()
+	var millisecond = moment.GetMilliseconds()
+	result.WriteString("<")
+	result.WriteString(stc.FormatInt(int64(year), 10))
+	if month > 1 || day > 1 || hour > 0 || minute > 0 || second > 0 || millisecond > 0 {
 		result.WriteString("-")
-		result.WriteString(formatOrdinal(month))
-		var day = moment.GetDays()
-		if day > 1 {
+		result.WriteString(formatOrdinal(month, 2))
+		if day > 1 || hour > 0 || minute > 0 || second > 0 || millisecond > 0 {
 			result.WriteString("-")
-			result.WriteString(formatOrdinal(day))
-			var hour = moment.GetHours()
-			if hour > 0 {
+			result.WriteString(formatOrdinal(day, 2))
+			if hour > 0 || minute > 0 || second > 0 || millisecond > 0 {
 				result.WriteString("T")
-				result.WriteString(formatOrdinal(hour))
-				var minute = moment.GetMinutes()
-				if minute > 0 {
+				result.WriteString(formatOrdinal(hour, 2))
+				if minute > 0 || second > 0 || millisecond > 0 {
 					result.WriteString(":")
-					result.WriteString(formatOrdinal(minute))
-					var second = moment.GetSeconds()
-					if second > 0 {
+					result.WriteString(formatOrdinal(minute, 2))
+					if second > 0 || millisecond > 0 {
 						result.WriteString(":")
-						result.WriteString(formatOrdinal(second))
-						var millisecond = moment.GetMilliseconds()
+						result.WriteString(formatOrdinal(second, 2))
 						if millisecond > 0 {
 							result.WriteString(".")
-							result.WriteString(formatOrdinal(millisecond))
+							result.WriteString(formatOrdinal(millisecond, 3))
 						}
 					}
 				}
@@ -666,9 +666,10 @@ func (v *formatter) formatTag(tag ele.Tag) {
 
 // PRIVATE FUNCTIONS
 
-// This function formats the specified ordinal value to exactly two digits.
-func formatOrdinal(ordinal int) string {
-	return fmt.Sprintf("%02d", ordinal)
+// This function formats the specified ordinal value to the specified number of
+// digits.
+func formatOrdinal(ordinal, digits int) string {
+	return fmt.Sprintf("%0" + stc.Itoa(digits) + "d", ordinal)
 }
 
 // This function converts a string into a float value.

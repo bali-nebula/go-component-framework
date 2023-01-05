@@ -1,11 +1,22 @@
 [
     [~0..~τ]
+    ['1234'..'abcd']
+    [false..true]
+    [~P0W..~P3Y)
+    [<2000>..<2023>]
     [1..+∞)
     (-∞..0]
     (-∞..+∞)
     ["a".."z"]
+    ["Aa".."Fe"]
     [1..42]
-    (0..75)
+    (0%..75%)
     (.25..1.)
     (.25...75)
+    ["ca+t"?.."do+g"?]
+    [/bali/abstractions/Continuous/v1../bali/abstractions/Spectral/v1]
+    [<https://craterdog.com/About.html>..<https://craterdog.com/Marketplace.html>]
+    [$bar..$foo]
+    [#ABCD..#FGHJ)
+    [v1.2..v1.6)
 ]

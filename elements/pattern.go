@@ -21,6 +21,13 @@ import (
 // corresponding to that pattern.
 type Pattern string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Pattern) AsString() string {
+	return string(v)
+}
+
 // MATCHABLE INTERFACE
 
 // This method determines whether or not this pattern matches the specified text

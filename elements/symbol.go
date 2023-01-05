@@ -17,6 +17,13 @@ package elements
 // make up the symbol.
 type Symbol string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Symbol) AsString() string {
+	return string(v)
+}
+
 // SYMBOLIC INTERFACE
 
 // This method returns the identifier for this symbol.

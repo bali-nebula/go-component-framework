@@ -30,10 +30,19 @@ func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 	var endpoint abs.Primitive
 	endpoint, token, ok = v.parseAngle()
 	if !ok {
+		endpoint, token, ok = v.parseBinary()
+	}
+	if !ok {
+		endpoint, token, ok = v.parseBoolean()
+	}
+	if !ok {
 		endpoint, token, ok = v.parseDuration()
 	}
 	if !ok {
 		endpoint, token, ok = v.parseMoment()
+	}
+	if !ok {
+		endpoint, token, ok = v.parseMoniker()
 	}
 	if !ok {
 		endpoint, token, ok = v.parsePattern()
@@ -45,25 +54,25 @@ func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 		endpoint, token, ok = v.parseProbability()
 	}
 	if !ok {
+		endpoint, token, ok = v.parseQuote()
+	}
+	if !ok {
 		endpoint, token, ok = v.parseReal()
 	}
 	if !ok {
 		endpoint, token, ok = v.parseResource()
 	}
 	if !ok {
-		endpoint, token, ok = v.parseSymbol()
-	}
-	if !ok {
 		endpoint, token, ok = v.parseRune()
 	}
 	if !ok {
-		endpoint, token, ok = v.parseMoniker()
+		endpoint, token, ok = v.parseSymbol()
+	}
+	if !ok {
+		endpoint, token, ok = v.parseTag()
 	}
 	if !ok {
 		endpoint, token, ok = v.parseVersion()
-	}
-	if !ok {
-		endpoint, token, ok = v.parseBinary()
 	}
 	if !ok {
 		// This must be explicitly set to nil since it is of type any.
@@ -85,6 +94,8 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 		v.formatAngle(value)
 	case str.Binary:
 		v.formatBinary(value)
+	case ele.Boolean:
+		v.formatBoolean(value)
 	case ele.Duration:
 		v.formatDuration(value)
 	case ele.Moment:
@@ -107,6 +118,8 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 		v.formatRune(value)
 	case ele.Symbol:
 		v.formatSymbol(value)
+	case ele.Tag:
+		v.formatTag(value)
 	case str.Version:
 		v.formatVersion(value)
 	default:

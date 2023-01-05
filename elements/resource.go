@@ -21,6 +21,13 @@ import (
 // that web resource.
 type Resource string
 
+// SPECTRAL INTERFACE
+
+// This method returns a string value for this spectral element.
+func (v Resource) AsString() string {
+	return string(v)
+}
+
 // SEGMENTED INTERFACE
 
 // This method returns the scheme part of this resource element.

@@ -3,4 +3,9 @@
     true($granularity: $boolean)  ! This is a note.
     '1234abcd'  ! This is base 64 encoded.
     ~P13W
+    [
+        1
+        2
+        3
+    ]($type: /bali/collections/Set/v1)
 ]
