@@ -34,11 +34,6 @@ type comparisonExpression struct {
 	second   abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *comparisonExpression) IsComparison() bool {
-	return true
-}
-
 // This method returns the first expression in this comparison expression.
 func (v *comparisonExpression) GetFirst() abs.Expression {
 	return v.first

@@ -32,11 +32,6 @@ type saveClause struct {
 	recipient abs.Recipient
 }
 
-// This method is a dummy method that always returns true.
-func (v *saveClause) IsSaveClause() bool {
-	return true
-}
-
 // This method returns the document expression for this save clause.
 func (v *saveClause) GetDocument() abs.Expression {
 	return v.document

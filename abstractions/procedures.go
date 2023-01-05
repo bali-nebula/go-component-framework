@@ -42,7 +42,6 @@ type Procedural interface {
 
 // This interface defines the methods supported by all accept-clause-like types.
 type AcceptClauseLike interface {
-	IsAcceptClause() bool
 	GetMessage() Expression
 	SetMessage(message Expression)
 }
@@ -65,12 +64,10 @@ type BlockLike interface {
 
 // This interface defines the methods supported by all break-clause-like types.
 type BreakClauseLike interface {
-	IsBreakClause() bool
 }
 
 // This interface defines the methods supported by all checkout-clause-like types.
 type CheckoutClauseLike interface {
-	IsCheckoutClause() bool
 	GetRecipient() Recipient
 	SetRecipient(recipient Recipient)
 	GetLevel() Expression
@@ -81,26 +78,22 @@ type CheckoutClauseLike interface {
 
 // This interface defines the methods supported by all continue-clause-like types.
 type ContinueClauseLike interface {
-	IsContinueClause() bool
 }
 
 // This interface defines the methods supported by all discard-clause-like types.
 type DiscardClauseLike interface {
-	IsDiscardClause() bool
 	GetDocument() Expression
 	SetDocument(document Expression)
 }
 
 // This interface defines the methods supported by all if-clause-like types.
 type IfClauseLike interface {
-	IsIfClause() bool
 	GetBlock() BlockLike
 	SetBlock(block BlockLike)
 }
 
 // This interface defines the methods supported by all let-clause-like types.
 type LetClauseLike interface {
-	IsLetClause() bool
 	HasRecipient() bool
 	GetRecipient() (Recipient, Operator)
 	SetRecipient(recipient Recipient, operator Operator)
@@ -110,7 +103,6 @@ type LetClauseLike interface {
 
 // This interface defines the methods supported by all notarize-clause-like types.
 type NotarizeClauseLike interface {
-	IsNotarizeClause() bool
 	GetDocument() Expression
 	SetDocument(document Expression)
 	GetMoniker() Expression
@@ -127,7 +119,6 @@ type OnClauseLike interface {
 
 // This interface defines the methods supported by all post-clause-like types.
 type PostClauseLike interface {
-	IsPostClause() bool
 	GetMessage() Expression
 	SetMessage(message Expression)
 	GetBag() Expression
@@ -136,21 +127,18 @@ type PostClauseLike interface {
 
 // This interface defines the methods supported by all publish-clause-like types.
 type PublishClauseLike interface {
-	IsPublishClause() bool
 	GetEvent() Expression
 	SetEvent(event Expression)
 }
 
 // This interface defines the methods supported by all reject-clause-like types.
 type RejectClauseLike interface {
-	IsRejectClause() bool
 	GetMessage() Expression
 	SetMessage(message Expression)
 }
 
 // This interface defines the methods supported by all retrieve-clause-like types.
 type RetrieveClauseLike interface {
-	IsRetrieveClause() bool
 	GetRecipient() Recipient
 	SetRecipient(recipient Recipient)
 	GetBag() Expression
@@ -159,14 +147,12 @@ type RetrieveClauseLike interface {
 
 // This interface defines the methods supported by all return-clause-like types.
 type ReturnClauseLike interface {
-	IsReturnClause() bool
 	GetResult() Expression
 	SetResult(result Expression)
 }
 
 // This interface defines the methods supported by all save-clause-like types.
 type SaveClauseLike interface {
-	IsSaveClause() bool
 	GetDocument() Expression
 	SetDocument(document Expression)
 	GetRecipient() Recipient
@@ -175,7 +161,6 @@ type SaveClauseLike interface {
 
 // This interface defines the methods supported by all select-clause-like types.
 type SelectClauseLike interface {
-	IsSelectClause() bool
 	GetTarget() Expression
 	SetTarget(control Expression)
 	GetBlocks() Blocks
@@ -196,21 +181,18 @@ type StatementLike interface {
 
 // This interface defines the methods supported by all throw-clause-like types.
 type ThrowClauseLike interface {
-	IsThrowClause() bool
 	GetException() Expression
 	SetException(exception Expression)
 }
 
 // This interface defines the methods supported by all while-clause-like types.
 type WhileClauseLike interface {
-	IsWhileClause() bool
 	GetBlock() BlockLike
 	SetBlock(block BlockLike)
 }
 
 // This interface defines the methods supported by all with-clause-like types.
 type WithClauseLike interface {
-	IsWithClause() bool
 	GetItem() Symbolic
 	SetItem(item Symbolic)
 	GetBlock() BlockLike

@@ -31,11 +31,6 @@ type selectClause struct {
 	blocks abs.Blocks
 }
 
-// This method is a dummy method that always returns true.
-func (v *selectClause) IsSelectClause() bool {
-	return true
-}
-
 // This method returns the target expression for this select clause.
 func (v *selectClause) GetTarget() abs.Expression {
 	return v.target

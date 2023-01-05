@@ -40,12 +40,7 @@ type letClause struct {
 	expression abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *letClause) IsLetClause() bool {
-	return true
-}
-
-// This method is a dummy method that always returns true.
+// This method determines whether or not this clause has a recipient.
 func (v *letClause) HasRecipient() bool {
 	return v.recipient != nil
 }

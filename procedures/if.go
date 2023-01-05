@@ -29,11 +29,6 @@ type ifClause struct {
 	block abs.BlockLike
 }
 
-// This method is a dummy method that always returns true.
-func (v *ifClause) IsIfClause() bool {
-	return true
-}
-
 // This method returns the block for this if clause.
 func (v *ifClause) GetBlock() abs.BlockLike {
 	return v.block

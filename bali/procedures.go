@@ -593,50 +593,64 @@ func (v *parser) parseMainClause() (abs.Clause, *Token, bool) {
 // This method adds the canonical format for the specified main clause to the
 // state of the formatter.
 func (v *formatter) formatMainClause(mainClause abs.Clause) {
-	// NOTE: A type switch will only work if each case specifies a unique
-	// interface. If two different interfaces define the same method signatures
-	// they are indistinguishable as types. To get around this we have added as
-	// necessary a unique "dummy" method to each interface to guarantee that it
-	// is unique.
-	switch value := mainClause.(type) {
-	case abs.AcceptClauseLike:
+	switch pro.GetType(mainClause) {
+	case "AcceptClause":
+		var value = mainClause.(abs.AcceptClauseLike)
 		v.formatAcceptClause(value)
-	case abs.BreakClauseLike:
+	case "BreakClause":
+		var value = mainClause.(abs.BreakClauseLike)
 		v.formatBreakClause(value)
-	case abs.CheckoutClauseLike:
+	case "CheckoutClause":
+		var value = mainClause.(abs.CheckoutClauseLike)
 		v.formatCheckoutClause(value)
-	case abs.ContinueClauseLike:
+	case "ContinueClause":
+		var value = mainClause.(abs.ContinueClauseLike)
 		v.formatContinueClause(value)
-	case abs.DiscardClauseLike:
+	case "DiscardClause":
+		var value = mainClause.(abs.DiscardClauseLike)
 		v.formatDiscardClause(value)
-	case abs.IfClauseLike:
+	case "IfClause":
+		var value = mainClause.(abs.IfClauseLike)
 		v.formatIfClause(value)
-	case abs.LetClauseLike:
+	case "LetClause":
+		var value = mainClause.(abs.LetClauseLike)
 		v.formatLetClause(value)
-	case abs.NotarizeClauseLike:
+	case "NotarizeClause":
+		var value = mainClause.(abs.NotarizeClauseLike)
 		v.formatNotarizeClause(value)
-	case abs.PostClauseLike:
+	case "PostClause":
+		var value = mainClause.(abs.PostClauseLike)
 		v.formatPostClause(value)
-	case abs.PublishClauseLike:
+	case "PublishClause":
+		var value = mainClause.(abs.PublishClauseLike)
 		v.formatPublishClause(value)
-	case abs.RejectClauseLike:
+	case "RejectClause":
+		var value = mainClause.(abs.RejectClauseLike)
 		v.formatRejectClause(value)
-	case abs.RetrieveClauseLike:
+	case "RetrieveClause":
+		var value = mainClause.(abs.RetrieveClauseLike)
 		v.formatRetrieveClause(value)
-	case abs.ReturnClauseLike:
+	case "ReturnClause":
+		var value = mainClause.(abs.ReturnClauseLike)
 		v.formatReturnClause(value)
-	case abs.SaveClauseLike:
+	case "SaveClause":
+		var value = mainClause.(abs.SaveClauseLike)
 		v.formatSaveClause(value)
-	case abs.SelectClauseLike:
+	case "SelectClause":
+		var value = mainClause.(abs.SelectClauseLike)
 		v.formatSelectClause(value)
-	case abs.ThrowClauseLike:
+	case "ThrowClause":
+		var value = mainClause.(abs.ThrowClauseLike)
 		v.formatThrowClause(value)
-	case abs.WhileClauseLike:
+	case "WhileClause":
+		var value = mainClause.(abs.WhileClauseLike)
 		v.formatWhileClause(value)
-	case abs.WithClauseLike:
+	case "WithClause":
+		var value = mainClause.(abs.WithClauseLike)
 		v.formatWithClause(value)
 	default:
-		panic(fmt.Sprintf("An invalid main clause (of type %T) was passed to the formatter: %v", value, value))
+		var message = fmt.Sprintf("An invalid main clause  type was passed to the formatter: %v", mainClause)
+		panic(message)
 	}
 }
 
@@ -1225,7 +1239,7 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	var onClause abs.OnClauseLike
 	var annotation abs.Annotation
 	var note abs.NoteLike
-	annotation, token, ok = v.parseAnnotation()  // This is optional.
+	annotation, token, ok = v.parseAnnotation() // This is optional.
 	if ok {
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -1243,8 +1257,8 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 		// This is not a statement.
 		return statement, token, false
 	}
-	onClause, token, _ = v.parseOnClause()  // This is optional.
-	note, token, _ = v.parseNote()          // This is optional.
+	onClause, token, _ = v.parseOnClause() // This is optional.
+	note, token, _ = v.parseNote()         // This is optional.
 	statement = pro.StatementWithHandler(mainClause, onClause)
 	statement.SetAnnotation(annotation)
 	statement.SetNote(note)

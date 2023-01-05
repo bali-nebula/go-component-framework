@@ -669,7 +669,7 @@ func (v *formatter) formatTag(tag ele.Tag) {
 // This function formats the specified ordinal value to the specified number of
 // digits.
 func formatOrdinal(ordinal, digits int) string {
-	return fmt.Sprintf("%0" + stc.Itoa(digits) + "d", ordinal)
+	return fmt.Sprintf("%0"+stc.Itoa(digits)+"d", ordinal)
 }
 
 // This function converts a string into a float value.

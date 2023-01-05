@@ -30,11 +30,6 @@ type magnitudeExpression struct {
 	expression abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *magnitudeExpression) IsMagnitude() bool {
-	return true
-}
-
 // This method returns the expression to be operated on by this magnitude
 // expression.
 func (v *magnitudeExpression) GetExpression() abs.Expression {

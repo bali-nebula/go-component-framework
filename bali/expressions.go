@@ -370,44 +370,55 @@ func (v *parser) parseExpression() (abs.Expression, *Token, bool) {
 // This method adds the canonical format for the specified expression to the
 // state of the formatter.
 func (v *formatter) formatExpression(expression abs.Expression) {
-	// NOTE: A type switch will only work if each case specifies a unique
-	// interface. If two different interfaces define the same method signatures
-	// they are indistinguishable as types. To get around this we have added as
-	// necessary a unique "dummy" method to each interface to guarantee that it
-	// is unique.
-	switch value := expression.(type) {
-	case abs.ComponentLike:
+	switch exp.GetType(expression) {
+	case "ComponentExpression":
+		var value = expression.(abs.ComponentLike)
 		v.formatComponent(value)
-	case abs.IntrinsicLike:
+	case "IntrinsicExpression":
+		var value = expression.(abs.IntrinsicLike)
 		v.formatIntrinsic(value)
-	case abs.VariableLike:
+	case "VariableExpression":
+		var value = expression.(abs.VariableLike)
 		v.formatVariable(value)
-	case abs.PrecedenceLike:
+	case "PrecedenceExpression":
+		var value = expression.(abs.PrecedenceLike)
 		v.formatPrecedence(value)
-	case abs.DereferenceLike:
+	case "DereferenceExpression":
+		var value = expression.(abs.DereferenceLike)
 		v.formatDereference(value)
-	case abs.InvocationLike:
+	case "InvocationExpression":
+		var value = expression.(abs.InvocationLike)
 		v.formatInvocation(value)
-	case abs.ItemLike:
-		v.formatItem(value)
-	case abs.ChainingLike:
+	case "SubcomponentExpression":
+		var value = expression.(abs.SubcomponentLike)
+		v.formatSubcomponent(value)
+	case "ChainingExpression":
+		var value = expression.(abs.ChainingLike)
 		v.formatChaining(value)
-	case abs.ExponentialLike:
+	case "ExponentialExpression":
+		var value = expression.(abs.ExponentialLike)
 		v.formatExponential(value)
-	case abs.InversionLike:
+	case "InversionExpression":
+		var value = expression.(abs.InversionLike)
 		v.formatInversion(value)
-	case abs.ArithmeticLike:
+	case "ArithmeticExpression":
+		var value = expression.(abs.ArithmeticLike)
 		v.formatArithmetic(value)
-	case abs.MagnitudeLike:
+	case "MagnitudeExpression":
+		var value = expression.(abs.MagnitudeLike)
 		v.formatMagnitude(value)
-	case abs.ComparisonLike:
+	case "ComparisonExpression":
+		var value = expression.(abs.ComparisonLike)
 		v.formatComparison(value)
-	case abs.ComplementLike:
+	case "ComplementExpression":
+		var value = expression.(abs.ComplementLike)
 		v.formatComplement(value)
-	case abs.LogicalLike:
+	case "LogicalExpression":
+		var value = expression.(abs.LogicalLike)
 		v.formatLogical(value)
 	default:
-		panic(fmt.Sprintf("An invalid expression (of type %T) was passed to the formatter: %v", value, value))
+		var message = fmt.Sprintf("An invalid expression type was passed to the formatter: %v", expression)
+		panic(message)
 	}
 }
 
@@ -538,10 +549,10 @@ func (v *formatter) formatInvocation(invocation abs.InvocationLike) {
 	v.formatArguments(arguments)
 }
 
-// This method attempts to parse an item expression. It returns the
-// item expression and whether or not the item expression was successfully
-// parsed.
-func (v *parser) parseItem(composite abs.Expression) (abs.Expression, *Token, bool) {
+// This method attempts to parse an subcomponent expression. It returns the
+// subcomponent expression and whether or not the subcomponent expression was
+// successfully parsed.
+func (v *parser) parseSubcomponent(composite abs.Expression) (abs.Expression, *Token, bool) {
 	var ok bool
 	var token *Token
 	var indices abs.Indices
@@ -550,16 +561,16 @@ func (v *parser) parseItem(composite abs.Expression) (abs.Expression, *Token, bo
 	if !ok {
 		return expression, token, false
 	}
-	expression = exp.Item(composite, indices)
+	expression = exp.Subcomponent(composite, indices)
 	return expression, token, true
 }
 
-// This method adds the canonical format for the specified item expression
-// to the state of the formatter.
-func (v *formatter) formatItem(item abs.ItemLike) {
-	var composite = item.GetComposite()
+// This method adds the canonical format for the specified subcomponent
+// expression to the state of the formatter.
+func (v *formatter) formatSubcomponent(subcomponent abs.SubcomponentLike) {
+	var composite = subcomponent.GetComposite()
 	v.formatExpression(composite)
-	var indices = item.GetIndices()
+	var indices = subcomponent.GetIndices()
 	v.formatIndices(indices)
 }
 
@@ -694,7 +705,7 @@ func (v *parser) parseRecursive(left abs.Expression) (abs.Expression, *Token) {
 	var expression abs.Expression
 	expression, token, ok = v.parseInvocation(left)
 	if !ok {
-		expression, token, ok = v.parseItem(left)
+		expression, token, ok = v.parseSubcomponent(left)
 	}
 	if !ok {
 		expression, token, ok = v.parseChaining(left)

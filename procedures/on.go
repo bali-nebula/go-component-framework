@@ -28,7 +28,7 @@ func OnClause(failure abs.Symbolic, blocks abs.Blocks) abs.OnClauseLike {
 // This type defines the structure and methods associated with an on clause.
 type onClause struct {
 	failure abs.Symbolic
-	blocks    abs.Blocks
+	blocks  abs.Blocks
 }
 
 // This method returns the symbol for the failure for this on clause.

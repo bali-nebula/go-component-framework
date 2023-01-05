@@ -32,11 +32,6 @@ type intrinsicExpression struct {
 	arguments abs.Arguments
 }
 
-// This method is a dummy method that always returns true.
-func (v *intrinsicExpression) IsIntrinsic() bool {
-	return true
-}
-
 // This method returns the function name for this intrinsic expression.
 func (v *intrinsicExpression) GetFunction() string {
 	return v.function

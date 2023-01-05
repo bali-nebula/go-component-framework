@@ -37,11 +37,6 @@ type rejectClause struct {
 	message abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *rejectClause) IsRejectClause() bool {
-	return true
-}
-
 // This method returns the message expression for this reject clause.
 func (v *rejectClause) GetMessage() abs.Expression {
 	return v.message

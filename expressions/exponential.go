@@ -34,11 +34,6 @@ type exponentialExpression struct {
 	exponent abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *exponentialExpression) IsExponential() bool {
-	return true
-}
-
 // This method returns the base expression in this exponential expression.
 func (v *exponentialExpression) GetBase() abs.Expression {
 	return v.base

@@ -35,11 +35,6 @@ type arithmeticExpression struct {
 	second   abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *arithmeticExpression) IsArithmetic() bool {
-	return true
-}
-
 // This method returns the first expression in this arithmetic expression.
 func (v *arithmeticExpression) GetFirst() abs.Expression {
 	return v.first

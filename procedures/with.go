@@ -27,13 +27,8 @@ func WithClause(item abs.Symbolic, block abs.BlockLike) abs.WithClauseLike {
 
 // This type defines the structure and methods associated with a with clause.
 type withClause struct {
-	item abs.Symbolic
+	item  abs.Symbolic
 	block abs.BlockLike
-}
-
-// This method is a dummy method that always returns true.
-func (v *withClause) IsWithClause() bool {
-	return true
 }
 
 // This method returns the symbol for the item for this with clause.

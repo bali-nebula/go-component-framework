@@ -84,18 +84,18 @@ var grammar = map[string]string{
     comparison   |  ! expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression
     complement   |  ! "NOT" expression
     logical         ! expression ("AND" | "SANS" | "OR" | "XOR") expression`,
-	"$failure":      `SYMBOL`,
-	"$function":     `IDENTIFIER`,
-	"$ifClause":     `"if" condition "do" procedure`,
-	"$indices":      `"[" expression {"," expression} "]"`,
-	"$intrinsic":    `function arguments`,
-	"$inversion":    `("-" | "/" | "*") expression`,
-	"$invocation":   `target ("." | "<-") method arguments`,
-	"$item":         `SYMBOL`,
-	"$key":          `primitive`,
-	"$letClause":    `["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
-	"$logical":      `expression ("AND" | "SANS" | "OR" | "XOR") expression`,
-	"$magnitude":    `"|" expression "|"`,
+	"$failure":    `SYMBOL`,
+	"$function":   `IDENTIFIER`,
+	"$ifClause":   `"if" condition "do" procedure`,
+	"$indices":    `"[" expression {"," expression} "]"`,
+	"$intrinsic":  `function arguments`,
+	"$inversion":  `("-" | "/" | "*") expression`,
+	"$invocation": `target ("." | "<-") method arguments`,
+	"$item":       `SYMBOL`,
+	"$key":        `primitive`,
+	"$letClause":  `["let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/=")] expression`,
+	"$logical":    `expression ("AND" | "SANS" | "OR" | "XOR") expression`,
+	"$magnitude":  `"|" expression "|"`,
 	"$mainClause": `
     control    |
     assignment |
@@ -118,15 +118,15 @@ var grammar = map[string]string{
 	"$parameters": `
     parameter {"," parameter} |
     EOL <parameter EOL>  ! At least one parameter is required.`,
-	"$pattern":        `expression`,
-	"$postClause":     `"post" message "to" bag`,
-	"$precedence":     `"(" expression ")"`,
-	"$primitive":      `element | string`,
-	"$procedure":      `"{" statements "}"`,
-	"$publishClause":  `"publish" event`,
-	"$range":          `( "[" | "(" ) primitive ".." primitive ( ")" | "]" )`,
-	"$recipient":      `name | attribute`,
-	"$rejectClause":   `"reject" message`,
+	"$pattern":       `expression`,
+	"$postClause":    `"post" message "to" bag`,
+	"$precedence":    `"(" expression ")"`,
+	"$primitive":     `element | string`,
+	"$procedure":     `"{" statements "}"`,
+	"$publishClause": `"publish" event`,
+	"$range":         `( "[" | "(" ) primitive ".." primitive ( ")" | "]" )`,
+	"$recipient":     `name | attribute`,
+	"$rejectClause":  `"reject" message`,
 	"$repository": `
     checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
     saveClause     |  ! "save" document "as" recipient
@@ -252,6 +252,7 @@ const header = `!>
 <!
 
 `
+
 func FormatGrammar() string {
 	var builder sts.Builder
 	builder.WriteString(header)

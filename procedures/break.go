@@ -25,8 +25,3 @@ func BreakClause() abs.BreakClauseLike {
 // This type defines the structure and methods associated with a break clause.
 type breakClause struct {
 }
-
-// This method is a dummy method that always returns true.
-func (v *breakClause) IsBreakClause() bool {
-	return true
-}

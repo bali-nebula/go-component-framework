@@ -30,11 +30,6 @@ type discardClause struct {
 	document abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *discardClause) IsDiscardClause() bool {
-	return true
-}
-
 // This method returns the document expression for this discard clause.
 func (v *discardClause) GetDocument() abs.Expression {
 	return v.document

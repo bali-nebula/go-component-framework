@@ -30,11 +30,6 @@ type acceptClause struct {
 	message abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *acceptClause) IsAcceptClause() bool {
-	return true
-}
-
 // This method returns the message expression for this accept clause.
 func (v *acceptClause) GetMessage() abs.Expression {
 	return v.message

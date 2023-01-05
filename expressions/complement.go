@@ -32,11 +32,6 @@ type complementExpression struct {
 	expression abs.Expression
 }
 
-// This method is a dummy method that always returns true.
-func (v *complementExpression) IsComplement() bool {
-	return true
-}
-
 // This method returns the complement operator in this complement expression.
 func (v *complementExpression) GetOperator() abs.Operator {
 	return v.operator

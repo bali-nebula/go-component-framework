@@ -35,7 +35,6 @@ type (
 
 // This interface defines the methods supported by all arithmetic-like expressions.
 type ArithmeticLike interface {
-	IsArithmetic() bool
 	GetFirst() Expression
 	SetFirst(first Expression)
 	GetOperator() Operator
@@ -46,7 +45,6 @@ type ArithmeticLike interface {
 
 // This interface defines the methods supported by all chaining-like expressions.
 type ChainingLike interface {
-	IsChaining() bool
 	GetFirst() Expression
 	SetFirst(first Expression)
 	GetOperator() Operator
@@ -57,7 +55,6 @@ type ChainingLike interface {
 
 // This interface defines the methods supported by all comparison-like expressions.
 type ComparisonLike interface {
-	IsComparison() bool
 	GetFirst() Expression
 	SetFirst(first Expression)
 	GetOperator() Operator
@@ -68,7 +65,6 @@ type ComparisonLike interface {
 
 // This interface defines the methods supported by all complement-like expressions.
 type ComplementLike interface {
-	IsComplement() bool
 	GetOperator() Operator
 	SetOperator(operator Operator)
 	GetExpression() Expression
@@ -77,7 +73,6 @@ type ComplementLike interface {
 
 // This interface defines the methods supported by all dereference-like expressions.
 type DereferenceLike interface {
-	IsDereference() bool
 	GetOperator() Operator
 	SetOperator(operator Operator)
 	GetExpression() Expression
@@ -86,7 +81,6 @@ type DereferenceLike interface {
 
 // This interface defines the methods supported by all exponential-like expressions.
 type ExponentialLike interface {
-	IsExponential() bool
 	GetBase() Expression
 	SetBase(base Expression)
 	GetOperator() Operator
@@ -97,7 +91,6 @@ type ExponentialLike interface {
 
 // This interface defines the methods supported by all intrinsic-like expressions.
 type IntrinsicLike interface {
-	IsIntrinsic() bool
 	GetFunction() string
 	SetFunction(function string)
 	GetArguments() Arguments
@@ -106,7 +99,6 @@ type IntrinsicLike interface {
 
 // This interface defines the methods supported by all inversion-like expressions.
 type InversionLike interface {
-	IsInversion() bool
 	GetOperator() Operator
 	SetOperator(operator Operator)
 	GetExpression() Expression
@@ -115,7 +107,6 @@ type InversionLike interface {
 
 // This interface defines the methods supported by all invocation-like expressions.
 type InvocationLike interface {
-	IsInvocation() bool
 	IsSynchronous() bool
 	GetTarget() Expression
 	SetTarget(target Expression)
@@ -129,7 +120,6 @@ type InvocationLike interface {
 
 // This interface defines the methods supported by all logical-like expressions.
 type LogicalLike interface {
-	IsLogical() bool
 	GetFirst() Expression
 	SetFirst(first Expression)
 	GetOperator() Operator
@@ -140,21 +130,18 @@ type LogicalLike interface {
 
 // This interface defines the methods supported by all magnitude-like expressions.
 type MagnitudeLike interface {
-	IsMagnitude() bool
 	GetExpression() Expression
 	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all precedence-like expressions.
 type PrecedenceLike interface {
-	IsPrecedence() bool
 	GetExpression() Expression
 	SetExpression(expression Expression)
 }
 
 // This interface defines the methods supported by all item-like expressions.
-type ItemLike interface {
-	IsItem() bool
+type SubcomponentLike interface {
 	GetComposite() Expression
 	SetComposite(composite Expression)
 	GetIndices() Indices
@@ -163,7 +150,6 @@ type ItemLike interface {
 
 // This interface defines the methods supported by all variable-like expressions.
 type VariableLike interface {
-	IsVariable() bool
 	GetIdentifier() string
 }
 
