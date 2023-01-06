@@ -57,7 +57,28 @@ func (v *continuum[V]) AsArray() []V {
 	return array
 }
 
-// ELASTIC INTERFACE
+// BOUNDED INTERFACE
+
+// This method determines whether or not the specified value is included in this
+// continuous range.
+func (v *continuum[V]) IncludesValue(value V) bool {
+	var first = v.first.AsReal()
+	var candidate = value.AsReal()
+	var last = v.last.AsReal()
+	switch v.extent {
+	case abs.INCLUSIVE:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
+	case abs.LEFT:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
+	case abs.RIGHT:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
+	case abs.EXCLUSIVE:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
+	default:
+		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
+		panic(message)
+	}
+}
 
 // This method returns the first value in this continuous range.
 func (v *continuum[V]) GetFirst() V {
