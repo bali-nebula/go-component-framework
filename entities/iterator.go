@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package components
+package entities
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
@@ -20,6 +20,5 @@ import (
 // This constructor creates a new instance of an iterator that can be used to
 // traverse the values in the specified sequence.
 func Iterator[V abs.Value](sequence abs.Sequential[V]) abs.IteratorLike[V] {
-	var raw = sequence.(col.Sequential[V])
-	return col.Iterator[V](raw)
+	return col.Iterator[V](sequence)
 }

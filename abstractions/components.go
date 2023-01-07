@@ -10,31 +10,10 @@
 
 package abstractions
 
-import (
-	col "github.com/craterdog/go-collection-framework"
-)
-
 // TYPE DEFINITIONS
 
 type (
-	Annotation            any
-	Value                 any
-	Entity                any
-	Sequential[V Value]   col.Sequential[V]
-	IteratorLike[V Value] col.IteratorLike[V]
-)
-
-// TYPE ALIASES
-
-// These type assignments hide the dependencies on the package used to implement
-// the collection types. It preserves the collection interfaces in a way that
-// will allow them to evolve separately as needed. Currently, the interfaces are
-// synchronized.
-type (
-	Runes      = col.Sequential[rune]
-	Lines      = col.Sequential[string]
-	Parameter  = col.Binding[Symbolic, ComponentLike]
-	Parameters = col.Sequential[Parameter]
+	Annotation any
 )
 
 // INDIVIDUAL INTERFACES
@@ -43,7 +22,7 @@ type (
 type Encapsulated interface {
 	GetEntity() Entity
 	SetEntity(entity Entity)
-	IsGeneric() bool
+	IsParameterized() bool
 	GetContext() ContextLike
 	SetContext(context ContextLike)
 	IsAnnotated() bool
@@ -51,35 +30,42 @@ type Encapsulated interface {
 	SetNote(note NoteLike)
 }
 
-// This interface defines the methods supported by all symbolic types.
-type Symbolic interface {
-	GetIdentifier() string
-}
-
-// This interface defines the methods supported by all generic types.
-type Generic interface {
-	GetParameters() Parameters
-	SetParameters(parameters Parameters)
+// This interface defines the methods supported by all parameterized sequences
+// whose values consist of name-value pairs.
+type Parameterized interface {
+	GetNames() Sequential[Symbolic]
+	GetValue(name Symbolic) ComponentLike
+	SetValue(name Symbolic, value ComponentLike)
 }
 
 // CONSOLIDATED INTERFACES
 
-// This interface defines the interfaces supported by all component-like types.
+// This interface consolidates all the interfaces supported by component-like
+// types.
 type ComponentLike interface {
 	Encapsulated
 }
 
-// This interface defines the interfaces supported by all context-like types.
-type ContextLike interface {
-	Generic
-}
-
-// This interface defines the interfaces supported by all note-like types.
+// This interface consolidates all the interfaces supported by note-like
+// types.
 type NoteLike interface {
-	Runes
+	Sequential[rune]
 }
 
-// This interface defines the interfaces supported by all comment-like types.
+// This interface consolidates all the interfaces supported by comment-like
+// types.
 type CommentLike interface {
-	Lines
+	Sequential[string]
+}
+
+// This interface consolidates all the interfaces supported by parameter-like
+// types.
+type ParameterLike interface {
+	Binding[Symbolic, ComponentLike]
+}
+
+// This interface consolidates all the interfaces supported by context-like
+// types.
+type ContextLike interface {
+	Parameterized
 }

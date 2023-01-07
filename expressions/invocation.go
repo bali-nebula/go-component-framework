@@ -21,7 +21,7 @@ func Invocation(
 	target abs.Expression,
 	operator abs.Operator,
 	message string,
-	arguments abs.Arguments,
+	arguments abs.Sequential[abs.Expression],
 ) abs.InvocationLike {
 	var v = &invocationExpression{}
 	// Perform argument validation.
@@ -38,7 +38,7 @@ type invocationExpression struct {
 	target    abs.Expression
 	operator  abs.Operator
 	message   string
-	arguments abs.Arguments
+	arguments abs.Sequential[abs.Expression]
 }
 
 // This method determines whether or not this invocation expression is
@@ -87,12 +87,12 @@ func (v *invocationExpression) SetMessage(message string) {
 }
 
 // This method returns the list of arguments for this invocation expression.
-func (v *invocationExpression) GetArguments() abs.Arguments {
+func (v *invocationExpression) GetArguments() abs.Sequential[abs.Expression] {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this invocation expression.
-func (v *invocationExpression) SetArguments(arguments abs.Arguments) {
+func (v *invocationExpression) SetArguments(arguments abs.Sequential[abs.Expression]) {
 	if arguments == nil {
 		panic("An invocation expression requires an array (possibly empty) of arguments.")
 	}

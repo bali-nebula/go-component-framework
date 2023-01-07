@@ -20,10 +20,10 @@ import (
 // This constructor creates a new empty stack with the default capacity.
 // The default capacity is 16 values.
 func Stack() abs.StackLike {
-	return col.Stack[abs.ComponentLike]()
+	return col.Stack[abs.ComponentLike]().(abs.StackLike)
 }
 
 // This constructor creates a new empty stack with the specified capacity.
 func StackWithCapacity(capacity int) abs.StackLike {
-	return col.StackWithCapacity[abs.ComponentLike](capacity)
+	return col.StackWithCapacity[abs.ComponentLike](capacity).(abs.StackLike)
 }

@@ -17,7 +17,7 @@ import (
 // ITEM EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new subcomponent expression.
-func Subcomponent(composite abs.Expression, indices abs.Indices) abs.SubcomponentLike {
+func Subcomponent(composite abs.Expression, indices abs.Sequential[abs.Expression]) abs.SubcomponentLike {
 	var v = &subcomponentExpression{}
 	// Perform argument validation.
 	v.SetComposite(composite)
@@ -29,7 +29,7 @@ func Subcomponent(composite abs.Expression, indices abs.Indices) abs.Subcomponen
 // expression.
 type subcomponentExpression struct {
 	composite abs.Expression
-	indices   abs.Indices
+	indices   abs.Sequential[abs.Expression]
 }
 
 // This method returns the composite for this subcomponent expression.
@@ -46,12 +46,12 @@ func (v *subcomponentExpression) SetComposite(composite abs.Expression) {
 }
 
 // This method returns the list of indices for this subcomponent expression.
-func (v *subcomponentExpression) GetIndices() abs.Indices {
+func (v *subcomponentExpression) GetIndices() abs.Sequential[abs.Expression] {
 	return v.indices
 }
 
 // This method sets the list of indices for this subcomponent expression.
-func (v *subcomponentExpression) SetIndices(indices abs.Indices) {
+func (v *subcomponentExpression) SetIndices(indices abs.Sequential[abs.Expression]) {
 	if indices == nil || indices.IsEmpty() {
 		panic("An subcomponent expression requires at least one index.")
 	}

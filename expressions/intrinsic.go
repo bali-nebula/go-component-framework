@@ -17,7 +17,7 @@ import (
 // INTRINSIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new intrinsic expression.
-func Intrinsic(function string, arguments abs.Arguments) abs.IntrinsicLike {
+func Intrinsic(function string, arguments abs.Sequential[abs.Expression]) abs.IntrinsicLike {
 	var v = &intrinsicExpression{}
 	// Perform argument validation.
 	v.SetFunction(function)
@@ -29,7 +29,7 @@ func Intrinsic(function string, arguments abs.Arguments) abs.IntrinsicLike {
 // expression.
 type intrinsicExpression struct {
 	function  string
-	arguments abs.Arguments
+	arguments abs.Sequential[abs.Expression]
 }
 
 // This method returns the function name for this intrinsic expression.
@@ -46,12 +46,12 @@ func (v *intrinsicExpression) SetFunction(function string) {
 }
 
 // This method returns the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) GetArguments() abs.Arguments {
+func (v *intrinsicExpression) GetArguments() abs.Sequential[abs.Expression] {
 	return v.arguments
 }
 
 // This method sets the list of arguments for this intrinsic expression.
-func (v *intrinsicExpression) SetArguments(arguments abs.Arguments) {
+func (v *intrinsicExpression) SetArguments(arguments abs.Sequential[abs.Expression]) {
 	if arguments == nil {
 		panic("An intrinsic expression requires an array (possibly empty) of arguments.")
 	}

@@ -31,7 +31,7 @@ func MonikerFromArray(array []abs.Name) Moniker {
 
 // This constructor creates a new moniker string from the specified name space
 // sequence. It returns the corresponding moniker string.
-func MonikerFromSequence(sequence abs.Names) Moniker {
+func MonikerFromSequence(sequence abs.Sequential[abs.Name]) Moniker {
 	var array = sequence.AsArray()
 	return MonikerFromArray(array)
 }
@@ -84,7 +84,7 @@ func (v Moniker) GetValue(index int) abs.Name {
 
 // This method retrieves from this string all names from the first index through
 // the last index (inclusive).
-func (v Moniker) GetValues(first int, last int) abs.Names {
+func (v Moniker) GetValues(first int, last int) abs.Sequential[abs.Name] {
 	var array = v.AsArray()
 	var names = col.Array[abs.Name](array)
 	return names.GetValues(first, last)

@@ -15,6 +15,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
+	ent "github.com/bali-nebula/go-component-framework/entities"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
@@ -71,7 +72,7 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComment(comment abs.CommentLike) {
 	v.AppendString(`!>`)
-	var iterator = col.Iterator[string](comment)
+	var iterator = ent.Iterator[string](comment)
 	for iterator.HasNext() {
 		var line = iterator.GetNext()
 		v.AppendNewline()
@@ -102,7 +103,7 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 func (v *formatter) formatComponent(component abs.ComponentLike) {
 	var entity = component.GetEntity()
 	v.formatEntity(entity)
-	if component.IsGeneric() {
+	if component.IsParameterized() {
 		var context = component.GetContext()
 		v.formatContext(context)
 	}
@@ -119,7 +120,7 @@ func (v *formatter) formatComponent(component abs.ComponentLike) {
 func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameters abs.Parameters
+	var parameters abs.Sequential[abs.ParameterLike]
 	var context abs.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
@@ -145,7 +146,14 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 			"$name")
 		panic(message)
 	}
-	context = com.Context(parameters)
+	context = com.Context()
+	var iterator = ent.Iterator(parameters)
+	for iterator.HasNext() {
+		var parameter = iterator.GetNext()
+		var name = parameter.GetKey()
+		var value = parameter.GetValue()
+		context.SetValue(name, value)
+	}
 	return context, token, true
 }
 
@@ -153,7 +161,15 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.AppendString("(")
-	var parameters = context.GetParameters()
+	var parameters = col.List[abs.ParameterLike]()
+	var names = context.GetNames()
+	var iterator = ent.Iterator(names)
+	for iterator.HasNext() {
+		var name = iterator.GetNext()
+		var value = context.GetValue(name)
+		var parameter = com.Parameter(name, value)
+		parameters.AddValue(parameter)
+	}
 	v.formatParameters(parameters)
 	v.AppendString(")")
 }
@@ -319,7 +335,7 @@ func (v *formatter) formatNote(note abs.NoteLike) {
 // This method attempts to parse a parameter containing a name and value. It
 // returns the parameter and whether or not the parameter was successfully
 // parsed.
-func (v *parser) parseParameter() (abs.Parameter, *Token, bool) {
+func (v *parser) parseParameter() (abs.ParameterLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var name abs.Symbolic
@@ -340,13 +356,13 @@ func (v *parser) parseParameter() (abs.Parameter, *Token, bool) {
 	if !ok {
 		panic("Expected a value after the ':' character.")
 	}
-	var parameter = col.Association(name, value)
+	var parameter = com.Parameter(name, value)
 	return parameter, token, true
 }
 
 // This method adds the canonical format for the specified parameter to the
 // state of the formatter.
-func (v *formatter) formatParameter(parameter abs.Parameter) {
+func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 	var key = parameter.GetKey()
 	v.AppendString("$")
 	v.formatIdentifier(key.GetIdentifier())
@@ -358,11 +374,11 @@ func (v *formatter) formatParameter(parameter abs.Parameter) {
 // This method attempts to parse context parameters. It returns the
 // context parameters and whether or not the context parameters were
 // successfully parsed.
-func (v *parser) parseParameters() (abs.Parameters, *Token, bool) {
+func (v *parser) parseParameters() (abs.Sequential[abs.ParameterLike], *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameter abs.Parameter
-	var parameters = col.Catalog[abs.Symbolic, abs.ComponentLike]()
+	var parameter abs.ParameterLike
+	var parameters = col.List[abs.ParameterLike]()
 	_, token, ok = v.parseEOL()
 	if !ok {
 		// The parameters are on a single line.
@@ -375,7 +391,7 @@ func (v *parser) parseParameters() (abs.Parameters, *Token, bool) {
 			panic("There must be at least one parameter in a context.")
 		}
 		for {
-			parameters.AddAssociation(parameter)
+			parameters.AddValue(parameter)
 			// Every subsequent parameter must be preceded by a ','.
 			_, token, ok = v.parseDelimiter(",")
 			if !ok {
@@ -395,7 +411,7 @@ func (v *parser) parseParameters() (abs.Parameters, *Token, bool) {
 		panic("There must be at least one parameter in a context.")
 	}
 	for {
-		parameters.AddAssociation(parameter)
+		parameters.AddValue(parameter)
 		// Every parameter must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -412,8 +428,8 @@ func (v *parser) parseParameters() (abs.Parameters, *Token, bool) {
 
 // This method adds the canonical format for the specified parameters to the
 // state of the formatter.
-func (v *formatter) formatParameters(parameters abs.Parameters) {
-	var iterator = col.Iterator[abs.Parameter](parameters)
+func (v *formatter) formatParameters(parameters abs.Sequential[abs.ParameterLike]) {
+	var iterator = ent.Iterator[abs.ParameterLike](parameters)
 	switch parameters.GetSize() {
 	case 0:
 		panic("A context must have at least one parameter.")

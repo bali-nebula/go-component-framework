@@ -17,7 +17,7 @@ import (
 // ON CLAUSE IMPLEMENTATION
 
 // This constructor creates a new on clause.
-func OnClause(failure abs.Symbolic, blocks abs.Blocks) abs.OnClauseLike {
+func OnClause(failure abs.Symbolic, blocks abs.Sequential[abs.BlockLike]) abs.OnClauseLike {
 	var v = &onClause{}
 	// Perform argument validation.
 	v.SetFailure(failure)
@@ -28,7 +28,7 @@ func OnClause(failure abs.Symbolic, blocks abs.Blocks) abs.OnClauseLike {
 // This type defines the structure and methods associated with an on clause.
 type onClause struct {
 	failure abs.Symbolic
-	blocks  abs.Blocks
+	blocks  abs.Sequential[abs.BlockLike]
 }
 
 // This method returns the symbol for the failure for this on clause.
@@ -45,12 +45,12 @@ func (v *onClause) SetFailure(failure abs.Symbolic) {
 }
 
 // This method returns the list of blocks for this on clause.
-func (v *onClause) GetBlocks() abs.Blocks {
+func (v *onClause) GetBlocks() abs.Sequential[abs.BlockLike] {
 	return v.blocks
 }
 
 // This method sets the list of blocks for this on clause.
-func (v *onClause) SetBlocks(blocks abs.Blocks) {
+func (v *onClause) SetBlocks(blocks abs.Sequential[abs.BlockLike]) {
 	if blocks == nil || blocks.IsEmpty() {
 		panic("An on clause requires at least one block.")
 	}

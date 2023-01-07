@@ -39,7 +39,7 @@ func VersionFromArray(array []abs.Ordinal) Version {
 
 // This constructor creates a new version string from the specified sequence of
 // ordinal numbers. It returns the corresponding version string.
-func VersionFromSequence(sequence abs.Ordinals) Version {
+func VersionFromSequence(sequence abs.Sequential[abs.Ordinal]) Version {
 	var array = sequence.AsArray()
 	return VersionFromArray(array)
 }
@@ -92,7 +92,7 @@ func (v Version) GetValue(index int) abs.Ordinal {
 
 // This method retrieves from this string all ordinals from the first index
 // through the last index (inclusive).
-func (v Version) GetValues(first int, last int) abs.Ordinals {
+func (v Version) GetValues(first int, last int) abs.Sequential[abs.Ordinal] {
 	var array = v.AsArray()
 	var ordinals = col.Array[abs.Ordinal](array)
 	return ordinals.GetValues(first, last)

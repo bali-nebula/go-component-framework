@@ -12,33 +12,43 @@ package components
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	col "github.com/craterdog/go-collection-framework"
 )
+
+// PARAMETER IMPLEMENTATION
+
+// This constructor creates a new parameter name-value pair.
+func Parameter(name abs.Symbolic, value abs.ComponentLike) abs.ParameterLike {
+	return col.Association(name, value)
+}
 
 // CONTEXT IMPLEMENTATION
 
 // This constructor creates a new component context.
-func Context(parameters abs.Parameters) abs.ContextLike {
-	var v = &context{}
-	// Perform argument validation.
-	v.SetParameters(parameters)
+func Context() abs.ContextLike {
+	var parameters = col.Catalog[abs.Symbolic, abs.ComponentLike]()
+	var v = &context{parameters}
 	return v
 }
 
 // This type defines the structure and methods associated with a component
 // context.
 type context struct {
-	parameters abs.Parameters
+	parameters col.CatalogLike[abs.Symbolic, abs.ComponentLike]
 }
 
-// This method returns the catalog of parameters for this component context.
-func (v *context) GetParameters() abs.Parameters {
-	return v.parameters
+// This method returns the sequence of parameter names for this context.
+func (v *context) GetNames() abs.Sequential[abs.Symbolic] {
+	return v.parameters.GetKeys()
 }
 
-// This method sets the catalog of parameters for this component context.
-func (v *context) SetParameters(parameters abs.Parameters) {
-	if parameters == nil || parameters.IsEmpty() {
-		panic("A component context requires at least one parameter.")
-	}
-	v.parameters = parameters
+// This method returns the parameter value associated with the specified name.
+func (v *context) GetValue(name abs.Symbolic) abs.ComponentLike {
+	return v.parameters.GetValue(name)
+}
+
+// This method set the value of the parameter associated with the specified
+// name.
+func (v *context) SetValue(name abs.Symbolic, value abs.ComponentLike) {
+	v.parameters.SetValue(name, value)
 }

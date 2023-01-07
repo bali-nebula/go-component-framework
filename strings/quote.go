@@ -27,7 +27,7 @@ func QuoteFromArray(array []rune) Quote {
 
 // This constructor creates a new quote string from the specified sequence of
 // runes. It returns the corresponding quote string.
-func QuoteFromSequence(sequence abs.Runes) Quote {
+func QuoteFromSequence(sequence abs.Sequential[rune]) Quote {
 	var array = sequence.AsArray()
 	var quote = QuoteFromArray(array)
 	return quote
@@ -75,7 +75,7 @@ func (v Quote) GetValue(index int) rune {
 
 // This method retrieves from this string all runes from the first index
 // through the last index (inclusive).
-func (v Quote) GetValues(first int, last int) abs.Runes {
+func (v Quote) GetValues(first int, last int) abs.Sequential[rune] {
 	var array = v.AsArray()
 	var runes = col.Array[rune](array)
 	return runes.GetValues(first, last)

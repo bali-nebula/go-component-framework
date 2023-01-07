@@ -17,7 +17,7 @@ import (
 // ATTRIBUTE IMPLEMENTATION
 
 // This constructor creates a new attribute.
-func Attribute(variable string, indices abs.Indices) abs.AttributeLike {
+func Attribute(variable string, indices abs.Sequential[abs.Expression]) abs.AttributeLike {
 	var v = &attribute{}
 	// Perform argument validation.
 	v.SetVariable(variable)
@@ -28,7 +28,7 @@ func Attribute(variable string, indices abs.Indices) abs.AttributeLike {
 // This type defines the structure and methods associated with an attribute.
 type attribute struct {
 	variable string
-	indices  abs.Indices
+	indices  abs.Sequential[abs.Expression]
 }
 
 // This method returns the variable for this attribute.
@@ -45,12 +45,12 @@ func (v *attribute) SetVariable(variable string) {
 }
 
 // This method returns the list of indices for this attribute.
-func (v *attribute) GetIndices() abs.Indices {
+func (v *attribute) GetIndices() abs.Sequential[abs.Expression] {
 	return v.indices
 }
 
 // This method sets the list of indices for this attribute.
-func (v *attribute) SetIndices(indices abs.Indices) {
+func (v *attribute) SetIndices(indices abs.Sequential[abs.Expression]) {
 	if indices == nil || indices.IsEmpty() {
 		panic("An attribute requires at least one index.")
 	}

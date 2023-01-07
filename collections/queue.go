@@ -20,10 +20,10 @@ import (
 // This constructor creates a new empty queue with the default capacity.
 // The default capacity is 16 values.
 func Queue() abs.QueueLike {
-	return col.Queue[abs.ComponentLike]()
+	return col.Queue[abs.ComponentLike]().(abs.QueueLike)
 }
 
 // This constructor creates a new empty queue with the specified capacity.
 func QueueWithCapacity(capacity int) abs.QueueLike {
-	return col.QueueWithCapacity[abs.ComponentLike](capacity)
+	return col.QueueWithCapacity[abs.ComponentLike](capacity).(abs.QueueLike)
 }

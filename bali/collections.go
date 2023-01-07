@@ -13,10 +13,10 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/bali-nebula/go-component-framework/collections"
-	com "github.com/bali-nebula/go-component-framework/components"
+	ent "github.com/bali-nebula/go-component-framework/entities"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // This method attempts to parse an association between a key and value. It
@@ -48,7 +48,7 @@ func (v *parser) parseAssociation() (abs.AssociationLike, *Token, bool) {
 			"$component")
 		panic(message)
 	}
-	var association = col.Association(key, value)
+	var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
 	return association, token, true
 }
 
@@ -83,7 +83,7 @@ func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var structure = col.Catalog()
+	var structure = col.Catalog[abs.Primitive, abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
 		// This is an empty structure.
@@ -101,7 +101,9 @@ func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 		return structure, token, false
 	}
 	for {
-		structure.AddAssociation(association)
+		var key = association.GetKey()
+		var value = association.GetValue()
+		structure.SetValue(key, value)
 		// Every subsequent association must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -129,7 +131,7 @@ func (v *parser) parseInlineValues() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var series = col.List()
+	var series = col.List[abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
 		// This is an empty series.
@@ -172,14 +174,16 @@ func (v *parser) parseMultilineAssociations() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var structure = col.Catalog()
+	var structure = col.Catalog[abs.Primitive, abs.ComponentLike]()
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty structure must have at least one association.
 		return structure, token, false
 	}
 	for {
-		structure.AddAssociation(association)
+		var key = association.GetKey()
+		var value = association.GetValue()
+		structure.SetValue(key, value)
 		// Every association must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -207,7 +211,7 @@ func (v *parser) parseMultilineValues() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var series = col.List()
+	var series = col.List[abs.ComponentLike]()
 	value, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty series must have at least one value.
@@ -336,7 +340,7 @@ func (v *parser) parseSeries() (abs.Collection, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatSeries(series abs.SeriesLike) {
 	v.AppendString("[")
-	var iterator = com.Iterator[abs.ComponentLike](series)
+	var iterator = ent.Iterator[abs.ComponentLike](series)
 	switch series.GetSize() {
 	case 0:
 		v.AppendString(" ")
@@ -397,18 +401,23 @@ func (v *parser) parseStructure() (abs.Collection, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatStructure(structure abs.StructureLike) {
 	v.AppendString("[")
-	var iterator = com.Iterator[abs.Binding](structure)
+	var keys = structure.GetKeys()
+	var iterator = ent.Iterator(keys)
 	switch structure.GetSize() {
 	case 0:
 		v.AppendString(":")
 	case 1:
-		var association = iterator.GetNext()
+		var key = iterator.GetNext()
+		var value = structure.GetValue(key)
+		var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
 		v.formatAssociation(association)
 	default:
 		v.depth++
 		for iterator.HasNext() {
 			v.AppendNewline()
-			var association = iterator.GetNext()
+			var key = iterator.GetNext()
+			var value = structure.GetValue(key)
+			var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
 			v.formatAssociation(association)
 		}
 		v.depth--

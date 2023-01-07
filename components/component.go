@@ -56,7 +56,7 @@ func (v *component) SetEntity(entity abs.Entity) {
 }
 
 // This method determines whether or not this component is parameterized.
-func (v *component) IsGeneric() bool {
+func (v *component) IsParameterized() bool {
 	return v.context != nil
 }
 

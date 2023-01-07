@@ -28,7 +28,7 @@ func NarrativeFromArray(array []string) Narrative {
 
 // This constructor creates a new narrative string from the specified sequence of
 // runes. It returns the corresponding narrative string.
-func NarrativeFromSequence(sequence abs.Lines) Narrative {
+func NarrativeFromSequence(sequence abs.Sequential[string]) Narrative {
 	var array = sequence.AsArray()
 	var narrative = NarrativeFromArray(array)
 	return narrative
@@ -78,7 +78,7 @@ func (v Narrative) GetValue(index int) string {
 
 // This method retrieves from this narrative all lines from the first index
 // through the last index (inclusive).
-func (v Narrative) GetValues(first int, last int) abs.Lines {
+func (v Narrative) GetValues(first int, last int) abs.Sequential[string] {
 	var array = v.AsArray()
 	var lines = col.Array[string](array)
 	return lines.GetValues(first, last)

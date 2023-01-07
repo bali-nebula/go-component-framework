@@ -27,7 +27,7 @@ func BinaryFromArray(array []byte) Binary {
 
 // This constructor creates a new binary string from the specified byte
 // sequence. It returns the corresponding binary string.
-func BinaryFromSequence(sequence abs.Bytes) Binary {
+func BinaryFromSequence(sequence abs.Sequential[byte]) Binary {
 	var array = sequence.AsArray()
 	return BinaryFromArray(array)
 }
@@ -76,7 +76,7 @@ func (v Binary) GetValue(index int) byte {
 
 // This method retrieves from this string all bytes from the first index
 // through the last index (inclusive).
-func (v Binary) GetValues(first int, last int) abs.Bytes {
+func (v Binary) GetValues(first int, last int) abs.Sequential[byte] {
 	var array = v.AsArray()
 	var bytes = col.Array[byte](array)
 	return bytes.GetValues(first, last)

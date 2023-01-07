@@ -20,7 +20,7 @@ import (
 // This method attempts to parse the arguments within a call. It returns a
 // list of the arguments and whether or not the arguments were successfully
 // parsed.
-func (v *parser) parseArguments() (abs.Arguments, *Token, bool) {
+func (v *parser) parseArguments() (abs.Sequential[abs.Expression], *Token, bool) {
 	var ok bool
 	var token *Token
 	var argument abs.Expression
@@ -66,9 +66,9 @@ func (v *parser) parseArguments() (abs.Arguments, *Token, bool) {
 
 // This method adds the canonical format for the specified sequence of arguments
 // to the state of the formatter.
-func (v *formatter) formatArguments(arguments abs.Arguments) {
+func (v *formatter) formatArguments(arguments abs.Sequential[abs.Expression]) {
 	v.AppendString("(")
-	var iterator = col.Iterator(arguments)
+	var iterator = col.Iterator[abs.Expression](arguments)
 	if iterator.HasNext() {
 		var argument = iterator.GetNext()
 		v.formatExpression(argument)
@@ -429,7 +429,7 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var function string
-	var arguments abs.Arguments
+	var arguments abs.Sequential[abs.Expression]
 	var expression abs.IntrinsicLike
 	function, token, ok = v.parseIdentifier()
 	if !ok {
@@ -502,7 +502,7 @@ func (v *parser) parseInvocation(target abs.Expression) (abs.Expression, *Token,
 	var token *Token
 	var operator abs.Operator
 	var message string
-	var arguments abs.Arguments
+	var arguments abs.Sequential[abs.Expression]
 	var expression abs.Expression = target
 	operator, token, ok = v.parseOperator()
 	if !ok {
@@ -555,7 +555,7 @@ func (v *formatter) formatInvocation(invocation abs.InvocationLike) {
 func (v *parser) parseSubcomponent(composite abs.Expression) (abs.Expression, *Token, bool) {
 	var ok bool
 	var token *Token
-	var indices abs.Indices
+	var indices abs.Sequential[abs.Expression]
 	var expression abs.Expression = composite
 	indices, token, ok = v.parseIndices()
 	if !ok {

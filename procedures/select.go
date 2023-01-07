@@ -17,7 +17,7 @@ import (
 // SELECT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new select clause.
-func SelectClause(target abs.Expression, blocks abs.Blocks) abs.SelectClauseLike {
+func SelectClause(target abs.Expression, blocks abs.Sequential[abs.BlockLike]) abs.SelectClauseLike {
 	var v = &selectClause{}
 	// Perform argument validation.
 	v.SetTarget(target)
@@ -28,7 +28,7 @@ func SelectClause(target abs.Expression, blocks abs.Blocks) abs.SelectClauseLike
 // This type defines the structure and methods associated with a select clause.
 type selectClause struct {
 	target abs.Expression
-	blocks abs.Blocks
+	blocks abs.Sequential[abs.BlockLike]
 }
 
 // This method returns the target expression for this select clause.
@@ -45,12 +45,12 @@ func (v *selectClause) SetTarget(target abs.Expression) {
 }
 
 // This method returns the list of blocks for this select clause.
-func (v *selectClause) GetBlocks() abs.Blocks {
+func (v *selectClause) GetBlocks() abs.Sequential[abs.BlockLike] {
 	return v.blocks
 }
 
 // This method sets the list of blocks for this select clause.
-func (v *selectClause) SetBlocks(blocks abs.Blocks) {
+func (v *selectClause) SetBlocks(blocks abs.Sequential[abs.BlockLike]) {
 	if blocks == nil || blocks.IsEmpty() {
 		panic("A select clause requires at least one block.")
 	}

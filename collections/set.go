@@ -12,6 +12,7 @@ package collections
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	ent "github.com/bali-nebula/go-component-framework/entities"
 	col "github.com/craterdog/go-collection-framework"
 )
 
@@ -20,24 +21,17 @@ import (
 // This constructor creates a new empty set that uses the canonical ranking
 // function.
 func Set() abs.SetLike {
-	return col.Set[abs.ComponentLike]()
-}
-
-// This constructor creates a new empty set that uses the specified ranking
-// function.
-func SetWithRanker(rank abs.RankingFunction) abs.SetLike {
-	return col.SetWithRanker[abs.ComponentLike](rank)
+	return col.Set[abs.ComponentLike]().(abs.SetLike)
 }
 
 // This constructor creates a new set from the specified array that uses the
 // natural ranking function.
-func SetFromArray(array []abs.ComponentLike) abs.SetLike {
-	return col.SetFromArray[abs.ComponentLike](array)
-}
-
-// This constructor creates a new set from the specified sequence. The set
-// uses the natural ranking function.
-func SetFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.SetLike {
-	var raw = sequence.(col.Sequential[abs.ComponentLike])
-	return col.SetFromSequence[abs.ComponentLike](raw)
+func SetFromSeries(series abs.SeriesLike) abs.SetLike {
+	var set = Set()
+	var iterator = ent.Iterator[abs.ComponentLike](series)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		set.AddValue(value)
+	}
+	return set
 }

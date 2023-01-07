@@ -10,25 +10,10 @@
 
 package abstractions
 
-import (
-	col "github.com/craterdog/go-collection-framework"
-)
-
 // TYPE DEFINITIONS
 
 type (
 	Expression any
-)
-
-// TYPE ALIASES
-
-// These type assignments hide the dependencies on the package used to implement
-// the collection types. It preserves the collection interfaces in a way that
-// will allow them to evolve separately as needed. Currently, the interfaces are
-// synchronized.
-type (
-	Arguments = col.Sequential[Expression]
-	Indices   = col.Sequential[Expression]
 )
 
 // INDIVIDUAL INTERFACES
@@ -93,8 +78,8 @@ type ExponentialLike interface {
 type IntrinsicLike interface {
 	GetFunction() string
 	SetFunction(function string)
-	GetArguments() Arguments
-	SetArguments(arguments Arguments)
+	GetArguments() Sequential[Expression]
+	SetArguments(arguments Sequential[Expression])
 }
 
 // This interface defines the methods supported by all inversion-like expressions.
@@ -114,8 +99,8 @@ type InvocationLike interface {
 	SetOperator(operator Operator)
 	GetMessage() string
 	SetMessage(message string)
-	GetArguments() Arguments
-	SetArguments(arguments Arguments)
+	GetArguments() Sequential[Expression]
+	SetArguments(arguments Sequential[Expression])
 }
 
 // This interface defines the methods supported by all logical-like expressions.
@@ -144,8 +129,8 @@ type PrecedenceLike interface {
 type SubcomponentLike interface {
 	GetComposite() Expression
 	SetComposite(composite Expression)
-	GetIndices() Indices
-	SetIndices(indices Indices)
+	GetIndices() Sequential[Expression]
+	SetIndices(indices Sequential[Expression])
 }
 
 // This interface defines the methods supported by all variable-like expressions.

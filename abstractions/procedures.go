@@ -10,10 +10,6 @@
 
 package abstractions
 
-import (
-	col "github.com/craterdog/go-collection-framework"
-)
-
 // TYPE DEFINITIONS
 
 type (
@@ -21,23 +17,12 @@ type (
 	Recipient any
 )
 
-// TYPE ALIASES
-
-// These type assignments hide the dependencies on the package used to implement
-// the collection types. It preserves the collection interfaces in a way that
-// will allow them to evolve separately as needed. Currently, the interfaces are
-// synchronized.
-type (
-	Blocks     = col.Sequential[BlockLike]
-	Statements = col.Sequential[StatementLike]
-)
-
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all procedural types.
 type Procedural interface {
-	GetStatements() Statements
-	SetStatements(statements Statements)
+	GetStatements() Sequential[StatementLike]
+	SetStatements(statements Sequential[StatementLike])
 }
 
 // This interface defines the methods supported by all accept-clause-like types.
@@ -50,8 +35,8 @@ type AcceptClauseLike interface {
 type AttributeLike interface {
 	GetVariable() string
 	SetVariable(variable string)
-	GetIndices() Indices
-	SetIndices(indices Indices)
+	GetIndices() Sequential[Expression]
+	SetIndices(indices Sequential[Expression])
 }
 
 // This interface defines the methods supported by all block-like types.
@@ -113,8 +98,8 @@ type NotarizeClauseLike interface {
 type OnClauseLike interface {
 	GetFailure() Symbolic
 	SetFailure(failure Symbolic)
-	GetBlocks() Blocks
-	SetBlocks(blocks Blocks)
+	GetBlocks() Sequential[BlockLike]
+	SetBlocks(blocks Sequential[BlockLike])
 }
 
 // This interface defines the methods supported by all post-clause-like types.
@@ -163,8 +148,8 @@ type SaveClauseLike interface {
 type SelectClauseLike interface {
 	GetTarget() Expression
 	SetTarget(control Expression)
-	GetBlocks() Blocks
-	SetBlocks(blocks Blocks)
+	GetBlocks() Sequential[BlockLike]
+	SetBlocks(blocks Sequential[BlockLike])
 }
 
 // This interface defines the methods supported by all statement-like types.

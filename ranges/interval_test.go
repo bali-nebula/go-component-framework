@@ -12,8 +12,8 @@ package ranges_test
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
+	ent "github.com/bali-nebula/go-component-framework/entities"
 	ran "github.com/bali-nebula/go-component-framework/ranges"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -38,7 +38,7 @@ func TestIntervalsWithDurations(t *tes.T) {
 	ass.Equal(t, 5, s.GetIndex(7))
 	ass.Equal(t, 0, s.GetIndex(8))
 	ass.Equal(t, []ele.Duration{3, 4, 5, 6, 7}, s.AsArray())
-	var iterator = com.Iterator[ele.Duration](s)
+	var iterator = ent.Iterator[ele.Duration](s)
 	ass.Equal(t, ele.Duration(3), iterator.GetNext())
 	iterator.ToEnd()
 	ass.Equal(t, ele.Duration(7), iterator.GetPrevious())

@@ -14,6 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
+	ent "github.com/bali-nebula/go-component-framework/entities"
 	pro "github.com/bali-nebula/go-component-framework/procedures"
 	col "github.com/craterdog/go-collection-framework"
 )
@@ -56,7 +57,7 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var variable string
-	var indices abs.Indices
+	var indices abs.Sequential[abs.Expression]
 	var attribute abs.AttributeLike
 	variable, token, ok = v.parseIdentifier()
 	if !ok {
@@ -366,7 +367,7 @@ func (v *formatter) formatIfClause(clause abs.IfClauseLike) {
 
 // This method attempts to parse a sequence of indices. It returns a list of
 // the indices and whether or not the indices were successfully parsed.
-func (v *parser) parseIndices() (abs.Indices, *Token, bool) {
+func (v *parser) parseIndices() (abs.Sequential[abs.Expression], *Token, bool) {
 	var ok bool
 	var token *Token
 	var index abs.Expression
@@ -415,9 +416,9 @@ func (v *parser) parseIndices() (abs.Indices, *Token, bool) {
 
 // This method adds the canonical format for the specified indices to the
 // state of the formatter.
-func (v *formatter) formatIndices(indices abs.Indices) {
+func (v *formatter) formatIndices(indices abs.Sequential[abs.Expression]) {
 	v.AppendString("[")
-	var iterator = col.Iterator(indices)
+	var iterator = ent.Iterator[abs.Expression](indices)
 	var index = iterator.GetNext() // There is always at least one index.
 	v.formatExpression(index)
 	for iterator.HasNext() {
@@ -431,7 +432,7 @@ func (v *formatter) formatIndices(indices abs.Indices) {
 // This method attempts to parse a list of inline statements. It returns
 // the list of statements and whether or not the list of statements was
 // successfully parsed.
-func (v *parser) parseInlineStatements() (abs.Statements, *Token, bool) {
+func (v *parser) parseInlineStatements() (abs.Sequential[abs.StatementLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
@@ -658,7 +659,7 @@ func (v *formatter) formatMainClause(mainClause abs.Clause) {
 // list of statements and whether or not the list of statements was successfully
 // parsed. Note that to support blank lines nil values will be added to the list
 // of statements for each blank line.
-func (v *parser) parseMultilineStatements() (abs.Statements, *Token, bool) {
+func (v *parser) parseMultilineStatements() (abs.Sequential[abs.StatementLike], *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
@@ -795,7 +796,7 @@ func (v *formatter) formatOnClause(clause abs.OnClauseLike) {
 	v.AppendString("$")
 	v.formatIdentifier(identifier)
 	var blocks = clause.GetBlocks()
-	var iterator = col.Iterator(blocks)
+	var iterator = ent.Iterator(blocks)
 	for iterator.HasNext() {
 		var block = iterator.GetNext()
 		v.AppendString(" matching ")
@@ -865,7 +866,7 @@ func (v *parser) parseProcedure() (abs.Procedural, *Token, bool) {
 	var ok bool
 	var token *Token
 	var procedure abs.Procedural
-	var statements abs.Statements
+	var statements abs.Sequential[abs.StatementLike]
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		return procedure, token, false
@@ -1221,7 +1222,7 @@ func (v *formatter) formatSelectClause(clause abs.SelectClauseLike) {
 	var target = clause.GetTarget()
 	v.formatExpression(target)
 	var blocks = clause.GetBlocks()
-	var iterator = col.Iterator(blocks)
+	var iterator = ent.Iterator(blocks)
 	for iterator.HasNext() {
 		var block = iterator.GetNext()
 		v.AppendString(" matching ")
@@ -1287,12 +1288,12 @@ func (v *formatter) formatStatement(statement abs.StatementLike) {
 
 // This method adds the canonical format for the specified statements to the
 // state of the formatter.
-func (v *formatter) formatStatements(statements abs.Statements) {
+func (v *formatter) formatStatements(statements abs.Sequential[abs.StatementLike]) {
 	switch statements.GetSize() {
 	case 0:
 		v.AppendString(" ")
 	default:
-		var iterator = col.Iterator(statements)
+		var iterator = ent.Iterator(statements)
 		v.depth++
 		for iterator.HasNext() {
 			v.AppendNewline()

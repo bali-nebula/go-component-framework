@@ -10,10 +10,6 @@
 
 package abstractions
 
-import (
-	col "github.com/craterdog/go-collection-framework"
-)
-
 // TYPE DEFINITIONS
 
 type (
@@ -28,15 +24,3 @@ type (
 type Spectral interface {
 	AsString() string
 }
-
-// TYPE ALIASES
-
-// These type assignments hide the dependencies on the package used to implement
-// the collection types. It preserves the collection interfaces in a way that
-// will allow them to evolve separately as needed. Currently, the interfaces are
-// synchronized.
-type (
-	Bytes    = col.Sequential[byte]
-	Names    = col.Sequential[Name]
-	Ordinals = col.Sequential[Ordinal]
-)
