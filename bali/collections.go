@@ -67,7 +67,7 @@ func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var collection abs.Collection
-	collection, token, ok = v.parseStructure()
+	collection, token, ok = v.parseMapping()
 	if !ok {
 		// The series must be attempted last since it may start with a component
 		// which cannot be put back as a single token.
@@ -76,31 +76,31 @@ func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 	return collection, token, ok
 }
 
-// It returns the structure collection and whether or not the structure collection
+// It returns the mapping collection and whether or not the mapping collection
 // was successfully parsed.
 func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var structure = col.List[abs.AssociationLike]()
+	var mapping = col.List[abs.AssociationLike]()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
-		// This is an empty structure.
-		return structure, token, true
+		// This is an empty mapping.
+		return mapping, token, true
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
 		// This is an empty series.
 		v.backupOne() // Put back the ']' character.
-		return structure, token, false
+		return mapping, token, false
 	}
 	association, token, ok = v.parseAssociation()
 	if !ok {
-		// A non-empty structure must have at least one association.
-		return structure, token, false
+		// A non-empty mapping must have at least one association.
+		return mapping, token, false
 	}
 	for {
-		structure.AddValue(association)
+		mapping.AddValue(association)
 		// Every subsequent association must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -111,14 +111,14 @@ func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("$association",
-				"$structure",
+				"$mapping",
 				"$association",
 				"$primitive",
 				"$component")
 			panic(message)
 		}
 	}
-	return structure, token, true
+	return mapping, token, true
 }
 
 // This method attempts to parse a series collection with inline values. It
@@ -164,27 +164,88 @@ func (v *parser) parseInlineValues() (abs.Collection, *Token, bool) {
 	return series, token, true
 }
 
-// This method attempts to parse a structure collection with multiline associations.
-// It returns the structure collection and whether or not the structure collection
+// This method attempts to parse a mapping collection. It returns the
+// mapping collection and whether or not the mapping collection was
+// successfully parsed.
+func (v *parser) parseMapping() (abs.Collection, *Token, bool) {
+	var ok bool
+	var token *Token
+	var mapping abs.Collection
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		return mapping, token, false
+	}
+	_, token, ok = v.parseEOL()
+	if !ok {
+		mapping, token, ok = v.parseInlineAssociations()
+		if !ok {
+			v.backupOne() // Put back the '[' character.
+			return mapping, token, false
+		}
+	} else {
+		mapping, token, ok = v.parseMultilineAssociations()
+		if !ok {
+			v.backupOne() // Put back the EOL character.
+			v.backupOne() // Put back the '[' character.
+			return mapping, token, false
+		}
+	}
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		var message = v.formatError(token)
+		message += generateGrammar("]",
+			"$collection",
+			"$values")
+		panic(message)
+	}
+	return mapping, token, true
+}
+
+// This method adds the canonical format for the specified collection to the
+// state of the formatter.
+func (v *formatter) formatMapping(mapping abs.MappingLike) {
+	v.AppendString("[")
+	var iterator = col.Iterator[abs.AssociationLike](mapping)
+	switch mapping.GetSize() {
+	case 0:
+		v.AppendString(":")
+	case 1:
+		var association = iterator.GetNext()
+		v.formatAssociation(association)
+	default:
+		v.depth++
+		for iterator.HasNext() {
+			v.AppendNewline()
+			var association = iterator.GetNext()
+			v.formatAssociation(association)
+		}
+		v.depth--
+		v.AppendNewline()
+	}
+	v.AppendString("]")
+}
+
+// This method attempts to parse a mapping collection with multiline associations.
+// It returns the mapping collection and whether or not the mapping collection
 // was successfully parsed.
 func (v *parser) parseMultilineAssociations() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var structure = col.List[abs.AssociationLike]()
+	var mapping = col.List[abs.AssociationLike]()
 	association, token, ok = v.parseAssociation()
 	if !ok {
-		// A non-empty structure must have at least one association.
-		return structure, token, false
+		// A non-empty mapping must have at least one association.
+		return mapping, token, false
 	}
 	for {
-		structure.AddValue(association)
+		mapping.AddValue(association)
 		// Every association must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
-				"$structure",
+				"$mapping",
 				"$association",
 				"$primitive",
 				"$component")
@@ -196,7 +257,7 @@ func (v *parser) parseMultilineAssociations() (abs.Collection, *Token, bool) {
 			break
 		}
 	}
-	return structure, token, true
+	return mapping, token, true
 }
 
 // This method attempts to parse a series collection with multiline values. It
@@ -348,67 +409,6 @@ func (v *formatter) formatSeries(series abs.SeriesLike) {
 			v.AppendNewline()
 			var value = iterator.GetNext()
 			v.formatComponent(value)
-		}
-		v.depth--
-		v.AppendNewline()
-	}
-	v.AppendString("]")
-}
-
-// This method attempts to parse a structure collection. It returns the
-// structure collection and whether or not the structure collection was
-// successfully parsed.
-func (v *parser) parseStructure() (abs.Collection, *Token, bool) {
-	var ok bool
-	var token *Token
-	var structure abs.Collection
-	_, token, ok = v.parseDelimiter("[")
-	if !ok {
-		return structure, token, false
-	}
-	_, token, ok = v.parseEOL()
-	if !ok {
-		structure, token, ok = v.parseInlineAssociations()
-		if !ok {
-			v.backupOne() // Put back the '[' character.
-			return structure, token, false
-		}
-	} else {
-		structure, token, ok = v.parseMultilineAssociations()
-		if !ok {
-			v.backupOne() // Put back the EOL character.
-			v.backupOne() // Put back the '[' character.
-			return structure, token, false
-		}
-	}
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
-		var message = v.formatError(token)
-		message += generateGrammar("]",
-			"$collection",
-			"$values")
-		panic(message)
-	}
-	return structure, token, true
-}
-
-// This method adds the canonical format for the specified collection to the
-// state of the formatter.
-func (v *formatter) formatStructure(structure abs.StructureLike) {
-	v.AppendString("[")
-	var iterator = col.Iterator[abs.AssociationLike](structure)
-	switch structure.GetSize() {
-	case 0:
-		v.AppendString(":")
-	case 1:
-		var association = iterator.GetNext()
-		v.formatAssociation(association)
-	default:
-		v.depth++
-		for iterator.HasNext() {
-			v.AppendNewline()
-			var association = iterator.GetNext()
-			v.formatAssociation(association)
 		}
 		v.depth--
 		v.AppendNewline()

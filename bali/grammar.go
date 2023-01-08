@@ -41,7 +41,7 @@ var grammar = map[string]string{
 	"$breakClause":    `"break" "loop"`,
 	"$chaining":       `expression "&" expression`,
 	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
-	"$collection":     `series | structure`,
+	"$collection":     `series | mapping`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
@@ -101,6 +101,7 @@ var grammar = map[string]string{
     assignment |
     messaging  |
     repository`,
+	"$mapping":    `"[" associations "]"`,
 	"$message": `expression`,
 	"$messaging": `
     postClause     |  ! "post" message "to" bag
@@ -146,7 +147,6 @@ var grammar = map[string]string{
     EOL <[statement] EOL> |  ! Allows blank lines.
     ! An empty procedure.`,
 	"$string":       `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
-	"$structure":    `"[" associations "]"`,
 	"$subcomponent": `composite indices`,
 	"$target":       `expression`,
 	"$throwClause":  `"throw" exception`,

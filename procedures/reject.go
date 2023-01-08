@@ -14,13 +14,6 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 )
 
-// This type defines the node structure associated with a clause that rejects a
-// message that was previously retrieved from a named message bag so that it
-// can be retrieved by another party.
-type Reject struct {
-	Message abs.Expression
-}
-
 // REJECT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new reject clause.

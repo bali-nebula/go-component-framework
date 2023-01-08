@@ -123,7 +123,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	var context abs.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
-		return nil, token, false
+		return context, token, false
 	}
 	parameters, token, ok = v.parseParameters()
 	if !ok {
@@ -242,10 +242,10 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatQuote(value)
 	case str.Version:
 		v.formatVersion(value)
-	case abs.StructureLike:
-		v.formatStructure(value)
 	case abs.SeriesLike:
 		v.formatSeries(value)
+	case abs.MappingLike:
+		v.formatMapping(value)
 	case abs.IntervalLike[abs.Discrete]:
 		v.formatInterval(value)
 	case abs.SpectrumLike[abs.Spectral]:

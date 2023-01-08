@@ -68,9 +68,9 @@ type AssociationLike interface {
 	Binding[Primitive, ComponentLike]
 }
 
-// This interface consolidates all the interfaces supported by structure-like
+// This interface consolidates all the interfaces supported by mapping-like
 // sequences.
-type StructureLike interface {
+type MappingLike interface {
 	Sequential[AssociationLike]
 	Indexed[AssociationLike]
 }

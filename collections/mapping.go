@@ -15,15 +15,15 @@ import (
 	col "github.com/craterdog/go-collection-framework"
 )
 
-// STRUCTURE IMPLEMENTATION
+// MAPPING IMPLEMENTATION
 
-// This constructor creates a new empty structure of key-value pairs.
-func Structure() abs.StructureLike {
+// This constructor creates a new empty sequence of key-value pairs.
+func Mapping() abs.MappingLike {
 	return col.Array[abs.AssociationLike]([]abs.AssociationLike{})
 }
 
-// This constructor creates a new structure of key-value pairs from the
+// This constructor creates a new sequence of key-value pairs from the
 // specified array.
-func StructureFromArray(array []abs.AssociationLike) abs.StructureLike {
+func MappingFromArray(array []abs.AssociationLike) abs.MappingLike {
 	return col.Array[abs.AssociationLike](array)
 }
