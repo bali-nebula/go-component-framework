@@ -82,7 +82,7 @@ func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var structure = col.Catalog[abs.Primitive, abs.ComponentLike]()
+	var structure = col.List[abs.AssociationLike]()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
 		// This is an empty structure.
@@ -100,9 +100,7 @@ func (v *parser) parseInlineAssociations() (abs.Collection, *Token, bool) {
 		return structure, token, false
 	}
 	for {
-		var key = association.GetKey()
-		var value = association.GetValue()
-		structure.SetValue(key, value)
+		structure.AddValue(association)
 		// Every subsequent association must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -173,16 +171,14 @@ func (v *parser) parseMultilineAssociations() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var structure = col.Catalog[abs.Primitive, abs.ComponentLike]()
+	var structure = col.List[abs.AssociationLike]()
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty structure must have at least one association.
 		return structure, token, false
 	}
 	for {
-		var key = association.GetKey()
-		var value = association.GetValue()
-		structure.SetValue(key, value)
+		structure.AddValue(association)
 		// Every association must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
