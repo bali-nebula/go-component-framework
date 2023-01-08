@@ -58,27 +58,6 @@ func (v *spectrum[V]) AsArray() []V {
 
 // BOUNDED INTERFACE
 
-// This method determines whether or not the specified value is included in this
-// continuous range.
-func (v *spectrum[V]) ContainsValue(value V) bool {
-	var first = v.first.AsString()
-	var candidate = value.AsString()
-	var last = v.last.AsString()
-	switch v.extent {
-	case abs.INCLUSIVE:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
-	case abs.LEFT:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
-	case abs.RIGHT:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
-	case abs.EXCLUSIVE:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
-	default:
-		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
-		panic(message)
-	}
-}
-
 // This method returns the first value in this spectral range.
 func (v *spectrum[V]) GetFirst() V {
 	return v.first
@@ -110,6 +89,57 @@ func (v *spectrum[V]) GetLast() V {
 func (v *spectrum[V]) SetLast(value V) {
 	v.last = value
 	v.validateSpectrum()
+}
+
+// This method determines whether or not the specified value is included in this
+// continuous range.
+func (v *spectrum[V]) ContainsValue(value V) bool {
+	var first = v.first.AsString()
+	var candidate = value.AsString()
+	var last = v.last.AsString()
+	switch v.extent {
+	case abs.INCLUSIVE:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
+	case abs.LEFT:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
+	case abs.RIGHT:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
+	case abs.EXCLUSIVE:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
+	default:
+		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
+		panic(message)
+	}
+}
+
+// This method determines whether or not this spectrum contains ANY of the
+// specified values.
+func (v *spectrum[V]) ContainsAny(values abs.Sequential[V]) bool {
+	var iterator = col.Iterator[V](values)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if v.ContainsValue(value) {
+			// This spectrum contains at least one of the values.
+			return true
+		}
+	}
+	// This spectrum does not contain any of the values.
+	return false
+}
+
+// This method determines whether or not this spectrum contains ALL of the
+// specified values.
+func (v *spectrum[V]) ContainsAll(values abs.Sequential[V]) bool {
+	var iterator = col.Iterator[V](values)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if !v.ContainsValue(value) {
+			// This spectrum is missing at least one of the values.
+			return false
+		}
+	}
+	// This spectrum does contains all of the values.
+	return true
 }
 
 // PRIVATE INTERFACE

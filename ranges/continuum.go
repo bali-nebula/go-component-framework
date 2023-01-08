@@ -59,27 +59,6 @@ func (v *continuum[V]) AsArray() []V {
 
 // BOUNDED INTERFACE
 
-// This method determines whether or not the specified value is included in this
-// continuous range.
-func (v *continuum[V]) ContainsValue(value V) bool {
-	var first = v.first.AsReal()
-	var candidate = value.AsReal()
-	var last = v.last.AsReal()
-	switch v.extent {
-	case abs.INCLUSIVE:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
-	case abs.LEFT:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
-	case abs.RIGHT:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
-	case abs.EXCLUSIVE:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
-	default:
-		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
-		panic(message)
-	}
-}
-
 // This method returns the first value in this continuous range.
 func (v *continuum[V]) GetFirst() V {
 	return v.first
@@ -111,6 +90,57 @@ func (v *continuum[V]) GetLast() V {
 func (v *continuum[V]) SetLast(value V) {
 	v.last = value
 	v.validateContinuum()
+}
+
+// This method determines whether or not the specified value is included in this
+// continuous range.
+func (v *continuum[V]) ContainsValue(value V) bool {
+	var first = v.first.AsReal()
+	var candidate = value.AsReal()
+	var last = v.last.AsReal()
+	switch v.extent {
+	case abs.INCLUSIVE:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
+	case abs.LEFT:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
+	case abs.RIGHT:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
+	case abs.EXCLUSIVE:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
+	default:
+		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
+		panic(message)
+	}
+}
+
+// This method determines whether or not this continuum contains ANY of the
+// specified values.
+func (v *continuum[V]) ContainsAny(values abs.Sequential[V]) bool {
+	var iterator = col.Iterator[V](values)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if v.ContainsValue(value) {
+			// This continuum contains at least one of the values.
+			return true
+		}
+	}
+	// This continuum does not contain any of the values.
+	return false
+}
+
+// This method determines whether or not this continuum contains ALL of the
+// specified values.
+func (v *continuum[V]) ContainsAll(values abs.Sequential[V]) bool {
+	var iterator = col.Iterator[V](values)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if !v.ContainsValue(value) {
+			// This continuum is missing at least one of the values.
+			return false
+		}
+	}
+	// This continuum does contains all of the values.
+	return true
 }
 
 // PRIVATE INTERFACE

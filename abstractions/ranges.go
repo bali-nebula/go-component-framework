@@ -34,13 +34,15 @@ const (
 // values that allow their endpoints to be changed. The type is parameterized to
 // force the first and last endpoint values to be the same type.
 type Bounded[V Primitive] interface {
-	ContainsValue(V) bool
 	GetFirst() V
-	SetFirst(V)
+	SetFirst(value V)
 	GetExtent() Extent
 	SetExtent(extent Extent)
 	GetLast() V
 	SetLast(V)
+	ContainsValue(value V) bool
+	ContainsAny(values Sequential[V]) bool
+	ContainsAll(values Sequential[V]) bool
 }
 
 // CONSOLIDATED INTERFACES

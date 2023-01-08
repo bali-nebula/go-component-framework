@@ -84,7 +84,7 @@ func (v *interval[V]) GetValue(index int) V {
 
 // This method retrieves from this interval range all values from the first
 // index through the last index (inclusive).
-func (v *interval[V]) GetValues(first int, last int) col.Sequential[V] {
+func (v *interval[V]) GetValues(first int, last int) abs.Sequential[V] {
 	var values = col.List[V]()
 	for index := first; index <= last; index++ {
 		var value V = v.indexToValue(index)
@@ -107,27 +107,6 @@ func (v *interval[V]) GetIndex(value V) int {
 }
 
 // BOUNDED INTERFACE
-
-// This method determines whether or not the specified value is included in this
-// continuous range.
-func (v *interval[V]) ContainsValue(value V) bool {
-	var first = v.first.AsInteger()
-	var candidate = value.AsInteger()
-	var last = v.last.AsInteger()
-	switch v.extent {
-	case abs.INCLUSIVE:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
-	case abs.LEFT:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
-	case abs.RIGHT:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
-	case abs.EXCLUSIVE:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
-	default:
-		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
-		panic(message)
-	}
-}
 
 // This method returns the first value in this interval range.
 func (v *interval[V]) GetFirst() V {
@@ -160,6 +139,57 @@ func (v *interval[V]) GetLast() V {
 func (v *interval[V]) SetLast(value V) {
 	v.last = value
 	v.validateInterval()
+}
+
+// This method determines whether or not the specified value is included in this
+// continuous range.
+func (v *interval[V]) ContainsValue(value V) bool {
+	var first = v.first.AsInteger()
+	var candidate = value.AsInteger()
+	var last = v.last.AsInteger()
+	switch v.extent {
+	case abs.INCLUSIVE:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
+	case abs.LEFT:
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
+	case abs.RIGHT:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
+	case abs.EXCLUSIVE:
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
+	default:
+		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
+		panic(message)
+	}
+}
+
+// This method determines whether or not this interval contains ANY of the
+// specified values.
+func (v *interval[V]) ContainsAny(values abs.Sequential[V]) bool {
+	var iterator = col.Iterator[V](values)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if v.ContainsValue(value) {
+			// This interval contains at least one of the values.
+			return true
+		}
+	}
+	// This interval does not contain any of the values.
+	return false
+}
+
+// This method determines whether or not this interval contains ALL of the
+// specified values.
+func (v *interval[V]) ContainsAll(values abs.Sequential[V]) bool {
+	var iterator = col.Iterator[V](values)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		if !v.ContainsValue(value) {
+			// This interval is missing at least one of the values.
+			return false
+		}
+	}
+	// This interval does contains all of the values.
+	return true
 }
 
 // PRIVATE INTERFACE
