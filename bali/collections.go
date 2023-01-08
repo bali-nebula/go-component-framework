@@ -13,7 +13,6 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	ent "github.com/bali-nebula/go-component-framework/entities"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	col "github.com/craterdog/go-collection-framework"
@@ -340,7 +339,7 @@ func (v *parser) parseSeries() (abs.Collection, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatSeries(series abs.SeriesLike) {
 	v.AppendString("[")
-	var iterator = ent.Iterator[abs.ComponentLike](series)
+	var iterator = col.Iterator[abs.ComponentLike](series)
 	switch series.GetSize() {
 	case 0:
 		v.AppendString(" ")
@@ -401,23 +400,18 @@ func (v *parser) parseStructure() (abs.Collection, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatStructure(structure abs.StructureLike) {
 	v.AppendString("[")
-	var keys = structure.GetKeys()
-	var iterator = ent.Iterator(keys)
+	var iterator = col.Iterator[abs.AssociationLike](structure)
 	switch structure.GetSize() {
 	case 0:
 		v.AppendString(":")
 	case 1:
-		var key = iterator.GetNext()
-		var value = structure.GetValue(key)
-		var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
+		var association = iterator.GetNext()
 		v.formatAssociation(association)
 	default:
 		v.depth++
 		for iterator.HasNext() {
 			v.AppendNewline()
-			var key = iterator.GetNext()
-			var value = structure.GetValue(key)
-			var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
+			var association = iterator.GetNext()
 			v.formatAssociation(association)
 		}
 		v.depth--

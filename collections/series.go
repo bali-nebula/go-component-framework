@@ -8,17 +8,22 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package entities
+package collections
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework"
 )
 
-// ITERATOR IMPLEMENTATION
+// SERIES IMPLEMENTATION
 
-// This constructor creates a new instance of an iterator that can be used to
-// traverse the values in the specified sequence.
-func Iterator[V abs.Value](sequence abs.Sequential[V]) abs.IteratorLike[V] {
-	return col.Iterator[V](sequence)
+// This constructor creates a new empty series of component values.
+func Series() abs.SeriesLike {
+	return col.Array[abs.ComponentLike]([]abs.ComponentLike{})
+}
+
+// This constructor creates a new series of component values from the specified
+// array.
+func SeriesFromArray(array []abs.ComponentLike) abs.SeriesLike {
+	return col.Array[abs.ComponentLike](array)
 }

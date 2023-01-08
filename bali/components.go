@@ -15,7 +15,6 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
-	ent "github.com/bali-nebula/go-component-framework/entities"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
@@ -72,7 +71,7 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComment(comment abs.CommentLike) {
 	v.AppendString(`!>`)
-	var iterator = ent.Iterator[string](comment)
+	var iterator = col.Iterator[string](comment)
 	for iterator.HasNext() {
 		var line = iterator.GetNext()
 		v.AppendNewline()
@@ -147,7 +146,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 		panic(message)
 	}
 	context = com.Context()
-	var iterator = ent.Iterator(parameters)
+	var iterator = col.Iterator[abs.ParameterLike](parameters)
 	for iterator.HasNext() {
 		var parameter = iterator.GetNext()
 		var name = parameter.GetKey()
@@ -163,7 +162,7 @@ func (v *formatter) formatContext(context abs.ContextLike) {
 	v.AppendString("(")
 	var parameters = col.List[abs.ParameterLike]()
 	var names = context.GetNames()
-	var iterator = ent.Iterator(names)
+	var iterator = col.Iterator[abs.Symbolic](names)
 	for iterator.HasNext() {
 		var name = iterator.GetNext()
 		var value = context.GetValue(name)
@@ -429,7 +428,7 @@ func (v *parser) parseParameters() (abs.Sequential[abs.ParameterLike], *Token, b
 // This method adds the canonical format for the specified parameters to the
 // state of the formatter.
 func (v *formatter) formatParameters(parameters abs.Sequential[abs.ParameterLike]) {
-	var iterator = ent.Iterator[abs.ParameterLike](parameters)
+	var iterator = col.Iterator[abs.ParameterLike](parameters)
 	switch parameters.GetSize() {
 	case 0:
 		panic("A context must have at least one parameter.")

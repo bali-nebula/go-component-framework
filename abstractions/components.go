@@ -14,9 +14,15 @@ package abstractions
 
 type (
 	Annotation any
+	Entity     any
 )
 
 // INDIVIDUAL INTERFACES
+
+// This interface defines the methods supported by all symbolic entities.
+type Symbolic interface {
+	GetIdentifier() string
+}
 
 // This interface defines the methods supported by all component-like types.
 type Encapsulated interface {

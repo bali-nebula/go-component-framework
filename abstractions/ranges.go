@@ -10,10 +10,6 @@
 
 package abstractions
 
-import (
-	col "github.com/craterdog/go-collection-framework"
-)
-
 // TYPE DEFINITIONS
 
 type (
@@ -52,8 +48,8 @@ type Bounded[V Primitive] interface {
 // This interface consolidates all of the interfaces supported by interval-like
 // ranges.
 type IntervalLike[V Discrete] interface {
-	col.Sequential[V]
-	col.Indexed[V]
+	Sequential[V]
+	Indexed[V]
 	Bounded[V]
 }
 

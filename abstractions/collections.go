@@ -13,121 +13,53 @@ package abstractions
 // TYPE DEFINITIONS
 
 type (
+	Key        any
+	Value      any
 	Primitive  any
 	Collection any
 )
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all updatable sequences of
-// components.
-type Updatable interface {
-	SetValue(index int, value ComponentLike)
+// This interface defines the methods supported by all binding types.
+// It binds a readonly key with a setable value.
+type Binding[K Key, V Value] interface {
+	GetKey() K
+	GetValue() V
+	SetValue(value V)
 }
 
-// This interface defines the methods supported by all sequences of components
-// that allow components to be added and removed.
-type Flexible interface {
-	AddValue(value ComponentLike)
-	RemoveValue(value ComponentLike)
-	RemoveAll()
-}
-
-// This interface defines the methods supported by all sequences of components
-// whose components may be modified, inserted, removed, or reordered.
-type Malleable interface {
-	AddValue(value ComponentLike)
-	InsertValue(slot int, value ComponentLike)
-	RemoveValue(index int) ComponentLike
-	RemoveAll()
-}
-
-// This interface defines the methods supported by all sequences of components
-// whose components may be sorted using various sorting algorithms.
-type Sortable interface {
-	SortValues()
-	ReverseValues()
-	ShuffleValues()
-}
-
-// This interface defines the methods supported by all associative sequences
-// whose values consist of key-value pair associations.
-type Associative interface {
+// This interface defines the methods supported by all sequences of values.
+type Sequential[V Value] interface {
 	IsEmpty() bool
 	GetSize() int
-	GetKeys() Sequential[Primitive]
-	GetValue(key Primitive) ComponentLike
-	SetValue(key Primitive, value ComponentLike)
-	RemoveValue(key Primitive) ComponentLike
-	RemoveAll()
+	AsArray() []V
 }
 
-// This interface defines the methods supported by all sequences of components
-// whose components are accessed using first-in-first-out (FIFO) semantics.
-type FIFO interface {
-	GetCapacity() int
-	AddValue(value ComponentLike)
-	RemoveHead() (head ComponentLike, ok bool)
-	CloseQueue()
-}
-
-// This interface defines the methods supported by all sequences of components
-// whose components are accessed using last-in-first-out (LIFO) semantics.
-type LIFO interface {
-	GetCapacity() int
-	AddValue(value ComponentLike)
-	GetTop() ComponentLike
-	RemoveTop() ComponentLike
-	RemoveAll()
+// This interface defines the methods supported by all sequences whose values can
+// be indexed. The indices of an indexed sequence are ORDINAL rather than ZERO
+// based (which is "SO last century"). This allows for positive indices starting
+// at the beginning of the sequence, and negative indices starting at the end of
+// the sequence as follows:
+//
+//	    1           2           3             N
+//	[value 1] . [value 2] . [value 3] ... [value N]
+//	   -N        -(N-1)      -(N-2)          -1
+//
+// Notice that because the indices are ordinal based, the positive and negative
+// indices are symmetrical.
+type Indexed[V Value] interface {
+	GetValue(index int) V
+	GetIndex(value V) int
 }
 
 // CONSOLIDATED INTERFACES
-
-// This interface consolidates all the interfaces supported by catalog-like
-// sequences.
-type CatalogLike interface {
-	Associative
-	Sortable
-}
-
-// This interface consolidates all the interfaces supported by list-like
-// sequences.
-type ListLike interface {
-	Sequential[ComponentLike]
-	Indexed[ComponentLike]
-	Updatable
-	Malleable
-	Sortable
-}
-
-// This interface consolidates all of the interfaces supported by queue-like
-// sequences.
-type QueueLike interface {
-	Sequential[ComponentLike]
-	FIFO
-}
 
 // This interface consolidates all the interfaces supported by series-like
 // sequences.
 type SeriesLike interface {
 	Sequential[ComponentLike]
 	Indexed[ComponentLike]
-	Updatable
-}
-
-// This interface consolidates all the interfaces supported by set-like
-// sequences.
-type SetLike interface {
-	Sequential[ComponentLike]
-	Indexed[ComponentLike]
-	Flexible
-}
-
-// This interface consolidates all the interfaces supported by stack-like
-// sequences.
-type StackLike interface {
-	Sequential[ComponentLike]
-	LIFO
 }
 
 // This interface consolidates all the interfaces supported by association-like
@@ -139,5 +71,6 @@ type AssociationLike interface {
 // This interface consolidates all the interfaces supported by structure-like
 // sequences.
 type StructureLike interface {
-	Associative
+	Sequential[AssociationLike]
+	Indexed[AssociationLike]
 }

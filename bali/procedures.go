@@ -14,7 +14,6 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
-	ent "github.com/bali-nebula/go-component-framework/entities"
 	pro "github.com/bali-nebula/go-component-framework/procedures"
 	col "github.com/craterdog/go-collection-framework"
 )
@@ -418,7 +417,7 @@ func (v *parser) parseIndices() (abs.Sequential[abs.Expression], *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatIndices(indices abs.Sequential[abs.Expression]) {
 	v.AppendString("[")
-	var iterator = ent.Iterator[abs.Expression](indices)
+	var iterator = col.Iterator[abs.Expression](indices)
 	var index = iterator.GetNext() // There is always at least one index.
 	v.formatExpression(index)
 	for iterator.HasNext() {
@@ -796,7 +795,7 @@ func (v *formatter) formatOnClause(clause abs.OnClauseLike) {
 	v.AppendString("$")
 	v.formatIdentifier(identifier)
 	var blocks = clause.GetBlocks()
-	var iterator = ent.Iterator(blocks)
+	var iterator = col.Iterator[abs.BlockLike](blocks)
 	for iterator.HasNext() {
 		var block = iterator.GetNext()
 		v.AppendString(" matching ")
@@ -1222,7 +1221,7 @@ func (v *formatter) formatSelectClause(clause abs.SelectClauseLike) {
 	var target = clause.GetTarget()
 	v.formatExpression(target)
 	var blocks = clause.GetBlocks()
-	var iterator = ent.Iterator(blocks)
+	var iterator = col.Iterator[abs.BlockLike](blocks)
 	for iterator.HasNext() {
 		var block = iterator.GetNext()
 		v.AppendString(" matching ")
@@ -1293,7 +1292,7 @@ func (v *formatter) formatStatements(statements abs.Sequential[abs.StatementLike
 	case 0:
 		v.AppendString(" ")
 	default:
-		var iterator = ent.Iterator(statements)
+		var iterator = col.Iterator[abs.StatementLike](statements)
 		v.depth++
 		for iterator.HasNext() {
 			v.AppendNewline()
