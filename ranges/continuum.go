@@ -61,7 +61,7 @@ func (v *continuum[V]) AsArray() []V {
 
 // This method determines whether or not the specified value is included in this
 // continuous range.
-func (v *continuum[V]) IncludesValue(value V) bool {
+func (v *continuum[V]) ContainsValue(value V) bool {
 	var first = v.first.AsReal()
 	var candidate = value.AsReal()
 	var last = v.last.AsReal()

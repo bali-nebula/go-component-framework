@@ -34,7 +34,7 @@ const (
 // values that allow their endpoints to be changed. The type is parameterized to
 // force the first and last endpoint values to be the same type.
 type Bounded[V Primitive] interface {
-	IncludesValue(V) bool
+	ContainsValue(V) bool
 	GetFirst() V
 	SetFirst(V)
 	GetExtent() Extent

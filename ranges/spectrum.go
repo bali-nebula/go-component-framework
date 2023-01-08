@@ -60,7 +60,7 @@ func (v *spectrum[V]) AsArray() []V {
 
 // This method determines whether or not the specified value is included in this
 // continuous range.
-func (v *spectrum[V]) IncludesValue(value V) bool {
+func (v *spectrum[V]) ContainsValue(value V) bool {
 	var first = v.first.AsString()
 	var candidate = value.AsString()
 	var last = v.last.AsString()

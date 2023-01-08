@@ -110,7 +110,7 @@ func (v *interval[V]) GetIndex(value V) int {
 
 // This method determines whether or not the specified value is included in this
 // continuous range.
-func (v *interval[V]) IncludesValue(value V) bool {
+func (v *interval[V]) ContainsValue(value V) bool {
 	var first = v.first.AsInteger()
 	var candidate = value.AsInteger()
 	var last = v.last.AsInteger()
