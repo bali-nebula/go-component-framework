@@ -16,43 +16,27 @@ import (
 
 // MAPPING IMPLEMENTATION
 
-// This constructor creates a new empty mapping of key-value pairs.
-func Mapping() abs.MappingLike {
-	var array = make([]abs.AssociationLike, 0)
-	return &mapping{array}
-}
-
-// This constructor creates a new mapping of key-value pairs from the specified
-// array of associations.
-func MappingFromSequence(sequence abs.Sequential[abs.AssociationLike]) abs.MappingLike {
-	var array = sequence.AsArray()
-	return &mapping{array}
-}
-
 // This type defines the structure and methods associated with a mapping of
-// key-value pairs.
-type mapping struct {
-	array []abs.AssociationLike
-}
+// key-value associations.
+type Mapping []abs.AssociationLike
 
 // SEQUENTIAL INTERFACE
 
-// This method determines whether or not this mapping of key-value pairs is
-// empty.
-func (v *mapping) IsEmpty() bool {
-	return len(v.array) == 0
+// This method determines whether or not this mapping is empty.
+func (v Mapping) IsEmpty() bool {
+	return len(v) == 0
 }
 
-// This method returns the number of key-value pairs maintained by this mapping.
-func (v *mapping) GetSize() int {
-	return len(v.array)
+// This method returns the number of values contained in this mapping.
+func (v Mapping) GetSize() int {
+	return len(v)
 }
 
-// This method returns an array of the key-value pairs maintained by this
-// mapping. The order of the values retrieved is preserved in the array.
-func (v *mapping) AsArray() []abs.AssociationLike {
-	var length = len(v.array)
+// This method returns all the values in this mapping. The values retrieved are in
+// the same order as they are in the mapping.
+func (v Mapping) AsArray() []abs.AssociationLike {
+	var length = len(v)
 	var array = make([]abs.AssociationLike, length)
-	copy(array, v.array)
+	copy(array, v)
 	return array
 }

@@ -168,10 +168,10 @@ func (v *parser) parseInlineValues() (abs.Sequential[abs.ComponentLike], *Token,
 // This method attempts to parse a mapping collection. It returns the
 // mapping collection and whether or not the mapping collection was
 // successfully parsed.
-func (v *parser) parseMapping() (abs.Collection, *Token, bool) {
+func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var mapping abs.Collection
+	var mapping abs.MappingLike
 	var associations abs.Sequential[abs.AssociationLike]
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
@@ -200,7 +200,7 @@ func (v *parser) parseMapping() (abs.Collection, *Token, bool) {
 			"$values")
 		panic(message)
 	}
-	mapping = col.MappingFromSequence(associations)
+	mapping = col.Mapping(associations.AsArray())
 	return mapping, token, true
 }
 
@@ -361,10 +361,10 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 // This method attempts to parse a series of values. It returns the
 // series of values and whether or not the series of values was
 // successfully parsed.
-func (v *parser) parseSeries() (abs.Collection, *Token, bool) {
+func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var series abs.Collection
+	var series abs.SeriesLike
 	var values abs.Sequential[abs.ComponentLike]
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
@@ -393,7 +393,7 @@ func (v *parser) parseSeries() (abs.Collection, *Token, bool) {
 			"$component")
 		panic(message)
 	}
-	series = col.SeriesFromSequence(values)
+	series = col.Series(values.AsArray())
 	return series, token, ok
 }
 

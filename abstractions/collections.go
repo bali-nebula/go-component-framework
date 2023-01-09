@@ -68,8 +68,6 @@ type Searchable[V Value] interface {
 // sequences.
 type SeriesLike interface {
 	Sequential[ComponentLike]
-	Indexed[ComponentLike]
-	Searchable[ComponentLike]
 }
 
 // This interface consolidates all the interfaces supported by association-like
