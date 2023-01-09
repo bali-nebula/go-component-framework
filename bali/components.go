@@ -16,7 +16,7 @@ import (
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -71,7 +71,7 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComment(comment abs.CommentLike) {
 	v.AppendString(`!>`)
-	var iterator = col.Iterator[string](comment)
+	var iterator = cox.Iterator[string](comment)
 	for iterator.HasNext() {
 		var line = iterator.GetNext()
 		v.AppendNewline()
@@ -146,7 +146,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 		panic(message)
 	}
 	context = com.Context()
-	var iterator = col.Iterator[abs.ParameterLike](parameters)
+	var iterator = cox.Iterator[abs.ParameterLike](parameters)
 	for iterator.HasNext() {
 		var parameter = iterator.GetNext()
 		var name = parameter.GetKey()
@@ -160,9 +160,9 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.AppendString("(")
-	var parameters = col.List[abs.ParameterLike]()
+	var parameters = cox.List[abs.ParameterLike]()
 	var names = context.GetNames()
-	var iterator = col.Iterator[abs.Symbolic](names)
+	var iterator = cox.Iterator[abs.Symbolic](names)
 	for iterator.HasNext() {
 		var name = iterator.GetNext()
 		var value = context.GetValue(name)
@@ -377,7 +377,7 @@ func (v *parser) parseParameters() (abs.Sequential[abs.ParameterLike], *Token, b
 	var ok bool
 	var token *Token
 	var parameter abs.ParameterLike
-	var parameters = col.List[abs.ParameterLike]()
+	var parameters = cox.List[abs.ParameterLike]()
 	_, token, ok = v.parseEOL()
 	if !ok {
 		// The parameters are on a single line.
@@ -428,7 +428,7 @@ func (v *parser) parseParameters() (abs.Sequential[abs.ParameterLike], *Token, b
 // This method adds the canonical format for the specified parameters to the
 // state of the formatter.
 func (v *formatter) formatParameters(parameters abs.Sequential[abs.ParameterLike]) {
-	var iterator = col.Iterator[abs.ParameterLike](parameters)
+	var iterator = cox.Iterator[abs.ParameterLike](parameters)
 	switch parameters.GetSize() {
 	case 0:
 		panic("A context must have at least one parameter.")

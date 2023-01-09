@@ -13,7 +13,7 @@ package ranges
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 	mat "math"
 )
 
@@ -92,6 +92,8 @@ func (v *continuum[V]) SetLast(value V) {
 	v.validateContinuum()
 }
 
+// SEARCHABLE INTERFACE
+
 // This method determines whether or not the specified value is included in this
 // continuous range.
 func (v *continuum[V]) ContainsValue(value V) bool {
@@ -100,13 +102,13 @@ func (v *continuum[V]) ContainsValue(value V) bool {
 	var last = v.last.AsReal()
 	switch v.extent {
 	case abs.INCLUSIVE:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
+		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) <= 0
 	case abs.LEFT:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
+		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) < 0
 	case abs.RIGHT:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
+		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) <= 0
 	case abs.EXCLUSIVE:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
+		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) < 0
 	default:
 		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
 		panic(message)
@@ -116,7 +118,7 @@ func (v *continuum[V]) ContainsValue(value V) bool {
 // This method determines whether or not this continuum contains ANY of the
 // specified values.
 func (v *continuum[V]) ContainsAny(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+	var iterator = cox.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if v.ContainsValue(value) {
@@ -131,7 +133,7 @@ func (v *continuum[V]) ContainsAny(values abs.Sequential[V]) bool {
 // This method determines whether or not this continuum contains ALL of the
 // specified values.
 func (v *continuum[V]) ContainsAll(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+	var iterator = cox.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if !v.ContainsValue(value) {
@@ -161,7 +163,7 @@ func (v *continuum[V]) validateContinuum() {
 	// Validate the endpoints.
 	var first = v.first.AsReal()
 	var last = v.last.AsReal()
-	var rank = col.RankValues(first, last)
+	var rank = cox.RankValues(first, last)
 	switch {
 	case rank < 0:
 		v.size = -1 // The size of a continuum is infinite.

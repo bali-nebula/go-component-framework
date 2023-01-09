@@ -12,18 +12,47 @@ package collections
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
 )
 
 // MAPPING IMPLEMENTATION
 
-// This constructor creates a new empty sequence of key-value pairs.
+// This constructor creates a new empty mapping of key-value pairs.
 func Mapping() abs.MappingLike {
-	return col.Array[abs.AssociationLike]([]abs.AssociationLike{})
+	var array = make([]abs.AssociationLike, 0)
+	return &mapping{array}
 }
 
-// This constructor creates a new sequence of key-value pairs from the
-// specified array.
-func MappingFromArray(array []abs.AssociationLike) abs.MappingLike {
-	return col.Array[abs.AssociationLike](array)
+// This constructor creates a new mapping of key-value pairs from the specified
+// array of associations.
+func MappingFromSequence(sequence abs.Sequential[abs.AssociationLike]) abs.MappingLike {
+	var array = sequence.AsArray()
+	return &mapping{array}
+}
+
+// This type defines the structure and methods associated with a mapping of
+// key-value pairs.
+type mapping struct {
+	array []abs.AssociationLike
+}
+
+// SEQUENTIAL INTERFACE
+
+// This method determines whether or not this mapping of key-value pairs is
+// empty.
+func (v *mapping) IsEmpty() bool {
+	return len(v.array) == 0
+}
+
+// This method returns the number of key-value pairs maintained by this mapping.
+func (v *mapping) GetSize() int {
+	return len(v.array)
+}
+
+// This method returns an array of the key-value pairs maintained by this
+// mapping. The order of the values retrieved is preserved in the array.
+func (v *mapping) AsArray() []abs.AssociationLike {
+	var length = len(v.array)
+	var array = make([]abs.AssociationLike, length)
+	copy(array, v.array)
+	return array
 }

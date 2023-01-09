@@ -14,7 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 	mat "math"
 )
 
@@ -36,6 +36,41 @@ type interval[V abs.Discrete] struct {
 	extent abs.Extent
 	last   V
 	size   int
+}
+
+// BOUNDED INTERFACE
+
+// This method returns the first value in this interval range.
+func (v *interval[V]) GetFirst() V {
+	return v.first
+}
+
+// This method sets the first value in this interval range.
+func (v *interval[V]) SetFirst(value V) {
+	v.first = value
+	v.validateInterval()
+}
+
+// This method returns the extent for this interval range.
+func (v *interval[V]) GetExtent() abs.Extent {
+	return v.extent
+}
+
+// This method sets the extent for this interval range.
+func (v *interval[V]) SetExtent(extent abs.Extent) {
+	v.extent = extent
+	v.validateInterval()
+}
+
+// This method returns the last value in this interval range.
+func (v *interval[V]) GetLast() V {
+	return v.last
+}
+
+// This method sets the last value in this interval range.
+func (v *interval[V]) SetLast(value V) {
+	v.last = value
+	v.validateInterval()
 }
 
 // SEQUENTIAL INTERFACE
@@ -85,7 +120,7 @@ func (v *interval[V]) GetValue(index int) V {
 // This method retrieves from this interval range all values from the first
 // index through the last index (inclusive).
 func (v *interval[V]) GetValues(first int, last int) abs.Sequential[V] {
-	var values = col.List[V]()
+	var values = cox.List[V]()
 	for index := first; index <= last; index++ {
 		var value V = v.indexToValue(index)
 		values.AddValue(value)
@@ -106,58 +141,25 @@ func (v *interval[V]) GetIndex(value V) int {
 	return offset
 }
 
-// BOUNDED INTERFACE
-
-// This method returns the first value in this interval range.
-func (v *interval[V]) GetFirst() V {
-	return v.first
-}
-
-// This method sets the first value in this interval range.
-func (v *interval[V]) SetFirst(value V) {
-	v.first = value
-	v.validateInterval()
-}
-
-// This method returns the extent for this interval range.
-func (v *interval[V]) GetExtent() abs.Extent {
-	return v.extent
-}
-
-// This method sets the extent for this interval range.
-func (v *interval[V]) SetExtent(extent abs.Extent) {
-	v.extent = extent
-	v.validateInterval()
-}
-
-// This method returns the last value in this interval range.
-func (v *interval[V]) GetLast() V {
-	return v.last
-}
-
-// This method sets the last value in this interval range.
-func (v *interval[V]) SetLast(value V) {
-	v.last = value
-	v.validateInterval()
-}
+// SEARCHABLE INTERFACE
 
 // This method determines whether or not the specified value is included in this
-// continuous range.
+// interval range.
 func (v *interval[V]) ContainsValue(value V) bool {
 	var first = v.first.AsInteger()
 	var candidate = value.AsInteger()
 	var last = v.last.AsInteger()
 	switch v.extent {
 	case abs.INCLUSIVE:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
+		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) <= 0
 	case abs.LEFT:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
+		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) < 0
 	case abs.RIGHT:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
+		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) <= 0
 	case abs.EXCLUSIVE:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
+		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) < 0
 	default:
-		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
+		var message = fmt.Sprintf("Received an invalid interval range extent: %v", v.extent)
 		panic(message)
 	}
 }
@@ -165,7 +167,7 @@ func (v *interval[V]) ContainsValue(value V) bool {
 // This method determines whether or not this interval contains ANY of the
 // specified values.
 func (v *interval[V]) ContainsAny(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+	var iterator = cox.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if v.ContainsValue(value) {
@@ -180,7 +182,7 @@ func (v *interval[V]) ContainsAny(values abs.Sequential[V]) bool {
 // This method determines whether or not this interval contains ALL of the
 // specified values.
 func (v *interval[V]) ContainsAll(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+	var iterator = cox.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if !v.ContainsValue(value) {
@@ -211,7 +213,7 @@ func (v *interval[V]) validateInterval() {
 	var first = v.effectiveFirst()
 	var last = v.effectiveLast()
 	v.size = last - first + 1
-	if col.RankValues(first, last) > 0 {
+	if cox.RankValues(first, last) > 0 {
 		panic("The effective first value in the interval range must not be more than the effective last value.")
 	}
 

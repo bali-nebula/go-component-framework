@@ -13,7 +13,7 @@ package strings
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 	stc "strconv"
 	sts "strings"
 )
@@ -86,7 +86,7 @@ func (v Version) AsArray() []abs.Ordinal {
 // with the specified index.
 func (v Version) GetValue(index int) abs.Ordinal {
 	var array = v.AsArray()
-	var ordinals = col.Array[abs.Ordinal](array)
+	var ordinals = cox.Array[abs.Ordinal](array)
 	return ordinals.GetValue(index)
 }
 
@@ -94,7 +94,7 @@ func (v Version) GetValue(index int) abs.Ordinal {
 // through the last index (inclusive).
 func (v Version) GetValues(first int, last int) abs.Sequential[abs.Ordinal] {
 	var array = v.AsArray()
-	var ordinals = col.Array[abs.Ordinal](array)
+	var ordinals = cox.Array[abs.Ordinal](array)
 	return ordinals.GetValues(first, last)
 }
 
@@ -103,7 +103,7 @@ func (v Version) GetValues(first int, last int) abs.Sequential[abs.Ordinal] {
 // number.
 func (v Version) GetIndex(ordinal abs.Ordinal) int {
 	var array = v.AsArray()
-	var ordinals = col.Array[abs.Ordinal](array)
+	var ordinals = cox.Array[abs.Ordinal](array)
 	return ordinals.GetIndex(ordinal)
 }
 
@@ -184,8 +184,8 @@ func (l versions) IsValidNextVersion(current Version, next Version) bool {
 	}
 
 	// Iterate through the versions comparing level values.
-	var currentIterator = col.Iterator[abs.Ordinal](current)
-	var nextIterator = col.Iterator[abs.Ordinal](next)
+	var currentIterator = cox.Iterator[abs.Ordinal](current)
+	var nextIterator = cox.Iterator[abs.Ordinal](next)
 	for currentIterator.HasNext() && nextIterator.HasNext() {
 		var currentLevel = currentIterator.GetNext()
 		var nextLevel = nextIterator.GetNext()

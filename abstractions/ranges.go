@@ -42,22 +42,14 @@ type Bounded[V Primitive] interface {
 	SetLast(V)
 }
 
-// This interface defines the methods supported by all searchable sequences of
-// values.
-type Searchable[V Value] interface {
-	ContainsValue(value V) bool
-	ContainsAny(values Sequential[V]) bool
-	ContainsAll(values Sequential[V]) bool
-}
-
 // CONSOLIDATED INTERFACES
 
 // This interface consolidates all of the interfaces supported by interval-like
 // ranges.
 type IntervalLike[V Discrete] interface {
+	Bounded[V]
 	Sequential[V]
 	Indexed[V]
-	Bounded[V]
 	Searchable[V]
 }
 

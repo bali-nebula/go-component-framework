@@ -12,7 +12,7 @@ package strings
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -72,7 +72,7 @@ func (v Narrative) AsArray() []string {
 // with the specified index.
 func (v Narrative) GetValue(index int) string {
 	var array = v.AsArray()
-	var lines = col.Array[string](array)
+	var lines = cox.Array[string](array)
 	return lines.GetValue(index)
 }
 
@@ -80,7 +80,7 @@ func (v Narrative) GetValue(index int) string {
 // through the last index (inclusive).
 func (v Narrative) GetValues(first int, last int) abs.Sequential[string] {
 	var array = v.AsArray()
-	var lines = col.Array[string](array)
+	var lines = cox.Array[string](array)
 	return lines.GetValues(first, last)
 }
 
@@ -88,7 +88,7 @@ func (v Narrative) GetValues(first int, last int) abs.Sequential[string] {
 // in this string, or zero if this string does not contain the rune.
 func (v Narrative) GetIndex(line string) int {
 	var array = v.AsArray()
-	var lines = col.Array[string](array)
+	var lines = cox.Array[string](array)
 	return lines.GetIndex(line)
 }
 

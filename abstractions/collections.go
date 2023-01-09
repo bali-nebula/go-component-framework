@@ -50,7 +50,16 @@ type Sequential[V Value] interface {
 // indices are symmetrical.
 type Indexed[V Value] interface {
 	GetValue(index int) V
+	GetValues(first int, last int) Sequential[V]
 	GetIndex(value V) int
+}
+
+// This interface defines the methods supported by all searchable sequences of
+// values.
+type Searchable[V Value] interface {
+	ContainsValue(value V) bool
+	ContainsAny(values Sequential[V]) bool
+	ContainsAll(values Sequential[V]) bool
 }
 
 // CONSOLIDATED INTERFACES
@@ -60,6 +69,7 @@ type Indexed[V Value] interface {
 type SeriesLike interface {
 	Sequential[ComponentLike]
 	Indexed[ComponentLike]
+	Searchable[ComponentLike]
 }
 
 // This interface consolidates all the interfaces supported by association-like
@@ -72,5 +82,4 @@ type AssociationLike interface {
 // sequences.
 type MappingLike interface {
 	Sequential[AssociationLike]
-	Indexed[AssociationLike]
 }

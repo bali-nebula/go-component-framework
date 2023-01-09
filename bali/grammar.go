@@ -12,7 +12,7 @@ package bali
 
 import (
 	fmt "fmt"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -262,9 +262,9 @@ func FormatGrammar() string {
 		unsorted[index] = key
 		index++
 	}
-	var keys = col.ListFromArray(unsorted)
+	var keys = cox.ListFromArray(unsorted)
 	keys.SortValues()
-	var iterator = col.Iterator[string](keys)
+	var iterator = cox.Iterator[string](keys)
 	for iterator.HasNext() {
 		var key = iterator.GetNext()
 		var value = grammar[key]

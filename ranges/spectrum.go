@@ -13,7 +13,7 @@ package ranges
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 )
 
 // SPECTRUM IMPLEMENTATION
@@ -91,23 +91,25 @@ func (v *spectrum[V]) SetLast(value V) {
 	v.validateSpectrum()
 }
 
+// SEARCHABLE INTERFACE
+
 // This method determines whether or not the specified value is included in this
-// continuous range.
+// spectrum range.
 func (v *spectrum[V]) ContainsValue(value V) bool {
 	var first = v.first.AsString()
 	var candidate = value.AsString()
 	var last = v.last.AsString()
 	switch v.extent {
 	case abs.INCLUSIVE:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
+		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) <= 0
 	case abs.LEFT:
-		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
+		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) < 0
 	case abs.RIGHT:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
+		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) <= 0
 	case abs.EXCLUSIVE:
-		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
+		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) < 0
 	default:
-		var message = fmt.Sprintf("Received an invalid continuous range extent: %v", v.extent)
+		var message = fmt.Sprintf("Received an invalid spectrum range extent: %v", v.extent)
 		panic(message)
 	}
 }
@@ -115,7 +117,7 @@ func (v *spectrum[V]) ContainsValue(value V) bool {
 // This method determines whether or not this spectrum contains ANY of the
 // specified values.
 func (v *spectrum[V]) ContainsAny(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+	var iterator = cox.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if v.ContainsValue(value) {
@@ -130,7 +132,7 @@ func (v *spectrum[V]) ContainsAny(values abs.Sequential[V]) bool {
 // This method determines whether or not this spectrum contains ALL of the
 // specified values.
 func (v *spectrum[V]) ContainsAll(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+	var iterator = cox.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if !v.ContainsValue(value) {
@@ -160,7 +162,7 @@ func (v *spectrum[V]) validateSpectrum() {
 	// Validate the endpoints.
 	var first = v.first.AsString()
 	var last = v.last.AsString()
-	var rank = col.RankValues(first, last)
+	var rank = cox.RankValues(first, last)
 	switch {
 	case rank < 0:
 		v.size = -1 // The size of a spectrum is infinite.

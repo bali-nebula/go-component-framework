@@ -14,7 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	exp "github.com/bali-nebula/go-component-framework/expressions"
-	col "github.com/craterdog/go-collection-framework"
+	cox "github.com/craterdog/go-collection-framework"
 )
 
 // This method attempts to parse the arguments within a call. It returns a
@@ -24,7 +24,7 @@ func (v *parser) parseArguments() (abs.Sequential[abs.Expression], *Token, bool)
 	var ok bool
 	var token *Token
 	var argument abs.Expression
-	var arguments = col.List[abs.Expression]()
+	var arguments = cox.List[abs.Expression]()
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		// This is not an argument expression.
@@ -68,7 +68,7 @@ func (v *parser) parseArguments() (abs.Sequential[abs.Expression], *Token, bool)
 // to the state of the formatter.
 func (v *formatter) formatArguments(arguments abs.Sequential[abs.Expression]) {
 	v.AppendString("(")
-	var iterator = col.Iterator[abs.Expression](arguments)
+	var iterator = cox.Iterator[abs.Expression](arguments)
 	if iterator.HasNext() {
 		var argument = iterator.GetNext()
 		v.formatExpression(argument)
