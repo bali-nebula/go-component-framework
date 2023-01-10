@@ -13,10 +13,9 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/bali-nebula/go-component-framework/collections"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // This method attempts to parse an association between a key and value. It
@@ -48,7 +47,7 @@ func (v *parser) parseAssociation() (abs.AssociationLike, *Token, bool) {
 			"$component")
 		panic(message)
 	}
-	var association = cox.Association[abs.Primitive, abs.ComponentLike](key, value)
+	var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
 	return association, token, true
 }
 
@@ -62,7 +61,7 @@ func (v *formatter) formatAssociation(association abs.AssociationLike) {
 	v.formatComponent(value)
 }
 
-// This method attempts to parse a collection of values. It returns the
+// This method attempts to parse a collection of components. It returns the
 // collection and whether or not the collection was successfully parsed.
 func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 	var ok bool
@@ -79,29 +78,29 @@ func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 
 // It returns the mapping collection and whether or not the mapping collection
 // was successfully parsed.
-func (v *parser) parseInlineAssociations() (abs.Sequential[abs.AssociationLike], *Token, bool) {
+func (v *parser) parseInlineMapping() (abs.MappingLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var associations = cox.List[abs.AssociationLike]()
+	var mapping = col.List[abs.AssociationLike]()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
 		// This is an empty mapping.
-		return associations, token, true
+		return mapping, token, true
 	}
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
 		// This is an empty series.
 		v.backupOne() // Put back the ']' character.
-		return associations, token, false
+		return mapping, token, false
 	}
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty mapping must have at least one association.
-		return associations, token, false
+		return mapping, token, false
 	}
 	for {
-		associations.AddValue(association)
+		mapping.AddValue(association)
 		// Every subsequent association must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -113,28 +112,29 @@ func (v *parser) parseInlineAssociations() (abs.Sequential[abs.AssociationLike],
 			var message = v.formatError(token)
 			message += generateGrammar("$association",
 				"$mapping",
+				"$associations",
 				"$association",
 				"$primitive",
 				"$component")
 			panic(message)
 		}
 	}
-	return associations, token, true
+	return mapping, token, true
 }
 
-// This method attempts to parse a series collection with inline values. It
+// This method attempts to parse a series collection with inline components. It
 // returns the series collection and whether or not the series collection was
 // successfully parsed.
-func (v *parser) parseInlineValues() (abs.Sequential[abs.ComponentLike], *Token, bool) {
+func (v *parser) parseInlineSeries() (abs.SeriesLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var values = cox.List[abs.ComponentLike]()
+	var series = col.List[abs.ComponentLike]()
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
 		// This is an empty series.
 		v.backupOne() // Put back the ']' token.
-		return values, token, true
+		return series, token, true
 	}
 	value, token, ok = v.parseComponent()
 	if !ok {
@@ -142,15 +142,16 @@ func (v *parser) parseInlineValues() (abs.Sequential[abs.ComponentLike], *Token,
 		var message = v.formatError(token)
 		message += generateGrammar("$component",
 			"$series",
+			"$components",
 			"$component")
 		panic(message)
 	}
 	for {
-		values.AddValue(value)
+		series.AddValue(value)
 		// Every subsequent value must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
-			// No more values.
+			// No more components.
 			break
 		}
 		value, token, ok = v.parseComponent()
@@ -158,11 +159,12 @@ func (v *parser) parseInlineValues() (abs.Sequential[abs.ComponentLike], *Token,
 			var message = v.formatError(token)
 			message += generateGrammar("$component",
 				"$series",
+				"$components",
 				"$component")
 			panic(message)
 		}
 	}
-	return values, token, true
+	return series, token, true
 }
 
 // This method attempts to parse a mapping collection. It returns the
@@ -172,20 +174,19 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var mapping abs.MappingLike
-	var associations abs.Sequential[abs.AssociationLike]
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		return mapping, token, false
 	}
 	_, token, ok = v.parseEOL()
 	if !ok {
-		associations, token, ok = v.parseInlineAssociations()
+		mapping, token, ok = v.parseInlineMapping()
 		if !ok {
 			v.backupOne() // Put back the '[' character.
 			return mapping, token, false
 		}
 	} else {
-		associations, token, ok = v.parseMultilineAssociations()
+		mapping, token, ok = v.parseMultilineMapping()
 		if !ok {
 			v.backupOne() // Put back the EOL character.
 			v.backupOne() // Put back the '[' character.
@@ -196,11 +197,13 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("]",
-			"$collection",
-			"$values")
+			"$mapping",
+			"$associations",
+			"$association",
+			"$primitive",
+			"$component")
 		panic(message)
 	}
-	mapping = col.Mapping(associations.AsArray())
 	return mapping, token, true
 }
 
@@ -208,7 +211,7 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatMapping(mapping abs.MappingLike) {
 	v.AppendString("[")
-	var iterator = cox.Iterator[abs.AssociationLike](mapping)
+	var iterator = col.Iterator[abs.AssociationLike](mapping)
 	switch mapping.GetSize() {
 	case 0:
 		v.AppendString(":")
@@ -231,11 +234,11 @@ func (v *formatter) formatMapping(mapping abs.MappingLike) {
 // This method attempts to parse a mapping collection with multiline associations.
 // It returns the mapping collection and whether or not the mapping collection
 // was successfully parsed.
-func (v *parser) parseMultilineAssociations() (abs.Sequential[abs.AssociationLike], *Token, bool) {
+func (v *parser) parseMultilineMapping() (abs.MappingLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var associations = cox.List[abs.AssociationLike]()
+	var associations = col.List[abs.AssociationLike]()
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty mapping must have at least one association.
@@ -249,6 +252,7 @@ func (v *parser) parseMultilineAssociations() (abs.Sequential[abs.AssociationLik
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
 				"$mapping",
+				"$associations",
 				"$association",
 				"$primitive",
 				"$component")
@@ -263,41 +267,43 @@ func (v *parser) parseMultilineAssociations() (abs.Sequential[abs.AssociationLik
 	return associations, token, true
 }
 
-// This method attempts to parse a series collection with multiline values. It
-// returns the series collection and whether or not the series collection was
+// This method attempts to parse a series collection with multiline components.
+// It returns the series collection and whether or not the series collection was
 // successfully parsed.
-func (v *parser) parseMultilineValues() (abs.Sequential[abs.ComponentLike], *Token, bool) {
+func (v *parser) parseMultilineSeries() (abs.SeriesLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var values = cox.List[abs.ComponentLike]()
+	var series = col.List[abs.ComponentLike]()
 	value, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty series must have at least one value.
 		var message = v.formatError(token)
 		message += generateGrammar("$component",
 			"$series",
+			"$components",
 			"$component")
 		panic(message)
 	}
 	for {
-		values.AddValue(value)
+		series.AddValue(value)
 		// Every value must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
 				"$series",
+				"$components",
 				"$component")
 			panic(message)
 		}
 		value, token, ok = v.parseComponent()
 		if !ok {
-			// No more values.
+			// No more components.
 			break
 		}
 	}
-	return values, token, true
+	return series, token, true
 }
 
 // This method attempts to parse a primitive. It returns the primitive and
@@ -358,27 +364,26 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 	}
 }
 
-// This method attempts to parse a series of values. It returns the
-// series of values and whether or not the series of values was
+// This method attempts to parse a series of components. It returns the
+// series of components and whether or not the series of components was
 // successfully parsed.
 func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var series abs.SeriesLike
-	var values abs.Sequential[abs.ComponentLike]
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		return series, token, false
 	}
 	_, token, ok = v.parseEOL()
 	if !ok {
-		values, token, ok = v.parseInlineValues()
+		series, token, ok = v.parseInlineSeries()
 		if !ok {
 			v.backupOne() // Put back the '[' character.
 			return series, token, false
 		}
 	} else {
-		values, token, ok = v.parseMultilineValues()
+		series, token, ok = v.parseMultilineSeries()
 		if !ok {
 			v.backupOne() // Put back the EOL character.
 			v.backupOne() // Put back the '[' character.
@@ -390,10 +395,10 @@ func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("]",
 			"$series",
+			"$components",
 			"$component")
 		panic(message)
 	}
-	series = col.Series(values.AsArray())
 	return series, token, ok
 }
 
@@ -401,7 +406,7 @@ func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatSeries(series abs.SeriesLike) {
 	v.AppendString("[")
-	var iterator = cox.Iterator[abs.ComponentLike](series)
+	var iterator = col.Iterator[abs.ComponentLike](series)
 	switch series.GetSize() {
 	case 0:
 		v.AppendString(" ")

@@ -45,6 +45,10 @@ var grammar = map[string]string{
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
+	"$components": `
+    component {"," component} |
+    EOL <component EOL> |
+    ! No components.`,
 	"$composite":      `expression`,
 	"$condition":      `expression`,
 	"$context":        `"(" parameters ")"`,
@@ -101,7 +105,7 @@ var grammar = map[string]string{
     assignment |
     messaging  |
     repository`,
-	"$mapping":    `"[" associations "]"`,
+	"$mapping": `"[" associations "]"`,
 	"$message": `expression`,
 	"$messaging": `
     postClause     |  ! "post" message "to" bag
@@ -139,7 +143,7 @@ var grammar = map[string]string{
 	"$saveClause":     `"save" document "as" recipient`,
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
 	"$sequence":       `expression`,
-	"$series":         `"[" values "]"`,
+	"$series":         `"[" components "]"`,
 	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
 	"$statement":      `[annotation EOL] mainClause [onClause] [NOTE]`,
 	"$statements": `
@@ -151,25 +155,21 @@ var grammar = map[string]string{
 	"$target":       `expression`,
 	"$throwClause":  `"throw" exception`,
 	"$value":        `component`,
-	"$values": `
-    component {"," component} |
-    EOL <component EOL> |
-    ! No components.`,
-	"$variable":    `IDENTIFIER`,
-	"$whileClause": `"while" condition "do" procedure`,
-	"$withClause":  `"with" "each" item "in" sequence "do" procedure`,
-	"$ANGLE":       `"~" (ZERO | MAGNITUDE)`,
-	"$ANY":         `"any"`,
-	"$AUTHORITY":   `<~"/">`,
-	"$BASE16":      `"0".."9" | "a".."f"`,
-	"$BASE32":      `"0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"`,
-	"$BASE64":      `"A".."Z" | "a".."z" | "0".."9" | "+" | "/"`,
-	"$BINARY":      `"'" {BASE64 | SPACE | EOL} "'"`,
-	"$BOOLEAN":     `"false" | "true"`,
-	"$COMMENT":     `"!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.`,
-	"$COMPLEX":     `"(" (RECTANGULAR | POLAR) ")"`,
-	"$DAY":         `"0".."2" "1".."9" | "3" "0".."1"`,
-	"$DAYS":        `TIMESPAN "D"`,
+	"$variable":     `IDENTIFIER`,
+	"$whileClause":  `"while" condition "do" procedure`,
+	"$withClause":   `"with" "each" item "in" sequence "do" procedure`,
+	"$ANGLE":        `"~" (ZERO | MAGNITUDE)`,
+	"$ANY":          `"any"`,
+	"$AUTHORITY":    `<~"/">`,
+	"$BASE16":       `"0".."9" | "a".."f"`,
+	"$BASE32":       `"0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"`,
+	"$BASE64":       `"A".."Z" | "a".."z" | "0".."9" | "+" | "/"`,
+	"$BINARY":       `"'" {BASE64 | SPACE | EOL} "'"`,
+	"$BOOLEAN":      `"false" | "true"`,
+	"$COMMENT":      `"!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.`,
+	"$COMPLEX":      `"(" (RECTANGULAR | POLAR) ")"`,
+	"$DAY":          `"0".."2" "1".."9" | "3" "0".."1"`,
+	"$DAYS":         `TIMESPAN "D"`,
 	"$DELIMITER": `
     "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "≠" | "<-" | "<" |
     ";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" |

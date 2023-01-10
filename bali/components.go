@@ -252,7 +252,7 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatSpectrum(value)
 	case abs.ContinuumLike[abs.Continuous]:
 		v.formatContinuum(value)
-	case abs.Procedural:
+	case abs.ProcedureLike:
 		v.formatProcedure(value)
 	default:
 		panic(fmt.Sprintf("An invalid entity (of type %T) was passed to the formatter: %v", value, value))

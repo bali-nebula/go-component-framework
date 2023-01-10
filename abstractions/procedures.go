@@ -19,12 +19,6 @@ type (
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all procedural types.
-type Procedural interface {
-	GetStatements() Sequential[StatementLike]
-	SetStatements(statements Sequential[StatementLike])
-}
-
 // This interface defines the methods supported by all accept-clause-like types.
 type AcceptClauseLike interface {
 	GetMessage() Expression
@@ -43,8 +37,8 @@ type AttributeLike interface {
 type BlockLike interface {
 	GetExpression() Expression
 	SetExpression(expression Expression)
-	GetProcedure() Procedural
-	SetProcedure(procedure Procedural)
+	GetProcedure() ProcedureLike
+	SetProcedure(procedure ProcedureLike)
 }
 
 // This interface defines the methods supported by all break-clause-like types.
@@ -182,4 +176,12 @@ type WithClauseLike interface {
 	SetItem(item Symbolic)
 	GetBlock() BlockLike
 	SetBlock(block BlockLike)
+}
+
+// CONSOLIDATED INTERFACES
+
+// This interface consolidates all the interfaces supported by procedure-like
+// entities.
+type ProcedureLike interface {
+	Sequential[StatementLike]
 }

@@ -17,7 +17,7 @@ import (
 // BLOCK IMPLEMENTATION
 
 // This constructor creates a new block.
-func Block(expression abs.Expression, procedure abs.Procedural) abs.BlockLike {
+func Block(expression abs.Expression, procedure abs.ProcedureLike) abs.BlockLike {
 	var v = &block{}
 	// Perform argument validation.
 	v.SetExpression(expression)
@@ -28,7 +28,7 @@ func Block(expression abs.Expression, procedure abs.Procedural) abs.BlockLike {
 // This type defines the structure and methods associated with a procedure block.
 type block struct {
 	expression abs.Expression
-	procedure  abs.Procedural
+	procedure  abs.ProcedureLike
 }
 
 // This method returns the expression for this block.
@@ -45,12 +45,12 @@ func (v *block) SetExpression(expression abs.Expression) {
 }
 
 // This method returns the procedure for this block.
-func (v *block) GetProcedure() abs.Procedural {
+func (v *block) GetProcedure() abs.ProcedureLike {
 	return v.procedure
 }
 
 // This method sets the procedure for this block.
-func (v *block) SetProcedure(procedure abs.Procedural) {
+func (v *block) SetProcedure(procedure abs.ProcedureLike) {
 	if procedure == nil {
 		panic("A block requires a procedure.")
 	}

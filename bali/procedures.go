@@ -88,7 +88,7 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var expression abs.Expression
-	var procedure abs.Procedural
+	var procedure abs.ProcedureLike
 	var block abs.BlockLike
 	expression, token, ok = v.parseExpression()
 	if !ok {
@@ -431,11 +431,11 @@ func (v *formatter) formatIndices(indices abs.Sequential[abs.Expression]) {
 // This method attempts to parse a list of inline statements. It returns
 // the list of statements and whether or not the list of statements was
 // successfully parsed.
-func (v *parser) parseInlineStatements() (abs.Sequential[abs.StatementLike], *Token, bool) {
+func (v *parser) parseInlineProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
-	var statements = cox.List[abs.StatementLike]()
+	var procedure = cox.List[abs.StatementLike]()
 	statement, token, ok = v.parseStatement()
 	if !ok {
 		// A non-empty list must have at least one statement.
@@ -446,7 +446,7 @@ func (v *parser) parseInlineStatements() (abs.Sequential[abs.StatementLike], *To
 		panic(message)
 	}
 	for {
-		statements.AddValue(statement)
+		procedure.AddValue(statement)
 		// Every subsequent statement must be preceded by a ';'.
 		_, token, ok = v.parseDelimiter(";")
 		if !ok {
@@ -462,7 +462,7 @@ func (v *parser) parseInlineStatements() (abs.Sequential[abs.StatementLike], *To
 			panic(message)
 		}
 	}
-	return statements, token, true
+	return procedure, token, true
 }
 
 // This method attempts to parse a let clause. It returns the let
@@ -658,20 +658,20 @@ func (v *formatter) formatMainClause(mainClause abs.Clause) {
 // list of statements and whether or not the list of statements was successfully
 // parsed. Note that to support blank lines nil values will be added to the list
 // of statements for each blank line.
-func (v *parser) parseMultilineStatements() (abs.Sequential[abs.StatementLike], *Token, bool) {
+func (v *parser) parseMultilineProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
-	var statements = cox.List[abs.StatementLike]()
+	var procedure = cox.List[abs.StatementLike]()
 	statement, token, _ = v.parseStatement()
 	for {
 		// Every statement must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
 			// There are no more statements in this block.
-			return statements, token, true
+			return procedure, token, true
 		}
-		statements.AddValue(statement)
+		procedure.AddValue(statement)
 		statement, token, _ = v.parseStatement()
 	}
 }
@@ -861,11 +861,10 @@ func (v *formatter) formatPostClause(clause abs.PostClauseLike) {
 // This method attempts to parse a list of statements. It returns the
 // list of statements and whether or not the list of statements was
 // successfully parsed.
-func (v *parser) parseProcedure() (abs.Procedural, *Token, bool) {
+func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var procedure abs.Procedural
-	var statements abs.Sequential[abs.StatementLike]
+	var procedure abs.ProcedureLike = cox.List[abs.StatementLike]()
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		return procedure, token, false
@@ -873,15 +872,13 @@ func (v *parser) parseProcedure() (abs.Procedural, *Token, bool) {
 	_, token, ok = v.parseDelimiter("}")
 	if ok {
 		// This is an empty inline list of statements.
-		statements = cox.List[abs.StatementLike]()
-		procedure = pro.Procedure(statements)
 		return procedure, token, true
 	}
 	_, token, ok = v.parseEOL()
 	if !ok {
-		statements, token, ok = v.parseInlineStatements()
+		procedure, token, ok = v.parseInlineProcedure()
 	} else {
-		statements, token, ok = v.parseMultilineStatements()
+		procedure, token, ok = v.parseMultilineProcedure()
 	}
 	_, token, ok = v.parseDelimiter("}")
 	if !ok {
@@ -892,16 +889,30 @@ func (v *parser) parseProcedure() (abs.Procedural, *Token, bool) {
 			"$statement")
 		panic(message)
 	}
-	procedure = pro.Procedure(statements)
 	return procedure, token, true
 }
 
 // This method adds the canonical format for the specified procedure to the
 // state of the formatter.
-func (v *formatter) formatProcedure(procedure abs.Procedural) {
+func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
 	v.AppendString("{")
-	var statements = procedure.GetStatements()
-	v.formatStatements(statements)
+	switch procedure.GetSize() {
+	case 0:
+		v.AppendString(" ")
+	default:
+		var iterator = cox.Iterator[abs.StatementLike](procedure)
+		v.depth++
+		for iterator.HasNext() {
+			v.AppendNewline()
+			var statement = iterator.GetNext()
+			if statement != nil {
+				// This is not a blank line so format the statement.
+				v.formatStatement(statement)
+			}
+		}
+		v.depth--
+		v.AppendNewline()
+	}
 	v.AppendString("}")
 }
 
@@ -1282,28 +1293,6 @@ func (v *formatter) formatStatement(statement abs.StatementLike) {
 	var note = statement.GetNote()
 	if note != nil {
 		v.formatNote(note)
-	}
-}
-
-// This method adds the canonical format for the specified statements to the
-// state of the formatter.
-func (v *formatter) formatStatements(statements abs.Sequential[abs.StatementLike]) {
-	switch statements.GetSize() {
-	case 0:
-		v.AppendString(" ")
-	default:
-		var iterator = cox.Iterator[abs.StatementLike](statements)
-		v.depth++
-		for iterator.HasNext() {
-			v.AppendNewline()
-			var statement = iterator.GetNext()
-			if statement != nil {
-				// This is not a blank line so format the statement.
-				v.formatStatement(statement)
-			}
-		}
-		v.depth--
-		v.AppendNewline()
 	}
 }
 
