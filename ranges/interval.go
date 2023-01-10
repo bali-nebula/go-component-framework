@@ -14,7 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 	mat "math"
 )
 
@@ -120,7 +120,7 @@ func (v *interval[V]) GetValue(index int) V {
 // This method retrieves from this interval range all values from the first
 // index through the last index (inclusive).
 func (v *interval[V]) GetValues(first int, last int) abs.Sequential[V] {
-	var values = cox.List[V]()
+	var values = col.List[V]()
 	for index := first; index <= last; index++ {
 		var value V = v.indexToValue(index)
 		values.AddValue(value)
@@ -151,13 +151,13 @@ func (v *interval[V]) ContainsValue(value V) bool {
 	var last = v.last.AsInteger()
 	switch v.extent {
 	case abs.INCLUSIVE:
-		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) <= 0
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
 	case abs.LEFT:
-		return cox.RankValues(first, candidate) <= 0 && cox.RankValues(candidate, last) < 0
+		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) < 0
 	case abs.RIGHT:
-		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) <= 0
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) <= 0
 	case abs.EXCLUSIVE:
-		return cox.RankValues(first, candidate) < 0 && cox.RankValues(candidate, last) < 0
+		return col.RankValues(first, candidate) < 0 && col.RankValues(candidate, last) < 0
 	default:
 		var message = fmt.Sprintf("Received an invalid interval range extent: %v", v.extent)
 		panic(message)
@@ -167,7 +167,7 @@ func (v *interval[V]) ContainsValue(value V) bool {
 // This method determines whether or not this interval contains ANY of the
 // specified values.
 func (v *interval[V]) ContainsAny(values abs.Sequential[V]) bool {
-	var iterator = cox.Iterator[V](values)
+	var iterator = col.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if v.ContainsValue(value) {
@@ -182,7 +182,7 @@ func (v *interval[V]) ContainsAny(values abs.Sequential[V]) bool {
 // This method determines whether or not this interval contains ALL of the
 // specified values.
 func (v *interval[V]) ContainsAll(values abs.Sequential[V]) bool {
-	var iterator = cox.Iterator[V](values)
+	var iterator = col.Iterator[V](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if !v.ContainsValue(value) {
@@ -213,7 +213,7 @@ func (v *interval[V]) validateInterval() {
 	var first = v.effectiveFirst()
 	var last = v.effectiveLast()
 	v.size = last - first + 1
-	if cox.RankValues(first, last) > 0 {
+	if col.RankValues(first, last) > 0 {
 		panic("The effective first value in the interval range must not be more than the effective last value.")
 	}
 

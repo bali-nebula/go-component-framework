@@ -13,7 +13,7 @@ package strings
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/utilities"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // BINARY STRING INTERFACE
@@ -70,7 +70,7 @@ func (v Binary) AsArray() []byte {
 // with the specified index.
 func (v Binary) GetValue(index int) byte {
 	var array = v.AsArray()
-	var bytes = cox.Array[byte](array)
+	var bytes = col.Array[byte](array)
 	return bytes.GetValue(index)
 }
 
@@ -78,7 +78,7 @@ func (v Binary) GetValue(index int) byte {
 // through the last index (inclusive).
 func (v Binary) GetValues(first int, last int) abs.Sequential[byte] {
 	var array = v.AsArray()
-	var bytes = cox.Array[byte](array)
+	var bytes = col.Array[byte](array)
 	return bytes.GetValues(first, last)
 }
 
@@ -86,7 +86,7 @@ func (v Binary) GetValues(first int, last int) abs.Sequential[byte] {
 // in this string, or zero if this string does not contain the byte.
 func (v Binary) GetIndex(b byte) int {
 	var array = v.AsArray()
-	var bytes = cox.Array[byte](array)
+	var bytes = col.Array[byte](array)
 	return bytes.GetIndex(b)
 }
 

@@ -14,7 +14,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	ran "github.com/bali-nebula/go-component-framework/ranges"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -38,7 +38,7 @@ func TestIntervalsWithDurations(t *tes.T) {
 	ass.Equal(t, 5, s.GetIndex(7))
 	ass.Equal(t, 0, s.GetIndex(8))
 	ass.Equal(t, []ele.Duration{3, 4, 5, 6, 7}, s.AsArray())
-	var iterator = cox.Iterator[ele.Duration](s)
+	var iterator = col.Iterator[ele.Duration](s)
 	ass.Equal(t, ele.Duration(3), iterator.GetNext())
 	iterator.ToEnd()
 	ass.Equal(t, ele.Duration(7), iterator.GetPrevious())

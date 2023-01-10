@@ -12,7 +12,7 @@ package strings
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // QUOTE STRING INTERFACE
@@ -69,7 +69,7 @@ func (v Quote) AsArray() []rune {
 // with the specified index.
 func (v Quote) GetValue(index int) rune {
 	var array = v.AsArray()
-	var runes = cox.Array[rune](array)
+	var runes = col.Array[rune](array)
 	return runes.GetValue(index)
 }
 
@@ -77,7 +77,7 @@ func (v Quote) GetValue(index int) rune {
 // through the last index (inclusive).
 func (v Quote) GetValues(first int, last int) abs.Sequential[rune] {
 	var array = v.AsArray()
-	var runes = cox.Array[rune](array)
+	var runes = col.Array[rune](array)
 	return runes.GetValues(first, last)
 }
 
@@ -85,7 +85,7 @@ func (v Quote) GetValues(first int, last int) abs.Sequential[rune] {
 // in this string, or zero if this string does not contain the rune.
 func (v Quote) GetIndex(r rune) int {
 	var array = v.AsArray()
-	var runes = cox.Array[rune](array)
+	var runes = col.Array[rune](array)
 	return runes.GetIndex(r)
 }
 

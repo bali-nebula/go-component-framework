@@ -15,7 +15,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	pro "github.com/bali-nebula/go-component-framework/procedures"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 )
 
 // This method attempts to parse an accept clause. It returns the accept
@@ -370,7 +370,7 @@ func (v *parser) parseIndices() (abs.Sequential[abs.Expression], *Token, bool) {
 	var ok bool
 	var token *Token
 	var index abs.Expression
-	var indices = cox.List[abs.Expression]()
+	var indices = col.List[abs.Expression]()
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
 		// This is not a list of indices.
@@ -417,7 +417,7 @@ func (v *parser) parseIndices() (abs.Sequential[abs.Expression], *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatIndices(indices abs.Sequential[abs.Expression]) {
 	v.AppendString("[")
-	var iterator = cox.Iterator[abs.Expression](indices)
+	var iterator = col.Iterator[abs.Expression](indices)
 	var index = iterator.GetNext() // There is always at least one index.
 	v.formatExpression(index)
 	for iterator.HasNext() {
@@ -435,7 +435,7 @@ func (v *parser) parseInlineProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
-	var procedure = cox.List[abs.StatementLike]()
+	var procedure = col.List[abs.StatementLike]()
 	statement, token, ok = v.parseStatement()
 	if !ok {
 		// A non-empty list must have at least one statement.
@@ -662,7 +662,7 @@ func (v *parser) parseMultilineProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
-	var procedure = cox.List[abs.StatementLike]()
+	var procedure = col.List[abs.StatementLike]()
 	statement, token, _ = v.parseStatement()
 	for {
 		// Every statement must be followed by an EOL.
@@ -738,7 +738,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	var token *Token
 	var failure ele.Symbol
 	var block abs.BlockLike
-	var blocks = cox.List[abs.BlockLike]()
+	var blocks = col.List[abs.BlockLike]()
 	var clause abs.OnClauseLike
 	_, token, ok = v.parseKeyword("on")
 	if !ok {
@@ -795,7 +795,7 @@ func (v *formatter) formatOnClause(clause abs.OnClauseLike) {
 	v.AppendString("$")
 	v.formatIdentifier(identifier)
 	var blocks = clause.GetBlocks()
-	var iterator = cox.Iterator[abs.BlockLike](blocks)
+	var iterator = col.Iterator[abs.BlockLike](blocks)
 	for iterator.HasNext() {
 		var block = iterator.GetNext()
 		v.AppendString(" matching ")
@@ -864,7 +864,7 @@ func (v *formatter) formatPostClause(clause abs.PostClauseLike) {
 func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var procedure abs.ProcedureLike = cox.List[abs.StatementLike]()
+	var procedure abs.ProcedureLike = col.List[abs.StatementLike]()
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		return procedure, token, false
@@ -900,7 +900,7 @@ func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
 	case 0:
 		v.AppendString(" ")
 	default:
-		var iterator = cox.Iterator[abs.StatementLike](procedure)
+		var iterator = col.Iterator[abs.StatementLike](procedure)
 		v.depth++
 		for iterator.HasNext() {
 			v.AppendNewline()
@@ -1179,7 +1179,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 	var token *Token
 	var target abs.Expression
 	var block abs.BlockLike
-	var blocks = cox.List[abs.BlockLike]()
+	var blocks = col.List[abs.BlockLike]()
 	var clause abs.SelectClauseLike
 	_, token, ok = v.parseKeyword("select")
 	if !ok {
@@ -1232,7 +1232,7 @@ func (v *formatter) formatSelectClause(clause abs.SelectClauseLike) {
 	var target = clause.GetTarget()
 	v.formatExpression(target)
 	var blocks = clause.GetBlocks()
-	var iterator = cox.Iterator[abs.BlockLike](blocks)
+	var iterator = col.Iterator[abs.BlockLike](blocks)
 	for iterator.HasNext() {
 		var block = iterator.GetNext()
 		v.AppendString(" matching ")

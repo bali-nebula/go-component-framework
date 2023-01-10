@@ -13,7 +13,7 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -92,7 +92,7 @@ func Parser(source []byte) *parser {
 	Scanner(source, tokens) // Starts scanning in a go routine.
 	var p = &parser{
 		source: source,
-		next:   cox.StackWithCapacity[*Token](4),
+		next:   col.StackWithCapacity[*Token](4),
 		tokens: tokens,
 	}
 	return p
@@ -101,7 +101,7 @@ func Parser(source []byte) *parser {
 // This type defines the structure and methods for the parser agent.
 type parser struct {
 	source         []byte
-	next           cox.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
+	next           col.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
 	tokens         chan Token            // The queue of unread tokens coming from the scanner.
 	p1, p2, p3, p4 *Token                // The previous four tokens that have been retrieved.
 }

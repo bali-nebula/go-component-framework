@@ -12,7 +12,7 @@ package strings
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	cox "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -78,7 +78,7 @@ func (v Moniker) AsArray() []abs.Name {
 // specified index.
 func (v Moniker) GetValue(index int) abs.Name {
 	var array = v.AsArray()
-	var names = cox.Array[abs.Name](array)
+	var names = col.Array[abs.Name](array)
 	return names.GetValue(index)
 }
 
@@ -86,7 +86,7 @@ func (v Moniker) GetValue(index int) abs.Name {
 // the last index (inclusive).
 func (v Moniker) GetValues(first int, last int) abs.Sequential[abs.Name] {
 	var array = v.AsArray()
-	var names = cox.Array[abs.Name](array)
+	var names = col.Array[abs.Name](array)
 	return names.GetValues(first, last)
 }
 
@@ -94,7 +94,7 @@ func (v Moniker) GetValues(first int, last int) abs.Sequential[abs.Name] {
 // this string, or zero if this string does not contain the name.
 func (v Moniker) GetIndex(name abs.Name) int {
 	var array = v.AsArray()
-	var names = cox.Array[abs.Name](array)
+	var names = col.Array[abs.Name](array)
 	return names.GetIndex(name)
 }
 
