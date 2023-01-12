@@ -43,8 +43,8 @@ func (v *parser) parseAssociation() (abs.AssociationLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("$component",
 			"$association",
-			"$primitive",
-			"$component")
+			"$key",
+			"$value")
 		panic(message)
 	}
 	var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
@@ -114,8 +114,8 @@ func (v *parser) parseInlineMapping() (abs.MappingLike, *Token, bool) {
 				"$mapping",
 				"$associations",
 				"$association",
-				"$primitive",
-				"$component")
+				"$key",
+				"$value")
 			panic(message)
 		}
 	}
@@ -200,8 +200,8 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 			"$mapping",
 			"$associations",
 			"$association",
-			"$primitive",
-			"$component")
+			"$key",
+			"$value")
 		panic(message)
 	}
 	return mapping, token, true
@@ -254,8 +254,8 @@ func (v *parser) parseMultilineMapping() (abs.MappingLike, *Token, bool) {
 				"$mapping",
 				"$associations",
 				"$association",
-				"$primitive",
-				"$component")
+				"$key",
+				"$value")
 			panic(message)
 		}
 		association, token, ok = v.parseAssociation()

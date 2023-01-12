@@ -13,6 +13,7 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	cox "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
@@ -88,22 +89,24 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 	var context abs.ContextLike
 	var note abs.NoteLike
 	var entity, token, ok = v.parseEntity()
-	if ok {
-		context, token, _ = v.parseContext() // The context is optional.
-		note, token, _ = v.parseNote()       // The note is optional.
-		component = com.ComponentWithContext(entity, context)
-		component.SetNote(note)
+	if !ok {
+		return component, token, false
 	}
-	return component, token, ok
+	context, token, _ = v.parseContext()   // The context is optional.
+	entity = adjustEntity(entity, context) // Set the real collection type.
+	note, token, _ = v.parseNote()         // The note is optional.
+	component = com.ComponentWithContext(entity, context)
+	component.SetNote(note)
+	return component, token, true
 }
 
 // This method adds the canonical format for the specified component to the
 // state of the formatter.
 func (v *formatter) formatComponent(component abs.ComponentLike) {
 	var entity = component.GetEntity()
+	var context = adjustContext(component)
 	v.formatEntity(entity)
 	if component.IsParameterized() {
-		var context = component.GetContext()
 		v.formatContext(context)
 	}
 	if component.IsAnnotated() {
@@ -113,27 +116,31 @@ func (v *formatter) formatComponent(component abs.ComponentLike) {
 	}
 }
 
-// This method attempts to parse the context for a parameterized component. It
-// returns an array of parameters and whether or not the context was
+// This method attempts to parse a component context. It returns the
+// component context and whether or not the component context was
 // successfully parsed.
 func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var parameters abs.Sequential[abs.ParameterLike]
 	var context abs.ContextLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		return context, token, false
 	}
-	parameters, token, ok = v.parseParameters()
+	_, token, ok = v.parseEOL()
 	if !ok {
-		var message = v.formatError(token)
-		message += generateGrammar("$parameter",
-			"$context",
-			"$parameters",
-			"$parameter",
-			"$name")
-		panic(message)
+		context, token, ok = v.parseInlineContext()
+		if !ok {
+			v.backupOne() // Put back the '(' character.
+			return context, token, false
+		}
+	} else {
+		context, token, ok = v.parseMultilineContext()
+		if !ok {
+			v.backupOne() // Put back the EOL character.
+			v.backupOne() // Put back the '(' character.
+			return context, token, false
+		}
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
@@ -142,16 +149,9 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 			"$context",
 			"$parameters",
 			"$parameter",
-			"$name")
+			"$name",
+			"$value")
 		panic(message)
-	}
-	context = com.Context()
-	var iterator = col.Iterator[abs.ParameterLike](parameters)
-	for iterator.HasNext() {
-		var parameter = iterator.GetNext()
-		var name = parameter.GetKey()
-		var value = parameter.GetValue()
-		context.SetValue(name, value)
 	}
 	return context, token, true
 }
@@ -160,16 +160,26 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.AppendString("(")
-	var parameters = col.List[abs.ParameterLike]()
 	var names = context.GetNames()
 	var iterator = col.Iterator[abs.Symbolic](names)
-	for iterator.HasNext() {
+	switch names.GetSize() {
+	case 1:
 		var name = iterator.GetNext()
 		var value = context.GetValue(name)
 		var parameter = com.Parameter(name, value)
-		parameters.AddValue(parameter)
+		v.formatParameter(parameter)
+	default:
+		v.depth++
+		for iterator.HasNext() {
+			v.AppendNewline()
+			var name = iterator.GetNext()
+			var value = context.GetValue(name)
+			var parameter = com.Parameter(name, value)
+			v.formatParameter(parameter)
+		}
+		v.depth--
+		v.AppendNewline()
 	}
-	v.formatParameters(parameters)
 	v.AppendString(")")
 }
 
@@ -300,6 +310,56 @@ func (v *formatter) formatIdentifier(identifier string) {
 	v.AppendString(identifier)
 }
 
+// It returns the component context and whether or not the component context
+// was successfully parsed.
+func (v *parser) parseInlineContext() (abs.ContextLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var context abs.ContextLike
+	var parameter abs.ParameterLike
+	_, token, ok = v.parseDelimiter(":")
+	if ok {
+		// A context must have at least one parameter.
+		var message = v.formatError(token)
+		message += generateGrammar("$parameter",
+			"$context",
+			"$parameters",
+			"$parameter",
+			"$name",
+			"$value")
+		panic(message)
+	}
+	parameter, token, ok = v.parseParameter()
+	if !ok {
+		// This is not an inline context.
+		return context, token, false
+	}
+	context = com.Context()
+	for {
+		var name = parameter.GetKey()
+		var value = parameter.GetValue()
+		context.SetValue(name, value)
+		// Every subsequent parameter must be preceded by a ','.
+		_, token, ok = v.parseDelimiter(",")
+		if !ok {
+			// No more parameters.
+			break
+		}
+		parameter, token, ok = v.parseParameter()
+		if !ok {
+			var message = v.formatError(token)
+			message += generateGrammar("$parameter",
+				"$context",
+				"$parameters",
+				"$parameter",
+				"$name",
+				"$value")
+			panic(message)
+		}
+	}
+	return context, token, true
+}
+
 // This method attempts to parse the specified keyword. It returns
 // the token and whether or not the keyword was found.
 func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
@@ -309,6 +369,52 @@ func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
 		return keyword, token, false
 	}
 	return keyword, token, true
+}
+
+// This method attempts to parse a component context with multiline parameters.
+// It returns the component context and whether or not the component context
+// was successfully parsed.
+func (v *parser) parseMultilineContext() (abs.ContextLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var parameter abs.ParameterLike
+	var context abs.ContextLike
+	parameter, token, ok = v.parseParameter()
+	if !ok {
+		// A context must have at least one parameter.
+		var message = v.formatError(token)
+		message += generateGrammar("parameter",
+			"$context",
+			"$parameters",
+			"$parameter",
+			"$name",
+			"$value")
+		panic(message)
+	}
+	context = com.Context()
+	for {
+		var name = parameter.GetKey()
+		var value = parameter.GetValue()
+		context.SetValue(name, value)
+		// Every parameter must be followed by an EOL.
+		_, token, ok = v.parseEOL()
+		if !ok {
+			var message = v.formatError(token)
+			message += generateGrammar("EOL",
+				"$context",
+				"$parameters",
+				"$parameter",
+				"$name",
+				"$value")
+			panic(message)
+		}
+		parameter, token, ok = v.parseParameter()
+		if !ok {
+			// No more parameters.
+			break
+		}
+	}
+	return context, token, true
 }
 
 // This method attempts to parse a note. It returns a string containing the
@@ -370,83 +476,6 @@ func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 	v.formatComponent(value)
 }
 
-// This method attempts to parse context parameters. It returns the
-// context parameters and whether or not the context parameters were
-// successfully parsed.
-func (v *parser) parseParameters() (abs.Sequential[abs.ParameterLike], *Token, bool) {
-	var ok bool
-	var token *Token
-	var parameter abs.ParameterLike
-	var parameters = col.List[abs.ParameterLike]()
-	_, token, ok = v.parseEOL()
-	if !ok {
-		// The parameters are on a single line.
-		_, token, ok = v.parseDelimiter(":")
-		if ok {
-			panic("There must be at least one parameter in a context.")
-		}
-		parameter, token, ok = v.parseParameter()
-		if !ok {
-			panic("There must be at least one parameter in a context.")
-		}
-		for {
-			parameters.AddValue(parameter)
-			// Every subsequent parameter must be preceded by a ','.
-			_, token, ok = v.parseDelimiter(",")
-			if !ok {
-				// No more parameters.
-				break
-			}
-			parameter, token, ok = v.parseParameter()
-			if !ok {
-				panic("Expected a parameter after the ',' character.")
-			}
-		}
-		return parameters, token, true
-	}
-	// The parameters are on separate lines.
-	parameter, token, ok = v.parseParameter()
-	if !ok {
-		panic("There must be at least one parameter in a context.")
-	}
-	for {
-		parameters.AddValue(parameter)
-		// Every parameter must be followed by an EOL.
-		_, token, ok = v.parseEOL()
-		if !ok {
-			panic("Expected an EOL character following the parameter.")
-		}
-		parameter, token, ok = v.parseParameter()
-		if !ok {
-			// No more parameters.
-			break
-		}
-	}
-	return parameters, token, true
-}
-
-// This method adds the canonical format for the specified parameters to the
-// state of the formatter.
-func (v *formatter) formatParameters(parameters abs.Sequential[abs.ParameterLike]) {
-	var iterator = col.Iterator[abs.ParameterLike](parameters)
-	switch parameters.GetSize() {
-	case 0:
-		panic("A context must have at least one parameter.")
-	case 1:
-		var parameter = iterator.GetNext()
-		v.formatParameter(parameter)
-	default:
-		v.depth++
-		for iterator.HasNext() {
-			v.AppendNewline()
-			var parameter = iterator.GetNext()
-			v.formatParameter(parameter)
-		}
-		v.depth--
-		v.AppendNewline()
-	}
-}
-
 // PRIVATE FUNCTIONS
 
 // This function removes the first and last line delimiters (shown as "xx")
@@ -478,4 +507,72 @@ func trimIndentation(v string) string {
 		trimmed += line[indentation:] + "\n" // Strip off the indentation.
 	}
 	return trimmed[:len(trimmed)-1] // Strip off the extra end-of-line character.
+}
+
+// This function checks to see if the entity is a collection and if so adjusts
+// it to be the right collection type.
+func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
+	// Check for an explicit component type.
+	var type_ string
+	if context != nil {
+		var name = ele.Symbol("type")
+		var component = context.GetValue(name)
+		if component != nil {
+			var moniker = component.GetEntity().(str.Moniker) // A type must be a moniker.
+			type_ = moniker.AsString()
+		}
+	}
+	// Check for a collection entity.
+	switch entity.(type) {
+	case abs.SeriesLike:
+		// The type is a series of components.
+		var sequence = entity.(abs.Sequential[abs.ComponentLike])
+		switch type_ {
+		case "/bali/collections/Set/v1":
+			// The series type is a set.
+			entity = cox.SetFromSequence(sequence)
+		case "/bali/collections/Queue/v1":
+			// The series type is a queue.
+			entity = cox.QueueFromSequence(sequence)
+		case "/bali/collections/Stack/v1":
+			// The series type is a stack.
+			entity = cox.StackFromSequence(sequence)
+		default:
+			// The default series type is a list.
+			entity = cox.ListFromSequence(sequence)
+		}
+	case abs.MappingLike:
+		// The mapping type is a catalog.
+		var sequence = entity.(abs.Sequential[abs.AssociationLike])
+		entity = cox.CatalogFromSequence(sequence)
+	default:
+		// The entity is not a collection.
+	}
+	return entity
+}
+
+// This function checks to make sure the context for any collection component has
+// the right type parameter.
+func adjustContext(component abs.ComponentLike) abs.ContextLike {
+	var type_ string
+	var entity = component.GetEntity()
+	var context = component.GetContext()
+	switch entity.(type) {
+	case abs.QueueLike:
+		type_ = "/bali/collections/Queue/v1"
+	case abs.SetLike:
+		type_ = "/bali/collections/Set/v1"
+	case abs.StackLike:
+		type_ = "/bali/collections/Stack/v1"
+	}
+	if type_ != "" {
+		if context == nil {
+			context = com.Context()
+			component.SetContext(context)
+		}
+		var name = ele.Symbol("type")
+		var value = com.Component(str.Moniker(type_))
+		context.SetValue(name, value)
+	}
+	return context
 }

@@ -8,7 +8,12 @@
         1
         2
         3
-    ]
+    ]($type: /bali/collections/Stack/v1)
+    [
+        1
+        2
+        3
+    ]($type: /bali/collections/Queue/v1)
     [
         $alpha: 1
         $beta: 2
@@ -18,4 +23,16 @@
         1: [$array]
         2: ["foo": $bar]
     ]
+    [ ]($type: /bali/collections/Set/v1)
+    [:]($type: /bali/collections/Catalog/v1)
+    [$foobar]($type: /bali/collections/List/v1)
+    [
+        $foo
+        $bar
+    ]($type: /bali/collections/List/v1)
+    [$foo: "bar"]($type: /bali/collections/Catalog/v1)
+    [
+        $foo: "bar"
+        $bar: "foo"
+    ]($type: /bali/collections/Catalog/v1)
 ]

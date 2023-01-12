@@ -123,7 +123,7 @@ func (v *associations) GetPrevious() abs.AssociationLike {
 // This method determines whether or not there is an association after the current
 // slot.
 func (v *associations) HasNext() bool {
-	return v.iterator.HasPrevious()
+	return v.iterator.HasNext()
 }
 
 // This method retrieves the association after the current slot.

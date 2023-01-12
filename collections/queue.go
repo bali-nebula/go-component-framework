@@ -31,6 +31,17 @@ func QueueWithCapacity(capacity int) abs.QueueLike {
 	return &queue{v}
 }
 
+// This constructor creates a new component queue from the specified sequence.
+func QueueFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.QueueLike {
+	var v = col.QueueWithCapacity[abs.ComponentLike](sequence.GetSize()*2)
+	var iterator = col.Iterator[abs.ComponentLike](sequence)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		v.AddValue(value)
+	}
+	return &queue{v}
+}
+
 // This type defines the structure and methods associated with a component
 // queue.
 type queue struct {

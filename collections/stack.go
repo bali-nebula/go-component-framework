@@ -31,6 +31,17 @@ func StackWithCapacity(capacity int) abs.StackLike {
 	return &stack{v}
 }
 
+// This constructor creates a new component stack from the specified sequence.
+func StackFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.StackLike {
+	var v = col.StackWithCapacity[abs.ComponentLike](sequence.GetSize()*2)
+	var iterator = col.Iterator[abs.ComponentLike](sequence)
+	for iterator.HasNext() {
+		var value = iterator.GetNext()
+		v.AddValue(value)
+	}
+	return &stack{v}
+}
+
 // This type defines the structure and methods associated with a component
 // stack.
 type stack struct {
