@@ -33,7 +33,7 @@ func StackWithCapacity(capacity int) abs.StackLike {
 
 // This constructor creates a new component stack from the specified sequence.
 func StackFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.StackLike {
-	var v = col.StackWithCapacity[abs.ComponentLike](sequence.GetSize()*2)
+	var v = col.StackWithCapacity[abs.ComponentLike](sequence.GetSize() * 2)
 	var iterator = col.Iterator[abs.ComponentLike](sequence)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()

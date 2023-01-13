@@ -33,7 +33,7 @@ func QueueWithCapacity(capacity int) abs.QueueLike {
 
 // This constructor creates a new component queue from the specified sequence.
 func QueueFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.QueueLike {
-	var v = col.QueueWithCapacity[abs.ComponentLike](sequence.GetSize()*2)
+	var v = col.QueueWithCapacity[abs.ComponentLike](sequence.GetSize() * 2)
 	var iterator = col.Iterator[abs.ComponentLike](sequence)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
