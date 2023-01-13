@@ -13,11 +13,11 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	cox "github.com/bali-nebula/go-component-framework/collections"
+	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
-	col "github.com/craterdog/go-collection-framework"
+	cof "github.com/craterdog/go-collection-framework"
 	sts "strings"
 )
 
@@ -72,7 +72,7 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComment(comment abs.CommentLike) {
 	v.AppendString(`!>`)
-	var iterator = col.Iterator[string](comment)
+	var iterator = cof.Iterator[string](comment)
 	for iterator.HasNext() {
 		var line = iterator.GetNext()
 		v.AppendNewline()
@@ -161,7 +161,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.AppendString("(")
 	var names = context.GetNames()
-	var iterator = col.Iterator[abs.Symbolic](names)
+	var iterator = cof.Iterator[abs.Symbolic](names)
 	switch names.GetSize() {
 	case 1:
 		var name = iterator.GetNext()
@@ -530,21 +530,21 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 		switch type_ {
 		case "/bali/collections/Set/v1":
 			// The series type is a set.
-			entity = cox.SetFromSequence(sequence)
+			entity = col.SetFromSequence(sequence)
 		case "/bali/collections/Queue/v1":
 			// The series type is a queue.
-			entity = cox.QueueFromSequence(sequence)
+			entity = col.QueueFromSequence(sequence)
 		case "/bali/collections/Stack/v1":
 			// The series type is a stack.
-			entity = cox.StackFromSequence(sequence)
+			entity = col.StackFromSequence(sequence)
 		default:
 			// The default series type is a list.
-			entity = cox.ListFromSequence(sequence)
+			entity = col.ListFromSequence(sequence)
 		}
 	case abs.MappingLike:
 		// The mapping type is a catalog.
 		var sequence = entity.(abs.Sequential[abs.AssociationLike])
-		entity = cox.CatalogFromSequence(sequence)
+		entity = col.CatalogFromSequence(sequence)
 	default:
 		// The entity is not a collection.
 	}
