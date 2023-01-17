@@ -30,14 +30,6 @@ const (
 	signature = "ed25519"
 )
 
-// TYPE DEFINITIONS
-
-type (
-	Digest    any
-	PublicKey any
-	Signature any
-)
-
 // NOTARY IMPLEMENTATION
 
 // This constructor creates a new software security module.
@@ -54,31 +46,31 @@ type ssm struct {
 
 // This method generates a new public-private key pair and returns the public
 // key.
-func (v *ssm) GenerateKeys() PublicKey {
+func (v *ssm) GenerateKeys() abs.PublicKey {
 	panic("Not yet implemented.")
 }
 
 // This method generates a digital digest of the specified bytes and returns
 // the digital digest.
-func (v *ssm) DigestBytes(bytes []byte) Digest {
+func (v *ssm) DigestBytes(bytes []byte) abs.Digest {
 	panic("Not yet implemented.")
 }
 
 // This method digitally signs the specified bytes using the private key and
 // returns the digital signature.
-func (v *ssm) SignBytes(bytes []byte) Signature {
+func (v *ssm) SignBytes(bytes []byte) abs.Signature {
 	panic("Not yet implemented.")
 }
 
 // This method determines whether or not the specified digital signature is
 // valid for the specified bytes using the specified public key.
-func (v *ssm) IsValid(publicKey PublicKey, signature Signature, bytes []byte) bool {
+func (v *ssm) IsValid(publicKey abs.PublicKey, signature abs.Signature, bytes []byte) bool {
 	panic("Not yet implemented.")
 }
 
 // This method replaces the existing public-key pair with a new one and returns
 // the new public key.
-func (v *ssm) RotateKeys() PublicKey {
+func (v *ssm) RotateKeys() abs.PublicKey {
 	panic("Not yet implemented.")
 }
 
