@@ -14,7 +14,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	ran "github.com/bali-nebula/go-component-framework/ranges"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )

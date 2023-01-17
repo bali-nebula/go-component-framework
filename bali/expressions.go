@@ -14,7 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	exp "github.com/bali-nebula/go-component-framework/expressions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // This method attempts to parse the arguments within a call. It returns a

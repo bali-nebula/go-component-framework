@@ -13,7 +13,7 @@ package ranges
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // SPECTRUM IMPLEMENTATION
@@ -92,6 +92,11 @@ func (v *spectrum[V]) SetLast(value V) {
 }
 
 // SEARCHABLE INTERFACE
+
+// This method always returns zero since a spectral range is not indexable.
+func (v *spectrum[V]) GetIndex(value V) int {
+	return 0
+}
 
 // This method determines whether or not the specified value is included in this
 // spectrum range.

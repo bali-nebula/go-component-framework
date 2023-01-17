@@ -12,7 +12,7 @@ package collections
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // LIST IMPLEMENTATION
@@ -54,7 +54,7 @@ func (v *list) AsArray() []abs.ComponentLike {
 	return v.components.AsArray()
 }
 
-// INDEXED INTERFACE
+// ACCESSIBLE INTERFACE
 
 // This method retrieves from this list the component that is associated with the
 // specified index.
@@ -68,13 +68,27 @@ func (v *list) GetValues(first int, last int) abs.Sequential[abs.ComponentLike] 
 	return v.components.GetValues(first, last)
 }
 
+// UPDATABLE INTERFACE
+
+// This method sets the component in this list that is associated with the specified
+// index to be the specified component.
+func (v *list) SetValue(index int, component abs.ComponentLike) {
+	v.components.SetValue(index, component)
+}
+
+// This method sets the components in this list starting with the specified index
+// to the specified components.
+func (v *list) SetValues(index int, components abs.Sequential[abs.ComponentLike]) {
+	v.components.SetValues(index, components)
+}
+
+// SEARCHABLE INTERFACE
+
 // This method returns the index of the FIRST occurrence of the specified component in
 // this list, or zero if this list does not contain the component.
 func (v *list) GetIndex(component abs.ComponentLike) int {
 	return v.components.GetIndex(component)
 }
-
-// SEARCHABLE INTERFACE
 
 // This method determines whether or not this list contains the specified component.
 func (v *list) ContainsValue(component abs.ComponentLike) bool {
@@ -93,7 +107,7 @@ func (v *list) ContainsAll(components abs.Sequential[abs.ComponentLike]) bool {
 	return v.components.ContainsAll(components)
 }
 
-// EXPANDABLE INTERFACE
+// MALLEABLE INTERFACE
 
 // This method appends the specified component to the end of this list.
 func (v *list) AddValue(component abs.ComponentLike) {
@@ -103,20 +117,6 @@ func (v *list) AddValue(component abs.ComponentLike) {
 // This method appends the specified components to the end of this list.
 func (v *list) AddValues(components abs.Sequential[abs.ComponentLike]) {
 	v.components.AddValues(components)
-}
-
-// MALLEABLE INTERFACE
-
-// This method sets the component in this list that is associated with the specified
-// index to be the specified component.
-func (v *list) SetValue(index int, component abs.ComponentLike) {
-	v.components.SetValue(index, component)
-}
-
-// This method sets the components in this list starting with the specified index
-// to the specified components.
-func (v *list) SetValues(index int, components abs.Sequential[abs.ComponentLike]) {
-	v.components.SetValues(index, components)
 }
 
 // This method inserts the specified component into this list in the specified

@@ -49,7 +49,7 @@ type Bounded[V Primitive] interface {
 type IntervalLike[V Discrete] interface {
 	Bounded[V]
 	Sequential[V]
-	Indexed[V]
+	Accessible[V]
 	Searchable[V]
 }
 

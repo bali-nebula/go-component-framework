@@ -40,7 +40,7 @@ func TestCatalogs(t *tes.T) {
 	ass.Equal(t, 3, catalog.GetSize())
 	ass.Equal(t, three, catalog.GetValue(baz))
 	ass.Equal(t, []abs.Primitive{foo, bar, baz}, catalog.GetKeys().AsArray())
-	//catalog.SortValues()
+	catalog.SortValues()
 	catalog.ShuffleValues()
 	catalog.RemoveAll()
 }

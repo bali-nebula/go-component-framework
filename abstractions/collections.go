@@ -29,10 +29,10 @@ type Sequential[V Value] interface {
 }
 
 // This interface defines the methods supported by all sequences whose values can
-// be indexed. The indices of an indexed sequence are ORDINAL rather than ZERO
-// based (which is "SO last century"). This allows for positive indices starting
-// at the beginning of the sequence, and negative indices starting at the end of
-// the sequence as follows:
+// be accessed using indices. The indices of an accessible sequence are ORDINAL
+// rather than ZERO based (which is "SO last century"). This allows for positive
+// indices starting at the beginning of the sequence, and negative indices
+// starting at the end of the sequence as follows:
 //
 //	    1           2           3             N
 //	[value 1] . [value 2] . [value 3] ... [value N]
@@ -40,40 +40,22 @@ type Sequential[V Value] interface {
 //
 // Notice that because the indices are ordinal based, the positive and negative
 // indices are symmetrical.
-type Indexed[V Value] interface {
+type Accessible[V Value] interface {
 	GetValue(index int) V
 	GetValues(first int, last int) Sequential[V]
-	GetIndex(value V) int
 }
 
-// This interface defines the methods supported by all ratcheted agents that
-// are capable of moving forward and backward over the values in a sequence. It
-// is used to implement the GoF Iterator Pattern:
-//   - https://en.wikipedia.org/wiki/Iterator_pattern
-//
-// A ratcheted agent locks into the slots that reside between each value in the
-// sequence:
-//
-//	    [value 1] . [value 2] . [value 3] ... [value N]
-//	  ^           ^           ^                         ^
-//	slot 0      slot 1      slot 2                    slot N
-//
-// It moves from slot to slot and has access to the values (if they exist) on
-// each side of the slot.
-type Ratcheted[V Value] interface {
-	GetSlot() int
-	ToSlot(slot int)
-	ToStart()
-	ToEnd()
-	HasPrevious() bool
-	GetPrevious() V
-	HasNext() bool
-	GetNext() V
+// This interface defines the methods supported by all updatable sequences of
+// values.
+type Updatable[V Value] interface {
+	SetValue(index int, value V)
+	SetValues(index int, values Sequential[V])
 }
 
 // This interface defines the methods supported by all searchable sequences of
 // values.
 type Searchable[V Value] interface {
+	GetIndex(value V) int
 	ContainsValue(value V) bool
 	ContainsAny(values Sequential[V]) bool
 	ContainsAll(values Sequential[V]) bool
@@ -81,24 +63,19 @@ type Searchable[V Value] interface {
 
 // This interface defines the methods supported by all sequences of values that
 // allow values to be added and removed.
-type Expandable[V Value] interface {
+type Flexible[V Value] interface {
 	AddValue(value V)
 	AddValues(values Sequential[V])
-}
-
-// This interface defines the methods supported by all sequences of values that
-// allow values to be added and removed.
-type Shrinkable[V Value] interface {
 	RemoveValue(value V)
 	RemoveValues(values Sequential[V])
 	RemoveAll()
 }
 
-// This interface defines the methods supported by all sequences whose values may
-// be modified, inserted, removed, or reordered.
+// This interface defines the methods supported by all indexed sequences whose
+// values may be added, inserted, or removed.
 type Malleable[V Value] interface {
-	SetValue(index int, value V)
-	SetValues(index int, values Sequential[V])
+	AddValue(value V)
+	AddValues(values Sequential[V])
 	InsertValue(slot int, value V)
 	InsertValues(slot int, values Sequential[V])
 	RemoveValue(index int) V
@@ -138,6 +115,7 @@ type Associative[K Key, V Value] interface {
 // are accessed using first-in-first-out (FIFO) semantics.
 type FIFO[V Value] interface {
 	GetCapacity() int
+	AddValue(value V)
 	RemoveHead() (head V, ok bool)
 	CloseQueue()
 }
@@ -146,9 +124,35 @@ type FIFO[V Value] interface {
 // are accessed using last-in-first-out (LIFO) semantics.
 type LIFO[V Value] interface {
 	GetCapacity() int
+	AddValue(value V)
 	GetTop() V
 	RemoveTop() V
 	RemoveAll()
+}
+
+// This interface defines the methods supported by all ratcheted agents that
+// are capable of moving forward and backward over the values in a sequence. It
+// is used to implement the GoF Iterator Pattern:
+//   - https://en.wikipedia.org/wiki/Iterator_pattern
+//
+// A ratcheted agent locks into the slots that reside between each value in the
+// sequence:
+//
+//	    [value 1] . [value 2] . [value 3] ... [value N]
+//	  ^           ^           ^                         ^
+//	slot 0      slot 1      slot 2                    slot N
+//
+// It moves from slot to slot and has access to the values (if they exist) on
+// each side of the slot.
+type Ratcheted[V Value] interface {
+	GetSlot() int
+	ToSlot(slot int)
+	ToStart()
+	ToEnd()
+	HasPrevious() bool
+	GetPrevious() V
+	HasNext() bool
+	GetNext() V
 }
 
 // CONSOLIDATED INTERFACES
@@ -195,9 +199,9 @@ type CatalogLike interface {
 // sequences.
 type ListLike interface {
 	Sequential[ComponentLike]
-	Indexed[ComponentLike]
+	Accessible[ComponentLike]
+	Updatable[ComponentLike]
 	Searchable[ComponentLike]
-	Expandable[ComponentLike]
 	Malleable[ComponentLike]
 	Sortable[ComponentLike]
 }
@@ -206,7 +210,6 @@ type ListLike interface {
 // sequences.
 type QueueLike interface {
 	Sequential[ComponentLike]
-	Expandable[ComponentLike]
 	FIFO[ComponentLike]
 }
 
@@ -214,16 +217,14 @@ type QueueLike interface {
 // sequences.
 type SetLike interface {
 	Sequential[ComponentLike]
-	Indexed[ComponentLike]
+	Accessible[ComponentLike]
 	Searchable[ComponentLike]
-	Expandable[ComponentLike]
-	Shrinkable[ComponentLike]
+	Flexible[ComponentLike]
 }
 
 // This interface consolidates all the interfaces supported by stack-like
 // sequences.
 type StackLike interface {
 	Sequential[ComponentLike]
-	Expandable[ComponentLike]
 	LIFO[ComponentLike]
 }

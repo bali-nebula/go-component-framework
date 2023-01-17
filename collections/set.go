@@ -12,7 +12,7 @@ package collections
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // SET IMPLEMENTATION
@@ -52,7 +52,7 @@ func (v *set) AsArray() []abs.ComponentLike {
 	return v.components.AsArray()
 }
 
-// INDEXED INTERFACE
+// ACCESSIBLE INTERFACE
 
 // This method retrieves from this set the component that is associated with the
 // specified index.
@@ -66,13 +66,13 @@ func (v *set) GetValues(first int, last int) abs.Sequential[abs.ComponentLike] {
 	return v.components.GetValues(first, last)
 }
 
+// SEARCHABLE INTERFACE
+
 // This method returns the index of the FIRST occurrence of the specified component in
 // this set, or zero if this set does not contain the component.
 func (v *set) GetIndex(component abs.ComponentLike) int {
 	return v.components.GetIndex(component)
 }
-
-// SEARCHABLE INTERFACE
 
 // This method determines whether or not this set contains the specified component.
 func (v *set) ContainsValue(component abs.ComponentLike) bool {
@@ -91,7 +91,7 @@ func (v *set) ContainsAll(components abs.Sequential[abs.ComponentLike]) bool {
 	return v.components.ContainsAll(components)
 }
 
-// EXPANDABLE INTERFACE
+// FLEXIBLE INTERFACE
 
 // This method adds the specified component to this set if it is not already a
 // member of the set.
@@ -104,8 +104,6 @@ func (v *set) AddValue(component abs.ComponentLike) {
 func (v *set) AddValues(components abs.Sequential[abs.ComponentLike]) {
 	v.components.AddValues(components)
 }
-
-// SHRINKABLE INTERFACE
 
 // This method removes the specified component from this set.
 func (v *set) RemoveValue(component abs.ComponentLike) {

@@ -12,7 +12,7 @@ package bali
 
 import (
 	fmt "fmt"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 	sts "strings"
 )
 

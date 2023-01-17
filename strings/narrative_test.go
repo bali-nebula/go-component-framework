@@ -40,7 +40,6 @@ func TestNarrative(t *tes.T) {
 	ass.Equal(t, n2, v.GetValue(1))
 	ass.Equal(t, n3, v.GetValue(-1))
 	ass.Equal(t, n1, string(str.NarrativeFromArray([]string{n2, n3})))
-	ass.Equal(t, 2, v.GetIndex(n3))
 	ass.Equal(t, 2, len(v.AsArray()))
 }
 

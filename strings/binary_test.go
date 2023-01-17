@@ -21,7 +21,6 @@ func TestEmptyBinary(t *tes.T) {
 	ass.Equal(t, "", string(v))
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
-	ass.Equal(t, 0, v.GetIndex(byte(0x69)))
 }
 
 func TestBinary(t *tes.T) {
@@ -33,7 +32,6 @@ func TestBinary(t *tes.T) {
 	ass.Equal(t, byte(0xf8), v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), str.BinaryFromArray(v.AsArray()).AsArray())
 	ass.Equal(t, "abcd", string(str.BinaryFromSequence(v.GetValues(1, 3))))
-	ass.Equal(t, 1, v.GetIndex(byte(0x69)))
 }
 
 func TestBinariesLibrary(t *tes.T) {

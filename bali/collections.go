@@ -15,7 +15,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // This method attempts to parse an association between a key and value. It

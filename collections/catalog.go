@@ -12,7 +12,7 @@ package collections
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // ASSOCIATION IMPLEMENTATION

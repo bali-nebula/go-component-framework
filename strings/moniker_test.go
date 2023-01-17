@@ -28,7 +28,6 @@ func TestMoniker(t *tes.T) {
 	ass.Equal(t, string(v1), string(v2))
 	var v3 = str.MonikerFromSequence(v1.GetValues(1, 2))
 	ass.Equal(t, "/bali/abstractions", string(v3))
-	ass.Equal(t, 3, v1.GetIndex("String"))
 }
 
 func TestMonikersLibrary(t *tes.T) {

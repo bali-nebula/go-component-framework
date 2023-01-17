@@ -14,7 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 	mat "math"
 )
 
@@ -103,12 +103,12 @@ func (v *interval[V]) AsArray() []V {
 	return array
 }
 
-// INDEXED INTERFACE
+// ACCESSIBLE INTERFACE
 
 // This method retrieves from this interval range the value that is associated
 // with the specified index.
 func (v *interval[V]) GetValue(index int) V {
-	var offset = v.GoIndex(index)
+	var offset = v.goIndex(index)
 	if offset < 0 {
 		panic("The index is outside the interval range of values.")
 	}
@@ -128,6 +128,8 @@ func (v *interval[V]) GetValues(first int, last int) abs.Sequential[V] {
 	return values
 }
 
+// SEARCHABLE INTERFACE
+
 // This method returns the index of the FIRST occurence of the specified value
 // in this interval range, or zero if this interval range does not contain the
 // value.
@@ -140,8 +142,6 @@ func (v *interval[V]) GetIndex(value V) int {
 	}
 	return offset
 }
-
-// SEARCHABLE INTERFACE
 
 // This method determines whether or not the specified value is included in this
 // interval range.
@@ -268,7 +268,7 @@ func (v *interval[V]) indexToValue(index int) V {
 //	[-length..-1] and [1..length] => [0..length)
 //
 // Notice that the specified index cannot be zero since zero is not an ORDINAL.
-func (v *interval[V]) GoIndex(index int) int {
+func (v *interval[V]) goIndex(index int) int {
 	var length = v.size
 	switch {
 	case index < -length || index == 0 || index > length:

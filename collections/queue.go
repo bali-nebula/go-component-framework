@@ -12,7 +12,7 @@ package collections
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // QUEUE IMPLEMENTATION
@@ -66,23 +66,16 @@ func (v *queue) AsArray() []abs.ComponentLike {
 	return v.components.AsArray()
 }
 
-// EXPANDABLE INTERFACE
-
-// This method appends the specified component to the end of this queue.
-func (v *queue) AddValue(component abs.ComponentLike) {
-	v.components.AddValue(component)
-}
-
-// This method appends the specified components to the end of this queue.
-func (v *queue) AddValues(components abs.Sequential[abs.ComponentLike]) {
-	v.components.AddValues(components)
-}
-
 // FIFO INTERFACE
 
 // This method retrieves the capacity of this queue.
 func (v *queue) GetCapacity() int {
 	return v.components.GetCapacity()
+}
+
+// This method appends the specified component to the end of this queue.
+func (v *queue) AddValue(component abs.ComponentLike) {
+	v.components.AddValue(component)
 }
 
 // This method removes from this queue the value that is at the head of it. It

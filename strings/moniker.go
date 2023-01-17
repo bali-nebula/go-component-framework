@@ -12,7 +12,7 @@ package strings
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 	sts "strings"
 )
 
@@ -72,7 +72,7 @@ func (v Moniker) AsArray() []abs.Name {
 	return array
 }
 
-// INDEXED INTERFACE
+// ACCESSIBLE INTERFACE
 
 // This method retrieves from this string the name that is associated with the
 // specified index.
@@ -88,14 +88,6 @@ func (v Moniker) GetValues(first int, last int) abs.Sequential[abs.Name] {
 	var array = v.AsArray()
 	var names = col.Array[abs.Name](array)
 	return names.GetValues(first, last)
-}
-
-// This method returns the index of the FIRST occurence of the specified name in
-// this string, or zero if this string does not contain the name.
-func (v Moniker) GetIndex(name abs.Name) int {
-	var array = v.AsArray()
-	var names = col.Array[abs.Name](array)
-	return names.GetIndex(name)
 }
 
 // LIBRARY FUNCTIONS

@@ -13,7 +13,7 @@ package strings
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 	stc "strconv"
 	sts "strings"
 )
@@ -80,7 +80,7 @@ func (v Version) AsArray() []abs.Ordinal {
 	return ordinals
 }
 
-// INDEXED INTERFACE
+// ACCESSIBLE INTERFACE
 
 // This method retrieves from this string the ordinal number that is associated
 // with the specified index.
@@ -96,15 +96,6 @@ func (v Version) GetValues(first int, last int) abs.Sequential[abs.Ordinal] {
 	var array = v.AsArray()
 	var ordinals = col.Array[abs.Ordinal](array)
 	return ordinals.GetValues(first, last)
-}
-
-// This method returns the index of the FIRST occurence of the specified ordinal
-// number in this string, or zero if this string does not contain the ordinal
-// number.
-func (v Version) GetIndex(ordinal abs.Ordinal) int {
-	var array = v.AsArray()
-	var ordinals = col.Array[abs.Ordinal](array)
-	return ordinals.GetIndex(ordinal)
 }
 
 // LIBRARY FUNCTIONS

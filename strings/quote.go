@@ -12,7 +12,7 @@ package strings
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // QUOTE STRING INTERFACE
@@ -63,7 +63,7 @@ func (v Quote) AsArray() []rune {
 	return []rune(v)
 }
 
-// INDEXED INTERFACE
+// ACCESSIBLE INTERFACE
 
 // This method retrieves from this string the rune that is associated
 // with the specified index.
@@ -79,14 +79,6 @@ func (v Quote) GetValues(first int, last int) abs.Sequential[rune] {
 	var array = v.AsArray()
 	var runes = col.Array[rune](array)
 	return runes.GetValues(first, last)
-}
-
-// This method returns the index of the FIRST occurence of the specified rune
-// in this string, or zero if this string does not contain the rune.
-func (v Quote) GetIndex(r rune) int {
-	var array = v.AsArray()
-	var runes = col.Array[rune](array)
-	return runes.GetIndex(r)
 }
 
 // LIBRARY FUNCTIONS

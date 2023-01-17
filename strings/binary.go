@@ -13,7 +13,7 @@ package strings
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/utilities"
-	col "github.com/craterdog/go-collection-framework"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // BINARY STRING INTERFACE
@@ -64,7 +64,7 @@ func (v Binary) AsArray() []byte {
 	return bytes
 }
 
-// INDEXED INTERFACE
+// ACCESSIBLE INTERFACE
 
 // This method retrieves from this string the byte that is associated
 // with the specified index.
@@ -80,14 +80,6 @@ func (v Binary) GetValues(first int, last int) abs.Sequential[byte] {
 	var array = v.AsArray()
 	var bytes = col.Array[byte](array)
 	return bytes.GetValues(first, last)
-}
-
-// This method returns the index of the FIRST occurence of the specified byte
-// in this string, or zero if this string does not contain the byte.
-func (v Binary) GetIndex(b byte) int {
-	var array = v.AsArray()
-	var bytes = col.Array[byte](array)
-	return bytes.GetIndex(b)
 }
 
 // LIBRARY FUNCTIONS

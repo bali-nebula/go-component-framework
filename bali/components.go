@@ -17,7 +17,7 @@ import (
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
-	cof "github.com/craterdog/go-collection-framework"
+	cof "github.com/craterdog/go-collection-framework/v2"
 	sts "strings"
 )
 
