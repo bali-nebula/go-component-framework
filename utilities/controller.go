@@ -88,7 +88,7 @@ type controller struct {
 	current State
 }
 
-// SEQUENTIAL INTERFACE
+// PUBLIC INTERFACE
 
 // This method retrieves the current state of the controller.
 func (v *controller) GetState() State {
