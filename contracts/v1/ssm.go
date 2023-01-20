@@ -23,8 +23,12 @@ import (
 	dig "crypto/sha512"
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	bal "github.com/bali-nebula/go-component-framework/bali"
+	col "github.com/bali-nebula/go-component-framework/collections"
+	com "github.com/bali-nebula/go-component-framework/components"
+	ele "github.com/bali-nebula/go-component-framework/elements"
+	str "github.com/bali-nebula/go-component-framework/strings"
 	uti "github.com/bali-nebula/go-component-framework/utilities"
-	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // CONSTANT DEFINITIONS
@@ -55,7 +59,7 @@ var table = [][]abs.State{
 // This constructor creates a new software security module.
 func SSM(directory string) abs.SecurityModuleLike {
 	var filename = "SSM" + protocol + ".bali"
-	var configuration = col.Catalog[string, []byte]()
+	var configuration = col.Catalog()
 	var configurator = uti.Configurator(directory, filename)
 	var controller = uti.Controller(events, states, table, keyless)
 	return &ssm{configuration, configurator, controller}
@@ -64,7 +68,7 @@ func SSM(directory string) abs.SecurityModuleLike {
 // This type defines the structure and methods associated with a software
 // security module (SSM).
 type ssm struct {
-	configuration col.CatalogLike[string, []byte]
+	configuration abs.CatalogLike
 	configurator abs.ConfiguratorLike
 	controller abs.ControllerLike
 }
@@ -80,9 +84,9 @@ func (v *ssm) GenerateKeys() abs.PublicKey {
 		var message = fmt.Sprintf("Could not generate a new public-private keypair: %v.", err)
 		panic(message)
 	}
-	v.configuration.SetValue("privateKey", privateKey)
-	v.configuration.SetValue("publicKey", publicKey)
-	v.configurator.Store(abs.Configuration(col.FormatValue(v.configuration)))
+	v.configuration.SetValue(ele.Symbol("privateKey"), com.Component(str.BinaryFromArray(privateKey)))
+	v.configuration.SetValue(ele.Symbol("publicKey"), com.Component(str.BinaryFromArray(publicKey)))
+	v.configurator.Store(abs.Configuration(bal.FormatEntity(v.configuration)))
 	return abs.PublicKey(publicKey)
 }
 
@@ -97,7 +101,7 @@ func (v *ssm) DigestBytes(bytes []byte) abs.Digest {
 // returns the digital signature.
 func (v *ssm) SignBytes(bytes []byte) abs.Signature {
 	v.controller.TransitionState(signBytes)
-	var privateKey = v.configuration.GetValue("privateKey")
+	var privateKey = v.configuration.GetValue(ele.Symbol("privateKey")).GetEntity().(str.Binary).AsArray()
 	var signature = sig.Sign(privateKey, bytes)
 	return abs.Signature(signature)
 }
@@ -118,9 +122,9 @@ func (v *ssm) RotateKeys() abs.PublicKey {
 		var message = fmt.Sprintf("Could not rotate the public-private keypair: %v.", err)
 		panic(message)
 	}
-	v.configuration.SetValue("privateKey", privateKey)
-	v.configuration.SetValue("publicKey", publicKey)
-	v.configurator.Store(abs.Configuration(col.FormatValue(v.configuration)))
+	v.configuration.SetValue(ele.Symbol("privateKey"), com.Component(str.BinaryFromArray(privateKey)))
+	v.configuration.SetValue(ele.Symbol("publicKey"), com.Component(str.BinaryFromArray(publicKey)))
+	v.configurator.Store(abs.Configuration(bal.FormatEntity(v.configuration)))
 	return abs.PublicKey(publicKey)
 }
 
