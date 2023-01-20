@@ -12,21 +12,8 @@ package utilities
 
 import (
 	fmt "fmt"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework/v2"
-)
-
-// TYPE DEFINITIONS
-
-type (
-	Event string
-	State string
-	Events col.ListLike[Event]
-	States col.ListLike[State]
-	Table col.CatalogLike[State, States]
-)
-
-const (
-	Invalid State = "invalid"
 )
 
 // CONTROLLER IMPLEMENTATION
@@ -36,16 +23,18 @@ const (
 // state machine and allowed transitions between states given a finite set of
 // possible event types. It implements a finite state machine with the following
 // structure:
-//     events:      [ "event1",  "event2", ...  "eventM"]
-//     states: 
-//         "state1: ["invalid",  "state2", ... "invalid"]
-//         "state2: [ "state3",  "stateN", ...  "state1"]
-   //                           ...
-//         "stateN: [ "state1", "invalid", ...  "state3"]
-//     ]
+//
+//	events:      [ "event1",  "event2", ...  "eventM"]
+//	states:
+//	    "state1: ["invalid",  "state2", ... "invalid"]
+//	    "state2: [ "state3",  "stateN", ...  "state1"]
+//	                        ...
+//	    "stateN: [ "state1", "invalid", ...  "state3"]
+//	]
+//
 // The first state listed in the state table is the initial state of the finite
 // state machine. Transitions to next states marked as "invalid" cannot occur.
-func Controller(columns []Event, rows []State, table [][]State) *controller {
+func Controller(columns []abs.Event, rows []abs.State, table [][]abs.State, state abs.State) abs.ControllerLike {
 	// Check for empty event types or states.
 	var events = col.ListFromArray(columns)
 	var states = col.ListFromArray(rows)
@@ -69,51 +58,51 @@ func Controller(columns []Event, rows []State, table [][]State) *controller {
 		panic(message)
 	}
 	// Construct the catalog of state transitions.
-	var catalog = col.Catalog[State, col.ListLike[State]]()
+	var catalog = col.Catalog[abs.State, col.ListLike[abs.State]]()
 	var row = 0
-	var iterator = col.Iterator[State](states)
+	var iterator = col.Iterator[abs.State](states)
 	for iterator.HasNext() {
 		var state = iterator.GetNext()
 		var transitions = col.ListFromArray(table[row])
 		catalog.SetValue(state, transitions)
 		row++
 	}
-	return &controller{events, catalog, states.GetValue(1)}
+	return &controller{events, states, catalog, state}
 }
 
 // This type defines the structure and methods associated with a controller agent.
 type controller struct {
-	events col.ListLike[Event]
-	table col.CatalogLike[State, col.ListLike[State]]
-	current State
+	events  col.ListLike[abs.Event]
+	states  col.ListLike[abs.State]
+	table   col.CatalogLike[abs.State, col.ListLike[abs.State]]
+	current abs.State
 }
 
 // PUBLIC INTERFACE
 
 // This method retrieves the current state of the controller.
-func (v *controller) GetState() State {
+func (v *controller) GetState() abs.State {
 	return v.current
 }
 
-// This method determines whether or not the specified event would result in a
-// valid state transition.
-func (v *controller) IsValid(event Event) bool {
-	var column = v.events.GetIndex(event)
-	var row = v.table.GetValue(v.current)
-	var next = row.GetValue(column)
-	return next != Invalid
+// This method sets the state of the controller to the specified state.
+func (v *controller) SetState(state abs.State) {
+	if !v.states.ContainsValue(state) {
+		var message = fmt.Sprintf("Attempted to set an invalid state: %v", state)
+		panic(message)
+	}
+	v.current = state
 }
 
 // This method determines whether or not this set is empty.
-func (v *controller) TransitionState(event Event) State {
+func (v *controller) TransitionState(event abs.Event) abs.State {
 	var column = v.events.GetIndex(event)
 	var row = v.table.GetValue(v.current)
-	v.current = row.GetValue(column)
+	var next = row.GetValue(column)
+	if !v.states.ContainsValue(next) {
+		var message = fmt.Sprintf("Attempted to transition to an invalid state: %v", next)
+		panic(message)
+	}
+	v.current = next
 	return v.current
-}
-
-// This method resets the state of the controller to the initial state.
-func (v *controller) ResetState() {
-	var states = col.ListFromSequence(v.table.GetKeys())
-	v.current = states.GetValue(1)
 }

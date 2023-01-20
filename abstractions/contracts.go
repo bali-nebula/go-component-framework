@@ -17,11 +17,12 @@ type (
 	Citation    any
 	Contract    any
 	Credentials any
-	Digest      any
 	Document    any
-	PublicKey   any
-	Salt        any
-	Signature   any
+	Salt        []byte
+	PublicKey   []byte
+	PrivateKey  []byte
+	Digest      []byte
+	Signature   []byte
 )
 
 // INDIVIDUAL INTERFACES

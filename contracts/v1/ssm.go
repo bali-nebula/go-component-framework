@@ -19,27 +19,54 @@ package v1
 /////////////////////////////////////////////////////////////////////////////////
 
 import (
+	sig "crypto/ed25519"
+	dig "crypto/sha512"
+	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	uti "github.com/bali-nebula/go-component-framework/utilities"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // CONSTANT DEFINITIONS
 
 const (
-	protocol  = "v1"
-	digest    = "sha512"
-	signature = "ed25519"
+	protocol     = "v1"
+	digest       = "sha512"
+	signature    = "ed25519"
+	generateKeys = "GenerateKeys"
+	signBytes    = "SignBytes"
+	rotateKeys   = "RotateKeys"
+	keyless      = "Keyless"
+	loneKey      = "LoneKey"
+	twoKeys      = "TwoKeys"
+	invalid      = "Invalid"
 )
+
+var events = []abs.Event{generateKeys, signBytes, rotateKeys}
+var states = []abs.State{keyless, loneKey, twoKeys}
+var table = [][]abs.State{
+	{loneKey, invalid, invalid},
+	{invalid, loneKey, twoKeys},
+	{invalid, loneKey, invalid},
+}
 
 // NOTARY IMPLEMENTATION
 
 // This constructor creates a new software security module.
-func SSM() abs.SecurityModuleLike {
-	return &ssm{}
+func SSM(directory string) abs.SecurityModuleLike {
+	var filename = "SSM" + protocol + ".bali"
+	var configuration = col.Catalog[string, []byte]()
+	var configurator = uti.Configurator(directory, filename)
+	var controller = uti.Controller(events, states, table, keyless)
+	return &ssm{configuration, configurator, controller}
 }
 
 // This type defines the structure and methods associated with a software
 // security module (SSM).
 type ssm struct {
+	configuration col.CatalogLike[string, []byte]
+	configurator abs.ConfiguratorLike
+	controller abs.ControllerLike
 }
 
 // SECURE INTERFACE
@@ -47,34 +74,59 @@ type ssm struct {
 // This method generates a new public-private key pair and returns the public
 // key.
 func (v *ssm) GenerateKeys() abs.PublicKey {
-	panic("Not yet implemented.")
+	v.controller.TransitionState(generateKeys)
+	var publicKey, privateKey, err = sig.GenerateKey(nil) // Uses crypto/rand.Reader.
+	if err != nil {
+		var message = fmt.Sprintf("Could not generate a new public-private keypair: %v.", err)
+		panic(message)
+	}
+	v.configuration.SetValue("privateKey", privateKey)
+	v.configuration.SetValue("publicKey", publicKey)
+	v.configurator.Store(abs.Configuration(col.FormatValue(v.configuration)))
+	return abs.PublicKey(publicKey)
 }
 
 // This method generates a digital digest of the specified bytes and returns
 // the digital digest.
 func (v *ssm) DigestBytes(bytes []byte) abs.Digest {
-	panic("Not yet implemented.")
+	var digest = dig.Sum512(bytes)
+	return abs.Digest(digest[:])
 }
 
 // This method digitally signs the specified bytes using the private key and
 // returns the digital signature.
 func (v *ssm) SignBytes(bytes []byte) abs.Signature {
-	panic("Not yet implemented.")
+	v.controller.TransitionState(signBytes)
+	var privateKey = v.configuration.GetValue("privateKey")
+	var signature = sig.Sign(privateKey, bytes)
+	return abs.Signature(signature)
 }
 
 // This method determines whether or not the specified digital signature is
 // valid for the specified bytes using the specified public key.
 func (v *ssm) IsValid(publicKey abs.PublicKey, signature abs.Signature, bytes []byte) bool {
-	panic("Not yet implemented.")
+	var isValid = sig.Verify(sig.PublicKey(publicKey), bytes, signature)
+	return isValid
 }
 
 // This method replaces the existing public-key pair with a new one and returns
 // the new public key.
 func (v *ssm) RotateKeys() abs.PublicKey {
-	panic("Not yet implemented.")
+	v.controller.TransitionState(rotateKeys)
+	var publicKey, privateKey, err = sig.GenerateKey(nil) // Uses crypto/rand.Reader.
+	if err != nil {
+		var message = fmt.Sprintf("Could not rotate the public-private keypair: %v.", err)
+		panic(message)
+	}
+	v.configuration.SetValue("privateKey", privateKey)
+	v.configuration.SetValue("publicKey", publicKey)
+	v.configurator.Store(abs.Configuration(col.FormatValue(v.configuration)))
+	return abs.PublicKey(publicKey)
 }
 
 // This method erases the existing public-key pair.
 func (v *ssm) EraseKeys() {
-	panic("Not yet implemented.")
+	v.configuration = nil
+	v.configurator.Delete()
+	v.controller.SetState(keyless)
 }

@@ -12,14 +12,14 @@ package utilities
 
 import (
 	fmt "fmt"
-	sts "strings"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	osx "os"
+	sts "strings"
 )
 
 // TYPE DEFINITIONS
 
-type (
-)
+type ()
 
 // CONSTANT DEFINITIONS
 
@@ -31,7 +31,7 @@ const (
 
 // This constructor creates a new configurator using the specified directory and
 // filename.
-func Configurator(directory, filename string) *configurator {
+func Configurator(directory, filename string) abs.ConfiguratorLike {
 	var err error
 	// Validate the configuration filename.
 	if len(filename) == 0 {
@@ -57,33 +57,35 @@ func Configurator(directory, filename string) *configurator {
 		panic(message)
 	}
 	// Create the configurator.
-	var file = directory + filename;
-	return &configurator{file}
+	return &configurator{directory, filename}
 }
 
 // This type defines the structure and methods associated with a configurator
 // agent.
 type configurator struct {
-	file string
+	directory string
+	filename  string
 }
 
 // PUBLIC INTERFACE
 
 // This method loads the current configuration stored in the configuration file.
-func (v *configurator) Load() string {
-	var bytes, err = osx.ReadFile(v.file)
+func (v *configurator) Load() abs.Configuration {
+	var file = v.directory + v.filename
+	var bytes, err = osx.ReadFile(file)
 	if err != nil {
 		var message = fmt.Sprintf("Could not read the configuration file: %v.", err)
 		panic(message)
 	}
-	var configuration = string(bytes[:len(bytes)-1]) // Remove the POSIX EOL character.
+	var configuration = abs.Configuration(bytes[:len(bytes)-1]) // Remove the POSIX EOL character.
 	return configuration
 }
 
 // This method stores the current configuration in the configuration file.
-func (v *configurator) Store(configuration string) {
+func (v *configurator) Store(configuration abs.Configuration) {
+	var file = v.directory + v.filename
 	var bytes = []byte(configuration + EOL) // Append the POSIX EOL character.
-	var err = osx.WriteFile(v.file, bytes, 0600)
+	var err = osx.WriteFile(file, bytes, 0600)
 	if err != nil {
 		var message = fmt.Sprintf("Could not create the configuration file: %v.", err)
 		panic(message)
@@ -92,9 +94,11 @@ func (v *configurator) Store(configuration string) {
 
 // This method deletes the configuration file.
 func (v *configurator) Delete() {
-	var err = osx.Remove(v.file)
+	var file = v.directory + v.filename
+	var err = osx.Remove(file)
 	if err != nil {
 		var message = fmt.Sprintf("Could not delete the configuration file: %v.", err)
 		panic(message)
 	}
+	osx.Remove(v.directory)
 }

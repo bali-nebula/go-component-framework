@@ -8,32 +8,22 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package utilities_test
+package v1_test
 
 import (
-	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	uti "github.com/bali-nebula/go-component-framework/utilities"
+	ssm "github.com/bali-nebula/go-component-framework/contracts/v1"
 	ass "github.com/stretchr/testify/assert"
-	sts "strings"
 	tes "testing"
 )
 
-func TestConfiguratorWithNoDirectory(t *tes.T) {
-	var directory = ""
-	var filename = "test.bali"
-	var configurator = uti.Configurator(directory, filename)
-	var configuration = abs.Configuration("This is a test configuration.")
+func TestSSM(t *tes.T) {
+	var bytes = []byte{0x0, 0x1, 0x2, 0x3, 0x4}
+	var module = ssm.SSM("./")
+	ass.Equal(t, 64, len(module.DigestBytes(bytes)))
 
-	configurator.Store(configuration)
-	ass.Equal(t, configuration, configurator.Load())
-	configurator.Delete()
-	defer func() {
-		if e := recover(); e != nil {
-			var message = e.(string)
-			ass.True(t, sts.HasPrefix(message, "Could not read the configuration file"))
-		} else {
-			ass.Fail(t, "Test should result in recovered panic.")
-		}
-	}()
-	configurator.Load() // This should panic.
+	var publicKey = module.GenerateKeys()
+
+	var signature = module.SignBytes(bytes)
+	ass.True(t, module.IsValid(publicKey, signature, bytes))
+	module.EraseKeys()
 }

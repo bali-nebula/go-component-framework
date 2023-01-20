@@ -36,7 +36,7 @@ func Notary() abs.NotaryLike {
 	// Must be ordered with newest version first.
 	//protocols.SetValue(v3, sm3.SSM())
 	//protocols.SetValue(v2, sm2.SSM())
-	protocols.SetValue(v1, sm1.SSM())
+	protocols.SetValue(v1, sm1.SSM(""))
 	return &notary{protocols}
 }
 
