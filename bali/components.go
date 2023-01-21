@@ -518,7 +518,7 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 		var name = ele.Symbol("type")
 		var component = context.GetValue(name)
 		if component != nil {
-			var moniker = component.GetEntity().(str.Moniker) // A type must be a moniker.
+			var moniker = component.ExtractMoniker()
 			type_ = moniker.AsString()
 		}
 	}

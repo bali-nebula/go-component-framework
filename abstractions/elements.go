@@ -139,5 +139,5 @@ type SymbolLike interface {
 
 type TagLike interface {
 	Spectral
-	Sequential[Byte]
+	Sequential[byte]
 }

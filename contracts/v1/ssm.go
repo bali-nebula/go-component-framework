@@ -73,7 +73,7 @@ func SSM(directory string) abs.SecurityModuleLike {
 	var configurator = age.Configurator(directory, filename)
 	if configurator.Exists() {
 		configuration = loadConfiguration(configurator)
-		state = abs.State(configuration.GetValue(stateKey).GetEntity().(str.Quote))
+		state = abs.State(configuration.GetValue(stateKey).ExtractQuote().AsString())
 	} else {
 		var tag = "#" + ele.TagOfSize(20) // Generate a new random tag.
 		configuration = bal.ParseEntity(`[
@@ -121,7 +121,7 @@ func (v *ssm) DigestBytes(bytes []byte) abs.Digest {
 // returns the digital signature.
 func (v *ssm) SignBytes(bytes []byte) abs.Signature {
 	v.controller.TransitionState(signBytes)
-	var private = v.configuration.GetValue(privateKey).GetEntity().(str.Binary).AsArray()
+	var private = v.configuration.GetValue(privateKey).ExtractBinary().AsArray()
 	var signature = sig.Sign(private, bytes)
 	return abs.Signature(signature)
 }
@@ -160,8 +160,7 @@ func (v *ssm) EraseKeys() {
 func loadConfiguration(configurator abs.ConfiguratorLike) abs.CatalogLike {
 	var document = configurator.Load()
 	var component = bal.ParseDocument(document)
-	var entity = component.GetEntity()
-	var configuration = entity.(abs.CatalogLike)
+	var configuration = component.ExtractCatalog()
 	return configuration
 }
 

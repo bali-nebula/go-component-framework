@@ -13,7 +13,6 @@ package abstractions
 // TYPE DEFINITIONS
 
 type (
-	Byte    byte
 	Line    string
 	Name    string
 	Ordinal uint
@@ -32,8 +31,8 @@ type Spectral interface {
 
 type BinaryLike interface {
 	Spectral
-	Sequential[Byte]
-	Accessible[Byte]
+	Sequential[byte]
+	Accessible[byte]
 }
 
 type MonikerLike interface {
