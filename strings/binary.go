@@ -16,7 +16,7 @@ import (
 	col "github.com/craterdog/go-collection-framework/v2"
 )
 
-// BINARY STRING INTERFACE
+// BINARY STRING IMPLEMENTATION
 
 // This constructor creates a new binary string from the specified byte array.
 // It returns the corresponding binary string.

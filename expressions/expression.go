@@ -18,7 +18,9 @@ import (
 // PUBLIC FUNCTIONS
 
 // This function returns a string describing the type of the specified
-// expression.
+// expression. This approach is used because the type switch CANNOT distinguish
+// between abstract "Like" types if they support exactly the same method sets.
+// The type switch CAN distinguish between the private structure types.
 func GetType(expression abs.Expression) string {
 	switch value := expression.(type) {
 	case abs.ComponentLike:

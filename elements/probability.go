@@ -14,7 +14,7 @@ import (
 	uti "github.com/bali-nebula/go-component-framework/utilities"
 )
 
-// PROBABILITY INTERFACE
+// PROBABILITY IMPLEMENTATION
 
 // This constructor creates a new probability and constrains the value to be in
 // the allowed range for probabilities [0..1].

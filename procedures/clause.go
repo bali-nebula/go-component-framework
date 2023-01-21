@@ -17,8 +17,10 @@ import (
 
 // PUBLIC FUNCTIONS
 
-// This function returns a string describing the type of the specified
-// clause.
+// This function returns a string describing the type of the specified main
+// clause. This approach is used because the type switch CANNOT distinguish
+// between abstract "Like" types if they support exactly the same method sets.
+// The type switch CAN distinguish between the private structure types.
 func GetType(clause abs.Clause) string {
 	switch value := clause.(type) {
 	case *acceptClause:

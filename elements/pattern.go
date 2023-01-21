@@ -14,7 +14,7 @@ import (
 	reg "regexp"
 )
 
-// PATTERN INTERFACE
+// PATTERN IMPLEMENTATION
 
 // This type defines the methods associated with a character pattern that
 // extends the native Go string type and represents the regular expression

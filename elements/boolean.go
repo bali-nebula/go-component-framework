@@ -10,7 +10,7 @@
 
 package elements
 
-// BOOLEAN INTERFACE
+// BOOLEAN IMPLEMENTATION
 
 // This type defines the methods associated with boolean elements. It extends
 // the native Go bool type.

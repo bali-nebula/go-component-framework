@@ -16,7 +16,7 @@ import (
 	sts "strings"
 )
 
-// MONIKER STRING INTERFACE
+// MONIKER STRING IMPLEMENTATION
 
 // This constructor attempts to create a new moniker string from the specified
 // array of names. It returns the corresponding moniker string.

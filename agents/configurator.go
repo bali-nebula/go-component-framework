@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package utilities
+package agents
 
 import (
 	fmt "fmt"
@@ -67,25 +67,30 @@ type configurator struct {
 	filename  string
 }
 
-// PUBLIC INTERFACE
+// CUSTODIAL INTERFACE
+
+// This method determines whether or not the configuration file already exists.
+func (v *configurator) Exists() bool {
+	var file = v.directory + v.filename
+	var _, err = osx.ReadFile(file)
+	return err == nil
+}
 
 // This method loads the current configuration stored in the configuration file.
-func (v *configurator) Load() abs.Configuration {
+func (v *configurator) Load() []byte {
 	var file = v.directory + v.filename
-	var bytes, err = osx.ReadFile(file)
+	var configuration, err = osx.ReadFile(file)
 	if err != nil {
 		var message = fmt.Sprintf("Could not read the configuration file: %v.", err)
 		panic(message)
 	}
-	var configuration = abs.Configuration(bytes[:len(bytes)-1]) // Remove the POSIX EOL character.
 	return configuration
 }
 
 // This method stores the current configuration in the configuration file.
-func (v *configurator) Store(configuration abs.Configuration) {
+func (v *configurator) Store(configuration []byte) {
 	var file = v.directory + v.filename
-	var bytes = []byte(configuration + EOL) // Append the POSIX EOL character.
-	var err = osx.WriteFile(file, bytes, 0600)
+	var err = osx.WriteFile(file, configuration, 0600)
 	if err != nil {
 		var message = fmt.Sprintf("Could not create the configuration file: %v.", err)
 		panic(message)

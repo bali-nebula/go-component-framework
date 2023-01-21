@@ -15,7 +15,7 @@ import (
 	col "github.com/craterdog/go-collection-framework/v2"
 )
 
-// QUOTE STRING INTERFACE
+// QUOTE STRING IMPLEMENTATION
 
 // This constructor attempts to create a new quote string from the specified
 // array of runes. It returns a quote string and whether or not the

@@ -25,5 +25,5 @@ func TestSSM(t *tes.T) {
 
 	var signature = module.SignBytes(bytes)
 	ass.True(t, module.IsValid(publicKey, signature, bytes))
-	module.EraseKeys()
+	//module.EraseKeys()
 }

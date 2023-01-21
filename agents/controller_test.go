@@ -8,11 +8,11 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package utilities_test
+package agents_test
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	uti "github.com/bali-nebula/go-component-framework/utilities"
+	age "github.com/bali-nebula/go-component-framework/agents"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
@@ -25,7 +25,7 @@ func TestController(t *tes.T) {
 		{"invalid", "state2", "state3"},
 		{"invalid", "invalid", "invalid"},
 	}
-	var controller = uti.Controller(events, states, table, "state1")
+	var controller = age.Controller(events, states, table, "state1")
 	ass.Equal(t, abs.State("state1"), controller.GetState())
 	ass.Equal(t, abs.State("state2"), controller.TransitionState("initialized"))
 	ass.Equal(t, abs.State("state2"), controller.TransitionState("processed"))

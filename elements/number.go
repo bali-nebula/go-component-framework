@@ -16,7 +16,7 @@ import (
 	cmp "math/cmplx"
 )
 
-// NUMBER INTERFACE
+// NUMBER IMPLEMENTATION
 
 var zero = complex(0, 0)
 var infinity = cmp.Inf()

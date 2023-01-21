@@ -8,11 +8,10 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package utilities_test
+package agents_test
 
 import (
-	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	uti "github.com/bali-nebula/go-component-framework/utilities"
+	age "github.com/bali-nebula/go-component-framework/agents"
 	ass "github.com/stretchr/testify/assert"
 	sts "strings"
 	tes "testing"
@@ -21,10 +20,12 @@ import (
 func TestConfiguratorWithNoDirectory(t *tes.T) {
 	var directory = ""
 	var filename = "test.bali"
-	var configurator = uti.Configurator(directory, filename)
-	var configuration = abs.Configuration("This is a test configuration.")
+	var configurator = age.Configurator(directory, filename)
+	ass.False(t, configurator.Exists())
+	var configuration = []byte("This is a test configuration.\n")
 
 	configurator.Store(configuration)
+	ass.True(t, configurator.Exists())
 	ass.Equal(t, configuration, configurator.Load())
 	configurator.Delete()
 	defer func() {

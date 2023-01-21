@@ -14,7 +14,7 @@ import (
 	mat "math"
 )
 
-// PERCENTAGE INTERFACE
+// PERCENTAGE IMPLEMENTATION
 
 // This constructor returns the minimum value for a percentage.
 func MinimumPercentage() Percentage {

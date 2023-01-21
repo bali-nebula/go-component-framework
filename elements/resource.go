@@ -14,7 +14,7 @@ import (
 	uri "net/url"
 )
 
-// RESOURCE INTERFACE
+// RESOURCE IMPLEMENTATION
 
 // This type defines the methods associated with a web resource element that
 // extends the native Go string type and represents the URI corresponding to

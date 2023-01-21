@@ -35,7 +35,7 @@ const DaysPerMonth float64 = float64(MillisecondsPerMonth) / float64(Millisecond
 const WeeksPerMonth float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerWeek) // ~4.348125 weeks/month
 const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsPerDay)     // ~365.2425 days/year
 
-// DURATION INTERFACE
+// DURATION IMPLEMENTATION
 
 // This constructor returns the minimum value for a duration.
 func MinimumDuration() Duration {

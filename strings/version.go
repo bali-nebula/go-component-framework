@@ -18,7 +18,7 @@ import (
 	sts "strings"
 )
 
-// VERSION STRING INTERFACE
+// VERSION STRING IMPLEMENTATION
 
 // This constructor attempts to create a new version string from the specified
 // array of ordinal numbers. It returns the corresponding version string.

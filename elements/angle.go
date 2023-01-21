@@ -14,7 +14,7 @@ import (
 	mat "math"
 )
 
-// ANGLE INTERFACE
+// ANGLE IMPLEMENTATION
 
 // See "The Tau Manifesto" at https://tauday.com/tau-manifesto
 const tau = 2.0 * mat.Pi

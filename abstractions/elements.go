@@ -85,3 +85,59 @@ type Temporal interface {
 	GetMonths() int
 	GetYears() int
 }
+
+// CONSOLIDATED INTERFACES
+
+type AngleLike interface {
+	Continuous
+}
+
+type BooleanLike interface {
+	Discrete
+}
+
+type DurationLike interface {
+	Discrete
+	Polarized
+	Temporal
+}
+
+type MomentLike interface {
+	Discrete
+	Temporal
+}
+
+type NumberLike interface {
+	Continuous
+	Polarized
+	Complex
+}
+
+type PatternLike interface {
+	Spectral
+	Matchable
+}
+
+type PercentageLike interface {
+	Continuous
+	Polarized
+}
+
+type ProbabilityLike interface {
+	Continuous
+}
+
+type ResourceLike interface {
+	Spectral
+	Segmented
+}
+
+type SymbolLike interface {
+	Spectral
+	Symbolic
+}
+
+type TagLike interface {
+	Spectral
+	Sequential[Byte]
+}

@@ -28,6 +28,31 @@ type Symbolic interface {
 type Encapsulated interface {
 	GetEntity() Entity
 	SetEntity(entity Entity)
+	ExtractAngle() AngleLike
+	ExtractBinary() BinaryLike
+	ExtractBoolean() BooleanLike
+	ExtractCatalog() CatalogLike
+	ExtractContinuum() ContinuumLike[Continuous]
+	ExtractDuration() DurationLike
+	ExtractInterval() IntervalLike[Discrete]
+	ExtractList() ListLike
+	ExtractMoment() MomentLike
+	ExtractMoniker() MonikerLike
+	ExtractNarrative() NarrativeLike
+	ExtractNumber() NumberLike
+	ExtractPattern() PatternLike
+	ExtractPercentage() PercentageLike
+	ExtractProbability() ProbabilityLike
+	ExtractProcedure() ProcedureLike
+	ExtractQueue() QueueLike
+	ExtractQuote() QuoteLike
+	ExtractResource() ResourceLike
+	ExtractSet() SetLike
+	ExtractSpectrum() SpectrumLike[Spectral]
+	ExtractStack() StackLike
+	ExtractSymbol() SymbolLike
+	ExtractTag() TagLike
+	ExtractVersion() VersionLike
 	IsParameterized() bool
 	GetContext() ContextLike
 	SetContext(context ContextLike)

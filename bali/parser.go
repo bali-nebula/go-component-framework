@@ -79,9 +79,15 @@ func ParseDocument(document []byte) abs.ComponentLike {
 
 // This function parses a source string rather than the bytes from a BDN
 // document file. It is useful when parsing strings within source code.
-func ParseSource(source string) abs.ComponentLike {
+func ParseComponent(source string) abs.ComponentLike {
 	var document = []byte(source + "\n") // Append the POSIX compliant EOL character.
 	return ParseDocument(document)
+}
+
+// This function parses an entity from a source string.
+func ParseEntity(source string) abs.Entity {
+	var document = []byte(source + "\n") // Append the POSIX compliant EOL character.
+	return ParseDocument(document).GetEntity()
 }
 
 // PARSER IMPLEMENTATION

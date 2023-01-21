@@ -15,7 +15,7 @@ import (
 	tim "time"
 )
 
-// MOMENT INTERFACE
+// MOMENT IMPLEMENTATION
 
 // This constructor creates a new moment in time element for the current time
 // in the UTC timezone.

@@ -11,7 +11,6 @@
 package bali_test
 
 import (
-	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	bal "github.com/bali-nebula/go-component-framework/bali"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -32,7 +31,7 @@ func TestRoundtripWithBinaries(t *tes.T) {
 	}
 
 	for index, s := range binaryStrings {
-		var component = bal.ParseSource(s).(abs.ComponentLike)
+		var component = bal.ParseComponent(s)
 		var s = bal.FormatComponent(component)
 		ass.Equal(t, binaryStrings[index], s)
 	}
@@ -46,7 +45,7 @@ func TestRoundtripWithMonikers(t *tes.T) {
 	}
 
 	for index, s := range monikerStrings {
-		var component = bal.ParseSource(s).(abs.ComponentLike)
+		var component = bal.ParseComponent(s)
 		var s = bal.FormatComponent(component)
 		ass.Equal(t, monikerStrings[index], s)
 	}
@@ -65,7 +64,7 @@ func TestRoundtripWithNarratives(t *tes.T) {
 	}
 
 	for index, s := range narrativeStrings {
-		var component = bal.ParseSource(s).(abs.ComponentLike)
+		var component = bal.ParseComponent(s)
 		var s = bal.FormatComponent(component)
 		ass.Equal(t, narrativeStrings[index], s)
 	}
@@ -79,7 +78,7 @@ func TestRoundtripWithQuotes(t *tes.T) {
 	}
 
 	for index, s := range quoteStrings {
-		var component = bal.ParseSource(s).(abs.ComponentLike)
+		var component = bal.ParseComponent(s)
 		var s = bal.FormatComponent(component)
 		ass.Equal(t, quoteStrings[index], s)
 	}
@@ -93,7 +92,7 @@ func TestRoundtripWithVersions(t *tes.T) {
 	}
 
 	for index, s := range versionStrings {
-		var component = bal.ParseSource(s).(abs.ComponentLike)
+		var component = bal.ParseComponent(s)
 		var s = bal.FormatComponent(component)
 		ass.Equal(t, versionStrings[index], s)
 	}

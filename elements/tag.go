@@ -14,7 +14,7 @@ import (
 	uti "github.com/bali-nebula/go-component-framework/utilities"
 )
 
-// TAG INTERFACE
+// TAG IMPLEMENTATION
 
 // This constructor creates a new random tag identifier element with the
 // specified number of bytes.

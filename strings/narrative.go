@@ -16,7 +16,7 @@ import (
 	sts "strings"
 )
 
-// NARRATIVE STRING INTERFACE
+// NARRATIVE STRING IMPLEMENTATION
 
 // This constructor attempts to create a new narrative string from the specified
 // array of runes. It returns the corresponding narrative string.

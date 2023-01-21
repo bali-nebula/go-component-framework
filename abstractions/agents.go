@@ -13,17 +13,17 @@ package abstractions
 // TYPE DEFINITIONS
 
 type (
-	Configuration string
-	Event         string
-	State         string
+	Event string
+	State string
 )
 
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all custodial agents.
 type Custodial interface {
-	Load() Configuration
-	Store(configuration Configuration)
+	Exists() bool
+	Load() []byte
+	Store(configuration []byte)
 	Delete()
 }
 

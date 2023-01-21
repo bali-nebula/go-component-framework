@@ -10,7 +10,7 @@
 
 package elements
 
-// SYMBOL INTERFACE
+// SYMBOL IMPLEMENTATION
 
 // This type defines the methods associated with a symbol element that
 // extends the native Go string type and represents the runes that

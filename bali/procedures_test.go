@@ -11,7 +11,6 @@
 package bali_test
 
 import (
-	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	bal "github.com/bali-nebula/go-component-framework/bali"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -38,7 +37,7 @@ func TestRoundtripWithStatements(t *tes.T) {
 	}
 
 	for index, s := range statementStrings {
-		var component = bal.ParseSource(s).(abs.ComponentLike)
+		var component = bal.ParseComponent(s)
 		var s = bal.FormatComponent(component)
 		ass.Equal(t, statementStrings[index], s)
 	}
