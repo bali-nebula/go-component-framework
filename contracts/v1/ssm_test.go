@@ -25,5 +25,10 @@ func TestSSM(t *tes.T) {
 
 	var signature = module.SignBytes(bytes)
 	ass.True(t, module.IsValid(publicKey, signature, bytes))
+
+	var newPublicKey = module.RotateKeys()
+	signature = module.SignBytes(newPublicKey)
+	ass.True(t, module.IsValid(publicKey, signature, newPublicKey))
+
 	module.EraseKeys()
 }

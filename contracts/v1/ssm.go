@@ -25,6 +25,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	age "github.com/bali-nebula/go-component-framework/agents"
 	bal "github.com/bali-nebula/go-component-framework/bali"
+	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
@@ -33,18 +34,18 @@ import (
 // CONSTANT DEFINITIONS
 
 const (
-	tagKey     = ele.Symbol("tag")
-	publicKey  = ele.Symbol("publicKey")
-	privateKey = ele.Symbol("privateKey")
-	stateKey   = ele.Symbol("state")
-
-	generateKeys = "generateKeys"
-	signBytes    = "signBytes"
-	rotateKeys   = "rotateKeys"
-	keyless      = "keyless"
-	loneKey      = "loneKey"
-	twoKeys      = "twoKeys"
-	invalid      = "invalid"
+	tagAttribute         = "tag"
+	stateAttribute       = "state"
+	publicKeyAttribute   = "publicKey"
+	privateKeyAttribute  = "privateKey"
+	previousKeyAttribute = "previousKey"
+	generateKeys         = "generateKeys"
+	signBytes            = "signBytes"
+	rotateKeys           = "rotateKeys"
+	keyless              = "keyless"
+	loneKey              = "loneKey"
+	twoKeys              = "twoKeys"
+	invalid              = "invalid"
 )
 
 var events = []abs.Event{generateKeys, signBytes, rotateKeys}
@@ -68,29 +69,27 @@ var protocol = bal.ParseEntity(`[
 // This constructor creates a new software security module.
 func SSM(directory string) abs.SecurityModuleLike {
 	var filename = "SSMv1.bali"
-	var state = abs.State(keyless)
-	var configuration abs.CatalogLike
 	var configurator = age.Configurator(directory, filename)
+	var controller = age.Controller(events, states, table, keyless)
+	var v = &ssm{configurator: configurator, controller: controller}
 	if configurator.Exists() {
-		configuration = loadConfiguration(configurator)
-		state = abs.State(configuration.GetValue(stateKey).ExtractQuote().AsString())
+		v.readConfiguration()
 	} else {
-		var tag = "#" + ele.TagOfSize(20) // Generate a new random tag.
-		configuration = bal.ParseEntity(`[
-    $tag: ` + string(tag) + `
-    $state: "keyless"
-]`).(abs.CatalogLike)
+		v.createConfiguration()
 	}
-	var controller = age.Controller(events, states, table, state)
-	return &ssm{configuration, configurator, controller}
+	return v
 }
 
 // This type defines the structure and methods associated with a software
 // security module (SSM).
 type ssm struct {
-	configuration abs.CatalogLike
-	configurator  abs.ConfiguratorLike
-	controller    abs.ControllerLike
+	tag          abs.TagLike
+	state        abs.State
+	publicKey    abs.BinaryLike
+	privateKey   abs.BinaryLike
+	previousKey  abs.BinaryLike
+	configurator abs.ConfiguratorLike
+	controller   abs.ControllerLike
 }
 
 // SECURE INTERFACE
@@ -98,15 +97,15 @@ type ssm struct {
 // This method generates a new public-private key pair and returns the public
 // key.
 func (v *ssm) GenerateKeys() abs.PublicKey {
-	v.controller.TransitionState(generateKeys)
+	v.state = v.controller.TransitionState(generateKeys)
 	var public, private, err = sig.GenerateKey(nil) // Uses crypto/rand.Reader.
 	if err != nil {
 		var message = fmt.Sprintf("Could not generate a new public-private keypair: %v.", err)
 		panic(message)
 	}
-	v.configuration.SetValue(privateKey, com.Component(str.BinaryFromArray(private)))
-	v.configuration.SetValue(publicKey, com.Component(str.BinaryFromArray(public)))
-	storeConfiguration(v.configurator, v.configuration)
+	v.privateKey = str.BinaryFromArray(private)
+	v.publicKey = str.BinaryFromArray(public)
+	v.updateConfiguration()
 	return abs.PublicKey(public)
 }
 
@@ -120,9 +119,16 @@ func (v *ssm) DigestBytes(bytes []byte) abs.Digest {
 // This method digitally signs the specified bytes using the private key and
 // returns the digital signature.
 func (v *ssm) SignBytes(bytes []byte) abs.Signature {
-	v.controller.TransitionState(signBytes)
-	var private = v.configuration.GetValue(privateKey).ExtractBinary().AsArray()
+	v.state = v.controller.TransitionState(signBytes)
+	var privateKey = v.previousKey
+	if privateKey != nil {
+		v.previousKey = nil
+	} else {
+		privateKey = v.privateKey
+	}
+	var private = privateKey.AsArray()
 	var signature = sig.Sign(private, bytes)
+	v.updateConfiguration()
 	return abs.Signature(signature)
 }
 
@@ -136,35 +142,80 @@ func (v *ssm) IsValid(public abs.PublicKey, signature abs.Signature, bytes []byt
 // This method replaces the existing public-key pair with a new one and returns
 // the new public key.
 func (v *ssm) RotateKeys() abs.PublicKey {
-	v.controller.TransitionState(rotateKeys)
+	v.state = v.controller.TransitionState(rotateKeys)
 	var public, private, err = sig.GenerateKey(nil) // Uses crypto/rand.Reader.
 	if err != nil {
 		var message = fmt.Sprintf("Could not rotate the public-private keypair: %v.", err)
 		panic(message)
 	}
-	v.configuration.SetValue(privateKey, com.Component(str.BinaryFromArray(private)))
-	v.configuration.SetValue(publicKey, com.Component(str.BinaryFromArray(public)))
-	storeConfiguration(v.configurator, v.configuration)
+	v.previousKey = v.privateKey
+	v.privateKey = str.BinaryFromArray(private)
+	v.publicKey = str.BinaryFromArray(public)
+	v.updateConfiguration()
 	return abs.PublicKey(public)
 }
 
 // This method erases the existing public-key pair.
 func (v *ssm) EraseKeys() {
-	v.configuration = nil
-	v.configurator.Delete()
 	v.controller.SetState(keyless)
+	v.deleteConfiguration()
 }
 
 // PRIVATE METHODS
 
-func loadConfiguration(configurator abs.ConfiguratorLike) abs.CatalogLike {
-	var document = configurator.Load()
-	var component = bal.ParseDocument(document)
-	var configuration = component.ExtractCatalog()
-	return configuration
+func (v *ssm) createConfiguration() {
+	v.tag = ele.TagOfSize(20) // Generate a new random tag.
+	v.state = keyless
+	var configuration = bal.ParseEntity(`[
+    $tag: #` + v.tag.AsString() + `
+    $state: "` + string(v.state) + `"
+]`).(abs.CatalogLike)
+	var document = []byte(bal.FormatEntity(configuration) + "\n")
+	v.configurator.Store(document)
 }
 
-func storeConfiguration(configurator abs.ConfiguratorLike, configuration abs.CatalogLike) {
+func (v *ssm) readConfiguration() {
+	var document = v.configurator.Load()
+	var component = bal.ParseDocument(document)
+	var configuration = component.ExtractCatalog()
+	v.tag = configuration.GetValue(ele.Symbol(tagAttribute)).ExtractTag()
+	v.state = abs.State(configuration.GetValue(ele.Symbol(stateAttribute)).ExtractQuote().AsString())
+	component = configuration.GetValue(ele.Symbol(publicKeyAttribute))
+	if component != nil {
+		v.publicKey = component.ExtractBinary()
+	}
+	component = configuration.GetValue(ele.Symbol(privateKeyAttribute))
+	if component != nil {
+		v.privateKey = component.ExtractBinary()
+	}
+	component = configuration.GetValue(ele.Symbol(previousKeyAttribute))
+	if component != nil {
+		v.previousKey = component.ExtractBinary()
+	}
+}
+
+func (v *ssm) updateConfiguration() {
+	var configuration = col.Catalog()
+	configuration.SetValue(ele.Symbol(tagAttribute), com.Component(v.tag))
+	configuration.SetValue(ele.Symbol(stateAttribute), com.Component(str.Quote(v.state)))
+	if v.publicKey != nil {
+		configuration.SetValue(ele.Symbol(publicKeyAttribute), com.Component(v.publicKey))
+	}
+	if v.privateKey != nil {
+		configuration.SetValue(ele.Symbol(privateKeyAttribute), com.Component(v.privateKey))
+	}
+	if v.previousKey != nil {
+		configuration.SetValue(ele.Symbol(previousKeyAttribute), com.Component(v.previousKey))
+	}
 	var document = []byte(bal.FormatEntity(configuration) + "\n")
-	configurator.Store(document)
+	v.configurator.Store(document)
+}
+
+func (v *ssm) deleteConfiguration() {
+	v.tag = nil
+	v.state = invalid
+	v.publicKey = nil
+	v.privateKey = nil
+	v.previousKey = nil
+	v.configurator.Delete()
 }

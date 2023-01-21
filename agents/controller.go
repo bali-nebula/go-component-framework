@@ -98,6 +98,10 @@ func (v *controller) SetState(state abs.State) {
 func (v *controller) TransitionState(event abs.Event) abs.State {
 	var column = v.events.GetIndex(event)
 	var row = v.table.GetValue(v.current)
+	if row == nil {
+		var message = fmt.Sprintf("The controller is in an invalid state: %v", v.current)
+		panic(message)
+	}
 	var next = row.GetValue(column)
 	if !v.states.ContainsValue(next) {
 		var message = fmt.Sprintf("Attempted to transition to an invalid state: %v", next)
