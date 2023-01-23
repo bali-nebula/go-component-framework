@@ -10,7 +10,35 @@
 
 package elements
 
+import (
+	fmt "fmt"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	reg "regexp"
+)
+
 // SYMBOL IMPLEMENTATION
+
+// These constants are used to define a regular expression for matching
+// symbols.
+const (
+	letter     = `\pL` // All unicode letters and connectors like underscores.
+	digit      = `\pN` // All unicode digits.
+	identifier = letter + `(?:` + letter + `|` + digit + `)*`
+	ordinal    = `[1-9][0-9]*`
+	symbol     = `(` + identifier + `(?:-` + ordinal + `)?)`
+)
+
+// This scanner is used for matching symbol strings.
+var symbolScanner = reg.MustCompile(`^(?:` + symbol + `)$`)
+
+// This constructor creates a new symbol from the specified string.
+func SymbolFromString(v string) abs.SymbolLike {
+	if !symbolScanner.MatchString(v) {
+		var message = fmt.Sprintf("Attempted to construct a symbol from an invalid string: %v", v)
+		panic(message)
+	}
+	return Symbol(v)
+}
 
 // This type defines the methods associated with a symbol element that
 // extends the native Go string type and represents the runes that
@@ -21,12 +49,5 @@ type Symbol string
 
 // This method returns a string value for this spectral element.
 func (v Symbol) AsString() string {
-	return string(v)
-}
-
-// SYMBOLIC INTERFACE
-
-// This method returns the identifier for this symbol.
-func (v Symbol) GetIdentifier() string {
 	return string(v)
 }

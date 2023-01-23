@@ -21,13 +21,26 @@ import (
 	sts "strings"
 )
 
-// PARSING METHODS
-//
-// Each parsing method returns the following three results:
-//  * The parsed component corresponding to the source string, or nil if the
-//    parsing failed.
-//  * The parsed token that caused the failure if the parsing did fail.
-//  * Whether or not the parsing succeeded.
+// UNIVERSAL CONSTRUCTORS
+
+// This constructor returns a new component initialized with the specified
+// value.
+func Component(value abs.Value) abs.ComponentLike {
+	var component abs.ComponentLike
+	switch actual := value.(type) {
+		case uint, uint8, uint16, uint32, uint64, int, int8, int16, int32, int64, float32, float64:
+			component = com.Component(Number(actual))
+		case string:
+			component = com.Component(str.Quote(actual))
+		case abs.ComponentLike:
+			component = actual
+		default:
+			component = com.Component(actual)
+	}
+	return component
+}
+
+// PRIVATE METHODS
 
 // This method attempts to parse annotation. It returns the annotation and
 // whether or not the annotation was successfully parsed.
@@ -161,7 +174,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.AppendString("(")
 	var names = context.GetNames()
-	var iterator = cof.Iterator[abs.Symbolic](names)
+	var iterator = cof.Iterator[abs.SymbolLike](names)
 	switch names.GetSize() {
 	case 1:
 		var name = iterator.GetNext()
@@ -443,7 +456,7 @@ func (v *formatter) formatNote(note abs.NoteLike) {
 func (v *parser) parseParameter() (abs.ParameterLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var name abs.Symbolic
+	var name abs.SymbolLike
 	var value abs.ComponentLike
 	name, token, ok = v.parseSymbol()
 	if !ok {
@@ -470,7 +483,7 @@ func (v *parser) parseParameter() (abs.ParameterLike, *Token, bool) {
 func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 	var key = parameter.GetKey()
 	v.AppendString("$")
-	v.formatIdentifier(key.GetIdentifier())
+	v.formatIdentifier(key.AsString())
 	v.AppendString(": ")
 	var value = parameter.GetValue()
 	v.formatComponent(value)

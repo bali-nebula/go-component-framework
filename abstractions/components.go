@@ -19,11 +19,6 @@ type (
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all symbolic entities.
-type Symbolic interface {
-	GetIdentifier() string
-}
-
 // This interface defines the methods supported by all component-like types.
 type Encapsulated interface {
 	GetEntity() Entity
@@ -64,9 +59,9 @@ type Encapsulated interface {
 // This interface defines the methods supported by all parameterized sequences
 // whose values consist of name-value pairs.
 type Parameterized interface {
-	GetNames() Sequential[Symbolic]
-	GetValue(name Symbolic) ComponentLike
-	SetValue(name Symbolic, value ComponentLike)
+	GetNames() Sequential[SymbolLike]
+	GetValue(name SymbolLike) ComponentLike
+	SetValue(name SymbolLike, value ComponentLike)
 }
 
 // CONSOLIDATED INTERFACES
@@ -92,7 +87,7 @@ type CommentLike interface {
 // This interface consolidates all the interfaces supported by parameter-like
 // types.
 type ParameterLike interface {
-	Binding[Symbolic, ComponentLike]
+	Binding[SymbolLike, ComponentLike]
 }
 
 // This interface consolidates all the interfaces supported by context-like

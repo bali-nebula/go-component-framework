@@ -197,6 +197,11 @@ type Real float64
 
 // CONTINUOUS INTERFACE
 
+// This method returns a real value for this real number.
+func (v Real) AsReal() float64 {
+	return float64(v)
+}
+
 // This method determines whether or not this real number is zero.
 func (v Real) IsZero() bool {
 	return v == 0
@@ -210,11 +215,6 @@ func (v Real) IsInfinite() bool {
 // This method determines whether or not this real number is undefined.
 func (v Real) IsUndefined() bool {
 	return mat.IsNaN(float64(v))
-}
-
-// This method returns a real value for this real number.
-func (v Real) AsReal() float64 {
-	return float64(v)
 }
 
 // POLARIZED INTERFACE

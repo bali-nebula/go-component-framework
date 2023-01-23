@@ -12,22 +12,25 @@ package elements
 
 import (
 	fmt "fmt"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	mat "math"
 	cmp "math/cmplx"
 )
 
-// NUMBER IMPLEMENTATION
+// CONSTANT DEFINITIONS
 
 var zero = complex(0, 0)
 var infinity = cmp.Inf()
 var undefined = cmp.NaN()
 
-var I = Number(complex(0.0, 1.0))
-var One = Number(complex(1.0, 0.0))
-var Phi = Number(complex(mat.Phi, 0.0))
-var Zero = Number(zero)
-var Infinity = Number(infinity)
-var Undefined = Number(undefined)
+var I abs.NumberLike = Number(complex(0.0, 1.0))
+var One abs.NumberLike = Number(complex(1.0, 0.0))
+var Phi abs.NumberLike = Number(complex(mat.Phi, 0.0))
+var Zero abs.NumberLike = Number(zero)
+var Infinity abs.NumberLike = Number(infinity)
+var Undefined abs.NumberLike = Number(undefined)
+
+// NUMBER IMPLEMENTATION
 
 // This constructor creates a new number that is mapped to the Riemann Sphere.
 //   - https://en.wikipedia.org/wiki/Riemann_sphere
@@ -84,7 +87,7 @@ var Undefined = Number(undefined)
 // crutch that leads to misleading convergence information for oscillating
 // functions. In the case of numerical analysis it is probably better to track
 // the course of the function as it converges than to look at the final value.
-func NumberFromComplex(v complex128) Number {
+func NumberFromComplex(v complex128) abs.NumberLike {
 	switch {
 	case cmp.Abs(v) == 0:
 		// Normalize all versions of zero.
@@ -103,18 +106,18 @@ func NumberFromComplex(v complex128) Number {
 	}
 }
 
-func NumberFromPolar(m float64, p Angle) Number {
-	var v = cmp.Rect(m, float64(p))
+func NumberFromPolar(m float64, p abs.AngleLike) abs.NumberLike {
+	var v = cmp.Rect(m, p.AsReal())
 	return NumberFromComplex(v)
 }
 
 // This constructor returns the minimum value for a number.
-func MinimumNumber() Number {
+func MinimumNumber() abs.NumberLike {
 	return Zero
 }
 
 // This constructor returns the maximum value for a number.
-func MaximumNumber() Number {
+func MaximumNumber() abs.NumberLike {
 	return Infinity
 }
 
@@ -124,6 +127,11 @@ func MaximumNumber() Number {
 type Number complex128
 
 // CONTINUOUS INTERFACE
+
+// This method returns a real value for this continuous component.
+func (v Number) AsReal() float64 {
+	return real(v)
+}
 
 // This method determines whether or not this number is zero.
 func (v Number) IsZero() bool {
@@ -140,11 +148,6 @@ func (v Number) IsUndefined() bool {
 	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
 }
 
-// This method returns a real value for this continuous component.
-func (v Number) AsReal() float64 {
-	return real(v)
-}
-
 // POLARIZED INTERFACE
 
 // This method determines whether or not this polarized component is negative.
@@ -153,6 +156,11 @@ func (v Number) IsNegative() bool {
 }
 
 // COMPLEX INTERFACE
+
+// This method returns a native complex value for this continuous component.
+func (v Number) AsComplex() complex128 {
+	return complex128(v)
+}
 
 // This method returns the real part of this complex component.
 func (v Number) GetReal() float64 {
@@ -170,7 +178,7 @@ func (v Number) GetMagnitude() float64 {
 }
 
 // This method returns the phase angle of this complex component.
-func (v Number) GetPhase() Angle {
+func (v Number) GetPhase() abs.AngleLike {
 	return AngleFromFloat(cmp.Phase(complex128(v)))
 }
 
@@ -187,45 +195,40 @@ type numbers struct{}
 // SCALABLE INTERFACE
 
 // This library function returns the inverse of the specified number.
-func (l *numbers) Inverse(number Number) Number {
-	var result = complex128(-number)
-	return NumberFromComplex(result)
+func (l *numbers) Inverse(number abs.NumberLike) abs.NumberLike {
+	return NumberFromComplex(-number.AsComplex())
 }
 
 // This library function returns the sum of the specified numbers.
-func (l *numbers) Sum(first, second Number) Number {
-	var result = complex128(first + second)
-	return NumberFromComplex(result)
+func (l *numbers) Sum(first, second abs.NumberLike) abs.NumberLike {
+	return NumberFromComplex(first.AsComplex() + second.AsComplex())
 }
 
 // This library function returns the difference of the specified numbers.
-func (l *numbers) Difference(first, second Number) Number {
-	var result = complex128(first - second)
-	return NumberFromComplex(result)
+func (l *numbers) Difference(first, second abs.NumberLike) abs.NumberLike {
+	return NumberFromComplex(first.AsComplex() - second.AsComplex())
 }
 
 // This library function returns the specified number scaled by the specified
 // factor.
-func (l *numbers) Scaled(number Number, factor float64) Number {
+func (l *numbers) Scaled(number abs.NumberLike, factor float64) abs.NumberLike {
 	return l.Product(number, NumberFromComplex(complex(factor, 0)))
 }
 
 // NUMERICAL INTERFACE
 
 // This library function returns the reciprocal of the specified number.
-func (l *numbers) Reciprocal(number Number) Number {
-	var result = 1.0 / complex128(number)
-	return NumberFromComplex(result)
+func (l *numbers) Reciprocal(number abs.NumberLike) abs.NumberLike {
+	return NumberFromComplex( 1.0 / number.AsComplex())
 }
 
 // This library function returns the complex conjugate of the specified number.
-func (l *numbers) Conjugate(number Number) Number {
-	var result = cmp.Conj(complex128(number))
-	return NumberFromComplex(result)
+func (l *numbers) Conjugate(number abs.NumberLike) abs.NumberLike {
+	return NumberFromComplex(cmp.Conj(number.AsComplex()))
 }
 
 // This library function returns the product of the specified numbers.
-func (l *numbers) Product(first, second Number) Number {
+func (l *numbers) Product(first, second abs.NumberLike) abs.NumberLike {
 	switch {
 	case first.IsUndefined() || second.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -237,21 +240,45 @@ func (l *numbers) Product(first, second Number) Number {
 		// Anything other than zero times infinity is infinite.
 		return Infinity
 	default:
-		return NumberFromComplex(complex128(first) * complex128(second))
+		return NumberFromComplex(first.AsComplex() * second.AsComplex())
 	}
 }
 
 // This library function returns the quotient of the specified numbers.
-func (l *numbers) Quotient(first, second Number) Number {
-	return l.Product(first, l.Reciprocal(second))
+func (l *numbers) Quotient(first, second abs.NumberLike) abs.NumberLike {
+	switch {
+	case first.IsUndefined() || second.IsUndefined():
+		// Any undefined arguments result in an undefined result.
+		return Undefined
+	case first.IsZero() && second.IsZero():
+		// Zero divided by zero is undefined.
+		return Undefined
+	case first.IsInfinite() && second.IsInfinite():
+		// Infinity divided by infinity is undefined.
+		return Undefined
+	case first.IsZero() && !second.IsZero():
+		// Zero divided by anything other than zero is zero.
+		return Zero
+	case second.IsZero() && !first.IsZero():
+		// Anything other than zero divided by zero is infinite.
+		return Infinity
+	case first.IsInfinite() && !second.IsInfinite():
+		// Zero divided by anything other than zero is zero.
+		return Infinity
+	case second.IsInfinite() && !first.IsInfinite():
+		// Anything other than zero divided by zero is infinite.
+		return Zero
+	default:
+		return NumberFromComplex(first.AsComplex() / second.AsComplex())
+	}
 }
 
 // This library function returns the remainder of the specified numbers.
-func (l *numbers) Remainder(first, second Number) Number {
-	var m1 = cmp.Abs(complex128(first))
-	var p1 = cmp.Phase(complex128(first))
-	var m2 = cmp.Abs(complex128(second))
-	var p2 = cmp.Phase(complex128(second))
+func (l *numbers) Remainder(first, second abs.NumberLike) abs.NumberLike {
+	var m1 = cmp.Abs(first.AsComplex())
+	var p1 = cmp.Phase(first.AsComplex())
+	var m2 = cmp.Abs(second.AsComplex())
+	var p2 = cmp.Phase(second.AsComplex())
 	var magnitude = lockMagnitude(mat.Remainder(m1, m2))
 	var phase = AngleFromFloat(p2 - p1)
 	return NumberFromPolar(magnitude, phase)
@@ -259,7 +286,7 @@ func (l *numbers) Remainder(first, second Number) Number {
 
 // This library function returns the result of raising the specified base to the
 // specified exponent.
-func (l *numbers) Power(base, exponent Number) Number {
+func (l *numbers) Power(base, exponent abs.NumberLike) abs.NumberLike {
 	switch {
 	case base.IsUndefined() || exponent.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -289,17 +316,18 @@ func (l *numbers) Power(base, exponent Number) Number {
 			panic(fmt.Sprintf("An impossible magnitude was encountered: %v", magnitude))
 		}
 	default:
-		return NumberFromComplex(cmp.Pow(complex128(base), complex128(exponent)))
+		return NumberFromComplex(cmp.Pow(base.AsComplex(), exponent.AsComplex()))
 	}
 }
 
 // This library function returns the result of taking the logarithm using the
 // specified base of the specified number.
-func (l *numbers) Logarithm(base, number Number) Number {
+func (l *numbers) Logarithm(base, number abs.NumberLike) abs.NumberLike {
 	// logB(z) => ln(z) / ln(b)
-	return l.Quotient(
-		NumberFromComplex(cmp.Log(complex128(number))),
-		NumberFromComplex(cmp.Log(complex128(base))))
+	var lnB = cmp.Log(base.AsComplex())
+	var lnZ = cmp.Log(number.AsComplex())
+	var logB = lnZ / lnB
+	return NumberFromComplex(logB)
 }
 
 // PRIVATE FUNCTIONS

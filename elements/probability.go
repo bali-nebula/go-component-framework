@@ -11,6 +11,7 @@
 package elements
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/utilities"
 )
 
@@ -18,7 +19,7 @@ import (
 
 // This constructor creates a new probability and constrains the value to be in
 // the allowed range for probabilities [0..1].
-func ProbabilityFromFloat(v float64) Probability {
+func ProbabilityFromFloat(v float64) abs.ProbabilityLike {
 	if v < 0.0 {
 		v = 0.0
 	} else if v > 1.0 {
@@ -28,7 +29,7 @@ func ProbabilityFromFloat(v float64) Probability {
 }
 
 // This constructor creates a new probability from the specified boolean value.
-func ProbabilityFromBoolean(v bool) Probability {
+func ProbabilityFromBoolean(v bool) abs.ProbabilityLike {
 	if v {
 		return Probability(1)
 	}
@@ -36,12 +37,12 @@ func ProbabilityFromBoolean(v bool) Probability {
 }
 
 // This constructor returns the minimum value for a probability.
-func MinimumProbability() Probability {
+func MinimumProbability() abs.ProbabilityLike {
 	return Probability(0)
 }
 
 // This constructor returns the maximum value for a probability.
-func MaximumProbability() Probability {
+func MaximumProbability() abs.ProbabilityLike {
 	return Probability(1)
 }
 
@@ -51,6 +52,11 @@ func MaximumProbability() Probability {
 type Probability float64
 
 // CONTINUOUS INTERFACE
+
+// This method returns a real value for this continuous element.
+func (v Probability) AsReal() float64 {
+	return float64(v)
+}
 
 // This method determines whether or not this continuous element is zero.
 func (v Probability) IsZero() bool {
@@ -67,11 +73,6 @@ func (v Probability) IsUndefined() bool {
 	return false
 }
 
-// This method returns a real value for this continuous element.
-func (v Probability) AsReal() float64 {
-	return float64(v)
-}
-
 // PROBABILITIES LIBRARY
 
 // This singleton creates a unique name space for the library functions for
@@ -83,7 +84,7 @@ var Probabilities = &probabilities{}
 type probabilities struct{}
 
 // This library function returns a random probability.
-func (l *probabilities) Random() Probability {
+func (l *probabilities) Random() abs.ProbabilityLike {
 	return Probability(uti.RandomProbability())
 }
 
@@ -91,30 +92,30 @@ func (l *probabilities) Random() Probability {
 
 // This library function returns the logical inverse of the specified
 // probability.
-func (l *probabilities) Not(probability Probability) Probability {
-	return Probability(1.0 - probability)
+func (l *probabilities) Not(probability abs.ProbabilityLike) abs.ProbabilityLike {
+	return Probability(1.0 - probability.AsReal())
 }
 
 // This library function returns the logical conjunction of the specified
 // probability elements.
-func (l *probabilities) And(first, second Probability) Probability {
-	return Probability(first * second)
+func (l *probabilities) And(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+	return Probability(first.AsReal() * second.AsReal())
 }
 
 // This library function returns the logical material non-implication of the
 // specified probability elements.
-func (l *probabilities) Sans(first, second Probability) Probability {
-	return l.And(first, l.Not(second))
+func (l *probabilities) Sans(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+	return Probability(first.AsReal() * (1.0 - second.AsReal()))
 }
 
 // This library function returns the logical disjunction of the specified
 // probability elements.
-func (l *probabilities) Or(first Probability, second Probability) Probability {
-	return l.Not(l.And(l.Not(first), l.Not(second)))
+func (l *probabilities) Or(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+	return Probability(first.AsReal() + second.AsReal() - (first.AsReal() * second.AsReal()))
 }
 
 // This library function returns the logical exclusive disjunction of the
 // specified probability elements.
-func (l *probabilities) Xor(first Probability, second Probability) Probability {
-	return l.Or(l.Sans(first, second), l.Sans(second, first))
+func (l *probabilities) Xor(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+	return Probability(first.AsReal() + second.AsReal() - (2.0 * first.AsReal() * second.AsReal()))
 }

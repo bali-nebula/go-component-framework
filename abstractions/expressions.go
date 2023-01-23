@@ -136,6 +136,7 @@ type SubcomponentLike interface {
 // This interface defines the methods supported by all variable-like expressions.
 type VariableLike interface {
 	GetIdentifier() string
+	SetIdentifier(identifier string)
 }
 
 // CONSTANTS

@@ -17,7 +17,7 @@ import (
 // ON CLAUSE IMPLEMENTATION
 
 // This constructor creates a new on clause.
-func OnClause(failure abs.Symbolic, blocks abs.Sequential[abs.BlockLike]) abs.OnClauseLike {
+func OnClause(failure abs.SymbolLike, blocks abs.Sequential[abs.BlockLike]) abs.OnClauseLike {
 	var v = &onClause{}
 	// Perform argument validation.
 	v.SetFailure(failure)
@@ -27,17 +27,17 @@ func OnClause(failure abs.Symbolic, blocks abs.Sequential[abs.BlockLike]) abs.On
 
 // This type defines the structure and methods associated with an on clause.
 type onClause struct {
-	failure abs.Symbolic
+	failure abs.SymbolLike
 	blocks  abs.Sequential[abs.BlockLike]
 }
 
 // This method returns the symbol for the failure for this on clause.
-func (v *onClause) GetFailure() abs.Symbolic {
+func (v *onClause) GetFailure() abs.SymbolLike {
 	return v.failure
 }
 
 // This method sets the symbol for the failure for this on clause.
-func (v *onClause) SetFailure(failure abs.Symbolic) {
+func (v *onClause) SetFailure(failure abs.SymbolLike) {
 	if failure == nil {
 		panic("An on clause requires a symbol for the failure.")
 	}

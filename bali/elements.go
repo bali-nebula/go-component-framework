@@ -21,11 +21,91 @@ import (
 	tim "time"
 )
 
+// UNIVERSAL CONSTRUCTORS
+
+// This constructor returns a new number entity initialized with the specified
+// value.
+func Number(value abs.Value) abs.NumberLike {
+	var number abs.NumberLike
+	switch actual := value.(type) {
+	case uint:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case uint8:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case uint16:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case uint32:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case uint64:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case int:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case int8:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case int16:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case int32:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case int64:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case float32:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case float64:
+		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case string:
+		number = ParseEntity(actual).(abs.NumberLike)
+	case abs.NumberLike:
+		number = actual
+	case abs.ComponentLike:
+		number = actual.GetEntity().(abs.NumberLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a number: %v", actual, actual)
+		panic(message)
+	}
+	return number
+}
+
+// This constructor returns a new quote entity initialized with the specified
+// value.
+func Quote(value abs.Value) abs.QuoteLike {
+	var quote abs.QuoteLike
+	switch actual := value.(type) {
+	case string:
+		quote = ParseEntity(actual).(abs.QuoteLike)
+	case abs.QuoteLike:
+		quote = actual
+	case abs.ComponentLike:
+		quote = actual.GetEntity().(abs.QuoteLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a quote: %v", actual, actual)
+		panic(message)
+	}
+	return quote
+}
+
+// This constructor returns a new symbol entity initialized with the specified
+// value.
+func Symbol(value abs.Value) abs.SymbolLike {
+	var symbol abs.SymbolLike
+	switch actual := value.(type) {
+	case string:
+		symbol = ParseEntity(actual).(abs.SymbolLike)
+	case abs.SymbolLike:
+		symbol = actual
+	case abs.ComponentLike:
+		symbol = actual.GetEntity().(abs.SymbolLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a symbol: %v", actual, actual)
+		panic(message)
+	}
+	return symbol
+}
+
 // This method attempts to parse an angle element. It returns the angle element
 // and whether or not the angle element was successfully parsed.
-func (v *parser) parseAngle() (ele.Angle, *Token, bool) {
+func (v *parser) parseAngle() (abs.AngleLike, *Token, bool) {
 	var token *Token
-	var angle ele.Angle
+	var angle abs.AngleLike
 	token = v.nextToken()
 	if token.Type != TokenAngle {
 		v.backupOne()
@@ -42,7 +122,7 @@ func (v *parser) parseAngle() (ele.Angle, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatAngle(angle ele.Angle) {
+func (v *formatter) formatAngle(angle abs.AngleLike) {
 	var s string
 	switch angle {
 	case ele.Pi:
@@ -50,16 +130,17 @@ func (v *formatter) formatAngle(angle ele.Angle) {
 	case ele.Tau:
 		s = "~τ"
 	default:
-		s = "~" + stc.FormatFloat(float64(angle), 'G', -1, 64)
+		var value = angle.AsReal()
+		s = "~" + stc.FormatFloat(value, 'G', -1, 64)
 	}
 	v.AppendString(s)
 }
 
 // This method attempts to parse a boolean element. It returns the boolean
 // element and whether or not the boolean element was successfully parsed.
-func (v *parser) parseBoolean() (ele.Boolean, *Token, bool) {
+func (v *parser) parseBoolean() (abs.BooleanLike, *Token, bool) {
 	var token *Token
-	var boolean ele.Boolean
+	var boolean abs.BooleanLike
 	token = v.nextToken()
 	if token.Type != TokenBoolean {
 		v.backupOne()
@@ -72,16 +153,17 @@ func (v *parser) parseBoolean() (ele.Boolean, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatBoolean(boolean ele.Boolean) {
-	var s = stc.FormatBool(bool(boolean))
+func (v *formatter) formatBoolean(boolean abs.BooleanLike) {
+	var value = boolean.AsBoolean()
+	var s = stc.FormatBool(value)
 	v.AppendString(s)
 }
 
 // This method attempts to parse a duration element. It returns the duration
 // element and whether or not the duration element was successfully parsed.
-func (v *parser) parseDuration() (ele.Duration, *Token, bool) {
+func (v *parser) parseDuration() (abs.DurationLike, *Token, bool) {
 	var token *Token
-	var duration ele.Duration
+	var duration abs.DurationLike
 	token = v.nextToken()
 	if token.Type != TokenDuration {
 		v.backupOne()
@@ -126,7 +208,7 @@ func (v *parser) parseDuration() (ele.Duration, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatDuration(duration ele.Duration) {
+func (v *formatter) formatDuration(duration abs.DurationLike) {
 	var result sts.Builder
 	result.WriteString("~")
 	if duration.IsNegative() {
@@ -264,9 +346,9 @@ func (v *formatter) formatImaginary(i float64) {
 
 // This method attempts to parse a moment element. It returns the moment
 // element and whether or not the moment element was successfully parsed.
-func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
+func (v *parser) parseMoment() (abs.MomentLike, *Token, bool) {
 	var token *Token
-	var moment ele.Moment
+	var moment abs.MomentLike
 	token = v.nextToken()
 	if token.Type != TokenMoment {
 		v.backupOne()
@@ -280,7 +362,7 @@ func (v *parser) parseMoment() (ele.Moment, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatMoment(moment ele.Moment) {
+func (v *formatter) formatMoment(moment abs.MomentLike) {
 	var result sts.Builder
 	var year = moment.GetYears()
 	var month = moment.GetMonths()
@@ -322,8 +404,8 @@ func (v *formatter) formatMoment(moment ele.Moment) {
 
 // This method attempts to parse a number element. It returns the number
 // element and whether or not the number element was successfully parsed.
-func (v *parser) parseNumber() (ele.Number, *Token, bool) {
-	var number ele.Number
+func (v *parser) parseNumber() (abs.NumberLike, *Token, bool) {
+	var number abs.NumberLike
 	var token = v.nextToken()
 	if token.Type != TokenNumber {
 		v.backupOne()
@@ -333,7 +415,7 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 	var c complex128
 	var realPart float64
 	var imaginaryPart float64
-	var phasePart ele.Angle
+	var phasePart abs.AngleLike
 	var matches = scanNumber([]byte(token.Value))
 	switch {
 	case matches[0] == "undefined":
@@ -390,7 +472,7 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 			var match = matches[6][:len(matches[6])-1] // Strip off the trailing "i".
 			var parser = Parser([]byte(match))
 			phasePart, _, _ = parser.parseAngle()
-			c = complex128(ele.NumberFromPolar(realPart, phasePart))
+			c = ele.NumberFromPolar(realPart, phasePart).AsComplex()
 		}
 	default:
 		// The value is pure real.
@@ -407,7 +489,7 @@ func (v *parser) parseNumber() (ele.Number, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatNumber(number ele.Number) {
+func (v *formatter) formatNumber(number abs.NumberLike) {
 	switch {
 	case number.IsZero():
 		v.AppendString("0")
@@ -435,19 +517,20 @@ func (v *formatter) formatNumber(number ele.Number) {
 
 // This method adds the canonical format for the specified imaginary phase to
 // the state of the formatter.
-func (v *formatter) formatPhase(p ele.Angle) {
+func (v *formatter) formatPhase(p abs.AngleLike) {
 	var s string
-	if float64(p) == mat.Pi {
+	if p.AsReal() == mat.Pi {
 		s = "~πi"
 	} else {
-		s = "~" + stc.FormatFloat(float64(p), 'G', -1, 64) + "i"
+		var value = p.AsReal()
+		s = "~" + stc.FormatFloat(value, 'G', -1, 64) + "i"
 	}
 	v.AppendString(s)
 }
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatPolar(number ele.Number) {
+func (v *formatter) formatPolar(number abs.NumberLike) {
 	switch {
 	case number.IsZero():
 		v.AppendString("0")
@@ -475,9 +558,9 @@ func (v *formatter) formatPolar(number ele.Number) {
 
 // This method attempts to parse a pattern element. It returns the pattern
 // element and whether or not the pattern element was successfully parsed.
-func (v *parser) parsePattern() (ele.Pattern, *Token, bool) {
+func (v *parser) parsePattern() (abs.PatternLike, *Token, bool) {
 	var token *Token
-	var pattern ele.Pattern
+	var pattern abs.PatternLike
 	token = v.nextToken()
 	if token.Type != TokenPattern {
 		v.backupOne()
@@ -498,9 +581,10 @@ func (v *parser) parsePattern() (ele.Pattern, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatPattern(pattern ele.Pattern) {
-	var s = `"` + string(pattern) + `"?`
-	switch pattern {
+func (v *formatter) formatPattern(pattern abs.PatternLike) {
+	var regexp = pattern.AsString()
+	var s = `"` + regexp + `"?`
+	switch regexp {
 	case `^none$`:
 		s = `none`
 	case `.*`:
@@ -511,9 +595,9 @@ func (v *formatter) formatPattern(pattern ele.Pattern) {
 
 // This method attempts to parse a percentage element. It returns the percentage
 // element and whether or not the percentage element was successfully parsed.
-func (v *parser) parsePercentage() (ele.Percentage, *Token, bool) {
+func (v *parser) parsePercentage() (abs.PercentageLike, *Token, bool) {
 	var token *Token
-	var percentage ele.Percentage
+	var percentage abs.PercentageLike
 	token = v.nextToken()
 	if token.Type != TokenPercentage {
 		v.backupOne()
@@ -527,16 +611,18 @@ func (v *parser) parsePercentage() (ele.Percentage, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatPercentage(percentage ele.Percentage) {
-	var s = stc.FormatFloat(float64(percentage), 'G', -1, 64) + "%"
+func (v *formatter) formatPercentage(percentage abs.PercentageLike) {
+	// Using 100.0 * percentage.AsReal() introduces round-off errors.
+	var value = float64(percentage.(ele.Percentage))
+	var s = stc.FormatFloat(value, 'G', -1, 64) + "%"
 	v.AppendString(s)
 }
 
 // This method attempts to parse a probability element. It returns the probability
 // element and whether or not the probability element was successfully parsed.
-func (v *parser) parseProbability() (ele.Probability, *Token, bool) {
+func (v *parser) parseProbability() (abs.ProbabilityLike, *Token, bool) {
 	var token *Token
-	var probability ele.Probability
+	var probability abs.ProbabilityLike
 	token = v.nextToken()
 	if token.Type != TokenProbability {
 		v.backupOne()
@@ -550,14 +636,15 @@ func (v *parser) parseProbability() (ele.Probability, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatProbability(probability ele.Probability) {
-	var s = stc.FormatFloat(float64(probability), 'f', -1, 64)
+func (v *formatter) formatProbability(probability abs.ProbabilityLike) {
+	var value = probability.AsReal()
+	var s = stc.FormatFloat(value, 'f', -1, 64)
 	switch {
 	// Zero is formatted as ".0".
-	case probability == 0:
+	case value == 0:
 		s = "." + s
 	// One is formatted as "1.".
-	case probability == 1:
+	case value == 1:
 		s += "."
 	// Otherwise, remove the leading "0".
 	default:
@@ -596,9 +683,9 @@ func (v *formatter) formatFloat(r float64) {
 // This method attempts to parse a resource element. It returns the
 // resource element and whether or not the resource element was
 // successfully parsed.
-func (v *parser) parseResource() (ele.Resource, *Token, bool) {
+func (v *parser) parseResource() (abs.ResourceLike, *Token, bool) {
 	var token *Token
-	var resource ele.Resource
+	var resource abs.ResourceLike
 	token = v.nextToken()
 	if token.Type != TokenResource {
 		v.backupOne()
@@ -611,8 +698,9 @@ func (v *parser) parseResource() (ele.Resource, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatResource(resource ele.Resource) {
-	var s = "<" + string(resource) + ">"
+func (v *formatter) formatResource(resource abs.ResourceLike) {
+	var uri = resource.AsString()
+	var s = "<" + uri + ">"
 	v.AppendString(s)
 }
 
@@ -621,9 +709,9 @@ func (v *formatter) formatResource(resource ele.Resource) {
 // successfully parsed.
 // This method attempts to parse a symbol string. It returns the symbol
 // string and whether or not the symbol string was successfully parsed.
-func (v *parser) parseSymbol() (ele.Symbol, *Token, bool) {
+func (v *parser) parseSymbol() (abs.SymbolLike, *Token, bool) {
 	var token *Token
-	var symbol ele.Symbol
+	var symbol abs.SymbolLike
 	token = v.nextToken()
 	if token.Type != TokenSymbol {
 		v.backupOne()
@@ -636,17 +724,18 @@ func (v *parser) parseSymbol() (ele.Symbol, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatSymbol(symbol ele.Symbol) {
-	var s = "$" + string(symbol)
+func (v *formatter) formatSymbol(symbol abs.SymbolLike) {
+	var identifier = symbol.AsString()
+	var s = "$" + identifier
 	v.AppendString(s)
 }
 
 // This method attempts to parse a tag element. It returns the
 // tag element and whether or not the tag element was
 // successfully parsed.
-func (v *parser) parseTag() (ele.Tag, *Token, bool) {
+func (v *parser) parseTag() (abs.TagLike, *Token, bool) {
 	var token *Token
-	var tag ele.Tag
+	var tag abs.TagLike
 	token = v.nextToken()
 	if token.Type != TokenTag {
 		v.backupOne()
@@ -659,8 +748,9 @@ func (v *parser) parseTag() (ele.Tag, *Token, bool) {
 
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
-func (v *formatter) formatTag(tag ele.Tag) {
-	var s = "#" + string(tag)
+func (v *formatter) formatTag(tag abs.TagLike) {
+	var encoded = tag.AsString()
+	var s = "#" + encoded
 	v.AppendString(s)
 }
 

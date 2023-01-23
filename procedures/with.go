@@ -17,7 +17,7 @@ import (
 // WITH CLAUSE IMPLEMENTATION
 
 // This constructor creates a new with clause.
-func WithClause(item abs.Symbolic, block abs.BlockLike) abs.WithClauseLike {
+func WithClause(item abs.SymbolLike, block abs.BlockLike) abs.WithClauseLike {
 	var v = &withClause{}
 	// Perform argument validation.
 	v.SetItem(item)
@@ -27,17 +27,17 @@ func WithClause(item abs.Symbolic, block abs.BlockLike) abs.WithClauseLike {
 
 // This type defines the structure and methods associated with a with clause.
 type withClause struct {
-	item  abs.Symbolic
+	item  abs.SymbolLike
 	block abs.BlockLike
 }
 
 // This method returns the symbol for the item for this with clause.
-func (v *withClause) GetItem() abs.Symbolic {
+func (v *withClause) GetItem() abs.SymbolLike {
 	return v.item
 }
 
 // This method sets the symbol for the item for this with clause.
-func (v *withClause) SetItem(item abs.Symbolic) {
+func (v *withClause) SetItem(item abs.SymbolLike) {
 	if item == nil {
 		panic("A with clause requires a symbol for the item.")
 	}

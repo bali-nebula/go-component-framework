@@ -11,14 +11,42 @@
 package elements
 
 import (
+	fmt "fmt"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	reg "regexp"
 	uti "github.com/bali-nebula/go-component-framework/utilities"
 )
 
 // TAG IMPLEMENTATION
 
-// This constructor creates a new random tag identifier element with the
-// specified number of bytes.
-func TagOfSize(size int) Tag {
+// These constants are used to define a regular expression for matching
+// symbols.
+const (
+	base32 = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
+	tag    = `(` + base32 + `+)`
+)
+
+// This scanner is used for matching symbol strings.
+var tagScanner = reg.MustCompile(`^(?:` + tag + `)$`)
+
+// This constructor creates a new tag element from the specified string.
+func TagFromString(v string) abs.TagLike {
+	if !tagScanner.MatchString(v) {
+		var message = fmt.Sprintf("Attempted to construct a tag from an invalid string: %v", v)
+		panic(message)
+	}
+	return Tag(v)
+}
+
+// This constructor creates a new tag element from the specified string.
+func TagFromArray(v []byte) abs.TagLike {
+	var base32 = uti.Base32Encode(v)
+	return Tag(base32)
+}
+
+// This constructor creates a new random tag element with the specified number
+// of bytes.
+func TagOfSize(size int) abs.TagLike {
 	if size < 1 {
 		panic("A tag must be at least one byte long!")
 	}
@@ -53,7 +81,7 @@ func (v Tag) GetSize() int {
 // This method returns all the bytes in this tag. The bytes retrieved
 // are in the same order as they are in the tag.
 func (v Tag) AsArray() []byte {
-	var encoded = string(v)
-	var bytes = uti.Base64Decode(encoded)
+	var base32 = string(v)
+	var bytes = uti.Base32Decode(base32)
 	return bytes
 }

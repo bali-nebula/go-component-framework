@@ -11,10 +11,23 @@
 package elements
 
 import (
+	fmt "fmt"
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	uri "net/url"
 )
 
 // RESOURCE IMPLEMENTATION
+
+// This constructor creates a new resource from the specified universal resource
+// identifier (URI).
+func ResourceFromString(v string) abs.ResourceLike {
+	var _, err = uri.Parse(v)
+	if err != nil {
+		var message = fmt.Sprintf("Attempted to construct a resource from an invalid URI: %v", v)
+		panic(message)
+	}
+	return Resource(v)
+}
 
 // This type defines the methods associated with a web resource element that
 // extends the native Go string type and represents the URI corresponding to

@@ -26,20 +26,19 @@ type Discrete interface {
 
 // This interface defines the methods supported by all numeric elements.
 type Continuous interface {
+	AsReal() float64
 	IsZero() bool
 	IsInfinite() bool
 	IsUndefined() bool
-	AsReal() float64
 }
 
 // This interface defines the methods supported by all complex elements.
 type Complex interface {
-	AsRectangular() string
-	AsPolar() string
+	AsComplex() complex128
 	GetReal() float64
 	GetImaginary() float64
 	GetMagnitude() float64
-	GetPhase() float64
+	GetPhase() AngleLike
 }
 
 // This interface defines the methods supported by all polarized elements.
@@ -134,7 +133,6 @@ type ResourceLike interface {
 
 type SymbolLike interface {
 	Spectral
-	Symbolic
 }
 
 type TagLike interface {

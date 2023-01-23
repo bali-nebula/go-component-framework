@@ -11,6 +11,7 @@
 package elements
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	mat "math"
 	tim "time"
 )
@@ -19,18 +20,24 @@ import (
 
 // This constructor creates a new moment in time element for the current time
 // in the UTC timezone.
-func Now() Moment {
+func Now() abs.MomentLike {
 	var now = tim.Now().UTC().UnixMilli()
 	return Moment(now)
 }
 
+// This constructor creates a new moment in time element from the specified
+// integer number of milliseconds since epoc in the UTC timezone.
+func MomentFromInteger(milliseconds int) abs.MomentLike {
+	return Moment(milliseconds)
+}
+
 // This constructor returns the earliest value for a moment.
-func MinimumMoment() Moment {
+func MinimumMoment() abs.MomentLike {
 	return Moment(mat.MinInt)
 }
 
 // This constructor returns the latest value for a moment.
-func MaximumMoment() Moment {
+func MaximumMoment() abs.MomentLike {
 	return Moment(mat.MaxInt)
 }
 
@@ -96,51 +103,59 @@ func (v Moment) AsYears() float64 {
 
 // This method returns the millisecond part of this moment.
 func (v Moment) GetMilliseconds() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	return t.Nanosecond() / 1e6
 }
 
 // This method returns the second part of this moment.
 func (v Moment) GetSeconds() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	return t.Second()
 }
 
 // This method returns the minute part of this moment.
 func (v Moment) GetMinutes() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	return t.Minute()
 }
 
 // This method returns the hour part of this moment.
 func (v Moment) GetHours() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	return t.Hour()
 }
 
 // This method returns the day part of this moment.
 func (v Moment) GetDays() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	return t.Day()
 }
 
 // This method returns the week part of this moment.
 func (v Moment) GetWeeks() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	var _, week = t.ISOWeek()
 	return week
 }
 
 // This method returns the month part of this moment.
 func (v Moment) GetMonths() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	return int(t.Month())
 }
 
 // This method returns the year part of this moment.
 func (v Moment) GetYears() int {
-	var t = momentToTime(v)
+	var t = v.asTime()
 	return t.Year()
+}
+
+// PRIVATE INTERFACE
+
+// This function returns the go Time value for the specified UNIX milliseconds.
+func (v Moment) asTime() tim.Time {
+	var milliseconds int64 = int64(v)
+	return tim.UnixMilli(milliseconds).UTC()
 }
 
 // MOMENTS LIBRARY
@@ -155,26 +170,18 @@ type moments struct{}
 
 // This library function returns the duration of time between the two specified
 // moments in tim.
-func (l *moments) Duration(first, second Moment) Duration {
-	return Duration(int(second - first))
+func (l *moments) Duration(first, second abs.MomentLike) abs.DurationLike {
+	return Duration(second.AsInteger() - first.AsInteger())
 }
 
 // This library function returns the moment in time that is earlier than the
 // specified moment in time by the specified duration of tim.
-func (l *moments) Earlier(moment Moment, duration Duration) Moment {
-	return Moment(int(moment) - int(duration))
+func (l *moments) Earlier(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+	return Moment(moment.AsInteger() - duration.AsInteger())
 }
 
 // This library function returns the moment in time that is later than the
 // specified moment in time by the specified duration of tim.
-func (l *moments) Later(moment Moment, duration Duration) Moment {
-	return Moment(int(moment) + int(duration))
-}
-
-// PRIVATE FUNCTIONS
-
-// This function returns the go Time value for the specified UNIX milliseconds.
-func momentToTime(v Moment) tim.Time {
-	var milliseconds int64 = int64(v)
-	return tim.UnixMilli(milliseconds).UTC()
+func (l *moments) Later(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+	return Moment(moment.AsInteger() + duration.AsInteger())
 }

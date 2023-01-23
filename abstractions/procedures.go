@@ -90,8 +90,8 @@ type NotarizeClauseLike interface {
 
 // This interface defines the methods supported by all on-clause-like types.
 type OnClauseLike interface {
-	GetFailure() Symbolic
-	SetFailure(failure Symbolic)
+	GetFailure() SymbolLike
+	SetFailure(failure SymbolLike)
 	GetBlocks() Sequential[BlockLike]
 	SetBlocks(blocks Sequential[BlockLike])
 }
@@ -172,8 +172,8 @@ type WhileClauseLike interface {
 
 // This interface defines the methods supported by all with-clause-like types.
 type WithClauseLike interface {
-	GetItem() Symbolic
-	SetItem(item Symbolic)
+	GetItem() SymbolLike
+	SetItem(item SymbolLike)
 	GetBlock() BlockLike
 	SetBlock(block BlockLike)
 }

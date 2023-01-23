@@ -33,6 +33,11 @@ type Percentage float64
 
 // CONTINUOUS INTERFACE
 
+// This method returns a real value for this continuous element.
+func (v Percentage) AsReal() float64 {
+	return float64(v / 100.0)
+}
+
 // This method determines whether or not this continuous element is zero.
 func (v Percentage) IsZero() bool {
 	return v == 0
@@ -48,47 +53,9 @@ func (v Percentage) IsUndefined() bool {
 	return mat.IsNaN(float64(v))
 }
 
-// This method returns a real value for this continuous element.
-func (v Percentage) AsReal() float64 {
-	return float64(v / 100.0)
-}
-
 // POLARIZED INTERFACE
 
 // This method determines whether or not this polarized component is negative.
 func (v Percentage) IsNegative() bool {
 	return v < 0.0
-}
-
-// PERCENTAGES LIBRARY
-
-// This singleton creates a unique name space for the library functions for
-// percentage elements.
-var Percentages = &percentages{}
-
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for percentage elements.
-type percentages struct{}
-
-// SCALABLE INTERFACE
-
-// This library function returns the inverse of the specified percentage.
-func (l *percentages) Inverse(percentage Percentage) Percentage {
-	return Percentage(float64(-percentage))
-}
-
-// This library function returns the sum of the specified percentages.
-func (l *percentages) Sum(first, second Percentage) Percentage {
-	return Percentage(float64(first + second))
-}
-
-// This library function returns the difference of the specified percentages.
-func (l *percentages) Difference(first, second Percentage) Percentage {
-	return Percentage(float64(first - second))
-}
-
-// This library function returns the specified percentage scaled by the
-// specified factor.
-func (l *percentages) Scaled(percentage Percentage, factor float64) Percentage {
-	return Percentage(float64(percentage) * factor)
 }

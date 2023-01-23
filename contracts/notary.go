@@ -26,23 +26,29 @@ const (
 	v1 = str.Version("v1")
 	v2 = str.Version("v2")
 	v3 = str.Version("v3")
+	protocolAttribute         = "protocol"
+	tagAttribute         = "tag"
+	versionAttribute         = "version"
+	digestAttribute         = "digest"
+	publicKeyAttribute   = "publicKey"
+	privateKeyAttribute  = "privateKey"
 )
 
 // NOTARY IMPLEMENTATION
 
 // This constructor creates a new digital notary.
 func Notary() abs.NotaryLike {
-	var protocols = col.Catalog[str.Version, abs.SecurityModuleLike]()
-	// Must be ordered with newest version first.
-	//protocols.SetValue(v3, sm3.SSM())
-	//protocols.SetValue(v2, sm2.SSM())
-	protocols.SetValue(v1, sm1.SSM(""))
-	return &notary{protocols}
+	var modules = col.Catalog[str.Version, abs.SecurityModuleLike]()
+	// Must be ordered with latest version first.
+	//modules.SetValue(v3, sm3.SSM())
+	//modules.SetValue(v2, sm2.SSM())
+	modules.SetValue(v1, sm1.SSM(""))
+	return &notary{modules}
 }
 
 // This type defines the structure and methods associated with a digital notary.
 type notary struct {
-	protocols col.CatalogLike[str.Version, abs.SecurityModuleLike]
+	modules col.CatalogLike[str.Version, abs.SecurityModuleLike]
 }
 
 // AUTHORITATIVE INTERFACE

@@ -178,39 +178,6 @@ func (v Duration) GetYears() int {
 	return years
 }
 
-// DURATIONS LIBRARY
-
-// This singleton creates a unique name space for the library functions for
-// duration elements.
-var Durations = &durations{}
-
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for duration elements.
-type durations struct{}
-
-// SCALABLE INTERFACE
-
-// This library function returns the inverse of the specified duration.
-func (l *durations) Inverse(duration Duration) Duration {
-	return Duration(int(-duration))
-}
-
-// This library function returns the sum of the specified durations.
-func (l *durations) Sum(first, second Duration) Duration {
-	return Duration(int(first + second))
-}
-
-// This library function returns the difference of the specified durations.
-func (l *durations) Difference(first, second Duration) Duration {
-	return Duration(int(first - second))
-}
-
-// This library function returns the specified duration scaled by the specified
-// factor.
-func (l *durations) Scaled(duration Duration, factor float64) Duration {
-	return Duration(int(mat.Round(float64(duration) * factor)))
-}
-
 // PRIVATE FUNCTIONS
 
 // This function returns the magnitude (absolute value) of the specified value.

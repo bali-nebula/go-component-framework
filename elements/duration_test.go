@@ -13,7 +13,6 @@ package elements_test
 import (
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	ass "github.com/stretchr/testify/assert"
-	mat "math"
 	tes "testing"
 )
 
@@ -81,27 +80,4 @@ func TestNegativeDurations(t *tes.T) {
 	ass.Equal(t, 0, v.GetWeeks())
 	ass.Equal(t, 0, v.GetMonths())
 	ass.Equal(t, 0, v.GetYears())
-}
-
-func TestDurationsLibrary(t *tes.T) {
-	var v0 = ele.Duration(0)
-	var v1 = ele.Duration(5)
-	var v2 = ele.Duration(-5)
-	var v3 = ele.Duration(1)
-
-	ass.Equal(t, v0, ele.Durations.Inverse(v0))
-	ass.Equal(t, v2, ele.Durations.Inverse(v1))
-	ass.Equal(t, v1, ele.Durations.Inverse(v2))
-
-	ass.Equal(t, v0, ele.Durations.Sum(v0, v0))
-	ass.Equal(t, v0, ele.Durations.Difference(v0, v0))
-	ass.Equal(t, v1, ele.Durations.Sum(v0, v1))
-	ass.Equal(t, v2, ele.Durations.Difference(v0, v1))
-	ass.Equal(t, v0, ele.Durations.Sum(v1, v2))
-	ass.Equal(t, v2, ele.Durations.Difference(v2, v0))
-
-	ass.Equal(t, v0, ele.Durations.Scaled(v0, mat.Pi))
-	ass.Equal(t, v2, ele.Durations.Scaled(v1, -1.002))
-	ass.Equal(t, v0, ele.Durations.Scaled(v2, 0.002))
-	ass.Equal(t, v3, ele.Durations.Scaled(v1, 0.2))
 }

@@ -11,6 +11,7 @@
 package elements_test
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
@@ -20,7 +21,7 @@ import (
 
 func TestZero(t *tes.T) {
 	var v = ele.NumberFromComplex(0 + 0i)
-	ass.Equal(t, 0+0i, complex128(v))
+	ass.Equal(t, 0+0i, v.AsComplex())
 	ass.True(t, v.IsZero())
 	ass.False(t, v.IsInfinite())
 	ass.False(t, v.IsUndefined())
@@ -32,7 +33,7 @@ func TestZero(t *tes.T) {
 
 func TestInfinity(t *tes.T) {
 	var v = ele.NumberFromComplex(cmp.Inf())
-	ass.Equal(t, cmp.Inf(), complex128(v))
+	ass.Equal(t, cmp.Inf(), v.AsComplex())
 	ass.False(t, v.IsZero())
 	ass.True(t, v.IsInfinite())
 	ass.False(t, v.IsUndefined())
@@ -44,7 +45,7 @@ func TestInfinity(t *tes.T) {
 
 func TestUndefined(t *tes.T) {
 	var v = ele.NumberFromComplex(cmp.NaN())
-	ass.True(t, cmp.IsNaN(complex128(v)))
+	ass.True(t, cmp.IsNaN(v.AsComplex()))
 	ass.False(t, v.IsZero())
 	ass.False(t, v.IsInfinite())
 	ass.True(t, v.IsUndefined())
@@ -55,10 +56,10 @@ func TestUndefined(t *tes.T) {
 }
 
 func TestPositiveReals(t *tes.T) {
-	var v ele.Number
+	var v abs.NumberLike
 
 	v = ele.NumberFromComplex(0.25)
-	ass.Equal(t, 0.25+0i, complex128(v))
+	ass.Equal(t, 0.25+0i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.25, v.AsReal())
 	ass.Equal(t, 0.25, v.GetReal())
@@ -66,10 +67,10 @@ func TestPositiveReals(t *tes.T) {
 }
 
 func TestPositiveImaginaries(t *tes.T) {
-	var v ele.Number
+	var v abs.NumberLike
 
 	v = ele.NumberFromComplex(0.25i)
-	ass.Equal(t, 0+0.25i, complex128(v))
+	ass.Equal(t, 0+0.25i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsReal())
 	ass.Equal(t, 0.0, v.GetReal())
@@ -77,10 +78,10 @@ func TestPositiveImaginaries(t *tes.T) {
 }
 
 func TestNegativeReals(t *tes.T) {
-	var v ele.Number
+	var v abs.NumberLike
 
 	v = ele.NumberFromComplex(-0.75)
-	ass.Equal(t, -0.75+0i, complex128(v))
+	ass.Equal(t, -0.75+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -0.75, v.AsReal())
 	ass.Equal(t, -0.75, v.GetReal())
@@ -88,10 +89,10 @@ func TestNegativeReals(t *tes.T) {
 }
 
 func TestNegativeImaginaries(t *tes.T) {
-	var v ele.Number
+	var v abs.NumberLike
 
 	v = ele.NumberFromComplex(-0.75i)
-	ass.Equal(t, 0-0.75i, complex128(v))
+	ass.Equal(t, 0-0.75i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsReal())
 	ass.Equal(t, 0.0, v.GetReal())
@@ -101,23 +102,27 @@ func TestNegativeImaginaries(t *tes.T) {
 func TestNumbersLibrary(t *tes.T) {
 	var zero = ele.Zero
 	var i = ele.I
+	var minusi = ele.NumberFromComplex(-1i)
 	var half = ele.NumberFromComplex(0.5)
+	var minushalf = ele.NumberFromComplex(-0.5)
 	var one = ele.One
-	var two = ele.One * 2.0
+	var minusone = ele.NumberFromComplex(-1)
+	var two = ele.NumberFromComplex(2.0)
+	var minustwo = ele.NumberFromComplex(-2.0)
 	var infinity = ele.Infinity
 	var undefined = ele.Undefined
 
 	//	-z
 	ass.Equal(t, zero, ele.Numbers.Inverse(zero))
-	ass.Equal(t, -half, ele.Numbers.Inverse(half))
-	ass.Equal(t, -one, ele.Numbers.Inverse(one))
-	ass.Equal(t, -i, ele.Numbers.Inverse(i))
+	ass.Equal(t, minushalf, ele.Numbers.Inverse(half))
+	ass.Equal(t, minusone, ele.Numbers.Inverse(one))
+	ass.Equal(t, minusi, ele.Numbers.Inverse(i))
 	ass.Equal(t, infinity, ele.Numbers.Inverse(infinity))
 	ass.True(t, ele.Numbers.Inverse(undefined).IsUndefined())
 
 	//	z + zero => z
-	ass.Equal(t, -i, ele.Numbers.Sum(-i, zero))
-	ass.Equal(t, -one, ele.Numbers.Sum(-one, zero))
+	ass.Equal(t, minusi, ele.Numbers.Sum(minusi, zero))
+	ass.Equal(t, minusone, ele.Numbers.Sum(minusone, zero))
 	ass.Equal(t, zero, ele.Numbers.Sum(zero, zero))
 	ass.Equal(t, one, ele.Numbers.Sum(one, zero))
 	ass.Equal(t, i, ele.Numbers.Sum(i, zero))
@@ -125,8 +130,8 @@ func TestNumbersLibrary(t *tes.T) {
 	ass.True(t, ele.Numbers.Sum(undefined, zero).IsUndefined())
 
 	//	z + infinity => infinity
-	ass.Equal(t, infinity, ele.Numbers.Sum(-i, infinity))
-	ass.Equal(t, infinity, ele.Numbers.Sum(-one, infinity))
+	ass.Equal(t, infinity, ele.Numbers.Sum(minusi, infinity))
+	ass.Equal(t, infinity, ele.Numbers.Sum(minusone, infinity))
 	ass.Equal(t, infinity, ele.Numbers.Sum(zero, infinity))
 	ass.Equal(t, infinity, ele.Numbers.Sum(one, infinity))
 	ass.Equal(t, infinity, ele.Numbers.Sum(i, infinity))
@@ -134,8 +139,8 @@ func TestNumbersLibrary(t *tes.T) {
 	ass.True(t, ele.Numbers.Sum(undefined, infinity).IsUndefined())
 
 	//	z - infinity => infinity  {z != infinity}
-	ass.Equal(t, infinity, ele.Numbers.Difference(-i, infinity))
-	ass.Equal(t, infinity, ele.Numbers.Difference(-one, infinity))
+	ass.Equal(t, infinity, ele.Numbers.Difference(minusi, infinity))
+	ass.Equal(t, infinity, ele.Numbers.Difference(minusone, infinity))
 	ass.Equal(t, infinity, ele.Numbers.Difference(zero, infinity))
 	ass.Equal(t, infinity, ele.Numbers.Difference(one, infinity))
 	ass.Equal(t, infinity, ele.Numbers.Difference(i, infinity))
@@ -143,16 +148,16 @@ func TestNumbersLibrary(t *tes.T) {
 	ass.True(t, ele.Numbers.Difference(undefined, infinity).IsUndefined())
 
 	//	infinity - z => infinity  {z != infinity}
-	ass.Equal(t, infinity, ele.Numbers.Difference(infinity, -i))
-	ass.Equal(t, infinity, ele.Numbers.Difference(infinity, -one))
+	ass.Equal(t, infinity, ele.Numbers.Difference(infinity, minusi))
+	ass.Equal(t, infinity, ele.Numbers.Difference(infinity, minusone))
 	ass.Equal(t, infinity, ele.Numbers.Difference(infinity, zero))
 	ass.Equal(t, infinity, ele.Numbers.Difference(infinity, one))
 	ass.Equal(t, infinity, ele.Numbers.Difference(infinity, i))
 	ass.True(t, ele.Numbers.Difference(infinity, undefined).IsUndefined())
 
 	//	z - z => zero  {z != infinity}
-	ass.Equal(t, zero, ele.Numbers.Difference(-i, -i))
-	ass.Equal(t, zero, ele.Numbers.Difference(-one, -one))
+	ass.Equal(t, zero, ele.Numbers.Difference(minusi, minusi))
+	ass.Equal(t, zero, ele.Numbers.Difference(minusone, minusone))
 	ass.Equal(t, zero, ele.Numbers.Difference(zero, zero))
 	ass.Equal(t, zero, ele.Numbers.Difference(one, one))
 	ass.Equal(t, zero, ele.Numbers.Difference(i, i))
@@ -160,8 +165,8 @@ func TestNumbersLibrary(t *tes.T) {
 	ass.True(t, ele.Numbers.Difference(undefined, undefined).IsUndefined())
 
 	//	z * r
-	ass.Equal(t, -i, ele.Numbers.Scaled(-i, 1.0))
-	ass.Equal(t, -half, ele.Numbers.Scaled(-one, 0.5))
+	ass.Equal(t, minusi, ele.Numbers.Scaled(minusi, 1.0))
+	ass.Equal(t, minushalf, ele.Numbers.Scaled(minusone, 0.5))
 	ass.Equal(t, zero, ele.Numbers.Scaled(zero, 5.0))
 	ass.Equal(t, half, ele.Numbers.Scaled(one, 0.5))
 	ass.Equal(t, i, ele.Numbers.Scaled(i, 1.0))
@@ -172,16 +177,16 @@ func TestNumbersLibrary(t *tes.T) {
 	ass.Equal(t, infinity, ele.Numbers.Reciprocal(zero))
 	ass.Equal(t, two, ele.Numbers.Reciprocal(half))
 	ass.Equal(t, one, ele.Numbers.Reciprocal(one))
-	ass.Equal(t, -half, ele.Numbers.Reciprocal(-two))
-	ass.Equal(t, -i, ele.Numbers.Reciprocal(i))
+	ass.Equal(t, minushalf, ele.Numbers.Reciprocal(minustwo))
+	ass.Equal(t, minusi, ele.Numbers.Reciprocal(i))
 	ass.Equal(t, zero, ele.Numbers.Reciprocal(infinity))
 	ass.True(t, ele.Numbers.Reciprocal(undefined).IsUndefined())
 
 	//	*z
 	ass.Equal(t, zero, ele.Numbers.Conjugate(zero))
 	ass.Equal(t, one, ele.Numbers.Conjugate(one))
-	ass.Equal(t, -i, ele.Numbers.Conjugate(i))
-	ass.Equal(t, i, ele.Numbers.Conjugate(-i))
+	ass.Equal(t, minusi, ele.Numbers.Conjugate(i))
+	ass.Equal(t, i, ele.Numbers.Conjugate(minusi))
 	ass.True(t, ele.Numbers.Conjugate(undefined).IsUndefined())
 
 	//	z * zero => zero          {z != infinity}
@@ -237,8 +242,8 @@ func TestNumbersLibrary(t *tes.T) {
 	ass.Equal(t, one, ele.Numbers.Quotient(half, half))
 
 	//	z ^ zero => one           {by definition}
-	ass.Equal(t, one, ele.Numbers.Power(-i, zero))
-	ass.Equal(t, one, ele.Numbers.Power(-one, zero))
+	ass.Equal(t, one, ele.Numbers.Power(minusi, zero))
+	ass.Equal(t, one, ele.Numbers.Power(minusone, zero))
 	ass.Equal(t, one, ele.Numbers.Power(zero, zero))
 	ass.Equal(t, one, ele.Numbers.Power(one, zero))
 	ass.Equal(t, one, ele.Numbers.Power(i, zero))
@@ -254,10 +259,10 @@ func TestNumbersLibrary(t *tes.T) {
 	//	z ^ infinity => zero      {|z| < one}
 	//	z ^ infinity => one       {|z| = one}
 	//	z ^ infinity => infinity  {|z| > one}
-	ass.Equal(t, infinity, ele.Numbers.Power(-two, infinity))
-	ass.Equal(t, one, ele.Numbers.Power(-i, infinity))
-	ass.Equal(t, one, ele.Numbers.Power(-one, infinity))
-	ass.Equal(t, zero, ele.Numbers.Power(-half, infinity))
+	ass.Equal(t, infinity, ele.Numbers.Power(minustwo, infinity))
+	ass.Equal(t, one, ele.Numbers.Power(minusi, infinity))
+	ass.Equal(t, one, ele.Numbers.Power(minusone, infinity))
+	ass.Equal(t, zero, ele.Numbers.Power(minushalf, infinity))
 	ass.Equal(t, zero, ele.Numbers.Power(half, infinity))
 	ass.Equal(t, one, ele.Numbers.Power(one, infinity))
 	ass.Equal(t, one, ele.Numbers.Power(i, infinity))
@@ -273,8 +278,8 @@ func TestNumbersLibrary(t *tes.T) {
 	//	one ^ z => one
 	ass.Equal(t, one, ele.Numbers.Power(one, one))
 	ass.Equal(t, one, ele.Numbers.Power(one, i))
-	ass.Equal(t, one, ele.Numbers.Power(one, -one))
-	ass.Equal(t, one, ele.Numbers.Power(one, -i))
+	ass.Equal(t, one, ele.Numbers.Power(one, minusone))
+	ass.Equal(t, one, ele.Numbers.Power(one, minusi))
 
 	//	log(zero, z) => zero
 	ass.True(t, ele.Numbers.Logarithm(zero, zero).IsUndefined())

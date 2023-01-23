@@ -13,7 +13,6 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	ele "github.com/bali-nebula/go-component-framework/elements"
 	pro "github.com/bali-nebula/go-component-framework/procedures"
 	col "github.com/craterdog/go-collection-framework/v2"
 )
@@ -736,7 +735,7 @@ func (v *formatter) formatNotarizeClause(clause abs.NotarizeClauseLike) {
 func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var failure ele.Symbol
+	var failure abs.SymbolLike
 	var block abs.BlockLike
 	var blocks = col.List[abs.BlockLike]()
 	var clause abs.OnClauseLike
@@ -791,7 +790,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 func (v *formatter) formatOnClause(clause abs.OnClauseLike) {
 	v.AppendString(" on ")
 	var failure = clause.GetFailure()
-	var identifier = failure.GetIdentifier()
+	var identifier = failure.AsString()
 	v.AppendString("$")
 	v.formatIdentifier(identifier)
 	var blocks = clause.GetBlocks()
@@ -965,7 +964,7 @@ func (v *parser) parseRecipient() (abs.Recipient, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatRecipient(recipient abs.Recipient) {
 	switch value := recipient.(type) {
-	case ele.Symbol:
+	case abs.SymbolLike:
 		v.formatSymbol(value)
 	case abs.AttributeLike:
 		v.formatAttribute(value)
@@ -1366,7 +1365,7 @@ func (v *formatter) formatWhileClause(clause abs.WhileClauseLike) {
 func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var item ele.Symbol
+	var item abs.SymbolLike
 	var block abs.BlockLike
 	var clause abs.WithClauseLike
 	_, token, ok = v.parseKeyword("with")
@@ -1420,7 +1419,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 func (v *formatter) formatWithClause(clause abs.WithClauseLike) {
 	v.AppendString("with each ")
 	var item = clause.GetItem()
-	var identifier = item.GetIdentifier()
+	var identifier = item.AsString()
 	v.AppendString("$")
 	v.formatIdentifier(identifier)
 	v.AppendString(" in ")

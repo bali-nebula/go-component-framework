@@ -14,9 +14,120 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
+	col "github.com/bali-nebula/go-component-framework/collections"
+	com "github.com/bali-nebula/go-component-framework/components"
 	str "github.com/bali-nebula/go-component-framework/strings"
-	col "github.com/craterdog/go-collection-framework/v2"
+	cox "github.com/craterdog/go-collection-framework/v2"
 )
+
+// TYPE DEFINITIONS
+
+type (
+	Components []any
+	Associations [][2]any
+	Parameters [][2]any
+)
+
+// UNIVERSAL CONSTRUCTORS
+
+// This constructor returns a new catalog component initialized with the
+// specified associations and parameterized with the specified parameters.
+func Catalog(associations Associations, parameters Parameters) abs.ComponentLike {
+	var catalog = col.Catalog()
+	for _, association := range associations {
+		var key = Component(association[0]).GetEntity()
+		var value = Component(association[1])
+		catalog.SetValue(key, value)
+	}
+	if len(parameters) > 0 {
+		var context = com.Context()
+		for _, parameter := range parameters {
+			var name = Symbol(parameter[0])
+			var value = Component(parameter[1])
+			context.SetValue(name, value)
+		}
+		return com.ComponentWithContext(catalog, context)
+	}
+	return com.Component(catalog)
+}
+
+// This constructor returns a new list component initialized with the
+// specified associations and parameterized with the specified parameters.
+func List(components Components, parameters Parameters) abs.ComponentLike {
+	var component abs.ComponentLike
+	var list = col.List()
+	for _, value := range components {
+		component = Component(value)
+		list.AddValue(component)
+	}
+	if len(parameters) > 0 {
+		var context = com.Context()
+		for _, parameter := range parameters {
+			var name = Symbol(parameter[0])
+			var value = parameter[1]
+			component = Component(value)
+			context.SetValue(name, component)
+		}
+		return com.ComponentWithContext(list, context)
+	}
+	return com.Component(list)
+}
+
+// This constructor returns a new queue component with the specified capacity
+// and parameterized with the specified parameters.
+func Queue(capacity int, parameters Parameters) abs.ComponentLike {
+	var queue = col.QueueWithCapacity(capacity)
+	if len(parameters) > 0 {
+		var context = com.Context()
+		for _, parameter := range parameters {
+			var name = Symbol(parameter[0])
+			var value = Component(parameter[1])
+			context.SetValue(name, value)
+		}
+		return com.ComponentWithContext(queue, context)
+	}
+	return com.Component(queue)
+}
+
+// This constructor returns a new set component initialized with the
+// specified associations and parameterized with the specified parameters.
+func Set(components Components, parameters Parameters) abs.ComponentLike {
+	var component abs.ComponentLike
+	var set = col.Set()
+	for _, value := range components {
+		component = Component(value)
+		set.AddValue(component)
+	}
+	if len(parameters) > 0 {
+		var context = com.Context()
+		for _, parameter := range parameters {
+			var name = Symbol(parameter[0])
+			var value = parameter[1]
+			component = Component(value)
+			context.SetValue(name, component)
+		}
+		return com.ComponentWithContext(set, context)
+	}
+	return com.Component(set)
+}
+
+// This constructor returns a new stack component with the specified capacity
+// and parameterized with the specified parameters.
+func Stack(capacity int, parameters Parameters) abs.ComponentLike {
+	var stack = col.StackWithCapacity(capacity)
+	if len(parameters) > 0 {
+		var context = com.Context()
+		for _, parameter := range parameters {
+			var name = Symbol(parameter[0])
+			var value = Component(parameter[1])
+			context.SetValue(name, value)
+		}
+		return com.ComponentWithContext(stack, context)
+	}
+	return com.Component(stack)
+}
+
+// PRIVATE METHODS
 
 // This method attempts to parse an association between a key and value. It
 // returns the association and whether or not the association was successfully
@@ -47,7 +158,7 @@ func (v *parser) parseAssociation() (abs.AssociationLike, *Token, bool) {
 			"$value")
 		panic(message)
 	}
-	var association = col.Association[abs.Primitive, abs.ComponentLike](key, value)
+	var association = col.Association(key, value)
 	return association, token, true
 }
 
@@ -82,7 +193,7 @@ func (v *parser) parseInlineMapping() (abs.MappingLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var mapping = col.List[abs.AssociationLike]()
+	var mapping = cox.List[abs.AssociationLike]()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
 		// This is an empty mapping.
@@ -129,7 +240,7 @@ func (v *parser) parseInlineSeries() (abs.SeriesLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var series = col.List[abs.ComponentLike]()
+	var series = col.List()
 	_, token, ok = v.parseDelimiter("]")
 	if ok {
 		// This is an empty series.
@@ -211,7 +322,7 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatMapping(mapping abs.MappingLike) {
 	v.AppendString("[")
-	var iterator = col.Iterator[abs.AssociationLike](mapping)
+	var iterator = col.AssociationIterator(mapping)
 	switch mapping.GetSize() {
 	case 0:
 		v.AppendString(":")
@@ -238,7 +349,7 @@ func (v *parser) parseMultilineMapping() (abs.MappingLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var associations = col.List[abs.AssociationLike]()
+	var associations = cox.List[abs.AssociationLike]()
 	association, token, ok = v.parseAssociation()
 	if !ok {
 		// A non-empty mapping must have at least one association.
@@ -274,7 +385,7 @@ func (v *parser) parseMultilineSeries() (abs.SeriesLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var series = col.List[abs.ComponentLike]()
+	var series = col.List()
 	value, token, ok = v.parseComponent()
 	if !ok {
 		// A non-empty series must have at least one value.
@@ -406,7 +517,7 @@ func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatSeries(series abs.SeriesLike) {
 	v.AppendString("[")
-	var iterator = col.Iterator[abs.ComponentLike](series)
+	var iterator = col.ComponentIterator(series)
 	switch series.GetSize() {
 	case 0:
 		v.AppendString(" ")

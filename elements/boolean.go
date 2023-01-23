@@ -10,6 +10,10 @@
 
 package elements
 
+import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
+)
+
 // BOOLEAN IMPLEMENTATION
 
 // This type defines the methods associated with boolean elements. It extends
@@ -44,30 +48,30 @@ type booleans struct{}
 // LOGICAL INTERFACE
 
 // This library function returns the logical inverse of the specified boolean.
-func (l *booleans) Not(boolean Boolean) Boolean {
-	return !boolean
+func (l *booleans) Not(boolean abs.BooleanLike) abs.BooleanLike {
+	return Boolean(!boolean.AsBoolean())
 }
 
 // This library function returns the logical conjunction of the specified
 // boolean elements.
-func (l *booleans) And(first, second Boolean) Boolean {
-	return first && second
+func (l *booleans) And(first, second abs.BooleanLike) abs.BooleanLike {
+	return Boolean(first.AsBoolean() && second.AsBoolean())
 }
 
 // This library function returns the logical material non-implication of the
 // specified boolean elements.
-func (l *booleans) Sans(first, second Boolean) Boolean {
-	return first && !second
+func (l *booleans) Sans(first, second abs.BooleanLike) abs.BooleanLike {
+	return Boolean(first.AsBoolean() && !second.AsBoolean())
 }
 
 // This library function returns the logical disjunction of the specified
 // boolean elements.
-func (l *booleans) Or(first Boolean, second Boolean) Boolean {
-	return first || second
+func (l *booleans) Or(first, second abs.BooleanLike) abs.BooleanLike {
+	return Boolean(first.AsBoolean() || second.AsBoolean())
 }
 
 // This library function returns the logical exclusive disjunction of the
 // specified boolean elements.
-func (l *booleans) Xor(first Boolean, second Boolean) Boolean {
-	return (first && !second) || (!first && second)
+func (l *booleans) Xor(first, second abs.BooleanLike) abs.BooleanLike {
+	return Boolean((first.AsBoolean() && !second.AsBoolean()) || (!first.AsBoolean() && second.AsBoolean()))
 }

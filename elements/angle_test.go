@@ -19,23 +19,19 @@ import (
 
 func TestZeroAngles(t *tes.T) {
 	var v = ele.AngleFromFloat(0)
-	ass.Equal(t, 0.0, float64(v))
 	ass.Equal(t, 0.0, v.AsReal())
 }
 
 func TestPositiveAngles(t *tes.T) {
 	var v = ele.AngleFromFloat(mat.Pi)
-	ass.Equal(t, mat.Pi, float64(v))
 	ass.Equal(t, mat.Pi, v.AsReal())
 }
 
 func TestNegativeAngles(t *tes.T) {
 	var v1 = ele.AngleFromFloat(-mat.Pi)
-	ass.Equal(t, mat.Pi, float64(v1))
 	ass.Equal(t, mat.Pi, v1.AsReal())
 
 	var v2 = ele.AngleFromFloat(-mat.Pi / 2.0)
-	ass.Equal(t, 1.5*mat.Pi, float64(v2))
 	ass.Equal(t, 1.5*mat.Pi, v2.AsReal())
 }
 
