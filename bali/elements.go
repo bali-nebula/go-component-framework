@@ -356,7 +356,7 @@ func (v *parser) parseMoment() (abs.MomentLike, *Token, bool) {
 	}
 	var date tim.Time = hackedParseDate(token.Value)
 	var milliseconds = int(date.UnixMilli())
-	moment = ele.Moment(milliseconds)
+	moment = ele.MomentFromInteger(milliseconds)
 	return moment, token, true
 }
 

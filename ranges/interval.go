@@ -252,9 +252,9 @@ func (v *interval[V]) indexToValue(index int) V {
 	var template V
 	var primitive abs.Primitive = template
 	switch primitive.(type) {
-	case ele.Duration:
+	case ele.Duration, abs.DurationLike:
 		primitive = ele.Duration(index)
-	case ele.Moment:
+	case ele.Moment, abs.MomentLike:
 		primitive = ele.Moment(index)
 	case Rune:
 		primitive = Rune(index)

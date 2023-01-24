@@ -20,12 +20,12 @@ import (
 )
 
 func TestContinuaWithAngles(t *tes.T) {
-	var s = ran.Continuum[abs.AngleLike](ele.Angle(0), abs.LEFT, ele.Pi)
-	ass.True(t, s.ContainsValue(ele.Angle(0)))
+	var s = ran.Continuum[abs.AngleLike](ele.AngleFromFloat(0), abs.LEFT, ele.Pi)
+	ass.True(t, s.ContainsValue(ele.AngleFromFloat(0)))
 	ass.False(t, s.ContainsValue(ele.Pi))
-	ass.True(t, s.ContainsValue(ele.Angle(2)))
-	ass.False(t, s.ContainsValue(ele.Angle(4)))
-	ass.Equal(t, ele.Angle(0), s.GetFirst())
+	ass.True(t, s.ContainsValue(ele.AngleFromFloat(2)))
+	ass.False(t, s.ContainsValue(ele.AngleFromFloat(4)))
+	ass.Equal(t, ele.AngleFromFloat(0), s.GetFirst())
 	ass.Equal(t, abs.LEFT, s.GetExtent())
 	ass.Equal(t, ele.Pi, s.GetLast())
 }
