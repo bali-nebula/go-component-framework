@@ -11,36 +11,10 @@
 package bali_test
 
 import (
-	fmt "fmt"
 	bal "github.com/bali-nebula/go-component-framework/bali"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
-
-func TestDummy(t *tes.T) {
-	var set = bal.Set(
-		bal.Components{
-			1, 3, 4, 2,
-	}, bal.Parameters{
-		{"$foobar", 2},
-	})
-	fmt.Println(bal.FormatComponent(set))
-	var list = bal.List(
-		bal.Components{
-			1, 2, 3, 4,
-	}, bal.Parameters{
-	})
-	fmt.Println(bal.FormatComponent(list))
-	var catalog = bal.Catalog(
-		bal.Associations{
-		{1, 2},
-		{3, 4},
-		{5, 6},
-	}, bal.Parameters{
-		{"$foobar", 2},
-	})
-	fmt.Println(bal.FormatComponent(catalog))
-}
 
 func TestRoundtripWithCatalogs(t *tes.T) {
 	var catalogStrings = []string{
