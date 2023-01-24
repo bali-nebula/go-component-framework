@@ -19,15 +19,39 @@ import (
 	tes "testing"
 )
 
-func TestIntervalsWithDurations(t *tes.T) {
-	var two = ele.Duration(2)
-	var three = ele.Duration(3)
-	var four = ele.Duration(4)
-	var five = ele.Duration(5)
-	var six = ele.Duration(6)
-	var seven = ele.Duration(7)
-	var eight = ele.Duration(8)
-	var s = ran.Interval(three, abs.INCLUSIVE, seven)
+func TestIntervalsWithImplicitDurations(t *tes.T) {
+	var s = ran.Interval[ele.Duration](3, abs.INCLUSIVE, 7)
+	ass.False(t, s.IsEmpty())
+	ass.Equal(t, 5, s.GetSize())
+	ass.False(t, s.ContainsValue(2))
+	ass.True(t, s.ContainsValue(3))
+	ass.True(t, s.ContainsValue(5))
+	ass.True(t, s.ContainsValue(7))
+	ass.False(t, s.ContainsValue(8))
+	ass.Equal(t, ele.Duration(3), s.GetFirst())
+	ass.Equal(t, abs.INCLUSIVE, s.GetExtent())
+	ass.Equal(t, ele.Duration(7), s.GetLast())
+	ass.Equal(t, ele.Duration(5), s.GetValue(3))
+	ass.Equal(t, 0, s.GetIndex(2))
+	ass.Equal(t, 1, s.GetIndex(3))
+	ass.Equal(t, 3, s.GetIndex(5))
+	ass.Equal(t, 5, s.GetIndex(7))
+	ass.Equal(t, 0, s.GetIndex(8))
+	ass.Equal(t, []ele.Duration{3, 4, 5, 6, 7}, s.AsArray())
+	var iterator = col.Iterator[ele.Duration](s)
+	ass.Equal(t, ele.Duration(3), iterator.GetNext())
+	iterator.ToEnd()
+	ass.Equal(t, ele.Duration(7), iterator.GetPrevious())
+}
+func TestIntervalsWithExplicitDurations(t *tes.T) {
+	var two = ele.DurationFromInteger(2)
+	var three = ele.DurationFromInteger(3)
+	var four = ele.DurationFromInteger(4)
+	var five = ele.DurationFromInteger(5)
+	var six = ele.DurationFromInteger(6)
+	var seven = ele.DurationFromInteger(7)
+	var eight = ele.DurationFromInteger(8)
+	var s = ran.Interval[abs.DurationLike](three, abs.INCLUSIVE, seven)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
 	ass.False(t, s.ContainsValue(two))
@@ -44,14 +68,14 @@ func TestIntervalsWithDurations(t *tes.T) {
 	ass.Equal(t, 3, s.GetIndex(five))
 	ass.Equal(t, 5, s.GetIndex(seven))
 	ass.Equal(t, 0, s.GetIndex(eight))
-	ass.Equal(t, []ele.Duration{
+	ass.Equal(t, []abs.DurationLike{
 		three,
 		four,
 		five,
 		six,
 		seven,
 	}, s.AsArray())
-	var iterator = col.Iterator[ele.Duration](s)
+	var iterator = col.Iterator[abs.DurationLike](s)
 	ass.Equal(t, three, iterator.GetNext())
 	iterator.ToEnd()
 	ass.Equal(t, seven, iterator.GetPrevious())

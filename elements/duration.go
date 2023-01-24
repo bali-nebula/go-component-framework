@@ -11,6 +11,7 @@
 package elements
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	mat "math"
 )
 
@@ -37,13 +38,19 @@ const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsP
 
 // DURATION IMPLEMENTATION
 
-// This constructor returns the minimum value for a duration.
-func MinimumDuration() Duration {
+// This constructor creates a new duration of time element from the specified
+// integer number of milliseconds.
+func DurationFromInteger(milliseconds int) abs.DurationLike {
+	return Duration(milliseconds)
+}
+
+// This constructor returns the minimum value for a duration of time.
+func MinimumDuration() abs.DurationLike {
 	return Duration(0)
 }
 
-// This constructor returns the maximum value for a duration.
-func MaximumDuration() Duration {
+// This constructor returns the maximum value for a duration of time.
+func MaximumDuration() abs.DurationLike {
 	return Duration(mat.MaxInt)
 }
 

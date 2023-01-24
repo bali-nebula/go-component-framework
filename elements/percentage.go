@@ -11,18 +11,19 @@
 package elements
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	mat "math"
 )
 
 // PERCENTAGE IMPLEMENTATION
 
 // This constructor returns the minimum value for a percentage.
-func MinimumPercentage() Percentage {
+func MinimumPercentage() abs.PercentageLike {
 	return Percentage(0)
 }
 
 // This constructor returns the maximum value for a percentage.
-func MaximumPercentage() Percentage {
+func MaximumPercentage() abs.PercentageLike {
 	return Percentage(100)
 }
 

@@ -122,7 +122,7 @@ func (v *interval[V]) GetValue(index int) V {
 func (v *interval[V]) GetValues(first int, last int) abs.Sequential[V] {
 	var values = col.List[V]()
 	for index := first; index <= last; index++ {
-		var value V = v.indexToValue(index)
+		var value = v.indexToValue(index)
 		values.AddValue(value)
 	}
 	return values
@@ -249,17 +249,21 @@ func (v *interval[V]) effectiveLast() int {
 
 // This method returns the value associated with the specified index.
 func (v *interval[V]) indexToValue(index int) V {
-	var template V
-	var primitive abs.Primitive = template
-	switch primitive.(type) {
-	case ele.Duration, abs.DurationLike:
-		primitive = ele.Duration(index)
-	case ele.Moment, abs.MomentLike:
-		primitive = ele.Moment(index)
+	var discrete abs.Discrete = v.first
+	switch discrete.(type) {
+	case abs.DurationLike:
+		discrete = ele.Duration(index)
+	case abs.MomentLike:
+		discrete = ele.Moment(index)
+	case Integer:
+		discrete = Integer(index)
 	case Rune:
-		primitive = Rune(index)
+		discrete = Rune(index)
+	default:
+		var message = fmt.Sprintf("The discrete type was not found: %T", discrete)
+		panic(message)
 	}
-	return primitive.(V)
+	return discrete.(V)
 }
 
 // This method normalizes an index to match the Go (zero based) indexing. The
@@ -284,6 +288,41 @@ func (v *interval[V]) goIndex(index int) int {
 		// This should never happen so time to panic...
 		panic(fmt.Sprintf("Compiler problem, unexpected index value: %v", index))
 	}
+}
+
+// INTEGER IMPLEMENTATION
+
+// This constructor returns the minimum value for an integer.
+func MinimumInteger() Integer {
+	return Integer(0)
+}
+
+// This constructor returns the maximum value for an integer.
+func MaximumInteger() Integer {
+	return Integer(mat.MaxInt)
+}
+
+// This type defines the methods associated with integers. It extends the
+// native Go int type.
+type Integer int
+
+// DISCRETE INTERFACE
+
+// This method returns a boolean value for this rune.
+func (v Integer) AsBoolean() bool {
+	return v != 0
+}
+
+// This method returns an integer value for this rune.
+func (v Integer) AsInteger() int {
+	return int(v)
+}
+
+// POLARIZED INTERFACE
+
+// This method determines whether or not this rune is negative.
+func (v Integer) IsNegative() bool {
+	return v < 0
 }
 
 // RUNE IMPLEMENTATION
@@ -312,11 +351,4 @@ func (v Rune) AsBoolean() bool {
 // This method returns an integer value for this rune.
 func (v Rune) AsInteger() int {
 	return int(v)
-}
-
-// POLARIZED INTERFACE
-
-// This method determines whether or not this rune is negative.
-func (v Rune) IsNegative() bool {
-	return v < 0
 }
