@@ -20,28 +20,28 @@ import (
 )
 
 func TestIntervalsWithImplicitDurations(t *tes.T) {
-	var s = ran.Interval[ele.Duration](3, abs.INCLUSIVE, 7)
+	var s = ran.Interval[ele.Duration](3, abs.LEFT, 7)
 	ass.False(t, s.IsEmpty())
-	ass.Equal(t, 5, s.GetSize())
+	ass.Equal(t, 4, s.GetSize())
 	ass.False(t, s.ContainsValue(2))
 	ass.True(t, s.ContainsValue(3))
 	ass.True(t, s.ContainsValue(5))
-	ass.True(t, s.ContainsValue(7))
+	ass.False(t, s.ContainsValue(7))
 	ass.False(t, s.ContainsValue(8))
 	ass.Equal(t, ele.Duration(3), s.GetFirst())
-	ass.Equal(t, abs.INCLUSIVE, s.GetExtent())
+	ass.Equal(t, abs.LEFT, s.GetExtent())
 	ass.Equal(t, ele.Duration(7), s.GetLast())
 	ass.Equal(t, ele.Duration(5), s.GetValue(3))
 	ass.Equal(t, 0, s.GetIndex(2))
 	ass.Equal(t, 1, s.GetIndex(3))
 	ass.Equal(t, 3, s.GetIndex(5))
-	ass.Equal(t, 5, s.GetIndex(7))
+	ass.Equal(t, 0, s.GetIndex(7))
 	ass.Equal(t, 0, s.GetIndex(8))
-	ass.Equal(t, []ele.Duration{3, 4, 5, 6, 7}, s.AsArray())
+	ass.Equal(t, []ele.Duration{3, 4, 5, 6}, s.AsArray())
 	var iterator = col.Iterator[ele.Duration](s)
 	ass.Equal(t, ele.Duration(3), iterator.GetNext())
 	iterator.ToEnd()
-	ass.Equal(t, ele.Duration(7), iterator.GetPrevious())
+	ass.Equal(t, ele.Duration(6), iterator.GetPrevious())
 }
 func TestIntervalsWithExplicitDurations(t *tes.T) {
 	var two = ele.DurationFromInteger(2)
@@ -51,7 +51,7 @@ func TestIntervalsWithExplicitDurations(t *tes.T) {
 	var six = ele.DurationFromInteger(6)
 	var seven = ele.DurationFromInteger(7)
 	var eight = ele.DurationFromInteger(8)
-	var s = ran.Interval[abs.DurationLike](three, abs.INCLUSIVE, seven)
+	var s = ran.Interval(three, abs.INCLUSIVE, seven)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
 	ass.False(t, s.ContainsValue(two))
@@ -81,14 +81,14 @@ func TestIntervalsWithExplicitDurations(t *tes.T) {
 	ass.Equal(t, seven, iterator.GetPrevious())
 }
 
-func TestIntervalsWithMoments(t *tes.T) {
-	var two = ele.Moment(2)
-	var three = ele.Moment(3)
-	var four = ele.Moment(4)
-	var five = ele.Moment(5)
-	var six = ele.Moment(6)
-	var seven = ele.Moment(7)
-	var eight = ele.Moment(8)
+func TestIntervalsWithExplicitMoments(t *tes.T) {
+	var two = ele.MomentFromInteger(2)
+	var three = ele.MomentFromInteger(3)
+	var four = ele.MomentFromInteger(4)
+	var five = ele.MomentFromInteger(5)
+	var six = ele.MomentFromInteger(6)
+	var seven = ele.MomentFromInteger(7)
+	var eight = ele.MomentFromInteger(8)
 	var s = ran.Interval(three, abs.RIGHT, seven)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())
@@ -106,34 +106,32 @@ func TestIntervalsWithMoments(t *tes.T) {
 	ass.Equal(t, 2, s.GetIndex(five))
 	ass.Equal(t, 4, s.GetIndex(seven))
 	ass.Equal(t, 0, s.GetIndex(eight))
-	ass.Equal(t, []ele.Moment{
+	ass.Equal(t, []abs.MomentLike{
 		four,
 		five,
 		six,
 		seven,
 	}, s.AsArray())
+}
 
-	s = ran.Interval(three, abs.EXCLUSIVE, seven)
+func TestIntervalsWithImplicitMoments(t *tes.T) {
+	var s = ran.Interval[ele.Moment](3, abs.EXCLUSIVE, 7)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 3, s.GetSize())
-	ass.False(t, s.ContainsValue(two))
-	ass.False(t, s.ContainsValue(three))
-	ass.True(t, s.ContainsValue(five))
-	ass.False(t, s.ContainsValue(seven))
-	ass.False(t, s.ContainsValue(eight))
-	ass.Equal(t, three, s.GetFirst())
+	ass.False(t, s.ContainsValue(2))
+	ass.False(t, s.ContainsValue(3))
+	ass.True(t, s.ContainsValue(5))
+	ass.False(t, s.ContainsValue(7))
+	ass.False(t, s.ContainsValue(8))
+	ass.Equal(t, ele.Moment(3), s.GetFirst())
 	ass.Equal(t, abs.EXCLUSIVE, s.GetExtent())
-	ass.Equal(t, seven, s.GetLast())
-	ass.Equal(t, four, s.GetValue(1))
-	ass.Equal(t, 0, s.GetIndex(three))
-	ass.Equal(t, 1, s.GetIndex(four))
-	ass.Equal(t, 3, s.GetIndex(six))
-	ass.Equal(t, 0, s.GetIndex(seven))
-	ass.Equal(t, []ele.Moment{
-		four,
-		five,
-		six,
-	}, s.AsArray())
+	ass.Equal(t, ele.Moment(7), s.GetLast())
+	ass.Equal(t, ele.Moment(4), s.GetValue(1))
+	ass.Equal(t, 0, s.GetIndex(3))
+	ass.Equal(t, 1, s.GetIndex(4))
+	ass.Equal(t, 3, s.GetIndex(6))
+	ass.Equal(t, 0, s.GetIndex(7))
+	ass.Equal(t, []ele.Moment{4, 5, 6}, s.AsArray())
 }
 
 func TestIntervalsWithRunes(t *tes.T) {
