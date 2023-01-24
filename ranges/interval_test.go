@@ -152,3 +152,22 @@ func TestIntervalsWithRunes(t *tes.T) {
 	ass.Equal(t, 0, s.GetIndex('f'))
 	ass.Equal(t, []ran.Rune{'a', 'b', 'c', 'd', 'e'}, s.AsArray())
 }
+
+func TestIntervalsWithIntegers(t *tes.T) {
+	var s = ran.Interval[ran.Integer](1, abs.RIGHT, 5)
+	ass.False(t, s.IsEmpty())
+	ass.Equal(t, 4, s.GetSize())
+	ass.False(t, s.ContainsValue(1))
+	ass.True(t, s.ContainsValue(2))
+	ass.True(t, s.ContainsValue(5))
+	ass.False(t, s.ContainsValue(6))
+	ass.Equal(t, ran.Integer(1), s.GetFirst())
+	ass.Equal(t, abs.RIGHT, s.GetExtent())
+	ass.Equal(t, ran.Integer(5), s.GetLast())
+	ass.Equal(t, ran.Integer(2), s.GetValue(1))
+	ass.Equal(t, 0, s.GetIndex(1))
+	ass.Equal(t, 1, s.GetIndex(2))
+	ass.Equal(t, 4, s.GetIndex(5))
+	ass.Equal(t, 0, s.GetIndex(6))
+	ass.Equal(t, []ran.Integer{2, 3, 4, 5}, s.AsArray())
+}
