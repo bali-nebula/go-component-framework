@@ -40,7 +40,7 @@ const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsP
 
 // This constructor creates a new duration of time element from the specified
 // integer number of milliseconds.
-func DurationFromInteger(milliseconds int) abs.DurationLike {
+func DurationFromInt(milliseconds int) abs.DurationLike {
 	return Duration(milliseconds)
 }
 

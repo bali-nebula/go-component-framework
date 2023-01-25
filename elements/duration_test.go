@@ -17,7 +17,7 @@ import (
 )
 
 func TestZeroDurations(t *tes.T) {
-	var v = ele.DurationFromInteger(0)
+	var v = ele.DurationFromInt(0)
 	ass.Equal(t, 0, v.AsInteger())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsMilliseconds())
@@ -39,7 +39,7 @@ func TestZeroDurations(t *tes.T) {
 }
 
 func TestPositiveDurations(t *tes.T) {
-	var v = ele.DurationFromInteger(60000)
+	var v = ele.DurationFromInt(60000)
 	ass.Equal(t, 60000, v.AsInteger())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 60000.0, v.AsMilliseconds())
@@ -61,7 +61,7 @@ func TestPositiveDurations(t *tes.T) {
 }
 
 func TestNegativeDurations(t *tes.T) {
-	var v = ele.DurationFromInteger(-60000)
+	var v = ele.DurationFromInt(-60000)
 	ass.Equal(t, -60000, v.AsInteger())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -60000.0, v.AsMilliseconds())

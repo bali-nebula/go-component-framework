@@ -202,7 +202,7 @@ func (v *parser) parseDuration() (abs.DurationLike, *Token, bool) {
 			}
 		}
 	}
-	duration = ele.DurationFromInteger(int(sign * milliseconds))
+	duration = ele.DurationFromInt(int(sign * milliseconds))
 	return duration, token, true
 }
 
@@ -356,7 +356,7 @@ func (v *parser) parseMoment() (abs.MomentLike, *Token, bool) {
 	}
 	var date tim.Time = hackedParseDate(token.Value)
 	var milliseconds = int(date.UnixMilli())
-	moment = ele.MomentFromInteger(milliseconds)
+	moment = ele.MomentFromInt(milliseconds)
 	return moment, token, true
 }
 

@@ -27,7 +27,7 @@ func Now() abs.MomentLike {
 
 // This constructor creates a new moment in time element from the specified
 // integer number of milliseconds since epoc in the UTC timezone.
-func MomentFromInteger(milliseconds int) abs.MomentLike {
+func MomentFromInt(milliseconds int) abs.MomentLike {
 	return Moment(milliseconds)
 }
 

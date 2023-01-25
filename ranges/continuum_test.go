@@ -15,7 +15,6 @@ import (
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	ran "github.com/bali-nebula/go-component-framework/ranges"
 	ass "github.com/stretchr/testify/assert"
-	mat "math"
 	tes "testing"
 )
 
@@ -31,31 +30,42 @@ func TestContinuaWithAngles(t *tes.T) {
 }
 
 func TestContinuaWithPercentages(t *tes.T) {
-	var s = ran.Continuum[ele.Percentage](-25, abs.INCLUSIVE, 100)
-	ass.True(t, s.ContainsValue(-25))
-	ass.True(t, s.ContainsValue(100))
-	ass.False(t, s.ContainsValue(-30))
-	ass.True(t, s.ContainsValue(50))
-	ass.False(t, s.ContainsValue(150))
-	ass.Equal(t, ele.Percentage(-25), s.GetFirst())
+	var pMinus30 = ele.PercentageFromInt(-30)
+	var pMinus25 = ele.PercentageFromInt(-25)
+	var p100 = ele.PercentageFromInt(100)
+	var p50 = ele.PercentageFromInt(50)
+	var p150 = ele.PercentageFromInt(150)
+	var s = ran.Continuum[abs.PercentageLike](pMinus25, abs.INCLUSIVE, p100)
+	ass.True(t, s.ContainsValue(pMinus25))
+	ass.True(t, s.ContainsValue(p100))
+	ass.False(t, s.ContainsValue(pMinus30))
+	ass.True(t, s.ContainsValue(p50))
+	ass.False(t, s.ContainsValue(p150))
+	ass.Equal(t, pMinus25, s.GetFirst())
 	ass.Equal(t, abs.INCLUSIVE, s.GetExtent())
-	ass.Equal(t, ele.Percentage(100), s.GetLast())
+	ass.Equal(t, p100, s.GetLast())
 }
 
 func TestContinuaWithProbabilities(t *tes.T) {
-	var s = ran.Continuum[ele.Probability](0, abs.RIGHT, 1)
-	ass.False(t, s.ContainsValue(0))
-	ass.True(t, s.ContainsValue(1))
-	ass.True(t, s.ContainsValue(0.5))
-	ass.Equal(t, ele.Probability(0), s.GetFirst())
+	var p0 = ele.ProbabilityFromFloat(0)
+	var pHalf = ele.ProbabilityFromFloat(0.5)
+	var p1 = ele.ProbabilityFromFloat(1)
+	var s = ran.Continuum[abs.ProbabilityLike](p0, abs.RIGHT, p1)
+	ass.False(t, s.ContainsValue(p0))
+	ass.True(t, s.ContainsValue(p1))
+	ass.True(t, s.ContainsValue(pHalf))
+	ass.Equal(t, p0, s.GetFirst())
 	ass.Equal(t, abs.RIGHT, s.GetExtent())
-	ass.Equal(t, ele.Probability(1), s.GetLast())
+	ass.Equal(t, p1, s.GetLast())
 }
 
 func TestContinuaWithReals(t *tes.T) {
-	var s = ran.Continuum[ran.Real](ran.Real(mat.Inf(-1)), abs.EXCLUSIVE, ran.Real(mat.Inf(1)))
-	ass.True(t, s.ContainsValue(0))
-	ass.Equal(t, ran.Real(mat.Inf(-1)), s.GetFirst())
+	var minimum = ran.MinimumReal()
+	var zero = ran.Real(0)
+	var maximum = ran.MaximumReal()
+	var s = ran.Continuum[abs.RealLike](minimum, abs.EXCLUSIVE, maximum)
+	ass.True(t, s.ContainsValue(zero))
+	ass.Equal(t, minimum, s.GetFirst())
 	ass.Equal(t, abs.EXCLUSIVE, s.GetExtent())
-	ass.Equal(t, ran.Real(mat.Inf(1)), s.GetLast())
+	ass.Equal(t, maximum, s.GetLast())
 }

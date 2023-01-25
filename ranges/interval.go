@@ -252,12 +252,12 @@ func (v *interval[V]) indexToValue(index int) V {
 	var discrete abs.Discrete = v.first
 	switch discrete.(type) {
 	case abs.DurationLike:
-		discrete = ele.DurationFromInteger(index)
+		discrete = ele.DurationFromInt(index)
 	case abs.MomentLike:
-		discrete = ele.MomentFromInteger(index)
-	case Integer:
+		discrete = ele.MomentFromInt(index)
+	case abs.IntegerLike:
 		discrete = Integer(index)
-	case Rune:
+	case abs.RuneLike:
 		discrete = Rune(index)
 	default:
 		var message = fmt.Sprintf("The discrete type was not found: %T", discrete)
@@ -292,17 +292,22 @@ func (v *interval[V]) goIndex(index int) int {
 
 // INTEGER IMPLEMENTATION
 
-// This constructor returns the minimum value for an integer.
-func MinimumInteger() Integer {
+// This constructor creates a new real endpoint from the specified float.
+func IntegerFromInt(v float64) abs.IntegerLike {
+	return Integer(v)
+}
+
+// This constructor returns the minimum value for an integer endpoint.
+func MinimumInteger() abs.IntegerLike {
 	return Integer(0)
 }
 
-// This constructor returns the maximum value for an integer.
-func MaximumInteger() Integer {
+// This constructor returns the maximum value for an integer endpoint.
+func MaximumInteger() abs.IntegerLike {
 	return Integer(mat.MaxInt)
 }
 
-// This type defines the methods associated with integers. It extends the
+// This type defines the methods associated with integer endpoints. It extends the
 // native Go int type.
 type Integer int
 
@@ -327,17 +332,22 @@ func (v Integer) IsNegative() bool {
 
 // RUNE IMPLEMENTATION
 
-// This constructor returns the minimum value for a rune.
-func MinimumRune() Rune {
+// This constructor creates a new rune endpoint from the specified integer.
+func RuneFromInt(v int) abs.RuneLike {
+	return Rune(v)
+}
+
+// This constructor returns the minimum value for a rune endpoint.
+func MinimumRune() abs.RuneLike {
 	return Rune(0)
 }
 
-// This constructor returns the maximum value for a rune.
-func MaximumRune() Rune {
+// This constructor returns the maximum value for a rune endpoint.
+func MaximumRune() abs.RuneLike {
 	return Rune(mat.MaxInt32)
 }
 
-// This type defines the methods associated with runes. It extends the
+// This type defines the methods associated with rune endpoints. It extends the
 // native Go int32 type.
 type Rune int32
 

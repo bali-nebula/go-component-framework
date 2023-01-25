@@ -29,7 +29,7 @@ func ProbabilityFromFloat(v float64) abs.ProbabilityLike {
 }
 
 // This constructor creates a new probability from the specified boolean value.
-func ProbabilityFromBoolean(v bool) abs.ProbabilityLike {
+func ProbabilityFromBool(v bool) abs.ProbabilityLike {
 	if v {
 		return Probability(1)
 	}

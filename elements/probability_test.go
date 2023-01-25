@@ -17,10 +17,10 @@ import (
 )
 
 func TestBooleanProbabilities(t *tes.T) {
-	var v1 = ele.ProbabilityFromBoolean(false)
+	var v1 = ele.ProbabilityFromBool(false)
 	ass.Equal(t, 0.0, v1.AsReal())
 
-	var v2 = ele.ProbabilityFromBoolean(true)
+	var v2 = ele.ProbabilityFromBool(true)
 	ass.Equal(t, 1.0, v2.AsReal())
 }
 

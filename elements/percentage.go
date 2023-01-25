@@ -18,7 +18,7 @@ import (
 // PERCENTAGE IMPLEMENTATION
 
 // This constructor creates a new percentage element from the specified integer.
-func PercentageFromInteger(v int) abs.PercentageLike {
+func PercentageFromInt(v int) abs.PercentageLike {
 	return Percentage(float64(v))
 }
 

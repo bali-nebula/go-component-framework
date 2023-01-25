@@ -181,17 +181,22 @@ func (v *continuum[V]) validateContinuum() {
 
 // REAL IMPLEMENTATION
 
-// This constructor returns the minimum value for a real.
-func MinimumReal() Real {
+// This constructor creates a new real endpoint from the specified float.
+func RealFromFloat(v float64) abs.RealLike {
+	return Real(v)
+}
+
+// This constructor returns the minimum value for a real endpoint.
+func MinimumReal() abs.RealLike {
 	return Real(mat.Inf(-1))
 }
 
-// This constructor returns the maximum value for a real.
-func MaximumReal() Real {
+// This constructor returns the maximum value for a real endpoint.
+func MaximumReal() abs.RealLike {
 	return Real(mat.Inf(1))
 }
 
-// This type defines the methods associated with real numbers. It extends the
+// This type defines the methods associated with real endpoints. It extends the
 // native Go float64 type.
 type Real float64
 
