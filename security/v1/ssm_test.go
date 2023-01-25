@@ -11,7 +11,7 @@
 package v1_test
 
 import (
-	ssm "github.com/bali-nebula/go-component-framework/contracts/v1"
+	ssm "github.com/bali-nebula/go-component-framework/security/v1"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )

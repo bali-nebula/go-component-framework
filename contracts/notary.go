@@ -12,9 +12,9 @@ package contracts
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	sm1 "github.com/bali-nebula/go-component-framework/contracts/v1"
-	//sm2 "github.com/bali-nebula/go-component-framework/contracts/v2"
-	//sm3 "github.com/bali-nebula/go-component-framework/contracts/v3"
+	sm1 "github.com/bali-nebula/go-component-framework/security/v1"
+	//sm2 "github.com/bali-nebula/go-component-framework/security/v2"
+	//sm3 "github.com/bali-nebula/go-component-framework/security/v3"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	col "github.com/craterdog/go-collection-framework/v2"
 )
