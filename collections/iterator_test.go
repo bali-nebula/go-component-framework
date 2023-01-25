@@ -19,9 +19,9 @@ import (
 )
 
 func TestComponentIterators(t *tes.T) {
-	var foo = com.Component(ele.Symbol("foo"))
-	var bar = com.Component(ele.Symbol("bar"))
-	var baz = com.Component(ele.Symbol("baz"))
+	var foo = com.Component(ele.SymbolFromString("foo"))
+	var bar = com.Component(ele.SymbolFromString("bar"))
+	var baz = com.Component(ele.SymbolFromString("baz"))
 	var list = col.List()
 	list.AddValue(foo)
 	list.AddValue(bar)

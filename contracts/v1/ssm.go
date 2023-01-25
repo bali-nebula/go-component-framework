@@ -178,17 +178,17 @@ func (v *ssm) readConfiguration() {
 	var document = v.configurator.Load()
 	var component = bal.ParseDocument(document)
 	var configuration = component.ExtractCatalog()
-	v.tag = configuration.GetValue(ele.Symbol(tagAttribute)).ExtractTag()
-	v.state = abs.State(configuration.GetValue(ele.Symbol(stateAttribute)).ExtractQuote().AsString())
-	component = configuration.GetValue(ele.Symbol(publicKeyAttribute))
+	v.tag = configuration.GetValue(ele.SymbolFromString(tagAttribute)).ExtractTag()
+	v.state = abs.State(configuration.GetValue(ele.SymbolFromString(stateAttribute)).ExtractQuote().AsString())
+	component = configuration.GetValue(ele.SymbolFromString(publicKeyAttribute))
 	if component != nil {
 		v.publicKey = component.ExtractBinary()
 	}
-	component = configuration.GetValue(ele.Symbol(privateKeyAttribute))
+	component = configuration.GetValue(ele.SymbolFromString(privateKeyAttribute))
 	if component != nil {
 		v.privateKey = component.ExtractBinary()
 	}
-	component = configuration.GetValue(ele.Symbol(previousKeyAttribute))
+	component = configuration.GetValue(ele.SymbolFromString(previousKeyAttribute))
 	if component != nil {
 		v.previousKey = component.ExtractBinary()
 	}
@@ -196,16 +196,16 @@ func (v *ssm) readConfiguration() {
 
 func (v *ssm) updateConfiguration() {
 	var configuration = col.Catalog()
-	configuration.SetValue(ele.Symbol(tagAttribute), com.Component(v.tag))
-	configuration.SetValue(ele.Symbol(stateAttribute), com.Component(str.Quote(v.state)))
+	configuration.SetValue(ele.SymbolFromString(tagAttribute), com.Component(v.tag))
+	configuration.SetValue(ele.SymbolFromString(stateAttribute), com.Component((str.QuoteFromString(string(v.state)))))
 	if v.publicKey != nil {
-		configuration.SetValue(ele.Symbol(publicKeyAttribute), com.Component(v.publicKey))
+		configuration.SetValue(ele.SymbolFromString(publicKeyAttribute), com.Component(v.publicKey))
 	}
 	if v.privateKey != nil {
-		configuration.SetValue(ele.Symbol(privateKeyAttribute), com.Component(v.privateKey))
+		configuration.SetValue(ele.SymbolFromString(privateKeyAttribute), com.Component(v.privateKey))
 	}
 	if v.previousKey != nil {
-		configuration.SetValue(ele.Symbol(previousKeyAttribute), com.Component(v.previousKey))
+		configuration.SetValue(ele.SymbolFromString(previousKeyAttribute), com.Component(v.previousKey))
 	}
 	var document = []byte(bal.FormatEntity(configuration) + "\n")
 	v.configurator.Store(document)

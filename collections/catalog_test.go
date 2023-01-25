@@ -20,12 +20,12 @@ import (
 )
 
 func TestCatalogs(t *tes.T) {
-	var foo = ele.Symbol("foo")
-	var bar = ele.Symbol("bar")
-	var baz = ele.Symbol("baz")
-	var one = com.Component(ele.Number(1))
-	var two = com.Component(ele.Number(2))
-	var three = com.Component(ele.Number(3))
+	var foo = ele.SymbolFromString("foo")
+	var bar = ele.SymbolFromString("bar")
+	var baz = ele.SymbolFromString("baz")
+	var one = com.Component(ele.NumberFromComplex(1))
+	var two = com.Component(ele.NumberFromComplex(2))
+	var three = com.Component(ele.NumberFromComplex(3))
 	var catalog = col.Catalog()
 	ass.True(t, catalog.IsEmpty())
 	ass.Equal(t, 0, catalog.GetSize())

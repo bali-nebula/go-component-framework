@@ -20,9 +20,9 @@ import (
 
 func TestLists(t *tes.T) {
 	var context = com.Context()
-	var one = com.ComponentWithContext(ele.Number(1), context)
-	var two = com.Component(ele.Number(2))
-	var three = com.Component(ele.Number(3))
+	var one = com.ComponentWithContext(ele.NumberFromComplex(1), context)
+	var two = com.Component(ele.NumberFromComplex(2))
+	var three = com.Component(ele.NumberFromComplex(3))
 	var list = col.List()
 	list.SortValues()
 	ass.True(t, list.IsEmpty())

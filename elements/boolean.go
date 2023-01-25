@@ -16,6 +16,12 @@ import (
 
 // BOOLEAN IMPLEMENTATION
 
+// This constructor creates a new boolean entity from the specified Go boolean
+// value.
+func BooleanFromBool(v bool) abs.BooleanLike {
+	return Boolean(v)
+}
+
 // This type defines the methods associated with boolean elements. It extends
 // the native Go bool type.
 type Boolean bool

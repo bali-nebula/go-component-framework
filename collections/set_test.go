@@ -19,9 +19,9 @@ import (
 )
 
 func TestSets(t *tes.T) {
-	var one = com.Component(ele.Number(1))
-	var two = com.Component(ele.Number(2))
-	var three = com.Component(ele.Number(3))
+	var one = com.Component(ele.NumberFromComplex(1))
+	var two = com.Component(ele.NumberFromComplex(2))
+	var three = com.Component(ele.NumberFromComplex(3))
 	var set = col.Set()
 	ass.True(t, set.IsEmpty())
 	ass.Equal(t, 0, set.GetSize())

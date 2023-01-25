@@ -39,7 +39,7 @@ func TestIntegerMoments(t *tes.T) {
 
 func TestMomentsLibrary(t *tes.T) {
 	var before = ele.Now()
-	var duration = ele.Duration(12345)
+	var duration = ele.DurationFromInt(12345)
 	var after = ele.MomentFromInt(before.AsInteger() + duration.AsInteger())
 
 	ass.Equal(t, duration, ele.Moments.Duration(before, after))
