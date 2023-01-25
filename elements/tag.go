@@ -20,13 +20,13 @@ import (
 // TAG IMPLEMENTATION
 
 // These constants are used to define a regular expression for matching
-// symbols.
+// tags.
 const (
 	base32 = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
 	tag    = `(` + base32 + `+)`
 )
 
-// This scanner is used for matching symbol strings.
+// This scanner is used for matching tag strings.
 var tagScanner = reg.MustCompile(`^(?:` + tag + `)$`)
 
 // This constructor creates a new tag element from the specified string.

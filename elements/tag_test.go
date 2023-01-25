@@ -22,7 +22,7 @@ func TestStringTags(t *tes.T) {
 		var t1 = ele.TagOfSize(i)
 		ass.Equal(t, len(t1.AsString()), int(mat.Ceil(float64(i)*8.0/5.0)))
 		var s1 = t1.AsString()
-		var t2 = ele.Tag(s1)
+		var t2 = ele.TagFromString(s1)
 		ass.Equal(t, t1, t2)
 		var s2 = t2.AsString()
 		ass.Equal(t, s1, s2)

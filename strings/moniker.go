@@ -11,16 +11,40 @@
 package strings
 
 import (
+	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework/v2"
+	reg "regexp"
 	sts "strings"
 )
 
 // MONIKER STRING IMPLEMENTATION
 
+// These constants are used to define a regular expression for matching
+// moniker strings.
+const (
+	separator = `[-+.]`
+	letter    = `\pL` // All unicode letters and connectors like underscores.
+	digit     = `\pN` // All unicode digits.
+	name      = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
+	moniker   = `(?:/` + name + `)+`
+)
+
+// This scanner is used for matching moniker strings.
+var monikerScanner = reg.MustCompile(`^(?:` + moniker + `)$`)
+
+// This constructor creates a new moniker string from the specified string.
+func MonikerFromString(v string) abs.MonikerLike {
+	if !monikerScanner.MatchString(v) {
+		var message = fmt.Sprintf("Attempted to construct a moniker string from an invalid string: %v", v)
+		panic(message)
+	}
+	return Moniker(v)
+}
+
 // This constructor attempts to create a new moniker string from the specified
 // array of names. It returns the corresponding moniker string.
-func MonikerFromArray(array []abs.Name) Moniker {
+func MonikerFromArray(array []abs.Name) abs.MonikerLike {
 	var builder sts.Builder
 	for _, name := range array {
 		builder.WriteString("/" + string(name))
@@ -31,7 +55,7 @@ func MonikerFromArray(array []abs.Name) Moniker {
 
 // This constructor creates a new moniker string from the specified name space
 // sequence. It returns the corresponding moniker string.
-func MonikerFromSequence(sequence abs.Sequential[abs.Name]) Moniker {
+func MonikerFromSequence(sequence abs.Sequential[abs.Name]) abs.MonikerLike {
 	var array = sequence.AsArray()
 	return MonikerFromArray(array)
 }
@@ -101,7 +125,7 @@ type monikers bool
 
 // This function returns the concatenation of the two specified moniker
 // strings.
-func (l monikers) Concatenate(first Moniker, second Moniker) Moniker {
-	var moniker = first + second
+func (l monikers) Concatenate(first, second abs.MonikerLike) abs.MonikerLike {
+	var moniker = first.AsString() + second.AsString()
 	return Moniker(moniker)
 }

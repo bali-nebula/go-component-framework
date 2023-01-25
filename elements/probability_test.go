@@ -81,15 +81,15 @@ func TestProbabilitiesLibrary(t *tes.T) {
 	sans = ele.Probabilities.And(F, ele.Probabilities.Not(F))
 	ass.Equal(t, sans, ele.Probabilities.Sans(F, F))
 
-	var xor = ele.Probability(ele.Probabilities.Sans(T, T).AsReal() + ele.Probabilities.Sans(T, T).AsReal())
+	var xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(T, T).AsReal() + ele.Probabilities.Sans(T, T).AsReal())
 	ass.Equal(t, xor, ele.Probabilities.Xor(T, T))
 
-	xor = ele.Probability(ele.Probabilities.Sans(T, F).AsReal() + ele.Probabilities.Sans(F, T).AsReal())
+	xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(T, F).AsReal() + ele.Probabilities.Sans(F, T).AsReal())
 	ass.Equal(t, xor, ele.Probabilities.Xor(T, F))
 
-	xor = ele.Probability(ele.Probabilities.Sans(F, T).AsReal() + ele.Probabilities.Sans(T, F).AsReal())
+	xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(F, T).AsReal() + ele.Probabilities.Sans(T, F).AsReal())
 	ass.Equal(t, xor, ele.Probabilities.Xor(F, T))
 
-	xor = ele.Probability(ele.Probabilities.Sans(F, F).AsReal() + ele.Probabilities.Sans(F, F).AsReal())
+	xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(F, F).AsReal() + ele.Probabilities.Sans(F, F).AsReal())
 	ass.Equal(t, xor, ele.Probabilities.Xor(F, F))
 }

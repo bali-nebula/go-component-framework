@@ -17,6 +17,16 @@ import (
 
 // PERCENTAGE IMPLEMENTATION
 
+// This constructor creates a new percentage element from the specified integer.
+func PercentageFromInteger(v int) abs.PercentageLike {
+	return Percentage(float64(v))
+}
+
+// This constructor creates a new percentage element from the specified float.
+func PercentageFromFloat(v float64) abs.PercentageLike {
+	return Percentage(v)
+}
+
 // This constructor returns the minimum value for a percentage.
 func MinimumPercentage() abs.PercentageLike {
 	return Percentage(0)
@@ -31,6 +41,18 @@ func MaximumPercentage() abs.PercentageLike {
 // the native Go float64 type and represents a percentage. Percentages can be
 // negative.
 type Percentage float64
+
+// DISCRETE INTERFACE
+
+// This method returns a boolean value for this discrete element.
+func (v Percentage) AsBoolean() bool {
+	return v != 0
+}
+
+// This method returns an integer value for this discrete element.
+func (v Percentage) AsInteger() int {
+	return int(float64(v))
+}
 
 // CONTINUOUS INTERFACE
 

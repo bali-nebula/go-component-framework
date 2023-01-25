@@ -18,17 +18,35 @@ import (
 
 // NARRATIVE STRING IMPLEMENTATION
 
+// This constructor creates a new narrative string from the specified string.
+func NarrativeFromString(v string) abs.NarrativeLike {
+	// Since a narrative may be recursive we cannot (easily) use a regular
+	// expression to scan it. We must trust it is correct here.
+	return Narrative(v)
+}
+
 // This constructor attempts to create a new narrative string from the specified
 // array of runes. It returns the corresponding narrative string.
-func NarrativeFromArray(array []string) Narrative {
-	var s = sts.Join(array, "\n")
-	var narrative = Narrative(s)
+func NarrativeFromArray(array []abs.Line) abs.NarrativeLike {
+	var builder sts.Builder
+	var lines = col.Array[abs.Line](array)
+	var iterator = col.Iterator[abs.Line](lines)
+	if iterator.HasNext() {
+		var line = string(iterator.GetNext())
+		builder.WriteString(line)
+	}
+	for iterator.HasNext() {
+		var line = string(iterator.GetNext())
+		builder.WriteString("\n")
+		builder.WriteString(line)
+	}
+	var narrative = Narrative(builder.String())
 	return narrative
 }
 
 // This constructor creates a new narrative string from the specified sequence of
 // runes. It returns the corresponding narrative string.
-func NarrativeFromSequence(sequence abs.Sequential[string]) Narrative {
+func NarrativeFromSequence(sequence abs.Sequential[abs.Line]) abs.NarrativeLike {
 	var array = sequence.AsArray()
 	var narrative = NarrativeFromArray(array)
 	return narrative
@@ -61,8 +79,13 @@ func (v Narrative) GetSize() int {
 
 // This method returns all the runes in this string. The runes retrieved
 // are in the same order as they are in the string.
-func (v Narrative) AsArray() []string {
-	var array = sts.Split(string(v), "\n")
+func (v Narrative) AsArray() []abs.Line {
+	var lines = sts.Split(string(v), "\n")
+	var length = len(lines)
+	var array = make([]abs.Line, length)
+	for index, line := range lines {
+		array[index] = abs.Line(line)
+	}
 	return array
 }
 
@@ -70,17 +93,17 @@ func (v Narrative) AsArray() []string {
 
 // This method retrieves from this narrative the line that is associated
 // with the specified index.
-func (v Narrative) GetValue(index int) string {
+func (v Narrative) GetValue(index int) abs.Line {
 	var array = v.AsArray()
-	var lines = col.Array[string](array)
+	var lines = col.Array[abs.Line](array)
 	return lines.GetValue(index)
 }
 
 // This method retrieves from this narrative all lines from the first index
 // through the last index (inclusive).
-func (v Narrative) GetValues(first int, last int) abs.Sequential[string] {
+func (v Narrative) GetValues(first int, last int) abs.Sequential[abs.Line] {
 	var array = v.AsArray()
-	var lines = col.Array[string](array)
+	var lines = col.Array[abs.Line](array)
 	return lines.GetValues(first, last)
 }
 
@@ -95,10 +118,10 @@ type narratives bool
 
 // This function returns the concatenation of the two specified narrative
 // strings.
-func (l narratives) Concatenate(first Narrative, second Narrative) Narrative {
+func (l narratives) Concatenate(first, second abs.NarrativeLike) abs.NarrativeLike {
 	var a1 = first.AsArray()
 	var a2 = second.AsArray()
-	var array = make([]string, len(a1)+len(a2))
+	var array = make([]abs.Line, len(a1)+len(a2))
 	copy(array, a1)
 	copy(array[len(a1):], a2)
 	var narrative = NarrativeFromArray(array)

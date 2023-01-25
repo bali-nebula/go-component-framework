@@ -17,6 +17,7 @@ import (
 )
 
 func TestSymbol(t *tes.T) {
-	var v = ele.Symbol("foobar")
-	ass.Equal(t, "foobar", string(v))
+	var foobar = "foobar"
+	var v = ele.SymbolFromString(foobar)
+	ass.Equal(t, foobar, v.AsString())
 }

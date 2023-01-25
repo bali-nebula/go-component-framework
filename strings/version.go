@@ -14,15 +14,35 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework/v2"
+	reg "regexp"
 	stc "strconv"
 	sts "strings"
 )
 
 // VERSION STRING IMPLEMENTATION
 
+// These constants are used to define a regular expression for matching
+// version strings.
+const (
+	ordinal = `[1-9][0-9]*`
+	version = `(` + ordinal + `(?:\.` + ordinal + `)*)`
+)
+
+// This scanner is used for matching version strings.
+var versionScanner = reg.MustCompile(`^(?:` + version + `)$`)
+
+// This constructor creates a new version string from the specified string.
+func VersionFromString(v string) abs.VersionLike {
+	if !versionScanner.MatchString(v) {
+		var message = fmt.Sprintf("Attempted to construct a version string from an invalid string: %v", v)
+		panic(message)
+	}
+	return Version(v)
+}
+
 // This constructor attempts to create a new version string from the specified
 // array of ordinal numbers. It returns the corresponding version string.
-func VersionFromArray(array []abs.Ordinal) Version {
+func VersionFromArray(array []abs.Ordinal) abs.VersionLike {
 	var length = len(array)
 	var version string
 	for i, ordinal := range array {
@@ -39,7 +59,7 @@ func VersionFromArray(array []abs.Ordinal) Version {
 
 // This constructor creates a new version string from the specified sequence of
 // ordinal numbers. It returns the corresponding version string.
-func VersionFromSequence(sequence abs.Sequential[abs.Ordinal]) Version {
+func VersionFromSequence(sequence abs.Sequential[abs.Ordinal]) abs.VersionLike {
 	var array = sequence.AsArray()
 	return VersionFromArray(array)
 }
@@ -108,8 +128,8 @@ const Versions versions = false
 type versions bool
 
 // This function returns the concatenation of the two specified version strings.
-func (l versions) Concatenate(first Version, second Version) Version {
-	var version = first + "." + second
+func (l versions) Concatenate(first, second abs.VersionLike) abs.VersionLike {
+	var version = first.AsString() + "." + second.AsString()
 	return Version(version)
 }
 
@@ -125,7 +145,7 @@ func (l versions) Concatenate(first Version, second Version) Version {
 // version string being incremented. A level that is greater than the size of
 // current version will result in a new level with the value of `1` being
 // appended to the copy of the current version string.
-func (l versions) GetNextVersion(current Version, level abs.Ordinal) Version {
+func (l versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs.VersionLike {
 	// Adjust the size of the ordinals as needed.
 	var ordinals = current.AsArray()
 	var size = abs.Ordinal(len(ordinals))
@@ -164,7 +184,7 @@ func (l versions) GetNextVersion(current Version, level abs.Ordinal) Version {
 //	level 1:    v5.7              v6         (interface/symantic changes)
 //	level 2:    v5.7              v5.8       (optimization/bug fixes)
 //	level 3:    v5.7              v5.7.1     (changes being tested)
-func (l versions) IsValidNextVersion(current Version, next Version) bool {
+func (l versions) IsValidNextVersion(current, next abs.VersionLike) bool {
 	// Make sure the version sizes are compatible.
 	var currentOrdinals = current.AsArray()
 	var currentSize = len(currentOrdinals)

@@ -17,27 +17,27 @@ import (
 )
 
 func TestEmptyBinary(t *tes.T) {
-	var v = str.Binary("")
-	ass.Equal(t, "", string(v))
+	var v = str.BinaryFromString("")
+	ass.Equal(t, "", v.AsString())
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 }
 
 func TestBinary(t *tes.T) {
-	var v = str.Binary("abcd1234")
-	ass.Equal(t, "abcd1234", string(v))
+	var v = str.BinaryFromString("abcd1234")
+	ass.Equal(t, "abcd1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
 	ass.Equal(t, byte(0x69), v.GetValue(1))
 	ass.Equal(t, byte(0xf8), v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), str.BinaryFromArray(v.AsArray()).AsArray())
-	ass.Equal(t, "abcd", string(str.BinaryFromSequence(v.GetValues(1, 3))))
+	ass.Equal(t, "abcd", str.BinaryFromSequence(v.GetValues(1, 3)).AsString())
 }
 
 func TestBinariesLibrary(t *tes.T) {
-	var v1 = str.Binary("abcd")
-	var v2 = str.Binary("12345678")
-	ass.Equal(t, "abcd12345678", string(str.Binaries.Concatenate(v1, v2)))
+	var v1 = str.BinaryFromString("abcd")
+	var v2 = str.BinaryFromString("12345678")
+	ass.Equal(t, "abcd12345678", str.Binaries.Concatenate(v1, v2).AsString())
 
 	v1 = str.BinaryFromArray([]byte{0x00, 0x01, 0x02, 0x03, 0x04})
 	v2 = str.BinaryFromArray([]byte{0x03, 0x00, 0x01, 0x02})

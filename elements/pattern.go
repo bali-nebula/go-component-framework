@@ -11,10 +11,17 @@
 package elements
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	reg "regexp"
 )
 
 // PATTERN IMPLEMENTATION
+
+// This constructor creates a new pattern from the specified string.
+func PatternFromString(v string) abs.PatternLike {
+	reg.MustCompile(v)
+	return Pattern(v)
+}
 
 // This type defines the methods associated with a character pattern that
 // extends the native Go string type and represents the regular expression

@@ -18,20 +18,20 @@ import (
 )
 
 func TestMoniker(t *tes.T) {
-	var v1 = str.Moniker("/bali/abstractions/String/v1.2.3")
-	ass.Equal(t, "/bali/abstractions/String/v1.2.3", string(v1))
+	var v1 = str.MonikerFromString("/bali/abstractions/String/v1.2.3")
+	ass.Equal(t, "/bali/abstractions/String/v1.2.3", v1.AsString())
 	ass.False(t, v1.IsEmpty())
 	ass.Equal(t, 4, v1.GetSize())
 	ass.Equal(t, abs.Name("bali"), v1.GetValue(1))
 	ass.Equal(t, abs.Name("v1.2.3"), v1.GetValue(-1))
 	var v2 = str.MonikerFromArray(v1.AsArray())
-	ass.Equal(t, string(v1), string(v2))
+	ass.Equal(t, v1.AsString(), v2.AsString())
 	var v3 = str.MonikerFromSequence(v1.GetValues(1, 2))
-	ass.Equal(t, "/bali/abstractions", string(v3))
+	ass.Equal(t, "/bali/abstractions", v3.AsString())
 }
 
 func TestMonikersLibrary(t *tes.T) {
-	var v1 = str.Moniker("/bali/abstractions")
-	var v2 = str.Moniker("/String/v1.2.3")
-	ass.Equal(t, "/bali/abstractions/String/v1.2.3", string(str.Monikers.Concatenate(v1, v2)))
+	var v1 = str.MonikerFromString("/bali/abstractions")
+	var v2 = str.MonikerFromString("/String/v1.2.3")
+	ass.Equal(t, "/bali/abstractions/String/v1.2.3", str.Monikers.Concatenate(v1, v2).AsString())
 }

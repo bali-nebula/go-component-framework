@@ -11,23 +11,47 @@
 package strings
 
 import (
+	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework/v2"
+	reg "regexp"
 )
 
 // QUOTE STRING IMPLEMENTATION
 
+// These constants are used to define a regular expression for matching
+// quote strings.
+const (
+	base16  = `[0-9a-f]`
+	unicode = `u` + base16 + `{4}`
+	escape  = `\\(?:` + unicode + `|["frnt\\])`
+	rune_   = `(?:` + escape + `|[^"\f\r\n\t]` + `)`
+	quote   = `(` + rune_ + `*)`
+)
+
+// This scanner is used for matching quote strings.
+var quoteScanner = reg.MustCompile(`^(?:` + quote + `)$`)
+
+// This constructor creates a new quote string from the specified string.
+func QuoteFromString(v string) abs.QuoteLike {
+	if !quoteScanner.MatchString(v) {
+		var message = fmt.Sprintf("Attempted to construct a quote string from an invalid string: %v", v)
+		panic(message)
+	}
+	return Quote(v)
+}
+
 // This constructor attempts to create a new quote string from the specified
 // array of runes. It returns a quote string and whether or not the
 // resulting string contained a valid quote.
-func QuoteFromArray(array []rune) Quote {
+func QuoteFromArray(array []rune) abs.QuoteLike {
 	var quote = Quote(string(array))
 	return quote
 }
 
 // This constructor creates a new quote string from the specified sequence of
 // runes. It returns the corresponding quote string.
-func QuoteFromSequence(sequence abs.Sequential[rune]) Quote {
+func QuoteFromSequence(sequence abs.Sequential[rune]) abs.QuoteLike {
 	var array = sequence.AsArray()
 	var quote = QuoteFromArray(array)
 	return quote
@@ -91,6 +115,6 @@ const Quotes quotes = false
 type quotes bool
 
 // This function returns the concatenation of the two specified quote strings.
-func (l quotes) Concatenate(first Quote, second Quote) Quote {
-	return Quote(first + second)
+func (l quotes) Concatenate(first, second abs.QuoteLike) abs.QuoteLike {
+	return Quote(first.AsString() + second.AsString())
 }

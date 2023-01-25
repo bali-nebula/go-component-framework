@@ -16,7 +16,6 @@ type (
 	Line    string
 	Name    string
 	Ordinal uint
-	Rune    rune
 	String  any
 )
 
@@ -49,8 +48,8 @@ type NarrativeLike interface {
 
 type QuoteLike interface {
 	Spectral
-	Sequential[Rune]
-	Accessible[Rune]
+	Sequential[rune]
+	Accessible[rune]
 }
 
 type VersionLike interface {

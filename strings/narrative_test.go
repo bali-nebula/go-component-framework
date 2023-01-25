@@ -11,6 +11,7 @@
 package strings_test
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -25,26 +26,26 @@ const n2 = "	abcd本"
 const n3 = "1234"
 
 func TestEmptyNarrative(t *tes.T) {
-	var v = str.Narrative(n0)
-	ass.Equal(t, n0, string(v))
+	var v = str.NarrativeFromString(n0)
+	ass.Equal(t, n0, v.AsString())
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 1, v.GetSize())
 	ass.Equal(t, 1, len(v.AsArray()))
 }
 
 func TestNarrative(t *tes.T) {
-	var v = str.Narrative(n1)
-	ass.Equal(t, n1, string(v))
+	var v = str.NarrativeFromString(n1)
+	ass.Equal(t, n1, v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 2, v.GetSize())
-	ass.Equal(t, n2, v.GetValue(1))
-	ass.Equal(t, n3, v.GetValue(-1))
-	ass.Equal(t, n1, string(str.NarrativeFromArray([]string{n2, n3})))
+	ass.Equal(t, n2, string(v.GetValue(1)))
+	ass.Equal(t, n3, string(v.GetValue(-1)))
+	ass.Equal(t, n1, str.NarrativeFromArray([]abs.Line{n2, n3}).AsString())
 	ass.Equal(t, 2, len(v.AsArray()))
 }
 
 func TestNarrativesLibrary(t *tes.T) {
-	var v1 = str.Narrative(n2)
-	var v2 = str.Narrative(n3)
-	ass.Equal(t, n1, string(str.Narratives.Concatenate(v1, v2)))
+	var v1 = str.NarrativeFromString(n2)
+	var v2 = str.NarrativeFromString(n3)
+	ass.Equal(t, n1, str.Narratives.Concatenate(v1, v2).AsString())
 }

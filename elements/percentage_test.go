@@ -17,19 +17,18 @@ import (
 )
 
 func TestZeroPercentages(t *tes.T) {
-	var v = ele.Percentage(0.0)
-	ass.Equal(t, 0.0, float64(v))
+	var v = ele.PercentageFromFloat(0.0)
 	ass.Equal(t, 0.0, v.AsReal())
 }
 
 func TestPositivePercentages(t *tes.T) {
-	var v = ele.Percentage(25)
-	ass.Equal(t, 25, int(v))
+	var v = ele.PercentageFromFloat(25)
+	ass.Equal(t, 25, v.AsInteger())
 	ass.Equal(t, 0.25, v.AsReal())
 }
 
 func TestNegativePercentages(t *tes.T) {
-	var v = ele.Percentage(-75)
-	ass.Equal(t, -75, int(v))
+	var v = ele.PercentageFromFloat(-75)
+	ass.Equal(t, -75, v.AsInteger())
 	ass.Equal(t, -0.75, v.AsReal())
 }

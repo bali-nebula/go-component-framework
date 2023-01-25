@@ -50,6 +50,7 @@ type Polarized interface {
 // elements.
 type Matchable interface {
 	MatchesText(text string) bool
+	GetMatches(text string) []string
 }
 
 // This interface defines the methods supported by all segmented resource
@@ -118,6 +119,7 @@ type PatternLike interface {
 }
 
 type PercentageLike interface {
+	Discrete
 	Continuous
 	Polarized
 }
