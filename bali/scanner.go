@@ -752,6 +752,20 @@ func scanIdentifier(v []byte) []string {
 	return bytesToStrings(identifierScanner.FindSubmatch(v))
 }
 
+const (
+	integer = zero + `|` + sign + `?` + ordinal
+)
+
+// This scanner is used for matching integers.
+var integerScanner = reg.MustCompile(`^(?:` + integer + `)`)
+
+// This function returns for the specified string an array of the matching
+// subgroups for an integer. The first string in the array is the entire
+// matched string.
+func scanInteger(v []byte) []string {
+	return bytesToStrings(integerScanner.FindSubmatch(v))
+}
+
 // KEYWORD SYNTAX
 
 // This function returns for the specified string an array of the matching

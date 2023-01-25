@@ -15,7 +15,6 @@ import (
 	sm1 "github.com/bali-nebula/go-component-framework/contracts/v1"
 	//sm2 "github.com/bali-nebula/go-component-framework/contracts/v2"
 	//sm3 "github.com/bali-nebula/go-component-framework/contracts/v3"
-	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	col "github.com/craterdog/go-collection-framework/v2"
 )
@@ -23,22 +22,25 @@ import (
 // CONSTANT DEFINITIONS
 
 const (
-	v1 = str.Version("v1")
-	v2 = str.Version("v2")
-	v3 = str.Version("v3")
-	protocolAttribute         = "protocol"
-	tagAttribute         = "tag"
-	versionAttribute         = "version"
-	digestAttribute         = "digest"
-	publicKeyAttribute   = "publicKey"
-	privateKeyAttribute  = "privateKey"
+	protocolAttribute   = "protocol"
+	tagAttribute        = "tag"
+	versionAttribute    = "version"
+	digestAttribute     = "digest"
+	publicKeyAttribute  = "publicKey"
+	privateKeyAttribute = "privateKey"
+)
+
+var (
+	v1 = str.VersionFromString("1")
+	v2 = str.VersionFromString("2")
+	v3 = str.VersionFromString("3")
 )
 
 // NOTARY IMPLEMENTATION
 
 // This constructor creates a new digital notary.
 func Notary() abs.NotaryLike {
-	var modules = col.Catalog[str.Version, abs.SecurityModuleLike]()
+	var modules = col.Catalog[abs.VersionLike, abs.SecurityModuleLike]()
 	// Must be ordered with latest version first.
 	//modules.SetValue(v3, sm3.SSM())
 	//modules.SetValue(v2, sm2.SSM())
@@ -48,7 +50,7 @@ func Notary() abs.NotaryLike {
 
 // This type defines the structure and methods associated with a digital notary.
 type notary struct {
-	modules col.CatalogLike[str.Version, abs.SecurityModuleLike]
+	modules col.CatalogLike[abs.VersionLike, abs.SecurityModuleLike]
 }
 
 // AUTHORITATIVE INTERFACE
@@ -118,10 +120,10 @@ func (v *notary) ForgetKey() {
 // This method creates a new document using the specified attributes and returns
 // the new document.
 func (v *notary) createDocument(
-	type_ str.Moniker,
+	type_ abs.MonikerLike,
 	attributes abs.MappingLike,
-	tag ele.Tag,
-	version str.Version,
+	tag abs.TagLike,
+	version abs.VersionLike,
 	permissions abs.MappingLike,
 	previous abs.Citation) {
 	panic("Not yet implemented.")
@@ -137,8 +139,8 @@ func (v *notary) createCitation(document abs.Document) {
 // and associated attributes.
 func (v *notary) createCertificate(
 	publicKey abs.PublicKey,
-	tag ele.Tag,
-	version str.Version,
+	tag abs.TagLike,
+	version abs.VersionLike,
 	previous abs.Citation) {
 	panic("Not yet implemented.")
 }

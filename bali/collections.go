@@ -13,9 +13,9 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	ele "github.com/bali-nebula/go-component-framework/elements"
 	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
+	ele "github.com/bali-nebula/go-component-framework/elements"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	cox "github.com/craterdog/go-collection-framework/v2"
 )
@@ -23,9 +23,9 @@ import (
 // TYPE DEFINITIONS
 
 type (
-	Components []any
+	Components   []any
 	Associations [][2]any
-	Parameters [][2]any
+	Parameters   [][2]any
 )
 
 // UNIVERSAL CONSTRUCTORS

@@ -219,7 +219,7 @@ func (l *numbers) Scaled(number abs.NumberLike, factor float64) abs.NumberLike {
 
 // This library function returns the reciprocal of the specified number.
 func (l *numbers) Reciprocal(number abs.NumberLike) abs.NumberLike {
-	return NumberFromComplex( 1.0 / number.AsComplex())
+	return NumberFromComplex(1.0 / number.AsComplex())
 }
 
 // This library function returns the complex conjugate of the specified number.

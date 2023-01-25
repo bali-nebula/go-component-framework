@@ -20,9 +20,9 @@ import (
 
 // This method attempts to parse a binary string. It returns the binary
 // string and whether or not the binary string was successfully parsed.
-func (v *parser) parseBinary() (str.Binary, *Token, bool) {
+func (v *parser) parseBinary() (abs.BinaryLike, *Token, bool) {
 	var token *Token
-	var binary str.Binary
+	var binary abs.BinaryLike
 	token = v.nextToken()
 	if token.Type != TokenBinary {
 		v.backupOne()
@@ -30,7 +30,7 @@ func (v *parser) parseBinary() (str.Binary, *Token, bool) {
 	}
 	var matches = scanBinary([]byte(token.Value))
 	// Remove all whitespace and the "'" delimiters.
-	binary = str.Binary(sts.Map(func(r rune) rune {
+	binary = str.BinaryFromString(sts.Map(func(r rune) rune {
 		if uni.IsSpace(r) {
 			return -1
 		}
@@ -43,9 +43,9 @@ const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
-func (v *formatter) formatBinary(binary str.Binary) {
+func (v *formatter) formatBinary(binary abs.BinaryLike) {
 	v.AppendString("'")
-	var s = string(binary)
+	var s = binary.AsString()
 	var length = len(s)
 	if length > lineLength {
 		// Spans multiple lines.
@@ -69,44 +69,44 @@ func (v *formatter) formatBinary(binary str.Binary) {
 
 // This method attempts to parse a moniker string. It returns the moniker string
 // and whether or not the moniker string was successfully parsed.
-func (v *parser) parseMoniker() (str.Moniker, *Token, bool) {
+func (v *parser) parseMoniker() (abs.MonikerLike, *Token, bool) {
 	var token *Token
-	var moniker str.Moniker
+	var moniker abs.MonikerLike
 	token = v.nextToken()
 	if token.Type != TokenMoniker {
 		v.backupOne()
 		return moniker, token, false
 	}
 	var matches = scanMoniker([]byte(token.Value))
-	moniker = str.Moniker(matches[0])
+	moniker = str.MonikerFromString(matches[0])
 	return moniker, token, true
 }
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
-func (v *formatter) formatMoniker(moniker str.Moniker) {
-	var s = string(moniker)
+func (v *formatter) formatMoniker(moniker abs.MonikerLike) {
+	var s = moniker.AsString()
 	v.AppendString(s)
 }
 
 // This method attempts to parse a narrative string. It returns the narrative
 // string and whether or not the narrative string was successfully parsed.
-func (v *parser) parseNarrative() (str.Narrative, *Token, bool) {
+func (v *parser) parseNarrative() (abs.NarrativeLike, *Token, bool) {
 	var token *Token
-	var narrative str.Narrative
+	var narrative abs.NarrativeLike
 	token = v.nextToken()
 	if token.Type != TokenNarrative {
 		v.backupOne()
 		return narrative, token, false
 	}
-	narrative = str.Narrative(trimIndentation(token.Value))
+	narrative = str.NarrativeFromString(trimIndentation(token.Value))
 	return narrative, token, true
 }
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
-func (v *formatter) formatNarrative(narrative str.Narrative) {
-	var s = string(narrative)
+func (v *formatter) formatNarrative(narrative abs.NarrativeLike) {
+	var s = narrative.AsString()
 	var lines = sts.Split(s, "\n")
 	v.AppendString(`">`)
 	for _, line := range lines {
@@ -119,9 +119,9 @@ func (v *formatter) formatNarrative(narrative str.Narrative) {
 
 // This method attempts to parse a quote string. It returns the quote string
 // and whether or not the quote string was successfully parsed.
-func (v *parser) parseQuote() (str.Quote, *Token, bool) {
+func (v *parser) parseQuote() (abs.QuoteLike, *Token, bool) {
 	var token *Token
-	var quote str.Quote
+	var quote abs.QuoteLike
 	token = v.nextToken()
 	if token.Type != TokenQuote {
 		v.backupOne()
@@ -130,15 +130,15 @@ func (v *parser) parseQuote() (str.Quote, *Token, bool) {
 	var matches = scanQuote([]byte(token.Value))
 	// We must unquote the full token string properly.
 	var unquoted, _ = stc.Unquote(matches[0])
-	quote = str.Quote(unquoted)
+	quote = str.QuoteFromString(unquoted)
 	return quote, token, true
 }
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
-func (v *formatter) formatQuote(quote str.Quote) {
+func (v *formatter) formatQuote(quote abs.QuoteLike) {
 	// We must requote the string string properly.
-	var s = stc.Quote(string(quote))
+	var s = stc.Quote(quote.AsString())
 	v.AppendString(s)
 }
 
@@ -171,22 +171,22 @@ func (v *parser) parseString() (abs.String, *Token, bool) {
 
 // This method attempts to parse a version string. It returns the version
 // string and whether or not the version string was successfully parsed.
-func (v *parser) parseVersion() (str.Version, *Token, bool) {
+func (v *parser) parseVersion() (abs.VersionLike, *Token, bool) {
 	var token *Token
-	var version str.Version
+	var version abs.VersionLike
 	token = v.nextToken()
 	if token.Type != TokenVersion {
 		v.backupOne()
 		return version, token, false
 	}
 	var matches = scanVersion([]byte(token.Value))
-	version = str.Version(matches[1]) // Remove the leading "v".
+	version = str.VersionFromString(matches[1]) // Remove the leading "v".
 	return version, token, true
 }
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
-func (v *formatter) formatVersion(version str.Version) {
-	var s = "v" + string(version)
+func (v *formatter) formatVersion(version abs.VersionLike) {
+	var s = "v" + version.AsString()
 	v.AppendString(s)
 }

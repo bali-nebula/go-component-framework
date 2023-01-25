@@ -28,14 +28,14 @@ import (
 func Component(value abs.Value) abs.ComponentLike {
 	var component abs.ComponentLike
 	switch actual := value.(type) {
-		case uint, uint8, uint16, uint32, uint64, int, int8, int16, int32, int64, float32, float64:
-			component = com.Component(Number(actual))
-		case string:
-			component = com.Component(str.Quote(actual))
-		case abs.ComponentLike:
-			component = actual
-		default:
-			component = com.Component(actual)
+	case uint, uint8, uint16, uint32, uint64, int, int8, int16, int32, int64, float32, float64:
+		component = com.Component(Number(actual))
+	case string:
+		component = com.Component(str.QuoteFromString(actual))
+	case abs.ComponentLike:
+		component = actual
+	default:
+		component = com.Component(actual)
 	}
 	return component
 }
@@ -528,7 +528,7 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 	// Check for an explicit component type.
 	var type_ string
 	if context != nil {
-		var name = ele.Symbol("type")
+		var name = ele.SymbolFromString("type")
 		var component = context.GetValue(name)
 		if component != nil {
 			var moniker = component.ExtractMoniker()
@@ -583,8 +583,8 @@ func adjustContext(component abs.ComponentLike) abs.ContextLike {
 			context = com.Context()
 			component.SetContext(context)
 		}
-		var name = ele.Symbol("type")
-		var value = com.Component(str.Moniker(type_))
+		var name = ele.SymbolFromString("type")
+		var value = com.Component(str.MonikerFromString(type_))
 		context.SetValue(name, value)
 	}
 	return context

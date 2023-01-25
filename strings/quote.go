@@ -20,12 +20,14 @@ import (
 // QUOTE STRING IMPLEMENTATION
 
 // These constants are used to define a regular expression for matching
-// quote strings.
+// quote strings. NOTE: Since the string does not contain the delimiting
+// quotes, any embedded double quote need not be escaped. This is different
+// than the regular expression the scanner uses for quoted strings.
 const (
 	base16  = `[0-9a-f]`
 	unicode = `u` + base16 + `{4}`
-	escape  = `\\(?:` + unicode + `|["frnt\\])`
-	rune_   = `(?:` + escape + `|[^"\f\r\n\t]` + `)`
+	escape  = `\\(?:` + unicode + `|[frnt\\])` // No escaped double quote.
+	rune_   = `(?:` + escape + `|[^\f\r\n\t]` + `)`
 	quote   = `(` + rune_ + `*)`
 )
 

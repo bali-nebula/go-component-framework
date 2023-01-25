@@ -13,8 +13,8 @@ package elements
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	reg "regexp"
 	uti "github.com/bali-nebula/go-component-framework/utilities"
+	reg "regexp"
 )
 
 // TAG IMPLEMENTATION

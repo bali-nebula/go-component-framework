@@ -252,9 +252,9 @@ func (v *interval[V]) indexToValue(index int) V {
 	var discrete abs.Discrete = v.first
 	switch discrete.(type) {
 	case abs.DurationLike:
-		discrete = ele.Duration(index)
+		discrete = ele.DurationFromInteger(index)
 	case abs.MomentLike:
-		discrete = ele.Moment(index)
+		discrete = ele.MomentFromInteger(index)
 	case Integer:
 		discrete = Integer(index)
 	case Rune:

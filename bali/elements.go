@@ -202,7 +202,7 @@ func (v *parser) parseDuration() (abs.DurationLike, *Token, bool) {
 			}
 		}
 	}
-	duration = ele.Duration(int(sign * milliseconds))
+	duration = ele.DurationFromInteger(int(sign * milliseconds))
 	return duration, token, true
 }
 
@@ -575,7 +575,7 @@ func (v *parser) parsePattern() (abs.PatternLike, *Token, bool) {
 	default:
 		regex = regex[1 : len(regex)-2] // Strip off the '"' and '"?' delimiters.
 	}
-	pattern = ele.Pattern(regex)
+	pattern = ele.PatternFromString(regex)
 	return pattern, token, true
 }
 
@@ -605,7 +605,7 @@ func (v *parser) parsePercentage() (abs.PercentageLike, *Token, bool) {
 	}
 	var s = token.Value[:len(token.Value)-1] // Removed the trailing '%'.
 	var float, _ = stc.ParseFloat(s, 64)
-	percentage = ele.Percentage(float)
+	percentage = ele.PercentageFromFloat(float)
 	return percentage, token, true
 }
 
@@ -692,7 +692,7 @@ func (v *parser) parseResource() (abs.ResourceLike, *Token, bool) {
 		return resource, token, false
 	}
 	var matches = scanResource([]byte(token.Value))
-	resource = ele.Resource(matches[1])
+	resource = ele.ResourceFromString(matches[1])
 	return resource, token, true
 }
 
@@ -718,7 +718,7 @@ func (v *parser) parseSymbol() (abs.SymbolLike, *Token, bool) {
 		return symbol, token, false
 	}
 	var matches = scanSymbol([]byte(token.Value))
-	symbol = ele.Symbol(matches[1]) // Remove the leading '$'.
+	symbol = ele.SymbolFromString(matches[1]) // Remove the leading '$'.
 	return symbol, token, true
 }
 
@@ -742,7 +742,7 @@ func (v *parser) parseTag() (abs.TagLike, *Token, bool) {
 		return tag, token, false
 	}
 	var matches = scanTag([]byte(token.Value))
-	tag = ele.Tag(matches[1]) // Remove the leading "#".
+	tag = ele.TagFromString(matches[1]) // Remove the leading "#".
 	return tag, token, true
 }
 

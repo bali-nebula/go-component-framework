@@ -107,6 +107,8 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 		v.formatQuote(value)
 	case ran.Real:
 		v.formatReal(value)
+	case ran.Integer:
+		v.formatInteger(value)
 	case ele.Resource:
 		v.formatResource(value)
 	case ran.Rune:
@@ -281,6 +283,45 @@ func (v *formatter) formatContinuum(continuum abs.ContinuumLike[abs.Continuous])
 	v.AppendString(right)
 }
 
+// This method attempts to parse an integer. It returns the integer and whether
+// or not the integer was successfully parsed.
+func (v *parser) parseInteger() (ran.Integer, *Token, bool) {
+	var number ran.Integer
+	var token = v.nextToken()
+	if token.Type != TokenNumber {
+		// The token is not numerical.
+		v.backupOne()
+		return number, token, false
+	}
+	var matches = scanReal([]byte(token.Value))
+	if len(matches) > 0 {
+		// The token is a real number.
+		v.backupOne()
+		return number, token, false
+	}
+	var err any
+	var integer int64
+	matches = scanInteger([]byte(token.Value))
+	if len(matches) == 0 {
+		// The token is not an integer.
+		v.backupOne()
+		return number, token, false
+	}
+	integer, err = stc.ParseInt(matches[0], 10, 0)
+	if err != nil {
+		panic(fmt.Sprintf("The integer was not parsable: %v", err))
+	}
+	number = ran.Integer(integer)
+	return number, token, true
+}
+
+// This method adds the canonical format for the specified integer to the state of
+// the formatter.
+func (v *formatter) formatInteger(number ran.Integer) {
+	var integer = number.AsInteger()
+	v.AppendString(stc.FormatInt(int64(integer), 10))
+}
+
 // This method attempts to parse a real number. It returns the real number
 // and whether or not the real number was successfully parsed.
 func (v *parser) parseReal() (ran.Real, *Token, bool) {
@@ -340,7 +381,7 @@ func (v *parser) parseRune() (ran.Rune, *Token, bool) {
 	if !ok {
 		return number, token, false
 	}
-	var s = string(quote)
+	var s = quote.AsString()
 	var r, size = utf.DecodeRuneInString(s)
 	if len(s) != size {
 		// This is not a rune.
@@ -355,6 +396,6 @@ func (v *parser) parseRune() (ran.Rune, *Token, bool) {
 // the formatter.
 func (v *formatter) formatRune(number ran.Rune) {
 	var runes = []rune{rune(number)}
-	var quote = str.Quote(string(runes))
+	var quote = str.QuoteFromString(string(runes))
 	v.formatQuote(quote)
 }
