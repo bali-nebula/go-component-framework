@@ -98,6 +98,10 @@ func Narrative(value abs.Value) abs.NarrativeLike {
 func Quote(value abs.Value) abs.QuoteLike {
 	var quote abs.QuoteLike
 	switch actual := value.(type) {
+	case []rune:
+		quote = str.QuoteFromArray(actual)
+	case abs.Sequential[rune]:
+		quote = str.QuoteFromSequence(actual)
 	case string:
 		quote = ParseEntity(actual).(abs.QuoteLike)
 	case abs.QuoteLike:
@@ -231,8 +235,12 @@ func (v *formatter) formatNarrative(narrative abs.NarrativeLike) {
 	var lines = sts.Split(s, "\n")
 	v.AppendString(`">`)
 	for _, line := range lines {
-		v.AppendNewline()
-		v.AppendString(line)
+		if len(line) > 0 {
+			v.AppendNewline()
+			v.AppendString("    " + line)
+		} else {
+			v.AppendString("\n")
+		}
 	}
 	v.AppendNewline()
 	v.AppendString(`<"`)

@@ -1,7 +1,7 @@
 {
     ! This is a note.
     if true do { }
-    
+
     while ok do {
         accept messages[index]
         if index > maximum do {
@@ -9,14 +9,19 @@
         }
         continue loop
     }
-    
-    
+
+
     !>
-    This is an annotation.
+        This is an annotation.
     <!
     with each $index in [1..5] do {
         let array[index] += index
     }
+    !>
+        This is an annotation...
+
+        with an empty line.
+    <!
     if flip() do {
         checkout $draft from /bali/tests/Procedures/v1.2
     }
@@ -56,11 +61,11 @@
             foobar()
         }
     } on $failure matching $bad do {
-        
+
     } matching $worse do {
-        
+
     } matching $worst do {
-        
+
     }
     post messages[last] to bag
     publish [

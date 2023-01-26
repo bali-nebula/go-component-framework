@@ -88,8 +88,12 @@ func (v *formatter) formatComment(comment abs.CommentLike) {
 	var iterator = cof.Iterator[string](comment)
 	for iterator.HasNext() {
 		var line = iterator.GetNext()
-		v.AppendNewline()
-		v.AppendString(line)
+		if len(line) > 0 {
+			v.AppendNewline()
+			v.AppendString("    " + line)
+		} else {
+			v.AppendString("\n")
+		}
 	}
 	v.AppendNewline()
 	v.AppendString(`<!`)
@@ -500,9 +504,9 @@ func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 // The following is an indented string with dashes showing the indentation:
 //
 //	----xx
-//	----This is the first line
-//	----of a multi-line
-//	----indented string.
+//	--------This is the first line
+//	--------of a multi-line
+//	--------indented string.
 //	----xx
 //
 // It will be trimmed to:
@@ -516,11 +520,15 @@ func trimIndentation(v string) string {
 	var trimmed string
 	var lines = sts.Split(v, "\n")
 	var size = len(lines) - 1
-	var last = lines[size]          // The last line provides the level of indentation.
-	var indentation = len(last) - 2 // The number of spaces in the last line.
+	var last = lines[size]
+	var indentation = len(last) + 2 // The number of spaces in the last line plus four more.
 	lines = lines[1:size]           // Strip off the first and last delimitier lines.
 	for _, line := range lines {
-		trimmed += line[indentation:] + "\n" // Strip off the indentation.
+		if len(line) < indentation {
+			trimmed += "\n" // This is an empty line.
+		} else {
+			trimmed += line[indentation:] + "\n" // Strip off the indentation.
+		}
 	}
 	return trimmed[:len(trimmed)-1] // Strip off the extra end-of-line character.
 }

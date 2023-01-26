@@ -437,7 +437,7 @@ func (v *parser) parseInlineProcedure() (abs.ProcedureLike, *Token, bool) {
 	var procedure = col.List[abs.StatementLike]()
 	statement, token, ok = v.parseStatement()
 	if !ok {
-		// A non-empty list must have at least one statement.
+		// A non-empty procedure must have at least one statement.
 		var message = v.formatError(token)
 		message += generateGrammar("statement",
 			"$statements",
@@ -902,11 +902,13 @@ func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
 		var iterator = col.Iterator[abs.StatementLike](procedure)
 		v.depth++
 		for iterator.HasNext() {
-			v.AppendNewline()
 			var statement = iterator.GetNext()
 			if statement != nil {
 				// This is not a blank line so format the statement.
+				v.AppendNewline()
 				v.formatStatement(statement)
+			} else {
+				v.AppendString("\n")
 			}
 		}
 		v.depth--

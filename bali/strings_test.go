@@ -11,89 +11,90 @@
 package bali_test
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	bal "github.com/bali-nebula/go-component-framework/bali"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
-func TestRoundtripWithBinaries(t *tes.T) {
-	var binaryStrings = []string{
-		`''`,
-		`'NyiXwRMG7OzG8P8y21A6lTFKWU6sFel5vCaYw1kslyq0gLkJTMHu5iNaFRwZ'`,
-		`'
-    EEzlwvUOVeuvUfs/IbPxLTZQqSFuy50r/XLCHdtnkB/fdwTzcwd3ManlLh+G
-    WnQ4dN6fednRMep1pKYUVsEXaTz63jIwM62ID0hCukrP3CRiHZwYIgKnQ00w
-    Rrk30KChDM1NILvA675+T6yR7P3xg/d8v/Rd35WPe4fZ5ACLzf6J7+ZTGDws
-    SZX92PsBv+4fiMG4dLUMxjnNVvN9LElT9nVy7BAB9i5PiBOr2hFuV8+FTTBy
-    oE89y7SjSM7BLw7m6DEfYJf5sapuz05pythmmqcqbbU9eDWkEfLbaS5MxYdN
-    JocIaQNamhzDhmriK0WEWNdUdzRC992R2ZkTYAQ8vg
-'`,
-	}
-
-	for index, s := range binaryStrings {
-		var component = bal.ParseComponent(s)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, binaryStrings[index], s)
-	}
+func TestEmptyBinary(t *tes.T) {
+	var v = bal.Binary("''")
+	ass.Equal(t, "", v.AsString())
+	ass.True(t, v.IsEmpty())
+	ass.Equal(t, 0, v.GetSize())
 }
 
-func TestRoundtripWithMonikers(t *tes.T) {
-	var monikerStrings = []string{
-		`/bali`,
-		`/bali/abstractions`,
-		`/bali/abstractions/Sequential/v1.2.3`,
-	}
-
-	for index, s := range monikerStrings {
-		var component = bal.ParseComponent(s)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, monikerStrings[index], s)
-	}
+func TestBinary(t *tes.T) {
+	var v = bal.Binary("'abcd1234'")
+	ass.Equal(t, "abcd1234", v.AsString())
+	ass.False(t, v.IsEmpty())
+	ass.Equal(t, 6, v.GetSize())
+	ass.Equal(t, byte(0x69), v.GetValue(1))
+	ass.Equal(t, byte(0xf8), v.GetValue(-1))
+	ass.Equal(t, v.AsArray(), bal.Binary(v.AsArray()).AsArray())
+	ass.Equal(t, "abcd", bal.Binary(v.GetValues(1, 3)).AsString())
 }
 
-func TestRoundtripWithNarratives(t *tes.T) {
-	var narrativeStrings = []string{
-		`">
+func TestMoniker(t *tes.T) {
+	var v1 = bal.Moniker("/bali/abstractions/String/v1.2.3")
+	ass.Equal(t, "/bali/abstractions/String/v1.2.3", v1.AsString())
+	ass.False(t, v1.IsEmpty())
+	ass.Equal(t, 4, v1.GetSize())
+	ass.Equal(t, abs.Name("bali"), v1.GetValue(1))
+	ass.Equal(t, abs.Name("v1.2.3"), v1.GetValue(-1))
+	var v2 = bal.Moniker(v1.AsArray())
+	ass.Equal(t, v1.AsString(), v2.AsString())
+	var v3 = bal.Moniker(v1.GetValues(1, 2))
+	ass.Equal(t, "/bali/abstractions", v3.AsString())
+}
+
+func TestEmptyNarrative(t *tes.T) {
+	var v = bal.Narrative(`">
     
-<"`,
-		`">
-    This is a multiline
-    narrative with a '"'
-    character in it.
-<"`,
-	}
-
-	for index, s := range narrativeStrings {
-		var component = bal.ParseComponent(s)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, narrativeStrings[index], s)
-	}
+<"`)
+	ass.True(t, v.IsEmpty())
+	ass.Equal(t, 1, v.GetSize())
+	ass.Equal(t, 1, len(v.AsArray()))
 }
 
-func TestRoundtripWithQuotes(t *tes.T) {
-	var quoteStrings = []string{
-		`""`,
-		`"To be, or not to be, that is the question?"`,
-		`"This quote contains '\"'s."`,
-	}
-
-	for index, s := range quoteStrings {
-		var component = bal.ParseComponent(s)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, quoteStrings[index], s)
-	}
+func TestNarrative(t *tes.T) {
+	var v = bal.Narrative(`">
+    This is a narrative
+    containing " marks.
+<"`)
+	ass.False(t, v.IsEmpty())
+	ass.Equal(t, 2, v.GetSize())
+	ass.Equal(t, "This is a narrative", string(v.GetValue(1)))
+	ass.Equal(t, 2, len(v.AsArray()))
 }
 
-func TestRoundtripWithVersions(t *tes.T) {
-	var versionStrings = []string{
-		`v1`,
-		`v1.2`,
-		`v1.2.3`,
-	}
+func TestEmptyQuote(t *tes.T) {
+	var v = bal.Quote(`""`)
+	ass.Equal(t, "", v.AsString())
+	ass.True(t, v.IsEmpty())
+	ass.Equal(t, 0, v.GetSize())
+}
 
-	for index, s := range versionStrings {
-		var component = bal.ParseComponent(s)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, versionStrings[index], s)
-	}
+func TestQuote(t *tes.T) {
+	var v = bal.Quote(`"abcd本1234"`)
+	ass.Equal(t, "abcd本1234", v.AsString())
+	ass.False(t, v.IsEmpty())
+	ass.Equal(t, 9, v.GetSize())
+	ass.Equal(t, 'a', v.GetValue(1))
+	ass.Equal(t, '4', v.GetValue(-1))
+	ass.Equal(t, v.AsArray(), bal.Quote(v.AsArray()).AsArray())
+	ass.Equal(t, "d本1", bal.Quote(v.GetValues(4, 6)).AsString())
+}
+
+func TestVersion(t *tes.T) {
+	var v1 = bal.Version("v1.2.3")
+	ass.Equal(t, "1.2.3", v1.AsString())
+	ass.False(t, v1.IsEmpty())
+	ass.Equal(t, 3, v1.GetSize())
+	ass.Equal(t, abs.Ordinal(1), v1.GetValue(1))
+	ass.Equal(t, abs.Ordinal(3), v1.GetValue(-1))
+	var v2 = bal.Version(v1.AsArray())
+	ass.Equal(t, v1.AsString(), v2.AsString())
+	var v3 = bal.Version(v1.GetValues(1, 2))
+	ass.Equal(t, "1.2", v3.AsString())
 }
