@@ -21,6 +21,78 @@ import (
 
 // UNIVERSAL CONSTRUCTORS
 
+// This constructor returns a new binary string initialized with the specified
+// value.
+func Binary(value abs.Value) abs.BinaryLike {
+	var binary abs.BinaryLike
+	switch actual := value.(type) {
+	case []byte:
+		binary = str.BinaryFromArray(actual)
+	case abs.Sequential[byte]:
+		binary = str.BinaryFromSequence(actual)
+	case string:
+		binary = ParseEntity(actual).(abs.BinaryLike)
+	case abs.BinaryLike:
+		binary = actual
+	case abs.ComponentLike:
+		binary = actual.GetEntity().(abs.BinaryLike)
+	default:
+		var message = fmt.Sprintf(
+			"The value (of type %T) cannot be converted to a binary string: %v",
+			actual, actual)
+		panic(message)
+	}
+	return binary
+}
+
+// This constructor returns a new moniker string initialized with the specified
+// value.
+func Moniker(value abs.Value) abs.MonikerLike {
+	var moniker abs.MonikerLike
+	switch actual := value.(type) {
+	case []abs.Name:
+		moniker = str.MonikerFromArray(actual)
+	case abs.Sequential[abs.Name]:
+		moniker = str.MonikerFromSequence(actual)
+	case string:
+		moniker = ParseEntity(actual).(abs.MonikerLike)
+	case abs.MonikerLike:
+		moniker = actual
+	case abs.ComponentLike:
+		moniker = actual.GetEntity().(abs.MonikerLike)
+	default:
+		var message = fmt.Sprintf(
+			"The value (of type %T) cannot be converted to a moniker string: %v",
+			actual, actual)
+		panic(message)
+	}
+	return moniker
+}
+
+// This constructor returns a new narrative string initialized with the specified
+// value.
+func Narrative(value abs.Value) abs.NarrativeLike {
+	var narrative abs.NarrativeLike
+	switch actual := value.(type) {
+	case []abs.Line:
+		narrative = str.NarrativeFromArray(actual)
+	case abs.Sequential[abs.Line]:
+		narrative = str.NarrativeFromSequence(actual)
+	case string:
+		narrative = ParseEntity(actual).(abs.NarrativeLike)
+	case abs.NarrativeLike:
+		narrative = actual
+	case abs.ComponentLike:
+		narrative = actual.GetEntity().(abs.NarrativeLike)
+	default:
+		var message = fmt.Sprintf(
+			"The value (of type %T) cannot be converted to a narrative string: %v",
+			actual, actual)
+		panic(message)
+	}
+	return narrative
+}
+
 // This constructor returns a new quote string initialized with the specified
 // value.
 func Quote(value abs.Value) abs.QuoteLike {
@@ -33,10 +105,36 @@ func Quote(value abs.Value) abs.QuoteLike {
 	case abs.ComponentLike:
 		quote = actual.GetEntity().(abs.QuoteLike)
 	default:
-		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a quote: %v", actual, actual)
+		var message = fmt.Sprintf(
+			"The value (of type %T) cannot be converted to a quote string: %v",
+			actual, actual)
 		panic(message)
 	}
 	return quote
+}
+
+// This constructor returns a new version string initialized with the specified
+// value.
+func Version(value abs.Value) abs.VersionLike {
+	var version abs.VersionLike
+	switch actual := value.(type) {
+	case []abs.Ordinal:
+		version = str.VersionFromArray(actual)
+	case abs.Sequential[abs.Ordinal]:
+		version = str.VersionFromSequence(actual)
+	case string:
+		version = ParseEntity(actual).(abs.VersionLike)
+	case abs.VersionLike:
+		version = actual
+	case abs.ComponentLike:
+		version = actual.GetEntity().(abs.VersionLike)
+	default:
+		var message = fmt.Sprintf(
+			"The value (of type %T) cannot be converted to a version string: %v",
+			actual, actual)
+		panic(message)
+	}
+	return version
 }
 
 // PRIVATE METHODS
