@@ -1030,10 +1030,10 @@ func scanQuote(v []byte) []string {
 //	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Resource
 const (
 	scheme    = `[a-zA-Z][0-9a-zA-Z+-.]*`
-	authority = `[^/]+`
-	path      = `[^?#>]*`
-	query     = `[^#>]*`
-	fragment  = `[^>]+`
+	authority = `[^/\n]+`
+	path      = `[^?#>\n]*`
+	query     = `[^#>\n]*`
+	fragment  = `[^>\n]+`
 	resource  = `<(` +
 		`(` + scheme + `):` +
 		`(?:` + `//(` + authority + `)` + `)?` +
