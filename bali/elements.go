@@ -147,7 +147,7 @@ func (v *parser) parseBoolean() (abs.BooleanLike, *Token, bool) {
 		return boolean, token, false
 	}
 	var b, _ = stc.ParseBool(token.Value)
-	boolean = ele.Boolean(b)
+	boolean = ele.BooleanFromBool(b)
 	return boolean, token, true
 }
 
@@ -612,9 +612,15 @@ func (v *parser) parsePercentage() (abs.PercentageLike, *Token, bool) {
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatPercentage(percentage abs.PercentageLike) {
-	// Using 100.0 * percentage.AsReal() introduces round-off errors.
-	var value = float64(percentage.(ele.Percentage))
-	var s = stc.FormatFloat(value, 'G', -1, 64) + "%"
+	var float float64
+	var element, ok = percentage.(ele.Percentage)
+	if ok {
+		float = float64(element)
+	} else {
+		// This approach introduces round-off errors.
+		float = 100.0 * percentage.AsReal()
+	}
+	var s = stc.FormatFloat(float, 'G', -1, 64) + "%"
 	v.AppendString(s)
 }
 
