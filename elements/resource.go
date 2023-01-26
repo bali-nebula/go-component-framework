@@ -19,7 +19,7 @@ import (
 // RESOURCE IMPLEMENTATION
 
 // This constructor creates a new resource from the specified universal resource
-// identifier (URI).
+// identifier (URI) string.
 func ResourceFromString(v string) abs.ResourceLike {
 	var _, err = uri.Parse(v)
 	if err != nil {
@@ -27,6 +27,12 @@ func ResourceFromString(v string) abs.ResourceLike {
 		panic(message)
 	}
 	return Resource(v)
+}
+
+// This constructor creates a new resource from the specified universal resource
+// identifier (URI) pointer.
+func ResourceFromURI(v *uri.URL) abs.ResourceLike {
+	return Resource(v.String())
 }
 
 // This type defines the methods associated with a web resource element that

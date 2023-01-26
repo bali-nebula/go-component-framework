@@ -16,6 +16,7 @@ import (
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	mat "math"
 	cmp "math/cmplx"
+	uri "net/url"
 	stc "strconv"
 	sts "strings"
 	tim "time"
@@ -23,7 +24,145 @@ import (
 
 // UNIVERSAL CONSTRUCTORS
 
-// This constructor returns a new number entity initialized with the specified
+// This constructor returns a new angle element initialized with the specified
+// value.
+func Angle(value abs.Value) abs.AngleLike {
+	var angle abs.AngleLike
+	switch actual := value.(type) {
+	case uint:
+		angle = ele.AngleFromFloat(float64(actual))
+	case uint8:
+		angle = ele.AngleFromFloat(float64(actual))
+	case uint16:
+		angle = ele.AngleFromFloat(float64(actual))
+	case uint32:
+		angle = ele.AngleFromFloat(float64(actual))
+	case uint64:
+		angle = ele.AngleFromFloat(float64(actual))
+	case int:
+		angle = ele.AngleFromFloat(float64(actual))
+	case int8:
+		angle = ele.AngleFromFloat(float64(actual))
+	case int16:
+		angle = ele.AngleFromFloat(float64(actual))
+	case int32:
+		angle = ele.AngleFromFloat(float64(actual))
+	case int64:
+		angle = ele.AngleFromFloat(float64(actual))
+	case float32:
+		angle = ele.AngleFromFloat(float64(actual))
+	case float64:
+		angle = ele.AngleFromFloat(float64(actual))
+	case string:
+		angle = ParseEntity(actual).(abs.AngleLike)
+	case abs.AngleLike:
+		angle = actual
+	case abs.ComponentLike:
+		angle = actual.GetEntity().(abs.AngleLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to an angle: %v", actual, actual)
+		panic(message)
+	}
+	return angle
+}
+
+// This constructor returns a new boolean element initialized with the specified
+// value.
+func Boolean(value abs.Value) abs.BooleanLike {
+	var boolean abs.BooleanLike
+	switch actual := value.(type) {
+	case bool:
+		boolean = ele.BooleanFromBool(actual)
+	case string:
+		boolean = ParseEntity(actual).(abs.BooleanLike)
+	case abs.BooleanLike:
+		boolean = actual
+	case abs.ComponentLike:
+		boolean = actual.GetEntity().(abs.BooleanLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a boolean: %v", actual, actual)
+		panic(message)
+	}
+	return boolean
+}
+
+// This constructor returns a new duration element initialized with the specified
+// value.
+func Duration(value abs.Value) abs.DurationLike {
+	var duration abs.DurationLike
+	switch actual := value.(type) {
+	case uint:
+		duration = ele.DurationFromInt(int(actual))
+	case uint8:
+		duration = ele.DurationFromInt(int(actual))
+	case uint16:
+		duration = ele.DurationFromInt(int(actual))
+	case uint32:
+		duration = ele.DurationFromInt(int(actual))
+	case uint64:
+		duration = ele.DurationFromInt(int(actual))
+	case int:
+		duration = ele.DurationFromInt(int(actual))
+	case int8:
+		duration = ele.DurationFromInt(int(actual))
+	case int16:
+		duration = ele.DurationFromInt(int(actual))
+	case int32:
+		duration = ele.DurationFromInt(int(actual))
+	case int64:
+		duration = ele.DurationFromInt(int(actual))
+	case string:
+		duration = ParseEntity(actual).(abs.DurationLike)
+	case abs.DurationLike:
+		duration = actual
+	case abs.ComponentLike:
+		duration = actual.GetEntity().(abs.DurationLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a duration: %v", actual, actual)
+		panic(message)
+	}
+	return duration
+}
+
+// This constructor returns a new moment element initialized with the specified
+// value.
+func Moment(value abs.Value) abs.MomentLike {
+	var moment abs.MomentLike
+	switch actual := value.(type) {
+	case uint:
+		moment = ele.MomentFromInt(int(actual))
+	case uint8:
+		moment = ele.MomentFromInt(int(actual))
+	case uint16:
+		moment = ele.MomentFromInt(int(actual))
+	case uint32:
+		moment = ele.MomentFromInt(int(actual))
+	case uint64:
+		moment = ele.MomentFromInt(int(actual))
+	case int:
+		moment = ele.MomentFromInt(int(actual))
+	case int8:
+		moment = ele.MomentFromInt(int(actual))
+	case int16:
+		moment = ele.MomentFromInt(int(actual))
+	case int32:
+		moment = ele.MomentFromInt(int(actual))
+	case int64:
+		moment = ele.MomentFromInt(int(actual))
+	case string:
+		moment = ParseEntity(actual).(abs.MomentLike)
+	case abs.MomentLike:
+		moment = actual
+	case abs.ComponentLike:
+		moment = actual.GetEntity().(abs.MomentLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a moment: %v", actual, actual)
+		panic(message)
+	}
+	return moment
+}
+
+// This constructor returns a new number element initialized with the specified
 // value.
 func Number(value abs.Value) abs.NumberLike {
 	var number abs.NumberLike
@@ -65,25 +204,131 @@ func Number(value abs.Value) abs.NumberLike {
 	return number
 }
 
-// This constructor returns a new quote entity initialized with the specified
+// This constructor returns a new pattern element initialized with the specified
 // value.
-func Quote(value abs.Value) abs.QuoteLike {
-	var quote abs.QuoteLike
+func Pattern(value abs.Value) abs.PatternLike {
+	var pattern abs.PatternLike
 	switch actual := value.(type) {
 	case string:
-		quote = ParseEntity(actual).(abs.QuoteLike)
-	case abs.QuoteLike:
-		quote = actual
+		pattern = ParseEntity(actual).(abs.PatternLike)
+	case abs.PatternLike:
+		pattern = actual
 	case abs.ComponentLike:
-		quote = actual.GetEntity().(abs.QuoteLike)
+		pattern = actual.GetEntity().(abs.PatternLike)
 	default:
-		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a quote: %v", actual, actual)
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a pattern: %v", actual, actual)
 		panic(message)
 	}
-	return quote
+	return pattern
 }
 
-// This constructor returns a new symbol entity initialized with the specified
+// This constructor returns a new percentage element initialized with the specified
+// value.
+func Percentage(value abs.Value) abs.PercentageLike {
+	var percentage abs.PercentageLike
+	switch actual := value.(type) {
+	case uint:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case uint8:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case uint16:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case uint32:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case uint64:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case int:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case int8:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case int16:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case int32:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case int64:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case float32:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case float64:
+		percentage = ele.PercentageFromFloat(float64(actual))
+	case string:
+		percentage = ParseEntity(actual).(abs.PercentageLike)
+	case abs.PercentageLike:
+		percentage = actual
+	case abs.ComponentLike:
+		percentage = actual.GetEntity().(abs.PercentageLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a percentage: %v", actual, actual)
+		panic(message)
+	}
+	return percentage
+}
+
+// This constructor returns a new probability element initialized with the specified
+// value.
+func Probability(value abs.Value) abs.ProbabilityLike {
+	var probability abs.ProbabilityLike
+	switch actual := value.(type) {
+	case bool:
+		probability = ele.ProbabilityFromBool(actual)
+	case uint:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case uint8:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case uint16:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case uint32:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case uint64:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case int:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case int8:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case int16:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case int32:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case int64:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case float32:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case float64:
+		probability = ele.ProbabilityFromFloat(float64(actual))
+	case string:
+		probability = ParseEntity(actual).(abs.ProbabilityLike)
+	case abs.ProbabilityLike:
+		probability = actual
+	case abs.ComponentLike:
+		probability = actual.GetEntity().(abs.ProbabilityLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a probability: %v", actual, actual)
+		panic(message)
+	}
+	return probability
+}
+
+// This constructor returns a new resource element initialized with the specified
+// value.
+func Resource(value abs.Value) abs.ResourceLike {
+	var resource abs.ResourceLike
+	switch actual := value.(type) {
+	case *uri.URL:
+		resource = ele.ResourceFromString(actual.String())
+	case string:
+		resource = ParseEntity(actual).(abs.ResourceLike)
+	case abs.ResourceLike:
+		resource = actual
+	case abs.ComponentLike:
+		resource = actual.GetEntity().(abs.ResourceLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a resource: %v", actual, actual)
+		panic(message)
+	}
+	return resource
+}
+
+// This constructor returns a new symbol element initialized with the specified
 // value.
 func Symbol(value abs.Value) abs.SymbolLike {
 	var symbol abs.SymbolLike
@@ -100,6 +345,48 @@ func Symbol(value abs.Value) abs.SymbolLike {
 	}
 	return symbol
 }
+
+// This constructor returns a new tag element initialized with the specified
+// value.
+func Tag(value abs.Value) abs.TagLike {
+	var tag abs.TagLike
+	switch actual := value.(type) {
+	case uint:
+		tag = ele.TagOfSize(int(actual))
+	case uint8:
+		tag = ele.TagOfSize(int(actual))
+	case uint16:
+		tag = ele.TagOfSize(int(actual))
+	case uint32:
+		tag = ele.TagOfSize(int(actual))
+	case uint64:
+		tag = ele.TagOfSize(int(actual))
+	case int:
+		tag = ele.TagOfSize(int(actual))
+	case int8:
+		tag = ele.TagOfSize(int(actual))
+	case int16:
+		tag = ele.TagOfSize(int(actual))
+	case int32:
+		tag = ele.TagOfSize(int(actual))
+	case int64:
+		tag = ele.TagOfSize(int(actual))
+	case []byte:
+		tag = ele.TagFromArray(actual)
+	case string:
+		tag = ParseEntity(actual).(abs.TagLike)
+	case abs.TagLike:
+		tag = actual
+	case abs.ComponentLike:
+		tag = actual.GetEntity().(abs.TagLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a tag: %v", actual, actual)
+		panic(message)
+	}
+	return tag
+}
+
+// PRIVATE METHODS
 
 // This method attempts to parse an angle element. It returns the angle element
 // and whether or not the angle element was successfully parsed.

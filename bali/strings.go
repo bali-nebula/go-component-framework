@@ -11,12 +11,35 @@
 package bali
 
 import (
+	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	stc "strconv"
 	sts "strings"
 	uni "unicode"
 )
+
+// UNIVERSAL CONSTRUCTORS
+
+// This constructor returns a new quote string initialized with the specified
+// value.
+func Quote(value abs.Value) abs.QuoteLike {
+	var quote abs.QuoteLike
+	switch actual := value.(type) {
+	case string:
+		quote = ParseEntity(actual).(abs.QuoteLike)
+	case abs.QuoteLike:
+		quote = actual
+	case abs.ComponentLike:
+		quote = actual.GetEntity().(abs.QuoteLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a quote: %v", actual, actual)
+		panic(message)
+	}
+	return quote
+}
+
+// PRIVATE METHODS
 
 // This method attempts to parse a binary string. It returns the binary
 // string and whether or not the binary string was successfully parsed.
