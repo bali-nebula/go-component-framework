@@ -191,6 +191,10 @@ func Number(value abs.Value) abs.NumberLike {
 		number = ele.NumberFromComplex(complex(float64(actual), 0))
 	case float64:
 		number = ele.NumberFromComplex(complex(float64(actual), 0))
+	case complex64:
+		number = ele.NumberFromComplex(complex128(actual))
+	case complex128:
+		number = ele.NumberFromComplex(complex128(actual))
 	case string:
 		number = ParseEntity(actual).(abs.NumberLike)
 	case abs.NumberLike:
