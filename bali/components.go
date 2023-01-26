@@ -233,38 +233,41 @@ func (v *parser) parseEntity() (abs.Entity, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatEntity(entity abs.Entity) {
 	switch value := entity.(type) {
-	case ele.Angle:
-		v.formatAngle(value)
-	case ele.Boolean:
-		v.formatBoolean(value)
-	case ele.Duration:
-		v.formatDuration(value)
-	case ele.Moment:
-		v.formatMoment(value)
-	case ele.Number:
-		v.formatNumber(value)
-	case ele.Pattern:
-		v.formatPattern(value)
-	case ele.Percentage:
-		v.formatPercentage(value)
-	case ele.Probability:
-		v.formatProbability(value)
-	case ele.Resource:
-		v.formatResource(value)
-	case ele.Symbol:
-		v.formatSymbol(value)
-	case ele.Tag:
-		v.formatTag(value)
-	case str.Binary:
+	// The order of these cases is very important since Go only compares the
+	// set of methods supported by each interface. An interface that is a subset
+	// of another interface must be checked AFTER that interface.
+	case abs.BinaryLike:
 		v.formatBinary(value)
-	case str.Moniker:
+	case abs.MonikerLike:
 		v.formatMoniker(value)
-	case str.Narrative:
+	case abs.NarrativeLike:
 		v.formatNarrative(value)
-	case str.Quote:
+	case abs.QuoteLike:
 		v.formatQuote(value)
-	case str.Version:
+	case abs.VersionLike:
 		v.formatVersion(value)
+	case abs.DurationLike:
+		v.formatDuration(value)
+	case abs.MomentLike:
+		v.formatMoment(value)
+	case abs.NumberLike:
+		v.formatNumber(value)
+	case abs.PercentageLike:
+		v.formatPercentage(value)
+	case abs.ProbabilityLike:
+		v.formatProbability(value)
+	case abs.AngleLike:
+		v.formatAngle(value)
+	case abs.BooleanLike:
+		v.formatBoolean(value)
+	case abs.PatternLike:
+		v.formatPattern(value)
+	case abs.ResourceLike:
+		v.formatResource(value)
+	case abs.TagLike:
+		v.formatTag(value)
+	case abs.SymbolLike:
+		v.formatSymbol(value)
 	case abs.SeriesLike:
 		v.formatSeries(value)
 	case abs.MappingLike:

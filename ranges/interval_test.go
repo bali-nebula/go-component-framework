@@ -134,6 +134,21 @@ func TestIntervalsWithImplicitMoments(t *tes.T) {
 	ass.Equal(t, []ele.Moment{4, 5, 6}, s.AsArray())
 }
 
+func TestIntervalsWithEmojis(t *tes.T) {
+	var r1 = ran.RuneFromInt('😀')
+	var r2 = ran.RuneFromInt('😆')
+	var r3 = ran.RuneFromInt('🤣')
+	var s = ran.Interval[abs.RuneLike](r1, abs.INCLUSIVE, r3)
+	ass.False(t, s.IsEmpty())
+	ass.Equal(t, 804, s.GetSize())
+	ass.True(t, s.ContainsValue(r2))
+	ass.Equal(t, r1, s.GetFirst())
+	ass.Equal(t, abs.INCLUSIVE, s.GetExtent())
+	ass.Equal(t, r3, s.GetLast())
+	ass.Equal(t, r2, s.GetValue(7))
+	ass.True(t, s.ContainsValue(r2))
+}
+
 func TestIntervalsWithRunes(t *tes.T) {
 	var rA = ran.RuneFromInt('A')
 	var ra = ran.RuneFromInt('a')

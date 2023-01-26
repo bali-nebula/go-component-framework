@@ -18,6 +18,15 @@ import (
 
 const maximum = 1 << 53
 
+// This function generates a cryptographically secure random boolean.
+func RandomBoolean() bool {
+	var random, err = ran.Int(ran.Reader, big.NewInt(int64(2)))
+	if err != nil {
+		panic(err)
+	}
+	return int(random.Int64()) > 0
+}
+
 // This function generates a cryptographically secure random integer in the
 // range [0..max].
 func RandomInteger(max int) int {

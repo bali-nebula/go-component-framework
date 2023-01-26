@@ -13,7 +13,6 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	ele "github.com/bali-nebula/go-component-framework/elements"
 	ran "github.com/bali-nebula/go-component-framework/ranges"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	mat "math"
@@ -85,40 +84,41 @@ func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 	switch value := endpoint.(type) {
-	case ele.Angle:
-		v.formatAngle(value)
-	case str.Binary:
+	// The order of these cases is very important since Go only compares the
+	// set of methods supported by each interface. An interface that is a subset
+	// of another interface must be checked AFTER that interface.
+	case abs.BinaryLike:
 		v.formatBinary(value)
-	case ele.Boolean:
-		v.formatBoolean(value)
-	case ele.Duration:
-		v.formatDuration(value)
-	case ele.Moment:
-		v.formatMoment(value)
-	case str.Moniker:
+	case abs.MonikerLike:
 		v.formatMoniker(value)
-	case ele.Pattern:
-		v.formatPattern(value)
-	case ele.Percentage:
-		v.formatPercentage(value)
-	case ele.Probability:
-		v.formatProbability(value)
-	case str.Quote:
+	case abs.QuoteLike:
 		v.formatQuote(value)
-	case ran.Real:
-		v.formatReal(value)
-	case ran.Integer:
-		v.formatInteger(value)
-	case ele.Resource:
-		v.formatResource(value)
-	case ran.Rune:
-		v.formatRune(value)
-	case ele.Symbol:
-		v.formatSymbol(value)
-	case ele.Tag:
-		v.formatTag(value)
-	case str.Version:
+	case abs.VersionLike:
 		v.formatVersion(value)
+	case abs.DurationLike:
+		v.formatDuration(value)
+	case abs.MomentLike:
+		v.formatMoment(value)
+	case abs.PercentageLike:
+		v.formatPercentage(value)
+	case abs.RealLike:
+		v.formatReal(value)
+	case abs.IntegerLike:
+		v.formatInteger(value)
+	case abs.ProbabilityLike:
+		v.formatProbability(value)
+	case abs.AngleLike:
+		v.formatAngle(value)
+	case abs.RuneLike:
+		v.formatRune(value)
+	case abs.PatternLike:
+		v.formatPattern(value)
+	case abs.ResourceLike:
+		v.formatResource(value)
+	case abs.TagLike:
+		v.formatTag(value)
+	case abs.SymbolLike:
+		v.formatSymbol(value)
 	default:
 		panic(fmt.Sprintf("An invalid endpoint (of type %T) was passed to the formatter: %v", value, value))
 	}
@@ -192,12 +192,12 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 		panic(message)
 	}
 	switch first.(type) {
+	case abs.Continuous:
+		range_ = ran.Continuum(first.(abs.Continuous), extent, last.(abs.Continuous))
 	case abs.Discrete:
 		range_ = ran.Interval(first.(abs.Discrete), extent, last.(abs.Discrete))
 	case abs.Spectral:
 		range_ = ran.Spectrum(first.(abs.Spectral), extent, last.(abs.Spectral))
-	case abs.Continuous:
-		range_ = ran.Continuum(first.(abs.Continuous), extent, last.(abs.Continuous))
 	default:
 		var message = fmt.Sprintf("An invalid range endpoint (of type %T) was parsed: %v", first, first)
 		panic(message)
@@ -317,7 +317,7 @@ func (v *parser) parseInteger() (ran.Integer, *Token, bool) {
 
 // This method adds the canonical format for the specified integer to the state of
 // the formatter.
-func (v *formatter) formatInteger(number ran.Integer) {
+func (v *formatter) formatInteger(number abs.IntegerLike) {
 	var integer = number.AsInteger()
 	v.AppendString(stc.FormatInt(int64(integer), 10))
 }
@@ -355,7 +355,7 @@ func (v *parser) parseReal() (ran.Real, *Token, bool) {
 
 // This method adds the canonical format for the specified real number to the
 // state of the formatter.
-func (v *formatter) formatReal(number ran.Real) {
+func (v *formatter) formatReal(number abs.RealLike) {
 	switch {
 	case number.IsZero():
 		v.AppendString("0")
@@ -369,7 +369,7 @@ func (v *formatter) formatReal(number ran.Real) {
 	case number.IsUndefined():
 		v.AppendString("undefined")
 	default:
-		v.formatFloat(float64(number))
+		v.formatFloat(number.AsReal())
 	}
 }
 
@@ -394,8 +394,9 @@ func (v *parser) parseRune() (ran.Rune, *Token, bool) {
 
 // This method adds the canonical format for the specified rune to the state of
 // the formatter.
-func (v *formatter) formatRune(number ran.Rune) {
-	var runes = []rune{rune(number)}
+func (v *formatter) formatRune(number abs.RuneLike) {
+	var integer = number.AsInteger()
+	var runes = []rune{rune(integer)}
 	var quote = str.QuoteFromString(string(runes))
 	v.formatQuote(quote)
 }

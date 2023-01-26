@@ -125,6 +125,7 @@ type PercentageLike interface {
 }
 
 type ProbabilityLike interface {
+	Discrete
 	Continuous
 }
 

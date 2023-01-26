@@ -51,6 +51,24 @@ func MaximumProbability() abs.ProbabilityLike {
 // [0..1].
 type Probability float64
 
+// DISCRETE INTERFACE
+
+// This method returns a probability value for this discrete element.
+func (v Probability) AsBoolean() bool {
+	if v == 0.5 {
+		return uti.RandomBoolean()
+	}
+	return v > 0.5
+}
+
+// This method returns an integer value for this discrete element.
+func (v Probability) AsInteger() int {
+	if v.AsBoolean() {
+		return 1
+	}
+	return 0
+}
+
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous element.
