@@ -23,6 +23,109 @@ import (
 
 // UNIVERSAL CONSTRUCTORS
 
+// This constructor returns a new rune endpoint with the specified value.
+func Rune(value abs.Value) abs.RuneLike {
+	var rune_ abs.RuneLike
+	switch actual := value.(type) {
+	case uint:
+		rune_ = ran.RuneFromInt(int(actual))
+	case uint8:
+		rune_ = ran.RuneFromInt(int(actual))
+	case uint16:
+		rune_ = ran.RuneFromInt(int(actual))
+	case uint32:
+		rune_ = ran.RuneFromInt(int(actual))
+	case uint64:
+		rune_ = ran.RuneFromInt(int(actual))
+	case int:
+		rune_ = ran.RuneFromInt(int(actual))
+	case int8:
+		rune_ = ran.RuneFromInt(int(actual))
+	case int16:
+		rune_ = ran.RuneFromInt(int(actual))
+	case int32:
+		rune_ = ran.RuneFromInt(int(actual))
+	case int64:
+		rune_ = ran.RuneFromInt(int(actual))
+	case abs.RuneLike:
+		rune_ = actual
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a rune: %v", actual, actual)
+		panic(message)
+	}
+	return rune_
+}
+
+// This constructor returns a new integer endpoint with the specified value.
+func Integer(value abs.Value) abs.IntegerLike {
+	var integer abs.IntegerLike
+	switch actual := value.(type) {
+	case uint:
+		integer = ran.IntegerFromInt(int(actual))
+	case uint8:
+		integer = ran.IntegerFromInt(int(actual))
+	case uint16:
+		integer = ran.IntegerFromInt(int(actual))
+	case uint32:
+		integer = ran.IntegerFromInt(int(actual))
+	case uint64:
+		integer = ran.IntegerFromInt(int(actual))
+	case int:
+		integer = ran.IntegerFromInt(int(actual))
+	case int8:
+		integer = ran.IntegerFromInt(int(actual))
+	case int16:
+		integer = ran.IntegerFromInt(int(actual))
+	case int32:
+		integer = ran.IntegerFromInt(int(actual))
+	case int64:
+		integer = ran.IntegerFromInt(int(actual))
+	case abs.IntegerLike:
+		integer = actual
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to an integer: %v", actual, actual)
+		panic(message)
+	}
+	return integer
+}
+
+// This constructor returns a new real endpoint with the specified value.
+func Real(value abs.Value) abs.RealLike {
+	var real_ abs.RealLike
+	switch actual := value.(type) {
+	case uint:
+		real_ = ran.RealFromFloat(float64(actual))
+	case uint8:
+		real_ = ran.RealFromFloat(float64(actual))
+	case uint16:
+		real_ = ran.RealFromFloat(float64(actual))
+	case uint32:
+		real_ = ran.RealFromFloat(float64(actual))
+	case uint64:
+		real_ = ran.RealFromFloat(float64(actual))
+	case int:
+		real_ = ran.RealFromFloat(float64(actual))
+	case int8:
+		real_ = ran.RealFromFloat(float64(actual))
+	case int16:
+		real_ = ran.RealFromFloat(float64(actual))
+	case int32:
+		real_ = ran.RealFromFloat(float64(actual))
+	case int64:
+		real_ = ran.RealFromFloat(float64(actual))
+	case float32:
+		real_ = ran.RealFromFloat(float64(actual))
+	case float64:
+		real_ = ran.RealFromFloat(float64(actual))
+	case abs.RealLike:
+		real_ = actual
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a real: %v", actual, actual)
+		panic(message)
+	}
+	return real_
+}
+
 // This constructor returns a new spectral range with the specified endpoints.
 func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, parameters Parameters) abs.ComponentLike {
 	var entity abs.Entity
@@ -143,7 +246,7 @@ func Interval(first abs.Value, extent abs.Extent, last abs.Value, parameters Par
 }
 
 // This constructor returns a new continuous range with the specified endpoints.
-func Continuus(first abs.Value, extent abs.Extent, last abs.Value, parameters Parameters) abs.ComponentLike {
+func Continuum(first abs.Value, extent abs.Extent, last abs.Value, parameters Parameters) abs.ComponentLike {
 	var entity abs.Entity
 	switch actual := first.(type) {
 	case uint:

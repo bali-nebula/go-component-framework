@@ -11,41 +11,165 @@
 package bali_test
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	bal "github.com/bali-nebula/go-component-framework/bali"
+	col "github.com/bali-nebula/go-component-framework/collections"
 	ass "github.com/stretchr/testify/assert"
+	syn "sync"
 	tes "testing"
 )
 
-func TestRoundtripWithCatalogs(t *tes.T) {
-	var catalogStrings = []string{
-		`[:]`,
-		"[$key: \"value\"]",
-		"[\n" +
-		"    $foo: 5\n" +
-		"    $bar: ~π\n" +
-		"]",
-	}
-
-	for index, s := range catalogStrings {
-		var component = bal.ParseComponent(s)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, catalogStrings[index], s)
-	}
+func TestCatalogs(t *tes.T) {
+	var foo = bal.Symbol("$foo")
+	var bar = bal.Symbol("$bar")
+	var baz = bal.Symbol("$baz")
+	var one = bal.Component(1, nil)
+	var two = bal.Component(2, nil)
+	var three = bal.Component(3, nil)
+	var catalog = col.Catalog()
+	ass.True(t, catalog.IsEmpty())
+	ass.Equal(t, 0, catalog.GetSize())
+	catalog.SetValue(foo, one)
+	ass.False(t, catalog.IsEmpty())
+	ass.Equal(t, 1, catalog.GetSize())
+	ass.Equal(t, one, catalog.GetValue(foo))
+	catalog.SetValue(bar, two)
+	ass.Equal(t, 2, catalog.GetSize())
+	ass.Equal(t, two, catalog.GetValue(bar))
+	catalog.SetValue(baz, three)
+	ass.Equal(t, 3, catalog.GetSize())
+	ass.Equal(t, three, catalog.GetValue(baz))
+	ass.Equal(t, []abs.Primitive{foo, bar, baz}, catalog.GetKeys().AsArray())
+	catalog.SortValues()
+	catalog.ShuffleValues()
+	catalog.RemoveAll()
 }
 
-func TestRoundtripWithLists(t *tes.T) {
-	var listStrings = []string{
-		`[ ]`,
-		"[42]",
-		"[\n" +
-		"    $foo\n" +
-		"    $bar\n" +
-		"]",
-	}
+func TestLists(t *tes.T) {
+	var one = bal.Component(1, nil)
+	var two = bal.Component(2, nil)
+	var three = bal.Component(3, nil)
+	var list = col.List()
+	list.SortValues()
+	ass.True(t, list.IsEmpty())
+	ass.Equal(t, 0, list.GetSize())
+	ass.False(t, list.ContainsValue(one))
+	list.AddValue(one)
+	ass.False(t, list.IsEmpty())
+	ass.Equal(t, 1, list.GetSize())
+	ass.True(t, list.ContainsValue(one))
+	ass.False(t, list.ContainsValue(two))
+	list.AddValue(two)
+	ass.False(t, list.IsEmpty())
+	ass.Equal(t, 2, list.GetSize())
+	ass.True(t, list.ContainsValue(one))
+	ass.True(t, list.ContainsValue(two))
+	list.AddValue(three)
+	ass.False(t, list.IsEmpty())
+	ass.Equal(t, 3, list.GetSize())
+	ass.True(t, list.ContainsValue(one))
+	ass.True(t, list.ContainsValue(two))
+	ass.True(t, list.ContainsValue(three))
+	list.RemoveAll()
+	ass.True(t, list.IsEmpty())
+}
 
-	for index, s := range listStrings {
-		var component = bal.ParseComponent(s)
-		var s = bal.FormatComponent(component)
-		ass.Equal(t, listStrings[index], s)
-	}
+
+func TestQueueWithConcurrency(t *tes.T) {
+	var one = bal.Component(1, nil)
+	var two = bal.Component(2, nil)
+	var three = bal.Component(3, nil)
+
+	// Create a wait group for synchronization.
+	var wg = new(syn.WaitGroup)
+	defer wg.Wait()
+
+	// Create a new queue with a specific capacity.
+	var queue = col.QueueWithCapacity(12)
+	ass.Equal(t, 12, queue.GetCapacity())
+	ass.True(t, queue.IsEmpty())
+	ass.Equal(t, 0, queue.GetSize())
+
+	// Add some values to the queue.
+	queue.AddValue(one)
+	queue.AddValue(two)
+	ass.Equal(t, 2, queue.GetSize())
+
+	// Remove values from the queue in the background.
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		var value abs.ComponentLike
+		var ok = true
+		value, ok = queue.RemoveHead()
+		ass.True(t, ok)
+		ass.Equal(t, one, value)
+		value, ok = queue.RemoveHead()
+		ass.True(t, ok)
+		ass.Equal(t, two, value)
+		value, ok = queue.RemoveHead()
+		ass.True(t, ok)
+		ass.Equal(t, three, value)
+	}()
+
+	// Add some more values to the queue.
+	queue.AddValue(three)
+	queue.CloseQueue()
+}
+
+func TestSets(t *tes.T) {
+	var one = bal.Component(1, nil)
+	var two = bal.Component(2, nil)
+	var three = bal.Component(3, nil)
+	var set = col.Set()
+	ass.True(t, set.IsEmpty())
+	ass.Equal(t, 0, set.GetSize())
+	ass.False(t, set.ContainsValue(one))
+	set.AddValue(one)
+	ass.False(t, set.IsEmpty())
+	ass.Equal(t, 1, set.GetSize())
+	ass.True(t, set.ContainsValue(one))
+	ass.False(t, set.ContainsValue(two))
+	set.AddValue(two)
+	ass.False(t, set.IsEmpty())
+	ass.Equal(t, 2, set.GetSize())
+	ass.True(t, set.ContainsValue(one))
+	ass.True(t, set.ContainsValue(two))
+	set.AddValue(three)
+	ass.False(t, set.IsEmpty())
+	ass.Equal(t, 3, set.GetSize())
+	ass.True(t, set.ContainsValue(one))
+	ass.True(t, set.ContainsValue(two))
+	ass.True(t, set.ContainsValue(three))
+	set.RemoveAll()
+	ass.True(t, set.IsEmpty())
+}
+
+func TestStacks(t *tes.T) {
+	var one = bal.Component(1, nil)
+	var two = bal.Component(1, nil)
+	var three = bal.Component(1, nil)
+	var stack = col.Stack()
+	ass.True(t, stack.IsEmpty())
+	ass.Equal(t, 0, stack.GetSize())
+	stack.AddValue(one)
+	ass.False(t, stack.IsEmpty())
+	ass.Equal(t, 1, stack.GetSize())
+	stack.AddValue(two)
+	ass.False(t, stack.IsEmpty())
+	ass.Equal(t, 2, stack.GetSize())
+	stack.AddValue(three)
+	ass.False(t, stack.IsEmpty())
+	ass.Equal(t, 3, stack.GetSize())
+	ass.Equal(t, three, stack.RemoveTop())
+	ass.False(t, stack.IsEmpty())
+	ass.Equal(t, 2, stack.GetSize())
+	ass.Equal(t, two, stack.RemoveTop())
+	ass.False(t, stack.IsEmpty())
+	ass.Equal(t, 1, stack.GetSize())
+	ass.Equal(t, one, stack.RemoveTop())
+	ass.True(t, stack.IsEmpty())
+	ass.Equal(t, 0, stack.GetSize())
+	stack.RemoveAll()
+	ass.True(t, stack.IsEmpty())
 }

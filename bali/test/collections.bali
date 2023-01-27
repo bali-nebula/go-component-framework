@@ -35,4 +35,13 @@
         $foo: "bar"
         $bar: "foo"
     ]($type: /bali/collections/Catalog/v1)
+    [$key: "value"]
+    [
+        $foo: 5
+        $bar: ~π
+    ]
+    [
+        $foo
+        $bar
+    ]
 ]
