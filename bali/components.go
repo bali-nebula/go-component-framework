@@ -21,23 +21,41 @@ import (
 	sts "strings"
 )
 
+// TYPE DEFINITIONS
+
+type (
+	Parameters   [][2]any
+)
+
 // UNIVERSAL CONSTRUCTORS
 
 // This constructor returns a new component initialized with the specified
 // value.
-func Component(value abs.Value) abs.ComponentLike {
-	var component abs.ComponentLike
+func Component(value abs.Value, parameters Parameters) abs.ComponentLike {
+	var context abs.ContextLike
+	if len(parameters) > 0 {
+		context = com.Context()
+		for _, parameter := range parameters {
+			var name = Symbol(parameter[0])
+			var value = Component(parameter[1], nil)
+			context.SetValue(name, value)
+		}
+	}
+	var entity abs.Entity
 	switch actual := value.(type) {
 	case uint, uint8, uint16, uint32, uint64, int, int8, int16, int32, int64, float32, float64:
-		component = com.Component(Number(actual))
+		entity = Number(actual)
 	case string:
-		component = com.Component(str.QuoteFromString(actual))
+		entity = Quote(actual)
 	case abs.ComponentLike:
-		component = actual
+		entity = actual.GetEntity()
 	default:
-		component = com.Component(actual)
+		entity = actual
 	}
-	return component
+	if context != nil {
+		return com.ComponentWithContext(entity, context)
+	}
+	return com.Component(entity)
 }
 
 // PRIVATE METHODS

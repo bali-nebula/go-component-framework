@@ -14,7 +14,6 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/bali-nebula/go-component-framework/collections"
-	com "github.com/bali-nebula/go-component-framework/components"
 	cox "github.com/craterdog/go-collection-framework/v2"
 )
 
@@ -23,7 +22,6 @@ import (
 type (
 	Components   []any
 	Associations [][2]any
-	Parameters   [][2]any
 )
 
 // UNIVERSAL CONSTRUCTORS
@@ -33,20 +31,11 @@ type (
 func Catalog(associations Associations, parameters Parameters) abs.ComponentLike {
 	var catalog = col.Catalog()
 	for _, association := range associations {
-		var key = Component(association[0]).GetEntity()
-		var value = Component(association[1])
+		var key = Component(association[0], nil).GetEntity()
+		var value = Component(association[1], nil)
 		catalog.SetValue(key, value)
 	}
-	if len(parameters) > 0 {
-		var context = com.Context()
-		for _, parameter := range parameters {
-			var name = Symbol(parameter[0])
-			var value = Component(parameter[1])
-			context.SetValue(name, value)
-		}
-		return com.ComponentWithContext(catalog, context)
-	}
-	return com.Component(catalog)
+	return Component(catalog, parameters)
 }
 
 // This constructor returns a new list component initialized with the
@@ -55,36 +44,17 @@ func List(components Components, parameters Parameters) abs.ComponentLike {
 	var component abs.ComponentLike
 	var list = col.List()
 	for _, value := range components {
-		component = Component(value)
+		component = Component(value, nil)
 		list.AddValue(component)
 	}
-	if len(parameters) > 0 {
-		var context = com.Context()
-		for _, parameter := range parameters {
-			var name = Symbol(parameter[0])
-			var value = parameter[1]
-			component = Component(value)
-			context.SetValue(name, component)
-		}
-		return com.ComponentWithContext(list, context)
-	}
-	return com.Component(list)
+	return Component(list, parameters)
 }
 
 // This constructor returns a new queue component with the specified capacity
 // and parameterized with the specified parameters.
 func Queue(capacity int, parameters Parameters) abs.ComponentLike {
 	var queue = col.QueueWithCapacity(capacity)
-	if len(parameters) > 0 {
-		var context = com.Context()
-		for _, parameter := range parameters {
-			var name = Symbol(parameter[0])
-			var value = Component(parameter[1])
-			context.SetValue(name, value)
-		}
-		return com.ComponentWithContext(queue, context)
-	}
-	return com.Component(queue)
+	return Component(queue, parameters)
 }
 
 // This constructor returns a new set component initialized with the
@@ -93,36 +63,17 @@ func Set(components Components, parameters Parameters) abs.ComponentLike {
 	var component abs.ComponentLike
 	var set = col.Set()
 	for _, value := range components {
-		component = Component(value)
+		component = Component(value, nil)
 		set.AddValue(component)
 	}
-	if len(parameters) > 0 {
-		var context = com.Context()
-		for _, parameter := range parameters {
-			var name = Symbol(parameter[0])
-			var value = parameter[1]
-			component = Component(value)
-			context.SetValue(name, component)
-		}
-		return com.ComponentWithContext(set, context)
-	}
-	return com.Component(set)
+	return Component(set, parameters)
 }
 
 // This constructor returns a new stack component with the specified capacity
 // and parameterized with the specified parameters.
 func Stack(capacity int, parameters Parameters) abs.ComponentLike {
 	var stack = col.StackWithCapacity(capacity)
-	if len(parameters) > 0 {
-		var context = com.Context()
-		for _, parameter := range parameters {
-			var name = Symbol(parameter[0])
-			var value = Component(parameter[1])
-			context.SetValue(name, value)
-		}
-		return com.ComponentWithContext(stack, context)
-	}
-	return com.Component(stack)
+	return Component(stack, parameters)
 }
 
 // PRIVATE METHODS

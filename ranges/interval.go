@@ -292,8 +292,8 @@ func (v *interval[V]) goIndex(index int) int {
 
 // INTEGER IMPLEMENTATION
 
-// This constructor creates a new real endpoint from the specified float.
-func IntegerFromInt(v float64) abs.IntegerLike {
+// This constructor creates a new integer endpoint from the specified int.
+func IntegerFromInt(v int) abs.IntegerLike {
 	return Integer(v)
 }
 
