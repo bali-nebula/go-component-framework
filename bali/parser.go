@@ -80,13 +80,13 @@ func ParseDocument(document []byte) abs.ComponentLike {
 // This function parses a source string rather than the bytes from a BDN
 // document file. It is useful when parsing strings within source code.
 func ParseComponent(source string) abs.ComponentLike {
-	var document = []byte(source + "\n") // Append the POSIX compliant EOL character.
+	var document = []byte(source + EOL) // Append the POSIX compliant EOL character.
 	return ParseDocument(document)
 }
 
 // This function parses an entity from a source string.
 func ParseEntity(source string) abs.Entity {
-	var document = []byte(source + "\n") // Append the POSIX compliant EOL character.
+	var document = []byte(source + EOL) // Append the POSIX compliant EOL character.
 	return ParseDocument(document).GetEntity()
 }
 
@@ -145,13 +145,13 @@ func (v *parser) backupOne() {
 func (v *parser) formatError(token *Token) string {
 	var message = fmt.Sprintf("An unexpected token was received by the parser: %v\n", token)
 	var line = token.Line
-	var lines = sts.Split(string(v.source), "\n")
+	var lines = sts.Split(string(v.source), EOL)
 
 	message += "\033[36m"
 	if line > 1 {
-		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + "\n"
+		message += fmt.Sprintf("%04d: ", line-1) + string(lines[line-2]) + EOL
 	}
-	message += fmt.Sprintf("%04d: ", line) + string(lines[line-1]) + "\n"
+	message += fmt.Sprintf("%04d: ", line) + string(lines[line-1]) + EOL
 
 	message += " \033[32m>>>─"
 	var count = 0
@@ -162,7 +162,7 @@ func (v *parser) formatError(token *Token) string {
 	message += "⌃\033[36m\n"
 
 	if line < len(lines) {
-		message += fmt.Sprintf("%04d: ", line+1) + string(lines[line]) + "\n"
+		message += fmt.Sprintf("%04d: ", line+1) + string(lines[line]) + EOL
 	}
 	message += "\033[0m\n"
 

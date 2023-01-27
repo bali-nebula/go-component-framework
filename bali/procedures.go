@@ -908,7 +908,7 @@ func (v *formatter) formatProcedure(procedure abs.ProcedureLike) {
 				v.AppendNewline()
 				v.formatStatement(statement)
 			} else {
-				v.AppendString("\n")
+				v.AppendString(EOL)
 			}
 		}
 		v.depth--

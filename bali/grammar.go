@@ -31,7 +31,7 @@ var grammar = map[string]string{
 	"$BASE16":       `"0".."9" | "a".."f"`,
 	"$BASE32":       `"0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"`,
 	"$BASE64":       `"A".."Z" | "a".."z" | "0".."9" | "+" | "/"`,
-	"$BINARY":       `"'>" {BASE64 | SPACE | EOL} "<'"`,
+	"$BINARY":       `"'>" EOL {BASE64 | SPACE | EOL} EOL {SPACE} "<'"`,
 	"$BOOLEAN":      `"false" | "true"`,
 	"$COMMENT":      `"!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.`,
 	"$COMPLEX":      `"(" (RECTANGULAR | POLAR) ")"`,

@@ -18,20 +18,6 @@ import (
 	tes "testing"
 )
 
-func TestSpectrWithBinaries(t *tes.T) {
-	var first = str.BinaryFromArray([]byte{0x0, 0x1, 0x3})
-	var last = str.BinaryFromArray([]byte{0xa, 0xb, 0xc})
-	var s = ran.Spectrum[abs.BinaryLike](first, abs.INCLUSIVE, last)
-	ass.False(t, s.ContainsValue(str.BinaryFromArray([]byte{0x0, 0x0, 0x0})))
-	ass.True(t, s.ContainsValue(first))
-	ass.True(t, s.ContainsValue(str.BinaryFromArray([]byte{0x0, 0x2, 0x3})))
-	ass.True(t, s.ContainsValue(last))
-	ass.False(t, s.ContainsValue(str.BinaryFromArray([]byte{0xa, 0xb, 0xd})))
-	ass.Equal(t, first, s.GetFirst())
-	ass.Equal(t, abs.INCLUSIVE, s.GetExtent())
-	ass.Equal(t, last, s.GetLast())
-}
-
 func TestSpectrWithMonikers(t *tes.T) {
 	var first = str.MonikerFromString("/bali/abstractions")
 	var last = str.MonikerFromString("/bali/strings")

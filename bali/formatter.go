@@ -64,7 +64,7 @@ func (v *formatter) AppendString(s string) {
 
 // This method appends a properly indented newline to the result.
 func (v *formatter) AppendNewline() {
-	var separator = "\n"
+	var separator = EOL
 	var levels = v.depth + v.indentation
 	for level := 0; level < levels; level++ {
 		separator += "    "

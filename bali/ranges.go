@@ -134,10 +134,6 @@ func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, parameters Par
 		var actualFirst = str.QuoteFromString(first.(string))
 		var actualLast = str.QuoteFromString(last.(string))
 		entity = ran.Spectrum[abs.QuoteLike](actualFirst, extent, actualLast)
-	case abs.BinaryLike:
-		var actualFirst = first.(abs.BinaryLike)
-		var actualLast = last.(abs.BinaryLike)
-		entity = ran.Spectrum[abs.BinaryLike](actualFirst, extent, actualLast)
 	case abs.MonikerLike:
 		var actualFirst = first.(abs.MonikerLike)
 		var actualLast = last.(abs.MonikerLike)
@@ -328,9 +324,6 @@ func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 	var endpoint abs.Primitive
 	endpoint, token, ok = v.parseAngle()
 	if !ok {
-		endpoint, token, ok = v.parseBinary()
-	}
-	if !ok {
 		endpoint, token, ok = v.parseDuration()
 	}
 	if !ok {
@@ -386,8 +379,6 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 	// The order of these cases is very important since Go only compares the
 	// set of methods supported by each interface. An interface that is a subset
 	// of another interface must be checked AFTER that interface.
-	case abs.BinaryLike:
-		v.formatBinary(value)
 	case abs.MonikerLike:
 		v.formatMoniker(value)
 	case abs.QuoteLike:

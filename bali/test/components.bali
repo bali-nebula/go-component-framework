@@ -1,7 +1,9 @@
 [
     ~π($units: $radians)
     true($granularity: $boolean)  ! This is a note.
-    '>1234abcd<'  ! This is base 64 encoded.
+    '>
+    1234abcd
+    <'  ! This is base 64 encoded.
     ~P13W
     [
         1

@@ -271,7 +271,7 @@ func (v *scanner) foundBinary() bool {
 	var matches = scanBinary(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.line += sts.Count(matches[0], "\n")
+		v.line += sts.Count(matches[0], EOL)
 		v.emitToken(TokenBinary)
 		return true
 	}
@@ -285,7 +285,7 @@ func (v *scanner) foundComment() bool {
 	var matches = scanComment(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.line += sts.Count(matches[0], "\n")
+		v.line += sts.Count(matches[0], EOL)
 		v.emitToken(TokenComment)
 		return true
 	}
@@ -341,7 +341,7 @@ func (v *scanner) foundEOF() bool {
 // channel. It returns true if an EOL token was found.
 func (v *scanner) foundEOL() bool {
 	var s = v.source[v.nextByte:]
-	if byt.HasPrefix(s, []byte("\n")) {
+	if byt.HasPrefix(s, []byte(EOL)) {
 		v.nextByte++
 		v.emitToken(TokenEOL)
 		v.line++
@@ -414,7 +414,7 @@ func (v *scanner) foundNarrative() bool {
 	var matches = scanNarrative(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.line += sts.Count(matches[0], "\n")
+		v.line += sts.Count(matches[0], EOL)
 		v.emitToken(TokenNarrative)
 		return true
 	}
@@ -601,9 +601,9 @@ func scanAngle(v []byte) []string {
 //	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Binary
 const (
 	space  = ` `
-	eol    = "\n"
+	eol    = EOL
 	base64 = `[A-Za-z0-9+/]`
-	binary = `'>((?:` + base64 + `|` + space + `|` + eol + `)*)<'`
+	binary = `'>` + eol + `((?:` + base64 + `|` + space + `|` + eol + `)*)` + eol + space + `*<'`
 )
 
 // This scanner is used for matching binary strings.
@@ -645,8 +645,8 @@ func scanBoolean(v []byte) []string {
 func scanComment(v []byte) []string {
 	var result []string
 	var space = []byte(" ")
-	var eol = []byte("\n")
-	var bangAngle = []byte("!>" + "\n")
+	var eol = []byte(EOL)
+	var bangAngle = []byte("!>" + EOL)
 	var angleBang = []byte("<!")
 	if !byt.HasPrefix(v, bangAngle) {
 		return result
@@ -838,10 +838,10 @@ func scanMoniker(v []byte) []string {
 // not used in this implementation.
 func scanNarrative(v []byte) []string {
 	var result []string
-	var quoteAngle = []byte(`">` + "\n")
+	var quoteAngle = []byte(`">` + EOL)
 	var angleQuote = []byte(`<"`)
 	var space = []byte(" ")
-	var eol = []byte("\n")
+	var eol = []byte(EOL)
 	if !byt.HasPrefix(v, quoteAngle) {
 		return result
 	}

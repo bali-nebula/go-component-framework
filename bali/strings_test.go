@@ -18,14 +18,14 @@ import (
 )
 
 func TestEmptyBinary(t *tes.T) {
-	var v = bal.Binary("'><'")
+	var v = bal.Binary("'>\n\n<'")
 	ass.Equal(t, "", v.AsString())
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 }
 
 func TestBinary(t *tes.T) {
-	var v = bal.Binary("'>abcd1234<'")
+	var v = bal.Binary("'>\nabcd1234\n<'")
 	ass.Equal(t, "abcd1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
@@ -50,7 +50,7 @@ func TestMoniker(t *tes.T) {
 
 func TestEmptyNarrative(t *tes.T) {
 	var v = bal.Narrative(`">
-    
+
 <"`)
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 1, v.GetSize())
@@ -59,8 +59,8 @@ func TestEmptyNarrative(t *tes.T) {
 
 func TestNarrative(t *tes.T) {
 	var v = bal.Narrative(`">
-    This is a narrative
-    containing " marks.
+This is a narrative
+containing " marks.
 <"`)
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 2, v.GetSize())

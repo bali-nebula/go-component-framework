@@ -172,9 +172,7 @@ func (v *formatter) formatBinary(binary abs.BinaryLike) {
 	v.AppendString("'>")
 	var s = binary.AsString()
 	var length = len(s)
-	if length > lineLength {
-		// Spans multiple lines.
-		v.depth++
+	if length > 0 {
 		for index := 0; index < length; {
 			v.AppendNewline()
 			var next = index + lineLength
@@ -184,11 +182,10 @@ func (v *formatter) formatBinary(binary abs.BinaryLike) {
 			v.AppendString(s[index:next])
 			index = next
 		}
-		v.depth--
-		v.AppendNewline()
 	} else {
-		v.AppendString(s)
+		v.AppendString(EOL)
 	}
+	v.AppendNewline()
 	v.AppendString("<'")
 }
 
@@ -232,14 +229,14 @@ func (v *parser) parseNarrative() (abs.NarrativeLike, *Token, bool) {
 // of the formatter.
 func (v *formatter) formatNarrative(narrative abs.NarrativeLike) {
 	var s = narrative.AsString()
-	var lines = sts.Split(s, "\n")
+	var lines = sts.Split(s, EOL)
 	v.AppendString(`">`)
 	for _, line := range lines {
 		if len(line) > 0 {
 			v.AppendNewline()
-			v.AppendString("    " + line)
+			v.AppendString(line)
 		} else {
-			v.AppendString("\n")
+			v.AppendString(EOL)
 		}
 	}
 	v.AppendNewline()

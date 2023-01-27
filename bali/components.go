@@ -21,10 +21,16 @@ import (
 	sts "strings"
 )
 
+// CONSTANT DEFINITIONS
+
+const (
+	EOL = "\n" // The POSIX end of line character.
+)
+
 // TYPE DEFINITIONS
 
 type (
-	Parameters   [][2]any
+	Parameters [][2]any
 )
 
 // UNIVERSAL CONSTRUCTORS
@@ -108,9 +114,9 @@ func (v *formatter) formatComment(comment abs.CommentLike) {
 		var line = iterator.GetNext()
 		if len(line) > 0 {
 			v.AppendNewline()
-			v.AppendString("    " + line)
+			v.AppendString(line)
 		} else {
-			v.AppendString("\n")
+			v.AppendString(EOL)
 		}
 	}
 	v.AppendNewline()
@@ -522,30 +528,30 @@ func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 // The following is an indented string with dashes showing the indentation:
 //
 //	----xx
-//	--------This is the first line
-//	--------of a multi-line
-//	--------indented string.
+//	----  This is the first line
+//	----of a short, multi-line
+//	----indented paragraph.
 //	----xx
 //
 // It will be trimmed to:
 //
-//	This is the first line
-//	of a multi-line
-//	indented string.
+//	  This is the first line
+//	of a short, multi-line
+//	indented paragraph.
 //
-// Only the indented lines remain and are no longer indented.
+// The remaining lines are no longer indented.
 func trimIndentation(v string) string {
 	var trimmed string
-	var lines = sts.Split(v, "\n")
+	var lines = sts.Split(v, EOL)
 	var size = len(lines) - 1
 	var last = lines[size]
-	var indentation = len(last) + 2 // The number of spaces in the last line plus four more.
+	var indentation = len(last) - 2 // The number of spaces in the indentation of the last line.
 	lines = lines[1:size]           // Strip off the first and last delimitier lines.
 	for _, line := range lines {
 		if len(line) < indentation {
-			trimmed += "\n" // This is an empty line.
+			trimmed += EOL // This is an empty line.
 		} else {
-			trimmed += line[indentation:] + "\n" // Strip off the indentation.
+			trimmed += line[indentation:] + EOL // Strip off the indentation.
 		}
 	}
 	return trimmed[:len(trimmed)-1] // Strip off the extra end-of-line character.

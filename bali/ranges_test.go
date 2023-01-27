@@ -17,7 +17,6 @@ import (
 )
 
 var firstAngle, lastAngle = bal.Angle("~0"), bal.Angle("~π")
-var firstBinary, lastBinary = bal.Binary("'>abcd<'"), bal.Binary("'>abce<'")
 var firstDuration, lastDuration = bal.Duration(12), bal.Duration(123)
 var firstFloat, lastFloat = -1.2, 3.4
 var firstInt, lastInt = 3, 7
@@ -36,7 +35,6 @@ var firstTag, lastTag = bal.Tag("#TAB"), bal.Tag("#TAG")
 var firstVersion, lastVersion = bal.Version("v1.2"), bal.Version("v1.2.3")
 
 func TestSpectra(t *tes.T) {
-	bal.Spectrum(firstBinary, abs.INCLUSIVE, lastBinary, nil)
 	bal.Spectrum(firstMoniker, abs.INCLUSIVE, lastMoniker, nil)
 	bal.Spectrum(firstPattern, abs.INCLUSIVE, lastPattern, nil)
 	bal.Spectrum(firstQuote, abs.INCLUSIVE, lastQuote, nil)
