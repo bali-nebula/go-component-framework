@@ -17,7 +17,7 @@ import (
 )
 
 var firstAngle, lastAngle = bal.Angle("~0"), bal.Angle("~π")
-var firstBinary, lastBinary = bal.Binary("'abcd'"), bal.Binary("'abce'")
+var firstBinary, lastBinary = bal.Binary("'>abcd<'"), bal.Binary("'>abce<'")
 var firstDuration, lastDuration = bal.Duration(12), bal.Duration(123)
 var firstFloat, lastFloat = -1.2, 3.4
 var firstInt, lastInt = 3, 7

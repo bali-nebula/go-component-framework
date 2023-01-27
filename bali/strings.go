@@ -154,7 +154,7 @@ func (v *parser) parseBinary() (abs.BinaryLike, *Token, bool) {
 		return binary, token, false
 	}
 	var matches = scanBinary([]byte(token.Value))
-	// Remove all whitespace and the "'" delimiters.
+	// Remove all whitespace and the "'>" and "<'" delimiters.
 	binary = str.BinaryFromString(sts.Map(func(r rune) rune {
 		if uni.IsSpace(r) {
 			return -1
@@ -169,7 +169,7 @@ const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
 // This method adds the canonical format for the specified string to the state
 // of the formatter.
 func (v *formatter) formatBinary(binary abs.BinaryLike) {
-	v.AppendString("'")
+	v.AppendString("'>")
 	var s = binary.AsString()
 	var length = len(s)
 	if length > lineLength {
@@ -189,7 +189,7 @@ func (v *formatter) formatBinary(binary abs.BinaryLike) {
 	} else {
 		v.AppendString(s)
 	}
-	v.AppendString("'")
+	v.AppendString("<'")
 }
 
 // This method attempts to parse a moniker string. It returns the moniker string

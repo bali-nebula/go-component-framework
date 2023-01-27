@@ -18,14 +18,14 @@ import (
 )
 
 func TestEmptyBinary(t *tes.T) {
-	var v = bal.Binary("''")
+	var v = bal.Binary("'><'")
 	ass.Equal(t, "", v.AsString())
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 }
 
 func TestBinary(t *tes.T) {
-	var v = bal.Binary("'abcd1234'")
+	var v = bal.Binary("'>abcd1234<'")
 	ass.Equal(t, "abcd1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
