@@ -603,7 +603,7 @@ const (
 	space  = ` `
 	eol    = EOL
 	base64 = `[A-Za-z0-9+/]`
-	binary = `'>` + eol + `((?:` + base64 + `|` + space + `|` + eol + `)*)` + eol + space + `*<'`
+	binary = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)+)` + space + `*<'`
 )
 
 // This scanner is used for matching binary strings.

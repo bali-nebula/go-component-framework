@@ -17,13 +17,6 @@ import (
 	tes "testing"
 )
 
-func TestEmptyBinary(t *tes.T) {
-	var v = bal.Binary("'>\n\n<'")
-	ass.Equal(t, "", v.AsString())
-	ass.True(t, v.IsEmpty())
-	ass.Equal(t, 0, v.GetSize())
-}
-
 func TestBinary(t *tes.T) {
 	var v = bal.Binary("'>\nabcd1234\n<'")
 	ass.Equal(t, "abcd1234", v.AsString())
