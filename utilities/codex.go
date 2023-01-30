@@ -12,11 +12,29 @@ package utilities
 
 import (
 	b64 "encoding/base64"
+	b16 "encoding/hex"
 	fmt "fmt"
 	mat "math"
 	sts "strings"
 	uni "unicode"
 )
+
+// This function encodes the specified bytes as a base 16 encoded string using
+// standard base 16 encoding with no padding.
+func Base16Encode(bytes []byte) string {
+	var encoded = b16.EncodeToString(bytes)
+	return encoded
+}
+
+// This function decodes the specified base 16 encoded string into its
+// corresponding decoded bytes.
+func Base16Decode(encoded string) []byte {
+	var bytes, err = b16.DecodeString(encoded)
+	if err != nil {
+		panic(fmt.Sprintf("The binary data was not encoded using base 16: %s", encoded))
+	}
+	return bytes
+}
 
 // This function encodes the specified bytes as a base 32 string using the
 // ten digits and all UPPER CASE letters except 'E', 'I', 'O', and 'U'.
@@ -56,7 +74,7 @@ func Base32Decode(encoded string) []byte {
 	for index, r := range encoded {
 		var chunk = byte(sts.Index(base32LookupTable, string(r)))
 		if chunk < 0 {
-			panic(fmt.Sprintf("The binary string was not encoded using base 32: %s", encoded))
+			panic(fmt.Sprintf("The binary data was not encoded using base 32: %s", encoded))
 		}
 		if index < size-1 {
 			base32DecodeBytes(chunk, index, bytes)
@@ -79,7 +97,7 @@ func Base64Encode(bytes []byte) string {
 func Base64Decode(encoded string) []byte {
 	var bytes, err = b64.RawStdEncoding.DecodeString(encoded)
 	if err != nil {
-		panic(fmt.Sprintf("The binary string was not encoded using base 64: %s", encoded))
+		panic(fmt.Sprintf("The binary data was not encoded using base 64: %s", encoded))
 	}
 	return bytes
 }

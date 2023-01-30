@@ -392,6 +392,8 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 	// of another interface must be checked AFTER that interface.
 	case abs.BinaryLike:
 		v.formatBinary(value)
+	case abs.BytecodeLike:
+		v.formatBytecode(value)
 	case abs.MonikerLike:
 		v.formatMoniker(value)
 	case abs.NarrativeLike:

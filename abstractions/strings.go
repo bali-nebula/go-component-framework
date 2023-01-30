@@ -16,6 +16,7 @@ type (
 	Line    string
 	Name    string
 	Ordinal uint
+	Instruction uint16
 	String  any
 )
 
@@ -32,6 +33,12 @@ type BinaryLike interface {
 	Spectral
 	Sequential[byte]
 	Accessible[byte]
+}
+
+type BytecodeLike interface {
+	Spectral
+	Sequential[Instruction]
+	Accessible[Instruction]
 }
 
 type MonikerLike interface {

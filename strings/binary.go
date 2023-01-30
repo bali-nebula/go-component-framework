@@ -23,10 +23,8 @@ import (
 // These constants are used to define a regular expression for matching
 // binary strings.
 const (
-	space  = ` `
-	eol    = "\n"
 	base64 = `[A-Za-z0-9+/]`
-	binary = `((?:` + base64 + `|` + space + `|` + eol + `)*)`
+	binary = `(` + base64 + `*)`
 )
 
 // This scanner is used for matching binary strings.

@@ -45,6 +45,30 @@ func Binary(value abs.Value) abs.BinaryLike {
 	return binary
 }
 
+// This constructor returns a new bytecode string initialized with the specified
+// value.
+func Bytecode(value abs.Value) abs.BytecodeLike {
+	var bytecode abs.BytecodeLike
+	switch actual := value.(type) {
+	case []abs.Instruction:
+		bytecode = str.BytecodeFromArray(actual)
+	case abs.Sequential[abs.Instruction]:
+		bytecode = str.BytecodeFromSequence(actual)
+	case string:
+		bytecode = ParseEntity(actual).(abs.BytecodeLike)
+	case abs.BytecodeLike:
+		bytecode = actual
+	case abs.ComponentLike:
+		bytecode = actual.GetEntity().(abs.BytecodeLike)
+	default:
+		var message = fmt.Sprintf(
+			"The value (of type %T) cannot be converted to a bytecode string: %v",
+			actual, actual)
+		panic(message)
+	}
+	return bytecode
+}
+
 // This constructor returns a new moniker string initialized with the specified
 // value.
 func Moniker(value abs.Value) abs.MonikerLike {
@@ -182,11 +206,46 @@ func (v *formatter) formatBinary(binary abs.BinaryLike) {
 			v.AppendString(s[index:next])
 			index = next
 		}
-	} else {
-		v.AppendString(EOL)
 	}
 	v.AppendNewline()
 	v.AppendString("<'")
+}
+
+// This method attempts to parse a bytecode string. It returns the bytecode
+// string and whether or not the bytecode string was successfully parsed.
+func (v *parser) parseBytecode() (abs.BytecodeLike, *Token, bool) {
+	var token *Token
+	var bytecode abs.BytecodeLike
+	token = v.nextToken()
+	if token.Type != TokenBytecode {
+		v.backupOne()
+		return bytecode, token, false
+	}
+	var matches = scanBytecode([]byte(token.Value))
+	// Remove all whitespace and the "'" delimiters.
+	bytecode = str.BytecodeFromString(sts.Map(func(r rune) rune {
+		if uni.IsSpace(r) {
+			return -1
+		}
+		return r
+	}, matches[1]))
+	return bytecode, token, true
+}
+
+// This method adds the canonical format for the specified string to the state
+// of the formatter.
+func (v *formatter) formatBytecode(bytecode abs.BytecodeLike) {
+	v.AppendString("'")
+	var s = bytecode.AsString()
+	var length = len(s)
+	if length > 0 {
+		v.AppendString(s[0:4])
+	}
+	for index := 4; index < length; index += 4 {
+		v.AppendString(" ")
+		v.AppendString(s[index: index + 4])
+	}
+	v.AppendString("'")
 }
 
 // This method attempts to parse a moniker string. It returns the moniker string
@@ -284,6 +343,9 @@ func (v *parser) parseString() (abs.String, *Token, bool) {
 	}
 	if !ok {
 		s, token, ok = v.parseBinary()
+	}
+	if !ok {
+		s, token, ok = v.parseBytecode()
 	}
 	if !ok {
 		s, token, ok = v.parseNarrative()

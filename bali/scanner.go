@@ -33,6 +33,7 @@ const (
 	TokenAngle
 	TokenBinary
 	TokenBoolean
+	TokenBytecode
 	TokenComment
 	TokenDelimiter
 	TokenDuration
@@ -62,6 +63,7 @@ func (v TokenType) String() string {
 		"Angle",
 		"Binary",
 		"Boolean",
+		"Bytecode",
 		"Comment",
 		"Delimiter",
 		"Duration",
@@ -175,6 +177,7 @@ func (v *scanner) scanToken() bool {
 	case v.foundTag():
 	case v.foundMoniker():
 	case v.foundBinary():
+	case v.foundBytecode(): // Must be after foundBinary().
 	case v.foundResource():
 	case v.foundMoment():
 	case v.foundDuration():
@@ -251,6 +254,20 @@ func (v *scanner) foundAngle() bool {
 	return false
 }
 
+// This method adds a binary string token with the current scanner information to
+// the token channel. It returns true if a binary token was found.
+func (v *scanner) foundBinary() bool {
+	var s = v.source[v.nextByte:]
+	var matches = scanBinary(s)
+	if len(matches) > 0 {
+		v.nextByte += len(matches[0])
+		v.line += sts.Count(matches[0], EOL)
+		v.emitToken(TokenBinary)
+		return true
+	}
+	return false
+}
+
 // This method adds a boolean element token with the current scanner information
 // to the token channel. It returns true if a boolean token was found.
 func (v *scanner) foundBoolean() bool {
@@ -264,15 +281,14 @@ func (v *scanner) foundBoolean() bool {
 	return false
 }
 
-// This method adds a binary string token with the current scanner information to
-// the token channel. It returns true if a binary token was found.
-func (v *scanner) foundBinary() bool {
+// This method adds a bytecode string token with the current scanner information to
+// the token channel. It returns true if a bytecode token was found.
+func (v *scanner) foundBytecode() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanBinary(s)
+	var matches = scanBytecode(s)
 	if len(matches) > 0 {
 		v.nextByte += len(matches[0])
-		v.line += sts.Count(matches[0], EOL)
-		v.emitToken(TokenBinary)
+		v.emitToken(TokenBytecode)
 		return true
 	}
 	return false
@@ -603,7 +619,7 @@ const (
 	space  = ` `
 	eol    = EOL
 	base64 = `[A-Za-z0-9+/]`
-	binary = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)+)` + space + `*<'`
+	binary = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)*)` + space + `*<'`
 )
 
 // This scanner is used for matching binary strings.
@@ -634,6 +650,27 @@ var booleanScanner = reg.MustCompile(`^(?:` + boolean + `)`)
 // matched string.
 func scanBoolean(v []byte) []string {
 	return bytesToStrings(booleanScanner.FindSubmatch(v))
+}
+
+// BYTECODE STRING SYNTAX
+
+// These constants are used to form a regular expression for valid bytecode
+// strings. See the language specification for the exact grammar:
+//
+//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Bytecode
+const (
+	instruction = base16 + base16 + base16 + base16
+	bytecode = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
+)
+
+// This scanner is used for matching bytecode strings.
+var bytecodeScanner = reg.MustCompile(`^(?:` + bytecode + `)`)
+
+// This function returns for the specified string an array of the matching
+// subgroups for a bytecode string. The first string in the array is the entire
+// matched string.
+func scanBytecode(v []byte) []string {
+	return bytesToStrings(bytecodeScanner.FindSubmatch(v))
 }
 
 // COMMENT SYNTAX
