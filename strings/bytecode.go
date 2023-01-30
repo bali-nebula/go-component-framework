@@ -41,16 +41,17 @@ func BytecodeFromString(v string) abs.BytecodeLike {
 // This constructor creates a new bytecode string from the specified instruction array.
 // It returns the corresponding bytecode string.
 func BytecodeFromArray(array []abs.Instruction) abs.BytecodeLike {
-	var bytes = make([]byte, len(array)*2)
-	var index = 0
-	for _, instruction := range array {
+	var bytes = col.List[byte]()
+	var instructions = col.ListFromArray(array)
+	var iterator = col.Iterator[abs.Instruction](instructions)
+	for iterator.HasNext() {
+		var instruction = iterator.GetNext()
 		var firstByte = byte((instruction >> 8) & 0xff)
 		var secondByte = byte(instruction & 0xff)
-		bytes[index] = firstByte
-		bytes[index+1] = secondByte
-		index += 2
+		bytes.AddValue(firstByte)
+		bytes.AddValue(secondByte)
 	}
-	var encoded = uti.Base16Encode(bytes)
+	var encoded = uti.Base16Encode(bytes.AsArray())
 	return Bytecode(encoded)
 }
 
@@ -89,15 +90,17 @@ func (v Bytecode) GetSize() int {
 // are in the same order as they are in the string.
 func (v Bytecode) AsArray() []abs.Instruction {
 	var encoded = string(v)
-	var bytes = uti.Base16Decode(encoded)
-	var instructions = make([]abs.Instruction, len(bytes)/2)
-	for index := 0; index < len(bytes)-1; index++ {
-		var firstByte = bytes[index]
-		var secondByte = bytes[index+1]
+	var decoded = uti.Base16Decode(encoded)
+	var bytes = col.ListFromArray(decoded)
+	var instructions = col.List[abs.Instruction]()
+	var iterator = col.Iterator[byte](bytes)
+	for iterator.HasNext() {
+		var firstByte = iterator.GetNext()
+		var secondByte = iterator.GetNext()
 		var instruction = abs.Instruction((firstByte << 8) & secondByte)
-		instructions[index/2] = instruction
+		instructions.AddValue(instruction)
 	}
-	return instructions
+	return instructions.AsArray()
 }
 
 // ACCESSIBLE INTERFACE
