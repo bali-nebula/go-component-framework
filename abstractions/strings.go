@@ -20,6 +20,19 @@ type (
 	String  any
 )
 
+func InstructionFromBytes(firstByte, secondByte byte) Instruction {
+	var v = Instruction((firstByte << 8) & secondByte)
+	return v
+}
+
+func (v Instruction) GetFirstByte() byte {
+	return byte(v >> 8)
+}
+
+func (v Instruction) GetSecondByte() byte {
+	return byte(v)
+}
+
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all spectral strings.
