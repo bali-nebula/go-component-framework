@@ -13,27 +13,33 @@ package abstractions
 // TYPE DEFINITIONS
 
 type (
-	Certificate any
-	Citation    any
-	Contract    any
-	Credentials any
-	Document    any
-	Salt        []byte
-	PublicKey   []byte
-	PrivateKey  []byte
-	Digest      []byte
-	Signature   []byte
+	Digest          []byte
+	PrivateKey      []byte
+	PublicKey       []byte
+	Salt            []byte
+	Signature       []byte
+	CertificateLike CatalogLike
+	CitationLike    CatalogLike
+	ContractLike    CatalogLike
+	CredentialsLike CatalogLike
+	DocumentLike    CatalogLike
 )
 
 // INDIVIDUAL INTERFACES
+
+// This interface defines the methods supported by all trusted security
+// modules.
+type Trusted interface {
+	GetVersion() string
+	DigestBytes(bytes []byte) Digest
+	IsValid(publicKey PublicKey, signature Signature, bytes []byte) bool
+}
 
 // This interface defines the methods supported by all hardened security
 // modules.
 type Hardened interface {
 	GenerateKeys() PublicKey
-	DigestBytes(bytes []byte) Digest
 	SignBytes(bytes []byte) Signature
-	IsValid(publicKey PublicKey, signature Signature, bytes []byte) bool
 	RotateKeys() PublicKey
 	EraseKeys()
 }
@@ -41,21 +47,21 @@ type Hardened interface {
 // This interface defines the methods supported by all prudent notary
 // agents.
 type Prudent interface {
-	GenerateKey() Certificate
-	ActivateKey(certificate Certificate) Citation
-	GetCitation() Citation
-	RefreshKey() Certificate
+	GenerateKey() CertificateLike
+	ActivateKey(certificate CertificateLike) CitationLike
+	GetCitation() CitationLike
+	RefreshKey() CertificateLike
 	ForgetKey()
 }
 
 // This interface defines the methods supported by all certified notary
 // agents.
 type Certified interface {
-	GenerateCredentials(salt Salt) Credentials
-	NotarizeDocument(document Document) Contract
-	IsValid(contract Contract, certificate Certificate) bool
-	CiteDocument(document Document) Citation
-	CitationMatches(citation Citation, document Document) bool
+	GenerateCredentials(salt Salt) CredentialsLike
+	NotarizeDocument(document DocumentLike) ContractLike
+	IsValid(contract ContractLike, certificate CertificateLike) bool
+	CiteDocument(document DocumentLike) CitationLike
+	CitationMatches(citation CitationLike, document DocumentLike) bool
 }
 
 // CONSOLIDATED INTERFACES
@@ -63,6 +69,7 @@ type Certified interface {
 // This interface consolidates all the interfaces supported by
 // security-module-like devices.
 type SecurityModuleLike interface {
+	Trusted
 	Hardened
 }
 

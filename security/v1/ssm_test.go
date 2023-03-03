@@ -19,6 +19,7 @@ import (
 func TestSSM(t *tes.T) {
 	var bytes = []byte{0x0, 0x1, 0x2, 0x3, 0x4}
 	var module = ssm.SSM("./")
+	ass.Equal(t, "1", module.GetVersion())
 	ass.Equal(t, 64, len(module.DigestBytes(bytes)))
 
 	var publicKey = module.GenerateKeys()

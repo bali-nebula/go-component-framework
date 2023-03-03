@@ -150,7 +150,7 @@ func (l versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs
 	var ordinals = current.AsArray()
 	var size = abs.Ordinal(len(ordinals))
 	switch {
-	case level < 1:
+	case level < 0:
 		panic("The level of the next version must be positive!")
 	case level < size:
 		// The next version will require fewer levels.

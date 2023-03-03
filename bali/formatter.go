@@ -23,6 +23,13 @@ func FormatEntity(entity abs.Entity) string {
 	return v.FormatEntity(entity)
 }
 
+// This function returns a canonical BDN string for the specified entity
+// using the specified indentation.
+func FormatEntityWithIndentation(entity abs.Entity, indentation int) string {
+	var v = Formatter(indentation)
+	return v.FormatEntity(entity)
+}
+
 // This function returns a canonical BDN string for the specified component.
 func FormatComponent(component abs.ComponentLike) string {
 	var v = Formatter(0)

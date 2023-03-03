@@ -10,13 +10,6 @@
 
 package abstractions
 
-// TYPE DEFINITIONS
-
-type (
-	Event string
-	State string
-)
-
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all custodial agents.
@@ -29,9 +22,9 @@ type Custodial interface {
 
 // This interface defines the methods supported by all mechanized agents.
 type Mechanized interface {
-	GetState() State
-	SetState(state State)
-	TransitionState(event Event) State
+	GetState() int
+	SetState(state int)
+	TransitionState(event int) int
 }
 
 // CONSOLIDATED INTERFACES
