@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package contracts
+package documents
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
@@ -17,53 +17,63 @@ import (
 	com "github.com/bali-nebula/go-component-framework/components"
 )
 
-// CITATION INTERFACE
+// CONTRACT INTERFACE
 
-// This constructor creates a new citation.
-func Citation(
-	tag abs.TagLike,
-	version abs.VersionLike,
+// This constructor creates a new contract.
+func Contract(
+	document abs.DocumentLike,
+	account abs.TagLike,
 	protocol abs.VersionLike,
-	digest abs.BinaryLike,
-) abs.CitationLike {
+	certificate abs.CitationLike,
+	signature abs.BinaryLike,
+) abs.ContractLike {
 
 	// Create a new catalog for the attributes.
 	var attributes = col.Catalog()
-	attributes.SetValue(tagAttribute, com.Component(tag))
-	attributes.SetValue(versionAttribute, com.Component(version))
+	attributes.SetValue(documentAttribute, com.Component(document))
+	attributes.SetValue(accountAttribute, com.Component(account))
 	attributes.SetValue(protocolAttribute, com.Component(protocol))
-	attributes.SetValue(digestAttribute, com.Component(digest))
+	attributes.SetValue(certificateAttribute, com.Component(certificate))
+	attributes.SetValue(signatureAttribute, com.Component(signature))
 
 	// Create a new context for the type.
 	var context = com.Context()
 	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Citation/v1"))
 
-	// Create a new citation.
-	return &citation{com.ComponentWithContext(attributes, context)}
+	// Create a new contract.
+	return &contract{com.ComponentWithContext(attributes, context)}
 }
 
-// CITATION IMPLEMENTATION
+// CONTRACT IMPLEMENTATION
 
-type citation struct {
+type contract struct {
 	abs.Encapsulated
 }
 
-func (v *citation) GetDigest() abs.BinaryLike {
-	return v.GetContext().GetValue(digestAttribute).ExtractBinary()
+func (v *contract) GetAccount() abs.TagLike {
+	return v.GetContext().GetValue(accountAttribute).ExtractTag()
 }
 
-func (v *citation) GetProtocol() abs.VersionLike {
+func (v *contract) GetCertificate() abs.CitationLike {
+	return v.GetContext().GetValue(versionAttribute).(abs.CitationLike)
+}
+
+func (v *contract) GetDocument() abs.DocumentLike {
+	return v.GetContext().GetValue(documentAttribute).(abs.DocumentLike)
+}
+
+func (v *contract) GetProtocol() abs.VersionLike {
 	return v.GetContext().GetValue(protocolAttribute).ExtractVersion()
 }
 
-func (v *citation) GetTag() abs.TagLike {
-	return v.GetContext().GetValue(tagAttribute).ExtractTag()
+func (v *contract) GetSignature() abs.BinaryLike {
+	return v.GetContext().GetValue(signatureAttribute).ExtractBinary()
 }
 
-func (v *citation) GetType() abs.TypeLike {
+func (v *contract) GetTimestamp() abs.MomentLike {
+	return v.GetContext().GetValue(timestampAttribute).ExtractMoment()
+}
+
+func (v *contract) GetType() abs.TypeLike {
 	return v.GetContext().GetValue(typeAttribute).(abs.TypeLike)
-}
-
-func (v *citation) GetVersion() abs.VersionLike {
-	return v.GetContext().GetValue(versionAttribute).ExtractVersion()
 }

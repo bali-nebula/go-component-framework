@@ -36,8 +36,8 @@ func Catalog(source string) abs.CatalogLike {
 func CatalogWithContext(associations Associations, parameters Parameters) abs.ComponentLike {
 	var catalog = col.Catalog()
 	for _, association := range associations {
-		var key = ComponentWithContext(association[0], nil).GetEntity()
-		var value = ComponentWithContext(association[1], nil)
+		var key = Component(association[0]).GetEntity()
+		var value = Component(association[1])
 		catalog.SetValue(key, value)
 	}
 	return ComponentWithContext(catalog, parameters)
@@ -54,7 +54,7 @@ func ListWithContext(components Components, parameters Parameters) abs.Component
 	var component abs.ComponentLike
 	var list = col.List()
 	for _, value := range components {
-		component = ComponentWithContext(value, nil)
+		component = Component(value)
 		list.AddValue(component)
 	}
 	return ComponentWithContext(list, parameters)
@@ -83,7 +83,7 @@ func SetWithContext(components Components, parameters Parameters) abs.ComponentL
 	var component abs.ComponentLike
 	var set = col.Set()
 	for _, value := range components {
-		component = ComponentWithContext(value, nil)
+		component = Component(value)
 		set.AddValue(component)
 	}
 	return ComponentWithContext(set, parameters)

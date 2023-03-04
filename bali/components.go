@@ -37,6 +37,13 @@ type (
 
 // This constructor returns a new component initialized with the specified
 // value.
+func Component(value abs.Value) abs.ComponentLike {
+	var context abs.ContextLike
+	return com.ComponentWithContext(value, context)
+}
+
+// This constructor returns a new component initialized with the specified
+// value and context parameters.
 func ComponentWithContext(value abs.Value, parameters Parameters) abs.ComponentLike {
 	var context abs.ContextLike
 	if len(parameters) > 0 {

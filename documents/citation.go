@@ -8,64 +8,62 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package contracts
+package documents
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	bal "github.com/bali-nebula/go-component-framework/bali"
 	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
-	ele "github.com/bali-nebula/go-component-framework/elements"
 )
 
-// CREDENTIALS INTERFACE
+// CITATION INTERFACE
 
-// This constructor creates a new credentials.
-func Credentials(
-	salt abs.BinaryLike,
-) abs.CredentialsLike {
+// This constructor creates a new citation.
+func Citation(
+	tag abs.TagLike,
+	version abs.VersionLike,
+	protocol abs.VersionLike,
+	digest abs.BinaryLike,
+) abs.CitationLike {
 
 	// Create a new catalog for the attributes.
 	var attributes = col.Catalog()
-	attributes.SetValue(saltAttribute, com.Component(salt))
+	attributes.SetValue(tagAttribute, com.Component(tag))
+	attributes.SetValue(versionAttribute, com.Component(version))
+	attributes.SetValue(protocolAttribute, com.Component(protocol))
+	attributes.SetValue(digestAttribute, com.Component(digest))
 
-	// Create a new context.
+	// Create a new context for the type.
 	var context = com.Context()
-	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Credentials/v1"))
-	context.SetValue(tagAttribute, com.Component(ele.TagOfSize(20)))
-	context.SetValue(versionAttribute, com.Component(v1))
-	context.SetValue(permissionsAttribute, bal.ParseComponent("/nebula/permissions/private/v1"))
+	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Citation/v1"))
 
-	// Create a new credentials.
-	return &credentials{com.ComponentWithContext(attributes, context)}
+	// Create a new citation.
+	return &citation{com.ComponentWithContext(attributes, context)}
 }
 
-// CREDENTIALS IMPLEMENTATION
+// CITATION IMPLEMENTATION
 
-type credentials struct {
+type citation struct {
 	abs.Encapsulated
 }
 
-func (v *credentials) GetSalt() abs.BinaryLike {
-	return v.ExtractCatalog().GetValue(saltAttribute).ExtractBinary()
+func (v *citation) GetDigest() abs.BinaryLike {
+	return v.GetContext().GetValue(digestAttribute).ExtractBinary()
 }
 
-func (v *credentials) GetPermissions() abs.MonikerLike {
-	return v.GetContext().GetValue(permissionsAttribute).ExtractMoniker()
+func (v *citation) GetProtocol() abs.VersionLike {
+	return v.GetContext().GetValue(protocolAttribute).ExtractVersion()
 }
 
-func (v *credentials) GetPrevious() abs.CitationLike {
-	return v.GetContext().GetValue(previousAttribute).ExtractCatalog().(abs.CitationLike)
-}
-
-func (v *credentials) GetTag() abs.TagLike {
+func (v *citation) GetTag() abs.TagLike {
 	return v.GetContext().GetValue(tagAttribute).ExtractTag()
 }
 
-func (v *credentials) GetType() abs.TypeLike {
+func (v *citation) GetType() abs.TypeLike {
 	return v.GetContext().GetValue(typeAttribute).(abs.TypeLike)
 }
 
-func (v *credentials) GetVersion() abs.VersionLike {
+func (v *citation) GetVersion() abs.VersionLike {
 	return v.GetContext().GetValue(versionAttribute).ExtractVersion()
 }

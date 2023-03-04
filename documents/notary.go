@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package contracts
+package documents
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
