@@ -55,16 +55,41 @@ var (
 	v3 = str.VersionFromString("3")
 )
 
+// This constant captures the algorithms used in this version of the protocol.
+var algorithms = bal.Catalog(`[
+    $digest: "SHA512"
+    $signature: "ED25519"
+]`)
+
+// These constants define the attribute names for the standard attribues.
+var (
+	accountAttribute     = ele.SymbolFromString("account")
+	algorithmsAttribute  = ele.SymbolFromString("algorithms")
+	certificateAttribute = ele.SymbolFromString("certificate")
+	digestAttribute      = ele.SymbolFromString("digest")
+	documentAttribute    = ele.SymbolFromString("document")
+	keyAttribute         = ele.SymbolFromString("key")
+	permissionsAttribute = ele.SymbolFromString("permissions")
+	previousAttribute    = ele.SymbolFromString("previous")
+	protocolAttribute    = ele.SymbolFromString("protocol")
+	saltAttribute        = ele.SymbolFromString("salt")
+	signatureAttribute   = ele.SymbolFromString("signature")
+	tagAttribute         = ele.SymbolFromString("tag")
+	timestampAttribute   = ele.SymbolFromString("timestamp")
+	typeAttribute        = ele.SymbolFromString("type")
+	versionAttribute     = ele.SymbolFromString("version")
+)
+
 // PRUDENT INTERFACE
 
 // This method generates a new private notary key and returns the corresponding
 // public notary certificate.
 func (v *notary) GenerateKey() abs.CertificateLike {
-	var publicKey = v.hsm.GenerateKeys()
+	var key = v.hsm.GenerateKeys()
 	var tag = ele.TagOfSize(20)
 	var version = v1
-	var previous abs.CertificateLike
-	var certificate = v.createCertificate(publicKey, tag, version, previous)
+	var previous abs.CitationLike
+	var certificate = Certificate(key, algorithms, tag, version, previous)
 	return certificate
 }
 
@@ -142,26 +167,6 @@ func (v *notary) createDocument(
 // citation.
 func (v *notary) createCitation(document abs.DocumentLike) {
 	panic("Not yet implemented.")
-}
-
-// This method creates a new certificate containing the specified public key
-// and associated attributes.
-func (v *notary) createCertificate(
-	publicKey abs.PublicKey,
-	tag abs.TagLike,
-	version abs.VersionLike,
-	previous abs.CitationLike) abs.DocumentLike {
-
-	var documentType = str.MonikerFromString("/nebula/types/Certificate/v1")
-	var attributes = bal.ParseComponent(`[
-    $publicKey: ` + bal.FormatEntityWithIndentation(publicKey, 1) + `
-    $algorithms: [
-        $digest: "SHA512"
-        $signature: "ED25519"
-    ]
-]`).ExtractCatalog()
-	var permissions = str.MonikerFromString("/nebula/permissions/public/v1")
-	return v.createDocument(documentType, attributes, tag, version, permissions, previous)
 }
 
 // This method creates a new digitally signed contract using the specified

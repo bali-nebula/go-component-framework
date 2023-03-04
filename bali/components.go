@@ -37,13 +37,13 @@ type (
 
 // This constructor returns a new component initialized with the specified
 // value.
-func Component(value abs.Value, parameters Parameters) abs.ComponentLike {
+func ComponentWithContext(value abs.Value, parameters Parameters) abs.ComponentLike {
 	var context abs.ContextLike
 	if len(parameters) > 0 {
 		context = com.Context()
 		for _, parameter := range parameters {
 			var name = Symbol(parameter[0])
-			var value = Component(parameter[1], nil)
+			var value = ComponentWithContext(parameter[1], nil)
 			context.SetValue(name, value)
 		}
 	}

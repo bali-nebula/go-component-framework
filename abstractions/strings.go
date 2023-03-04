@@ -13,11 +13,11 @@ package abstractions
 // TYPE DEFINITIONS
 
 type (
-	Line    string
-	Name    string
-	Ordinal uint
+	Line        string
+	Name        string
+	Ordinal     uint
 	Instruction uint16
-	String  any
+	String      any
 )
 
 func InstructionFromBytes(firstByte, secondByte byte) Instruction {

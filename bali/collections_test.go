@@ -23,9 +23,9 @@ func TestCatalogs(t *tes.T) {
 	var foo = bal.Symbol("$foo")
 	var bar = bal.Symbol("$bar")
 	var baz = bal.Symbol("$baz")
-	var one = bal.Component(1, nil)
-	var two = bal.Component(2, nil)
-	var three = bal.Component(3, nil)
+	var one = bal.ComponentWithContext(1, nil)
+	var two = bal.ComponentWithContext(2, nil)
+	var three = bal.ComponentWithContext(3, nil)
 	var catalog = col.Catalog()
 	ass.True(t, catalog.IsEmpty())
 	ass.Equal(t, 0, catalog.GetSize())
@@ -46,9 +46,9 @@ func TestCatalogs(t *tes.T) {
 }
 
 func TestLists(t *tes.T) {
-	var one = bal.Component(1, nil)
-	var two = bal.Component(2, nil)
-	var three = bal.Component(3, nil)
+	var one = bal.ComponentWithContext(1, nil)
+	var two = bal.ComponentWithContext(2, nil)
+	var three = bal.ComponentWithContext(3, nil)
 	var list = col.List()
 	list.SortValues()
 	ass.True(t, list.IsEmpty())
@@ -76,9 +76,9 @@ func TestLists(t *tes.T) {
 
 
 func TestQueueWithConcurrency(t *tes.T) {
-	var one = bal.Component(1, nil)
-	var two = bal.Component(2, nil)
-	var three = bal.Component(3, nil)
+	var one = bal.ComponentWithContext(1, nil)
+	var two = bal.ComponentWithContext(2, nil)
+	var three = bal.ComponentWithContext(3, nil)
 
 	// Create a wait group for synchronization.
 	var wg = new(syn.WaitGroup)
@@ -118,9 +118,9 @@ func TestQueueWithConcurrency(t *tes.T) {
 }
 
 func TestSets(t *tes.T) {
-	var one = bal.Component(1, nil)
-	var two = bal.Component(2, nil)
-	var three = bal.Component(3, nil)
+	var one = bal.ComponentWithContext(1, nil)
+	var two = bal.ComponentWithContext(2, nil)
+	var three = bal.ComponentWithContext(3, nil)
 	var set = col.Set()
 	ass.True(t, set.IsEmpty())
 	ass.Equal(t, 0, set.GetSize())
@@ -146,9 +146,9 @@ func TestSets(t *tes.T) {
 }
 
 func TestStacks(t *tes.T) {
-	var one = bal.Component(1, nil)
-	var two = bal.Component(1, nil)
-	var three = bal.Component(1, nil)
+	var one = bal.ComponentWithContext(1, nil)
+	var two = bal.ComponentWithContext(1, nil)
+	var three = bal.ComponentWithContext(1, nil)
 	var stack = col.Stack()
 	ass.True(t, stack.IsEmpty())
 	ass.Equal(t, 0, stack.GetSize())

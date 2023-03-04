@@ -104,11 +104,11 @@ const (
 )
 
 // This is the latest security protocol used.
-var protocol = bal.ParseEntity(`[
+var protocol = bal.Catalog(`[
     $protocol: v1
     $digest: "sha512"
     $signature: "ed25519"
-]`).(abs.CatalogLike)
+]`)
 
 // TRUSTED INTERFACE
 
@@ -228,10 +228,10 @@ func (v *ssm) setState(state string) {
 
 func (v *ssm) createConfiguration() {
 	v.tag = ele.TagOfSize(20) // Generate a new random tag.
-	var configuration = bal.ParseEntity(`[
+	var configuration = bal.Catalog(`[
     $tag: #` + v.tag.AsString() + `
     $state: "` + v.stateAsString() + `"
-]`).(abs.CatalogLike)
+]`)
 	var document = []byte(bal.FormatEntity(configuration) + "\n")
 	v.configurator.Store(document)
 }

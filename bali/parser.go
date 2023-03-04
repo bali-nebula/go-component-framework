@@ -86,8 +86,7 @@ func ParseComponent(source string) abs.ComponentLike {
 
 // This function parses an entity from a source string.
 func ParseEntity(source string) abs.Entity {
-	var document = []byte(source + EOL) // Append the POSIX compliant EOL character.
-	return ParseDocument(document).GetEntity()
+	return ParseComponent(source).GetEntity()
 }
 
 // PARSER IMPLEMENTATION

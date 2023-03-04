@@ -26,54 +26,79 @@ type (
 
 // UNIVERSAL CONSTRUCTORS
 
+// This function parses a catalog from a source string.
+func Catalog(source string) abs.CatalogLike {
+	return ParseEntity(source).(abs.CatalogLike)
+}
+
 // This constructor returns a new catalog component initialized with the
 // specified associations and parameterized with the specified parameters.
-func Catalog(associations Associations, parameters Parameters) abs.ComponentLike {
+func CatalogWithContext(associations Associations, parameters Parameters) abs.ComponentLike {
 	var catalog = col.Catalog()
 	for _, association := range associations {
-		var key = Component(association[0], nil).GetEntity()
-		var value = Component(association[1], nil)
+		var key = ComponentWithContext(association[0], nil).GetEntity()
+		var value = ComponentWithContext(association[1], nil)
 		catalog.SetValue(key, value)
 	}
-	return Component(catalog, parameters)
+	return ComponentWithContext(catalog, parameters)
+}
+
+// This function parses a catalog from a source string.
+func List(source string) abs.ListLike {
+	return ParseEntity(source).(abs.ListLike)
 }
 
 // This constructor returns a new list component initialized with the
 // specified associations and parameterized with the specified parameters.
-func List(components Components, parameters Parameters) abs.ComponentLike {
+func ListWithContext(components Components, parameters Parameters) abs.ComponentLike {
 	var component abs.ComponentLike
 	var list = col.List()
 	for _, value := range components {
-		component = Component(value, nil)
+		component = ComponentWithContext(value, nil)
 		list.AddValue(component)
 	}
-	return Component(list, parameters)
+	return ComponentWithContext(list, parameters)
+}
+
+// This function parses a catalog from a source string.
+func Queue(source string) abs.QueueLike {
+	return ParseEntity(source).(abs.QueueLike)
 }
 
 // This constructor returns a new queue component with the specified capacity
 // and parameterized with the specified parameters.
-func Queue(capacity int, parameters Parameters) abs.ComponentLike {
+func QueueWithContext(capacity int, parameters Parameters) abs.ComponentLike {
 	var queue = col.QueueWithCapacity(capacity)
-	return Component(queue, parameters)
+	return ComponentWithContext(queue, parameters)
+}
+
+// This function parses a catalog from a source string.
+func Set(source string) abs.SetLike {
+	return ParseEntity(source).(abs.SetLike)
 }
 
 // This constructor returns a new set component initialized with the
 // specified associations and parameterized with the specified parameters.
-func Set(components Components, parameters Parameters) abs.ComponentLike {
+func SetWithContext(components Components, parameters Parameters) abs.ComponentLike {
 	var component abs.ComponentLike
 	var set = col.Set()
 	for _, value := range components {
-		component = Component(value, nil)
+		component = ComponentWithContext(value, nil)
 		set.AddValue(component)
 	}
-	return Component(set, parameters)
+	return ComponentWithContext(set, parameters)
+}
+
+// This function parses a catalog from a source string.
+func Stack(source string) abs.StackLike {
+	return ParseEntity(source).(abs.StackLike)
 }
 
 // This constructor returns a new stack component with the specified capacity
 // and parameterized with the specified parameters.
-func Stack(capacity int, parameters Parameters) abs.ComponentLike {
+func StackWithContext(capacity int, parameters Parameters) abs.ComponentLike {
 	var stack = col.StackWithCapacity(capacity)
-	return Component(stack, parameters)
+	return ComponentWithContext(stack, parameters)
 }
 
 // PRIVATE METHODS
