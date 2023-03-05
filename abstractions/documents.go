@@ -10,16 +10,6 @@
 
 package abstractions
 
-// TYPE DEFINITIONS
-
-type (
-	Digest     []byte
-	PrivateKey []byte
-	PublicKey  []byte
-	Salt       []byte
-	Signature  []byte
-)
-
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all notarized components.
@@ -68,23 +58,6 @@ type Versioned interface {
 	GetPrevious() CitationLike
 }
 
-// This interface defines the methods supported by all trusted security
-// modules.
-type Trusted interface {
-	GetVersion() string
-	DigestBytes(bytes []byte) Digest
-	IsValid(publicKey PublicKey, signature Signature, bytes []byte) bool
-}
-
-// This interface defines the methods supported by all hardened security
-// modules.
-type Hardened interface {
-	GenerateKeys() PublicKey
-	SignBytes(bytes []byte) Signature
-	RotateKeys() PublicKey
-	EraseKeys()
-}
-
 // This interface defines the methods supported by all prudent notary
 // agents.
 type Prudent interface {
@@ -98,7 +71,7 @@ type Prudent interface {
 // This interface defines the methods supported by all certified notary
 // agents.
 type Certified interface {
-	GenerateCredentials(salt Salt) CredentialsLike
+	GenerateCredentials(salt BinaryLike) CredentialsLike
 	NotarizeDocument(document DocumentLike) ContractLike
 	IsValid(contract ContractLike, certificate CertificateLike) bool
 	CiteDocument(document DocumentLike) CitationLike
@@ -157,13 +130,6 @@ type CredentialsLike interface {
 	Typed
 	Restricted
 	Versioned
-}
-
-// This interface consolidates all the interfaces supported by
-// security-module-like devices.
-type SecurityModuleLike interface {
-	Trusted
-	Hardened
 }
 
 // This interface consolidates all the interfaces supported by notary-like

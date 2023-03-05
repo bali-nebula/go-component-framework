@@ -27,6 +27,24 @@ type Mechanized interface {
 	TransitionState(event int) int
 }
 
+// This interface defines the methods supported by all trusted security
+// modules.
+type Trusted interface {
+	GetVersion() string
+	DigestBytes(bytes []byte) []byte
+	IsValid(publicKey []byte, signature []byte, bytes []byte) bool
+}
+
+// This interface defines the methods supported by all hardened security
+// modules.
+type Hardened interface {
+	GetTag() string
+	GenerateKeys() []byte
+	SignBytes(bytes []byte) []byte
+	RotateKeys() []byte
+	EraseKeys()
+}
+
 // CONSOLIDATED INTERFACES
 
 // This interface consolidates all the interfaces supported by configurator-like
@@ -39,4 +57,11 @@ type ConfiguratorLike interface {
 // agents.
 type ControllerLike interface {
 	Mechanized
+}
+
+// This interface consolidates all the interfaces supported by
+// security-module-like devices.
+type SecurityModuleLike interface {
+	Trusted
+	Hardened
 }

@@ -48,7 +48,7 @@ func TagFromArray(v []byte) abs.TagLike {
 // of bytes.
 func TagOfSize(size int) abs.TagLike {
 	if size < 1 {
-		panic("A tag must be at least one byte long!")
+		size = 20 // Default to 20 bytes.
 	}
 	var bytes = uti.RandomBytes(size)
 	var tag = uti.Base32Encode(bytes)

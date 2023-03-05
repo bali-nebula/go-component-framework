@@ -13,46 +13,57 @@ package documents
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	bal "github.com/bali-nebula/go-component-framework/bali"
-	ele "github.com/bali-nebula/go-component-framework/elements"
 	sm1 "github.com/bali-nebula/go-component-framework/security/v1"
 	//sm2 "github.com/bali-nebula/go-component-framework/security/v2"
 	//sm3 "github.com/bali-nebula/go-component-framework/security/v3"
-	str "github.com/bali-nebula/go-component-framework/strings"
 	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // NOTARY INTERFACE
 
-// This constructor creates a new digital notary.
+// This constructor creates a new digital notary. The notary may be used to
+// digitally sign contract documents using the specified hardware security
+// module (HSM). The notary may also be used to validate the signature on a
+// contract that was signed using the current or any previous version of the
+// security protocol used by digital notaries. The HSM will be used to validate
+// all current version signatures while a software security module (SSM) will be
+// used to validate previous version signatures.
 func Notary(hsm abs.SecurityModuleLike) abs.NotaryLike {
-	// Initialize the modules catalog with all software security module versions.
-	// The modules must be ordered with latest version first.
+	if hsm == nil {
+		panic("A security module must be provided to the digital notary.")
+	}
+
+	// Initialize the modules catalog with all versions of software security
+	// modules. The modules must be ordered with latest version first.
 	var modules = col.Catalog[abs.VersionLike, abs.SecurityModuleLike]()
 	//modules.SetValue(v3, sm3.SSM(""))
 	//modules.SetValue(v2, sm2.SSM(""))
 	modules.SetValue(v1, sm1.SSM(""))
 
-	// Replace the corresponding SSM with the HSM (if provided)
-	if hsm != nil {
-		var version = str.VersionFromString(hsm.GetVersion())
-		modules.SetValue(version, hsm)
-	}
-	return &notary{hsm, modules}
+	// Replace the corresponding SSM with the HSM
+	var protocol = bal.Version(hsm.GetVersion())
+	modules.SetValue(protocol, hsm)
+
+	// Create the new notary.
+	var account = hsm.GetTag()
+	return &notary{account, protocol, hsm, modules}
 }
 
 // NOTARY IMPLEMENTATION
 
 // This type defines the structure and methods associated with a digital notary.
 type notary struct {
-	hsm     abs.SecurityModuleLike
-	modules col.CatalogLike[abs.VersionLike, abs.SecurityModuleLike]
+	account  abs.TagLike
+	protocol abs.VersionLike
+	hsm      abs.SecurityModuleLike
+	modules  col.CatalogLike[abs.VersionLike, abs.SecurityModuleLike]
 }
 
 // These constants define the supported versions of the security protocol.
 var (
-	v1 = str.VersionFromString("1")
-	v2 = str.VersionFromString("2")
-	v3 = str.VersionFromString("3")
+	v1 = bal.Version("v1")
+	v2 = bal.Version("v2")
+	v3 = bal.Version("v3")
 )
 
 // This constant captures the algorithms used in this version of the protocol.
@@ -63,40 +74,41 @@ var algorithms = bal.Catalog(`[
 
 // These constants define the attribute names for the standard attribues.
 var (
-	accountAttribute     = ele.SymbolFromString("account")
-	algorithmsAttribute  = ele.SymbolFromString("algorithms")
-	certificateAttribute = ele.SymbolFromString("certificate")
-	digestAttribute      = ele.SymbolFromString("digest")
-	documentAttribute    = ele.SymbolFromString("document")
-	keyAttribute         = ele.SymbolFromString("key")
-	permissionsAttribute = ele.SymbolFromString("permissions")
-	previousAttribute    = ele.SymbolFromString("previous")
-	protocolAttribute    = ele.SymbolFromString("protocol")
-	saltAttribute        = ele.SymbolFromString("salt")
-	signatureAttribute   = ele.SymbolFromString("signature")
-	tagAttribute         = ele.SymbolFromString("tag")
-	timestampAttribute   = ele.SymbolFromString("timestamp")
-	typeAttribute        = ele.SymbolFromString("type")
-	versionAttribute     = ele.SymbolFromString("version")
+	accountAttribute     = bal.Symbol("$account")
+	algorithmsAttribute  = bal.Symbol("$algorithms")
+	certificateAttribute = bal.Symbol("$certificate")
+	digestAttribute      = bal.Symbol("$digest")
+	documentAttribute    = bal.Symbol("$document")
+	keyAttribute         = bal.Symbol("$key")
+	permissionsAttribute = bal.Symbol("$permissions")
+	previousAttribute    = bal.Symbol("$previous")
+	protocolAttribute    = bal.Symbol("$protocol")
+	saltAttribute        = bal.Symbol("$salt")
+	signatureAttribute   = bal.Symbol("$signature")
+	tagAttribute         = bal.Symbol("$tag")
+	timestampAttribute   = bal.Symbol("$timestamp")
+	typeAttribute        = bal.Symbol("$type")
+	versionAttribute     = bal.Symbol("$version")
 )
 
 // PRUDENT INTERFACE
 
 // This method generates a new private notary key and returns the corresponding
 // public notary certificate.
-func (v *notary) GenerateKey() abs.CertificateLike {
-	var key = v.hsm.GenerateKeys()
-	var tag = ele.TagOfSize(20)
-	var version = v1
-	var previous abs.CitationLike
+func (v *notary) GenerateKey() abs.ContractLike {
+	var key = v.hsm.GenerateKeys() // Returns the new public key.
+	var tag = bal.Tag(0)           // Create a new random tag.
+	var version = v1               // The first version of this certificate.
+	var previous abs.CitationLike  // No previous version.
 	var certificate = Certificate(key, algorithms, tag, version, previous)
-	return certificate
-}
-
-// This method activates a new private notary key and returns the a citation to
-// the corresponding public notary certificate.
-func (v *notary) ActivateKey(certificate abs.CertificateLike) abs.CitationLike {
-	panic("Not yet implemented.")
+	var bytes = []byte(bal.FormatDocument(certificate))
+	var digest = v.hsm.DigestBytes(bytes)
+	var citation = Citation(tag, version, v.protocol, digest)
+	var contract = Contract(certificate, v.account, v.protocol, citation)
+	bytes = []byte(bal.FormatDocument(contract))
+	var signature = v.hsm.SignBytes(bytes)
+	contract.SetValue(signatureAttribute, signature)
+	return contract
 }
 
 // This method retrieves a citation to the public notary certificate for the

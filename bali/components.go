@@ -38,8 +38,8 @@ type (
 // This constructor returns a new component initialized with the specified
 // value.
 func Component(value abs.Value) abs.ComponentLike {
-	var context abs.ContextLike
-	return com.ComponentWithContext(value, context)
+	var parameters Parameters
+	return ComponentWithContext(value, parameters)
 }
 
 // This constructor returns a new component initialized with the specified
@@ -58,8 +58,10 @@ func ComponentWithContext(value abs.Value, parameters Parameters) abs.ComponentL
 	switch actual := value.(type) {
 	case uint, uint8, uint16, uint32, uint64, int, int8, int16, int32, int64, float32, float64:
 		entity = Number(actual)
+	case []byte:
+		entity = Binary(actual)
 	case string:
-		entity = Quote(actual)
+		entity = ParseEntity(actual)
 	case abs.ComponentLike:
 		entity = actual.GetEntity()
 	default:

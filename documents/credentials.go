@@ -15,7 +15,6 @@ import (
 	bal "github.com/bali-nebula/go-component-framework/bali"
 	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
-	ele "github.com/bali-nebula/go-component-framework/elements"
 )
 
 // CREDENTIALS INTERFACE
@@ -32,7 +31,7 @@ func Credentials(
 	// Create a new context.
 	var context = com.Context()
 	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Credentials/v1"))
-	context.SetValue(tagAttribute, com.Component(ele.TagOfSize(20)))
+	context.SetValue(tagAttribute, com.Component(bal.Tag(0)))
 	context.SetValue(versionAttribute, com.Component(v1))
 	context.SetValue(permissionsAttribute, bal.ParseComponent("/nebula/permissions/private/v1"))
 

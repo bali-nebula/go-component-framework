@@ -8,18 +8,18 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package v1_test
+package agents_test
 
 import (
-	ssm "github.com/bali-nebula/go-component-framework/security/v1"
+	age "github.com/bali-nebula/go-component-framework/agents"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
 func TestSSM(t *tes.T) {
 	var bytes = []byte{0x0, 0x1, 0x2, 0x3, 0x4}
-	var module = ssm.SSM("./")
-	ass.Equal(t, "1", module.GetVersion())
+	var module = age.SSMv1("./")
+	ass.Equal(t, "v1", module.GetVersion())
 	ass.Equal(t, 64, len(module.DigestBytes(bytes)))
 
 	var publicKey = module.GenerateKeys()
