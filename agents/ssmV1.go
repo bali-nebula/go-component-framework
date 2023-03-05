@@ -28,7 +28,9 @@ import (
 
 // SOFTWARE SECURITY MODULE (SSM) INTERFACE
 
-// This constructor creates a new software security module.
+// This constructor creates a new software security module. It emulates a
+// hardware security module and may be used for testing or, in a trusted
+// cloud environment where it cannot be tampered with.
 func SSMv1(directory string) abs.SecurityModuleLike {
 	var configurator abs.ConfiguratorLike
 	var controller abs.ControllerLike
@@ -113,7 +115,7 @@ func (v *ssmV1) GetVersion() string {
 // the digital digest.
 func (v *ssmV1) DigestBytes(bytes []byte) []byte {
 	var digest = dig.Sum512(bytes)
-	return digest[:]
+	return digest[:] // Convert to a slice.
 }
 
 // This method determines whether or not the specified digital signature is

@@ -20,6 +20,7 @@ type Notarized interface {
 	GetProtocol() VersionLike
 	GetCertificate() CitationLike
 	GetSignature() BinaryLike
+	SetSignature(signature BinaryLike)
 }
 
 // This interface defines the methods supported by all published components.
@@ -48,7 +49,7 @@ type Salted interface {
 
 // This interface defines the methods supported by all typed components.
 type Typed interface {
-	GetType() TypeLike
+	GetType() MonikerLike
 }
 
 // This interface defines the methods supported by all versioned components.
@@ -61,10 +62,9 @@ type Versioned interface {
 // This interface defines the methods supported by all prudent notary
 // agents.
 type Prudent interface {
-	GenerateKey() CertificateLike
-	ActivateKey(certificate CertificateLike) CitationLike
+	GenerateKey() ContractLike
 	GetCitation() CitationLike
-	RefreshKey() CertificateLike
+	RefreshKey() ContractLike
 	ForgetKey()
 }
 

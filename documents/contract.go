@@ -25,20 +25,17 @@ func Contract(
 	account abs.TagLike,
 	protocol abs.VersionLike,
 	certificate abs.CitationLike,
-	signature abs.BinaryLike,
 ) abs.ContractLike {
-
 	// Create a new catalog for the attributes.
 	var attributes = col.Catalog()
 	attributes.SetValue(documentAttribute, com.Component(document))
 	attributes.SetValue(accountAttribute, com.Component(account))
 	attributes.SetValue(protocolAttribute, com.Component(protocol))
 	attributes.SetValue(certificateAttribute, com.Component(certificate))
-	attributes.SetValue(signatureAttribute, com.Component(signature))
 
 	// Create a new context for the type.
 	var context = com.Context()
-	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Citation/v1"))
+	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Contract/v1"))
 
 	// Create a new contract.
 	return &contract{com.ComponentWithContext(attributes, context)}
@@ -70,10 +67,14 @@ func (v *contract) GetSignature() abs.BinaryLike {
 	return v.GetContext().GetValue(signatureAttribute).ExtractBinary()
 }
 
+func (v *contract) SetSignature(signature abs.BinaryLike) {
+	v.GetContext().SetValue(signatureAttribute, bal.Component(signature))
+}
+
 func (v *contract) GetTimestamp() abs.MomentLike {
 	return v.GetContext().GetValue(timestampAttribute).ExtractMoment()
 }
 
-func (v *contract) GetType() abs.TypeLike {
-	return v.GetContext().GetValue(typeAttribute).(abs.TypeLike)
+func (v *contract) GetType() abs.MonikerLike {
+	return v.GetContext().GetValue(typeAttribute).GetEntity().(abs.MonikerLike)
 }

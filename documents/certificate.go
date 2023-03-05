@@ -21,7 +21,7 @@ import (
 
 // This constructor creates a new certificate.
 func Certificate(
-	key abs.PublicKey,
+	key abs.BinaryLike,
 	algorithms abs.CatalogLike,
 	tag abs.TagLike,
 	version abs.VersionLike,
@@ -71,8 +71,8 @@ func (v *certificate) GetTag() abs.TagLike {
 	return v.GetContext().GetValue(tagAttribute).ExtractTag()
 }
 
-func (v *certificate) GetType() abs.TypeLike {
-	return v.GetContext().GetValue(typeAttribute).(abs.TypeLike)
+func (v *certificate) GetType() abs.MonikerLike {
+	return v.GetContext().GetValue(typeAttribute).GetEntity().(abs.MonikerLike)
 }
 
 func (v *certificate) GetVersion() abs.VersionLike {
