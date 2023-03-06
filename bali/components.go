@@ -539,13 +539,15 @@ func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 //	----xx
 //	----  This is the first line
 //	----of a short, multi-line
+//  
 //	----indented paragraph.
-//	----xx
+//	----xx <-- No EOL here
 //
 // It will be trimmed to:
 //
 //	  This is the first line
 //	of a short, multi-line
+//
 //	indented paragraph.
 //
 // The remaining lines are no longer indented.
@@ -554,16 +556,24 @@ func trimIndentation(v string) string {
 	var lines = sts.Split(v, EOL)
 	var size = len(lines) - 1
 	var last = lines[size]
-	var indentation = len(last) - 2 // The number of spaces in the indentation of the last line.
+	var count = len(last) - 2 // The number of spaces in the indentation of the last line.
+	var indentation = sts.Repeat(" ", count)
 	lines = lines[1:size]           // Strip off the first and last delimitier lines.
 	for _, line := range lines {
-		if len(line) < indentation {
+		if !sts.HasPrefix(line, indentation) {
+			line = sts.TrimLeft(line, " ")
+			if len(line) > 0 {
+				// Fix the improper indentation.
+				line = indentation + line
+			}
+		}
+		if len(line) == 0 {
 			trimmed += EOL // This is an empty line.
 		} else {
-			trimmed += line[indentation:] + EOL // Strip off the indentation.
+			trimmed += line[count:] + EOL // Strip off the indentation.
 		}
 	}
-	return trimmed[:len(trimmed)-1] // Strip off the extra end-of-line character.
+	return trimmed[:len(trimmed)-1] // Strip off the last end-of-line character.
 }
 
 // This function checks to see if the entity is a collection and if so adjusts
