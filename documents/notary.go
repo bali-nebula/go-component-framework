@@ -11,6 +11,7 @@
 package documents
 
 import (
+	byt "bytes"
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	age "github.com/bali-nebula/go-component-framework/agents"
@@ -193,11 +194,28 @@ func (v *notary) SignatureMatches(contract abs.ContractLike, certificate abs.Cer
 // This method generates a citation to the specified document and returns that
 // citation.
 func (v *notary) CiteDocument(document abs.DocumentLike) abs.CitationLike {
-	panic("Not yet implemented.")
+	var tag = document.GetTag()
+	var version = document.GetVersion()
+	var bytes = bal.FormatDocument(document)
+	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
+	var citation = Citation(tag, version, v.protocol, digest)
+	return citation
 }
 
 // This method determines whether or not the specified document citation matches
 // the specified document.
 func (v *notary) CitationMatches(citation abs.CitationLike, document abs.DocumentLike) bool {
-	panic("Not yet implemented.")
+	// Retrieve the SSM that supports the required security protocol.
+	var protocol = citation.GetProtocol()
+	var ssm = v.modules.GetValue(protocol)
+	if ssm == nil {
+		var message = fmt.Sprintf(
+			"The required security protocol (%v) is not supported by this digital notary.\n",
+			protocol)
+		panic(message)
+	}
+
+	// Compare the citation digest with a digest of the document.
+	var bytes = bal.FormatDocument(document)
+	return byt.Equal(bytes, citation.GetDigest().AsArray())
 }
