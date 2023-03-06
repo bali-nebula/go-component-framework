@@ -48,33 +48,33 @@ type contract struct {
 }
 
 func (v *contract) GetAccount() abs.TagLike {
-	return v.GetContext().GetValue(accountAttribute).ExtractTag()
+	return v.ExtractCatalog().GetValue(accountAttribute).ExtractTag()
 }
 
 func (v *contract) GetCertificate() abs.CitationLike {
-	return v.GetContext().GetValue(versionAttribute).(abs.CitationLike)
+	return v.ExtractCatalog().GetValue(versionAttribute).(abs.CitationLike)
 }
 
 func (v *contract) GetDocument() abs.DocumentLike {
-	return v.GetContext().GetValue(documentAttribute).(abs.DocumentLike)
+	return v.ExtractCatalog().GetValue(documentAttribute).(abs.DocumentLike)
 }
 
 func (v *contract) GetProtocol() abs.VersionLike {
-	return v.GetContext().GetValue(protocolAttribute).ExtractVersion()
-}
-
-func (v *contract) GetSignature() abs.BinaryLike {
-	return v.GetContext().GetValue(signatureAttribute).ExtractBinary()
-}
-
-func (v *contract) SetSignature(signature abs.BinaryLike) {
-	v.GetContext().SetValue(signatureAttribute, bal.Component(signature))
+	return v.ExtractCatalog().GetValue(protocolAttribute).ExtractVersion()
 }
 
 func (v *contract) GetTimestamp() abs.MomentLike {
-	return v.GetContext().GetValue(timestampAttribute).ExtractMoment()
+	return v.ExtractCatalog().GetValue(timestampAttribute).ExtractMoment()
 }
 
 func (v *contract) GetType() abs.MonikerLike {
 	return v.GetContext().GetValue(typeAttribute).GetEntity().(abs.MonikerLike)
+}
+
+func (v *contract) AddSignature(signature abs.BinaryLike) {
+	v.ExtractCatalog().SetValue(signatureAttribute, bal.Component(signature))
+}
+
+func (v *contract) RemoveSignature() abs.BinaryLike {
+	return v.ExtractCatalog().RemoveValue(signatureAttribute).ExtractBinary()
 }

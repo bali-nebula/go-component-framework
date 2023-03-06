@@ -32,7 +32,7 @@ type Mechanized interface {
 type Trusted interface {
 	GetProtocol() string
 	DigestBytes(bytes []byte) []byte
-	IsValid(publicKey []byte, signature []byte, bytes []byte) bool
+	IsValid(key []byte, signature []byte, bytes []byte) bool
 }
 
 // This interface defines the methods supported by all hardened security

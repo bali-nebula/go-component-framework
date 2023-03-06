@@ -19,8 +19,8 @@ type Notarized interface {
 	GetAccount() TagLike
 	GetProtocol() VersionLike
 	GetCertificate() CitationLike
-	GetSignature() BinaryLike
-	SetSignature(signature BinaryLike)
+	AddSignature(signature BinaryLike)
+	RemoveSignature() BinaryLike
 }
 
 // This interface defines the methods supported by all published components.
@@ -71,9 +71,9 @@ type Prudent interface {
 // This interface defines the methods supported by all certified notary
 // agents.
 type Certified interface {
-	GenerateCredentials(salt BinaryLike) CredentialsLike
+	GenerateCredentials(salt BinaryLike) ContractLike
 	NotarizeDocument(document DocumentLike) ContractLike
-	IsValid(contract ContractLike, certificate CertificateLike) bool
+	SignatureMatches(contract ContractLike, certificate CertificateLike) bool
 	CiteDocument(document DocumentLike) CitationLike
 	CitationMatches(citation CitationLike, document DocumentLike) bool
 }

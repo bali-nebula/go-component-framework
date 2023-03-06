@@ -11,6 +11,7 @@
 package documents
 
 import (
+	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	age "github.com/bali-nebula/go-component-framework/agents"
 	bal "github.com/bali-nebula/go-component-framework/bali"
@@ -103,11 +104,11 @@ func (v *notary) GenerateKey() abs.ContractLike {
 	var certificate = Certificate(key, algorithms, tag, version, previous)
 	var bytes = []byte(bal.FormatEntity(certificate))
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
-	var citation = Citation(tag, version, v.protocol, digest)
-	var contract = Contract(certificate, v.account, v.protocol, citation)
+	v.citation = Citation(tag, version, v.protocol, digest)
+	var contract = Contract(certificate, v.account, v.protocol, v.citation)
 	bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
-	contract.SetSignature(signature)
+	contract.AddSignature(signature)
 	return contract
 }
 
@@ -127,7 +128,7 @@ func (v *notary) RefreshKey() abs.ContractLike {
 	var key = bal.Binary(v.hsm.RotateKeys()) // Returns the new public key.
 	var tag = v.citation.GetTag()            // Create a new random tag.
 	var version = v.citation.GetVersion()    // The NEXT version of this certificate.
-	var previous = v.citation                // No previous version.
+	var previous = v.citation                // Record the previous version.
 	var certificate = Certificate(key, algorithms, tag, version, previous)
 	var bytes = []byte(bal.FormatEntity(certificate))
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
@@ -135,7 +136,7 @@ func (v *notary) RefreshKey() abs.ContractLike {
 	var contract = Contract(certificate, v.account, v.protocol, v.citation)
 	bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
-	contract.SetSignature(signature)
+	contract.AddSignature(signature)
 	return contract
 }
 
@@ -148,20 +149,45 @@ func (v *notary) ForgetKey() {
 
 // This method generates a new set of account credentials that can be used for
 // authentication.
-func (v *notary) GenerateCredentials(salt abs.BinaryLike) abs.CredentialsLike {
-	panic("Not yet implemented.")
+func (v *notary) GenerateCredentials(salt abs.BinaryLike) abs.ContractLike {
+	var credentials = Credentials(salt)
+	var contract = Contract(credentials, v.account, v.protocol, v.citation)
+	var bytes = bal.FormatDocument(contract)
+	var signature = bal.Binary(v.hsm.SignBytes(bytes))
+	contract.AddSignature(signature)
+	return contract
 }
 
 // This method uses the current private notary key to notarized the specified
 // document and returns the resulting contract.
 func (v *notary) NotarizeDocument(document abs.DocumentLike) abs.ContractLike {
-	panic("Not yet implemented.")
+	var contract = Contract(document, v.account, v.protocol, v.citation)
+	var bytes = bal.FormatDocument(contract)
+	var signature = bal.Binary(v.hsm.SignBytes(bytes))
+	contract.AddSignature(signature)
+	return contract
 }
 
-// This method determines whether or not the specified contract is valid using
-// the specified public notary certificate.
-func (v *notary) IsValid(contract abs.ContractLike, certificate abs.CertificateLike) bool {
-	panic("Not yet implemented.")
+// This method determines whether or not the signature on the specified contract
+// is valid using the specified public notary certificate.
+func (v *notary) SignatureMatches(contract abs.ContractLike, certificate abs.CertificateLike) bool {
+	// Retrieve the SSM that supports the required security protocol.
+	var protocol = contract.GetProtocol()
+	var ssm = v.modules.GetValue(protocol)
+	if ssm == nil {
+		var message = fmt.Sprintf(
+			"The required security protocol (%v) is not supported by this digital notary.\n",
+			protocol)
+		panic(message)
+	}
+
+	// Validate the signature on the contract using the public certificate.
+	var key = certificate.GetKey()
+	var signature = contract.RemoveSignature()
+	var bytes = bal.FormatDocument(contract)
+	contract.AddSignature(signature)
+	var isValid = ssm.IsValid(key.AsArray(), signature.AsArray(), bytes)
+	return isValid
 }
 
 // This method generates a citation to the specified document and returns that
@@ -173,31 +199,5 @@ func (v *notary) CiteDocument(document abs.DocumentLike) abs.CitationLike {
 // This method determines whether or not the specified document citation matches
 // the specified document.
 func (v *notary) CitationMatches(citation abs.CitationLike, document abs.DocumentLike) bool {
-	panic("Not yet implemented.")
-}
-
-// PRIVATE METHODS
-
-// This method creates a new document using the specified attributes and returns
-// the new document.
-func (v *notary) createDocument(
-	type_ abs.MonikerLike,
-	attributes abs.CatalogLike,
-	tag abs.TagLike,
-	version abs.VersionLike,
-	permissions abs.MonikerLike,
-	previous abs.CitationLike) abs.CatalogLike {
-	panic("Not yet implemented.")
-}
-
-// This method creates a citation to the specified document and returns the
-// citation.
-func (v *notary) createCitation(document abs.DocumentLike) {
-	panic("Not yet implemented.")
-}
-
-// This method creates a new digitally signed contract using the specified
-// document and public notary certificate.
-func (v *notary) createContract(document abs.DocumentLike, certificate abs.CertificateLike) {
 	panic("Not yet implemented.")
 }

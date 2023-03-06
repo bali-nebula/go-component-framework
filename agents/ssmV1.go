@@ -113,8 +113,8 @@ func (v *ssmV1) DigestBytes(bytes []byte) []byte {
 
 // This method determines whether or not the specified digital signature is
 // valid for the specified bytes using the specified public key.
-func (v *ssmV1) IsValid(public []byte, signature []byte, bytes []byte) bool {
-	var isValid = sig.Verify(sig.PublicKey(public), bytes, signature)
+func (v *ssmV1) IsValid(key []byte, signature []byte, bytes []byte) bool {
+	var isValid = sig.Verify(sig.PublicKey(key), bytes, signature)
 	return isValid
 }
 
