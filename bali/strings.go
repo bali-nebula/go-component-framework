@@ -202,6 +202,7 @@ const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
 // of the formatter.
 func (v *formatter) formatBinary(binary abs.BinaryLike) {
 	v.AppendString("'>")
+	v.depth++
 	var s = binary.AsString()
 	var length = len(s)
 	if length > 0 {
@@ -215,6 +216,7 @@ func (v *formatter) formatBinary(binary abs.BinaryLike) {
 			index = next
 		}
 	}
+	v.depth--
 	v.AppendNewline()
 	v.AppendString("<'")
 }
@@ -298,6 +300,7 @@ func (v *formatter) formatNarrative(narrative abs.NarrativeLike) {
 	var s = narrative.AsString()
 	var lines = sts.Split(s, EOL)
 	v.AppendString(`">`)
+	v.depth++
 	for _, line := range lines {
 		if len(line) > 0 {
 			v.AppendNewline()
@@ -306,6 +309,7 @@ func (v *formatter) formatNarrative(narrative abs.NarrativeLike) {
 			v.AppendString(EOL)
 		}
 	}
+	v.depth--
 	v.AppendNewline()
 	v.AppendString(`<"`)
 }

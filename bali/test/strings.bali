@@ -4,7 +4,7 @@
     '>
     <'
     '>
-    1234abcd
+        1234abcd
     <'
     /bali
     /bali/abstractions/Sequential/v1
@@ -12,25 +12,25 @@
 
     <"
     ">
-      This is a multiline
-    narrative with " marks
+          This is a multiline
+        narrative with " marks
 
-    and a blank line in it.
+        and a blank line in it.
     <"
     ""
     "And this is a quote"
     v1
     v1.2.3
     '>
-    NyiXwRMG7OzG8P8y21A6lTFKWU6sFel5vCaYw1kslyq0gLkJTMHu5iNaFRwZ
+        NyiXwRMG7OzG8P8y21A6lTFKWU6sFel5vCaYw1kslyq0gLkJTMHu5iNaFRwZ
     <'
     '>
-    EEzlwvUOVeuvUfs/IbPxLTZQqSFuy50r/XLCHdtnkB/fdwTzcwd3ManlLh+G
-    WnQ4dN6fednRMep1pKYUVsEXaTz63jIwM62ID0hCukrP3CRiHZwYIgKnQ00w
-    Rrk30KChDM1NILvA675+T6yR7P3xg/d8v/Rd35WPe4fZ5ACLzf6J7+ZTGDws
-    SZX92PsBv+4fiMG4dLUMxjnNVvN9LElT9nVy7BAB9i5PiBOr2hFuV8+FTTBy
-    oE89y7SjSM7BLw7m6DEfYJf5sapuz05pythmmqcqbbU9eDWkEfLbaS5MxYdN
-    JocIaQNamhzDhmriK0WEWNdUdzRC992R2ZkTYAQ8vg
+        EEzlwvUOVeuvUfs/IbPxLTZQqSFuy50r/XLCHdtnkB/fdwTzcwd3ManlLh+G
+        WnQ4dN6fednRMep1pKYUVsEXaTz63jIwM62ID0hCukrP3CRiHZwYIgKnQ00w
+        Rrk30KChDM1NILvA675+T6yR7P3xg/d8v/Rd35WPe4fZ5ACLzf6J7+ZTGDws
+        SZX92PsBv+4fiMG4dLUMxjnNVvN9LElT9nVy7BAB9i5PiBOr2hFuV8+FTTBy
+        oE89y7SjSM7BLw7m6DEfYJf5sapuz05pythmmqcqbbU9eDWkEfLbaS5MxYdN
+        JocIaQNamhzDhmriK0WEWNdUdzRC992R2ZkTYAQ8vg
     <'
     /bali
     /bali/abstractions

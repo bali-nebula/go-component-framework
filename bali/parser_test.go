@@ -35,7 +35,7 @@ func TestParsingRoundtrips(t *tes.T) {
 			var expected, _ = osx.ReadFile(filename)
 			var component = bal.ParseDocument(expected)
 			var document = bal.FormatDocument(component)
-			ass.Equal(t, expected, document)
+			ass.Equal(t, string(expected), string(document))
 		}
 	}
 }

@@ -116,6 +116,7 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatComment(comment abs.CommentLike) {
 	v.AppendString(`!>`)
+	v.depth++
 	var iterator = cof.Iterator[string](comment)
 	for iterator.HasNext() {
 		var line = iterator.GetNext()
@@ -126,6 +127,7 @@ func (v *formatter) formatComment(comment abs.CommentLike) {
 			v.AppendString(EOL)
 		}
 	}
+	v.depth--
 	v.AppendNewline()
 	v.AppendString(`<!`)
 }
@@ -556,24 +558,29 @@ func trimIndentation(v string) string {
 	var lines = sts.Split(v, EOL)
 	var size = len(lines) - 1
 	var last = lines[size]
-	var count = len(last) - 2 // The number of spaces in the indentation of the last line.
+	var count = len(last) + 2 // The correct number of spaces in the indentation.
 	var indentation = sts.Repeat(" ", count)
 	lines = lines[1:size]           // Strip off the first and last delimitier lines.
 	for _, line := range lines {
 		if !sts.HasPrefix(line, indentation) {
+			// Remove any incorrect indentation
 			line = sts.TrimLeft(line, " ")
 			if len(line) > 0 {
-				// Fix the improper indentation.
+				// Insert the correct indentation.
 				line = indentation + line
 			}
 		}
 		if len(line) == 0 {
-			trimmed += EOL // This is an empty line.
+			// This is an empty line.
+			trimmed += EOL
 		} else {
-			trimmed += line[count:] + EOL // Strip off the indentation.
+			// Strip off the indentation.
+			trimmed += line[count:] + EOL
 		}
 	}
-	return trimmed[:len(trimmed)-1] // Strip off the last end-of-line character.
+	// Strip off the last end-of-line character.
+	trimmed = trimmed[:len(trimmed)-1]
+	return trimmed
 }
 
 // This function checks to see if the entity is a collection and if so adjusts
