@@ -16,7 +16,6 @@ import (
 	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
-	str "github.com/bali-nebula/go-component-framework/strings"
 	cof "github.com/craterdog/go-collection-framework/v2"
 	sts "strings"
 )
@@ -27,33 +26,18 @@ const (
 	EOL = "\n" // The POSIX end of line character.
 )
 
-// TYPE DEFINITIONS
-
-type (
-	Parameters [][2]any
-)
-
 // UNIVERSAL CONSTRUCTORS
 
 // This constructor returns a new component initialized with the specified
 // value.
 func Component(value abs.Value) abs.ComponentLike {
-	var parameters Parameters
-	return ComponentWithContext(value, parameters)
+	var context abs.ContextLike
+	return ComponentWithContext(value, context)
 }
 
 // This constructor returns a new component initialized with the specified
-// value and context parameters.
-func ComponentWithContext(value abs.Value, parameters Parameters) abs.ComponentLike {
-	var context abs.ContextLike
-	if len(parameters) > 0 {
-		context = com.Context()
-		for _, parameter := range parameters {
-			var name = Symbol(parameter[0])
-			var value = ComponentWithContext(parameter[1], nil)
-			context.SetValue(name, value)
-		}
-	}
+// value and context.
+func ComponentWithContext(value abs.Value, context abs.ContextLike) abs.ComponentLike {
 	var entity abs.Entity
 	switch actual := value.(type) {
 	case uint, uint8, uint16, uint32, uint64, int, int8, int16, int32, int64, float32, float64:
@@ -71,6 +55,20 @@ func ComponentWithContext(value abs.Value, parameters Parameters) abs.ComponentL
 		return com.ComponentWithContext(entity, context)
 	}
 	return com.Component(entity)
+}
+
+// This constructor returns a new context initialized with the specified value.
+func Context(value abs.Value) abs.ContextLike {
+	var context abs.ContextLike
+	switch actual := value.(type) {
+	case string:
+		context = ParseContext(actual)
+	case abs.ContextLike:
+		context = actual
+	default:
+		panic(fmt.Sprintf("An invalid value (of type %T) was passed as a context: %v", actual, actual))
+	}
+	return context
 }
 
 // PRIVATE METHODS
@@ -629,8 +627,8 @@ func adjustContext(component abs.ComponentLike) abs.ContextLike {
 			context = com.Context()
 			component.SetContext(context)
 		}
-		var name = ele.SymbolFromString("type")
-		var value = com.Component(str.MonikerFromString(type_))
+		var name = Symbol("$type")
+		var value = Component(type_)
 		context.SetValue(name, value)
 	}
 	return context

@@ -18,7 +18,9 @@ import (
 )
 
 func TestBinary(t *tes.T) {
-	var v = bal.Binary("'>\nabcd1234\n<'")
+	var v = bal.Binary(64)
+	ass.Equal(t, 64, v.GetSize())
+	v = bal.Binary("'>\nabcd1234\n<'")
 	ass.Equal(t, "abcd1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())

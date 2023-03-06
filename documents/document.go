@@ -12,6 +12,7 @@ package documents
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	bal "github.com/bali-nebula/go-component-framework/bali"
 	com "github.com/bali-nebula/go-component-framework/components"
 )
 
@@ -30,13 +31,15 @@ func Document(
 	// Create a new context.
 	var context = com.Context()
 	context.SetValue(typeAttribute, type_)
-	context.SetValue(tagAttribute, com.Component(tag))
-	context.SetValue(versionAttribute, com.Component(version))
-	context.SetValue(permissionsAttribute, com.Component(permissions))
-	context.SetValue(previousAttribute, com.Component(previous))
+	context.SetValue(tagAttribute, bal.Component(tag))
+	context.SetValue(versionAttribute, bal.Component(version))
+	context.SetValue(permissionsAttribute, bal.Component(permissions))
+	if previous != nil {
+		context.SetValue(previousAttribute, bal.Component(previous))
+	}
 
 	// Create a new document.
-	return &document{com.ComponentWithContext(attributes, context)}
+	return &document{bal.ComponentWithContext(attributes, context)}
 }
 
 // DOCUMENT IMPLEMENTATION

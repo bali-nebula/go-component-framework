@@ -150,8 +150,8 @@ func (l versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs
 	var ordinals = current.AsArray()
 	var size = abs.Ordinal(len(ordinals))
 	switch {
-	case level < 0:
-		panic("The level of the next version must be positive!")
+	case level == 0:
+		level = size // Normalize the level to the current size.
 	case level < size:
 		// The next version will require fewer levels.
 		size = level
@@ -159,10 +159,8 @@ func (l versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs
 	case level > size:
 		// The next version will require another level.
 		size++
-		level = size // Normalize the level.
+		level = size // Normalize the level to the new size.
 		ordinals = append(ordinals, 0)
-	default:
-		// The level is equal to the current size.
 	}
 
 	// Increment the specified version level.

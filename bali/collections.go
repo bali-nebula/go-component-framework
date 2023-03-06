@@ -32,15 +32,15 @@ func Catalog(source string) abs.CatalogLike {
 }
 
 // This constructor returns a new catalog component initialized with the
-// specified associations and parameterized with the specified parameters.
-func CatalogWithContext(associations Associations, parameters Parameters) abs.ComponentLike {
+// specified associations and parameterized with the specified context.
+func CatalogWithContext(associations Associations, context abs.ContextLike) abs.ComponentLike {
 	var catalog = col.Catalog()
 	for _, association := range associations {
 		var key = Component(association[0]).GetEntity()
 		var value = Component(association[1])
 		catalog.SetValue(key, value)
 	}
-	return ComponentWithContext(catalog, parameters)
+	return ComponentWithContext(catalog, context)
 }
 
 // This function parses a catalog from a source string.
@@ -49,15 +49,15 @@ func List(source string) abs.ListLike {
 }
 
 // This constructor returns a new list component initialized with the
-// specified associations and parameterized with the specified parameters.
-func ListWithContext(components Components, parameters Parameters) abs.ComponentLike {
+// specified associations and parameterized with the specified context.
+func ListWithContext(components Components, context abs.ContextLike) abs.ComponentLike {
 	var component abs.ComponentLike
 	var list = col.List()
 	for _, value := range components {
 		component = Component(value)
 		list.AddValue(component)
 	}
-	return ComponentWithContext(list, parameters)
+	return ComponentWithContext(list, context)
 }
 
 // This function parses a catalog from a source string.
@@ -66,10 +66,10 @@ func Queue(source string) abs.QueueLike {
 }
 
 // This constructor returns a new queue component with the specified capacity
-// and parameterized with the specified parameters.
-func QueueWithContext(capacity int, parameters Parameters) abs.ComponentLike {
+// and parameterized with the specified context.
+func QueueWithContext(capacity int, context abs.ContextLike) abs.ComponentLike {
 	var queue = col.QueueWithCapacity(capacity)
-	return ComponentWithContext(queue, parameters)
+	return ComponentWithContext(queue, context)
 }
 
 // This function parses a catalog from a source string.
@@ -78,15 +78,15 @@ func Set(source string) abs.SetLike {
 }
 
 // This constructor returns a new set component initialized with the
-// specified associations and parameterized with the specified parameters.
-func SetWithContext(components Components, parameters Parameters) abs.ComponentLike {
+// specified associations and parameterized with the specified context.
+func SetWithContext(components Components, context abs.ContextLike) abs.ComponentLike {
 	var component abs.ComponentLike
 	var set = col.Set()
 	for _, value := range components {
 		component = Component(value)
 		set.AddValue(component)
 	}
-	return ComponentWithContext(set, parameters)
+	return ComponentWithContext(set, context)
 }
 
 // This function parses a catalog from a source string.
@@ -95,10 +95,10 @@ func Stack(source string) abs.StackLike {
 }
 
 // This constructor returns a new stack component with the specified capacity
-// and parameterized with the specified parameters.
-func StackWithContext(capacity int, parameters Parameters) abs.ComponentLike {
+// and parameterized with the specified context.
+func StackWithContext(capacity int, context abs.ContextLike) abs.ComponentLike {
 	var stack = col.StackWithCapacity(capacity)
-	return ComponentWithContext(stack, parameters)
+	return ComponentWithContext(stack, context)
 }
 
 // PRIVATE METHODS

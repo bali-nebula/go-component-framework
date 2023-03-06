@@ -99,11 +99,11 @@ var (
 // public notary certificate.
 func (v *notary) GenerateKey() abs.ContractLike {
 	var key = bal.Binary(v.hsm.GenerateKeys()) // Returns the new public key.
-	var tag = bal.Tag(0)                       // Create a new random tag.
-	var version = v1                           // The first version of this certificate.
-	var previous abs.CitationLike              // No previous version.
+	var tag = bal.NewTag()
+	var version = v1              // The first version of this certificate.
+	var previous abs.CitationLike // No previous version.
 	var certificate = Certificate(key, algorithms, tag, version, previous)
-	var bytes = []byte(bal.FormatEntity(certificate))
+	var bytes = []byte(bal.FormatDocument(certificate))
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
 	v.citation = Citation(tag, version, v.protocol, digest)
 	var contract = Contract(certificate, v.account, v.protocol, v.citation)
@@ -127,11 +127,11 @@ func (v *notary) GetCitation() abs.CitationLike {
 // old private notary key. The old private notary key is destroyed.
 func (v *notary) RefreshKey() abs.ContractLike {
 	var key = bal.Binary(v.hsm.RotateKeys()) // Returns the new public key.
-	var tag = v.citation.GetTag()            // Create a new random tag.
-	var version = v.citation.GetVersion()    // The NEXT version of this certificate.
-	var previous = v.citation                // Record the previous version.
+	var tag = v.citation.GetTag()
+	var version = bal.NextVersion(v.citation.GetVersion())
+	var previous = v.citation // Record the previous certificate citation.
 	var certificate = Certificate(key, algorithms, tag, version, previous)
-	var bytes = []byte(bal.FormatEntity(certificate))
+	var bytes = []byte(bal.FormatDocument(certificate))
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
 	v.citation = Citation(tag, version, v.protocol, digest)
 	var contract = Contract(certificate, v.account, v.protocol, v.citation)
@@ -217,5 +217,6 @@ func (v *notary) CitationMatches(citation abs.CitationLike, document abs.Documen
 
 	// Compare the citation digest with a digest of the document.
 	var bytes = bal.FormatDocument(document)
-	return byt.Equal(bytes, citation.GetDigest().AsArray())
+	var digest = bal.Binary(ssm.DigestBytes(bytes))
+	return byt.Equal(digest.AsArray(), citation.GetDigest().AsArray())
 }

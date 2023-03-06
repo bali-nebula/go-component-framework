@@ -28,17 +28,17 @@ func Contract(
 ) abs.ContractLike {
 	// Create a new catalog for the attributes.
 	var attributes = col.Catalog()
-	attributes.SetValue(documentAttribute, com.Component(document))
-	attributes.SetValue(accountAttribute, com.Component(account))
-	attributes.SetValue(protocolAttribute, com.Component(protocol))
-	attributes.SetValue(certificateAttribute, com.Component(certificate))
+	attributes.SetValue(documentAttribute, document)
+	attributes.SetValue(accountAttribute, bal.Component(account))
+	attributes.SetValue(protocolAttribute, bal.Component(protocol))
+	attributes.SetValue(certificateAttribute, certificate)
 
 	// Create a new context for the type.
 	var context = com.Context()
 	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Contract/v1"))
 
 	// Create a new contract.
-	return &contract{com.ComponentWithContext(attributes, context)}
+	return &contract{bal.ComponentWithContext(attributes, context)}
 }
 
 // CONTRACT IMPLEMENTATION

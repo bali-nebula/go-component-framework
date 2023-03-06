@@ -14,6 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	str "github.com/bali-nebula/go-component-framework/strings"
+	uti "github.com/bali-nebula/go-component-framework/utilities"
 	stc "strconv"
 	sts "strings"
 	uni "unicode"
@@ -26,6 +27,8 @@ import (
 func Binary(value abs.Value) abs.BinaryLike {
 	var binary abs.BinaryLike
 	switch actual := value.(type) {
+	case int:
+		binary = str.BinaryFromArray(uti.RandomBytes(actual))
 	case []byte:
 		binary = str.BinaryFromArray(actual)
 	case abs.Sequential[byte]:
@@ -163,6 +166,11 @@ func Version(value abs.Value) abs.VersionLike {
 		panic(message)
 	}
 	return version
+}
+
+// This constructor returns the next version string for the specified version.
+func NextVersion(current abs.VersionLike) abs.VersionLike {
+	return str.Versions.GetNextVersion(current, 0)
 }
 
 // PRIVATE METHODS

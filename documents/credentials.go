@@ -26,17 +26,17 @@ func Credentials(
 
 	// Create a new catalog for the attributes.
 	var attributes = col.Catalog()
-	attributes.SetValue(saltAttribute, com.Component(salt))
+	attributes.SetValue(saltAttribute, bal.Component(salt))
 
 	// Create a new context.
 	var context = com.Context()
 	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Credentials/v1"))
-	context.SetValue(tagAttribute, com.Component(bal.Tag(0)))
-	context.SetValue(versionAttribute, com.Component(v1))
+	context.SetValue(tagAttribute, bal.Component(bal.NewTag()))
+	context.SetValue(versionAttribute, bal.Component(v1))
 	context.SetValue(permissionsAttribute, bal.ParseComponent("/nebula/permissions/private/v1"))
 
 	// Create a new credentials.
-	return &credentials{com.ComponentWithContext(attributes, context)}
+	return &credentials{bal.ComponentWithContext(attributes, context)}
 }
 
 // CREDENTIALS IMPLEMENTATION

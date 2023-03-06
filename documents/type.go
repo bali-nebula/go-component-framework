@@ -12,7 +12,7 @@ package documents
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	com "github.com/bali-nebula/go-component-framework/components"
+	bal "github.com/bali-nebula/go-component-framework/bali"
 )
 
 // TYPE INTERFACE
@@ -22,7 +22,7 @@ func Type(
 	moniker abs.MonikerLike,
 	context abs.ContextLike,
 ) abs.TypeLike {
-	return &type_{com.ComponentWithContext(moniker, context)}
+	return &type_{bal.ComponentWithContext(moniker, context)}
 }
 
 // TYPE IMPLEMENTATION

@@ -216,7 +216,7 @@ func (v *ssmV1) setState(state abs.ComponentLike) {
 }
 
 func (v *ssmV1) createConfiguration() {
-	v.tag = bal.FormatEntity(bal.Tag(0)) // Generate a new random tag.
+	v.tag = bal.FormatEntity(bal.NewTag())
 	var configuration = bal.Catalog(`[
     $tag: ` + v.tag + `
     $state: ` + v.getState() + `

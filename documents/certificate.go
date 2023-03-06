@@ -30,19 +30,21 @@ func Certificate(
 
 	// Create a new catalog for the attributes.
 	var attributes = col.Catalog()
-	attributes.SetValue(keyAttribute, com.Component(key))
-	attributes.SetValue(algorithmsAttribute, com.Component(algorithms))
+	attributes.SetValue(keyAttribute, bal.Component(key))
+	attributes.SetValue(algorithmsAttribute, bal.Component(algorithms))
 
 	// Create a new context.
 	var context = com.Context()
 	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Certificate/v1"))
-	context.SetValue(tagAttribute, com.Component(tag))
-	context.SetValue(versionAttribute, com.Component(version))
+	context.SetValue(tagAttribute, bal.Component(tag))
+	context.SetValue(versionAttribute, bal.Component(version))
 	context.SetValue(permissionsAttribute, bal.ParseComponent("/nebula/permissions/public/v1"))
-	context.SetValue(previousAttribute, com.Component(previous))
+	if previous != nil {
+		context.SetValue(previousAttribute, bal.Component(previous))
+	}
 
 	// Create a new certificate.
-	return &certificate{com.ComponentWithContext(attributes, context)}
+	return &certificate{bal.ComponentWithContext(attributes, context)}
 }
 
 // CERTIFICATE IMPLEMENTATION

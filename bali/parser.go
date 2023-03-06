@@ -89,6 +89,25 @@ func ParseEntity(source string) abs.Entity {
 	return ParseComponent(source).GetEntity()
 }
 
+// This function parses an entity from a source string.
+func ParseContext(source string) abs.ContextLike {
+	var ok bool
+	var token *Token
+	var context abs.ContextLike
+	var parser = Parser([]byte(source))
+	context, token, ok = parser.parseContext()
+	if !ok {
+		var message = parser.formatError(token)
+		message += generateGrammar("$context",
+			"$context",
+			"$parameters",
+			"$parameter",
+			"$name")
+		panic(message)
+	}
+	return context
+}
+
 // PARSER IMPLEMENTATION
 
 // This constructor creates a new parser using the specified byte array.

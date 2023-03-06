@@ -350,6 +350,11 @@ func Symbol(value abs.Value) abs.SymbolLike {
 	return symbol
 }
 
+// This constructor returns a new random tag element of the default size.
+func NewTag() abs.TagLike {
+	return ele.TagOfSize(0)
+}
+
 // This constructor returns a new tag element initialized with the specified
 // value.
 func Tag(value abs.Value) abs.TagLike {

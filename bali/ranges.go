@@ -127,7 +127,7 @@ func Real(value abs.Value) abs.RealLike {
 }
 
 // This constructor returns a new spectral range with the specified endpoints.
-func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, parameters Parameters) abs.ComponentLike {
+func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, context abs.ContextLike) abs.ComponentLike {
 	var entity abs.Entity
 	switch actual := first.(type) {
 	case string:
@@ -166,12 +166,12 @@ func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, parameters Par
 		var message = fmt.Sprintf("The value (of type %T) cannot be a spectrum endpoint: %v", actual, actual)
 		panic(message)
 	}
-	return ComponentWithContext(entity, parameters)
+	return ComponentWithContext(entity, context)
 }
 
 // This constructor returns a new continuous range with the specified endpoints.
 // This constructor returns a new discrete range with the specified endpoints.
-func Interval(first abs.Value, extent abs.Extent, last abs.Value, parameters Parameters) abs.ComponentLike {
+func Interval(first abs.Value, extent abs.Extent, last abs.Value, context abs.ContextLike) abs.ComponentLike {
 	var entity abs.Entity
 	switch actual := first.(type) {
 	case uint:
@@ -238,11 +238,11 @@ func Interval(first abs.Value, extent abs.Extent, last abs.Value, parameters Par
 		var message = fmt.Sprintf("The value (of type %T) cannot be an interval endpoint: %v", actual, actual)
 		panic(message)
 	}
-	return ComponentWithContext(entity, parameters)
+	return ComponentWithContext(entity, context)
 }
 
 // This constructor returns a new continuous range with the specified endpoints.
-func Continuum(first abs.Value, extent abs.Extent, last abs.Value, parameters Parameters) abs.ComponentLike {
+func Continuum(first abs.Value, extent abs.Extent, last abs.Value, context abs.ContextLike) abs.ComponentLike {
 	var entity abs.Entity
 	switch actual := first.(type) {
 	case uint:
@@ -313,7 +313,7 @@ func Continuum(first abs.Value, extent abs.Extent, last abs.Value, parameters Pa
 		var message = fmt.Sprintf("The value (of type %T) cannot be a continuum endpoint: %v", actual, actual)
 		panic(message)
 	}
-	return ComponentWithContext(entity, parameters)
+	return ComponentWithContext(entity, context)
 }
 
 // This method attempts to parse an endpoint. It returns the endpoint and

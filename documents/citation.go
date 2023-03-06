@@ -29,17 +29,17 @@ func Citation(
 
 	// Create a new catalog for the attributes.
 	var attributes = col.Catalog()
-	attributes.SetValue(tagAttribute, com.Component(tag))
-	attributes.SetValue(versionAttribute, com.Component(version))
-	attributes.SetValue(protocolAttribute, com.Component(protocol))
-	attributes.SetValue(digestAttribute, com.Component(digest))
+	attributes.SetValue(tagAttribute, bal.Component(tag))
+	attributes.SetValue(versionAttribute, bal.Component(version))
+	attributes.SetValue(protocolAttribute, bal.Component(protocol))
+	attributes.SetValue(digestAttribute, bal.Component(digest))
 
 	// Create a new context for the type.
 	var context = com.Context()
 	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Citation/v1"))
 
 	// Create a new citation.
-	return &citation{com.ComponentWithContext(attributes, context)}
+	return &citation{bal.ComponentWithContext(attributes, context)}
 }
 
 // CITATION IMPLEMENTATION
@@ -49,15 +49,15 @@ type citation struct {
 }
 
 func (v *citation) GetDigest() abs.BinaryLike {
-	return v.GetContext().GetValue(digestAttribute).ExtractBinary()
+	return v.ExtractCatalog().GetValue(digestAttribute).ExtractBinary()
 }
 
 func (v *citation) GetProtocol() abs.VersionLike {
-	return v.GetContext().GetValue(protocolAttribute).ExtractVersion()
+	return v.ExtractCatalog().GetValue(protocolAttribute).ExtractVersion()
 }
 
 func (v *citation) GetTag() abs.TagLike {
-	return v.GetContext().GetValue(tagAttribute).ExtractTag()
+	return v.ExtractCatalog().GetValue(tagAttribute).ExtractTag()
 }
 
 func (v *citation) GetType() abs.MonikerLike {
@@ -65,5 +65,5 @@ func (v *citation) GetType() abs.MonikerLike {
 }
 
 func (v *citation) GetVersion() abs.VersionLike {
-	return v.GetContext().GetValue(versionAttribute).ExtractVersion()
+	return v.ExtractCatalog().GetValue(versionAttribute).ExtractVersion()
 }
