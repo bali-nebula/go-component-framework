@@ -32,11 +32,10 @@ func TestParsingRoundtrips(t *tes.T) {
 		var filename = testDirectory + file.Name()
 		if sts.HasSuffix(filename, ".bali") {
 			fmt.Println(filename)
-			var document, _ = osx.ReadFile(filename)
-			var component = bal.ParseDocument(document)
-			var source = bal.FormatComponent(component)
-			var expected = string(document[:len(document)-1]) // Remove POSIX EOL character.
-			ass.Equal(t, expected, source)
+			var expected, _ = osx.ReadFile(filename)
+			var component = bal.ParseDocument(expected)
+			var document = bal.FormatDocument(component)
+			ass.Equal(t, expected, document)
 		}
 	}
 }

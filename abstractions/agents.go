@@ -30,7 +30,7 @@ type Mechanized interface {
 // This interface defines the methods supported by all trusted security
 // modules.
 type Trusted interface {
-	GetVersion() string
+	GetProtocol() string
 	DigestBytes(bytes []byte) []byte
 	IsValid(publicKey []byte, signature []byte, bytes []byte) bool
 }

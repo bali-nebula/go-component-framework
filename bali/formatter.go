@@ -43,6 +43,14 @@ func FormatComponentWithIndentation(component abs.ComponentLike, indentation int
 	return v.FormatComponent(component)
 }
 
+// This function returns a canonical BDN bytes for the specified component
+// including the POSIX standard trailing EOL.
+func FormatDocument(component abs.ComponentLike) []byte {
+	var v = Formatter(0)
+	var s = v.FormatComponent(component) + EOL
+	return []byte(s)
+}
+
 // FORMATTER IMPLEMENTATION
 
 // This constructor creates a new formatter using the specified indentation.

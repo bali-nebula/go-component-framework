@@ -83,9 +83,9 @@ const (
 // This table defines the allowed transitions for the state machine.
 var states = [][]int{
 	{events, generateKeys, signBytes, rotateKeys},
-	{keyless, loneKey,     invalid,   invalid},
-	{loneKey, invalid,     loneKey,   twoKeys},
-	{twoKeys, invalid,     loneKey,   invalid},
+	{keyless,  loneKey,     invalid,   invalid},
+	{loneKey,  invalid,     loneKey,   twoKeys},
+	{twoKeys,  invalid,     loneKey,   invalid},
 }
 
 // These constants define the possible attribute names for the configuration.
@@ -97,17 +97,10 @@ var (
 	previousKeyAttribute = bal.Symbol("$previousKey")
 )
 
-// This is the latest security protocol used.
-var protocol = bal.Catalog(`[
-    $protocol: v1
-    $digest: "sha512"
-    $signature: "ed25519"
-]`)
-
 // TRUSTED INTERFACE
 
 // This method retrieves the protocol version for this security module.
-func (v *ssmV1) GetVersion() string {
+func (v *ssmV1) GetProtocol() string {
 	return "v1"
 }
 

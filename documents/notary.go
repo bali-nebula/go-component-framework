@@ -12,8 +12,8 @@ package documents
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	bal "github.com/bali-nebula/go-component-framework/bali"
 	age "github.com/bali-nebula/go-component-framework/agents"
+	bal "github.com/bali-nebula/go-component-framework/bali"
 	col "github.com/craterdog/go-collection-framework/v2"
 )
 
@@ -39,12 +39,13 @@ func Notary(hsm abs.SecurityModuleLike) abs.NotaryLike {
 	modules.SetValue(v1, age.SSMv1(""))
 
 	// Replace the corresponding SSM with the HSM
-	var protocol = bal.Version(hsm.GetVersion())
+	var protocol = bal.Version(hsm.GetProtocol())
 	modules.SetValue(protocol, hsm)
 
 	// Create the new notary.
 	var account = bal.Tag(hsm.GetTag())
-	return &notary{account, protocol, hsm, modules}
+	var citation abs.CitationLike
+	return &notary{account, protocol, hsm, modules, citation}
 }
 
 // NOTARY IMPLEMENTATION
@@ -55,6 +56,7 @@ type notary struct {
 	protocol abs.VersionLike
 	hsm      abs.SecurityModuleLike
 	modules  col.CatalogLike[abs.VersionLike, abs.SecurityModuleLike]
+	citation abs.CitationLike
 }
 
 // These constants define the supported versions of the security protocol.
@@ -103,7 +105,7 @@ func (v *notary) GenerateKey() abs.ContractLike {
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
 	var citation = Citation(tag, version, v.protocol, digest)
 	var contract = Contract(certificate, v.account, v.protocol, citation)
-	bytes = []byte(bal.FormatComponent(contract))
+	bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
 	contract.SetSignature(signature)
 	return contract
@@ -112,19 +114,34 @@ func (v *notary) GenerateKey() abs.ContractLike {
 // This method retrieves a citation to the public notary certificate for the
 // current private notary key.
 func (v *notary) GetCitation() abs.CitationLike {
-	panic("Not yet implemented.")
+	if v.citation == nil {
+		panic("The digital notary has not yet been initialized.")
+	}
+	return v.citation
 }
 
 // This method replaces an existing private notary key with a new one and
 // returns the corresponding public notary certificate digitally signed by the
 // old private notary key. The old private notary key is destroyed.
 func (v *notary) RefreshKey() abs.ContractLike {
-	panic("Not yet implemented.")
+	var key = bal.Binary(v.hsm.RotateKeys()) // Returns the new public key.
+	var tag = v.citation.GetTag()            // Create a new random tag.
+	var version = v.citation.GetVersion()    // The NEXT version of this certificate.
+	var previous = v.citation                // No previous version.
+	var certificate = Certificate(key, algorithms, tag, version, previous)
+	var bytes = []byte(bal.FormatEntity(certificate))
+	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
+	v.citation = Citation(tag, version, v.protocol, digest)
+	var contract = Contract(certificate, v.account, v.protocol, v.citation)
+	bytes = bal.FormatDocument(contract)
+	var signature = bal.Binary(v.hsm.SignBytes(bytes))
+	contract.SetSignature(signature)
+	return contract
 }
 
 // This method destroys any existing private notary key.
 func (v *notary) ForgetKey() {
-	panic("Not yet implemented.")
+	v.hsm.EraseKeys()
 }
 
 // CERTIFIED INTERFACE
