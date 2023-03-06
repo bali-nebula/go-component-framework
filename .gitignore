@@ -14,5 +14,5 @@
 # Swap files for vi(m)
 *.swp
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Generated examples with embedded timestamps.
+examples/
