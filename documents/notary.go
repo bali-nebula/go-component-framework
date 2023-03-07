@@ -28,7 +28,7 @@ import (
 // security protocol used by digital notaries. The HSM will be used to validate
 // all current version signatures while a software security module (SSM) will be
 // used to validate previous version signatures.
-func Notary(hsm abs.SecurityModuleLike) abs.NotaryLike {
+func Notary(directory string, hsm abs.SecurityModuleLike) abs.NotaryLike {
 	if hsm == nil {
 		panic("A security module must be provided to the digital notary.")
 	}
@@ -46,19 +46,19 @@ func Notary(hsm abs.SecurityModuleLike) abs.NotaryLike {
 
 	// Create the new notary.
 	var account = bal.Tag(hsm.GetTag())
-	var citation abs.CitationLike
-	return &notary{account, protocol, hsm, modules, citation}
+	var configurator = age.Configurator(directory, "citation.bali")
+	return &notary{account, protocol, hsm, modules, configurator}
 }
 
 // NOTARY IMPLEMENTATION
 
 // This type defines the structure and methods associated with a digital notary.
 type notary struct {
-	account  abs.TagLike
-	protocol abs.VersionLike
-	hsm      abs.SecurityModuleLike
-	modules  col.CatalogLike[abs.VersionLike, abs.SecurityModuleLike]
-	citation abs.CitationLike
+	account      abs.TagLike
+	protocol     abs.VersionLike
+	hsm          abs.SecurityModuleLike
+	modules      col.CatalogLike[abs.VersionLike, abs.SecurityModuleLike]
+	configurator abs.ConfiguratorLike
 }
 
 // These constants define the supported versions of the security protocol.
@@ -105,8 +105,9 @@ func (v *notary) GenerateKey() abs.ContractLike {
 	var certificate = Certificate(key, algorithms, tag, version, previous)
 	var bytes = []byte(bal.FormatDocument(certificate))
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
-	v.citation = Citation(tag, version, v.protocol, digest)
-	var contract = Contract(certificate, v.account, v.protocol, v.citation)
+	var citation = Citation(tag, version, v.protocol, digest)
+	v.configurator.Store(bal.FormatDocument(citation))
+	var contract = Contract(certificate, v.account, v.protocol, citation)
 	bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
 	contract.AddSignature(signature)
@@ -116,24 +117,27 @@ func (v *notary) GenerateKey() abs.ContractLike {
 // This method retrieves a citation to the public notary certificate for the
 // current private notary key.
 func (v *notary) GetCitation() abs.CitationLike {
-	if v.citation == nil {
+	if !v.configurator.Exists() {
 		panic("The digital notary has not yet been initialized.")
 	}
-	return v.citation
+	var component = bal.ParseDocument(v.configurator.Load())
+	return &citation{component}
 }
 
 // This method replaces an existing private notary key with a new one and
 // returns the corresponding public notary certificate digitally signed by the
 // old private notary key. The old private notary key is destroyed.
 func (v *notary) RefreshKey() abs.ContractLike {
+	var citation = v.GetCitation()
 	var key = bal.Binary(v.hsm.RotateKeys()) // Returns the new public key.
-	var tag = v.citation.GetTag()
-	var version = bal.NextVersion(v.citation.GetVersion())
-	var previous = v.citation // Record the previous certificate citation.
+	var tag = citation.GetTag()
+	var version = bal.NextVersion(citation.GetVersion())
+	var previous = citation // Record the previous certificate citation.
 	var certificate = Certificate(key, algorithms, tag, version, previous)
 	var bytes = []byte(bal.FormatDocument(certificate))
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
-	v.citation = Citation(tag, version, v.protocol, digest)
+	citation = Citation(tag, version, v.protocol, digest)
+	v.configurator.Store(bal.FormatDocument(citation))
 	var contract = Contract(certificate, v.account, v.protocol, previous)
 	bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
@@ -144,6 +148,7 @@ func (v *notary) RefreshKey() abs.ContractLike {
 // This method destroys any existing private notary key.
 func (v *notary) ForgetKey() {
 	v.hsm.EraseKeys()
+	v.configurator.Delete()
 }
 
 // CERTIFIED INTERFACE
@@ -151,8 +156,9 @@ func (v *notary) ForgetKey() {
 // This method generates a new set of account credentials that can be used for
 // authentication.
 func (v *notary) GenerateCredentials(salt abs.BinaryLike) abs.ContractLike {
+	var citation = v.GetCitation()
 	var credentials = Credentials(salt)
-	var contract = Contract(credentials, v.account, v.protocol, v.citation)
+	var contract = Contract(credentials, v.account, v.protocol, citation)
 	var bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
 	contract.AddSignature(signature)
@@ -162,7 +168,8 @@ func (v *notary) GenerateCredentials(salt abs.BinaryLike) abs.ContractLike {
 // This method uses the current private notary key to notarized the specified
 // document and returns the resulting contract.
 func (v *notary) NotarizeDocument(document abs.DocumentLike) abs.ContractLike {
-	var contract = Contract(document, v.account, v.protocol, v.citation)
+	var citation = v.GetCitation()
+	var contract = Contract(document, v.account, v.protocol, citation)
 	var bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
 	contract.AddSignature(signature)

@@ -17,22 +17,65 @@ import (
 	doc "github.com/bali-nebula/go-component-framework/documents"
 	ass "github.com/stretchr/testify/assert"
 	osx "os"
+	sts "strings"
 	tes "testing"
 )
 
 const directory = "./"
 
-func TestNotary(t *tes.T) {
+func TestNotaryInitialization(t *tes.T) {
+	// Initialize the security module and digital notary.
 	var module = age.SSMv1(directory)
-	var notary = doc.Notary(module)
+	var notary = doc.Notary(directory, module)
 
+	// Should not be able to retrieve the certificate citation without any keys.
+	defer func() {
+		if e := recover(); e != nil {
+			var message = e.(string)
+			ass.Equal(t, "The digital notary has not yet been initialized.", message)
+		} else {
+			ass.Fail(t, "Test should result in recovered panic.")
+		}
+	}()
+	notary.GetCitation()
+}
+
+func TestNotaryGenerateKey(t *tes.T) {
+	// Initialize the security module and digital notary.
+	var module = age.SSMv1(directory)
+	var notary = doc.Notary(directory, module)
+
+	// Generate a new public-private key pair.
+	notary.GenerateKey()
+
+	// Should not be able to do this twice.
+	defer func() {
+		if e := recover(); e != nil {
+			var message = e.(string)
+			ass.Equal(t, "Attempted to transition to an invalid state: 0", message)
+			notary.ForgetKey()
+		} else {
+			ass.Fail(t, "Test should result in recovered panic.")
+		}
+	}()
+	notary.GenerateKey()
+}
+
+func TestNotaryLifecycle(t *tes.T) {
+	// Initialize the security module and digital notary.
+	var module = age.SSMv1(directory)
+	var notary = doc.Notary(directory, module)
+
+	// Generate and validate a new public-private key pair.
 	var certificateV1 = notary.GenerateKey()
 	osx.WriteFile("./examples/certificateV1.bali", bal.FormatDocument(certificateV1), 0600)
 	ass.True(t, notary.SignatureMatches(certificateV1, certificateV1.GetDocument().(abs.CertificateLike)))
 
+	// Extract the citation to the public certificate.
 	var citation = notary.GetCitation()
 	osx.WriteFile("./examples/citation.bali", bal.FormatDocument(citation), 0600)
 
+	// Create and cite a new transaction document.
 	var attributes = bal.Catalog(`[
     $timestamp: <2022-06-03T07:39:54>
     $consumer: "Derk Norton"
@@ -49,18 +92,37 @@ func TestNotary(t *tes.T) {
 	citation = notary.CiteDocument(document)
 	ass.True(t, notary.CitationMatches(citation, document))
 
+	// Notarize the transaction document to create a signed contract.
 	var contract = notary.NotarizeDocument(document)
 	osx.WriteFile("./examples/contract.bali", bal.FormatDocument(contract), 0600)
 	ass.True(t, notary.SignatureMatches(contract, certificateV1.GetDocument().(abs.CertificateLike)))
 
+	// Pickup where we left off with a new security module and digital notary.
+	module = age.SSMv1(directory)
+	notary = doc.Notary(directory, module)
+
+	// Refresh and validate the public-private key pair.
 	var certificateV2 = notary.RefreshKey()
 	osx.WriteFile("./examples/certificateV2.bali", bal.FormatDocument(certificateV2), 0600)
 	ass.True(t, notary.SignatureMatches(certificateV2, certificateV1.GetDocument().(abs.CertificateLike)))
 
+	// Generate some authentication credentials.
 	var salt = bal.Binary(64)
 	var credentials = notary.GenerateCredentials(salt)
 	osx.WriteFile("./examples/credentials.bali", bal.FormatDocument(credentials), 0600)
 	ass.True(t, notary.SignatureMatches(credentials, certificateV2.GetDocument().(abs.CertificateLike)))
 
+	// Reset the security module and digital notary to an uninitialized state.
 	notary.ForgetKey()
+
+	// Confirm that an error is raised if we try to retrieve the certificate citation.
+	defer func() {
+		if e := recover(); e != nil {
+			var message = e.(string)
+			ass.True(t, sts.HasPrefix(message, "The digital notary has not yet been initialized."))
+		} else {
+			ass.Fail(t, "Test should result in recovered panic.")
+		}
+	}()
+	notary.GetCitation()
 }
