@@ -20,7 +20,9 @@ import (
 func TestBinary(t *tes.T) {
 	var v = bal.Binary(64)
 	ass.Equal(t, 64, v.GetSize())
-	v = bal.Binary("'>\nabcd1234\n<'")
+	v = bal.Binary(`'>
+    abcd1234
+<'`)
 	ass.Equal(t, "abcd1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
@@ -54,8 +56,8 @@ func TestEmptyNarrative(t *tes.T) {
 
 func TestNarrative(t *tes.T) {
 	var v = bal.Narrative(`">
-This is a narrative
-containing " marks.
+    This is a narrative
+    containing " marks.
 <"`)
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 2, v.GetSize())
