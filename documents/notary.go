@@ -134,7 +134,7 @@ func (v *notary) RefreshKey() abs.ContractLike {
 	var bytes = []byte(bal.FormatDocument(certificate))
 	var digest = bal.Binary(v.hsm.DigestBytes(bytes))
 	v.citation = Citation(tag, version, v.protocol, digest)
-	var contract = Contract(certificate, v.account, v.protocol, v.citation)
+	var contract = Contract(certificate, v.account, v.protocol, previous)
 	bytes = bal.FormatDocument(contract)
 	var signature = bal.Binary(v.hsm.SignBytes(bytes))
 	contract.AddSignature(signature)

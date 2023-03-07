@@ -28,6 +28,7 @@ func TestNotary(t *tes.T) {
 
 	var certificateV1 = notary.GenerateKey()
 	osx.WriteFile("./examples/certificateV1.bali", bal.FormatDocument(certificateV1), 0600)
+	ass.True(t, notary.SignatureMatches(certificateV1, certificateV1.GetDocument().(abs.CertificateLike)))
 
 	var citation = notary.GetCitation()
 	osx.WriteFile("./examples/citation.bali", bal.FormatDocument(citation), 0600)
@@ -52,10 +53,12 @@ func TestNotary(t *tes.T) {
 
 	var certificateV2 = notary.RefreshKey()
 	osx.WriteFile("./examples/certificateV2.bali", bal.FormatDocument(certificateV2), 0600)
+	ass.True(t, notary.SignatureMatches(certificateV2, certificateV1.GetDocument().(abs.CertificateLike)))
 
 	var salt = bal.Binary(64)
 	var credentials = notary.GenerateCredentials(salt)
 	osx.WriteFile("./examples/credentials.bali", bal.FormatDocument(credentials), 0600)
+	ass.True(t, notary.SignatureMatches(credentials, certificateV2.GetDocument().(abs.CertificateLike)))
 
 	notary.ForgetKey()
 }
