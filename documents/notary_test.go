@@ -34,8 +34,10 @@ func TestNotary(t *tes.T) {
 	osx.WriteFile("./examples/citation.bali", bal.FormatDocument(citation), 0600)
 
 	var attributes = bal.Catalog(`[
-    $foo: "bar"
-    $bax: "baz"
+    $timestamp: <2022-06-03T07:39:54>
+    $consumer: "Derk Norton"
+    $merchant: <https://www.starbucks.com/>
+    $amount: 4.95($currency: $USD)
 ]`)
 	var type_ = bal.Component("/bali/examples/Document/v1.2.3")
 	var tag = bal.NewTag()
