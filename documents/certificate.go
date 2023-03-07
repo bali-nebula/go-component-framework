@@ -35,10 +35,10 @@ func Certificate(
 
 	// Create a new context.
 	var context = com.Context()
-	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Certificate/v1"))
+	context.SetValue(typeAttribute, bal.ParseComponent("/bali/types/documents/Certificate/v1"))
 	context.SetValue(tagAttribute, bal.Component(tag))
 	context.SetValue(versionAttribute, bal.Component(version))
-	context.SetValue(permissionsAttribute, bal.ParseComponent("/nebula/permissions/public/v1"))
+	context.SetValue(permissionsAttribute, bal.ParseComponent("/bali/permissions/public/v1"))
 	if previous != nil {
 		context.SetValue(previousAttribute, bal.Component(previous))
 	}

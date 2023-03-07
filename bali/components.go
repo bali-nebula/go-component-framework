@@ -602,13 +602,13 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 		// The type is a series of components.
 		var sequence = entity.(abs.Sequential[abs.ComponentLike])
 		switch type_ {
-		case "/bali/collections/Set/v1":
+		case "/bali/types/collections/Set/v1":
 			// The series type is a set.
 			entity = col.SetFromSequence(sequence)
-		case "/bali/collections/Queue/v1":
+		case "/bali/types/collections/Queue/v1":
 			// The series type is a queue.
 			entity = col.QueueFromSequence(sequence)
-		case "/bali/collections/Stack/v1":
+		case "/bali/types/collections/Stack/v1":
 			// The series type is a stack.
 			entity = col.StackFromSequence(sequence)
 		default:
@@ -633,11 +633,11 @@ func adjustContext(component abs.ComponentLike) abs.ContextLike {
 	var context = component.GetContext()
 	switch entity.(type) {
 	case abs.QueueLike:
-		type_ = "/bali/collections/Queue/v1"
+		type_ = "/bali/types/collections/Queue/v1"
 	case abs.SetLike:
-		type_ = "/bali/collections/Set/v1"
+		type_ = "/bali/types/collections/Set/v1"
 	case abs.StackLike:
-		type_ = "/bali/collections/Stack/v1"
+		type_ = "/bali/types/collections/Stack/v1"
 	}
 	if type_ != "" {
 		if context == nil {

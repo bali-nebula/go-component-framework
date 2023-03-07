@@ -32,11 +32,14 @@ func TestNotary(t *tes.T) {
 	var citation = notary.GetCitation()
 	osx.WriteFile("./examples/citation.bali", bal.FormatDocument(citation), 0600)
 
-	var attributes = bal.Catalog(`[:]`)
-	var type_ = bal.Component("/nebula/examples/Document/v1.2.3")
+	var attributes = bal.Catalog(`[
+    $foo: "bar"
+    $bax: "baz"
+]`)
+	var type_ = bal.Component("/bali/examples/Document/v1.2.3")
 	var tag = bal.NewTag()
 	var version = bal.Version("v1.2")
-	var permissions = bal.Moniker("/nebula/permissions/public/v1")
+	var permissions = bal.Moniker("/bali/permissions/public/v1")
 	var previous abs.CitationLike
 	var document = doc.Document(attributes, type_, tag, version, permissions, previous)
 	osx.WriteFile("./examples/document.bali", bal.FormatDocument(document), 0600)

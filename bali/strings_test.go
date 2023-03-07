@@ -33,16 +33,16 @@ func TestBinary(t *tes.T) {
 }
 
 func TestMoniker(t *tes.T) {
-	var v1 = bal.Moniker("/bali/abstractions/String/v1.2.3")
-	ass.Equal(t, "/bali/abstractions/String/v1.2.3", v1.AsString())
+	var v1 = bal.Moniker("/bali/types/abstractions/String/v1.2.3")
+	ass.Equal(t, "/bali/types/abstractions/String/v1.2.3", v1.AsString())
 	ass.False(t, v1.IsEmpty())
-	ass.Equal(t, 4, v1.GetSize())
+	ass.Equal(t, 5, v1.GetSize())
 	ass.Equal(t, abs.Name("bali"), v1.GetValue(1))
 	ass.Equal(t, abs.Name("v1.2.3"), v1.GetValue(-1))
 	var v2 = bal.Moniker(v1.AsArray())
 	ass.Equal(t, v1.AsString(), v2.AsString())
 	var v3 = bal.Moniker(v1.GetValues(1, 2))
-	ass.Equal(t, "/bali/abstractions", v3.AsString())
+	ass.Equal(t, "/bali/types", v3.AsString())
 }
 
 func TestEmptyNarrative(t *tes.T) {

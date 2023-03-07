@@ -30,10 +30,10 @@ func Credentials(
 
 	// Create a new context.
 	var context = com.Context()
-	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Credentials/v1"))
+	context.SetValue(typeAttribute, bal.ParseComponent("/bali/types/documents/Credentials/v1"))
 	context.SetValue(tagAttribute, bal.Component(bal.NewTag()))
 	context.SetValue(versionAttribute, bal.Component(v1))
-	context.SetValue(permissionsAttribute, bal.ParseComponent("/nebula/permissions/private/v1"))
+	context.SetValue(permissionsAttribute, bal.ParseComponent("/bali/permissions/private/v1"))
 
 	// Create a new credentials.
 	return &credentials{bal.ComponentWithContext(attributes, context)}

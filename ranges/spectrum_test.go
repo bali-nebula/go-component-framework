@@ -19,14 +19,14 @@ import (
 )
 
 func TestSpectrWithMonikers(t *tes.T) {
-	var first = str.MonikerFromString("/bali/abstractions")
-	var last = str.MonikerFromString("/bali/strings")
+	var first = str.MonikerFromString("/bali/types/abstractions")
+	var last = str.MonikerFromString("/bali/types/strings")
 	var s = ran.Spectrum[abs.MonikerLike](first, abs.RIGHT, last)
 	ass.False(t, s.ContainsValue(str.MonikerFromString("/bali")))
 	ass.False(t, s.ContainsValue(first))
-	ass.True(t, s.ContainsValue(str.MonikerFromString("/bali/abstractions/Sequential")))
+	ass.True(t, s.ContainsValue(str.MonikerFromString("/bali/types/abstractions/Sequential/v1")))
 	ass.True(t, s.ContainsValue(last))
-	ass.False(t, s.ContainsValue(str.MonikerFromString("/bali/strings/Version")))
+	ass.False(t, s.ContainsValue(str.MonikerFromString("/bali/types/strings/Version/v1")))
 	ass.Equal(t, first, s.GetFirst())
 	ass.Equal(t, abs.RIGHT, s.GetExtent())
 	ass.Equal(t, last, s.GetLast())

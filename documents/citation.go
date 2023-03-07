@@ -36,7 +36,7 @@ func Citation(
 
 	// Create a new context for the type.
 	var context = com.Context()
-	context.SetValue(typeAttribute, bal.ParseComponent("/nebula/types/Citation/v1"))
+	context.SetValue(typeAttribute, bal.ParseComponent("/bali/types/documents/Citation/v1"))
 
 	// Create a new citation.
 	return &citation{bal.ComponentWithContext(attributes, context)}
