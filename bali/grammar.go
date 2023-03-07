@@ -244,13 +244,13 @@ var grammar = map[string]string{
 }
 
 const header = `!>
-A formal definition of Bali Document Notation™ (Bali) using Bali Wirth Syntax
-Notation™ (BWSN):
-    <https://github.com/bali-nebula/specifications/blob/main/bwsn.bwsn>
-The token names are identified by all CAPITAL characters and the rule names
-are identified by lowerCamelCase characters. The token and rule definitions
-have been alphabetized to make it easier to locate specific definitions.
-The starting rule is "$source".
+    A formal definition of Bali Document Notation™ (Bali) using Bali Wirth Syntax
+    Notation™ (BWSN):
+        <https://github.com/bali-nebula/specifications/blob/main/bwsn.bwsn>
+    The token names are identified by all CAPITAL characters and the rule names
+    are identified by lowerCamelCase characters. The token and rule definitions
+    have been alphabetized to make it easier to locate specific definitions.
+    The starting rule is "$source".
 <!
 
 `
