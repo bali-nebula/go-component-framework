@@ -59,9 +59,9 @@ func TagOfSize(size int) abs.TagLike {
 // the native Go string type.
 type Tag string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized element.
 func (v Tag) AsString() string {
 	return string(v)
 }

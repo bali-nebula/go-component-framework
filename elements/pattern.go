@@ -28,9 +28,9 @@ func PatternFromString(v string) abs.PatternLike {
 // corresponding to that pattern.
 type Pattern string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized element.
 func (v Pattern) AsString() string {
 	return string(v)
 }

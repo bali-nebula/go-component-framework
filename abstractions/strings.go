@@ -35,7 +35,7 @@ func (v Instruction) GetSecondByte() byte {
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all spectral strings.
+// This interface defines the methods supported by all quantized strings.
 type Quantized interface {
 	AsString() string
 }

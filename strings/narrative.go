@@ -58,9 +58,9 @@ func NarrativeFromSequence(sequence abs.Sequential[abs.Line]) abs.NarrativeLike 
 // For valid string formats for this type see `../abstractions/language.go`.
 type Narrative string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized string.
 func (v Narrative) AsString() string {
 	return string(v)
 }

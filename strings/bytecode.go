@@ -67,9 +67,9 @@ func BytecodeFromSequence(sequence abs.Sequential[abs.Instruction]) abs.Bytecode
 // the bytecode string.
 type Bytecode string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized string.
 func (v Bytecode) AsString() string {
 	return string(v)
 }

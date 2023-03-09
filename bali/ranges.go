@@ -126,7 +126,7 @@ func Real(value abs.Value) abs.RealLike {
 	return real_
 }
 
-// This constructor returns a new spectral range with the specified endpoints.
+// This constructor returns a new quantized range with the specified endpoints.
 func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, context abs.ContextLike) abs.ComponentLike {
 	var entity abs.Entity
 	switch actual := first.(type) {

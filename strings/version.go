@@ -69,9 +69,9 @@ func VersionFromSequence(sequence abs.Sequential[abs.Ordinal]) abs.VersionLike {
 // the version string.
 type Version string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized string.
 func (v Version) AsString() string {
 	return string(v)
 }

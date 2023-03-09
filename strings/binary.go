@@ -58,9 +58,9 @@ func BinaryFromSequence(sequence abs.Sequential[byte]) abs.BinaryLike {
 // the binary string.
 type Binary string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized string.
 func (v Binary) AsString() string {
 	return string(v)
 }

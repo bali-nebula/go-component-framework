@@ -65,9 +65,9 @@ func MonikerFromSequence(sequence abs.Sequential[abs.Name]) abs.MonikerLike {
 // make up the moniker.
 type Moniker string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized string.
 func (v Moniker) AsString() string {
 	return string(v)
 }

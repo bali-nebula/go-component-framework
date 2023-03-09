@@ -40,9 +40,9 @@ func ResourceFromURI(v *uri.URL) abs.ResourceLike {
 // that web resource.
 type Resource string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized element.
 func (v Resource) AsString() string {
 	return string(v)
 }

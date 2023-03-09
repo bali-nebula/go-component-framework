@@ -64,9 +64,9 @@ func QuoteFromSequence(sequence abs.Sequential[rune]) abs.QuoteLike {
 // the quote string.
 type Quote string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized string.
 func (v Quote) AsString() string {
 	return string(v)
 }

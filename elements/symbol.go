@@ -45,9 +45,9 @@ func SymbolFromString(v string) abs.SymbolLike {
 // make up the symbol.
 type Symbol string
 
-// SPECTRAL INTERFACE
+// QUANTIZED INTERFACE
 
-// This method returns a string value for this spectral element.
+// This method returns a string value for this quantized element.
 func (v Symbol) AsString() string {
 	return string(v)
 }
