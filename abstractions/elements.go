@@ -114,7 +114,7 @@ type NumberLike interface {
 }
 
 type PatternLike interface {
-	Spectral
+	Quantized
 	Matchable
 }
 
@@ -130,15 +130,15 @@ type ProbabilityLike interface {
 }
 
 type ResourceLike interface {
-	Spectral
+	Quantized
 	Segmented
 }
 
 type SymbolLike interface {
-	Spectral
+	Quantized
 }
 
 type TagLike interface {
-	Spectral
+	Quantized
 	Sequential[byte]
 }

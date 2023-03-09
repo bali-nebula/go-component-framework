@@ -21,7 +21,7 @@ import (
 // This constructor creates a new spectral range of values covering the
 // specified endpoints. Note that at least one of the endpoints must be non-nil
 // so that the endpoint type may be determined.
-func Spectrum[V abs.Spectral](first V, extent abs.Extent, last V) abs.SpectrumLike[V] {
+func Spectrum[V abs.Quantized](first V, extent abs.Extent, last V) abs.SpectrumLike[V] {
 	var v = spectrum[V]{first: first, extent: extent, last: last}
 	v.validateSpectrum()
 	return &v
@@ -30,7 +30,7 @@ func Spectrum[V abs.Spectral](first V, extent abs.Extent, last V) abs.SpectrumLi
 // This type defines the structure and methods associated with a spectral
 // range of values. This type is parameterized as follows:
 //   - V is any endpoint type.
-type spectrum[V abs.Spectral] struct {
+type spectrum[V abs.Quantized] struct {
 	first  V
 	extent abs.Extent
 	last   V

@@ -25,19 +25,19 @@ import (
 //
 // This map is useful when creating scanner and parser error messages.
 var grammar = map[string]string{
-	"$ANGLE":        `"~" (ZERO | MAGNITUDE)`,
-	"$ANY":          `"any"`,
-	"$AUTHORITY":    `<~("/" | EOL)>`,
-	"$BASE16":       `"0".."9" | "a".."f"`,
-	"$BASE32":       `"0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"`,
-	"$BASE64":       `"A".."Z" | "a".."z" | "0".."9" | "+" | "/"`,
-	"$BINARY":       `"'>" EOL {{SPACE} <BASE64> EOL} {SPACE} "<'"`,
-	"$BOOLEAN":      `"false" | "true"`,
-	"$BYTECODE":     `"'" {INSTRUCTION {SPACE INSTRUCTION}} "'"`,
-	"$COMMENT":      `"!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.`,
-	"$COMPLEX":      `"(" (RECTANGULAR | POLAR) ")"`,
-	"$DAY":          `"0".."2" "1".."9" | "3" "0".."1"`,
-	"$DAYS":         `TIMESPAN "D"`,
+	"$ANGLE":     `"~" (ZERO | MAGNITUDE)`,
+	"$ANY":       `"any"`,
+	"$AUTHORITY": `<~("/" | EOL)>`,
+	"$BASE16":    `"0".."9" | "a".."f"`,
+	"$BASE32":    `"0".."9" | "A".."D" | "F".."H" | "J".."N" | "P".."T" | "V".."Z"`,
+	"$BASE64":    `"A".."Z" | "a".."z" | "0".."9" | "+" | "/"`,
+	"$BINARY":    `"'>" EOL {{SPACE} <BASE64> EOL} {SPACE} "<'"`,
+	"$BOOLEAN":   `"false" | "true"`,
+	"$BYTECODE":  `"'" {INSTRUCTION {SPACE INSTRUCTION}} "'"`,
+	"$COMMENT":   `"!>" EOL {COMMENT | ~"<!"} EOL {SPACE} "<!"  ! Allows recursion.`,
+	"$COMPLEX":   `"(" (RECTANGULAR | POLAR) ")"`,
+	"$DAY":       `"0".."2" "1".."9" | "3" "0".."1"`,
+	"$DAYS":      `TIMESPAN "D"`,
 	"$DELIMITER": `
     "~" | "}" | "|" | "{" | "^" | "]" | "[" | "@" | "?=" | ">" | "=" | "≠" | "<-" | "<" |
     ";" | ":=" | ":" | "/=" | "//" | "/" | ".." | "." | "-=" | "-" | "," | "+=" | "+" |
@@ -103,11 +103,11 @@ var grammar = map[string]string{
 	"$UNICODE": `
     "u" BASE16 BASE16 BASE16 BASE16 |
     "U" BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16 BASE16`,
-	"$VERSION": `"v" ORDINAL {"." ORDINAL}`,
-	"$WEEKS":   `TIMESPAN "W"`,
-	"$YEAR":    `ZERO | ORDINAL`,
-	"$YEARS":   `TIMESPAN "Y"`,
-	"$ZERO":    `"0"`,
+	"$VERSION":      `"v" ORDINAL {"." ORDINAL}`,
+	"$WEEKS":        `TIMESPAN "W"`,
+	"$YEAR":         `ZERO | ORDINAL`,
+	"$YEARS":        `TIMESPAN "Y"`,
+	"$ZERO":         `"0"`,
 	"$acceptClause": `"accept" message`,
 	"$annotation":   `NOTE | COMMENT`,
 	"$arguments":    `"(" [expression {"," expression}] ")"`,

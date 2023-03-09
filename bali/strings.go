@@ -253,7 +253,7 @@ func (v *formatter) formatBytecode(bytecode abs.BytecodeLike) {
 	}
 	for index := 4; index < length; index += 4 {
 		v.AppendString(" ")
-		v.AppendString(s[index: index + 4])
+		v.AppendString(s[index : index+4])
 	}
 	v.AppendString("'")
 }

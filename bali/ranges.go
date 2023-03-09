@@ -486,8 +486,8 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 		range_ = ran.Continuum(first.(abs.Continuous), extent, last.(abs.Continuous))
 	case abs.Discrete:
 		range_ = ran.Interval(first.(abs.Discrete), extent, last.(abs.Discrete))
-	case abs.Spectral:
-		range_ = ran.Spectrum(first.(abs.Spectral), extent, last.(abs.Spectral))
+	case abs.Quantized:
+		range_ = ran.Spectrum(first.(abs.Quantized), extent, last.(abs.Quantized))
 	default:
 		var message = fmt.Sprintf("An invalid range endpoint (of type %T) was parsed: %v", first, first)
 		panic(message)
@@ -523,7 +523,7 @@ func (v *formatter) formatInterval(interval abs.IntervalLike[abs.Discrete]) {
 
 // This method adds the canonical format for the specified spectrum to the
 // state of the formatter.
-func (v *formatter) formatSpectrum(spectrum abs.SpectrumLike[abs.Spectral]) {
+func (v *formatter) formatSpectrum(spectrum abs.SpectrumLike[abs.Quantized]) {
 	var extent = spectrum.GetExtent()
 	var left, right string
 	switch extent {

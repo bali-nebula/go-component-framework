@@ -313,7 +313,7 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatMapping(value)
 	case abs.IntervalLike[abs.Discrete]:
 		v.formatInterval(value)
-	case abs.SpectrumLike[abs.Spectral]:
+	case abs.SpectrumLike[abs.Quantized]:
 		v.formatSpectrum(value)
 	case abs.ContinuumLike[abs.Continuous]:
 		v.formatContinuum(value)
@@ -541,7 +541,7 @@ func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 //	----xx
 //	----  This is the first line
 //	----of a short, multi-line
-//  
+//
 //	----indented paragraph.
 //	----xx <-- No EOL here
 //
@@ -560,7 +560,7 @@ func trimIndentation(v string) string {
 	var last = lines[size]
 	var count = len(last) + 2 // The correct number of spaces in the indentation.
 	var indentation = sts.Repeat(" ", count)
-	lines = lines[1:size]           // Strip off the first and last delimitier lines.
+	lines = lines[1:size] // Strip off the first and last delimitier lines.
 	for _, line := range lines {
 		if !sts.HasPrefix(line, indentation) {
 			// Remove any incorrect indentation

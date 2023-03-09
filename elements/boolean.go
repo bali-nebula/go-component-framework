@@ -14,6 +14,12 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 )
 
+// CONSTANT DEFINITIONS
+
+var False abs.BooleanLike = Boolean(false)
+
+var True abs.BooleanLike = Boolean(true)
+
 // BOOLEAN IMPLEMENTATION
 
 // This constructor creates a new boolean entity from the specified Go boolean

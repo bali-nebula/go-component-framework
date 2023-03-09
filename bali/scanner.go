@@ -660,7 +660,7 @@ func scanBoolean(v []byte) []string {
 //	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Bytecode
 const (
 	instruction = base16 + base16 + base16 + base16
-	bytecode = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
+	bytecode    = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
 )
 
 // This scanner is used for matching bytecode strings.

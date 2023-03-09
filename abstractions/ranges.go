@@ -38,7 +38,7 @@ type Bounded[V Primitive] interface {
 	GetExtent() Extent
 	SetExtent(extent Extent)
 	GetLast() V
-	SetLast(V)
+	SetLast(value V)
 }
 
 // CONSOLIDATED INTERFACES
@@ -74,7 +74,7 @@ type IntervalLike[V Discrete] interface {
 
 // This interface consolidates all of the interfaces supported by spectrum-like
 // ranges.
-type SpectrumLike[V Spectral] interface {
+type SpectrumLike[V Quantized] interface {
 	Bounded[V]
 	Searchable[V]
 }

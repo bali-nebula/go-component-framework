@@ -16,6 +16,10 @@ import (
 	tim "time"
 )
 
+// MOMENT CONSTANTS
+
+const Epoch = Moment(0)
+
 // MOMENT IMPLEMENTATION
 
 // This constructor creates a new moment in time element for the current time
@@ -26,7 +30,7 @@ func Now() abs.MomentLike {
 }
 
 // This constructor creates a new moment in time element from the specified
-// integer number of milliseconds since epoc in the UTC timezone.
+// integer number of milliseconds since the UNIX Epoch in the UTC timezone.
 func MomentFromInt(milliseconds int) abs.MomentLike {
 	return Moment(milliseconds)
 }
@@ -43,7 +47,7 @@ func MaximumMoment() abs.MomentLike {
 
 // This type defines the methods associated with moment in time elements. It
 // extends the native Go int type and represents the number of milliseconds
-// after the UNIX epoc (Midnight, January 1, 1970 UTC) for a moment of tim.
+// after the UNIX Epoch (Midnight, January 1, 1970 UTC) for a moment of tim.
 // All moments are based on UTC.
 type Moment int
 
@@ -61,42 +65,50 @@ func (v Moment) AsInteger() int {
 
 // TEMPORAL INTERFACE
 
-// This method returns the total number of milliseconds since epoc in this moment.
+// This method returns the total number of milliseconds since the UNIX Epoch
+// in this moment.
 func (v Moment) AsMilliseconds() float64 {
 	return float64(v)
 }
 
-// This method returns the total number of seconds since epoc in this moment.
+// This method returns the total number of seconds since the UNIX Epoch
+// in this moment.
 func (v Moment) AsSeconds() float64 {
 	return float64(v.AsMilliseconds()) / 1000.0 // milliseconds per second
 }
 
-// This method returns the total number of minutes since epoc in this moment.
+// This method returns the total number of minutes since the UNIX Epoch
+// in this moment.
 func (v Moment) AsMinutes() float64 {
 	return v.AsSeconds() / 60.0 // seconds per minute
 }
 
-// This method returns the total number of hours since epoc in this moment.
+// This method returns the total number of hours since the UNIX Epoch
+// in this moment.
 func (v Moment) AsHours() float64 {
 	return v.AsMinutes() / 60.0 // minutes per hour
 }
 
-// This method returns the total number of days since epoc in this moment.
+// This method returns the total number of days since the UNIX Epoch
+// in this moment.
 func (v Moment) AsDays() float64 {
 	return v.AsHours() / 24.0 // hours per day
 }
 
-// This method returns the total number of weeks since epoc in this moment.
+// This method returns the total number of weeks since the UNIX Epoch
+// in this moment.
 func (v Moment) AsWeeks() float64 {
 	return v.AsDays() / 7.0 // days per week
 }
 
-// This method returns the total number of months since epoc in this moment.
+// This method returns the total number of months since the UNIX Epoch
+// in this moment.
 func (v Moment) AsMonths() float64 {
 	return v.AsDays() / DaysPerMonth
 }
 
-// This method returns the total number of years since epoc in this moment.
+// This method returns the total number of years since the UNIX Epoch
+// in this moment.
 func (v Moment) AsYears() float64 {
 	return v.AsDays() / DaysPerYear
 }

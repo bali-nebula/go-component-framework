@@ -74,7 +74,6 @@ func TestLists(t *tes.T) {
 	ass.True(t, list.IsEmpty())
 }
 
-
 func TestQueueWithConcurrency(t *tes.T) {
 	var one = bal.Component(1)
 	var two = bal.Component(2)

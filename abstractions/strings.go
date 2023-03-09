@@ -36,44 +36,44 @@ func (v Instruction) GetSecondByte() byte {
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all spectral strings.
-type Spectral interface {
+type Quantized interface {
 	AsString() string
 }
 
 // CONSOLIDATED INTERFACES
 
 type BinaryLike interface {
-	Spectral
+	Quantized
 	Sequential[byte]
 	Accessible[byte]
 }
 
 type BytecodeLike interface {
-	Spectral
+	Quantized
 	Sequential[Instruction]
 	Accessible[Instruction]
 }
 
 type MonikerLike interface {
-	Spectral
+	Quantized
 	Sequential[Name]
 	Accessible[Name]
 }
 
 type NarrativeLike interface {
-	Spectral
+	Quantized
 	Sequential[Line]
 	Accessible[Line]
 }
 
 type QuoteLike interface {
-	Spectral
+	Quantized
 	Sequential[rune]
 	Accessible[rune]
 }
 
 type VersionLike interface {
-	Spectral
+	Quantized
 	Sequential[Ordinal]
 	Accessible[Ordinal]
 }
