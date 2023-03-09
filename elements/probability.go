@@ -36,6 +36,11 @@ func ProbabilityFromBool(v bool) abs.ProbabilityLike {
 	return Probability(0)
 }
 
+// This constructor creates a new random probability.
+func RandomProbability() abs.ProbabilityLike {
+	return Probability(uti.RandomProbability())
+}
+
 // This constructor returns the minimum value for a probability.
 func MinimumProbability() abs.ProbabilityLike {
 	return Probability(0)
@@ -100,11 +105,6 @@ var Probabilities = &probabilities{}
 // This type defines an empty structure and the group of methods bound to it
 // that define the library functions for probability elements.
 type probabilities struct{}
-
-// This library function returns a random probability.
-func (l *probabilities) Random() abs.ProbabilityLike {
-	return Probability(uti.RandomProbability())
-}
 
 // LOGICAL INTERFACE
 

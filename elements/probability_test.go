@@ -35,7 +35,7 @@ func TestOneProbabilities(t *tes.T) {
 }
 
 func TestRandomProbabilities(t *tes.T) {
-	ele.Probabilities.Random()
+	ele.RandomProbability()
 }
 
 func TestOtherProbabilities(t *tes.T) {
