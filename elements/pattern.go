@@ -15,6 +15,12 @@ import (
 	reg "regexp"
 )
 
+// CONSTANT DEFINITIONS
+
+var Any abs.PatternLike = Pattern(`.*`)
+
+var None abs.PatternLike = Pattern(`^none$`)
+
 // PATTERN IMPLEMENTATION
 
 // This constructor creates a new pattern from the specified string.

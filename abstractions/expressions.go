@@ -139,7 +139,7 @@ type VariableLike interface {
 	SetIdentifier(identifier string)
 }
 
-// CONSTANTS
+// CONSTANT DEFINITIONS
 
 type Operator int
 

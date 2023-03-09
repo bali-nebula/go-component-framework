@@ -15,7 +15,7 @@ import (
 	mat "math"
 )
 
-// DURATION CONSTANTS
+// CONSTANT DEFINITIONS
 
 // These are locked to the Earth's daily revolutions.
 

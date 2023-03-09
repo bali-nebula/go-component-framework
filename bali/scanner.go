@@ -1151,7 +1151,7 @@ func scanVersion(v []byte) []string {
 	return bytesToStrings(versionScanner.FindSubmatch(v))
 }
 
-// PRIVATE CONSTANTS
+// CONSTANT DEFINITIONS
 
 // This array contains the full set of keywords used by the Bali Document
 // Notation™ (BDN). They are in reverse order for proper matching.

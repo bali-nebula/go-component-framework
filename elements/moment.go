@@ -16,7 +16,7 @@ import (
 	tim "time"
 )
 
-// MOMENT CONSTANTS
+// CONSTANT DEFINITIONS
 
 const Epoch = Moment(0)
 
