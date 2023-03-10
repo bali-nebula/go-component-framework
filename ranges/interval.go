@@ -293,8 +293,8 @@ func (v *interval[V]) goIndex(index int) int {
 // INTEGER IMPLEMENTATION
 
 // This constructor creates a new integer endpoint from the specified int.
-func IntegerFromInt(v int) abs.IntegerLike {
-	return Integer(v)
+func IntegerFromInt(integer int) abs.IntegerLike {
+	return Integer(integer)
 }
 
 // This constructor returns the minimum value for an integer endpoint.

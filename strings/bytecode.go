@@ -30,12 +30,12 @@ const (
 var bytecodeScanner = reg.MustCompile(`^(?:` + bytecode + `)$`)
 
 // This constructor creates a new bytecode string from the specified string.
-func BytecodeFromString(v string) abs.BytecodeLike {
-	if !bytecodeScanner.MatchString(v) {
-		var message = fmt.Sprintf("Attempted to construct a bytecode string from an invalid string: %v", v)
+func BytecodeFromString(string_ string) abs.BytecodeLike {
+	if !bytecodeScanner.MatchString(string_) {
+		var message = fmt.Sprintf("Attempted to construct a bytecode string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Bytecode(v)
+	return Bytecode(string_)
 }
 
 // This constructor creates a new bytecode string from the specified instruction array.

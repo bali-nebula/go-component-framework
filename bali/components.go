@@ -553,9 +553,9 @@ func (v *formatter) formatParameter(parameter abs.ParameterLike) {
 //	indented paragraph.
 //
 // The remaining lines are no longer indented.
-func trimIndentation(v string) string {
+func trimIndentation(string_ string) string {
 	var trimmed string
-	var lines = sts.Split(v, EOL)
+	var lines = sts.Split(string_, EOL)
 	var size = len(lines) - 1
 	var last = lines[size]
 	var count = len(last) + 2 // The correct number of spaces in the indentation.

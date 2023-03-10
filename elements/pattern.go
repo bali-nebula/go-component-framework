@@ -24,9 +24,9 @@ var None abs.PatternLike = Pattern(`^none$`)
 // PATTERN IMPLEMENTATION
 
 // This constructor creates a new pattern from the specified string.
-func PatternFromString(v string) abs.PatternLike {
-	reg.MustCompile(v)
-	return Pattern(v)
+func PatternFromString(string_ string) abs.PatternLike {
+	reg.MustCompile(string_)
+	return Pattern(string_)
 }
 
 // This type defines the methods associated with a character pattern that

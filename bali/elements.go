@@ -1065,8 +1065,8 @@ func formatOrdinal(ordinal, digits int) string {
 }
 
 // This function converts a string into a float value.
-func stringToFloat(s string) float64 {
-	switch s {
+func stringToFloat(string_ string) float64 {
+	switch string_ {
 	case "":
 		return 1
 	case "-":
@@ -1088,7 +1088,7 @@ func stringToFloat(s string) float64 {
 	case "-tau", "-τ":
 		return -mat.Pi * 2.0
 	}
-	var float, _ = stc.ParseFloat(s, 64)
+	var float, _ = stc.ParseFloat(string_, 64)
 	return float
 }
 

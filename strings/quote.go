@@ -35,12 +35,12 @@ const (
 var quoteScanner = reg.MustCompile(`^(?:` + quote + `)$`)
 
 // This constructor creates a new quote string from the specified string.
-func QuoteFromString(v string) abs.QuoteLike {
-	if !quoteScanner.MatchString(v) {
-		var message = fmt.Sprintf("Attempted to construct a quote string from an invalid string: %v", v)
+func QuoteFromString(string_ string) abs.QuoteLike {
+	if !quoteScanner.MatchString(string_) {
+		var message = fmt.Sprintf("Attempted to construct a quote string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Quote(v)
+	return Quote(string_)
 }
 
 // This constructor attempts to create a new quote string from the specified

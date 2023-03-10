@@ -31,12 +31,12 @@ const (
 var binaryScanner = reg.MustCompile(`^(?:` + binary + `)$`)
 
 // This constructor creates a new binary string from the specified string.
-func BinaryFromString(v string) abs.BinaryLike {
-	if !binaryScanner.MatchString(v) {
-		var message = fmt.Sprintf("Attempted to construct a binary string from an invalid string: %v", v)
+func BinaryFromString(string_ string) abs.BinaryLike {
+	if !binaryScanner.MatchString(string_) {
+		var message = fmt.Sprintf("Attempted to construct a binary string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Binary(v)
+	return Binary(string_)
 }
 
 // This constructor creates a new binary string from the specified byte array.

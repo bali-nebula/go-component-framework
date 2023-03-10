@@ -32,12 +32,12 @@ const (
 var symbolScanner = reg.MustCompile(`^(?:` + symbol + `)$`)
 
 // This constructor creates a new symbol from the specified string.
-func SymbolFromString(v string) abs.SymbolLike {
-	if !symbolScanner.MatchString(v) {
-		var message = fmt.Sprintf("Attempted to construct a symbol from an invalid string: %v", v)
+func SymbolFromString(string_ string) abs.SymbolLike {
+	if !symbolScanner.MatchString(string_) {
+		var message = fmt.Sprintf("Attempted to construct a symbol from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Symbol(v)
+	return Symbol(string_)
 }
 
 // This type defines the methods associated with a symbol element that

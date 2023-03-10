@@ -19,18 +19,18 @@ import (
 
 // This constructor creates a new probability and constrains the value to be in
 // the allowed range for probabilities [0..1].
-func ProbabilityFromFloat(v float64) abs.ProbabilityLike {
-	if v < 0.0 {
-		v = 0.0
-	} else if v > 1.0 {
-		v = 1.0
+func ProbabilityFromFloat(float float64) abs.ProbabilityLike {
+	if float < 0.0 {
+		float = 0.0
+	} else if float > 1.0 {
+		float = 1.0
 	}
-	return Probability(v)
+	return Probability(float)
 }
 
 // This constructor creates a new probability from the specified boolean value.
-func ProbabilityFromBool(v bool) abs.ProbabilityLike {
-	if v {
+func ProbabilityFromBool(boolean bool) abs.ProbabilityLike {
+	if boolean {
 		return Probability(1)
 	}
 	return Probability(0)

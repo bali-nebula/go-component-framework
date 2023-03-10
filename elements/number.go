@@ -87,28 +87,28 @@ var Undefined abs.NumberLike = Number(undefined)
 // crutch that leads to misleading convergence information for oscillating
 // functions. In the case of numerical analysis it is probably better to track
 // the course of the function as it converges than to look at the final value.
-func NumberFromComplex(v complex128) abs.NumberLike {
+func NumberFromComplex(complex_ complex128) abs.NumberLike {
 	switch {
-	case cmp.Abs(v) == 0:
+	case cmp.Abs(complex_) == 0:
 		// Normalize all versions of zero.
 		return Zero
-	case cmp.IsInf(v):
+	case cmp.IsInf(complex_):
 		// Normalize any negative infinities or infinite i's.
 		return Infinity
-	case cmp.IsNaN(v):
+	case cmp.IsNaN(complex_):
 		// Normalize any NaN's mixed with valid numbers.
 		return Undefined
 	default:
 		// Lock onto 0, -1, 1, -i, i, and ∞ if necessary.
-		var r = lockMagnitude(real(v))
-		var i = lockMagnitude(imag(v))
+		var r = lockMagnitude(real(complex_))
+		var i = lockMagnitude(imag(complex_))
 		return Number(complex(r, i))
 	}
 }
 
-func NumberFromPolar(m float64, p abs.AngleLike) abs.NumberLike {
-	var v = cmp.Rect(m, p.AsReal())
-	return NumberFromComplex(v)
+func NumberFromPolar(magnitude float64, phase abs.AngleLike) abs.NumberLike {
+	var complex_ = cmp.Rect(magnitude, phase.AsReal())
+	return NumberFromComplex(complex_)
 }
 
 // This constructor returns the minimum value for a number.

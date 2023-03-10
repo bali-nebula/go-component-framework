@@ -32,12 +32,12 @@ const (
 var versionScanner = reg.MustCompile(`^(?:` + version + `)$`)
 
 // This constructor creates a new version string from the specified string.
-func VersionFromString(v string) abs.VersionLike {
-	if !versionScanner.MatchString(v) {
-		var message = fmt.Sprintf("Attempted to construct a version string from an invalid string: %v", v)
+func VersionFromString(string_ string) abs.VersionLike {
+	if !versionScanner.MatchString(string_) {
+		var message = fmt.Sprintf("Attempted to construct a version string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Version(v)
+	return Version(string_)
 }
 
 // This constructor attempts to create a new version string from the specified

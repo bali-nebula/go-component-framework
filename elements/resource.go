@@ -20,19 +20,19 @@ import (
 
 // This constructor creates a new resource from the specified universal resource
 // identifier (URI) string.
-func ResourceFromString(v string) abs.ResourceLike {
-	var _, err = uri.Parse(v)
+func ResourceFromString(string_ string) abs.ResourceLike {
+	var _, err = uri.Parse(string_)
 	if err != nil {
-		var message = fmt.Sprintf("Attempted to construct a resource from an invalid URI: %v", v)
+		var message = fmt.Sprintf("Attempted to construct a resource from an invalid URI: %v", string_)
 		panic(message)
 	}
-	return Resource(v)
+	return Resource(string_)
 }
 
 // This constructor creates a new resource from the specified universal resource
 // identifier (URI) pointer.
-func ResourceFromURI(v *uri.URL) abs.ResourceLike {
-	return Resource(v.String())
+func ResourceFromURI(url *uri.URL) abs.ResourceLike {
+	return Resource(url.String())
 }
 
 // This type defines the methods associated with a web resource element that

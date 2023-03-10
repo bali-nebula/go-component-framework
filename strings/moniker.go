@@ -34,12 +34,12 @@ const (
 var monikerScanner = reg.MustCompile(`^(?:` + moniker + `)$`)
 
 // This constructor creates a new moniker string from the specified string.
-func MonikerFromString(v string) abs.MonikerLike {
-	if !monikerScanner.MatchString(v) {
-		var message = fmt.Sprintf("Attempted to construct a moniker string from an invalid string: %v", v)
+func MonikerFromString(string_ string) abs.MonikerLike {
+	if !monikerScanner.MatchString(string_) {
+		var message = fmt.Sprintf("Attempted to construct a moniker string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Moniker(v)
+	return Moniker(string_)
 }
 
 // This constructor attempts to create a new moniker string from the specified

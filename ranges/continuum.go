@@ -182,8 +182,8 @@ func (v *continuum[V]) validateContinuum() {
 // REAL IMPLEMENTATION
 
 // This constructor creates a new real endpoint from the specified float.
-func RealFromFloat(v float64) abs.RealLike {
-	return Real(v)
+func RealFromFloat(float float64) abs.RealLike {
+	return Real(float)
 }
 
 // This constructor returns the minimum value for a real endpoint.

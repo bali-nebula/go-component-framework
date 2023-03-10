@@ -24,8 +24,8 @@ var True abs.BooleanLike = Boolean(true)
 
 // This constructor creates a new boolean entity from the specified Go boolean
 // value.
-func BooleanFromBool(v bool) abs.BooleanLike {
-	return Boolean(v)
+func BooleanFromBool(boolean bool) abs.BooleanLike {
+	return Boolean(boolean)
 }
 
 // This type defines the methods associated with boolean elements. It extends

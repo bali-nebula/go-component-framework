@@ -73,8 +73,8 @@ func (v *formatter) GetIndentation() int {
 }
 
 // This method appends the specified string to the result.
-func (v *formatter) AppendString(s string) {
-	v.result.WriteString(s)
+func (v *formatter) AppendString(string_ string) {
+	v.result.WriteString(string_)
 }
 
 // This method appends a properly indented newline to the result.

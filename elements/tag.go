@@ -30,17 +30,17 @@ const (
 var tagScanner = reg.MustCompile(`^(?:` + tag + `)$`)
 
 // This constructor creates a new tag element from the specified string.
-func TagFromString(v string) abs.TagLike {
-	if !tagScanner.MatchString(v) {
-		var message = fmt.Sprintf("Attempted to construct a tag from an invalid string: %v", v)
+func TagFromString(string_ string) abs.TagLike {
+	if !tagScanner.MatchString(string_) {
+		var message = fmt.Sprintf("Attempted to construct a tag from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Tag(v)
+	return Tag(string_)
 }
 
 // This constructor creates a new tag element from the specified string.
-func TagFromArray(v []byte) abs.TagLike {
-	var base32 = uti.Base32Encode(v)
+func TagFromArray(array []byte) abs.TagLike {
+	var base32 = uti.Base32Encode(array)
 	return Tag(base32)
 }
 

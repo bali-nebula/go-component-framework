@@ -38,17 +38,17 @@ func MaximumAngle() abs.AngleLike {
 
 // This constructor creates a new angle from the specified value and normalizes
 // the value to be in the allowed range for angles [0..τ).
-func AngleFromFloat(v float64) abs.AngleLike {
+func AngleFromFloat(float float64) abs.AngleLike {
 	var tau = 2.0 * mat.Pi
-	if v < -tau || v >= tau {
+	if float < -tau || float >= tau {
 		// Normalize the angle to the range [-τ..τ).
-		v = mat.Remainder(v, tau)
+		float = mat.Remainder(float, tau)
 	}
-	if v < 0.0 {
+	if float < 0.0 {
 		// Normalize the angle to the range [0..τ).
-		v = v + tau
+		float = float + tau
 	}
-	return Angle(lockPhase(v))
+	return Angle(lockPhase(float))
 }
 
 // This type defines the methods associated with angle elements. It extends the

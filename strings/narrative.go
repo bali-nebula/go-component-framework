@@ -19,10 +19,10 @@ import (
 // NARRATIVE STRING IMPLEMENTATION
 
 // This constructor creates a new narrative string from the specified string.
-func NarrativeFromString(v string) abs.NarrativeLike {
+func NarrativeFromString(string_ string) abs.NarrativeLike {
 	// Since a narrative may be recursive we cannot (easily) use a regular
 	// expression to scan it. We must trust it is correct here.
-	return Narrative(v)
+	return Narrative(string_)
 }
 
 // This constructor attempts to create a new narrative string from the specified
