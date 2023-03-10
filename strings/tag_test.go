@@ -8,10 +8,10 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package elements_test
+package strings_test
 
 import (
-	ele "github.com/bali-nebula/go-component-framework/elements"
+	sts "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
 	tes "testing"
@@ -19,10 +19,10 @@ import (
 
 func TestStringTags(t *tes.T) {
 	for i := 1; i < 33; i++ {
-		var t1 = ele.TagOfSize(i)
+		var t1 = sts.TagOfSize(i)
 		ass.Equal(t, len(t1.AsString()), int(mat.Ceil(float64(i)*8.0/5.0)))
 		var s1 = t1.AsString()
-		var t2 = ele.TagFromString(s1)
+		var t2 = sts.TagFromString(s1)
 		ass.Equal(t, t1, t2)
 		var s2 = t2.AsString()
 		ass.Equal(t, s1, s2)

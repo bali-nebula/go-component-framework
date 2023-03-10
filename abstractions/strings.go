@@ -72,6 +72,11 @@ type QuoteLike interface {
 	Accessible[rune]
 }
 
+type TagLike interface {
+	Quantized
+	Sequential[byte]
+}
+
 type VersionLike interface {
 	Quantized
 	Sequential[Ordinal]

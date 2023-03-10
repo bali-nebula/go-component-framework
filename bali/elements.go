@@ -350,51 +350,6 @@ func Symbol(value abs.Value) abs.SymbolLike {
 	return symbol
 }
 
-// This constructor returns a new random tag element of the default size.
-func NewTag() abs.TagLike {
-	return ele.TagOfSize(0)
-}
-
-// This constructor returns a new tag element initialized with the specified
-// value.
-func Tag(value abs.Value) abs.TagLike {
-	var tag abs.TagLike
-	switch actual := value.(type) {
-	case uint:
-		tag = ele.TagOfSize(int(actual))
-	case uint8:
-		tag = ele.TagOfSize(int(actual))
-	case uint16:
-		tag = ele.TagOfSize(int(actual))
-	case uint32:
-		tag = ele.TagOfSize(int(actual))
-	case uint64:
-		tag = ele.TagOfSize(int(actual))
-	case int:
-		tag = ele.TagOfSize(int(actual))
-	case int8:
-		tag = ele.TagOfSize(int(actual))
-	case int16:
-		tag = ele.TagOfSize(int(actual))
-	case int32:
-		tag = ele.TagOfSize(int(actual))
-	case int64:
-		tag = ele.TagOfSize(int(actual))
-	case []byte:
-		tag = ele.TagFromArray(actual)
-	case string:
-		tag = ParseEntity(actual).(abs.TagLike)
-	case abs.TagLike:
-		tag = actual
-	case abs.ComponentLike:
-		tag = actual.GetEntity().(abs.TagLike)
-	default:
-		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a tag: %v", actual, actual)
-		panic(message)
-	}
-	return tag
-}
-
 // PRIVATE METHODS
 
 // This method attempts to parse an angle element. It returns the angle element
@@ -1029,30 +984,6 @@ func (v *parser) parseSymbol() (abs.SymbolLike, *Token, bool) {
 func (v *formatter) formatSymbol(symbol abs.SymbolLike) {
 	var identifier = symbol.AsString()
 	var s = "$" + identifier
-	v.AppendString(s)
-}
-
-// This method attempts to parse a tag element. It returns the
-// tag element and whether or not the tag element was
-// successfully parsed.
-func (v *parser) parseTag() (abs.TagLike, *Token, bool) {
-	var token *Token
-	var tag abs.TagLike
-	token = v.nextToken()
-	if token.Type != TokenTag {
-		v.backupOne()
-		return tag, token, false
-	}
-	var matches = scanTag([]byte(token.Value))
-	tag = ele.TagFromString(matches[1]) // Remove the leading "#".
-	return tag, token, true
-}
-
-// This method adds the canonical format for the specified element to the state
-// of the formatter.
-func (v *formatter) formatTag(tag abs.TagLike) {
-	var encoded = tag.AsString()
-	var s = "#" + encoded
 	v.AppendString(s)
 }
 

@@ -19,6 +19,10 @@ import (
 	sts "strings"
 )
 
+// CONSTANT DEFINITIONS
+
+var V1 abs.VersionLike = Version("v1")
+
 // VERSION STRING IMPLEMENTATION
 
 // These constants are used to define a regular expression for matching

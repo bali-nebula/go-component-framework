@@ -137,8 +137,3 @@ type ResourceLike interface {
 type SymbolLike interface {
 	Quantized
 }
-
-type TagLike interface {
-	Quantized
-	Sequential[byte]
-}

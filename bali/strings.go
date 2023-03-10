@@ -144,6 +144,51 @@ func Quote(value abs.Value) abs.QuoteLike {
 	return quote
 }
 
+// This constructor returns a new random tag element of the default size.
+func NewTag() abs.TagLike {
+	return str.TagOfSize(0)
+}
+
+// This constructor returns a new tag element initialized with the specified
+// value.
+func Tag(value abs.Value) abs.TagLike {
+	var tag abs.TagLike
+	switch actual := value.(type) {
+	case uint:
+		tag = str.TagOfSize(int(actual))
+	case uint8:
+		tag = str.TagOfSize(int(actual))
+	case uint16:
+		tag = str.TagOfSize(int(actual))
+	case uint32:
+		tag = str.TagOfSize(int(actual))
+	case uint64:
+		tag = str.TagOfSize(int(actual))
+	case int:
+		tag = str.TagOfSize(int(actual))
+	case int8:
+		tag = str.TagOfSize(int(actual))
+	case int16:
+		tag = str.TagOfSize(int(actual))
+	case int32:
+		tag = str.TagOfSize(int(actual))
+	case int64:
+		tag = str.TagOfSize(int(actual))
+	case []byte:
+		tag = str.TagFromArray(actual)
+	case string:
+		tag = ParseEntity(actual).(abs.TagLike)
+	case abs.TagLike:
+		tag = actual
+	case abs.ComponentLike:
+		tag = actual.GetEntity().(abs.TagLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a tag: %v", actual, actual)
+		panic(message)
+	}
+	return tag
+}
+
 // This constructor returns a new version string initialized with the specified
 // value.
 func Version(value abs.Value) abs.VersionLike {
@@ -367,6 +412,30 @@ func (v *parser) parseString() (abs.String, *Token, bool) {
 		s = nil
 	}
 	return s, token, ok
+}
+
+// This method attempts to parse a tag element. It returns the
+// tag element and whether or not the tag element was
+// successfully parsed.
+func (v *parser) parseTag() (abs.TagLike, *Token, bool) {
+	var token *Token
+	var tag abs.TagLike
+	token = v.nextToken()
+	if token.Type != TokenTag {
+		v.backupOne()
+		return tag, token, false
+	}
+	var matches = scanTag([]byte(token.Value))
+	tag = str.TagFromString(matches[1]) // Remove the leading "#".
+	return tag, token, true
+}
+
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
+func (v *formatter) formatTag(tag abs.TagLike) {
+	var encoded = tag.AsString()
+	var s = "#" + encoded
+	v.AppendString(s)
 }
 
 // This method attempts to parse a version string. It returns the version
