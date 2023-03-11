@@ -19,7 +19,7 @@ type (
 // INDIVIDUAL INTERFACES
 
 // This interface defines the methods supported by all spectrum endpoints.
-type Quantized interface {
+type Lexical interface {
 	AsString() string
 }
 
@@ -119,7 +119,7 @@ type NumberLike interface {
 }
 
 type PatternLike interface {
-	Quantized
+	Lexical
 	Matchable
 }
 
@@ -135,10 +135,10 @@ type ProbabilityLike interface {
 }
 
 type ResourceLike interface {
-	Quantized
+	Lexical
 	Segmented
 }
 
 type SymbolLike interface {
-	Quantized
+	Lexical
 }

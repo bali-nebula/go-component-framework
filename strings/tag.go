@@ -72,7 +72,7 @@ type Tag string
 
 // QUANTIZED INTERFACE
 
-// This method returns a string value for this quantized element.
+// This method returns a string value for this lexical element.
 func (v Tag) AsString() string {
 	return string(v)
 }

@@ -47,7 +47,7 @@ type Symbol string
 
 // QUANTIZED INTERFACE
 
-// This method returns a string value for this quantized element.
+// This method returns a string value for this lexical element.
 func (v Symbol) AsString() string {
 	return string(v)
 }

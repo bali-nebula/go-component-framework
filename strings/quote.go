@@ -66,7 +66,7 @@ type Quote string
 
 // QUANTIZED INTERFACE
 
-// This method returns a string value for this quantized string.
+// This method returns a string value for this lexical string.
 func (v Quote) AsString() string {
 	return string(v)
 }

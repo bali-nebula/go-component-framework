@@ -126,7 +126,7 @@ func Real(value abs.Value) abs.RealLike {
 	return real_
 }
 
-// This constructor returns a new quantized range with the specified endpoints.
+// This constructor returns a new lexical range with the specified endpoints.
 func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, context abs.ContextLike) abs.ComponentLike {
 	var entity abs.Entity
 	switch actual := first.(type) {
@@ -486,8 +486,8 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 		range_ = ran.Continuum(first.(abs.Continuous), extent, last.(abs.Continuous))
 	case abs.Discrete:
 		range_ = ran.Interval(first.(abs.Discrete), extent, last.(abs.Discrete))
-	case abs.Quantized:
-		range_ = ran.Spectrum(first.(abs.Quantized), extent, last.(abs.Quantized))
+	case abs.Lexical:
+		range_ = ran.Spectrum(first.(abs.Lexical), extent, last.(abs.Lexical))
 	default:
 		var message = fmt.Sprintf("An invalid range endpoint (of type %T) was parsed: %v", first, first)
 		panic(message)
@@ -523,7 +523,7 @@ func (v *formatter) formatInterval(interval abs.IntervalLike[abs.Discrete]) {
 
 // This method adds the canonical format for the specified spectrum to the
 // state of the formatter.
-func (v *formatter) formatSpectrum(spectrum abs.SpectrumLike[abs.Quantized]) {
+func (v *formatter) formatSpectrum(spectrum abs.SpectrumLike[abs.Lexical]) {
 	var extent = spectrum.GetExtent()
 	var left, right string
 	switch extent {

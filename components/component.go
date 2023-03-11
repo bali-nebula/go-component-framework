@@ -156,8 +156,8 @@ func (v *component) ExtractSet() abs.SetLike {
 }
 
 // This method returns the entity for this component as a spectrum.
-func (v *component) ExtractSpectrum() abs.SpectrumLike[abs.Quantized] {
-	return v.entity.(abs.SpectrumLike[abs.Quantized])
+func (v *component) ExtractSpectrum() abs.SpectrumLike[abs.Lexical] {
+	return v.entity.(abs.SpectrumLike[abs.Lexical])
 }
 
 // This method returns the entity for this component as a stack.

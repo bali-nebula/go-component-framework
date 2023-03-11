@@ -71,7 +71,7 @@ type Binary string
 
 // QUANTIZED INTERFACE
 
-// This method returns a string value for this quantized string.
+// This method returns a string value for this lexical string.
 func (v Binary) AsString() string {
 	return string(v)
 }

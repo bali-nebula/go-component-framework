@@ -74,7 +74,7 @@ type IntervalLike[V Discrete] interface {
 
 // This interface consolidates all of the interfaces supported by spectrum-like
 // ranges.
-type SpectrumLike[V Quantized] interface {
+type SpectrumLike[V Lexical] interface {
 	Bounded[V]
 	Searchable[V]
 }

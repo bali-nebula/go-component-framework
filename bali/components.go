@@ -313,7 +313,7 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatMapping(value)
 	case abs.IntervalLike[abs.Discrete]:
 		v.formatInterval(value)
-	case abs.SpectrumLike[abs.Quantized]:
+	case abs.SpectrumLike[abs.Lexical]:
 		v.formatSpectrum(value)
 	case abs.ContinuumLike[abs.Continuous]:
 		v.formatContinuum(value)

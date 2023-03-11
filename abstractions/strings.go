@@ -95,45 +95,45 @@ type Ratcheted[V Value] interface {
 // CONSOLIDATED INTERFACES
 
 type BinaryLike interface {
-	Quantized
+	Lexical
 	Fundamental
 	Sequential[Byte]
 	Accessible[Byte]
 }
 
 type BytecodeLike interface {
-	Quantized
+	Lexical
 	Fundamental
 	Sequential[Instruction]
 	Accessible[Instruction]
 }
 
 type MonikerLike interface {
-	Quantized
+	Lexical
 	Sequential[Name]
 	Accessible[Name]
 }
 
 type NarrativeLike interface {
-	Quantized
+	Lexical
 	Sequential[Line]
 	Accessible[Line]
 }
 
 type QuoteLike interface {
-	Quantized
+	Lexical
 	Sequential[Rune]
 	Accessible[Rune]
 }
 
 type TagLike interface {
-	Quantized
+	Lexical
 	Fundamental
 	Sequential[Byte]
 }
 
 type VersionLike interface {
-	Quantized
+	Lexical
 	Sequential[Ordinal]
 	Accessible[Ordinal]
 }

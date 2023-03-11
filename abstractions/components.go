@@ -43,7 +43,7 @@ type Encapsulated interface {
 	ExtractQuote() QuoteLike
 	ExtractResource() ResourceLike
 	ExtractSet() SetLike
-	ExtractSpectrum() SpectrumLike[Quantized]
+	ExtractSpectrum() SpectrumLike[Lexical]
 	ExtractStack() StackLike
 	ExtractSymbol() SymbolLike
 	ExtractTag() TagLike
