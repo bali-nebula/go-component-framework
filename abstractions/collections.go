@@ -20,13 +20,6 @@ type (
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all updatable sequences of
-// values.
-type Updatable[V Value] interface {
-	SetValue(index int, value V)
-	SetValues(index int, values Sequential[V])
-}
-
 // This interface defines the methods supported by all searchable sequences of
 // values.
 type Searchable[V Value] interface {
@@ -34,6 +27,13 @@ type Searchable[V Value] interface {
 	ContainsValue(value V) bool
 	ContainsAny(values Sequential[V]) bool
 	ContainsAll(values Sequential[V]) bool
+}
+
+// This interface defines the methods supported by all updatable sequences of
+// values.
+type Updatable[V Value] interface {
+	SetValue(index int, value V)
+	SetValues(index int, values Sequential[V])
 }
 
 // This interface defines the methods supported by all sequences of values that
@@ -55,6 +55,25 @@ type Malleable[V Value] interface {
 	InsertValues(slot int, values Sequential[V])
 	RemoveValue(index int) V
 	RemoveValues(first int, last int) Sequential[V]
+	RemoveAll()
+}
+
+// This interface defines the methods supported by all sequences whose values
+// are accessed using first-in-first-out (FIFO) semantics.
+type FIFO[V Value] interface {
+	GetCapacity() int
+	AddValue(value V)
+	RemoveHead() (head V, ok bool)
+	CloseQueue()
+}
+
+// This interface defines the methods supported by all sequences whose values
+// are accessed using last-in-first-out (LIFO) semantics.
+type LIFO[V Value] interface {
+	GetCapacity() int
+	AddValue(value V)
+	GetTop() V
+	RemoveTop() V
 	RemoveAll()
 }
 
@@ -83,25 +102,6 @@ type Associative[K Key, V Value] interface {
 	SetValue(key K, value V)
 	RemoveValue(key K) V
 	RemoveValues(keys Sequential[K]) Sequential[V]
-	RemoveAll()
-}
-
-// This interface defines the methods supported by all sequences whose values
-// are accessed using first-in-first-out (FIFO) semantics.
-type FIFO[V Value] interface {
-	GetCapacity() int
-	AddValue(value V)
-	RemoveHead() (head V, ok bool)
-	CloseQueue()
-}
-
-// This interface defines the methods supported by all sequences whose values
-// are accessed using last-in-first-out (LIFO) semantics.
-type LIFO[V Value] interface {
-	GetCapacity() int
-	AddValue(value V)
-	GetTop() V
-	RemoveTop() V
 	RemoveAll()
 }
 

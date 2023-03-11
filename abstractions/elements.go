@@ -37,6 +37,11 @@ type Continuous interface {
 	IsUndefined() bool
 }
 
+// This interface defines the methods supported by all polarized elements.
+type Polarized interface {
+	IsNegative() bool
+}
+
 // This interface defines the methods supported by all complex elements.
 type Complex interface {
 	AsComplex() complex128
@@ -44,11 +49,6 @@ type Complex interface {
 	GetImaginary() float64
 	GetMagnitude() float64
 	GetPhase() AngleLike
-}
-
-// This interface defines the methods supported by all polarized elements.
-type Polarized interface {
-	IsNegative() bool
 }
 
 // This interface defines the methods supported by all matchable pattern
