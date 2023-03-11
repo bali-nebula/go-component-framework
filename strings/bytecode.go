@@ -38,20 +38,28 @@ func BytecodeFromString(string_ string) abs.BytecodeLike {
 	return Bytecode(string_)
 }
 
+// This constructor creates a new binary string from the specified byte array.
+// It returns the corresponding binary string.
+func BytecodeFromBytes(bytes []byte) abs.BytecodeLike {
+	var encoded = uti.Base16Encode(bytes)
+	return Bytecode(encoded)
+}
+
 // This constructor creates a new bytecode string from the specified instruction array.
 // It returns the corresponding bytecode string.
 func BytecodeFromArray(array []abs.Instruction) abs.BytecodeLike {
-	var bytes = col.List[byte]()
+	var list = col.List[byte]()
 	var instructions = col.ListFromArray(array)
 	var iterator = col.Iterator[abs.Instruction](instructions)
 	for iterator.HasNext() {
 		var instruction = iterator.GetNext()
 		var firstByte = instruction.GetFirstByte()
 		var secondByte = instruction.GetSecondByte()
-		bytes.AddValue(firstByte)
-		bytes.AddValue(secondByte)
+		list.AddValue(firstByte)
+		list.AddValue(secondByte)
 	}
-	var encoded = uti.Base16Encode(bytes.AsArray())
+	var bytes = list.AsArray()
+	var encoded = uti.Base16Encode(bytes)
 	return Bytecode(encoded)
 }
 
@@ -72,6 +80,15 @@ type Bytecode string
 // This method returns a string value for this quantized string.
 func (v Bytecode) AsString() string {
 	return string(v)
+}
+
+// FUNDAMENTAL INTERFACE
+
+// This method returns the byte array for this fundamental string.
+func (v Bytecode) AsBytes() []byte {
+	var encoded = string(v)
+	var bytes = uti.Base16Decode(encoded)
+	return bytes
 }
 
 // SEQUENTIAL INTERFACE

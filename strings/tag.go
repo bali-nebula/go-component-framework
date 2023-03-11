@@ -38,9 +38,20 @@ func TagFromString(string_ string) abs.TagLike {
 	return Tag(string_)
 }
 
+// This constructor creates a new binary string from the specified byte array.
+// It returns the corresponding binary string.
+func TagFromBytes(bytes []byte) abs.TagLike {
+	var encoded = uti.Base32Encode(bytes)
+	return Tag(encoded)
+}
+
 // This constructor creates a new tag element from the specified string.
-func TagFromArray(array []byte) abs.TagLike {
-	var base32 = uti.Base32Encode(array)
+func TagFromArray(array []abs.Byte) abs.TagLike {
+	var bytes = make([]byte, len(array))
+	for index, b := range array {
+		bytes[index] = byte(b)
+	}
+	var base32 = uti.Base32Encode(bytes)
 	return Tag(base32)
 }
 
@@ -66,6 +77,15 @@ func (v Tag) AsString() string {
 	return string(v)
 }
 
+// FUNDAMENTAL INTERFACE
+
+// This method returns the byte array for this fundamental string.
+func (v Tag) AsBytes() []byte {
+	var encoded = string(v)
+	var bytes = uti.Base32Decode(encoded)
+	return bytes
+}
+
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this tag is empty.
@@ -80,8 +100,11 @@ func (v Tag) GetSize() int {
 
 // This method returns all the bytes in this tag. The bytes retrieved
 // are in the same order as they are in the tag.
-func (v Tag) AsArray() []byte {
-	var base32 = string(v)
-	var bytes = uti.Base32Decode(base32)
-	return bytes
+func (v Tag) AsArray() []abs.Byte {
+	var bytes = v.AsBytes()
+	var array = make([]abs.Byte, len(bytes))
+	for index, b := range bytes {
+		array[index] = abs.Byte(b)
+	}
+	return array
 }

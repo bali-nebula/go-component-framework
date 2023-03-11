@@ -11,6 +11,7 @@
 package strings_test
 
 import (
+	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -28,8 +29,8 @@ func TestQuote(t *tes.T) {
 	ass.Equal(t, "abcd本1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 9, v.GetSize())
-	ass.Equal(t, 'a', v.GetValue(1))
-	ass.Equal(t, '4', v.GetValue(-1))
+	ass.Equal(t, abs.Rune('a'), v.GetValue(1))
+	ass.Equal(t, abs.Rune('4'), v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), str.QuoteFromArray(v.AsArray()).AsArray())
 	ass.Equal(t, "d本1", str.QuoteFromSequence(v.GetValues(4, 6)).AsString())
 }

@@ -194,7 +194,7 @@ func (v *notary) SignatureMatches(contract abs.ContractLike, certificate abs.Cer
 	var signature = contract.RemoveSignature()
 	var bytes = bal.FormatDocument(contract)
 	contract.AddSignature(signature)
-	var isValid = ssm.IsValid(key.AsArray(), signature.AsArray(), bytes)
+	var isValid = ssm.IsValid(key.AsBytes(), signature.AsBytes(), bytes)
 	return isValid
 }
 
@@ -225,5 +225,5 @@ func (v *notary) CitationMatches(citation abs.CitationLike, document abs.Documen
 	// Compare the citation digest with a digest of the document.
 	var bytes = bal.FormatDocument(document)
 	var digest = bal.Binary(ssm.DigestBytes(bytes))
-	return byt.Equal(digest.AsArray(), citation.GetDigest().AsArray())
+	return byt.Equal(digest.AsBytes(), citation.GetDigest().AsBytes())
 }

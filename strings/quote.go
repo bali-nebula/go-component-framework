@@ -46,14 +46,14 @@ func QuoteFromString(string_ string) abs.QuoteLike {
 // This constructor attempts to create a new quote string from the specified
 // array of runes. It returns a quote string and whether or not the
 // resulting string contained a valid quote.
-func QuoteFromArray(array []rune) abs.QuoteLike {
+func QuoteFromArray(array []abs.Rune) abs.QuoteLike {
 	var quote = Quote(string(array))
 	return quote
 }
 
 // This constructor creates a new quote string from the specified sequence of
 // runes. It returns the corresponding quote string.
-func QuoteFromSequence(sequence abs.Sequential[rune]) abs.QuoteLike {
+func QuoteFromSequence(sequence abs.Sequential[abs.Rune]) abs.QuoteLike {
 	var array = sequence.AsArray()
 	var quote = QuoteFromArray(array)
 	return quote
@@ -85,25 +85,30 @@ func (v Quote) GetSize() int {
 
 // This method returns all the runes in this string. The runes retrieved
 // are in the same order as they are in the string.
-func (v Quote) AsArray() []rune {
-	return []rune(v)
+func (v Quote) AsArray() []abs.Rune {
+	var runes = []rune(v)
+	var array = make([]abs.Rune, len(runes))
+	for index, r := range runes {
+		array[index] = abs.Rune(r)
+	}
+	return array
 }
 
 // ACCESSIBLE INTERFACE
 
 // This method retrieves from this string the rune that is associated
 // with the specified index.
-func (v Quote) GetValue(index int) rune {
+func (v Quote) GetValue(index int) abs.Rune {
 	var array = v.AsArray()
-	var runes = col.Array[rune](array)
+	var runes = col.Array[abs.Rune](array)
 	return runes.GetValue(index)
 }
 
 // This method retrieves from this string all runes from the first index
 // through the last index (inclusive).
-func (v Quote) GetValues(first int, last int) abs.Sequential[rune] {
+func (v Quote) GetValues(first int, last int) abs.Sequential[abs.Rune] {
 	var array = v.AsArray()
-	var runes = col.Array[rune](array)
+	var runes = col.Array[abs.Rune](array)
 	return runes.GetValues(first, last)
 }
 

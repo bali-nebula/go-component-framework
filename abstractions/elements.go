@@ -18,13 +18,18 @@ type (
 
 // INDIVIDUAL INTERFACES
 
-// This interface defines the methods supported by all numeric elements.
+// This interface defines the methods supported by all spectrum endpoints.
+type Quantized interface {
+	AsString() string
+}
+
+// This interface defines the methods supported by all interval endpoints.
 type Discrete interface {
 	AsBoolean() bool
 	AsInteger() int
 }
 
-// This interface defines the methods supported by all numeric elements.
+// This interface defines the methods supported by all continuum endpoints.
 type Continuous interface {
 	AsReal() float64
 	IsZero() bool

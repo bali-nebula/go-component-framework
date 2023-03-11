@@ -27,50 +27,7 @@ func ComponentIterator(sequence abs.Sequential[abs.ComponentLike]) abs.Component
 // This type defines the structure and methods for a components iterator. The
 // iterator operates on a sequence of components.
 type components struct {
-	iterator col.IteratorLike[abs.ComponentLike]
-}
-
-// This method returns the current slot between components that this iterator is
-// currently locked into.
-func (v *components) GetSlot() int {
-	return v.iterator.GetSlot()
-}
-
-// This method moves this iterator to the specified slot between components.
-func (v *components) ToSlot(slot int) {
-	v.iterator.ToSlot(slot)
-}
-
-// This method moves this iterator to the slot before the first component.
-func (v *components) ToStart() {
-	v.iterator.ToStart()
-}
-
-// This method moves this iterator to the slot after the last component.
-func (v *components) ToEnd() {
-	v.iterator.ToEnd()
-}
-
-// This method determines whether or not there is a component before the current
-// slot.
-func (v *components) HasPrevious() bool {
-	return v.iterator.HasPrevious()
-}
-
-// This method retrieves the component before the current slot.
-func (v *components) GetPrevious() abs.ComponentLike {
-	return v.iterator.GetPrevious()
-}
-
-// This method determines whether or not there is a component after the current
-// slot.
-func (v *components) HasNext() bool {
-	return v.iterator.HasNext()
-}
-
-// This method retrieves the component after the current slot.
-func (v *components) GetNext() abs.ComponentLike {
-	return v.iterator.GetNext()
+	abs.ComponentIteratorLike
 }
 
 // ASSOCIATION ITERATOR IMPLEMENTATION
@@ -85,48 +42,5 @@ func AssociationIterator(sequence abs.Sequential[abs.AssociationLike]) abs.Assoc
 // This type defines the structure and methods for an associations iterator. The
 // iterator operates on a sequence of associations.
 type associations struct {
-	iterator col.IteratorLike[abs.AssociationLike]
-}
-
-// This method returns the current slot between associations that this iterator is
-// currently locked into.
-func (v *associations) GetSlot() int {
-	return v.iterator.GetSlot()
-}
-
-// This method moves this iterator to the specified slot between associations.
-func (v *associations) ToSlot(slot int) {
-	v.iterator.ToSlot(slot)
-}
-
-// This method moves this iterator to the slot before the first association.
-func (v *associations) ToStart() {
-	v.iterator.ToStart()
-}
-
-// This method moves this iterator to the slot after the last association.
-func (v *associations) ToEnd() {
-	v.iterator.ToEnd()
-}
-
-// This method determines whether or not there is an association before the current
-// slot.
-func (v *associations) HasPrevious() bool {
-	return v.iterator.HasPrevious()
-}
-
-// This method retrieves the association before the current slot.
-func (v *associations) GetPrevious() abs.AssociationLike {
-	return v.iterator.GetPrevious()
-}
-
-// This method determines whether or not there is an association after the current
-// slot.
-func (v *associations) HasNext() bool {
-	return v.iterator.HasNext()
-}
-
-// This method retrieves the association after the current slot.
-func (v *associations) GetNext() abs.AssociationLike {
-	return v.iterator.GetNext()
+	abs.AssociationIteratorLike
 }
