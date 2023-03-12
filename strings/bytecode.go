@@ -82,15 +82,6 @@ func (v Bytecode) AsString() string {
 	return string(v)
 }
 
-// FUNDAMENTAL INTERFACE
-
-// This method returns the byte array for this fundamental string.
-func (v Bytecode) AsBytes() []byte {
-	var encoded = string(v)
-	var bytes = uti.Base16Decode(encoded)
-	return bytes
-}
-
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.

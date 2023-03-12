@@ -31,9 +31,7 @@ func Binary(value abs.Value) abs.BinaryLike {
 		binary = str.BinaryFromBytes(uti.RandomBytes(actual))
 	case []byte:
 		binary = str.BinaryFromBytes(actual)
-	case []abs.Byte:
-		binary = str.BinaryFromArray(actual)
-	case abs.Sequential[abs.Byte]:
+	case abs.Sequential[byte]:
 		binary = str.BinaryFromSequence(actual)
 	case string:
 		binary = ParseEntity(actual).(abs.BinaryLike)
@@ -129,9 +127,7 @@ func Quote(value abs.Value) abs.QuoteLike {
 	switch actual := value.(type) {
 	case []rune:
 		quote = str.QuoteFromString(string(actual))
-	case []abs.Rune:
-		quote = str.QuoteFromArray(actual)
-	case abs.Sequential[abs.Rune]:
+	case abs.Sequential[rune]:
 		quote = str.QuoteFromSequence(actual)
 	case string:
 		quote = ParseEntity(actual).(abs.QuoteLike)
@@ -180,8 +176,6 @@ func Tag(value abs.Value) abs.TagLike {
 		tag = str.TagOfSize(int(actual))
 	case []byte:
 		tag = str.TagFromBytes(actual)
-	case []abs.Byte:
-		tag = str.TagFromArray(actual)
 	case string:
 		tag = ParseEntity(actual).(abs.TagLike)
 	case abs.TagLike:

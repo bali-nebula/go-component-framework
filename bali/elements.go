@@ -72,7 +72,7 @@ func Boolean(value abs.Value) abs.BooleanLike {
 	var boolean abs.BooleanLike
 	switch actual := value.(type) {
 	case bool:
-		boolean = ele.BooleanFromBool(actual)
+		boolean = ele.Boolean(actual)
 	case string:
 		boolean = ParseEntity(actual).(abs.BooleanLike)
 	case abs.BooleanLike:
@@ -398,7 +398,7 @@ func (v *parser) parseBoolean() (abs.BooleanLike, *Token, bool) {
 		return boolean, token, false
 	}
 	var b, _ = stc.ParseBool(token.Value)
-	boolean = ele.BooleanFromBool(b)
+	boolean = ele.Boolean(b)
 	return boolean, token, true
 }
 

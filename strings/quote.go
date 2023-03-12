@@ -46,14 +46,14 @@ func QuoteFromString(string_ string) abs.QuoteLike {
 // This constructor attempts to create a new quote string from the specified
 // array of runes. It returns a quote string and whether or not the
 // resulting string contained a valid quote.
-func QuoteFromArray(array []abs.Rune) abs.QuoteLike {
+func QuoteFromArray(array []rune) abs.QuoteLike {
 	var quote = Quote(string(array))
 	return quote
 }
 
 // This constructor creates a new quote string from the specified sequence of
 // runes. It returns the corresponding quote string.
-func QuoteFromSequence(sequence abs.Sequential[abs.Rune]) abs.QuoteLike {
+func QuoteFromSequence(sequence abs.Sequential[rune]) abs.QuoteLike {
 	var array = sequence.AsArray()
 	var quote = QuoteFromArray(array)
 	return quote
@@ -85,11 +85,11 @@ func (v Quote) GetSize() int {
 
 // This method returns all the runes in this string. The runes retrieved
 // are in the same order as they are in the string.
-func (v Quote) AsArray() []abs.Rune {
+func (v Quote) AsArray() []rune {
 	var runes = []rune(v)
-	var array = make([]abs.Rune, len(runes))
+	var array = make([]rune, len(runes))
 	for index, r := range runes {
-		array[index] = abs.Rune(r)
+		array[index] = rune(r)
 	}
 	return array
 }
@@ -98,17 +98,17 @@ func (v Quote) AsArray() []abs.Rune {
 
 // This method retrieves from this string the rune that is associated
 // with the specified index.
-func (v Quote) GetValue(index int) abs.Rune {
+func (v Quote) GetValue(index int) rune {
 	var array = v.AsArray()
-	var runes = col.Array[abs.Rune](array)
+	var runes = col.Array[rune](array)
 	return runes.GetValue(index)
 }
 
 // This method retrieves from this string all runes from the first index
 // through the last index (inclusive).
-func (v Quote) GetValues(first int, last int) abs.Sequential[abs.Rune] {
+func (v Quote) GetValues(first int, last int) abs.Sequential[rune] {
 	var array = v.AsArray()
-	var runes = col.Array[abs.Rune](array)
+	var runes = col.Array[rune](array)
 	return runes.GetValues(first, last)
 }
 

@@ -60,9 +60,9 @@ func TestContinuaWithProbabilities(t *tes.T) {
 }
 
 func TestContinuaWithReals(t *tes.T) {
-	var minimum = ran.MinimumReal()
-	var zero = ran.Real(0)
-	var maximum = ran.MaximumReal()
+	var minimum = ele.MinimumReal()
+	var zero = ele.Real(0)
+	var maximum = ele.MaximumReal()
 	var s = ran.Continuum[abs.RealLike](minimum, abs.EXCLUSIVE, maximum)
 	ass.True(t, s.ContainsValue(zero))
 	ass.Equal(t, minimum, s.GetFirst())

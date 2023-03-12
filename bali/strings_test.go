@@ -26,8 +26,8 @@ func TestBinary(t *tes.T) {
 	ass.Equal(t, "abcd1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
-	ass.Equal(t, abs.Byte(0x69), v.GetValue(1))
-	ass.Equal(t, abs.Byte(0xf8), v.GetValue(-1))
+	ass.Equal(t, byte(0x69), v.GetValue(1))
+	ass.Equal(t, byte(0xf8), v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), bal.Binary(v.AsArray()).AsArray())
 	ass.Equal(t, "abcd", bal.Binary(v.GetValues(1, 3)).AsString())
 }
@@ -77,8 +77,8 @@ func TestQuote(t *tes.T) {
 	ass.Equal(t, "abcd本1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 9, v.GetSize())
-	ass.Equal(t, abs.Rune('a'), v.GetValue(1))
-	ass.Equal(t, abs.Rune('4'), v.GetValue(-1))
+	ass.Equal(t, rune('a'), v.GetValue(1))
+	ass.Equal(t, rune('4'), v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), bal.Quote(v.AsArray()).AsArray())
 	ass.Equal(t, "d本1", bal.Quote(v.GetValues(4, 6)).AsString())
 }

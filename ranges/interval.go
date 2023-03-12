@@ -15,7 +15,6 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/elements"
 	col "github.com/craterdog/go-collection-framework/v2"
-	mat "math"
 )
 
 // INTERVAL IMPLEMENTATION
@@ -256,9 +255,9 @@ func (v *interval[V]) indexToValue(index int) V {
 	case abs.MomentLike:
 		discrete = ele.MomentFromInt(index)
 	case abs.IntegerLike:
-		discrete = Integer(index)
+		discrete = ele.Integer(index)
 	case abs.RuneLike:
-		discrete = Rune(index)
+		discrete = ele.Rune(index)
 	default:
 		var message = fmt.Sprintf("The discrete type was not found: %T", discrete)
 		panic(message)
@@ -288,77 +287,4 @@ func (v *interval[V]) goIndex(index int) int {
 		// This should never happen so time to panic...
 		panic(fmt.Sprintf("Compiler problem, unexpected index value: %v", index))
 	}
-}
-
-// INTEGER IMPLEMENTATION
-
-// This constructor creates a new integer endpoint from the specified int.
-func IntegerFromInt(integer int) abs.IntegerLike {
-	return Integer(integer)
-}
-
-// This constructor returns the minimum value for an integer endpoint.
-func MinimumInteger() abs.IntegerLike {
-	return Integer(0)
-}
-
-// This constructor returns the maximum value for an integer endpoint.
-func MaximumInteger() abs.IntegerLike {
-	return Integer(mat.MaxInt)
-}
-
-// This type defines the methods associated with integer endpoints. It extends the
-// native Go int type.
-type Integer int
-
-// DISCRETE INTERFACE
-
-// This method returns a boolean value for this rune.
-func (v Integer) AsBoolean() bool {
-	return v != 0
-}
-
-// This method returns an integer value for this rune.
-func (v Integer) AsInteger() int {
-	return int(v)
-}
-
-// POLARIZED INTERFACE
-
-// This method determines whether or not this rune is negative.
-func (v Integer) IsNegative() bool {
-	return v < 0
-}
-
-// RUNE IMPLEMENTATION
-
-// This constructor creates a new rune endpoint from the specified integer.
-func RuneFromInt(v int) abs.RuneLike {
-	return Rune(v)
-}
-
-// This constructor returns the minimum value for a rune endpoint.
-func MinimumRune() abs.RuneLike {
-	return Rune(0)
-}
-
-// This constructor returns the maximum value for a rune endpoint.
-func MaximumRune() abs.RuneLike {
-	return Rune(mat.MaxInt32)
-}
-
-// This type defines the methods associated with rune endpoints. It extends the
-// native Go int32 type.
-type Rune int32
-
-// DISCRETE INTERFACE
-
-// This method returns a boolean value for this rune.
-func (v Rune) AsBoolean() bool {
-	return v > -1
-}
-
-// This method returns an integer value for this rune.
-func (v Rune) AsInteger() int {
-	return int(v)
 }

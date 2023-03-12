@@ -43,26 +43,6 @@ type Bounded[V Primitive] interface {
 
 // CONSOLIDATED INTERFACES
 
-// This interface consolidates all of the interfaces supported by integer-like
-// endpoints.
-type IntegerLike interface {
-	Discrete
-	Polarized
-}
-
-// This interface consolidates all of the interfaces supported by real-like
-// endpoints.
-type RealLike interface {
-	Continuous
-	Polarized
-}
-
-// This interface consolidates all of the interfaces supported by rune-like
-// endpoints.
-type RuneLike interface {
-	Discrete
-}
-
 // This interface consolidates all of the interfaces supported by interval-like
 // ranges.
 type IntervalLike[V Discrete] interface {

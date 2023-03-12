@@ -135,9 +135,9 @@ func TestIntervalsWithImplicitMoments(t *tes.T) {
 }
 
 func TestIntervalsWithEmojis(t *tes.T) {
-	var r1 = ran.RuneFromInt('😀')
-	var r2 = ran.RuneFromInt('😆')
-	var r3 = ran.RuneFromInt('🤣')
+	var r1 = ele.Rune('😀')
+	var r2 = ele.Rune('😆')
+	var r3 = ele.Rune('🤣')
 	var s = ran.Interval[abs.RuneLike](r1, abs.INCLUSIVE, r3)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 804, s.GetSize())
@@ -150,14 +150,14 @@ func TestIntervalsWithEmojis(t *tes.T) {
 }
 
 func TestIntervalsWithRunes(t *tes.T) {
-	var rA = ran.RuneFromInt('A')
-	var ra = ran.RuneFromInt('a')
-	var rb = ran.RuneFromInt('b')
-	var rc = ran.RuneFromInt('c')
-	var rd = ran.RuneFromInt('d')
-	var re = ran.RuneFromInt('e')
-	var rf = ran.RuneFromInt('f')
-	var rg = ran.RuneFromInt('g')
+	var rA = ele.Rune('A')
+	var ra = ele.Rune('a')
+	var rb = ele.Rune('b')
+	var rc = ele.Rune('c')
+	var rd = ele.Rune('d')
+	var re = ele.Rune('e')
+	var rf = ele.Rune('f')
+	var rg = ele.Rune('g')
 	var s = ran.Interval[abs.RuneLike](ra, abs.LEFT, rf)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
@@ -177,12 +177,12 @@ func TestIntervalsWithRunes(t *tes.T) {
 }
 
 func TestIntervalsWithIntegers(t *tes.T) {
-	var i1 = ran.IntegerFromInt(1)
-	var i2 = ran.IntegerFromInt(2)
-	var i3 = ran.IntegerFromInt(3)
-	var i4 = ran.IntegerFromInt(4)
-	var i5 = ran.IntegerFromInt(5)
-	var i6 = ran.IntegerFromInt(6)
+	var i1 = ele.Integer(1)
+	var i2 = ele.Integer(2)
+	var i3 = ele.Integer(3)
+	var i4 = ele.Integer(4)
+	var i5 = ele.Integer(5)
+	var i6 = ele.Integer(6)
 	var s = ran.Interval[abs.IntegerLike](i1, abs.RIGHT, i5)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())

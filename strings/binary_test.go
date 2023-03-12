@@ -11,7 +11,6 @@
 package strings_test
 
 import (
-	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
@@ -29,10 +28,9 @@ func TestBinary(t *tes.T) {
 	ass.Equal(t, "abcd1234", v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 6, v.GetSize())
-	ass.Equal(t, abs.Byte(0x69), v.GetValue(1))
-	ass.Equal(t, abs.Byte(0xf8), v.GetValue(-1))
+	ass.Equal(t, byte(0x69), v.GetValue(1))
+	ass.Equal(t, byte(0xf8), v.GetValue(-1))
 	ass.Equal(t, v.AsArray(), str.BinaryFromArray(v.AsArray()).AsArray())
-	ass.Equal(t, v.AsBytes(), str.BinaryFromBytes(v.AsBytes()).AsBytes())
 	ass.Equal(t, "abcd", str.BinaryFromSequence(v.GetValues(1, 3)).AsString())
 }
 
@@ -41,14 +39,14 @@ func TestBinariesLibrary(t *tes.T) {
 	var v2 = str.BinaryFromString("12345678")
 	ass.Equal(t, "abcd12345678", str.Binaries.Concatenate(v1, v2).AsString())
 
-	v1 = str.BinaryFromArray([]abs.Byte{0x00, 0x01, 0x02, 0x03, 0x04})
-	v2 = str.BinaryFromArray([]abs.Byte{0x03, 0x00, 0x01, 0x02})
-	var not = str.BinaryFromArray([]abs.Byte{0xff, 0xfe, 0xfd, 0xfc, 0xfb})
-	var and = str.BinaryFromArray([]abs.Byte{0x00, 0x00, 0x00, 0x02, 0x00})
-	var sans = str.BinaryFromArray([]abs.Byte{0x00, 0x01, 0x02, 0x01, 0x04})
-	var or = str.BinaryFromArray([]abs.Byte{0x03, 0x01, 0x03, 0x03, 0x04})
-	var xor = str.BinaryFromArray([]abs.Byte{0x03, 0x01, 0x03, 0x01, 0x04})
-	var sans2 = str.BinaryFromArray([]abs.Byte{0x03, 0x00, 0x01, 0x00, 0x00})
+	v1 = str.BinaryFromArray([]byte{0x00, 0x01, 0x02, 0x03, 0x04})
+	v2 = str.BinaryFromArray([]byte{0x03, 0x00, 0x01, 0x02})
+	var not = str.BinaryFromArray([]byte{0xff, 0xfe, 0xfd, 0xfc, 0xfb})
+	var and = str.BinaryFromArray([]byte{0x00, 0x00, 0x00, 0x02, 0x00})
+	var sans = str.BinaryFromArray([]byte{0x00, 0x01, 0x02, 0x01, 0x04})
+	var or = str.BinaryFromArray([]byte{0x03, 0x01, 0x03, 0x03, 0x04})
+	var xor = str.BinaryFromArray([]byte{0x03, 0x01, 0x03, 0x01, 0x04})
+	var sans2 = str.BinaryFromArray([]byte{0x03, 0x00, 0x01, 0x00, 0x00})
 	ass.Equal(t, not, str.Binaries.Not(v1))
 	ass.Equal(t, and, str.Binaries.And(v1, v2))
 	ass.Equal(t, sans, str.Binaries.Sans(v1, v2))

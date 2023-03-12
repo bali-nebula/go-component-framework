@@ -18,7 +18,7 @@ import (
 )
 
 func TestByteIterators(t *tes.T) {
-	var bytes = []abs.Byte{1, 2, 3}
+	var bytes = []byte{1, 2, 3}
 	var b1 = bytes[0]
 	var b2 = bytes[1]
 	var b3 = bytes[2]
@@ -132,10 +132,10 @@ func TestLineIterators(t *tes.T) {
 }
 
 func TestRuneIterators(t *tes.T) {
-	var first = abs.Rune('a')
-	var second = abs.Rune('b')
-	var third = abs.Rune('c')
-	var array = []abs.Rune{first, second, third}
+	var first = rune('a')
+	var second = rune('b')
+	var third = rune('c')
+	var array = []rune{first, second, third}
 	var quote = str.QuoteFromArray(array)
 	var iterator = str.RuneIterator(quote)
 	ass.False(t, iterator.HasPrevious())

@@ -107,6 +107,11 @@ type DurationLike interface {
 	Temporal
 }
 
+type IntegerLike interface {
+	Discrete
+	Polarized
+}
+
 type MomentLike interface {
 	Discrete
 	Temporal
@@ -132,6 +137,11 @@ type PercentageLike interface {
 type ProbabilityLike interface {
 	Discrete
 	Continuous
+}
+
+type RealLike interface {
+	Continuous
+	Polarized
 }
 
 type ResourceLike interface {

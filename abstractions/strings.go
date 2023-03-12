@@ -15,12 +15,10 @@ package abstractions
 type (
 	String      any
 	Value       any
-	Byte        byte
-	Rune        rune
-	Line        string
-	Name        string
 	Ordinal     uint
 	Instruction uint16
+	Line        string
+	Name        string
 )
 
 func InstructionFromBytes(firstByte, secondByte byte) Instruction {
@@ -37,11 +35,6 @@ func (v Instruction) GetSecondByte() byte {
 }
 
 // INDIVIDUAL INTERFACES
-
-// This interface defines the methods supported by all sequences of bytes.
-type Fundamental interface {
-	AsBytes() []byte
-}
 
 // This interface defines the methods supported by all sequences of values.
 type Sequential[V Value] interface {
@@ -96,14 +89,12 @@ type Ratcheted[V Value] interface {
 
 type BinaryLike interface {
 	Lexical
-	Fundamental
-	Sequential[Byte]
-	Accessible[Byte]
+	Sequential[byte]
+	Accessible[byte]
 }
 
 type BytecodeLike interface {
 	Lexical
-	Fundamental
 	Sequential[Instruction]
 	Accessible[Instruction]
 }
@@ -120,16 +111,21 @@ type NarrativeLike interface {
 	Accessible[Line]
 }
 
+// This interface consolidates all of the interfaces supported by rune-like
+// endpoints.
+type RuneLike interface {
+	Discrete
+}
+
 type QuoteLike interface {
 	Lexical
-	Sequential[Rune]
-	Accessible[Rune]
+	Sequential[rune]
+	Accessible[rune]
 }
 
 type TagLike interface {
 	Lexical
-	Fundamental
-	Sequential[Byte]
+	Sequential[byte]
 }
 
 type VersionLike interface {
@@ -141,7 +137,7 @@ type VersionLike interface {
 // This interface defines the methods supported by all byte-iterator-like
 // types.
 type ByteIteratorLike interface {
-	Ratcheted[Byte]
+	Ratcheted[byte]
 }
 
 // This interface defines the methods supported by all instruction-iterator-like
@@ -165,7 +161,7 @@ type LineIteratorLike interface {
 // This interface defines the methods supported by all rune-iterator-like
 // types.
 type RuneIteratorLike interface {
-	Ratcheted[Rune]
+	Ratcheted[rune]
 }
 
 // This interface defines the methods supported by all ordinal-iterator-like

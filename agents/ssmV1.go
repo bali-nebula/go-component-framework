@@ -234,15 +234,15 @@ func (v *ssmV1) readConfiguration() {
 	v.setState(state)
 	component = configuration.GetValue(publicKeyAttribute)
 	if component != nil {
-		v.publicKey = component.ExtractBinary().AsBytes()
+		v.publicKey = component.ExtractBinary().AsArray()
 	}
 	component = configuration.GetValue(privateKeyAttribute)
 	if component != nil {
-		v.privateKey = component.ExtractBinary().AsBytes()
+		v.privateKey = component.ExtractBinary().AsArray()
 	}
 	component = configuration.GetValue(previousKeyAttribute)
 	if component != nil {
-		v.previousKey = component.ExtractBinary().AsBytes()
+		v.previousKey = component.ExtractBinary().AsArray()
 	}
 }
 

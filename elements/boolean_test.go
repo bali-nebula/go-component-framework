@@ -17,18 +17,18 @@ import (
 )
 
 func TestFalseBooleans(t *tes.T) {
-	var v = ele.BooleanFromBool(false)
+	var v = ele.Boolean(false)
 	ass.False(t, v.AsBoolean())
 }
 
 func TestTrueBooleans(t *tes.T) {
-	var v = ele.BooleanFromBool(true)
+	var v = ele.Boolean(true)
 	ass.True(t, v.AsBoolean())
 }
 
 func TestBooleansLibrary(t *tes.T) {
-	var T = ele.BooleanFromBool(true)
-	var F = ele.BooleanFromBool(false)
+	var T = ele.Boolean(true)
+	var F = ele.Boolean(false)
 
 	var andNot = ele.Booleans.And(ele.Booleans.Not(T), ele.Booleans.Not(T))
 	var notOr = ele.Booleans.Not(ele.Booleans.Or(T, T))

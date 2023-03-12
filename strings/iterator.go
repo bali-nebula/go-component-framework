@@ -19,8 +19,8 @@ import (
 
 // This constructor creates a new instance of a byte iterator that can be used
 // to traverse the bytes in the specified sequence.
-func ByteIterator(sequence abs.Sequential[abs.Byte]) abs.ByteIteratorLike {
-	var iterator = col.Iterator[abs.Byte](sequence)
+func ByteIterator(sequence abs.Sequential[byte]) abs.ByteIteratorLike {
+	var iterator = col.Iterator[byte](sequence)
 	return &byteIterator{iterator}
 }
 
@@ -79,8 +79,8 @@ type lineIterator struct {
 
 // This constructor creates a new instance of a rune iterator that can be used
 // to traverse the runes in the specified sequence.
-func RuneIterator(sequence abs.Sequential[abs.Rune]) abs.RuneIteratorLike {
-	var iterator = col.Iterator[abs.Rune](sequence)
+func RuneIterator(sequence abs.Sequential[rune]) abs.RuneIteratorLike {
+	var iterator = col.Iterator[rune](sequence)
 	return &runeIterator{iterator}
 }
 

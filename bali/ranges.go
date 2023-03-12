@@ -13,6 +13,7 @@ package bali
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
+	ele "github.com/bali-nebula/go-component-framework/elements"
 	ran "github.com/bali-nebula/go-component-framework/ranges"
 	str "github.com/bali-nebula/go-component-framework/strings"
 	mat "math"
@@ -28,25 +29,25 @@ func Rune(value abs.Value) abs.RuneLike {
 	var rune_ abs.RuneLike
 	switch actual := value.(type) {
 	case uint:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case uint8:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case uint16:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case uint32:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case uint64:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case int:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case int8:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case int16:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case int32:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case int64:
-		rune_ = ran.RuneFromInt(int(actual))
+		rune_ = ele.Rune(int(actual))
 	case abs.RuneLike:
 		rune_ = actual
 	default:
@@ -61,25 +62,25 @@ func Integer(value abs.Value) abs.IntegerLike {
 	var integer abs.IntegerLike
 	switch actual := value.(type) {
 	case uint:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case uint8:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case uint16:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case uint32:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case uint64:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case int:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case int8:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case int16:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case int32:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case int64:
-		integer = ran.IntegerFromInt(int(actual))
+		integer = ele.Integer(int(actual))
 	case abs.IntegerLike:
 		integer = actual
 	default:
@@ -94,29 +95,29 @@ func Real(value abs.Value) abs.RealLike {
 	var real_ abs.RealLike
 	switch actual := value.(type) {
 	case uint:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case uint8:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case uint16:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case uint32:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case uint64:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case int:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case int8:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case int16:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case int32:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case int64:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case float32:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case float64:
-		real_ = ran.RealFromFloat(float64(actual))
+		real_ = ele.Real(float64(actual))
 	case abs.RealLike:
 		real_ = actual
 	default:
@@ -175,52 +176,52 @@ func Interval(first abs.Value, extent abs.Extent, last abs.Value, context abs.Co
 	var entity abs.Entity
 	switch actual := first.(type) {
 	case uint:
-		var actualFirst = ran.IntegerFromInt(int(first.(uint)))
-		var actualLast = ran.IntegerFromInt(int(last.(uint)))
+		var actualFirst = ele.Integer(int(first.(uint)))
+		var actualLast = ele.Integer(int(last.(uint)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case uint8:
-		var actualFirst = ran.IntegerFromInt(int(first.(uint8)))
-		var actualLast = ran.IntegerFromInt(int(last.(uint8)))
+		var actualFirst = ele.Integer(int(first.(uint8)))
+		var actualLast = ele.Integer(int(last.(uint8)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case uint16:
-		var actualFirst = ran.IntegerFromInt(int(first.(uint16)))
-		var actualLast = ran.IntegerFromInt(int(last.(uint16)))
+		var actualFirst = ele.Integer(int(first.(uint16)))
+		var actualLast = ele.Integer(int(last.(uint16)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case uint32:
-		var actualFirst = ran.IntegerFromInt(int(first.(uint32)))
-		var actualLast = ran.IntegerFromInt(int(last.(uint32)))
+		var actualFirst = ele.Integer(int(first.(uint32)))
+		var actualLast = ele.Integer(int(last.(uint32)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case uint64:
-		var actualFirst = ran.IntegerFromInt(int(first.(uint64)))
-		var actualLast = ran.IntegerFromInt(int(last.(uint64)))
+		var actualFirst = ele.Integer(int(first.(uint64)))
+		var actualLast = ele.Integer(int(last.(uint64)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case int:
-		var actualFirst = ran.IntegerFromInt(int(first.(int)))
-		var actualLast = ran.IntegerFromInt(int(last.(int)))
+		var actualFirst = ele.Integer(int(first.(int)))
+		var actualLast = ele.Integer(int(last.(int)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case int8:
-		var actualFirst = ran.IntegerFromInt(int(first.(int8)))
-		var actualLast = ran.IntegerFromInt(int(last.(int8)))
+		var actualFirst = ele.Integer(int(first.(int8)))
+		var actualLast = ele.Integer(int(last.(int8)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case int16:
-		var actualFirst = ran.IntegerFromInt(int(first.(int16)))
-		var actualLast = ran.IntegerFromInt(int(last.(int16)))
+		var actualFirst = ele.Integer(int(first.(int16)))
+		var actualLast = ele.Integer(int(last.(int16)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case int32:
-		var actualFirst = ran.IntegerFromInt(int(first.(int32)))
-		var actualLast = ran.IntegerFromInt(int(last.(int32)))
+		var actualFirst = ele.Integer(int(first.(int32)))
+		var actualLast = ele.Integer(int(last.(int32)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case int64:
-		var actualFirst = ran.IntegerFromInt(int(first.(int64)))
-		var actualLast = ran.IntegerFromInt(int(last.(int64)))
+		var actualFirst = ele.Integer(int(first.(int64)))
+		var actualLast = ele.Integer(int(last.(int64)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case float32:
-		var actualFirst = ran.IntegerFromInt(int(first.(float32)))
-		var actualLast = ran.IntegerFromInt(int(last.(float32)))
+		var actualFirst = ele.Integer(int(first.(float32)))
+		var actualLast = ele.Integer(int(last.(float32)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case float64:
-		var actualFirst = ran.IntegerFromInt(int(first.(float64)))
-		var actualLast = ran.IntegerFromInt(int(last.(float64)))
+		var actualFirst = ele.Integer(int(first.(float64)))
+		var actualLast = ele.Integer(int(last.(float64)))
 		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
 	case abs.DurationLike:
 		var actualFirst = first.(abs.DurationLike)
@@ -246,52 +247,52 @@ func Continuum(first abs.Value, extent abs.Extent, last abs.Value, context abs.C
 	var entity abs.Entity
 	switch actual := first.(type) {
 	case uint:
-		var actualFirst = ran.RealFromFloat(float64(first.(uint)))
-		var actualLast = ran.RealFromFloat(float64(last.(uint)))
+		var actualFirst = ele.Real(float64(first.(uint)))
+		var actualLast = ele.Real(float64(last.(uint)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case uint8:
-		var actualFirst = ran.RealFromFloat(float64(first.(uint8)))
-		var actualLast = ran.RealFromFloat(float64(last.(uint8)))
+		var actualFirst = ele.Real(float64(first.(uint8)))
+		var actualLast = ele.Real(float64(last.(uint8)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case uint16:
-		var actualFirst = ran.RealFromFloat(float64(first.(uint16)))
-		var actualLast = ran.RealFromFloat(float64(last.(uint16)))
+		var actualFirst = ele.Real(float64(first.(uint16)))
+		var actualLast = ele.Real(float64(last.(uint16)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case uint32:
-		var actualFirst = ran.RealFromFloat(float64(first.(uint32)))
-		var actualLast = ran.RealFromFloat(float64(last.(uint32)))
+		var actualFirst = ele.Real(float64(first.(uint32)))
+		var actualLast = ele.Real(float64(last.(uint32)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case uint64:
-		var actualFirst = ran.RealFromFloat(float64(first.(uint64)))
-		var actualLast = ran.RealFromFloat(float64(last.(uint64)))
+		var actualFirst = ele.Real(float64(first.(uint64)))
+		var actualLast = ele.Real(float64(last.(uint64)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case int:
-		var actualFirst = ran.RealFromFloat(float64(first.(int)))
-		var actualLast = ran.RealFromFloat(float64(last.(int)))
+		var actualFirst = ele.Real(float64(first.(int)))
+		var actualLast = ele.Real(float64(last.(int)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case int8:
-		var actualFirst = ran.RealFromFloat(float64(first.(int8)))
-		var actualLast = ran.RealFromFloat(float64(last.(int8)))
+		var actualFirst = ele.Real(float64(first.(int8)))
+		var actualLast = ele.Real(float64(last.(int8)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case int16:
-		var actualFirst = ran.RealFromFloat(float64(first.(int16)))
-		var actualLast = ran.RealFromFloat(float64(last.(int16)))
+		var actualFirst = ele.Real(float64(first.(int16)))
+		var actualLast = ele.Real(float64(last.(int16)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case int32:
-		var actualFirst = ran.RealFromFloat(float64(first.(int32)))
-		var actualLast = ran.RealFromFloat(float64(last.(int32)))
+		var actualFirst = ele.Real(float64(first.(int32)))
+		var actualLast = ele.Real(float64(last.(int32)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case int64:
-		var actualFirst = ran.RealFromFloat(float64(first.(int64)))
-		var actualLast = ran.RealFromFloat(float64(last.(int64)))
+		var actualFirst = ele.Real(float64(first.(int64)))
+		var actualLast = ele.Real(float64(last.(int64)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case float32:
-		var actualFirst = ran.RealFromFloat(float64(first.(float32)))
-		var actualLast = ran.RealFromFloat(float64(last.(float32)))
+		var actualFirst = ele.Real(float64(first.(float32)))
+		var actualLast = ele.Real(float64(last.(float32)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case float64:
-		var actualFirst = ran.RealFromFloat(float64(first.(float64)))
-		var actualLast = ran.RealFromFloat(float64(last.(float64)))
+		var actualFirst = ele.Real(float64(first.(float64)))
+		var actualLast = ele.Real(float64(last.(float64)))
 		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
 	case abs.PercentageLike:
 		var actualFirst = first.(abs.PercentageLike)
@@ -575,8 +576,8 @@ func (v *formatter) formatContinuum(continuum abs.ContinuumLike[abs.Continuous])
 
 // This method attempts to parse an integer. It returns the integer and whether
 // or not the integer was successfully parsed.
-func (v *parser) parseInteger() (ran.Integer, *Token, bool) {
-	var number ran.Integer
+func (v *parser) parseInteger() (ele.Integer, *Token, bool) {
+	var number ele.Integer
 	var token = v.nextToken()
 	if token.Type != TokenNumber {
 		// The token is not numerical.
@@ -601,7 +602,7 @@ func (v *parser) parseInteger() (ran.Integer, *Token, bool) {
 	if err != nil {
 		panic(fmt.Sprintf("The integer was not parsable: %v", err))
 	}
-	number = ran.Integer(integer)
+	number = ele.Integer(integer)
 	return number, token, true
 }
 
@@ -614,8 +615,8 @@ func (v *formatter) formatInteger(number abs.IntegerLike) {
 
 // This method attempts to parse a real number. It returns the real number
 // and whether or not the real number was successfully parsed.
-func (v *parser) parseReal() (ran.Real, *Token, bool) {
-	var number ran.Real
+func (v *parser) parseReal() (ele.Real, *Token, bool) {
+	var number ele.Real
 	var token = v.nextToken()
 	if token.Type != TokenNumber {
 		v.backupOne()
@@ -639,7 +640,7 @@ func (v *parser) parseReal() (ran.Real, *Token, bool) {
 			r = stringToFloat(matches[0])
 		}
 	}
-	number = ran.Real(r)
+	number = ele.Real(r)
 	return number, token, true
 }
 
@@ -665,8 +666,8 @@ func (v *formatter) formatReal(number abs.RealLike) {
 
 // This method attempts to parse a rune. It returns the rune and whether or not
 // the rune was successfully parsed.
-func (v *parser) parseRune() (ran.Rune, *Token, bool) {
-	var number = ran.Rune(-1)
+func (v *parser) parseRune() (ele.Rune, *Token, bool) {
+	var number = ele.Rune(-1)
 	var quote, token, ok = v.parseQuote()
 	if !ok {
 		return number, token, false
@@ -678,7 +679,7 @@ func (v *parser) parseRune() (ran.Rune, *Token, bool) {
 		v.backupOne() // Put back the quote token.
 		return number, token, false
 	}
-	number = ran.Rune(r)
+	number = ele.Rune(r)
 	return number, token, true
 }
 

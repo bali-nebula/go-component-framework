@@ -14,7 +14,6 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/craterdog/go-collection-framework/v2"
-	mat "math"
 )
 
 // CONTINUUM IMPLEMENTATION
@@ -177,54 +176,4 @@ func (v *continuum[V]) validateContinuum() {
 	default:
 		panic("The first value in the continuous range must not be more than the last value.")
 	}
-}
-
-// REAL IMPLEMENTATION
-
-// This constructor creates a new real endpoint from the specified float.
-func RealFromFloat(float float64) abs.RealLike {
-	return Real(float)
-}
-
-// This constructor returns the minimum value for a real endpoint.
-func MinimumReal() abs.RealLike {
-	return Real(mat.Inf(-1))
-}
-
-// This constructor returns the maximum value for a real endpoint.
-func MaximumReal() abs.RealLike {
-	return Real(mat.Inf(1))
-}
-
-// This type defines the methods associated with real endpoints. It extends the
-// native Go float64 type.
-type Real float64
-
-// CONTINUOUS INTERFACE
-
-// This method returns a real value for this real number.
-func (v Real) AsReal() float64 {
-	return float64(v)
-}
-
-// This method determines whether or not this real number is zero.
-func (v Real) IsZero() bool {
-	return v == 0
-}
-
-// This method determines whether or not this real number is infinite.
-func (v Real) IsInfinite() bool {
-	return mat.IsInf(float64(v), 0)
-}
-
-// This method determines whether or not this real number is undefined.
-func (v Real) IsUndefined() bool {
-	return mat.IsNaN(float64(v))
-}
-
-// POLARIZED INTERFACE
-
-// This method determines whether or not this real number is negative.
-func (v Real) IsNegative() bool {
-	return v < 0
 }
