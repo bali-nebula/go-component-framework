@@ -53,10 +53,10 @@ func BytecodeFromArray(array []abs.Instruction) abs.BytecodeLike {
 	var iterator = col.Iterator[abs.Instruction](instructions)
 	for iterator.HasNext() {
 		var instruction = iterator.GetNext()
-		var firstByte = instruction.GetFirstByte()
-		var secondByte = instruction.GetSecondByte()
-		list.AddValue(firstByte)
-		list.AddValue(secondByte)
+		var leftByte = instruction.GetLeftByte()
+		var rightByte = instruction.GetRightByte()
+		list.AddValue(leftByte)
+		list.AddValue(rightByte)
 	}
 	var bytes = list.AsArray()
 	var encoded = uti.Base16Encode(bytes)
@@ -103,9 +103,9 @@ func (v Bytecode) AsArray() []abs.Instruction {
 	var instructions = col.List[abs.Instruction]()
 	var iterator = col.Iterator[byte](bytes)
 	for iterator.HasNext() {
-		var firstByte = iterator.GetNext()
-		var secondByte = iterator.GetNext()
-		var instruction = abs.InstructionFromBytes(firstByte, secondByte)
+		var leftByte = iterator.GetNext()
+		var rightByte = iterator.GetNext()
+		var instruction = abs.InstructionFromBytes(leftByte, rightByte)
 		instructions.AddValue(instruction)
 	}
 	return instructions.AsArray()

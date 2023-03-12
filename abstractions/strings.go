@@ -21,16 +21,16 @@ type (
 	Name        string
 )
 
-func InstructionFromBytes(firstByte, secondByte byte) Instruction {
-	var v = Instruction((firstByte << 8) | secondByte)
+func InstructionFromBytes(leftByte, rightByte byte) Instruction {
+	var v = Instruction((leftByte << 8) | rightByte)
 	return v
 }
 
-func (v Instruction) GetFirstByte() byte {
+func (v Instruction) GetLeftByte() byte {
 	return byte(v >> 8)
 }
 
-func (v Instruction) GetSecondByte() byte {
+func (v Instruction) GetRightByte() byte {
 	return byte(v)
 }
 
