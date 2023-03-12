@@ -149,6 +149,10 @@ type ResourceLike interface {
 	Segmented
 }
 
+type RuneLike interface {
+	Discrete
+}
+
 type SymbolLike interface {
 	Lexical
 }

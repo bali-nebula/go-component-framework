@@ -66,32 +66,22 @@ type Parameterized interface {
 
 // CONSOLIDATED INTERFACES
 
-// This interface consolidates all the interfaces supported by component-like
-// types.
 type ComponentLike interface {
 	Encapsulated
 }
 
-// This interface consolidates all the interfaces supported by note-like
-// types.
 type NoteLike interface {
 	Sequential[rune]
 }
 
-// This interface consolidates all the interfaces supported by comment-like
-// types.
 type CommentLike interface {
 	Sequential[string]
 }
 
-// This interface consolidates all the interfaces supported by parameter-like
-// types.
 type ParameterLike interface {
 	Binding[SymbolLike, ComponentLike]
 }
 
-// This interface consolidates all the interfaces supported by context-like
-// types.
 type ContextLike interface {
 	Parameterized
 }

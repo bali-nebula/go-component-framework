@@ -111,12 +111,6 @@ type NarrativeLike interface {
 	Accessible[Line]
 }
 
-// This interface consolidates all of the interfaces supported by rune-like
-// endpoints.
-type RuneLike interface {
-	Discrete
-}
-
 type QuoteLike interface {
 	Lexical
 	Sequential[rune]
@@ -134,38 +128,26 @@ type VersionLike interface {
 	Accessible[Ordinal]
 }
 
-// This interface defines the methods supported by all byte-iterator-like
-// types.
 type ByteIteratorLike interface {
 	Ratcheted[byte]
 }
 
-// This interface defines the methods supported by all instruction-iterator-like
-// types.
 type InstructionIteratorLike interface {
 	Ratcheted[Instruction]
 }
 
-// This interface defines the methods supported by all name-iterator-like
-// types.
 type NameIteratorLike interface {
 	Ratcheted[Name]
 }
 
-// This interface defines the methods supported by all line-iterator-like
-// types.
 type LineIteratorLike interface {
 	Ratcheted[Line]
 }
 
-// This interface defines the methods supported by all rune-iterator-like
-// types.
 type RuneIteratorLike interface {
 	Ratcheted[rune]
 }
 
-// This interface defines the methods supported by all ordinal-iterator-like
-// types.
 type OrdinalIteratorLike interface {
 	Ratcheted[Ordinal]
 }

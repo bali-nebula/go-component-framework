@@ -80,31 +80,23 @@ type Certified interface {
 
 // CONSOLIDATED INTERFACES
 
-// This interface consolidates all the interfaces supported by type-like
-// components.
 type TypeLike interface {
 	Encapsulated
 	Typed
 }
 
-// This interface consolidates all the interfaces supported by citation-like
-// components.
 type CitationLike interface {
 	Encapsulated
 	Referential
 	Typed
 }
 
-// This interface consolidates all the interfaces supported by contract-like
-// components.
 type ContractLike interface {
 	Encapsulated
 	Notarized
 	Typed
 }
 
-// This interface consolidates all the interfaces supported by document-like
-// components.
 type DocumentLike interface {
 	Encapsulated
 	Typed
@@ -112,8 +104,6 @@ type DocumentLike interface {
 	Versioned
 }
 
-// This interface consolidates all the interfaces supported by certificate-like
-// components.
 type CertificateLike interface {
 	Encapsulated
 	Published
@@ -122,8 +112,6 @@ type CertificateLike interface {
 	Versioned
 }
 
-// This interface consolidates all the interfaces supported by credentials-like
-// components.
 type CredentialsLike interface {
 	Encapsulated
 	Salted
@@ -132,8 +120,6 @@ type CredentialsLike interface {
 	Versioned
 }
 
-// This interface consolidates all the interfaces supported by notary-like
-// agents.
 type NotaryLike interface {
 	Prudent
 	Certified

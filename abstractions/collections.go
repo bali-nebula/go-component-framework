@@ -107,46 +107,32 @@ type Associative[K Key, V Value] interface {
 
 // CONSOLIDATED INTERFACES
 
-// This interface consolidates all the interfaces supported by series-like
-// sequences.
 type SeriesLike interface {
 	Sequential[ComponentLike]
 }
 
-// This interface defines the methods supported by all component-iterator-like
-// types.
 type ComponentIteratorLike interface {
 	Ratcheted[ComponentLike]
 }
 
-// This interface consolidates all the interfaces supported by association-like
-// types.
 type AssociationLike interface {
 	Binding[Primitive, ComponentLike]
 }
 
-// This interface consolidates all the interfaces supported by mapping-like
-// sequences.
 type MappingLike interface {
 	Sequential[AssociationLike]
 }
 
-// This interface defines the methods supported by all association-iterator-like
-// types.
 type AssociationIteratorLike interface {
 	Ratcheted[AssociationLike]
 }
 
-// This interface consolidates all the interfaces supported by catalog-like
-// sequences.
 type CatalogLike interface {
 	Sequential[AssociationLike]
 	Associative[Primitive, ComponentLike]
 	Sortable[AssociationLike]
 }
 
-// This interface consolidates all the interfaces supported by list-like
-// sequences.
 type ListLike interface {
 	Sequential[ComponentLike]
 	Accessible[ComponentLike]
@@ -156,15 +142,11 @@ type ListLike interface {
 	Sortable[ComponentLike]
 }
 
-// This interface consolidates all of the interfaces supported by queue-like
-// sequences.
 type QueueLike interface {
 	Sequential[ComponentLike]
 	FIFO[ComponentLike]
 }
 
-// This interface consolidates all the interfaces supported by set-like
-// sequences.
 type SetLike interface {
 	Sequential[ComponentLike]
 	Accessible[ComponentLike]
@@ -172,8 +154,6 @@ type SetLike interface {
 	Flexible[ComponentLike]
 }
 
-// This interface consolidates all the interfaces supported by stack-like
-// sequences.
 type StackLike interface {
 	Sequential[ComponentLike]
 	LIFO[ComponentLike]

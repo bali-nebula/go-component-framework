@@ -47,20 +47,14 @@ type Hardened interface {
 
 // CONSOLIDATED INTERFACES
 
-// This interface consolidates all the interfaces supported by configurator-like
-// agents.
 type ConfiguratorLike interface {
 	Custodial
 }
 
-// This interface consolidates all the interfaces supported by controller-like
-// agents.
 type ControllerLike interface {
 	Mechanized
 }
 
-// This interface consolidates all the interfaces supported by
-// security-module-like devices.
 type SecurityModuleLike interface {
 	Trusted
 	Hardened

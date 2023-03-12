@@ -43,8 +43,6 @@ type Bounded[V Primitive] interface {
 
 // CONSOLIDATED INTERFACES
 
-// This interface consolidates all of the interfaces supported by interval-like
-// ranges.
 type IntervalLike[V Discrete] interface {
 	Bounded[V]
 	Sequential[V]
@@ -52,15 +50,11 @@ type IntervalLike[V Discrete] interface {
 	Searchable[V]
 }
 
-// This interface consolidates all of the interfaces supported by spectrum-like
-// ranges.
 type SpectrumLike[V Lexical] interface {
 	Bounded[V]
 	Searchable[V]
 }
 
-// This interface consolidates all of the interfaces supported by continuum-like
-// ranges.
 type ContinuumLike[V Continuous] interface {
 	Bounded[V]
 	Searchable[V]
