@@ -13,15 +13,15 @@ package collections_test
 import (
 	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
-	ele "github.com/bali-nebula/go-component-framework/elements"
+	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
 func TestComponentIterators(t *tes.T) {
-	var foo = com.Component(ele.SymbolFromString("foo"))
-	var bar = com.Component(ele.SymbolFromString("bar"))
-	var baz = com.Component(ele.SymbolFromString("baz"))
+	var foo = com.Component(str.SymbolFromString("foo"))
+	var bar = com.Component(str.SymbolFromString("bar"))
+	var baz = com.Component(str.SymbolFromString("baz"))
 	var list = col.List()
 	list.AddValue(foo)
 	list.AddValue(bar)

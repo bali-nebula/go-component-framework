@@ -15,14 +15,15 @@ import (
 	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
 	ele "github.com/bali-nebula/go-component-framework/elements"
+	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
 func TestCatalogs(t *tes.T) {
-	var foo = ele.SymbolFromString("foo")
-	var bar = ele.SymbolFromString("bar")
-	var baz = ele.SymbolFromString("baz")
+	var foo = str.SymbolFromString("foo")
+	var bar = str.SymbolFromString("bar")
+	var baz = str.SymbolFromString("baz")
 	var one = com.Component(ele.NumberFromComplex(1))
 	var two = com.Component(ele.NumberFromComplex(2))
 	var three = com.Component(ele.NumberFromComplex(3))

@@ -37,6 +37,8 @@ type context struct {
 	parameters col.CatalogLike[abs.SymbolLike, abs.ComponentLike]
 }
 
+// PARAMETERIZED INTERFACE
+
 // This method returns the sequence of parameter names for this context.
 func (v *context) GetNames() abs.Sequential[abs.SymbolLike] {
 	return v.parameters.GetKeys()

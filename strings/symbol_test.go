@@ -8,16 +8,19 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package elements_test
+package strings_test
 
 import (
-	ele "github.com/bali-nebula/go-component-framework/elements"
+	str "github.com/bali-nebula/go-component-framework/strings"
 	ass "github.com/stretchr/testify/assert"
 	tes "testing"
 )
 
 func TestSymbol(t *tes.T) {
 	var foobar = "foobar"
-	var v = ele.SymbolFromString(foobar)
+	var v = str.SymbolFromString(foobar)
 	ass.Equal(t, foobar, v.AsString())
+	ass.False(t, v.IsEmpty())
+	ass.Equal(t, 6, v.GetSize())
+	ass.Equal(t, []rune(foobar), v.AsArray())
 }

@@ -8,7 +8,7 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package elements
+package strings
 
 import (
 	fmt "fmt"
@@ -21,10 +21,7 @@ import (
 // These constants are used to define a regular expression for matching
 // symbols.
 const (
-	letter     = `\pL` // All unicode letters and connectors like underscores.
-	digit      = `\pN` // All unicode digits.
 	identifier = letter + `(?:` + letter + `|` + digit + `)*`
-	ordinal    = `[1-9][0-9]*`
 	symbol     = `(` + identifier + `(?:-` + ordinal + `)?)`
 )
 
@@ -50,4 +47,22 @@ type Symbol string
 // This method returns a string value for this lexical element.
 func (v Symbol) AsString() string {
 	return string(v)
+}
+
+// SEQUENTIAL INTERFACE
+
+// This method determines whether or not this symbol is empty.
+func (v Symbol) IsEmpty() bool {
+	return len(v) == 0
+}
+
+// This method returns the number of bytes contained in this symbol.
+func (v Symbol) GetSize() int {
+	return len(v)
+}
+
+// This method returns all the bytes in this symbol. The bytes retrieved
+// are in the same order as they are in the symbol.
+func (v Symbol) AsArray() []rune {
+	return []rune(v)
 }

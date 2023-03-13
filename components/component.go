@@ -40,7 +40,7 @@ type component struct {
 	note    abs.NoteLike
 }
 
-// COMPONENT IMPLEMENTATION
+// ENCAPSULATED INTERFACE
 
 // This method returns the entity for this component.
 func (v *component) GetEntity() abs.Entity {

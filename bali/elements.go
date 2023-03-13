@@ -332,24 +332,6 @@ func Resource(value abs.Value) abs.ResourceLike {
 	return resource
 }
 
-// This constructor returns a new symbol element initialized with the specified
-// value.
-func Symbol(value abs.Value) abs.SymbolLike {
-	var symbol abs.SymbolLike
-	switch actual := value.(type) {
-	case string:
-		symbol = ParseEntity(actual).(abs.SymbolLike)
-	case abs.SymbolLike:
-		symbol = actual
-	case abs.ComponentLike:
-		symbol = actual.GetEntity().(abs.SymbolLike)
-	default:
-		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a symbol: %v", actual, actual)
-		panic(message)
-	}
-	return symbol
-}
-
 // PRIVATE METHODS
 
 // This method attempts to parse an angle element. It returns the angle element
@@ -522,7 +504,6 @@ func (v *formatter) formatDuration(duration abs.DurationLike) {
 // element primitive and whether or not the element primitive was
 // successfully parsed.
 func (v *parser) parseElement() (abs.Element, *Token, bool) {
-	// TODO: Reorder these based on how often each type occurs.
 	var ok bool
 	var token *Token
 	var element abs.Element
@@ -550,12 +531,6 @@ func (v *parser) parseElement() (abs.Element, *Token, bool) {
 	}
 	if !ok {
 		element, token, ok = v.parseResource()
-	}
-	if !ok {
-		element, token, ok = v.parseSymbol()
-	}
-	if !ok {
-		element, token, ok = v.parseTag()
 	}
 	if !ok {
 		// Override any zero values returned from failed parsing attempts.
@@ -958,32 +933,6 @@ func (v *parser) parseResource() (abs.ResourceLike, *Token, bool) {
 func (v *formatter) formatResource(resource abs.ResourceLike) {
 	var uri = resource.AsString()
 	var s = "<" + uri + ">"
-	v.AppendString(s)
-}
-
-// This method attempts to parse a probability element. It returns the
-// probability element and whether or not the probability element was
-// successfully parsed.
-// This method attempts to parse a symbol string. It returns the symbol
-// string and whether or not the symbol string was successfully parsed.
-func (v *parser) parseSymbol() (abs.SymbolLike, *Token, bool) {
-	var token *Token
-	var symbol abs.SymbolLike
-	token = v.nextToken()
-	if token.Type != TokenSymbol {
-		v.backupOne()
-		return symbol, token, false
-	}
-	var matches = scanSymbol([]byte(token.Value))
-	symbol = ele.SymbolFromString(matches[1]) // Remove the leading '$'.
-	return symbol, token, true
-}
-
-// This method adds the canonical format for the specified element to the state
-// of the formatter.
-func (v *formatter) formatSymbol(symbol abs.SymbolLike) {
-	var identifier = symbol.AsString()
-	var s = "$" + identifier
 	v.AppendString(s)
 }
 

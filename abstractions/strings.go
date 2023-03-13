@@ -117,6 +117,11 @@ type QuoteLike interface {
 	Accessible[rune]
 }
 
+type SymbolLike interface {
+	Lexical
+	Sequential[rune]
+}
+
 type TagLike interface {
 	Lexical
 	Sequential[byte]

@@ -144,6 +144,24 @@ func Quote(value abs.Value) abs.QuoteLike {
 	return quote
 }
 
+// This constructor returns a new symbol element initialized with the specified
+// value.
+func Symbol(value abs.Value) abs.SymbolLike {
+	var symbol abs.SymbolLike
+	switch actual := value.(type) {
+	case string:
+		symbol = ParseEntity(actual).(abs.SymbolLike)
+	case abs.SymbolLike:
+		symbol = actual
+	case abs.ComponentLike:
+		symbol = actual.GetEntity().(abs.SymbolLike)
+	default:
+		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a symbol: %v", actual, actual)
+		panic(message)
+	}
+	return symbol
+}
+
 // This constructor returns a new random tag element of the default size.
 func NewTag() abs.TagLike {
 	return str.TagOfSize(0)
@@ -391,27 +409,59 @@ func (v *parser) parseString() (abs.String, *Token, bool) {
 	var ok bool
 	var token *Token
 	var s abs.String
-	s, token, ok = v.parseQuote()
-	if !ok {
-		s, token, ok = v.parseMoniker()
-	}
-	if !ok {
-		s, token, ok = v.parseVersion()
-	}
-	if !ok {
-		s, token, ok = v.parseBinary()
-	}
+	s, token, ok = v.parseBinary()
 	if !ok {
 		s, token, ok = v.parseBytecode()
 	}
 	if !ok {
+		s, token, ok = v.parseMoniker()
+	}
+	if !ok {
 		s, token, ok = v.parseNarrative()
+	}
+	if !ok {
+		s, token, ok = v.parseQuote()
+	}
+	if !ok {
+		s, token, ok = v.parseSymbol()
+	}
+	if !ok {
+		s, token, ok = v.parseTag()
+	}
+	if !ok {
+		s, token, ok = v.parseVersion()
 	}
 	if !ok {
 		// Override any empty strings returned from failed parsing attempts.
 		s = nil
 	}
 	return s, token, ok
+}
+
+// This method attempts to parse a probability element. It returns the
+// probability element and whether or not the probability element was
+// successfully parsed.
+// This method attempts to parse a symbol string. It returns the symbol
+// string and whether or not the symbol string was successfully parsed.
+func (v *parser) parseSymbol() (abs.SymbolLike, *Token, bool) {
+	var token *Token
+	var symbol abs.SymbolLike
+	token = v.nextToken()
+	if token.Type != TokenSymbol {
+		v.backupOne()
+		return symbol, token, false
+	}
+	var matches = scanSymbol([]byte(token.Value))
+	symbol = str.SymbolFromString(matches[1]) // Remove the leading '$'.
+	return symbol, token, true
+}
+
+// This method adds the canonical format for the specified element to the state
+// of the formatter.
+func (v *formatter) formatSymbol(symbol abs.SymbolLike) {
+	var identifier = symbol.AsString()
+	var s = "$" + identifier
+	v.AppendString(s)
 }
 
 // This method attempts to parse a tag element. It returns the

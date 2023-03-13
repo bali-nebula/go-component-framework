@@ -152,7 +152,3 @@ type ResourceLike interface {
 type RuneLike interface {
 	Discrete
 }
-
-type SymbolLike interface {
-	Lexical
-}

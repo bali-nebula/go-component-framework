@@ -15,7 +15,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/abstractions"
 	col "github.com/bali-nebula/go-component-framework/collections"
 	com "github.com/bali-nebula/go-component-framework/components"
-	ele "github.com/bali-nebula/go-component-framework/elements"
+	str "github.com/bali-nebula/go-component-framework/strings"
 	cof "github.com/craterdog/go-collection-framework/v2"
 	sts "strings"
 )
@@ -589,7 +589,7 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 	// Check for an explicit component type.
 	var type_ string
 	if context != nil {
-		var name = ele.SymbolFromString("type")
+		var name = str.SymbolFromString("type")
 		var component = context.GetValue(name)
 		if component != nil {
 			var moniker = component.ExtractMoniker()
