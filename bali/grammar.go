@@ -149,8 +149,8 @@ var grammar = map[string]string{
 	"$discardClause": `"discard" document`,
 	"$document":      `expression`,
 	"$element": `
-    ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN |
-    PERCENTAGE | PROBABILITY | RESOURCE | SYMBOL | TAG`,
+    ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE |
+    PROBABILITY | RESOURCE`,
 	"$entity":      `element | string | range | collection | procedure`,
 	"$event":       `expression`,
 	"$exception":   `expression`,
@@ -233,7 +233,7 @@ var grammar = map[string]string{
     statement {";" statement} |
     EOL <[statement] EOL> |  ! Allows blank lines.
     ! An empty procedure.`,
-	"$string":       `BINARY | MONIKER | NARRATIVE | QUOTE | VERSION`,
+	"$string":       `BINARY | BYTECODE | MONIKER | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION`,
 	"$subcomponent": `composite indices`,
 	"$target":       `expression`,
 	"$throwClause":  `"throw" exception`,
