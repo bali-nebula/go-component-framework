@@ -15,22 +15,20 @@ formatters for different document types (Bali, HTML, JSON, XML, etc.)
 ### Quick Links
 For more information on this project click on the following links:
  * [project documentation](https://github.com/bali-nebula/go-component-framework/wiki)
- * [release notes](https://github.com/bali-nebula/go-component-framework/wiki/release-notes)
- * [code examples](https://github.com/bali-nebula/go-component-framework/wiki/code-examples)
+ * [coding conventions](https://github.com/craterdog/go-collection-framework/wiki/coding-conventions)
+ * [release notes](https://github.com/bali-nebula/go-component-framework/wiki/releases)
 
 ### Getting Started
 To include the Go packages for this module use the following import statement:
 ```go
 import (
-	abs "github.com/bali-nebula/go-component-framework/abstractions"
-	bdn "github.com/bali-nebula/go-component-framework/bdn"
-	col "github.com/bali-nebula/go-component-framework/collections"
-	ele "github.com/bali-nebula/go-component-framework/elements"
-	htm "github.com/bali-nebula/go-component-framework/html"
-	jso "github.com/bali-nebula/go-component-framework/json"
-	str "github.com/bali-nebula/go-component-framework/strings"
-	uti "github.com/bali-nebula/go-component-framework/utilities"
-	xml "github.com/bali-nebula/go-component-framework/xml"
+	abs "github.com/bali-nebula/go-component-framework/v1/abstractions"
+	age "github.com/bali-nebula/go-component-framework/v1/agents"
+	col "github.com/bali-nebula/go-component-framework/v1/collections"
+	ele "github.com/bali-nebula/go-component-framework/v1/elements"
+	ran "github.com/bali-nebula/go-component-framework/v1/ranges"
+	str "github.com/bali-nebula/go-component-framework/v1/strings"
+	uti "github.com/bali-nebula/go-component-framework/v1/utilities"
 )
 ```
 
