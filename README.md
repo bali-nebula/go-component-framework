@@ -15,20 +15,20 @@ formatters for different document types (Bali, HTML, JSON, XML, etc.)
 ### Quick Links
 For more information on this project click on the following links:
  * [project documentation](https://github.com/bali-nebula/go-component-framework/wiki)
- * [coding conventions](https://github.com/craterdog/go-collection-framework/wiki/coding-conventions)
+ * [coding conventions](https://github.com/craterdog/go-collection-framework/wiki/conventions)
  * [release notes](https://github.com/bali-nebula/go-component-framework/wiki/releases)
 
 ### Getting Started
 To include the Go packages for this module use the following import statement:
 ```go
 import (
-	abs "github.com/bali-nebula/go-component-framework/v1/abstractions"
-	age "github.com/bali-nebula/go-component-framework/v1/agents"
-	col "github.com/bali-nebula/go-component-framework/v1/collections"
-	ele "github.com/bali-nebula/go-component-framework/v1/elements"
-	ran "github.com/bali-nebula/go-component-framework/v1/ranges"
-	str "github.com/bali-nebula/go-component-framework/v1/strings"
-	uti "github.com/bali-nebula/go-component-framework/v1/utilities"
+	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
+	age "github.com/bali-nebula/go-component-framework/v2/agents"
+	col "github.com/bali-nebula/go-component-framework/v2/collections"
+	ele "github.com/bali-nebula/go-component-framework/v2/elements"
+	ran "github.com/bali-nebula/go-component-framework/v2/ranges"
+	str "github.com/bali-nebula/go-component-framework/v2/strings"
+	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 )
 ```
 
