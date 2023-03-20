@@ -146,8 +146,8 @@ var grammar = map[string]string{
     returnClause   |  ! "return" result
     throwClause       ! "throw" exception`,
 	"$dereference":   `"@" expression`,
-	"$discardClause": `"discard" document`,
-	"$document":      `expression`,
+	"$discardClause": `"discard" record`,
+	"$document":      `component EOF  ! EOF is the end-of-file marker.`,
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE |
     PROBABILITY | RESOURCE`,
@@ -199,7 +199,7 @@ var grammar = map[string]string{
 	"$method":         `IDENTIFIER`,
 	"$moniker":        `expression`,
 	"$name":           `SYMBOL`,
-	"$notarizeClause": `"notarize" document "as" moniker`,
+	"$notarizeClause": `"notarize" record "as" moniker`,
 	"$onClause":       `"on" failure <"matching" pattern "do" procedure>`,
 	"$ordinal":        `expression`,
 	"$parameter":      `name ":" value`,
@@ -214,20 +214,20 @@ var grammar = map[string]string{
 	"$publishClause": `"publish" event`,
 	"$range":         `( "[" | "(" ) primitive ".." primitive ( ")" | "]" )`,
 	"$recipient":     `name | attribute`,
+	"$record":        `expression`,
 	"$rejectClause":  `"reject" message`,
 	"$repository": `
     checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
-    saveClause     |  ! "save" document "as" recipient
-    discardClause  |  ! "discard" document
-    notarizeClause    ! "notarize" document "as" moniker`,
+    saveClause     |  ! "save" record "as" recipient
+    discardClause  |  ! "discard" record
+    notarizeClause    ! "notarize" record "as" moniker`,
 	"$result":         `expression`,
 	"$retrieveClause": `"retrieve" recipient "from" bag`,
 	"$returnClause":   `"return" result`,
-	"$saveClause":     `"save" document "as" recipient`,
+	"$saveClause":     `"save" record "as" recipient`,
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
 	"$sequence":       `expression`,
 	"$series":         `"[" components "]"`,
-	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
 	"$statement":      `[annotation EOL] mainClause [onClause] [NOTE]`,
 	"$statements": `
     statement {";" statement} |
@@ -250,7 +250,7 @@ const header = `!>
     The token names are identified by all CAPITAL characters and the rule names
     are identified by lowerCamelCase characters. The token and rule definitions
     have been alphabetized to make it easier to locate specific definitions.
-    The starting rule is "$source".
+    The starting rule is "$document".
 <!
 
 `

@@ -40,7 +40,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 		if !ok {
 			var message = parser.formatError(token)
 			message += generateGrammar("EOL",
-				"$source",
+				"$document",
 				"$component",
 				"$entity",
 				"$context",
@@ -53,7 +53,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 		if !ok {
 			var message = parser.formatError(token)
 			message += generateGrammar("EOF",
-				"$source",
+				"$document",
 				"$component",
 				"$entity",
 				"$context",
@@ -65,7 +65,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 	} else {
 		var message = parser.formatError(token)
 		message += generateGrammar("$component",
-			"$source",
+			"$document",
 			"$component",
 			"$entity",
 			"$context",

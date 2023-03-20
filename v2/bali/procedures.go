@@ -315,7 +315,7 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("document",
 			"$discardClause",
-			"$document")
+			"$record")
 		panic(message)
 	}
 	clause = pro.DiscardClause(document)
@@ -693,7 +693,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("document",
 			"$notarizeClause",
-			"$document",
+			"$record",
 			"$moniker")
 		panic(message)
 	}
@@ -702,7 +702,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("as",
 			"$notarizeClause",
-			"$document",
+			"$record",
 			"$moniker")
 		panic(message)
 	}
@@ -711,7 +711,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("moniker",
 			"$notarizeClause",
-			"$document",
+			"$record",
 			"$moniker")
 		panic(message)
 	}
@@ -1124,7 +1124,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("document",
 			"$saveClause",
-			"$document",
+			"$record",
 			"$recipient",
 			"$name",
 			"$attribute",
@@ -1137,7 +1137,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("as",
 			"$saveClause",
-			"$document",
+			"$record",
 			"$recipient",
 			"$name",
 			"$attribute",
@@ -1150,7 +1150,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("recipient",
 			"$saveClause",
-			"$document",
+			"$record",
 			"$recipient",
 			"$name",
 			"$attribute",
