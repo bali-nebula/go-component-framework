@@ -197,10 +197,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar(")",
 			"$context",
-			"$parameters",
-			"$parameter",
-			"$name",
-			"$value")
+			"$parameters")
 		panic(message)
 	}
 	return context, token, true
@@ -376,7 +373,7 @@ func (v *parser) parseInlineContext() (abs.ContextLike, *Token, bool) {
 	if ok {
 		// A context must have at least one parameter.
 		var message = v.formatError(token)
-		message += generateGrammar("$parameter",
+		message += generateGrammar("parameter",
 			"$context",
 			"$parameters",
 			"$parameter",
@@ -403,7 +400,7 @@ func (v *parser) parseInlineContext() (abs.ContextLike, *Token, bool) {
 		parameter, token, ok = v.parseParameter()
 		if !ok {
 			var message = v.formatError(token)
-			message += generateGrammar("$parameter",
+			message += generateGrammar("parameter",
 				"$context",
 				"$parameters",
 				"$parameter",
@@ -457,10 +454,7 @@ func (v *parser) parseMultilineContext() (abs.ContextLike, *Token, bool) {
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
 				"$context",
-				"$parameters",
-				"$parameter",
-				"$name",
-				"$value")
+				"$parameters")
 			panic(message)
 		}
 		parameter, token, ok = v.parseParameter()

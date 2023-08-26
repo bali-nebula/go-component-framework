@@ -448,7 +448,7 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 	last, token, ok = v.parseEndpoint()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("right endpoint",
+		message += generateGrammar("primitive",
 			"$range",
 			"$primitive")
 		panic(message)
@@ -458,9 +458,8 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 		right, token, ok = v.parseDelimiter(")")
 		if !ok {
 			var message = v.formatError(token)
-			message += generateGrammar("right bracket",
-				"$range",
-				"$primitive")
+			message += generateGrammar("bracket",
+				"$range")
 			panic(message)
 		}
 	}

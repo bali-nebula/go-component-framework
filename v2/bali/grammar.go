@@ -124,7 +124,7 @@ var grammar = map[string]string{
 	"$breakClause":    `"break" "loop"`,
 	"$chaining":       `expression "&" expression`,
 	"$checkoutClause": `"checkout" recipient ["at" "level" ordinal] "from" moniker`,
-	"$collection":     `series | mapping`,
+	"$collection":     `"[" components | associations "]"`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
 	"$component":      `entity [context] [NOTE]`,
@@ -146,8 +146,8 @@ var grammar = map[string]string{
     returnClause   |  ! "return" result
     throwClause       ! "throw" exception`,
 	"$dereference":   `"@" expression`,
-	"$discardClause": `"discard" record`,
-	"$document":      `component EOF  ! EOF is the end-of-file marker.`,
+	"$discardClause": `"discard" document`,
+	"$document":      `expression`,
 	"$element": `
     ANGLE | BOOLEAN | DURATION | MOMENT | NUMBER | PATTERN | PERCENTAGE |
     PROBABILITY | RESOURCE`,
@@ -188,7 +188,6 @@ var grammar = map[string]string{
     assignment |
     messaging  |
     repository`,
-	"$mapping": `"[" associations "]"`,
 	"$message": `expression`,
 	"$messaging": `
     postClause     |  ! "post" message "to" bag
@@ -199,7 +198,7 @@ var grammar = map[string]string{
 	"$method":         `IDENTIFIER`,
 	"$moniker":        `expression`,
 	"$name":           `SYMBOL`,
-	"$notarizeClause": `"notarize" record "as" moniker`,
+	"$notarizeClause": `"notarize" document "as" moniker`,
 	"$onClause":       `"on" failure <"matching" pattern "do" procedure>`,
 	"$ordinal":        `expression`,
 	"$parameter":      `name ":" value`,
@@ -214,20 +213,19 @@ var grammar = map[string]string{
 	"$publishClause": `"publish" event`,
 	"$range":         `( "[" | "(" ) primitive ".." primitive ( ")" | "]" )`,
 	"$recipient":     `name | attribute`,
-	"$record":        `expression`,
 	"$rejectClause":  `"reject" message`,
 	"$repository": `
     checkoutClause |  ! "checkout" recipient ["at" "level" ordinal] "from" moniker
-    saveClause     |  ! "save" record "as" recipient
-    discardClause  |  ! "discard" record
-    notarizeClause    ! "notarize" record "as" moniker`,
+    saveClause     |  ! "save" document "as" recipient
+    discardClause  |  ! "discard" document
+    notarizeClause    ! "notarize" document "as" moniker`,
 	"$result":         `expression`,
 	"$retrieveClause": `"retrieve" recipient "from" bag`,
 	"$returnClause":   `"return" result`,
-	"$saveClause":     `"save" record "as" recipient`,
+	"$saveClause":     `"save" document "as" recipient`,
 	"$selectClause":   `"select" target <"matching" pattern "do" procedure>`,
 	"$sequence":       `expression`,
-	"$series":         `"[" components "]"`,
+	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
 	"$statement":      `[annotation EOL] mainClause [onClause] [NOTE]`,
 	"$statements": `
     statement {";" statement} |
@@ -247,10 +245,11 @@ const header = `!>
     A formal definition of Bali Document Notation™ (Bali) using Bali Wirth Syntax
     Notation™ (BWSN):
         <https://github.com/bali-nebula/specifications/blob/main/bwsn.bwsn>
+
     The token names are identified by all CAPITAL characters and the rule names
     are identified by lowerCamelCase characters. The token and rule definitions
     have been alphabetized to make it easier to locate specific definitions.
-    The starting rule is "$document".
+    The starting rule is "$source".
 <!
 
 `

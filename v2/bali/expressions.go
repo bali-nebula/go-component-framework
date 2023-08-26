@@ -47,8 +47,9 @@ func (v *parser) parseArguments() (abs.Sequential[abs.Expression], *Token, bool)
 		argument, token, ok = v.parseExpression()
 		if !ok {
 			var message = v.formatError(token)
-			message += generateGrammar("$expression",
-				"$arguments")
+			message += generateGrammar("expression",
+				"$arguments",
+				"$expression")
 			panic(message)
 		}
 	}
@@ -57,8 +58,7 @@ func (v *parser) parseArguments() (abs.Sequential[abs.Expression], *Token, bool)
 		var message = v.formatError(token)
 		message += generateGrammar(")",
 			"$intrinsic",
-			"$function",
-			"$arguments")
+			"$function")
 		panic(message)
 	}
 	return arguments, token, true
@@ -103,8 +103,9 @@ func (v *parser) parseArithmetic(first abs.Expression) (abs.Expression, *Token, 
 	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$arithmetic")
+		message += generateGrammar("expression",
+			"$arithmetic",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Arithmetic(first, operator, second)
@@ -146,8 +147,9 @@ func (v *parser) parseChaining(first abs.Expression) (abs.Expression, *Token, bo
 	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$chaining")
+		message += generateGrammar("expression",
+			"$chaining",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Chaining(first, operator, second)
@@ -189,8 +191,9 @@ func (v *parser) parseComparison(first abs.Expression) (abs.Expression, *Token, 
 	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$comparison")
+		message += generateGrammar("expression",
+			"$comparison",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Comparison(first, operator, second)
@@ -232,8 +235,9 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 	logical, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$complement")
+		message += generateGrammar("expression",
+			"$complement",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Complement(operator, logical)
@@ -272,8 +276,9 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 	reference, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$dereference")
+		message += generateGrammar("expression",
+			"$dereference",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Dereference(operator, reference)
@@ -311,8 +316,9 @@ func (v *parser) parseExponential(base abs.Expression) (abs.Expression, *Token, 
 	exponent, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$exponential")
+		message += generateGrammar("expression",
+			"$exponential",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Exponential(base, operator, exponent)
@@ -477,8 +483,9 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	numeric, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$inversion")
+		message += generateGrammar("expression",
+			"$inversion",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Inversion(operator, numeric)
@@ -517,7 +524,7 @@ func (v *parser) parseInvocation(target abs.Expression) (abs.Expression, *Token,
 	message, token, ok = v.parseIdentifier()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$method",
+		message += generateGrammar("method",
 			"$invocation",
 			"$method",
 			"$arguments")
@@ -526,10 +533,11 @@ func (v *parser) parseInvocation(target abs.Expression) (abs.Expression, *Token,
 	arguments, token, ok = v.parseArguments()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
+		message += generateGrammar("expression",
 			"$invocation",
 			"$method",
-			"$arguments")
+			"$arguments",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Invocation(target, operator, message, arguments)
@@ -596,8 +604,9 @@ func (v *parser) parseLogical(first abs.Expression) (abs.Expression, *Token, boo
 	second, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$logical")
+		message += generateGrammar("expression",
+			"$logical",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Logical(first, operator, second)
@@ -633,8 +642,9 @@ func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 	numeric, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$magnitude")
+		message += generateGrammar("expression",
+			"$magnitude",
+			"$expression")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("|")
@@ -673,15 +683,17 @@ func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 	inner, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$precedence")
+		message += generateGrammar("expression",
+			"$precedence",
+			"$expression")
 		panic(message)
 	}
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$expression",
-			"$precedence")
+		message += generateGrammar("expression",
+			"$precedence",
+			"$expression")
 		panic(message)
 	}
 	expression = exp.Precedence(inner)

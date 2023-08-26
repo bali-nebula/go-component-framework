@@ -126,7 +126,7 @@ func (v *parser) parseAssociation() (abs.AssociationLike, *Token, bool) {
 	value, token, ok = v.parseComponent()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("$component",
+		message += generateGrammar("value",
 			"$association",
 			"$key",
 			"$value")
@@ -195,8 +195,7 @@ func (v *parser) parseInlineMapping() (abs.MappingLike, *Token, bool) {
 		association, token, ok = v.parseAssociation()
 		if !ok {
 			var message = v.formatError(token)
-			message += generateGrammar("$association",
-				"$mapping",
+			message += generateGrammar("association",
 				"$associations",
 				"$association",
 				"$key",
@@ -225,8 +224,8 @@ func (v *parser) parseInlineSeries() (abs.SeriesLike, *Token, bool) {
 	if !ok {
 		// A non-empty series must have at least one component value.
 		var message = v.formatError(token)
-		message += generateGrammar("$component",
-			"$series",
+		message += generateGrammar("component",
+			"$collection",
 			"$components",
 			"$component")
 		panic(message)
@@ -242,8 +241,8 @@ func (v *parser) parseInlineSeries() (abs.SeriesLike, *Token, bool) {
 		value, token, ok = v.parseComponent()
 		if !ok {
 			var message = v.formatError(token)
-			message += generateGrammar("$component",
-				"$series",
+			message += generateGrammar("component",
+				"$collection",
 				"$components",
 				"$component")
 			panic(message)
@@ -282,11 +281,9 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("]",
-			"$mapping",
+			"$collection",
 			"$associations",
-			"$association",
-			"$key",
-			"$value")
+			"$association")
 		panic(message)
 	}
 	return mapping, token, true
@@ -336,11 +333,9 @@ func (v *parser) parseMultilineMapping() (abs.MappingLike, *Token, bool) {
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
-				"$mapping",
+				"$collection",
 				"$associations",
-				"$association",
-				"$key",
-				"$value")
+				"$association")
 			panic(message)
 		}
 		association, token, ok = v.parseAssociation()
@@ -364,8 +359,8 @@ func (v *parser) parseMultilineSeries() (abs.SeriesLike, *Token, bool) {
 	if !ok {
 		// A non-empty series must have at least one value.
 		var message = v.formatError(token)
-		message += generateGrammar("$component",
-			"$series",
+		message += generateGrammar("component",
+			"$collection",
 			"$components",
 			"$component")
 		panic(message)
@@ -377,9 +372,8 @@ func (v *parser) parseMultilineSeries() (abs.SeriesLike, *Token, bool) {
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
-				"$series",
-				"$components",
-				"$component")
+				"$collection",
+				"$components")
 			panic(message)
 		}
 		value, token, ok = v.parseComponent()
@@ -484,9 +478,8 @@ func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("]",
-			"$series",
-			"$components",
-			"$component")
+			"$collection",
+			"$components")
 		panic(message)
 	}
 	return series, token, ok

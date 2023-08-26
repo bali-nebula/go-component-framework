@@ -94,7 +94,7 @@ type Token struct {
 	Position int // The position in the line of the first rune of the token.
 }
 
-// This method returns the a canonical string version of this token.
+// This method returns the canonical string version of this token.
 func (v Token) String() string {
 	var s string
 	switch {

@@ -41,12 +41,7 @@ func ParseDocument(document []byte) abs.ComponentLike {
 			var message = parser.formatError(token)
 			message += generateGrammar("EOL",
 				"$document",
-				"$component",
-				"$entity",
-				"$context",
-				"$parameters",
-				"$parameter",
-				"$name")
+				"$component")
 			panic(message)
 		}
 		_, token, ok = parser.parseEOF()
@@ -54,24 +49,16 @@ func ParseDocument(document []byte) abs.ComponentLike {
 			var message = parser.formatError(token)
 			message += generateGrammar("EOF",
 				"$document",
-				"$component",
-				"$entity",
-				"$context",
-				"$parameters",
-				"$parameter",
-				"$name")
+				"$component")
 			panic(message)
 		}
 	} else {
 		var message = parser.formatError(token)
-		message += generateGrammar("$component",
+		message += generateGrammar("component",
 			"$document",
 			"$component",
 			"$entity",
-			"$context",
-			"$parameters",
-			"$parameter",
-			"$name")
+			"$context")
 		panic(message)
 	}
 	return component
@@ -98,11 +85,10 @@ func ParseContext(source string) abs.ContextLike {
 	context, token, ok = parser.parseContext()
 	if !ok {
 		var message = parser.formatError(token)
-		message += generateGrammar("$context",
+		message += generateGrammar("context",
+			"$component",
 			"$context",
-			"$parameters",
-			"$parameter",
-			"$name")
+			"$parameters")
 		panic(message)
 	}
 	return context

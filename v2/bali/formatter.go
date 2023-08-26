@@ -17,6 +17,12 @@ import (
 
 // FORMATTER INTERFACE
 
+// This constructor creates a new formatter using the specified indentation.
+func Formatter(indentation int) *formatter {
+	var v = &formatter{indentation: indentation, depth: 0}
+	return v
+}
+
 // This function returns a canonical BDN string for the specified entity.
 func FormatEntity(entity abs.Entity) string {
 	var v = Formatter(0)
@@ -46,18 +52,11 @@ func FormatComponentWithIndentation(component abs.ComponentLike, indentation int
 // This function returns a canonical BDN bytes for the specified component
 // including the POSIX standard trailing EOL.
 func FormatDocument(component abs.ComponentLike) []byte {
-	var v = Formatter(0)
-	var s = v.FormatComponent(component) + EOL
+	var s = FormatComponent(component) + EOL
 	return []byte(s)
 }
 
 // FORMATTER IMPLEMENTATION
-
-// This constructor creates a new formatter using the specified indentation.
-func Formatter(indentation int) *formatter {
-	var v = &formatter{indentation: indentation, depth: 0}
-	return v
-}
 
 // This type defines the structure and methods for a canonical formatting agent.
 type formatter struct {

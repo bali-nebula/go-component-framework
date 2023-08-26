@@ -97,7 +97,8 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 			"$selectClause",
 			"$withClause",
 			"$whileClause",
-			"$onClause")
+			"$onClause",
+			"$expression")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("do")
@@ -115,9 +116,12 @@ func (v *parser) parseBlock() (abs.BlockLike, *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("procedure",
-			"$procedure",
-			"$statements",
-			"$statement")
+			"$ifClause",
+			"$selectClause",
+			"$withClause",
+			"$whileClause",
+			"$onClause",
+			"$procedure")
 		panic(message)
 	}
 	block = pro.Block(expression, procedure)
@@ -181,13 +185,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("recipient",
 			"$checkoutClause",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices",
-			"$ordinal",
-			"$moniker")
+			"$recipient")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("at")
@@ -197,28 +195,15 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("level",
-				"$checkoutClause",
-				"$recipient",
-				"$name",
-				"$attribute",
-				"$variable",
-				"$indices",
-				"$ordinal",
-				"$moniker")
+				"$checkoutClause")
 			panic(message)
 		}
 		level, token, ok = v.parseExpression()
 		if !ok {
 			var message = v.formatError(token)
-			message += generateGrammar("expression",
+			message += generateGrammar("ordinal",
 				"$checkoutClause",
-				"$recipient",
-				"$name",
-				"$attribute",
-				"$variable",
-				"$indices",
-				"$ordinal",
-				"$moniker")
+				"$ordinal")
 			panic(message)
 		}
 	}
@@ -226,14 +211,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("from",
-			"$checkoutClause",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices",
-			"$ordinal",
-			"$moniker")
+			"$checkoutClause")
 		panic(message)
 	}
 	moniker, token, ok = v.parseExpression()
@@ -241,12 +219,6 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("moniker",
 			"$checkoutClause",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices",
-			"$ordinal",
 			"$moniker")
 		panic(message)
 	}
@@ -315,7 +287,7 @@ func (v *parser) parseDiscardClause() (abs.DiscardClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("document",
 			"$discardClause",
-			"$record")
+			"$document")
 		panic(message)
 	}
 	clause = pro.DiscardClause(document)
@@ -347,8 +319,7 @@ func (v *parser) parseIfClause() (abs.IfClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("condition",
 			"$ifClause",
-			"$condition",
-			"$procedure")
+			"$condition")
 		panic(message)
 	}
 	clause = pro.IfClause(block)
@@ -405,8 +376,7 @@ func (v *parser) parseIndices() (abs.Sequential[abs.Expression], *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("]",
-			"$indices",
-			"$expression")
+			"$indices")
 		panic(message)
 	}
 	return indices, token, true
@@ -481,11 +451,7 @@ func (v *parser) parseLetClause() (abs.LetClauseLike, *Token, bool) {
 			var message = v.formatError(token)
 			message += generateGrammar("recipient",
 				"$letClause",
-				"$recipient",
-				"$name",
-				"$attribute",
-				"$variable",
-				"$indices")
+				"$recipient")
 			panic(message)
 		}
 		// The recipient requires an operator.
@@ -493,12 +459,7 @@ func (v *parser) parseLetClause() (abs.LetClauseLike, *Token, bool) {
 		if !ok || operator < abs.ASSIGN || operator > abs.QUOTIENT {
 			var message = v.formatError(token)
 			message += generateGrammar("operator",
-				"$letClause",
-				"$recipient",
-				"$name",
-				"$attribute",
-				"$variable",
-				"$indices")
+				"$letClause")
 			panic(message)
 		}
 	}
@@ -693,17 +654,14 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("document",
 			"$notarizeClause",
-			"$record",
-			"$moniker")
+			"$document")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("as")
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("as",
-			"$notarizeClause",
-			"$record",
-			"$moniker")
+			"$notarizeClause")
 		panic(message)
 	}
 	moniker, token, ok = v.parseExpression()
@@ -711,7 +669,6 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("moniker",
 			"$notarizeClause",
-			"$record",
 			"$moniker")
 		panic(message)
 	}
@@ -749,9 +706,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("failure",
 			"$onClause",
-			"$failure",
-			"$pattern",
-			"$statements")
+			"$failure")
 		panic(message)
 	}
 	for {
@@ -764,9 +719,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 			var message = v.formatError(token)
 			message += generateGrammar("pattern",
 				"$onClause",
-				"$failure",
-				"$pattern",
-				"$procedure")
+				"$pattern")
 			panic(message)
 		}
 		blocks.AddValue(block)
@@ -776,9 +729,7 @@ func (v *parser) parseOnClause() (abs.OnClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("pattern",
 			"$onClause",
-			"$failure",
-			"$pattern",
-			"$procedure")
+			"$pattern")
 		panic(message)
 	}
 	clause = pro.OnClause(failure, blocks)
@@ -820,17 +771,14 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("message",
 			"$postClause",
-			"$message",
-			"$bag")
+			"$message")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("to")
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("to",
-			"$postClause",
-			"$message",
-			"$bag")
+			"$postClause")
 		panic(message)
 	}
 	bag, token, ok = v.parseExpression()
@@ -838,7 +786,6 @@ func (v *parser) parsePostClause() (abs.PostClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("bag",
 			"$postClause",
-			"$message",
 			"$bag")
 		panic(message)
 	}
@@ -883,9 +830,7 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("}",
-			"$procedure",
-			"$statements",
-			"$statement")
+			"$procedure")
 		panic(message)
 	}
 	return procedure, token, true
@@ -1025,25 +970,14 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("recipient",
 			"$retrieveClause",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices",
-			"$bag")
+			"$recipient")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("from")
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("from",
-			"$retrieveClause",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices",
-			"$bag")
+			"$retrieveClause")
 		panic(message)
 	}
 	bag, token, ok = v.parseExpression()
@@ -1051,11 +985,6 @@ func (v *parser) parseRetrieveClause() (abs.RetrieveClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("bag",
 			"$retrieveClause",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices",
 			"$bag")
 		panic(message)
 	}
@@ -1124,25 +1053,14 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("document",
 			"$saveClause",
-			"$record",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices")
+			"$document")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("as")
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("as",
-			"$saveClause",
-			"$record",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices")
+			"$saveClause")
 		panic(message)
 	}
 	recipient, token, ok = v.parseRecipient()
@@ -1150,12 +1068,7 @@ func (v *parser) parseSaveClause() (abs.SaveClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("recipient",
 			"$saveClause",
-			"$record",
-			"$recipient",
-			"$name",
-			"$attribute",
-			"$variable",
-			"$indices")
+			"$recipient")
 		panic(message)
 	}
 	clause = pro.SaveClause(document, recipient)
@@ -1192,8 +1105,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("target",
 			"$selectClause",
-			"$target",
-			"$pattern")
+			"$target")
 		panic(message)
 	}
 	for {
@@ -1206,9 +1118,7 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 			var message = v.formatError(token)
 			message += generateGrammar("pattern",
 				"$selectClause",
-				"$target",
-				"$pattern",
-				"$procedure")
+				"$pattern")
 			panic(message)
 		}
 		blocks.AddValue(block)
@@ -1218,7 +1128,6 @@ func (v *parser) parseSelectClause() (abs.SelectClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("pattern",
 			"$selectClause",
-			"$target",
 			"$pattern")
 		panic(message)
 	}
@@ -1256,11 +1165,8 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 		_, token, ok = v.parseEOL()
 		if !ok {
 			var message = v.formatError(token)
-			message += generateGrammar("statement",
-				"$annotation",
-				"$mainClause",
-				"$onClause",
-				"$NOTE")
+			message += generateGrammar("EOL",
+				"$statement")
 			panic(message)
 		}
 	}
@@ -1346,8 +1252,7 @@ func (v *parser) parseWhileClause() (abs.WhileClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("condition",
 			"$whileClause",
-			"$condition",
-			"$procedure")
+			"$condition")
 		panic(message)
 	}
 	clause = pro.WhileClause(block)
@@ -1379,9 +1284,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("each",
-			"$withClause",
-			"$item",
-			"$sequence")
+			"$withClause")
 		panic(message)
 	}
 	item, token, ok = v.parseSymbol()
@@ -1389,17 +1292,14 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("item",
 			"$withClause",
-			"$item",
-			"$sequence")
+			"$item")
 		panic(message)
 	}
 	_, token, ok = v.parseKeyword("in")
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("in",
-			"$withClause",
-			"$item",
-			"$sequence")
+			"$withClause")
 		panic(message)
 	}
 	block, token, ok = v.parseBlock()
@@ -1407,9 +1307,7 @@ func (v *parser) parseWithClause() (abs.WithClauseLike, *Token, bool) {
 		var message = v.formatError(token)
 		message += generateGrammar("sequence",
 			"$withClause",
-			"$item",
-			"$sequence",
-			"$procedure")
+			"$sequence")
 		panic(message)
 	}
 	clause = pro.WithClause(item, block)
