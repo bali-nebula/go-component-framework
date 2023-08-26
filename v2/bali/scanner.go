@@ -1154,7 +1154,9 @@ func scanVersion(v []byte) []string {
 // CONSTANT DEFINITIONS
 
 // This array contains the full set of keywords used by the Bali Document
-// Notation™ (BDN). They are in reverse order for proper matching.
+// Notation™ (BDN). They are in reverse order for proper matching for
+// overlapping words like "no" and "not".  Currently there are no overlapping
+// words.
 var keywords = [][]byte{
 	[]byte("with"),
 	[]byte("while"),
