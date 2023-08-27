@@ -27,9 +27,9 @@ type Encapsulated interface {
 	ExtractBinary() BinaryLike
 	ExtractBoolean() BooleanLike
 	ExtractCatalog() CatalogLike
-	ExtractContinuum() ContinuumLike[Continuous]
+	ExtractContinuum() ContinuumLike
 	ExtractDuration() DurationLike
-	ExtractInterval() IntervalLike[Discrete]
+	ExtractInterval() IntervalLike
 	ExtractList() ListLike
 	ExtractMoment() MomentLike
 	ExtractMoniker() MonikerLike
@@ -43,7 +43,7 @@ type Encapsulated interface {
 	ExtractQuote() QuoteLike
 	ExtractResource() ResourceLike
 	ExtractSet() SetLike
-	ExtractSpectrum() SpectrumLike[Lexical]
+	ExtractSpectrum() SpectrumLike
 	ExtractStack() StackLike
 	ExtractSymbol() SymbolLike
 	ExtractTag() TagLike

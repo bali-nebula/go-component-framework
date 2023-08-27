@@ -76,8 +76,8 @@ func (v *component) ExtractCatalog() abs.CatalogLike {
 }
 
 // This method returns the entity for this component as a continuum.
-func (v *component) ExtractContinuum() abs.ContinuumLike[abs.Continuous] {
-	return v.entity.(abs.ContinuumLike[abs.Continuous])
+func (v *component) ExtractContinuum() abs.ContinuumLike {
+	return v.entity.(abs.ContinuumLike)
 }
 
 // This method returns the entity for this component as a duration.
@@ -86,8 +86,8 @@ func (v *component) ExtractDuration() abs.DurationLike {
 }
 
 // This method returns the entity for this component as an interval.
-func (v *component) ExtractInterval() abs.IntervalLike[abs.Discrete] {
-	return v.entity.(abs.IntervalLike[abs.Discrete])
+func (v *component) ExtractInterval() abs.IntervalLike {
+	return v.entity.(abs.IntervalLike)
 }
 
 // This method returns the entity for this component as a list.
@@ -156,8 +156,8 @@ func (v *component) ExtractSet() abs.SetLike {
 }
 
 // This method returns the entity for this component as a spectrum.
-func (v *component) ExtractSpectrum() abs.SpectrumLike[abs.Lexical] {
-	return v.entity.(abs.SpectrumLike[abs.Lexical])
+func (v *component) ExtractSpectrum() abs.SpectrumLike {
+	return v.entity.(abs.SpectrumLike)
 }
 
 // This method returns the entity for this component as a stack.

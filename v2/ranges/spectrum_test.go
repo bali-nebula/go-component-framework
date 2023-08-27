@@ -21,7 +21,7 @@ import (
 func TestSpectrWithMonikers(t *tes.T) {
 	var first = str.MonikerFromString("/bali/types/abstractions")
 	var last = str.MonikerFromString("/bali/types/strings")
-	var s = ran.Spectrum[abs.MonikerLike](first, abs.RIGHT, last)
+	var s = ran.Spectrum(first, abs.RIGHT, last)
 	ass.False(t, s.ContainsValue(str.MonikerFromString("/bali")))
 	ass.False(t, s.ContainsValue(first))
 	ass.True(t, s.ContainsValue(str.MonikerFromString("/bali/types/abstractions/Sequential/v1")))
@@ -35,7 +35,7 @@ func TestSpectrWithMonikers(t *tes.T) {
 func TestSpectrWithQuotes(t *tes.T) {
 	var first = str.QuoteFromString("A")
 	var last = str.QuoteFromString("Fe")
-	var s = ran.Spectrum[abs.QuoteLike](first, abs.EXCLUSIVE, last)
+	var s = ran.Spectrum(first, abs.EXCLUSIVE, last)
 	ass.False(t, s.ContainsValue(str.QuoteFromString("1")))
 	ass.False(t, s.ContainsValue(first))
 	ass.True(t, s.ContainsValue(str.QuoteFromString("Boo")))
@@ -49,7 +49,7 @@ func TestSpectrWithQuotes(t *tes.T) {
 func TestSpectrWithVersions(t *tes.T) {
 	var first = str.VersionFromString("1.2")
 	var last = str.VersionFromString("1.6.1")
-	var s = ran.Spectrum[abs.VersionLike](first, abs.LEFT, last)
+	var s = ran.Spectrum(first, abs.LEFT, last)
 	ass.False(t, s.ContainsValue(str.VersionFromString("1")))
 	ass.True(t, s.ContainsValue(first))
 	ass.True(t, s.ContainsValue(str.VersionFromString("1.5.3")))

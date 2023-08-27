@@ -21,53 +21,52 @@ import (
 
 // This constructor creates a new interval range of values covering the
 // specified endpoints.
-func Interval[V abs.Discrete](first V, extent abs.Extent, last V) abs.IntervalLike[V] {
-	var v = interval[V]{first: first, extent: extent, last: last}
+func Interval(first abs.Discrete, extent abs.Extent, last abs.Discrete) abs.IntervalLike {
+	var v = interval{first: first, extent: extent, last: last}
 	v.validateInterval()
 	return &v
 }
 
 // This type defines the structure and methods associated with an interval range
-// of values. This type is parameterized as follows:
-//   - V is any endpoint type.
-type interval[V abs.Discrete] struct {
-	first  V
+// of values.
+type interval struct {
+	first  abs.Discrete
 	extent abs.Extent
-	last   V
+	last   abs.Discrete
 	size   int
 }
 
 // BOUNDED INTERFACE
 
 // This method returns the first value in this interval range.
-func (v *interval[V]) GetFirst() V {
+func (v *interval) GetFirst() abs.Discrete {
 	return v.first
 }
 
 // This method sets the first value in this interval range.
-func (v *interval[V]) SetFirst(value V) {
+func (v *interval) SetFirst(value abs.Discrete) {
 	v.first = value
 	v.validateInterval()
 }
 
 // This method returns the extent for this interval range.
-func (v *interval[V]) GetExtent() abs.Extent {
+func (v *interval) GetExtent() abs.Extent {
 	return v.extent
 }
 
 // This method sets the extent for this interval range.
-func (v *interval[V]) SetExtent(extent abs.Extent) {
+func (v *interval) SetExtent(extent abs.Extent) {
 	v.extent = extent
 	v.validateInterval()
 }
 
 // This method returns the last value in this interval range.
-func (v *interval[V]) GetLast() V {
+func (v *interval) GetLast() abs.Discrete {
 	return v.last
 }
 
 // This method sets the last value in this interval range.
-func (v *interval[V]) SetLast(value V) {
+func (v *interval) SetLast(value abs.Discrete) {
 	v.last = value
 	v.validateInterval()
 }
@@ -75,23 +74,23 @@ func (v *interval[V]) SetLast(value V) {
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this interval range is empty.
-func (v *interval[V]) IsEmpty() bool {
+func (v *interval) IsEmpty() bool {
 	return v.size == 0
 }
 
 // This method returns the number of values contained in this interval range.
-func (v *interval[V]) GetSize() int {
+func (v *interval) GetSize() int {
 	return v.size
 }
 
 // This method returns up to the first 256 values in this interval range. The
 // values retrieved are in the same order as they are in the interval range.
-func (v *interval[V]) AsArray() []V {
+func (v *interval) AsArray() []abs.Discrete {
 	var size = v.size
 	if size > 256 {
 		size = 256
 	}
-	var array = make([]V, size)
+	var array = make([]abs.Discrete, size)
 	if size > 0 {
 		var first = v.firstIndex()
 		for i := 0; i < size; i++ {
@@ -106,7 +105,7 @@ func (v *interval[V]) AsArray() []V {
 
 // This method retrieves from this interval range the value that is associated
 // with the specified index.
-func (v *interval[V]) GetValue(index int) V {
+func (v *interval) GetValue(index int) abs.Discrete {
 	var offset = v.goIndex(index)
 	if offset < 0 {
 		panic("The index is outside the interval range of values.")
@@ -118,8 +117,8 @@ func (v *interval[V]) GetValue(index int) V {
 
 // This method retrieves from this interval range all values from the first
 // index through the last index (inclusive).
-func (v *interval[V]) GetValues(first int, last int) abs.Sequential[V] {
-	var values = col.List[V]()
+func (v *interval) GetValues(first int, last int) abs.Sequential[abs.Discrete] {
+	var values = col.List[abs.Discrete]()
 	for index := first; index <= last; index++ {
 		var value = v.indexToValue(index)
 		values.AddValue(value)
@@ -132,7 +131,7 @@ func (v *interval[V]) GetValues(first int, last int) abs.Sequential[V] {
 // This method returns the index of the FIRST occurence of the specified value
 // in this interval range, or zero if this interval range does not contain the
 // value.
-func (v *interval[V]) GetIndex(value V) int {
+func (v *interval) GetIndex(value abs.Discrete) int {
 	var index = value.AsInteger()
 	var first = v.firstIndex()
 	var offset = index - first + 1
@@ -144,7 +143,7 @@ func (v *interval[V]) GetIndex(value V) int {
 
 // This method determines whether or not the specified value is included in this
 // interval range.
-func (v *interval[V]) ContainsValue(value V) bool {
+func (v *interval) ContainsValue(value abs.Discrete) bool {
 	var first = v.first.AsInteger()
 	var candidate = value.AsInteger()
 	var last = v.last.AsInteger()
@@ -165,8 +164,8 @@ func (v *interval[V]) ContainsValue(value V) bool {
 
 // This method determines whether or not this interval contains ANY of the
 // specified values.
-func (v *interval[V]) ContainsAny(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+func (v *interval) ContainsAny(values abs.Sequential[abs.Discrete]) bool {
+	var iterator = col.Iterator[abs.Discrete](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if v.ContainsValue(value) {
@@ -180,8 +179,8 @@ func (v *interval[V]) ContainsAny(values abs.Sequential[V]) bool {
 
 // This method determines whether or not this interval contains ALL of the
 // specified values.
-func (v *interval[V]) ContainsAll(values abs.Sequential[V]) bool {
-	var iterator = col.Iterator[V](values)
+func (v *interval) ContainsAll(values abs.Sequential[abs.Discrete]) bool {
+	var iterator = col.Iterator[abs.Discrete](values)
 	for iterator.HasNext() {
 		var value = iterator.GetNext()
 		if !v.ContainsValue(value) {
@@ -197,7 +196,7 @@ func (v *interval[V]) ContainsAll(values abs.Sequential[V]) bool {
 
 // This method determines whether or not the first and last endpoints are
 // invalid.
-func (v *interval[V]) validateInterval() {
+func (v *interval) validateInterval() {
 	// Validate the extent.
 	switch v.extent {
 	case abs.INCLUSIVE:
@@ -219,15 +218,14 @@ func (v *interval[V]) validateInterval() {
 }
 
 // This method returns the effective first value in the interval range based on
-// its extent type. It can only be called when the parameterized value type V is
-// an integer type.
-func (v *interval[V]) firstIndex() int {
+// its extent type.
+func (v *interval) firstIndex() int {
 	var firstIndex = v.effectiveFirst()
 	return firstIndex
 }
 
 // This method returns the effective first value in the interval range.
-func (v *interval[V]) effectiveFirst() int {
+func (v *interval) effectiveFirst() int {
 	var first = v.first.AsInteger()
 	switch v.extent {
 	case abs.RIGHT, abs.EXCLUSIVE:
@@ -237,7 +235,7 @@ func (v *interval[V]) effectiveFirst() int {
 }
 
 // This method returns the effective last value in the interval range.
-func (v *interval[V]) effectiveLast() int {
+func (v *interval) effectiveLast() int {
 	var last = v.last.AsInteger()
 	switch v.extent {
 	case abs.LEFT, abs.EXCLUSIVE:
@@ -247,7 +245,7 @@ func (v *interval[V]) effectiveLast() int {
 }
 
 // This method returns the value associated with the specified index.
-func (v *interval[V]) indexToValue(index int) V {
+func (v *interval) indexToValue(index int) abs.Discrete {
 	var discrete abs.Discrete = v.first
 	switch discrete.(type) {
 	case abs.DurationLike:
@@ -262,7 +260,7 @@ func (v *interval[V]) indexToValue(index int) V {
 		var message = fmt.Sprintf("The discrete type was not found: %T", discrete)
 		panic(message)
 	}
-	return discrete.(V)
+	return discrete.(abs.Discrete)
 }
 
 // This method normalizes an index to match the Go (zero based) indexing. The
@@ -271,7 +269,7 @@ func (v *interval[V]) indexToValue(index int) V {
 //	[-length..-1] and [1..length] => [0..length)
 //
 // Notice that the specified index cannot be zero since zero is not an ORDINAL.
-func (v *interval[V]) goIndex(index int) int {
+func (v *interval) goIndex(index int) int {
 	var length = v.size
 	switch {
 	case index < -length || index == 0 || index > length:

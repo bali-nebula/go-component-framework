@@ -134,35 +134,35 @@ func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, context abs.Co
 	case string:
 		var actualFirst = str.QuoteFromString(first.(string))
 		var actualLast = str.QuoteFromString(last.(string))
-		entity = ran.Spectrum[abs.QuoteLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.MonikerLike:
 		var actualFirst = first.(abs.MonikerLike)
 		var actualLast = last.(abs.MonikerLike)
-		entity = ran.Spectrum[abs.MonikerLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.PatternLike:
 		var actualFirst = first.(abs.PatternLike)
 		var actualLast = last.(abs.PatternLike)
-		entity = ran.Spectrum[abs.PatternLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.QuoteLike:
 		var actualFirst = first.(abs.QuoteLike)
 		var actualLast = last.(abs.QuoteLike)
-		entity = ran.Spectrum[abs.QuoteLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.ResourceLike:
 		var actualFirst = first.(abs.ResourceLike)
 		var actualLast = last.(abs.ResourceLike)
-		entity = ran.Spectrum[abs.ResourceLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.SymbolLike:
 		var actualFirst = first.(abs.SymbolLike)
 		var actualLast = last.(abs.SymbolLike)
-		entity = ran.Spectrum[abs.SymbolLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.TagLike:
 		var actualFirst = first.(abs.TagLike)
 		var actualLast = last.(abs.TagLike)
-		entity = ran.Spectrum[abs.TagLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.VersionLike:
 		var actualFirst = first.(abs.VersionLike)
 		var actualLast = last.(abs.VersionLike)
-		entity = ran.Spectrum[abs.VersionLike](actualFirst, extent, actualLast)
+		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	default:
 		var message = fmt.Sprintf("The value (of type %T) cannot be a spectrum endpoint: %v", actual, actual)
 		panic(message)
@@ -178,63 +178,63 @@ func Interval(first abs.Value, extent abs.Extent, last abs.Value, context abs.Co
 	case uint:
 		var actualFirst = ele.Integer(int(first.(uint)))
 		var actualLast = ele.Integer(int(last.(uint)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case uint8:
 		var actualFirst = ele.Integer(int(first.(uint8)))
 		var actualLast = ele.Integer(int(last.(uint8)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case uint16:
 		var actualFirst = ele.Integer(int(first.(uint16)))
 		var actualLast = ele.Integer(int(last.(uint16)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case uint32:
 		var actualFirst = ele.Integer(int(first.(uint32)))
 		var actualLast = ele.Integer(int(last.(uint32)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case uint64:
 		var actualFirst = ele.Integer(int(first.(uint64)))
 		var actualLast = ele.Integer(int(last.(uint64)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case int:
 		var actualFirst = ele.Integer(int(first.(int)))
 		var actualLast = ele.Integer(int(last.(int)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case int8:
 		var actualFirst = ele.Integer(int(first.(int8)))
 		var actualLast = ele.Integer(int(last.(int8)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case int16:
 		var actualFirst = ele.Integer(int(first.(int16)))
 		var actualLast = ele.Integer(int(last.(int16)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case int32:
 		var actualFirst = ele.Integer(int(first.(int32)))
 		var actualLast = ele.Integer(int(last.(int32)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case int64:
 		var actualFirst = ele.Integer(int(first.(int64)))
 		var actualLast = ele.Integer(int(last.(int64)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case float32:
 		var actualFirst = ele.Integer(int(first.(float32)))
 		var actualLast = ele.Integer(int(last.(float32)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case float64:
 		var actualFirst = ele.Integer(int(first.(float64)))
 		var actualLast = ele.Integer(int(last.(float64)))
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case abs.DurationLike:
 		var actualFirst = first.(abs.DurationLike)
 		var actualLast = last.(abs.DurationLike)
-		entity = ran.Interval[abs.DurationLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case abs.MomentLike:
 		var actualFirst = first.(abs.MomentLike)
 		var actualLast = last.(abs.MomentLike)
-		entity = ran.Interval[abs.MomentLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	case abs.IntegerLike:
 		var actualFirst = first.(abs.IntegerLike)
 		var actualLast = last.(abs.IntegerLike)
-		entity = ran.Interval[abs.IntegerLike](actualFirst, extent, actualLast)
+		entity = ran.Interval(actualFirst, extent, actualLast)
 	default:
 		var message = fmt.Sprintf("The value (of type %T) cannot be an interval endpoint: %v", actual, actual)
 		panic(message)
@@ -249,67 +249,67 @@ func Continuum(first abs.Value, extent abs.Extent, last abs.Value, context abs.C
 	case uint:
 		var actualFirst = ele.Real(float64(first.(uint)))
 		var actualLast = ele.Real(float64(last.(uint)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint8:
 		var actualFirst = ele.Real(float64(first.(uint8)))
 		var actualLast = ele.Real(float64(last.(uint8)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint16:
 		var actualFirst = ele.Real(float64(first.(uint16)))
 		var actualLast = ele.Real(float64(last.(uint16)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint32:
 		var actualFirst = ele.Real(float64(first.(uint32)))
 		var actualLast = ele.Real(float64(last.(uint32)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint64:
 		var actualFirst = ele.Real(float64(first.(uint64)))
 		var actualLast = ele.Real(float64(last.(uint64)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int:
 		var actualFirst = ele.Real(float64(first.(int)))
 		var actualLast = ele.Real(float64(last.(int)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int8:
 		var actualFirst = ele.Real(float64(first.(int8)))
 		var actualLast = ele.Real(float64(last.(int8)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int16:
 		var actualFirst = ele.Real(float64(first.(int16)))
 		var actualLast = ele.Real(float64(last.(int16)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int32:
 		var actualFirst = ele.Real(float64(first.(int32)))
 		var actualLast = ele.Real(float64(last.(int32)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int64:
 		var actualFirst = ele.Real(float64(first.(int64)))
 		var actualLast = ele.Real(float64(last.(int64)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case float32:
 		var actualFirst = ele.Real(float64(first.(float32)))
 		var actualLast = ele.Real(float64(last.(float32)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case float64:
 		var actualFirst = ele.Real(float64(first.(float64)))
 		var actualLast = ele.Real(float64(last.(float64)))
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case abs.PercentageLike:
 		var actualFirst = first.(abs.PercentageLike)
 		var actualLast = last.(abs.PercentageLike)
-		entity = ran.Continuum[abs.PercentageLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case abs.ProbabilityLike:
 		var actualFirst = first.(abs.ProbabilityLike)
 		var actualLast = last.(abs.ProbabilityLike)
-		entity = ran.Continuum[abs.ProbabilityLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case abs.AngleLike:
 		var actualFirst = first.(abs.AngleLike)
 		var actualLast = last.(abs.AngleLike)
-		entity = ran.Continuum[abs.AngleLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case abs.RealLike:
 		var actualFirst = first.(abs.RealLike)
 		var actualLast = last.(abs.RealLike)
-		entity = ran.Continuum[abs.RealLike](actualFirst, extent, actualLast)
+		entity = ran.Continuum(actualFirst, extent, actualLast)
 	default:
 		var message = fmt.Sprintf("The value (of type %T) cannot be a continuum endpoint: %v", actual, actual)
 		panic(message)
@@ -497,7 +497,7 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 
 // This method adds the canonical format for the specified interval to the
 // state of the formatter.
-func (v *formatter) formatInterval(interval abs.IntervalLike[abs.Discrete]) {
+func (v *formatter) formatInterval(interval abs.IntervalLike) {
 	var extent = interval.GetExtent()
 	var left, right string
 	switch extent {
@@ -523,7 +523,7 @@ func (v *formatter) formatInterval(interval abs.IntervalLike[abs.Discrete]) {
 
 // This method adds the canonical format for the specified spectrum to the
 // state of the formatter.
-func (v *formatter) formatSpectrum(spectrum abs.SpectrumLike[abs.Lexical]) {
+func (v *formatter) formatSpectrum(spectrum abs.SpectrumLike) {
 	var extent = spectrum.GetExtent()
 	var left, right string
 	switch extent {
@@ -549,7 +549,7 @@ func (v *formatter) formatSpectrum(spectrum abs.SpectrumLike[abs.Lexical]) {
 
 // This method adds the canonical format for the specified continuum to the
 // state of the formatter.
-func (v *formatter) formatContinuum(continuum abs.ContinuumLike[abs.Continuous]) {
+func (v *formatter) formatContinuum(continuum abs.ContinuumLike) {
 	var extent = continuum.GetExtent()
 	var left, right string
 	switch extent {

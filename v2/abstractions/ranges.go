@@ -43,19 +43,19 @@ type Bounded[V Primitive] interface {
 
 // CONSOLIDATED INTERFACES
 
-type IntervalLike[V Discrete] interface {
-	Bounded[V]
-	Sequential[V]
-	Accessible[V]
-	Searchable[V]
+type IntervalLike interface {
+	Bounded[Discrete]
+	Sequential[Discrete]
+	Accessible[Discrete]
+	Searchable[Discrete]
 }
 
-type SpectrumLike[V Lexical] interface {
-	Bounded[V]
-	Searchable[V]
+type SpectrumLike interface {
+	Bounded[Lexical]
+	Searchable[Lexical]
 }
 
-type ContinuumLike[V Continuous] interface {
-	Bounded[V]
-	Searchable[V]
+type ContinuumLike interface {
+	Bounded[Continuous]
+	Searchable[Continuous]
 }
