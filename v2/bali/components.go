@@ -20,12 +20,6 @@ import (
 	sts "strings"
 )
 
-// CONSTANT DEFINITIONS
-
-const (
-	EOL = "\n" // The POSIX end of line character.
-)
-
 // UNIVERSAL CONSTRUCTORS
 
 // This constructor returns a new component initialized with the specified

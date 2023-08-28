@@ -580,25 +580,6 @@ func (v *scanner) foundVersion() bool {
 
 // ANGLE ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid angle
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Angle
-const (
-	e         = `e`
-	pi        = `pi|π`
-	phi       = `phi|φ`
-	tau       = `tau|τ`
-	sign      = `[+-]`
-	zero      = `0`
-	ordinal   = `[1-9][0-9]*`
-	fraction  = `\.[0-9]+`
-	exponent  = `E` + sign + `?` + ordinal
-	scalar    = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
-	magnitude = `(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
-	angle     = `~(` + magnitude + `|` + zero + `)`
-)
-
 // This scanner is used for matching angle entities.
 var angleScanner = reg.MustCompile(`^(?:` + angle + `)`)
 
@@ -610,17 +591,6 @@ func scanAngle(v []byte) []string {
 }
 
 // BINARY STRING SYNTAX
-
-// These constants are used to form a regular expression for valid binary
-// strings. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Binary
-const (
-	space  = ` `
-	eol    = EOL
-	base64 = `[A-Za-z0-9+/]`
-	binary = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)*)` + space + `*<'`
-)
 
 // This scanner is used for matching binary strings.
 var binaryScanner = reg.MustCompile(`^(?:` + binary + `)`)
@@ -634,14 +604,6 @@ func scanBinary(v []byte) []string {
 
 // BOOLEAN ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid boolean
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Boolean
-const (
-	boolean = `false|true`
-)
-
 // This scanner is used for matching boolean entities.
 var booleanScanner = reg.MustCompile(`^(?:` + boolean + `)`)
 
@@ -653,15 +615,6 @@ func scanBoolean(v []byte) []string {
 }
 
 // BYTECODE STRING SYNTAX
-
-// These constants are used to form a regular expression for valid bytecode
-// strings. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Bytecode
-const (
-	instruction = base16 + base16 + base16 + base16
-	bytecode    = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
-)
 
 // This scanner is used for matching bytecode strings.
 var bytecodeScanner = reg.MustCompile(`^(?:` + bytecode + `)`)
@@ -739,24 +692,6 @@ func scanDelimiter(v []byte) []string {
 
 // DURATION ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid duration
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Duration
-const (
-	tspan    = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
-	weeks    = `(` + tspan + `W)`
-	years    = `(` + tspan + `Y)`
-	months   = `(` + tspan + `M)`
-	days     = `(` + tspan + `D)`
-	hours    = `(` + tspan + `H)`
-	minutes  = `(` + tspan + `M)`
-	seconds  = `(` + tspan + `S)`
-	dates    = years + `?` + months + `?` + days + `?`
-	times    = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
-	duration = `~(` + sign + `?)P(?:` + weeks + `|` + dates + `(?:` + times + `)?)`
-)
-
 // This scanner is used for matching duration entities.
 var durationScanner = reg.MustCompile(`^(?:` + duration + `)`)
 
@@ -769,16 +704,6 @@ func scanDuration(v []byte) []string {
 
 // IDENTIFIER SYNTAX
 
-// These constants are used to form a regular expression for valid identifiers.
-// See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Identifier
-const (
-	letter     = `\pL` // All unicode letters and connectors like underscores.
-	digit      = `\pN` // All unicode digits.
-	identifier = letter + `(?:` + letter + `|` + digit + `)*`
-)
-
 // This scanner is used for matching identifiers.
 var identifierScanner = reg.MustCompile(`^(?:` + identifier + `)`)
 
@@ -788,10 +713,6 @@ var identifierScanner = reg.MustCompile(`^(?:` + identifier + `)`)
 func scanIdentifier(v []byte) []string {
 	return bytesToStrings(identifierScanner.FindSubmatch(v))
 }
-
-const (
-	integer = zero + `|` + sign + `?` + ordinal
-)
 
 // This scanner is used for matching integers.
 var integerScanner = reg.MustCompile(`^(?:` + integer + `)`)
@@ -820,21 +741,6 @@ func scanKeyword(v []byte) []string {
 
 // MOMENT ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid moment
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Moment
-const (
-	year   = `(?:` + ordinal + `|` + zero + `)`
-	month  = `(?:[0][1-9])|(?:[1][012])`
-	day    = `(?:[012][1-9])|(?:[3][01])`
-	hour   = `(?:[01][0-9])|(?:[2][0-3])`
-	minute = `[0-5][0-9]`
-	second = `(?:[0-5][0-9])|(?:[6][01])`
-	moment = `<(` + sign + `)?(` + year + `)(?:-(` + month + `)(?:-(` + day + `)` +
-		`(?:T(` + hour + `)(?::(` + minute + `)(?::((?:` + second + `)(?:` + fraction + `)?))?)?)?)?)?>`
-)
-
 // This scanner is used for matching moment entities.
 var momentScanner = reg.MustCompile(`^(?:` + moment + `)`)
 
@@ -846,16 +752,6 @@ func scanMoment(v []byte) []string {
 }
 
 // MONIKER STRING SYNTAX
-
-// These constants are used to form a regular expression for valid moniker
-// strings. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Moniker
-const (
-	separator = `[-+.]`
-	name      = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
-	moniker   = `(?:/` + name + `)+` // Cannot capture each name...
-)
 
 // This scanner is used for matching moniker strings.
 var monikerScanner = reg.MustCompile(`^(?:` + moniker + `)`)
@@ -918,14 +814,6 @@ func scanNarrative(v []byte) []string {
 
 // NOTE SYNTAX
 
-// These constants are used to form a regular expression for valid notes. See
-// the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Note
-const (
-	note = `! [^\n]*`
-)
-
 // This scanner is used for matching notes.
 var noteScanner = reg.MustCompile(`^(?:` + note + `)`)
 
@@ -937,22 +825,6 @@ func scanNote(v []byte) []string {
 }
 
 // NUMBER ELEMENT SYNTAX
-
-// These constants are used to form a regular expression for valid number
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Number
-const (
-	infinity    = sign + `?(?:infinity|∞)`
-	undefined   = `undefined`
-	float       = sign + `?` + magnitude
-	imaginary   = sign + `?` + magnitude + `?i`
-	rectangular = `(` + float + `)(, )(` + imaginary + `)`
-	polar       = `(` + magnitude + `)(e\^)(` + angle + `i)`
-	real_       = undefined + `|` + infinity + `|` + float + `|` + zero
-	complex_    = `\((?:` + rectangular + `|` + polar + `)\)`
-	number      = imaginary + `|` + real_ + `|` + complex_
-)
 
 // This scanner is used for matching number entities.
 var numberScanner = reg.MustCompile(`^(?:` + number + `)`)
@@ -976,19 +848,6 @@ func scanReal(v []byte) []string {
 
 // PATTERN ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid pattern
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Pattern
-const (
-	base16  = `[0-9a-f]`
-	unicode = `u` + base16 + `{4}`
-	escape  = `\\(?:` + unicode + `|["frnt\\])`
-	rune_   = `(?:` + escape + `|[^"\f\r\n\t]` + `)`
-	regex   = `"(` + rune_ + `+)"\?`
-	pattern = `none` + `|` + regex + `|` + `any`
-)
-
 // This scanner is used for matching pattern entities.
 var patternScanner = reg.MustCompile(`^(?:` + pattern + `)`)
 
@@ -1000,14 +859,6 @@ func scanPattern(v []byte) []string {
 }
 
 // PERCENTAGE ELEMENT SYNTAX
-
-// These constants are used to form a regular expression for valid percentage
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Percentage
-const (
-	percentage = `(` + real_ + `)%`
-)
 
 // This scanner is used for matching percentage entities.
 var percentageScanner = reg.MustCompile(`^(?:` + percentage + `)`)
@@ -1021,14 +872,6 @@ func scanPercentage(v []byte) []string {
 
 // PROBABILITY ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid probability
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Probability
-const (
-	probability = fraction + `|1\.`
-)
-
 // This scanner is used for matching probability entities.
 var probabilityScanner = reg.MustCompile(`^(?:` + probability + `)`)
 
@@ -1040,14 +883,6 @@ func scanProbability(v []byte) []string {
 }
 
 // QUOTE STRING SYNTAX
-
-// These constants are used to form a regular expression for valid quoted
-// strings. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Quote
-const (
-	quote = `"(` + rune_ + `*)"`
-)
 
 // This scanner is used for matching quoted strings.
 var quoteScanner = reg.MustCompile(`^(?:` + quote + `)`)
@@ -1061,25 +896,6 @@ func scanQuote(v []byte) []string {
 
 // RESOURCE ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid resource
-// entities. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Resource
-const (
-	scheme    = `[a-zA-Z][0-9a-zA-Z+-.]*`
-	authority = `[^/\n]+`
-	path      = `[^?#>\n]*`
-	query     = `[^#>\n]*`
-	fragment  = `[^>\n]+`
-	resource  = `<(` +
-		`(` + scheme + `):` +
-		`(?:` + `//(` + authority + `)` + `)?` +
-		`(` + path + `)` +
-		`(?:` + `\?(` + query + `)` + `)?` +
-		`(?:` + `#(` + fragment + `)` + `)?` +
-		`)>`
-)
-
 // This scanner is used for matching resource entities.
 var resourceScanner = reg.MustCompile(`^(?:` + resource + `)`)
 
@@ -1091,14 +907,6 @@ func scanResource(v []byte) []string {
 }
 
 // SYMBOL STRING SYNTAX
-
-// These constants are used to form a regular expression for valid symbol
-// strings. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Symbol
-const (
-	symbol = `\$(` + identifier + `(?:-` + ordinal + `)?)`
-)
 
 // This scanner is used for matching symbol strings.
 var symbolScanner = reg.MustCompile(`^(?:` + symbol + `)`)
@@ -1112,15 +920,6 @@ func scanSymbol(v []byte) []string {
 
 // TAG ELEMENT SYNTAX
 
-// These constants are used to form a regular expression for valid tag entities.
-// See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Tag
-const (
-	base32 = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
-	tag    = `#(` + base32 + `+)`
-)
-
 // This scanner is used for matching tag entities.
 var tagScanner = reg.MustCompile(`^(?:` + tag + `)`)
 
@@ -1133,14 +932,6 @@ func scanTag(v []byte) []string {
 
 // VERSION STRING SYNTAX
 
-// These constants are used to form a regular expression for valid version
-// strings. See the language specification for the exact grammar:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification#Version
-const (
-	version = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
-)
-
 // This scanner is used for matching version strings.
 var versionScanner = reg.MustCompile(`^(?:` + version + `)`)
 
@@ -1152,6 +943,88 @@ func scanVersion(v []byte) []string {
 }
 
 // CONSTANT DEFINITIONS
+
+// This is the POSIX standard end-of-line character constant.
+const EOL = "\n"
+
+// These constant definitions capture regular expression subpatterns.
+const (
+	angle       = `~(` + magnitude + `|` + zero + `)`
+	authority   = `[^/\n]+`
+	base16      = `[0-9a-f]`
+	base32      = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
+	base64      = `[A-Za-z0-9+/]`
+	binary      = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)*)` + space + `*<'`
+	boolean     = `false|true`
+	bytecode    = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
+	character   = `(?:` + escape + `|[^"` + eol + `])`
+	complex_    = `\((?:` + rectangular + `|` + polar + `)\)`
+	dates       = years + `?` + months + `?` + days + `?`
+	day         = `(?:[012][1-9])|(?:[3][01])`
+	days        = `(` + tspan + `D)`
+	digit       = `\pN` // All unicode digits.
+	duration    = `~(` + sign + `?)P(?:` + weeks + `|` + dates + `(?:` + times + `)?)`
+	e           = `e`
+	eol         = `\n`
+	escape      = `\\(?:(?:` + unicode + `)|[abfnrtv'"\\])`
+	exponent    = `E` + sign + `?` + ordinal
+	float       = sign + `?` + magnitude
+	fraction    = `\.[0-9]+`
+	fragment    = `[^>\n]+`
+	hour        = `(?:[01][0-9])|(?:[2][0-3])`
+	hours       = `(` + tspan + `H)`
+	identifier  = letter + `(?:` + letter + `|` + digit + `)*`
+	imaginary   = sign + `?` + magnitude + `?i`
+	infinity    = sign + `?(?:infinity|∞)`
+	instruction = base16 + base16 + base16 + base16
+	integer     = zero + `|` + sign + `?` + ordinal
+	letter      = `\pL` // All unicode letters and connectors like underscores.
+	magnitude   = `(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
+	minute      = `[0-5][0-9]`
+	minutes     = `(` + tspan + `M)`
+	moment      = `<(` + sign + `)?(` + year + `)(?:-(` + month + `)(?:-(` + day + `)` +
+		`(?:T(` + hour + `)(?::(` + minute + `)(?::((?:` + second + `)(?:` + fraction + `)?))?)?)?)?)?>`
+	moniker     = `(?:/` + name + `)+` // Cannot capture each name...
+	month       = `(?:[0][1-9])|(?:[1][012])`
+	months      = `(` + tspan + `M)`
+	name        = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
+	note        = `! [^\n]*`
+	number      = imaginary + `|` + real_ + `|` + complex_
+	ordinal     = `[1-9][0-9]*`
+	path        = `[^?#>\n]*`
+	pattern     = `none` + `|` + regex + `|` + `any`
+	percentage  = `(` + real_ + `)%`
+	pi          = `pi|π`
+	phi         = `phi|φ`
+	polar       = `(` + magnitude + `)(e\^)(` + angle + `i)`
+	probability = fraction + `|1\.`
+	query       = `[^#>\n]*`
+	quote       = `"(` + character + `*)"`
+	real_       = undefined + `|` + infinity + `|` + float + `|` + zero
+	rectangular = `(` + float + `)(, )(` + imaginary + `)`
+	regex       = `"(` + character + `+)"\?`
+	resource    = `<(` + `(` + scheme + `):` + `(?:` + `//(` + authority + `)` + `)?` + `(` + path + `)` +
+		`(?:` + `\?(` + query + `)` + `)?` + `(?:` + `#(` + fragment + `)` + `)?` + `)>`
+	scalar      = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
+	scheme      = `[a-zA-Z][0-9a-zA-Z+-.]*`
+	second      = `(?:[0-5][0-9])|(?:[6][01])`
+	seconds     = `(` + tspan + `S)`
+	separator   = `[-+.]`
+	sign        = `[+-]`
+	space       = ` `
+	symbol      = `\$(` + identifier + `(?:-` + ordinal + `)?)`
+	tag         = `#(` + base32 + `+)`
+	tau         = `tau|τ`
+	times       = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
+	tspan       = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
+	undefined   = `undefined`
+	unicode     = `u` + base16 + `{4}|U` + base16 + `{8}`
+	version     = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
+	weeks       = `(` + tspan + `W)`
+	year        = `(?:` + ordinal + `|` + zero + `)`
+	years       = `(` + tspan + `Y)`
+	zero        = `0`
+)
 
 // This array contains the full set of keywords used by the Bali Document
 // Notation™ (BDN). They are in reverse order for proper matching for
