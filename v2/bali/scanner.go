@@ -28,8 +28,6 @@ type TokenType int
 const (
 	// The first two token types must be first.
 	TokenError TokenType = iota
-	TokenEOF
-	TokenEOL
 	TokenAngle
 	TokenBinary
 	TokenBoolean
@@ -37,6 +35,8 @@ const (
 	TokenComment
 	TokenDelimiter
 	TokenDuration
+	TokenEOF
+	TokenEOL
 	TokenIdentifier
 	TokenKeyword
 	TokenMoment
@@ -58,8 +58,6 @@ const (
 func (v TokenType) String() string {
 	return [...]string{
 		"Error",
-		"EOF",
-		"EOL",
 		"Angle",
 		"Binary",
 		"Boolean",
@@ -67,6 +65,8 @@ func (v TokenType) String() string {
 		"Comment",
 		"Delimiter",
 		"Duration",
+		"EOF",
+		"EOL",
 		"Identifier",
 		"Keyword",
 		"Moment",
