@@ -477,7 +477,7 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 		var message = fmt.Sprintf("Expected valid range brackets but received:%q and %q\n", left, right)
 		panic(message)
 	}
-	if ref.TypeOf(first) != ref.TypeOf(first) {
+	if ref.TypeOf(first) != ref.TypeOf(last) {
 		var message = fmt.Sprintf("The range endpoints have two different types: %T and %T\n", first, last)
 		panic(message)
 	}
