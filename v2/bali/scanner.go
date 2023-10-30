@@ -1005,25 +1005,25 @@ const (
 	regex       = `"(` + character + `+)"\?`
 	resource    = `<(` + `(` + scheme + `):` + `(?:` + `//(` + authority + `)` + `)?` + `(` + path + `)` +
 		`(?:` + `\?(` + query + `)` + `)?` + `(?:` + `#(` + fragment + `)` + `)?` + `)>`
-	scalar      = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
-	scheme      = `[a-zA-Z][0-9a-zA-Z+-.]*`
-	second      = `(?:[0-5][0-9])|(?:[6][01])`
-	seconds     = `(` + tspan + `S)`
-	separator   = `[-+.]`
-	sign        = `[+-]`
-	space       = ` `
-	symbol      = `\$(` + identifier + `(?:-` + ordinal + `)?)`
-	tag         = `#(` + base32 + `+)`
-	tau         = `tau|τ`
-	times       = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
-	tspan       = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
-	undefined   = `undefined`
-	unicode     = `u` + base16 + `{4}|U` + base16 + `{8}`
-	version     = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
-	weeks       = `(` + tspan + `W)`
-	year        = `(?:` + ordinal + `|` + zero + `)`
-	years       = `(` + tspan + `Y)`
-	zero        = `0`
+	scalar    = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
+	scheme    = `[a-zA-Z][0-9a-zA-Z+-.]*`
+	second    = `(?:[0-5][0-9])|(?:[6][01])`
+	seconds   = `(` + tspan + `S)`
+	separator = `[-+.]`
+	sign      = `[+-]`
+	space     = ` `
+	symbol    = `\$(` + identifier + `(?:-` + ordinal + `)?)`
+	tag       = `#(` + base32 + `+)`
+	tau       = `tau|τ`
+	times     = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
+	tspan     = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
+	undefined = `undefined`
+	unicode   = `u` + base16 + `{4}|U` + base16 + `{8}`
+	version   = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
+	weeks     = `(` + tspan + `W)`
+	year      = `(?:` + ordinal + `|` + zero + `)`
+	years     = `(` + tspan + `Y)`
+	zero      = `0`
 )
 
 // This array contains the full set of keywords used by the Bali Document
