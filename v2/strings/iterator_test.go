@@ -52,7 +52,7 @@ func TestInstructionIterators(t *tes.T) {
 	var i3 = instructions[2]
 	var bytecode = str.BytecodeFromArray(instructions)
 	/*
-	var bytecode = str.BytecodeFromString("000100020003")
+		var bytecode = str.BytecodeFromString("000100020003")
 	*/
 	var iterator = str.InstructionIterator(bytecode)
 	ass.False(t, iterator.HasPrevious())

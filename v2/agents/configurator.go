@@ -105,5 +105,5 @@ func (v *configurator) Delete() {
 		var message = fmt.Sprintf("Could not delete the configuration file: %v.", err)
 		panic(message)
 	}
-	osx.Remove(v.directory)
+	_ = osx.Remove(v.directory)
 }

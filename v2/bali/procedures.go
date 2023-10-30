@@ -188,7 +188,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 			"$recipient")
 		panic(message)
 	}
-	_, token, ok = v.parseKeyword("at")
+	_, _, ok = v.parseKeyword("at")
 	if ok {
 		// There is an at level part to this clause.
 		_, token, ok = v.parseKeyword("level")
@@ -358,7 +358,7 @@ func (v *parser) parseIndices() (abs.Sequential[abs.Expression], *Token, bool) {
 	for {
 		indices.AddValue(index)
 		// Every subsequent index must be preceded by a ','.
-		_, token, ok = v.parseDelimiter(",")
+		_, _, ok = v.parseDelimiter(",")
 		if !ok {
 			// No more indices.
 			break
@@ -444,7 +444,7 @@ func (v *parser) parseLetClause() (abs.LetClauseLike, *Token, bool) {
 	var expression abs.Expression
 	var clause abs.LetClauseLike
 	// The recipient part is optional.
-	_, token, ok = v.parseKeyword("let")
+	_, _, ok = v.parseKeyword("let")
 	if ok {
 		recipient, token, ok = v.parseRecipient()
 		if !ok {
@@ -623,7 +623,7 @@ func (v *parser) parseMultilineProcedure() (abs.ProcedureLike, *Token, bool) {
 	var token *Token
 	var statement abs.StatementLike
 	var procedure = col.List[abs.StatementLike]()
-	statement, token, _ = v.parseStatement()
+	statement, _, _ = v.parseStatement()
 	for {
 		// Every statement must be followed by an EOL.
 		_, token, ok = v.parseEOL()
@@ -632,7 +632,7 @@ func (v *parser) parseMultilineProcedure() (abs.ProcedureLike, *Token, bool) {
 			return procedure, token, true
 		}
 		procedure.AddValue(statement)
-		statement, token, _ = v.parseStatement()
+		statement, _, _ = v.parseStatement()
 	}
 }
 
@@ -820,11 +820,11 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 		// This is an empty inline list of statements.
 		return procedure, token, true
 	}
-	_, token, ok = v.parseEOL()
+	_, _, ok = v.parseEOL()
 	if !ok {
-		procedure, token, ok = v.parseInlineProcedure()
+		procedure, _, _ = v.parseInlineProcedure()
 	} else {
-		procedure, token, ok = v.parseMultilineProcedure()
+		procedure, _, _ = v.parseMultilineProcedure()
 	}
 	_, token, ok = v.parseDelimiter("}")
 	if !ok {
@@ -1160,7 +1160,7 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 	var onClause abs.OnClauseLike
 	var annotation abs.Annotation
 	var note abs.NoteLike
-	annotation, token, ok = v.parseAnnotation() // This is optional.
+	annotation, _, ok = v.parseAnnotation() // This is optional.
 	if ok {
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -1175,8 +1175,8 @@ func (v *parser) parseStatement() (abs.StatementLike, *Token, bool) {
 		// This is not a statement.
 		return statement, token, false
 	}
-	onClause, token, _ = v.parseOnClause() // This is optional.
-	note, token, _ = v.parseNote()         // This is optional.
+	onClause, _, _ = v.parseOnClause() // This is optional.
+	note, token, _ = v.parseNote()     // This is optional.
 	statement = pro.StatementWithHandler(mainClause, onClause)
 	statement.SetAnnotation(annotation)
 	statement.SetNote(note)

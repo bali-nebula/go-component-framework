@@ -260,7 +260,7 @@ func (v *interval) indexToValue(index int) abs.Discrete {
 		var message = fmt.Sprintf("The discrete type was not found: %T", discrete)
 		panic(message)
 	}
-	return discrete.(abs.Discrete)
+	return discrete
 }
 
 // This method normalizes an index to match the Go (zero based) indexing. The

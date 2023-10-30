@@ -262,7 +262,7 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 	if !ok {
 		return mapping, token, false
 	}
-	_, token, ok = v.parseEOL()
+	_, _, ok = v.parseEOL()
 	if !ok {
 		mapping, token, ok = v.parseInlineMapping()
 		if !ok {
@@ -459,7 +459,7 @@ func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
 	if !ok {
 		return series, token, false
 	}
-	_, token, ok = v.parseEOL()
+	_, _, ok = v.parseEOL()
 	if !ok {
 		series, token, ok = v.parseInlineSeries()
 		if !ok {

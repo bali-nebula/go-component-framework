@@ -73,9 +73,6 @@ func Base32Decode(encoded string) []byte {
 	var bytes = make([]byte, int(mat.Trunc(float64(size)*5.0/8.0)))
 	for index, r := range encoded {
 		var chunk = byte(sts.Index(base32LookupTable, string(r)))
-		if chunk < 0 {
-			panic(fmt.Sprintf("The binary data was not encoded using base 32: %s", encoded))
-		}
 		if index < size-1 {
 			base32DecodeBytes(chunk, index, bytes)
 		} else {

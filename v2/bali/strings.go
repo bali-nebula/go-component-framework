@@ -35,8 +35,6 @@ func Binary(value abs.Value) abs.BinaryLike {
 		binary = str.BinaryFromSequence(actual)
 	case string:
 		binary = ParseEntity(actual).(abs.BinaryLike)
-	case abs.BinaryLike:
-		binary = actual
 	case abs.ComponentLike:
 		binary = actual.GetEntity().(abs.BinaryLike)
 	default:
@@ -59,8 +57,6 @@ func Bytecode(value abs.Value) abs.BytecodeLike {
 		bytecode = str.BytecodeFromSequence(actual)
 	case string:
 		bytecode = ParseEntity(actual).(abs.BytecodeLike)
-	case abs.BytecodeLike:
-		bytecode = actual
 	case abs.ComponentLike:
 		bytecode = actual.GetEntity().(abs.BytecodeLike)
 	default:
@@ -83,8 +79,6 @@ func Moniker(value abs.Value) abs.MonikerLike {
 		moniker = str.MonikerFromSequence(actual)
 	case string:
 		moniker = ParseEntity(actual).(abs.MonikerLike)
-	case abs.MonikerLike:
-		moniker = actual
 	case abs.ComponentLike:
 		moniker = actual.GetEntity().(abs.MonikerLike)
 	default:
@@ -107,8 +101,6 @@ func Narrative(value abs.Value) abs.NarrativeLike {
 		narrative = str.NarrativeFromSequence(actual)
 	case string:
 		narrative = ParseEntity(actual).(abs.NarrativeLike)
-	case abs.NarrativeLike:
-		narrative = actual
 	case abs.ComponentLike:
 		narrative = actual.GetEntity().(abs.NarrativeLike)
 	default:
@@ -131,8 +123,6 @@ func Quote(value abs.Value) abs.QuoteLike {
 		quote = str.QuoteFromSequence(actual)
 	case string:
 		quote = ParseEntity(actual).(abs.QuoteLike)
-	case abs.QuoteLike:
-		quote = actual
 	case abs.ComponentLike:
 		quote = actual.GetEntity().(abs.QuoteLike)
 	default:
@@ -218,8 +208,6 @@ func Version(value abs.Value) abs.VersionLike {
 		version = str.VersionFromSequence(actual)
 	case string:
 		version = ParseEntity(actual).(abs.VersionLike)
-	case abs.VersionLike:
-		version = actual
 	case abs.ComponentLike:
 		version = actual.GetEntity().(abs.VersionLike)
 	default:

@@ -741,47 +741,6 @@ func (v *formatter) formatNumber(number abs.NumberLike) {
 	}
 }
 
-// This method adds the canonical format for the specified imaginary phase to
-// the state of the formatter.
-func (v *formatter) formatPhase(p abs.AngleLike) {
-	var s string
-	if p.AsReal() == mat.Pi {
-		s = "~πi"
-	} else {
-		var value = p.AsReal()
-		s = "~" + stc.FormatFloat(value, 'G', -1, 64) + "i"
-	}
-	v.AppendString(s)
-}
-
-// This method adds the canonical format for the specified element to the state
-// of the formatter.
-func (v *formatter) formatPolar(number abs.NumberLike) {
-	switch {
-	case number.IsZero():
-		v.AppendString("0")
-	case number.IsInfinite():
-		v.AppendString("∞")
-	case number.IsUndefined():
-		v.AppendString("undefined")
-	default:
-		var magnitude = number.GetMagnitude()
-		var phase = number.GetPhase()
-		switch {
-		case phase.IsZero():
-			v.formatFloat(magnitude)
-		case magnitude == 0:
-			v.AppendString("0")
-		default:
-			v.AppendString("(")
-			v.formatFloat(magnitude)
-			v.AppendString("e^")
-			v.formatPhase(phase)
-			v.AppendString(")")
-		}
-	}
-}
-
 // This method attempts to parse a pattern element. It returns the pattern
 // element and whether or not the pattern element was successfully parsed.
 func (v *parser) parsePattern() (abs.PatternLike, *Token, bool) {

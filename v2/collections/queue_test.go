@@ -45,7 +45,7 @@ func TestQueueWithConcurrency(t *tes.T) {
 	go func() {
 		defer wg.Done()
 		var value abs.ComponentLike
-		var ok = true
+		var ok bool
 		value, ok = queue.RemoveHead()
 		ass.True(t, ok)
 		ass.Equal(t, one, value)

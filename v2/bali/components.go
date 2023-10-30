@@ -136,7 +136,7 @@ func (v *parser) parseComponent() (abs.ComponentLike, *Token, bool) {
 	if !ok {
 		return component, token, false
 	}
-	context, token, _ = v.parseContext()   // The context is optional.
+	context, _, _ = v.parseContext()       // The context is optional.
 	entity = adjustEntity(entity, context) // Set the real collection type.
 	note, token, _ = v.parseNote()         // The note is optional.
 	component = com.ComponentWithContext(entity, context)
@@ -171,7 +171,7 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	if !ok {
 		return context, token, false
 	}
-	_, token, ok = v.parseEOL()
+	_, _, ok = v.parseEOL()
 	if !ok {
 		context, token, ok = v.parseInlineContext()
 		if !ok {

@@ -33,9 +33,9 @@ const (
 func TestController(t *tes.T) {
 	var states = [][]int{
 		{events, initialized, processed, finalized},
-		{state1, state2,      invalid,   invalid},
-		{state2, invalid,     state2,    state3},
-		{state3, invalid,     invalid,   invalid},
+		{state1, state2, invalid, invalid},
+		{state2, invalid, state2, state3},
+		{state3, invalid, invalid, invalid},
 	}
 
 	var controller = age.Controller(states)

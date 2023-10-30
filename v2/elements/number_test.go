@@ -11,7 +11,6 @@
 package elements_test
 
 import (
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	ele "github.com/bali-nebula/go-component-framework/v2/elements"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
@@ -56,9 +55,7 @@ func TestUndefined(t *tes.T) {
 }
 
 func TestPositiveReals(t *tes.T) {
-	var v abs.NumberLike
-
-	v = ele.NumberFromComplex(0.25)
+	var v = ele.NumberFromComplex(0.25)
 	ass.Equal(t, 0.25+0i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.25, v.AsReal())
@@ -67,9 +64,7 @@ func TestPositiveReals(t *tes.T) {
 }
 
 func TestPositiveImaginaries(t *tes.T) {
-	var v abs.NumberLike
-
-	v = ele.NumberFromComplex(0.25i)
+	var v = ele.NumberFromComplex(0.25i)
 	ass.Equal(t, 0+0.25i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsReal())
@@ -78,9 +73,7 @@ func TestPositiveImaginaries(t *tes.T) {
 }
 
 func TestNegativeReals(t *tes.T) {
-	var v abs.NumberLike
-
-	v = ele.NumberFromComplex(-0.75)
+	var v = ele.NumberFromComplex(-0.75)
 	ass.Equal(t, -0.75+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -0.75, v.AsReal())
@@ -89,9 +82,7 @@ func TestNegativeReals(t *tes.T) {
 }
 
 func TestNegativeImaginaries(t *tes.T) {
-	var v abs.NumberLike
-
-	v = ele.NumberFromComplex(-0.75i)
+	var v = ele.NumberFromComplex(-0.75i)
 	ass.Equal(t, 0-0.75i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsReal())
@@ -299,74 +290,4 @@ func TestNumbersLibrary(t *tes.T) {
 	ass.Equal(t, zero, ele.Numbers.Logarithm(infinity, one))
 	ass.True(t, ele.Numbers.Logarithm(infinity, infinity).IsUndefined())
 	ass.True(t, ele.Numbers.Logarithm(infinity, undefined).IsUndefined())
-}
-
-var numbers = []string{
-	"undefined",
-	"0",
-	"1",
-	"1.2",
-	"1.2E+30",
-	"1.2E-30",
-	"-1",
-	"-1.2",
-	"-1.2E+30",
-	"-1.2E-30",
-	"i",
-	"1.2i",
-	"1.2E+30i",
-	"1.2E-30i",
-	"-i",
-	"-1.2i",
-	"-1.2E+30i",
-	"-1.2E-30i",
-	"e",
-	"-e",
-	"ei",
-	"-ei",
-	"π",
-	"-π",
-	"πi",
-	"-πi",
-	"φ",
-	"-φ",
-	"φi",
-	"-φi",
-	"τ",
-	"-τ",
-	"τi",
-	"-τi",
-	"∞",
-	"(1, i)",
-	"(-1, i)",
-	"(1, -i)",
-	"(-1, -i)",
-	"(π, πi)",
-	"(-π, πi)",
-	"(π, -πi)",
-	"(-π, -πi)",
-	"(φ, φi)",
-	"(-φ, φi)",
-	"(φ, -φi)",
-	"(-φ, -φi)",
-	"(τ, τi)",
-	"(-τ, τi)",
-	"(τ, -τi)",
-	"(-τ, -τi)",
-	"(3, 4i)",
-	"(-3, 4i)",
-	"(3, -4i)",
-	"(-3, -4i)",
-	"(3.15, 4.15i)",
-	"(-3.15, 4.15i)",
-	"(3.15, -4.15i)",
-	"(-3.15, -4.15i)",
-	"(3.15E+12, 4.15E+12i)",
-	"(-3.15E+12, 4.15E+12i)",
-	"(3.15E+12, -4.15E+12i)",
-	"(-3.15E+12, -4.15E+12i)",
-	"(3.15E-12, 4.15E-12i)",
-	"(-3.15E-12, 4.15E-12i)",
-	"(3.15E-12, -4.15E-12i)",
-	"(-3.15E-12, -4.15E-12i)",
 }

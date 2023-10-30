@@ -306,10 +306,6 @@ func Continuum(first abs.Value, extent abs.Extent, last abs.Value, context abs.C
 		var actualFirst = first.(abs.AngleLike)
 		var actualLast = last.(abs.AngleLike)
 		entity = ran.Continuum(actualFirst, extent, actualLast)
-	case abs.RealLike:
-		var actualFirst = first.(abs.RealLike)
-		var actualLast = last.(abs.RealLike)
-		entity = ran.Continuum(actualFirst, extent, actualLast)
 	default:
 		var message = fmt.Sprintf("The value (of type %T) cannot be a continuum endpoint: %v", actual, actual)
 		panic(message)
@@ -425,7 +421,7 @@ func (v *parser) parseRange() (abs.Range, *Token, bool) {
 	var extent abs.Extent
 	var last abs.Primitive
 	var range_ abs.Range
-	left, token, ok = v.parseDelimiter("[")
+	left, _, ok = v.parseDelimiter("[")
 	if !ok {
 		left, token, ok = v.parseDelimiter("(")
 		if !ok {

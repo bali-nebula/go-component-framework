@@ -35,11 +35,11 @@ func (v *parser) parseArguments() (abs.Sequential[abs.Expression], *Token, bool)
 		// This is an empty argument expression.
 		return arguments, token, true
 	}
-	argument, token, ok = v.parseExpression()
+	argument, _, ok = v.parseExpression()
 	for ok {
 		arguments.AddValue(argument)
 		// Every subsequent argument must be preceded by a ','.
-		_, token, ok = v.parseDelimiter(",")
+		_, _, ok = v.parseDelimiter(",")
 		if !ok {
 			// No more arguments.
 			break

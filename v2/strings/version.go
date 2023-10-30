@@ -158,7 +158,6 @@ func (l versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs
 		level = size // Normalize the level to the current size.
 	case level < size:
 		// The next version will require fewer levels.
-		size = level
 		ordinals = ordinals[:level]
 	case level > size:
 		// The next version will require another level.

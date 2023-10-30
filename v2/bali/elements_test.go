@@ -11,7 +11,6 @@
 package bali_test
 
 import (
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	bal "github.com/bali-nebula/go-component-framework/v2/bali"
 	ass "github.com/stretchr/testify/assert"
 	mat "math"
@@ -199,9 +198,7 @@ func TestUndefined(t *tes.T) {
 }
 
 func TestPositiveReals(t *tes.T) {
-	var v abs.NumberLike
-
-	v = bal.Number(0.25)
+	var v = bal.Number(0.25)
 	ass.Equal(t, 0.25+0i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.25, v.AsReal())
@@ -210,9 +207,7 @@ func TestPositiveReals(t *tes.T) {
 }
 
 func TestPositiveImaginaries(t *tes.T) {
-	var v abs.NumberLike
-
-	v = bal.Number(0.25i)
+	var v = bal.Number(0.25i)
 	ass.Equal(t, 0+0.25i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsReal())
@@ -221,9 +216,7 @@ func TestPositiveImaginaries(t *tes.T) {
 }
 
 func TestNegativeReals(t *tes.T) {
-	var v abs.NumberLike
-
-	v = bal.Number(-0.75)
+	var v = bal.Number(-0.75)
 	ass.Equal(t, -0.75+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -0.75, v.AsReal())
@@ -232,9 +225,7 @@ func TestNegativeReals(t *tes.T) {
 }
 
 func TestNegativeImaginaries(t *tes.T) {
-	var v abs.NumberLike
-
-	v = bal.Number(-0.75i)
+	var v = bal.Number(-0.75i)
 	ass.Equal(t, 0-0.75i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsReal())

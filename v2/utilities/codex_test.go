@@ -38,7 +38,7 @@ func TestBase16EmptyRoundTrip(t *tes.T) {
 func TestBase16RoundTrip(t *tes.T) {
 	// Seed the bytes.
 	var bytes = make([]byte, 256)
-	for index, _ := range bytes {
+	for index := range bytes {
 		bytes[index] = byte(index)
 	}
 
@@ -82,7 +82,7 @@ func TestBase32EmptyRoundTrip(t *tes.T) {
 func TestBase32RoundTrip(t *tes.T) {
 	// Seed the bytes.
 	var bytes = make([]byte, 256)
-	for index, _ := range bytes {
+	for index := range bytes {
 		bytes[index] = byte(index)
 	}
 
@@ -126,7 +126,7 @@ func TestBase64EmptyRoundTrip(t *tes.T) {
 func TestBase64RoundTrip(t *tes.T) {
 	// Seed the bytes.
 	var bytes = make([]byte, 256)
-	for index, _ := range bytes {
+	for index := range bytes {
 		bytes[index] = byte(index)
 	}
 

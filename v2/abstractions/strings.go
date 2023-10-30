@@ -22,7 +22,9 @@ type (
 )
 
 func InstructionFromBytes(leftByte, rightByte byte) Instruction {
-	var v = Instruction((leftByte << 8) | rightByte)
+	var instruction uint16 = uint16(leftByte)
+	instruction = instruction<<8 | uint16(rightByte)
+	var v = Instruction(instruction)
 	return v
 }
 
