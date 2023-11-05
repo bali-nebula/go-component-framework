@@ -21,3 +21,7 @@ import (
 func Procedure() abs.ProcedureLike {
 	return col.List[abs.StatementLike]()
 }
+
+func ProcedureFromSequence(sequence abs.Sequential[abs.StatementLike]) abs.ProcedureLike {
+	return col.ListFromSequence[abs.StatementLike](sequence)
+}
