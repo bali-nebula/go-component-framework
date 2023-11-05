@@ -17,7 +17,7 @@ import (
 // MAGNITUDE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new magnitude expression.
-func Magnitude(expression abs.Expression) abs.MagnitudeLike {
+func Magnitude(expression abs.Expression) abs.UnaryOperationLike {
 	var v = &magnitudeExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)
@@ -28,6 +28,16 @@ func Magnitude(expression abs.Expression) abs.MagnitudeLike {
 // expression.
 type magnitudeExpression struct {
 	expression abs.Expression
+}
+
+// This method returns the magnitude operator in this magnitude expression.
+func (v *magnitudeExpression) GetOperator() abs.Operator {
+	return abs.MAGNITUDE
+}
+
+// This method sets the magnitude operator in this magnitude expression to the
+// specified value.
+func (v *magnitudeExpression) SetOperator(operator abs.Operator) {
 }
 
 // This method returns the expression to be operated on by this magnitude

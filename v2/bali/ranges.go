@@ -25,36 +25,36 @@ import (
 // UNIVERSAL CONSTRUCTORS
 
 // This constructor returns a new rune endpoint with the specified value.
-func Rune(value abs.Value) abs.RuneLike {
-	var rune_ abs.RuneLike
+func Character(value abs.Value) abs.CharacterLike {
+	var character abs.CharacterLike
 	switch actual := value.(type) {
 	case uint:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case uint8:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case uint16:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case uint32:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case uint64:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case int:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case int8:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case int16:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case int32:
-		rune_ = ele.Rune(int(actual))
+		character = ele.Character(int(actual))
 	case int64:
-		rune_ = ele.Rune(int(actual))
-	case abs.RuneLike:
-		rune_ = actual
+		character = ele.Character(int(actual))
+	case abs.CharacterLike:
+		character = actual
 	default:
 		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a rune: %v", actual, actual)
 		panic(message)
 	}
-	return rune_
+	return character
 }
 
 // This constructor returns a new integer endpoint with the specified value.
@@ -351,7 +351,7 @@ func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 		endpoint, token, ok = v.parseResource()
 	}
 	if !ok {
-		endpoint, token, ok = v.parseRune()
+		endpoint, token, ok = v.parseCharacter()
 	}
 	if !ok {
 		endpoint, token, ok = v.parseSymbol()
@@ -396,8 +396,8 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 		v.formatProbability(value)
 	case abs.AngleLike:
 		v.formatAngle(value)
-	case abs.RuneLike:
-		v.formatRune(value)
+	case abs.CharacterLike:
+		v.formatCharacter(value)
 	case abs.PatternLike:
 		v.formatPattern(value)
 	case abs.ResourceLike:
@@ -415,30 +415,30 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 // not the range was successfully parsed.
 func (v *parser) parseRange() (abs.Range, *Token, bool) {
 	var ok bool
-	var token *Token
+	var token, bracketToken, endpointToken *Token
 	var left, right string
 	var first abs.Primitive
 	var extent abs.Extent
 	var last abs.Primitive
 	var range_ abs.Range
-	left, _, ok = v.parseDelimiter("[")
+	left, bracketToken, ok = v.parseDelimiter("[")
 	if !ok {
-		left, token, ok = v.parseDelimiter("(")
+		left, bracketToken, ok = v.parseDelimiter("(")
 		if !ok {
-			return range_, token, false
+			return range_, bracketToken, false
 		}
 	}
-	first, token, ok = v.parseEndpoint()
+	first, endpointToken, ok = v.parseEndpoint()
 	if !ok {
 		// This is not a range.
-		v.backupOne() // Put back the left bracket character.
+		v.backupOne(bracketToken) // Put back the left bracket character.
 		return range_, token, false
 	}
 	_, token, ok = v.parseDelimiter("..")
 	if !ok {
 		// This is not a range.
-		v.backupOne() // Put back the first endpoint token.
-		v.backupOne() // Put back the left bracket character.
+		v.backupOne(endpointToken) // Put back the first endpoint token.
+		v.backupOne(bracketToken)  // Put back the left bracket character.
 		return range_, token, false
 	}
 	last, token, ok = v.parseEndpoint()
@@ -574,23 +574,23 @@ func (v *formatter) formatContinuum(continuum abs.ContinuumLike) {
 func (v *parser) parseInteger() (ele.Integer, *Token, bool) {
 	var number ele.Integer
 	var token = v.nextToken()
-	if token.Type != TokenNumber {
+	if token.Type != TokenNUMBER {
 		// The token is not numerical.
-		v.backupOne()
+		v.backupOne(token)
 		return number, token, false
 	}
-	var matches = scanReal([]byte(token.Value))
+	var matches = bytesToStrings(realScanner.FindSubmatch([]byte(token.Value)))
 	if len(matches) > 0 {
 		// The token is a real number.
-		v.backupOne()
+		v.backupOne(token)
 		return number, token, false
 	}
 	var err any
 	var integer int64
-	matches = scanInteger([]byte(token.Value))
+	matches = bytesToStrings(integerScanner.FindSubmatch([]byte(token.Value)))
 	if len(matches) == 0 {
 		// The token is not an integer.
-		v.backupOne()
+		v.backupOne(token)
 		return number, token, false
 	}
 	integer, err = stc.ParseInt(matches[0], 10, 0)
@@ -613,13 +613,13 @@ func (v *formatter) formatInteger(number abs.IntegerLike) {
 func (v *parser) parseReal() (ele.Real, *Token, bool) {
 	var number ele.Real
 	var token = v.nextToken()
-	if token.Type != TokenNumber {
-		v.backupOne()
+	if token.Type != TokenNUMBER {
+		v.backupOne(token)
 		return number, token, false
 	}
 	var err any
 	var r float64
-	var matches = scanReal([]byte(token.Value))
+	var matches = bytesToStrings(realScanner.FindSubmatch([]byte(token.Value)))
 	switch {
 	case matches[0] == "undefined":
 		r = mat.NaN()
@@ -659,10 +659,10 @@ func (v *formatter) formatReal(number abs.RealLike) {
 	}
 }
 
-// This method attempts to parse a rune. It returns the rune and whether or not
-// the rune was successfully parsed.
-func (v *parser) parseRune() (ele.Rune, *Token, bool) {
-	var number = ele.Rune(-1)
+// This method attempts to parse a character. It returns the character and whether or not
+// the character was successfully parsed.
+func (v *parser) parseCharacter() (ele.Character, *Token, bool) {
+	var number = ele.Character(-1)
 	var quote, token, ok = v.parseQuote()
 	if !ok {
 		return number, token, false
@@ -670,19 +670,19 @@ func (v *parser) parseRune() (ele.Rune, *Token, bool) {
 	var s = quote.AsString()
 	var r, size = utf.DecodeRuneInString(s)
 	if len(s) != size {
-		// This is not a rune.
-		v.backupOne() // Put back the quote token.
+		// This is not a character.
+		v.backupOne(token)
 		return number, token, false
 	}
-	number = ele.Rune(r)
+	number = ele.Character(r)
 	return number, token, true
 }
 
-// This method adds the canonical format for the specified rune to the state of
+// This method adds the canonical format for the specified character to the state of
 // the formatter.
-func (v *formatter) formatRune(number abs.RuneLike) {
+func (v *formatter) formatCharacter(number abs.CharacterLike) {
 	var integer = number.AsInteger()
-	var runes = []rune{rune(integer)}
-	var quote = str.QuoteFromString(string(runes))
+	var characters = []rune{rune(integer)}
+	var quote = str.QuoteFromString(string(characters))
 	v.formatQuote(quote)
 }

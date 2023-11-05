@@ -24,11 +24,11 @@ import (
 // quotes, any embedded double quote need not be escaped. This is different
 // than the regular expression the scanner uses for quoted strings.
 const (
-	base16  = `[0-9a-f]`
-	unicode = `u` + base16 + `{4}`
-	escape  = `\\(?:` + unicode + `|[frnt\\])` // No escaped double quote.
-	rune_   = `(?:` + escape + `|[^\f\r\n\t]` + `)`
-	quote   = `(` + rune_ + `*)`
+	base16    = `[0-9a-f]`
+	character = `(?:` + escape + `|[^\f\r\n\t]` + `)`
+	unicode   = `u` + base16 + `{4}`
+	escape    = `\\(?:` + unicode + `|[frnt\\])` // No escaped double quote.
+	quote     = `(` + character + `*)`
 )
 
 // This scanner is used for matching quote strings.

@@ -14,7 +14,7 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	col "github.com/bali-nebula/go-component-framework/v2/collections"
-	cox "github.com/craterdog/go-collection-framework/v2"
+	com "github.com/bali-nebula/go-component-framework/v2/components"
 )
 
 // TYPE DEFINITIONS
@@ -116,10 +116,10 @@ func (v *parser) parseAssociation() (abs.AssociationLike, *Token, bool) {
 		// This is not an association.
 		return nil, token, false
 	}
-	_, token, ok = v.parseDelimiter(":")
+	_, _, ok = v.parseDelimiter(":")
 	if !ok {
 		// This is not an association.
-		v.backupOne() // Put back the primitive key token.
+		v.backupOne(token) // Put back the primitive key token.
 		return nil, token, false
 	}
 	// This must be an association.
@@ -152,129 +152,20 @@ func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token
 	var collection abs.Collection
-	collection, token, ok = v.parseMapping()
-	if !ok {
-		// The series must be attempted last since it may start with a component
-		// which cannot be put back as a single token.
-		collection, token, ok = v.parseSeries()
-	}
-	return collection, token, ok
-}
-
-// It returns the mapping collection and whether or not the mapping collection
-// was successfully parsed.
-func (v *parser) parseInlineMapping() (abs.MappingLike, *Token, bool) {
-	var ok bool
-	var token *Token
-	var association abs.AssociationLike
-	var mapping = cox.List[abs.AssociationLike]()
-	_, token, ok = v.parseDelimiter(":")
-	if ok {
-		// This is an empty mapping.
-		return mapping, token, true
-	}
-	_, token, ok = v.parseDelimiter("]")
-	if ok {
-		// This is an empty series.
-		v.backupOne() // Put back the ']' character.
-		return mapping, token, false
-	}
-	association, token, ok = v.parseAssociation()
-	if !ok {
-		// A non-empty mapping must have at least one association.
-		return mapping, token, false
-	}
-	for {
-		mapping.AddValue(association)
-		// Every subsequent association must be preceded by a ','.
-		_, token, ok = v.parseDelimiter(",")
-		if !ok {
-			// No more associations.
-			break
-		}
-		association, token, ok = v.parseAssociation()
-		if !ok {
-			var message = v.formatError(token)
-			message += generateGrammar("association",
-				"$associations",
-				"$association",
-				"$key",
-				"$value")
-			panic(message)
-		}
-	}
-	return mapping, token, true
-}
-
-// This method attempts to parse a series collection with inline components. It
-// returns the series collection and whether or not the series collection was
-// successfully parsed.
-func (v *parser) parseInlineSeries() (abs.SeriesLike, *Token, bool) {
-	var ok bool
-	var token *Token
-	var value abs.ComponentLike
-	var series = col.List()
-	_, token, ok = v.parseDelimiter("]")
-	if ok {
-		// This is an empty series.
-		v.backupOne() // Put back the ']' token.
-		return series, token, true
-	}
-	value, token, ok = v.parseComponent()
-	if !ok {
-		// A non-empty series must have at least one component value.
-		var message = v.formatError(token)
-		message += generateGrammar("component",
-			"$collection",
-			"$components",
-			"$component")
-		panic(message)
-	}
-	for {
-		series.AddValue(value)
-		// Every subsequent value must be preceded by a ','.
-		_, token, ok = v.parseDelimiter(",")
-		if !ok {
-			// No more components.
-			break
-		}
-		value, token, ok = v.parseComponent()
-		if !ok {
-			var message = v.formatError(token)
-			message += generateGrammar("component",
-				"$collection",
-				"$components",
-				"$component")
-			panic(message)
-		}
-	}
-	return series, token, true
-}
-
-// This method attempts to parse a mapping collection. It returns the
-// mapping collection and whether or not the mapping collection was
-// successfully parsed.
-func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
-	var ok bool
-	var token *Token
-	var mapping abs.MappingLike
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
-		return mapping, token, false
+		// This is not a collection.
+		return collection, token, false
 	}
-	_, _, ok = v.parseEOL()
+	collection, _, ok = v.parseAssociations()
 	if !ok {
-		mapping, token, ok = v.parseInlineMapping()
+		// The values must be attempted second since it may start with a component
+		// which cannot be put back as a single token.
+		collection, _, ok = v.parseValues()
 		if !ok {
-			v.backupOne() // Put back the '[' character.
-			return mapping, token, false
-		}
-	} else {
-		mapping, token, ok = v.parseMultilineMapping()
-		if !ok {
-			v.backupOne() // Put back the EOL character.
-			v.backupOne() // Put back the '[' character.
-			return mapping, token, false
+			// Not a collection (must be a range).
+			v.backupOne(token) // Put back the "[" character.
+			return collection, token, false
 		}
 	}
 	_, token, ok = v.parseDelimiter("]")
@@ -283,18 +174,117 @@ func (v *parser) parseMapping() (abs.MappingLike, *Token, bool) {
 		message += generateGrammar("]",
 			"$collection",
 			"$associations",
-			"$association")
+			"$association",
+		)
 		panic(message)
 	}
-	return mapping, token, true
+	return collection, token, true
+}
+
+// It returns the associations collection and whether or not the associations collection
+// was successfully parsed.
+func (v *parser) parseInlineAssociations() (abs.AssociationsLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var association abs.AssociationLike
+	var associations = col.Catalog()
+	association, token, ok = v.parseAssociation()
+	if !ok {
+		// This is not an inline associations.
+		return associations, token, false
+	}
+	for {
+		var key = association.GetKey()
+		var value = association.GetValue()
+		associations.SetValue(key, value)
+		// Every subsequent association must be preceded by a ','.
+		_, token, ok = v.parseDelimiter(",")
+		if !ok {
+			// No more associations.
+			return associations, token, true
+		}
+		association, token, ok = v.parseAssociation()
+		if !ok {
+			var message = v.formatError(token)
+			message += generateGrammar("association",
+				"$collection",
+				"$associations",
+				"$association",
+			)
+			panic(message)
+		}
+	}
+}
+
+// This method attempts to parse a values collection with inline values. It
+// returns the values collection and whether or not the values collection was
+// successfully parsed.
+func (v *parser) parseInlineValues() (abs.ValuesLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var value abs.ComponentLike
+	var values = col.List()
+	value, token, ok = v.parseComponent()
+	if !ok {
+		// This is not an inline values.
+		return values, token, false
+	}
+	for {
+		values.AddValue(value)
+		// Every subsequent value must be preceded by a ','.
+		_, token, ok = v.parseDelimiter(",")
+		if !ok {
+			// No more values.
+			return values, token, true
+		}
+		value, token, ok = v.parseComponent()
+		if !ok {
+			var message = v.formatError(token)
+			message += generateGrammar("value",
+				"$collection",
+				"$values",
+				"$value",
+			)
+			panic(message)
+		}
+	}
+}
+
+// This method attempts to parse an associations collection. It returns the
+// associations collection and whether or not the associations collection was
+// successfully parsed.
+func (v *parser) parseAssociations() (abs.AssociationsLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var associations abs.AssociationsLike
+	_, token, ok = v.parseDelimiter(":")
+	if ok {
+		// The associations is empty.
+		associations = col.Catalog()
+		return associations, token, true
+	}
+	_, token, ok = v.parseEOL()
+	if ok {
+		associations, _, ok = v.parseMultilineAssociations()
+		if !ok {
+			v.backupOne(token) // Put back the EOL character.
+			return associations, token, false
+		}
+	} else {
+		associations, token, ok = v.parseInlineAssociations()
+		if !ok {
+			return associations, token, false
+		}
+	}
+	return associations, token, true
 }
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatMapping(mapping abs.MappingLike) {
+func (v *formatter) formatAssociations(associations abs.AssociationsLike) {
 	v.AppendString("[")
-	var iterator = col.AssociationIterator(mapping)
-	switch mapping.GetSize() {
+	var iterator = col.AssociationIterator(associations)
+	switch associations.GetSize() {
 	case 0:
 		v.AppendString(":")
 	case 1:
@@ -313,21 +303,40 @@ func (v *formatter) formatMapping(mapping abs.MappingLike) {
 	v.AppendString("]")
 }
 
-// This method attempts to parse a mapping collection with multiline associations.
-// It returns the mapping collection and whether or not the mapping collection
+// This method attempts to parse an associations collection with multiline associations.
+// It returns the associations collection and whether or not the associations collection
 // was successfully parsed.
-func (v *parser) parseMultilineMapping() (abs.MappingLike, *Token, bool) {
+func (v *parser) parseMultilineAssociations() (abs.AssociationsLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var association abs.AssociationLike
-	var associations = cox.List[abs.AssociationLike]()
+	var associations = col.Catalog()
+
 	association, token, ok = v.parseAssociation()
 	if !ok {
-		// A non-empty mapping must have at least one association.
+		// This is not a multiline associations.
 		return associations, token, false
 	}
+	// Every association must be followed by an EOL.
+	_, token, ok = v.parseEOL()
+	if !ok {
+		var message = v.formatError(token)
+		message += generateGrammar("EOL",
+			"$collection",
+			"$associations",
+			"$association",
+		)
+		panic(message)
+	}
 	for {
-		associations.AddValue(association)
+		var key = association.GetKey()
+		var value = association.GetValue()
+		associations.SetValue(key, value)
+		association, token, ok = v.parseAssociation()
+		if !ok {
+			// No more associations.
+			return associations, token, true
+		}
 		// Every association must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -335,54 +344,57 @@ func (v *parser) parseMultilineMapping() (abs.MappingLike, *Token, bool) {
 			message += generateGrammar("EOL",
 				"$collection",
 				"$associations",
-				"$association")
+				"$association",
+			)
 			panic(message)
 		}
-		association, token, ok = v.parseAssociation()
-		if !ok {
-			// No more associations.
-			break
-		}
 	}
-	return associations, token, true
 }
 
-// This method attempts to parse a series collection with multiline components.
-// It returns the series collection and whether or not the series collection was
+// This method attempts to parse a values collection with multiline values.
+// It returns the values collection and whether or not the values collection was
 // successfully parsed.
-func (v *parser) parseMultilineSeries() (abs.SeriesLike, *Token, bool) {
+func (v *parser) parseMultilineValues() (abs.ValuesLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var value abs.ComponentLike
-	var series = col.List()
+	var values = col.List()
+
 	value, token, ok = v.parseComponent()
 	if !ok {
-		// A non-empty series must have at least one value.
+		// This is not a multiline values.
+		return values, token, false
+	}
+	// Every value must be followed by an EOL.
+	_, token, ok = v.parseEOL()
+	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("component",
+		message += generateGrammar("EOL",
 			"$collection",
-			"$components",
-			"$component")
+			"$values",
+			"$value",
+		)
 		panic(message)
 	}
 	for {
-		series.AddValue(value)
+		values.AddValue(value)
+		value, token, ok = v.parseComponent()
+		if !ok {
+			// No more values.
+			return values, token, true
+		}
 		// Every value must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("EOL",
 				"$collection",
-				"$components")
+				"$values",
+				"$value",
+			)
 			panic(message)
 		}
-		value, token, ok = v.parseComponent()
-		if !ok {
-			// No more components.
-			break
-		}
 	}
-	return series, token, true
 }
 
 // This method attempts to parse a primitive. It returns the primitive and
@@ -448,49 +460,42 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 	}
 }
 
-// This method attempts to parse a series of components. It returns the
-// series of components and whether or not the series of components was
+// This method attempts to parse a values of values. It returns the
+// values of values and whether or not the values of values was
 // successfully parsed.
-func (v *parser) parseSeries() (abs.SeriesLike, *Token, bool) {
+func (v *parser) parseValues() (abs.ValuesLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var series abs.SeriesLike
-	_, token, ok = v.parseDelimiter("[")
-	if !ok {
-		return series, token, false
+	var values abs.ValuesLike
+	_, token, ok = v.parseDelimiter("]")
+	if ok {
+		// The values is empty.
+		v.backupOne(token) // Put back the "]" character.
+		values = col.List()
+		return values, token, true
 	}
-	_, _, ok = v.parseEOL()
-	if !ok {
-		series, token, ok = v.parseInlineSeries()
+	_, token, ok = v.parseEOL()
+	if ok {
+		values, _, ok = v.parseMultilineValues()
 		if !ok {
-			v.backupOne() // Put back the '[' character.
-			return series, token, false
+			v.backupOne(token) // Put back the EOL character.
+			return values, token, false
 		}
 	} else {
-		series, token, ok = v.parseMultilineSeries()
+		values, token, ok = v.parseInlineValues()
 		if !ok {
-			v.backupOne() // Put back the EOL character.
-			v.backupOne() // Put back the '[' character.
-			return series, token, false
+			return values, token, false
 		}
 	}
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
-		var message = v.formatError(token)
-		message += generateGrammar("]",
-			"$collection",
-			"$components")
-		panic(message)
-	}
-	return series, token, ok
+	return values, token, true
 }
 
 // This method adds the canonical format for the specified collection to the
 // state of the formatter.
-func (v *formatter) formatSeries(series abs.SeriesLike) {
+func (v *formatter) formatValues(values abs.ValuesLike) {
 	v.AppendString("[")
-	var iterator = col.ComponentIterator(series)
-	switch series.GetSize() {
+	var iterator = com.ComponentIterator(values)
+	switch values.GetSize() {
 	case 0:
 		v.AppendString(" ")
 	case 1:

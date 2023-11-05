@@ -97,7 +97,7 @@ func (v *parser) parseArithmetic(first abs.Expression) (abs.Expression, *Token, 
 	}
 	if operator < abs.PLUS || operator > abs.MODULO {
 		// This is not an arithmetic expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -114,7 +114,7 @@ func (v *parser) parseArithmetic(first abs.Expression) (abs.Expression, *Token, 
 
 // This method adds the canonical format for the specified arithmetic expression
 // to the state of the formatter.
-func (v *formatter) formatArithmetic(arithmetic abs.ArithmeticLike) {
+func (v *formatter) formatArithmetic(arithmetic abs.BinaryOperationLike) {
 	var first = arithmetic.GetFirst()
 	v.formatExpression(first)
 	v.AppendString(" ")
@@ -141,7 +141,7 @@ func (v *parser) parseChaining(first abs.Expression) (abs.Expression, *Token, bo
 	}
 	if operator != abs.AMPERSAND {
 		// This is not a chaining expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -158,7 +158,7 @@ func (v *parser) parseChaining(first abs.Expression) (abs.Expression, *Token, bo
 
 // This method adds the canonical format for the specified chaining expression
 // to the state of the formatter.
-func (v *formatter) formatChaining(chaining abs.ChainingLike) {
+func (v *formatter) formatChaining(chaining abs.BinaryOperationLike) {
 	var first = chaining.GetFirst()
 	v.formatExpression(first)
 	v.AppendString(" ")
@@ -185,7 +185,7 @@ func (v *parser) parseComparison(first abs.Expression) (abs.Expression, *Token, 
 	}
 	if operator < abs.LESS || operator > abs.MATCHES {
 		// This is not a comparison expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -202,7 +202,7 @@ func (v *parser) parseComparison(first abs.Expression) (abs.Expression, *Token, 
 
 // This method adds the canonical format for the specified comparison expression
 // to the state of the formatter.
-func (v *formatter) formatComparison(comparison abs.ComparisonLike) {
+func (v *formatter) formatComparison(comparison abs.BinaryOperationLike) {
 	var first = comparison.GetFirst()
 	v.formatExpression(first)
 	v.AppendString(" ")
@@ -216,12 +216,12 @@ func (v *formatter) formatComparison(comparison abs.ComparisonLike) {
 // This method attempts to parse a complement expression. It returns the
 // complement expression and whether or not the complement expression was
 // successfully parsed.
-func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
+func (v *parser) parseComplement() (abs.UnaryOperationLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var operator abs.Operator
 	var logical abs.Expression
-	var expression abs.ComplementLike
+	var expression abs.UnaryOperationLike
 	operator, token, ok = v.parseOperator()
 	if !ok {
 		// This is not a complement expression.
@@ -229,7 +229,7 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 	}
 	if operator != abs.NOT {
 		// This is not a complement expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	logical, token, ok = v.parseExpression()
@@ -246,7 +246,7 @@ func (v *parser) parseComplement() (abs.ComplementLike, *Token, bool) {
 
 // This method adds the canonical format for the specified complement expression
 // to the state of the formatter.
-func (v *formatter) formatComplement(complement abs.ComplementLike) {
+func (v *formatter) formatComplement(complement abs.UnaryOperationLike) {
 	var operator = complement.GetOperator()
 	v.formatOperator(operator)
 	v.AppendString(" ")
@@ -257,12 +257,12 @@ func (v *formatter) formatComplement(complement abs.ComplementLike) {
 // This method attempts to parse a dereference expression. It returns the
 // dereference expression and whether or not the dereference expression was
 // successfully parsed.
-func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
+func (v *parser) parseDereference() (abs.UnaryOperationLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var operator abs.Operator
 	var reference abs.Expression
-	var expression abs.DereferenceLike
+	var expression abs.UnaryOperationLike
 	operator, token, ok = v.parseOperator()
 	if !ok {
 		// This is not a dereference expression.
@@ -270,7 +270,7 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 	}
 	if operator != abs.AT {
 		// This is not a dereference expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	reference, token, ok = v.parseExpression()
@@ -287,7 +287,7 @@ func (v *parser) parseDereference() (abs.DereferenceLike, *Token, bool) {
 
 // This method adds the canonical format for the specified dereference expression
 // to the state of the formatter.
-func (v *formatter) formatDereference(dereference abs.DereferenceLike) {
+func (v *formatter) formatDereference(dereference abs.UnaryOperationLike) {
 	var operator = dereference.GetOperator()
 	v.formatOperator(operator)
 	var expression = dereference.GetExpression()
@@ -310,7 +310,7 @@ func (v *parser) parseExponential(base abs.Expression) (abs.Expression, *Token, 
 	}
 	if operator != abs.CARET {
 		// This is not an exponential expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	exponent, token, ok = v.parseExpression()
@@ -327,14 +327,14 @@ func (v *parser) parseExponential(base abs.Expression) (abs.Expression, *Token, 
 
 // This method adds the canonical format for the specified exponential expression
 // to the state of the formatter.
-func (v *formatter) formatExponential(exponential abs.ExponentialLike) {
-	var base = exponential.GetBase()
+func (v *formatter) formatExponential(exponential abs.BinaryOperationLike) {
+	var base = exponential.GetFirst()
 	v.formatExpression(base)
 	v.AppendString(" ")
 	var operator = exponential.GetOperator()
 	v.formatOperator(operator)
 	v.AppendString(" ")
-	var exponent = exponential.GetExponent()
+	var exponent = exponential.GetSecond()
 	v.formatExpression(exponent)
 }
 
@@ -387,10 +387,10 @@ func (v *formatter) formatExpression(expression abs.Expression) {
 		var value = expression.(abs.VariableLike)
 		v.formatVariable(value)
 	case "PrecedenceExpression":
-		var value = expression.(abs.PrecedenceLike)
+		var value = expression.(abs.UnaryOperationLike)
 		v.formatPrecedence(value)
 	case "DereferenceExpression":
-		var value = expression.(abs.DereferenceLike)
+		var value = expression.(abs.UnaryOperationLike)
 		v.formatDereference(value)
 	case "InvocationExpression":
 		var value = expression.(abs.InvocationLike)
@@ -399,28 +399,28 @@ func (v *formatter) formatExpression(expression abs.Expression) {
 		var value = expression.(abs.SubcomponentLike)
 		v.formatSubcomponent(value)
 	case "ChainingExpression":
-		var value = expression.(abs.ChainingLike)
+		var value = expression.(abs.BinaryOperationLike)
 		v.formatChaining(value)
 	case "ExponentialExpression":
-		var value = expression.(abs.ExponentialLike)
+		var value = expression.(abs.BinaryOperationLike)
 		v.formatExponential(value)
 	case "InversionExpression":
-		var value = expression.(abs.InversionLike)
+		var value = expression.(abs.UnaryOperationLike)
 		v.formatInversion(value)
 	case "ArithmeticExpression":
-		var value = expression.(abs.ArithmeticLike)
+		var value = expression.(abs.BinaryOperationLike)
 		v.formatArithmetic(value)
 	case "MagnitudeExpression":
-		var value = expression.(abs.MagnitudeLike)
+		var value = expression.(abs.UnaryOperationLike)
 		v.formatMagnitude(value)
 	case "ComparisonExpression":
-		var value = expression.(abs.ComparisonLike)
+		var value = expression.(abs.BinaryOperationLike)
 		v.formatComparison(value)
 	case "ComplementExpression":
-		var value = expression.(abs.ComplementLike)
+		var value = expression.(abs.UnaryOperationLike)
 		v.formatComplement(value)
 	case "LogicalExpression":
-		var value = expression.(abs.LogicalLike)
+		var value = expression.(abs.BinaryOperationLike)
 		v.formatLogical(value)
 	default:
 		var message = fmt.Sprintf("An invalid expression type was passed to the formatter: %v", expression)
@@ -442,10 +442,10 @@ func (v *parser) parseIntrinsic() (abs.IntrinsicLike, *Token, bool) {
 		// This is not a function expression.
 		return expression, token, false
 	}
-	arguments, token, ok = v.parseArguments()
+	arguments, _, ok = v.parseArguments()
 	if !ok {
 		// This is not a function expression.
-		v.backupOne() // Put back the identifier token.
+		v.backupOne(token) // Put back the identifier token.
 		return expression, token, false
 	}
 	expression = exp.Intrinsic(function, arguments)
@@ -464,12 +464,12 @@ func (v *formatter) formatIntrinsic(dereference abs.IntrinsicLike) {
 // This method attempts to parse a inversion expression. It returns the
 // inversion expression and whether or not the inversion expression was
 // successfully parsed.
-func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
+func (v *parser) parseInversion() (abs.UnaryOperationLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var operator abs.Operator
 	var numeric abs.Expression
-	var expression abs.InversionLike
+	var expression abs.UnaryOperationLike
 	operator, token, ok = v.parseOperator()
 	if !ok {
 		// This is not an inversion expression.
@@ -477,7 +477,7 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 	}
 	if operator < abs.MINUS || operator > abs.SLASH {
 		// This is not an inversion expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	numeric, token, ok = v.parseExpression()
@@ -494,7 +494,7 @@ func (v *parser) parseInversion() (abs.InversionLike, *Token, bool) {
 
 // This method adds the canonical format for the specified inversion expression
 // to the state of the formatter.
-func (v *formatter) formatInversion(inversion abs.InversionLike) {
+func (v *formatter) formatInversion(inversion abs.UnaryOperationLike) {
 	var operator = inversion.GetOperator()
 	v.formatOperator(operator)
 	var expression = inversion.GetExpression()
@@ -518,7 +518,7 @@ func (v *parser) parseInvocation(target abs.Expression) (abs.Expression, *Token,
 	}
 	if operator < abs.DOT || operator > abs.ARROW {
 		// This is not an invocation expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	message, token, ok = v.parseIdentifier()
@@ -551,7 +551,7 @@ func (v *formatter) formatInvocation(invocation abs.InvocationLike) {
 	v.formatExpression(target)
 	var operator = invocation.GetOperator()
 	v.formatOperator(operator)
-	var message = invocation.GetMessage()
+	var message = invocation.GetMethod()
 	v.AppendString(message)
 	var arguments = invocation.GetArguments()
 	v.formatArguments(arguments)
@@ -598,7 +598,7 @@ func (v *parser) parseLogical(first abs.Expression) (abs.Expression, *Token, boo
 	}
 	if operator < abs.NOT || operator > abs.XOR {
 		// This is not a logical expression.
-		v.backupOne() // Put back the operator token.
+		v.backupOne(token) // Put back the operator token.
 		return expression, token, false
 	}
 	second, token, ok = v.parseExpression()
@@ -615,7 +615,7 @@ func (v *parser) parseLogical(first abs.Expression) (abs.Expression, *Token, boo
 
 // This method adds the canonical format for the specified logical expression
 // to the state of the formatter.
-func (v *formatter) formatLogical(logical abs.LogicalLike) {
+func (v *formatter) formatLogical(logical abs.BinaryOperationLike) {
 	var first = logical.GetFirst()
 	v.formatExpression(first)
 	v.AppendString(" ")
@@ -629,11 +629,11 @@ func (v *formatter) formatLogical(logical abs.LogicalLike) {
 // This method attempts to parse a magnitude expression. It returns the
 // magnitude expression and whether or not the magnitude expression was
 // successfully parsed.
-func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
+func (v *parser) parseMagnitude() (abs.UnaryOperationLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var numeric abs.Expression
-	var expression abs.MagnitudeLike
+	var expression abs.UnaryOperationLike
 	_, token, ok = v.parseDelimiter("|")
 	if !ok {
 		// This is not a magnitude expression.
@@ -660,7 +660,7 @@ func (v *parser) parseMagnitude() (abs.MagnitudeLike, *Token, bool) {
 
 // This method adds the canonical format for the specified magnitude expression
 // to the state of the formatter.
-func (v *formatter) formatMagnitude(magnitude abs.MagnitudeLike) {
+func (v *formatter) formatMagnitude(magnitude abs.UnaryOperationLike) {
 	v.AppendString("|")
 	var expression = magnitude.GetExpression()
 	v.formatExpression(expression)
@@ -670,11 +670,11 @@ func (v *formatter) formatMagnitude(magnitude abs.MagnitudeLike) {
 // This method attempts to parse a precedence expression. It returns the
 // precedence expression and whether or not the precedence expression was
 // successfully parsed.
-func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
+func (v *parser) parsePrecedence() (abs.UnaryOperationLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var inner abs.Expression
-	var expression abs.PrecedenceLike
+	var expression abs.UnaryOperationLike
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		// This is not a precedence expression.
@@ -702,7 +702,7 @@ func (v *parser) parsePrecedence() (abs.PrecedenceLike, *Token, bool) {
 
 // This method adds the canonical format for the specified precedence expression
 // to the state of the formatter.
-func (v *formatter) formatPrecedence(precedence abs.PrecedenceLike) {
+func (v *formatter) formatPrecedence(precedence abs.UnaryOperationLike) {
 	v.AppendString("(")
 	var expression = precedence.GetExpression()
 	v.formatExpression(expression)
@@ -745,7 +745,7 @@ func (v *parser) parseRecursive(left abs.Expression) (abs.Expression, *Token) {
 func (v *parser) parseOperator() (abs.Operator, *Token, bool) {
 	var token = v.nextToken()
 	var operator abs.Operator
-	if token.Type == TokenKeyword {
+	if token.Type == TokenKEYWORD {
 		switch token.Value {
 		case "AND":
 			operator = abs.AND
@@ -763,12 +763,12 @@ func (v *parser) parseOperator() (abs.Operator, *Token, bool) {
 			operator = abs.XOR
 		default:
 			// The token is not an operator.
-			v.backupOne()
+			v.backupOne(token)
 			return operator, token, false
 		}
 		return operator, token, true
 	}
-	if token.Type == TokenDelimiter {
+	if token.Type == TokenDELIMITER {
 		switch token.Value {
 		case "&":
 			operator = abs.AMPERSAND
@@ -816,13 +816,13 @@ func (v *parser) parseOperator() (abs.Operator, *Token, bool) {
 			operator = abs.UNEQUAL
 		default:
 			// The token is not an operator.
-			v.backupOne()
+			v.backupOne(token)
 			return operator, token, false
 		}
 		return operator, token, true
 	}
 	// The token is not an operator.
-	v.backupOne()
+	v.backupOne(token)
 	return operator, token, false
 }
 
@@ -899,8 +899,8 @@ func (v *formatter) formatOperator(operator abs.Operator) {
 func (v *parser) parseVariable() (abs.VariableLike, *Token, bool) {
 	var variable abs.VariableLike
 	var token = v.nextToken()
-	if token.Type != TokenIdentifier {
-		v.backupOne()
+	if token.Type != TokenIDENTIFIER {
+		v.backupOne(token)
 		return variable, token, false
 	}
 	variable = exp.Variable(token.Value)

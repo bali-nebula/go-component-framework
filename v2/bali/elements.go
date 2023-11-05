@@ -340,8 +340,8 @@ func (v *parser) parseAngle() (abs.AngleLike, *Token, bool) {
 	var token *Token
 	var angle abs.AngleLike
 	token = v.nextToken()
-	if token.Type != TokenAngle {
-		v.backupOne()
+	if token.Type != TokenANGLE {
+		v.backupOne(token)
 		return angle, token, false
 	}
 	var value = stringToFloat(token.Value[1:])
@@ -375,8 +375,8 @@ func (v *parser) parseBoolean() (abs.BooleanLike, *Token, bool) {
 	var token *Token
 	var boolean abs.BooleanLike
 	token = v.nextToken()
-	if token.Type != TokenBoolean {
-		v.backupOne()
+	if token.Type != TokenBOOLEAN {
+		v.backupOne(token)
 		return boolean, token, false
 	}
 	var b, _ = stc.ParseBool(token.Value)
@@ -398,11 +398,11 @@ func (v *parser) parseDuration() (abs.DurationLike, *Token, bool) {
 	var token *Token
 	var duration abs.DurationLike
 	token = v.nextToken()
-	if token.Type != TokenDuration {
-		v.backupOne()
+	if token.Type != TokenDURATION {
+		v.backupOne(token)
 		return duration, token, false
 	}
-	var matches = scanDuration([]byte(token.Value))
+	var matches = bytesToStrings(durationScanner.FindSubmatch([]byte(token.Value)))
 	var milliseconds = 0.0
 	var sign = 1.0
 	var isTime = false
@@ -576,8 +576,8 @@ func (v *parser) parseMoment() (abs.MomentLike, *Token, bool) {
 	var token *Token
 	var moment abs.MomentLike
 	token = v.nextToken()
-	if token.Type != TokenMoment {
-		v.backupOne()
+	if token.Type != TokenMOMENT {
+		v.backupOne(token)
 		return moment, token, false
 	}
 	var date tim.Time = hackedParseDate(token.Value)
@@ -633,8 +633,8 @@ func (v *formatter) formatMoment(moment abs.MomentLike) {
 func (v *parser) parseNumber() (abs.NumberLike, *Token, bool) {
 	var number abs.NumberLike
 	var token = v.nextToken()
-	if token.Type != TokenNumber {
-		v.backupOne()
+	if token.Type != TokenNUMBER {
+		v.backupOne(token)
 		return number, token, false
 	}
 	var err any
@@ -642,7 +642,7 @@ func (v *parser) parseNumber() (abs.NumberLike, *Token, bool) {
 	var realPart float64
 	var imaginaryPart float64
 	var phasePart abs.AngleLike
-	var matches = scanNumber([]byte(token.Value))
+	var matches = bytesToStrings(numberScanner.FindSubmatch([]byte(token.Value)))
 	switch {
 	case matches[0] == "undefined":
 		c = cmp.NaN()
@@ -695,9 +695,10 @@ func (v *parser) parseNumber() (abs.NumberLike, *Token, bool) {
 				// The real part of the number is a constant.
 				realPart = stringToFloat(matches[4])
 			}
-			var match = matches[6][:len(matches[6])-1] // Strip off the trailing "i".
-			var parser = Parser([]byte(match))
-			phasePart, _, _ = parser.parseAngle()
+			//var match = matches[6][:len(matches[6])-1] // Strip off the trailing "i".
+			//var parser = Parser([]byte(match))
+			//phasePart, _, _ = parser.parseAngle()
+			phasePart = ele.Angle(0)
 			c = ele.NumberFromPolar(realPart, phasePart).AsComplex()
 		}
 	default:
@@ -747,8 +748,8 @@ func (v *parser) parsePattern() (abs.PatternLike, *Token, bool) {
 	var token *Token
 	var pattern abs.PatternLike
 	token = v.nextToken()
-	if token.Type != TokenPattern {
-		v.backupOne()
+	if token.Type != TokenPATTERN {
+		v.backupOne(token)
 		return pattern, token, false
 	}
 	var regex = token.Value
@@ -784,8 +785,8 @@ func (v *parser) parsePercentage() (abs.PercentageLike, *Token, bool) {
 	var token *Token
 	var percentage abs.PercentageLike
 	token = v.nextToken()
-	if token.Type != TokenPercentage {
-		v.backupOne()
+	if token.Type != TokenPERCENTAGE {
+		v.backupOne(token)
 		return percentage, token, false
 	}
 	var s = token.Value[:len(token.Value)-1] // Removed the trailing '%'.
@@ -815,12 +816,12 @@ func (v *parser) parseProbability() (abs.ProbabilityLike, *Token, bool) {
 	var token *Token
 	var probability abs.ProbabilityLike
 	token = v.nextToken()
-	if token.Type != TokenProbability {
-		v.backupOne()
+	if token.Type != TokenPROBABILITY {
+		v.backupOne(token)
 		return probability, token, false
 	}
-	var matches = scanProbability([]byte(token.Value))
-	var float, _ = stc.ParseFloat(matches[0], 64)
+	//var matches = bytesToStrings(probabilityScanner.FindSubmatch([]byte(token.Value)))
+	var float, _ = stc.ParseFloat(token.Value, 64)
 	probability = ele.ProbabilityFromFloat(float)
 	return probability, token, true
 }
@@ -878,12 +879,12 @@ func (v *parser) parseResource() (abs.ResourceLike, *Token, bool) {
 	var token *Token
 	var resource abs.ResourceLike
 	token = v.nextToken()
-	if token.Type != TokenResource {
-		v.backupOne()
+	if token.Type != TokenRESOURCE {
+		v.backupOne(token)
 		return resource, token, false
 	}
-	var matches = scanResource([]byte(token.Value))
-	resource = ele.ResourceFromString(matches[1])
+	//var matches = bytesToStrings(resourceScanner.FindSubmatch([]byte(token.Value)))
+	resource = ele.ResourceFromString(token.Value[1 : len(token.Value)-1])
 	return resource, token, true
 }
 
@@ -974,7 +975,7 @@ var isoFormats = [...]string{
 func hackedParseDate(moment string) tim.Time {
 
 	// First, we replace the year with year zero.
-	var matches = scanMoment([]byte(moment))
+	var matches = bytesToStrings(momentScanner.FindSubmatch([]byte(moment)))
 	var yearString = matches[2]
 	var patched = sts.Replace(moment, yearString, "0000", 1)
 

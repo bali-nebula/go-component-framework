@@ -12,117 +12,68 @@ package bali
 
 import (
 	byt "bytes"
-	fmt "fmt"
+	//fmt "fmt"
 	reg "regexp"
 	sts "strings"
 	uni "unicode"
 	utf "unicode/utf8"
 )
 
-// TOKENS
+// SCANNER INTERFACE
 
-// This integer type is used as a type identifier for each token.
-type TokenType int
+// The POSIX standard end-of-line character.
+const EOL = "\n"
 
 // This enumeration defines all possible token types including the error token.
 const (
-	// The first two token types must be first.
-	TokenError TokenType = iota
-	TokenAngle
-	TokenBinary
-	TokenBoolean
-	TokenBytecode
-	TokenComment
-	TokenDelimiter
-	TokenDuration
-	TokenEOF
-	TokenEOL
-	TokenIdentifier
-	TokenKeyword
-	TokenMoment
-	TokenMoniker
-	TokenNarrative
-	TokenNote
-	TokenNumber
-	TokenPattern
-	TokenPercentage
-	TokenProbability
-	TokenQuote
-	TokenResource
-	TokenSymbol
-	TokenTag
-	TokenVersion
+	TokenANGLE       TokenType = "ANGLE"
+	TokenBINARY      TokenType = "BINARY"
+	TokenBOOLEAN     TokenType = "BOOLEAN"
+	TokenBYTECODE    TokenType = "BYTECODE"
+	TokenCOMMENT     TokenType = "COMMENT"
+	TokenDELIMITER   TokenType = "DELIMITER"
+	TokenDURATION    TokenType = "DURATION"
+	TokenEOL         TokenType = "EOL"
+	TokenEOF         TokenType = "EOF"
+	TokenERROR       TokenType = "ERROR"
+	TokenIDENTIFIER  TokenType = "IDENTIFIER"
+	TokenINTRINSIC   TokenType = "INTRINSIC"
+	TokenKEYWORD     TokenType = "KEYWORD"
+	TokenMOMENT      TokenType = "MOMENT"
+	TokenMONIKER     TokenType = "MONIKER"
+	TokenNARRATIVE   TokenType = "NARRATIVE"
+	TokenNOTE        TokenType = "NOTE"
+	TokenNUMBER      TokenType = "NUMBER"
+	TokenPATTERN     TokenType = "PATTERN"
+	TokenPERCENTAGE  TokenType = "PERCENTAGE"
+	TokenPROBABILITY TokenType = "PROBABILITY"
+	TokenQUOTE       TokenType = "QUOTE"
+	TokenRESOURCE    TokenType = "RESOURCE"
+	TokenSYMBOL      TokenType = "SYMBOL"
+	TokenTAG         TokenType = "TAG"
+	TokenVERSION     TokenType = "VERSION"
+	TokenWHITESPACE  TokenType = "WHITESPACE"
 )
 
-// This method returns the string representation for each token type.
-func (v TokenType) String() string {
-	return [...]string{
-		"Error",
-		"Angle",
-		"Binary",
-		"Boolean",
-		"Bytecode",
-		"Comment",
-		"Delimiter",
-		"Duration",
-		"EOF",
-		"EOL",
-		"Identifier",
-		"Keyword",
-		"Moment",
-		"Moniker",
-		"Narrative",
-		"Note",
-		"Number",
-		"Pattern",
-		"Percentage",
-		"Probability",
-		"Quote",
-		"Resource",
-		"Symbol",
-		"Tag",
-		"Version",
-	}[v]
-}
-
-// This type defines the structure and methods for each token returned by the
-// scanner.
-type Token struct {
-	Type     TokenType
-	Value    string
-	Line     int // The line number of the token in the input string.
-	Position int // The position in the line of the first rune of the token.
-}
-
-// This method returns the canonical string version of this token.
-func (v Token) String() string {
-	var s string
-	switch {
-	case v.Type == TokenEOF:
-		s = "<EOF>"
-	case v.Type == TokenEOL:
-		s = "<EOL>"
-	case len(v.Value) > 60:
-		s = fmt.Sprintf("%.60q...", v.Value)
-	default:
-		s = fmt.Sprintf("%q", v.Value)
-	}
-	return fmt.Sprintf("Token [type: %s, line: %d, position: %d]: %s", v.Type, v.Line, v.Position, s)
-}
-
-// SCANNER
-
-// This constructor creates a new scanner initialized with the specified array
-// of bytes. The scanner will scan in tokens matching Bali Document Notation™ as
-// defined in the language specification:
-//
-//	https://github.com/bali-nebula/bali-nebula/wiki/Language-Specification
-//
-// All token types in the specification are shown in UPPERCASE.
-func Scanner(source []byte, tokens chan Token) *scanner {
+// This function creates a new scanner initialized with the specified array
+// of bytes. The scanner will automatically generating tokens that match the
+// corresponding regular expressions.
+func ScanTokens(source []byte, tokens chan Token) *scanner {
 	var v = &scanner{source: source, line: 1, position: 1, tokens: tokens}
-	go v.scanTokens() // Start scanning in the background.
+	go v.generateTokens() // Start scanning in the background.
 	return v
+}
+
+// SCANNER IMPLEMENTATION
+
+// This private function converts an array of byte arrays into an array of
+// strings.
+func bytesToStrings(bytes [][]byte) []string {
+	var strings = make([]string, len(bytes))
+	for index, array := range bytes {
+		strings[index] = string(array)
+	}
+	return strings
 }
 
 // This type defines the structure and methods for the scanner agent. The source
@@ -137,495 +88,569 @@ type scanner struct {
 	source    []byte
 	firstByte int // The zero based index of the first possible byte in the next token.
 	nextByte  int // The zero based index of the next possible byte in the next token.
-	line      int // The line number in the source string of the next rune.
+	line      int // The line number in the source bytes of the next rune.
 	position  int // The position in the current line of the first rune in the next token.
 	tokens    chan Token
 }
 
-// This method continues scanning tokens from the source array until an error
-// occurs or the end of file is reached. It then closes the token channel.
-func (v *scanner) scanTokens() {
-	for v.scanToken() {
-	}
-	close(v.tokens)
-}
-
-// This method attempts to scan any token starting with the next rune in
-// the source array. It returns true if it found a valid token or false
-// if no valid token or a TokenEOF was found.
-func (v *scanner) scanToken() bool {
-	v.skipSpaces()
-	switch {
-	// The order of the cases below has been set to help optimize the
-	// performance by placing the most common token types first.
-	//
-	// Must be first in case the input buffer is empty.
-	case v.foundEOL():
-	case v.foundSymbol():
-	case v.foundBoolean():
-	case v.foundPattern():
-	case v.foundPercentage():
-	case v.foundProbability():
-	case v.foundNumber(): // Must be after foundPercentage() and foundProbability().
-	case v.foundVersion():
-	case v.foundKeyword():
-	case v.foundIdentifier(): // Must be after foundBoolean(), foundKeyword(), foundPattern() and foundVersion().
-	case v.foundNote():
-	case v.foundComment():
-	case v.foundNarrative():
-	case v.foundQuote(): // Must be after foundPattern() and foundNarrative().
-	case v.foundTag():
-	case v.foundMoniker():
-	case v.foundBinary():
-	case v.foundBytecode(): // Must be after foundBinary().
-	case v.foundResource():
-	case v.foundMoment():
-	case v.foundDuration():
-	case v.foundAngle():
-	case v.foundDelimiter(): // Must be after all element and string types.
-	case v.foundEOF():
-		// We are done scanning.
-		return false
-	default:
-		v.foundError()
-		return false
-	}
-	return true
-}
-
-// This method scans through any spaces in the source array and
-// sets the next byte index to the next non-white-space rune.
-func (v *scanner) skipSpaces() {
-	if v.nextByte < len(v.source) {
-		for {
-			if v.source[v.nextByte] != ' ' {
-				break
-			}
-			v.nextByte++
-			v.position++
+// This method determines whether or not the scanner is at the end of the source
+// bytes and adds an EOF token with the current scanner information to the token
+// channel if it is at the end.
+func (v *scanner) atEOF() bool {
+	if v.nextByte == len(v.source) {
+		// The last byte in a POSIX standard file must be an EOL character.
+		if byt.HasPrefix(v.source[v.nextByte-1:], []byte(EOL)) {
+			v.emitToken("", TokenEOF)
+			return true
 		}
-		v.firstByte = v.nextByte
 	}
+	return false
+}
+
+// This method adds a new error token with the current scanner information
+// to the token channel.
+func (v *scanner) atError() {
+	var bytes = v.source[v.nextByte:]
+	var character, _ = utf.DecodeRune(bytes)
+	v.emitToken(string(character), TokenERROR)
 }
 
 // This method adds a token of the specified type with the current scanner
 // information to the token channel. It then resets the first byte index to the
 // next byte index position. It returns the token type of the type added to the
 // channel.
-func (v *scanner) emitToken(tType TokenType) TokenType {
-	var tValue = string(v.source[v.firstByte:v.nextByte])
-	if tType == TokenEOF {
-		tValue = "<EOF>"
-	}
-	if tType == TokenError {
-		switch tValue {
-		case "\a":
-			tValue = "<BELL>"
-		case "\b":
-			tValue = "<BKSP>"
-		case "\t":
-			tValue = "<TAB>"
-		case "\f":
-			tValue = "<FF>"
-		case "\r":
-			tValue = "<CR>"
-		case "\v":
-			tValue = "<VTAB>"
+func (v *scanner) emitToken(tValue string, tType TokenType) {
+	var byteCount = len(tValue)
+	var runeCount = sts.Count(tValue, "") - 1 // Empty string adds one to count.
+	var eolCount = sts.Count(tValue, EOL)
+	var lastEOL = sts.LastIndex(tValue, EOL) + 1 // Convert to ordinal indexing.
+	if tType != TokenWHITESPACE {
+		if tType == TokenEOF {
+			tValue = "<EOFL>"
 		}
+		if tType == TokenERROR {
+			switch tValue {
+			case "\a":
+				tValue = "<BELL>"
+			case "\b":
+				tValue = "<BKSP>"
+			case "\t":
+				tValue = "<HTAB>"
+			case "\f":
+				tValue = "<FMFD>"
+			case "\n":
+				tValue = "<EOLN>"
+			case "\r":
+				tValue = "<CRTN>"
+			case "\v":
+				tValue = "<VTAB>"
+			}
+		}
+		var token = Token{tType, tValue, v.line, v.position}
+		//fmt.Println(token)
+		v.tokens <- token
 	}
-	var token = Token{tType, tValue, v.line, v.position}
-	//fmt.Println(token)
-	v.tokens <- token
+	v.nextByte += byteCount
 	v.firstByte = v.nextByte
-	v.position += sts.Count(tValue, "") - 1 // Add the number of runes in the token.
-	return tType
+	v.line += eolCount
+	if eolCount > 0 {
+		v.position = runeCount - lastEOL + 1
+	} else {
+		v.position += runeCount
+	}
 }
 
-// This method adds an angle element token with the current scanner information to
-// the token channel. It returns true if an angle token was found.
-func (v *scanner) foundAngle() bool {
+// This method continues scanning tokens from the source bytes until an error
+// occurs or the end of file is reached. It then closes the token channel.
+func (v *scanner) generateTokens() {
+	for v.processToken() {
+	}
+	close(v.tokens)
+}
+
+// This method attempts to scan any token starting with the next rune in the
+// source bytes. It checks for each type of token as the cases for the switch
+// statement. If that token type is found, this method returns true and skips
+// the rest of the cases.  If no valid token is found, or if the scanner is at
+// the end of the source bytes, this method returns false.
+func (v *scanner) processToken() bool {
+	switch {
+	// Check for end-of-file marker.
+	case v.atEOF():
+		return false
+	// Must be scanned first.
+	case v.scanWHITESPACE():
+	case v.scanINTRINSIC():
+	case v.scanKEYWORD():
+	// Annotation token types.
+	case v.scanNOTE():
+	case v.scanCOMMENT():
+	// Element token types.
+	case v.scanANGLE():
+	case v.scanBOOLEAN():
+	case v.scanDURATION():
+	case v.scanMOMENT():
+	case v.scanPATTERN():
+	case v.scanPERCENTAGE():
+	case v.scanPROBABILITY():
+	case v.scanRESOURCE():
+	// String token types.
+	case v.scanBINARY():
+	case v.scanBYTECODE():
+	case v.scanMONIKER():
+	case v.scanNARRATIVE():
+	case v.scanQUOTE():
+	case v.scanSYMBOL():
+	case v.scanTAG():
+	case v.scanVERSION():
+	// Must be scanned last.
+	case v.scanNUMBER():
+	case v.scanIDENTIFIER():
+	case v.scanDELIMITER():
+	case v.scanEOL():
+	// No valid token was found.
+	default:
+		v.atError()
+		return false
+	}
+	// Successfully processed a token.
+	return true
+}
+
+// This method adds a new angle token with the current scanner information
+// to the token channel. It returns true if a new angle token was found.
+func (v *scanner) scanANGLE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanAngle(s)
+	var matches = bytesToStrings(angleScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenAngle)
+		v.emitToken(matches[0], TokenANGLE)
 		return true
 	}
 	return false
 }
 
-// This method adds a binary string token with the current scanner information to
-// the token channel. It returns true if a binary token was found.
-func (v *scanner) foundBinary() bool {
+// This method adds a new binary token with the current scanner information
+// to the token channel. It returns true if a new binary token was found.
+func (v *scanner) scanBINARY() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanBinary(s)
+	var matches = bytesToStrings(binaryScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.line += sts.Count(matches[0], EOL)
-		v.emitToken(TokenBinary)
+		v.emitToken(matches[0], TokenBINARY)
 		return true
 	}
 	return false
 }
 
-// This method adds a boolean element token with the current scanner information
-// to the token channel. It returns true if a boolean token was found.
-func (v *scanner) foundBoolean() bool {
+// This method adds a new boolean token with the current scanner information
+// to the token channel. It returns true if a new boolean token was found.
+func (v *scanner) scanBOOLEAN() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanBoolean(s)
+	var matches = bytesToStrings(booleanScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenBoolean)
+		v.emitToken(matches[0], TokenBOOLEAN)
 		return true
 	}
 	return false
 }
 
-// This method adds a bytecode string token with the current scanner information to
-// the token channel. It returns true if a bytecode token was found.
-func (v *scanner) foundBytecode() bool {
+// This method adds a new bytecode token with the current scanner information
+// to the token channel. It returns true if a new bytecode token was found.
+func (v *scanner) scanBYTECODE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanBytecode(s)
+	var matches = bytesToStrings(bytecodeScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenBytecode)
+		v.emitToken(matches[0], TokenBYTECODE)
 		return true
 	}
 	return false
 }
 
-// This method adds a comment token with the current scanner information to the
-// token channel. It returns true if a comment token was found.
-func (v *scanner) foundComment() bool {
+// This method adds a new comment token with the current scanner information
+// to the token channel. It returns true if a new comment token was found.
+func (v *scanner) scanCOMMENT() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanComment(s)
+	var matches = bytesToStrings(commentScanner.FindSubmatch(s))
+	//matches = scanComment(s)
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.line += sts.Count(matches[0], EOL)
-		v.emitToken(TokenComment)
+		v.emitToken(matches[0], TokenCOMMENT)
 		return true
 	}
 	return false
 }
 
-// This method adds a delimiter token with the current scanner information to the
-// token channel. It returns true if a delimiter token was found.
-func (v *scanner) foundDelimiter() bool {
+// This method adds a new delimiter token with the current scanner information
+// to the token channel. It returns true if a new delimiter token was found.
+func (v *scanner) scanDELIMITER() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanDelimiter(s)
+	var matches = bytesToStrings(delimiterScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenDelimiter)
+		v.emitToken(matches[0], TokenDELIMITER)
 		return true
 	}
 	return false
 }
 
-// This method adds a duration element token with the current scanner information
-// to the token channel. It returns true if a duration token was found.
-func (v *scanner) foundDuration() bool {
+// This method adds a new duration token with the current scanner information
+// to the token channel. It returns true if a new duration token was found.
+func (v *scanner) scanDURATION() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanDuration(s)
+	var matches = bytesToStrings(durationScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenDuration)
+		v.emitToken(matches[0], TokenDURATION)
 		return true
 	}
 	return false
 }
 
-// This method adds an error token with the current scanner information to the token
-// channel.
-func (v *scanner) foundError() {
-	var bytes = v.source[v.nextByte:]
-	var _, width = utf.DecodeRune(bytes)
-	v.nextByte += width
-	v.emitToken(TokenError)
-}
-
-// This method adds an EOF token with the current scanner information to the token
-// channel. It returns true if an EOF token was found.
-func (v *scanner) foundEOF() bool {
-	if v.nextByte == len(v.source) {
-		v.emitToken(TokenEOF)
-		return true
-	}
-	return false
-}
-
-// This method adds an EOL token with the current scanner information to the token
-// channel. It returns true if an EOL token was found.
-func (v *scanner) foundEOL() bool {
+// This method adds a new EOL token with the current scanner information
+// to the token channel. It returns true if a new EOL token was found.
+func (v *scanner) scanEOL() bool {
 	var s = v.source[v.nextByte:]
-	if byt.HasPrefix(s, []byte(EOL)) {
-		v.nextByte++
-		v.emitToken(TokenEOL)
-		v.line++
-		v.position = 1
-		return true
-	}
-	return false
-}
-
-// This method adds an identifier token with the current scanner information to
-// the token channel. It returns true if an identifier token was found.
-func (v *scanner) foundIdentifier() bool {
-	var s = v.source[v.nextByte:]
-	var matches = scanIdentifier(s)
+	var matches = bytesToStrings(eolScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenIdentifier)
+		v.emitToken(matches[0], TokenEOL)
 		return true
 	}
 	return false
 }
 
-// This method adds a keyword token with the current scanner information to the
-// token channel. It returns true if a keyword token was found.
-func (v *scanner) foundKeyword() bool {
+// This method adds a new identifier token with the current scanner information
+// to the token channel. It returns true if a new identifier token was found.
+func (v *scanner) scanIDENTIFIER() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanKeyword(s)
+	var matches = bytesToStrings(identifierScanner.FindSubmatch(s))
+	if len(matches) > 0 {
+		v.emitToken(matches[0], TokenIDENTIFIER)
+		return true
+	}
+	return false
+}
+
+// This method adds a new intrinsic token with the current scanner information
+// to the token channel. It returns true if a new intrinsic token was found.
+func (v *scanner) scanINTRINSIC() bool {
+	var s = v.source[v.nextByte:]
+	var matches = bytesToStrings(intrinsicScanner.FindSubmatch(s))
 	if len(matches) > 0 {
 		// Check to see if the match is part of an identifier.
 		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
 		if !uni.IsLetter(r) {
-			v.nextByte += len(matches[0])
-			v.emitToken(TokenKeyword)
+			v.emitToken(matches[0], TokenINTRINSIC)
 			return true
 		}
 	}
 	return false
 }
 
-// This method adds a moment element token with the current scanner information to
-// the token channel. It returns true if a moment token was found.
-func (v *scanner) foundMoment() bool {
+// This method adds a new keyword token with the current scanner information
+// to the token channel. It returns true if a new keyword token was found.
+func (v *scanner) scanKEYWORD() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanMoment(s)
+	var matches = bytesToStrings(keywordScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenMoment)
+		// Check to see if the match is part of an identifier.
+		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
+		if !uni.IsLetter(r) {
+			v.emitToken(matches[0], TokenKEYWORD)
+			return true
+		}
+	}
+	return false
+}
+
+// This method adds a new moment token with the current scanner information
+// to the token channel. It returns true if a new moment token was found.
+func (v *scanner) scanMOMENT() bool {
+	var s = v.source[v.nextByte:]
+	var matches = bytesToStrings(momentScanner.FindSubmatch(s))
+	if len(matches) > 0 {
+		v.emitToken(matches[0], TokenMOMENT)
 		return true
 	}
 	return false
 }
 
-// This method adds a moniker string token with the current scanner information to
-// the token channel. It returns true if a moniker token was found.
-func (v *scanner) foundMoniker() bool {
+// This method adds a new moniker token with the current scanner information
+// to the token channel. It returns true if a new moniker token was found.
+func (v *scanner) scanMONIKER() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanMoniker(s)
+	var matches = bytesToStrings(monikerScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenMoniker)
+		v.emitToken(matches[0], TokenMONIKER)
 		return true
 	}
 	return false
 }
 
-// This method adds a narrative string token with the current scanner information
-// to the token channel. It returns true if a narrative token was found.
-func (v *scanner) foundNarrative() bool {
+// This method adds a new narrative token with the current scanner information
+// to the token channel. It returns true if a new narrative token was found.
+func (v *scanner) scanNARRATIVE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanNarrative(s)
+	var matches = bytesToStrings(narrativeScanner.FindSubmatch(s))
+	//matches = scanNarrative(s)
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.line += sts.Count(matches[0], EOL)
-		v.emitToken(TokenNarrative)
+		v.emitToken(matches[0], TokenNARRATIVE)
 		return true
 	}
 	return false
 }
 
-// This method adds a note token with the current scanner information to the token
-// channel. It returns true if a note token was found.
-func (v *scanner) foundNote() bool {
+// This method adds a new note token with the current scanner information
+// to the token channel. It returns true if a new note token was found.
+func (v *scanner) scanNOTE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanNote(s)
+	var matches = bytesToStrings(noteScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenNote)
+		v.emitToken(matches[0], TokenNOTE)
 		return true
 	}
 	return false
 }
 
-// This method adds a number element token with the current scanner information to
-// the token channel. It returns true if a number token was found.
-func (v *scanner) foundNumber() bool {
+// This method adds a new number token with the current scanner information
+// to the token channel. It returns true if a new number token was found.
+func (v *scanner) scanNUMBER() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanNumber(s)
+	var matches = bytesToStrings(numberScanner.FindSubmatch(s))
 	if len(matches) > 0 {
 		// Check to see if the match is part of an identifier or keyword.
 		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
 		if !uni.IsLetter(r) {
-			v.nextByte += len(matches[0])
-			v.emitToken(TokenNumber)
+			v.emitToken(matches[0], TokenNUMBER)
 			return true
 		}
 	}
 	return false
 }
 
-// This method adds a pattern element token with the current scanner information
-// to the token channel. It returns true if a pattern token was found.
-func (v *scanner) foundPattern() bool {
+// This method adds a new pattern token with the current scanner information
+// to the token channel. It returns true if a new pattern token was found.
+func (v *scanner) scanPATTERN() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanPattern(s)
+	var matches = bytesToStrings(patternScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenPattern)
+		v.emitToken(matches[0], TokenPATTERN)
 		return true
 	}
 	return false
 }
 
-// This method adds a percentage element token with the current scanner
-// information to the token channel. It returns true if a percentage token was
-// found.
-func (v *scanner) foundPercentage() bool {
+// This method adds a new percentage token with the current scanner information
+// to the token channel. It returns true if a new percentage token was found.
+func (v *scanner) scanPERCENTAGE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanPercentage(s)
+	var matches = bytesToStrings(percentageScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenPercentage)
+		v.emitToken(matches[0], TokenPERCENTAGE)
 		return true
 	}
 	return false
 }
 
-// This method adds a probability element token with the current scanner
-// information to the token channel. It returns true if a probability token was
-// found.
-func (v *scanner) foundProbability() bool {
+// This method adds a new probability token with the current scanner information
+// to the token channel. It returns true if a new probability token was found.
+func (v *scanner) scanPROBABILITY() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanProbability(s)
+	var matches = bytesToStrings(probabilityScanner.FindSubmatch(s))
 	if len(matches) > 0 {
 		// Check to see if the match is part of a range.
 		if matches[0] != "1." ||
 			byt.HasPrefix(v.source[v.nextByte+len(matches[0]):], []byte("..")) || // "1...x" is ok.
 			!byt.HasPrefix(v.source[v.nextByte+len(matches[0]):], []byte(".")) { // "1.x" is ok.
-			v.nextByte += len(matches[0])
-			v.emitToken(TokenProbability)
+			v.emitToken(matches[0], TokenPROBABILITY)
 			return true
 		} // "1..x" is NOT ok.
 	}
 	return false
 }
 
-// This method adds a quoted string token with the current scanner information to
-// the token channel. It returns true if a quote token was found.
-func (v *scanner) foundQuote() bool {
+// This method adds a new quote token with the current scanner information
+// to the token channel. It returns true if a new quote token was found.
+func (v *scanner) scanQUOTE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanQuote(s)
+	var matches = bytesToStrings(quoteScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenQuote)
+		v.emitToken(matches[0], TokenQUOTE)
 		return true
 	}
 	return false
 }
 
-// This method adds a resource element token with the current scanner information
-// the token channel. It returns true if a resource token was found.
-func (v *scanner) foundResource() bool {
+// This method adds a new resource token with the current scanner information
+// to the token channel. It returns true if a new resource token was found.
+func (v *scanner) scanRESOURCE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanResource(s)
+	var matches = bytesToStrings(resourceScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenResource)
+		v.emitToken(matches[0], TokenRESOURCE)
 		return true
 	}
 	return false
 }
 
-// This method adds a symbol string token with the current scanner information to
-// the token channel. It returns true if a symbol token was found.
-func (v *scanner) foundSymbol() bool {
+// This method adds a new symbol token with the current scanner information
+// to the token channel. It returns true if a new symbol token was found.
+func (v *scanner) scanSYMBOL() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanSymbol(s)
+	var matches = bytesToStrings(symbolScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenSymbol)
+		v.emitToken(matches[0], TokenSYMBOL)
 		return true
 	}
 	return false
 }
 
-// This method adds a tag element token with the current scanner information to
-// the token channel. It returns true if a tag token was found.
-func (v *scanner) foundTag() bool {
+// This method adds a new tag token with the current scanner information
+// to the token channel. It returns true if a new tag token was found.
+func (v *scanner) scanTAG() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanTag(s)
+	var matches = bytesToStrings(tagScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenTag)
+		v.emitToken(matches[0], TokenTAG)
 		return true
 	}
 	return false
 }
 
-// This method adds a version string token with the current scanner information to
-// the token channel. It returns true if a version token was found.
-func (v *scanner) foundVersion() bool {
+// This method adds a new version token with the current scanner information
+// to the token channel. It returns true if a new version token was found.
+func (v *scanner) scanVERSION() bool {
 	var s = v.source[v.nextByte:]
-	var matches = scanVersion(s)
+	var matches = bytesToStrings(versionScanner.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.nextByte += len(matches[0])
-		v.emitToken(TokenVersion)
+		v.emitToken(matches[0], TokenVERSION)
 		return true
 	}
 	return false
 }
 
-// ANGLE ELEMENT SYNTAX
-
-// This scanner is used for matching angle entities.
-var angleScanner = reg.MustCompile(`^(?:` + angle + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for an angle element. The first string in the array is the entire
-// matched string.
-func scanAngle(v []byte) []string {
-	return bytesToStrings(angleScanner.FindSubmatch(v))
+// This method adds a new whitespace token with the current scanner information
+// to the token channel. It returns true if a new whitespace token was found.
+func (v *scanner) scanWHITESPACE() bool {
+	var s = v.source[v.nextByte:]
+	var matches = bytesToStrings(whitespaceScanner.FindSubmatch(s))
+	if len(matches) > 0 {
+		v.emitToken(matches[0], TokenWHITESPACE)
+		return true
+	}
+	return false
 }
 
-// BINARY STRING SYNTAX
+// These constant definitions capture regular expression subpatterns.
+const (
+	angle       = `~(` + magnitude + `|` + zero + `)`
+	authority   = `[^/\n]+`
+	base16      = `[0-9a-f]`
+	base32      = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
+	base64      = `[A-Za-z0-9+/]`
+	binary      = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)*)` + space + `*<'`
+	boolean     = `false|true`
+	bytecode    = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
+	character   = `(?:` + escape + `|[^"` + eol + `])`
+	comment     = `!>` + eol + `((?:.|` + eol + `)*?)` + eol + space + `*<!`
+	complex_    = `\((?:` + rectangular + `|` + polar + `)\)`
+	dates       = years + `?` + months + `?` + days + `?`
+	day         = `(?:[012][1-9])|(?:[3][01])`
+	days        = `(` + span + `D)`
+	delimiter   = `≠|~|\}|\||\{|\^|\]|\[|@|\?=|>|=|<-|<|;|:=|:|/=|//|/|\.\.|\.|-=|-|,|\+=|\+|\*=|\*|\)|\(|&`
+	digit       = `\pN` // All unicode digits.
+	duration    = `~(` + sign + `?)P(?:` + weeks + `|` + dates + `(?:` + times + `)?)`
+	e           = `e`
+	eol         = `\n`
+	escape      = `\\(?:(?:` + unicode + `)|[abfnrtv'"\\])`
+	exponent    = `E` + sign + `?` + ordinal
+	float       = sign + `?` + magnitude
+	fraction    = `\.[0-9]+`
+	fragment    = `[^>\n]+`
+	hour        = `(?:[01][0-9])|(?:[2][0-3])`
+	hours       = `(` + span + `H)`
+	identifier  = letter + `(?:` + letter + `|` + digit + `)*`
+	imaginary   = sign + `?` + magnitude + `?i`
+	infinity    = sign + `?(?:infinity|∞)`
+	instruction = base16 + base16 + base16 + base16
+	integer     = zero + `|` + sign + `?` + ordinal
+	intrinsic   = `ANY|LOWER_CASE|UPPER_CASE|DIGIT|ESCAPE|CONTROL|EOF`
+	keyword     = `AND|IS|MATCHES|NOT|OR|SANS|XOR|accept|as|at|break|checkout|continue|discard|do|each|from|if|in|let|level|loop|matching|notarize|on|post|publish|reject|retrieve|return|save|select|throw|to|while|with`
+	letter      = `\pL` // All unicode letters and connectors like underscores.
+	magnitude   = `(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
+	minute      = `[0-5][0-9]`
+	minutes     = `(` + span + `M)`
+	moment      = `<(` + sign + `)?(` + year + `)(?:-(` + month + `)(?:-(` + day + `)` +
+		`(?:T(` + hour + `)(?::(` + minute + `)(?::((?:` + second + `)(?:` + fraction + `)?))?)?)?)?)?>`
+	moniker     = `(?:/` + name + `)+` // Cannot capture each name...
+	month       = `(?:[0][1-9])|(?:[1][012])`
+	months      = `(` + span + `M)`
+	name        = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
+	narrative   = `">` + eol + `((?:.|` + eol + `)*?)` + eol + space + `*<"`
+	note        = `! [^\n]*`
+	number      = imaginary + `|` + real_ + `|` + complex_
+	ordinal     = `[1-9][0-9]*`
+	path        = `[^?#>\n]*`
+	pattern     = `none` + `|` + regex + `|` + `any`
+	percentage  = `(` + real_ + `)%`
+	pi          = `pi|π`
+	phi         = `phi|φ`
+	polar       = `(` + magnitude + `)(e\^)(` + angle + `i)`
+	probability = fraction + `|1\.`
+	query       = `[^#>\n]*`
+	quote       = `"(` + character + `*)"`
+	real_       = undefined + `|` + infinity + `|` + float + `|` + zero
+	rectangular = `(` + float + `)(, )(` + imaginary + `)`
+	regex       = `"(` + character + `+)"\?`
+	resource    = `<(` + `(` + scheme + `):` + `(?:` + `//(` + authority + `)` + `)?` + `(` + path + `)` + `(?:` + `\?(` + query + `)` + `)?` + `(?:` + `#(` + fragment + `)` + `)?` + `)>`
+	scalar      = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
+	scheme      = `[a-zA-Z][0-9a-zA-Z+-.]*`
+	second      = `(?:[0-5][0-9])|(?:[6][01])`
+	seconds     = `(` + span + `S)`
+	separator   = `[-+.]`
+	sign        = `[+-]`
+	space       = ` `
+	symbol      = `\$(` + identifier + `(?:-` + ordinal + `)?)`
+	tag         = `#(` + base32 + `+)`
+	tau         = `tau|τ`
+	times       = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
+	span        = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
+	undefined   = `undefined`
+	unicode     = `u` + base16 + `{4}|U` + base16 + `{8}`
+	version     = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
+	weeks       = `(` + span + `W)`
+	whitespace  = `[` + space + `]+`
+	year        = `(?:` + ordinal + `|` + zero + `)`
+	years       = `(` + span + `Y)`
+	zero        = `0`
+)
 
-// This scanner is used for matching binary strings.
-var binaryScanner = reg.MustCompile(`^(?:` + binary + `)`)
+var (
+	angleScanner       = reg.MustCompile(`^(?:` + angle + `)`)
+	binaryScanner      = reg.MustCompile(`^(?:` + binary + `)`)
+	booleanScanner     = reg.MustCompile(`^(?:` + boolean + `)`)
+	bytecodeScanner    = reg.MustCompile(`^(?:` + bytecode + `)`)
+	commentScanner     = reg.MustCompile(`^(?:` + comment + `)`)
+	delimiterScanner   = reg.MustCompile(`^(?:` + delimiter + `)`)
+	durationScanner    = reg.MustCompile(`^(?:` + duration + `)`)
+	eolScanner         = reg.MustCompile(`^(?:` + eol + `)`)
+	identifierScanner  = reg.MustCompile(`^(?:` + identifier + `)`)
+	integerScanner     = reg.MustCompile(`^(?:` + integer + `)`)
+	intrinsicScanner   = reg.MustCompile(`^(?:` + intrinsic + `)`)
+	keywordScanner     = reg.MustCompile(`^(?:` + keyword + `)`)
+	momentScanner      = reg.MustCompile(`^(?:` + moment + `)`)
+	monikerScanner     = reg.MustCompile(`^(?:` + moniker + `)`)
+	narrativeScanner   = reg.MustCompile(`^(?:` + narrative + `)`)
+	noteScanner        = reg.MustCompile(`^(?:` + note + `)`)
+	numberScanner      = reg.MustCompile(`^(?:` + number + `)`)
+	patternScanner     = reg.MustCompile(`^(?:` + pattern + `)`)
+	percentageScanner  = reg.MustCompile(`^(?:` + percentage + `)`)
+	probabilityScanner = reg.MustCompile(`^(?:` + probability + `)`)
+	quoteScanner       = reg.MustCompile(`^(?:` + quote + `)`)
+	realScanner        = reg.MustCompile(`^(?:` + real_ + `)`)
+	resourceScanner    = reg.MustCompile(`^(?:` + resource + `)`)
+	symbolScanner      = reg.MustCompile(`^(?:` + symbol + `)`)
+	tagScanner         = reg.MustCompile(`^(?:` + tag + `)`)
+	versionScanner     = reg.MustCompile(`^(?:` + version + `)`)
+	whitespaceScanner  = reg.MustCompile(`^(?:` + whitespace + `)`)
+)
 
-// This function returns for the specified string an array of the matching
-// subgroups for a binary string. The first string in the array is the entire
-// matched string.
-func scanBinary(v []byte) []string {
-	return bytesToStrings(binaryScanner.FindSubmatch(v))
-}
-
-// BOOLEAN ELEMENT SYNTAX
-
-// This scanner is used for matching boolean entities.
-var booleanScanner = reg.MustCompile(`^(?:` + boolean + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a boolean element. The first string in the array is the entire
-// matched string.
-func scanBoolean(v []byte) []string {
-	return bytesToStrings(booleanScanner.FindSubmatch(v))
-}
-
-// BYTECODE STRING SYNTAX
-
-// This scanner is used for matching bytecode strings.
-var bytecodeScanner = reg.MustCompile(`^(?:` + bytecode + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a bytecode string. The first string in the array is the entire
-// matched string.
-func scanBytecode(v []byte) []string {
-	return bytesToStrings(bytecodeScanner.FindSubmatch(v))
-}
-
+/*
 // COMMENT SYNTAX
 
 // This function returns for the specified string an array of the matching
@@ -656,13 +681,13 @@ func scanComment(v []byte) []string {
 			current++
 		case byt.HasPrefix(s, bangAngle):
 			current += 3 // Skip the '!>\n' characters.
-			level++      // Start a nested narrative.
+			level++      // Start a nested comment.
 		case byt.HasPrefix(s, angleBang):
 			if !angleBangAllowed {
 				return result
 			}
 			current += 2 // Skip the '<!' characters.
-			level--      // Terminate the current narrative.
+			level--      // Terminate the current comment.
 		default:
 			if angleBangAllowed && !byt.HasPrefix(s, space) {
 				angleBangAllowed = false
@@ -673,94 +698,6 @@ func scanComment(v []byte) []string {
 	result = append(result, string(v[:current])) // Includes bang delimeters.
 	result = append(result, string(v[3:last]))   // Excludes bang delimeters.
 	return result
-}
-
-// DELIMITER SYNTAX
-
-// This function returns for the specified string an array of the matching
-// subgroups for a delimiter. The first string in the array is the entire
-// matched string.
-func scanDelimiter(v []byte) []string {
-	var result []string
-	for _, delimiter := range delimiters {
-		if byt.HasPrefix(v, delimiter) {
-			result = append(result, string(delimiter))
-		}
-	}
-	return result
-}
-
-// DURATION ELEMENT SYNTAX
-
-// This scanner is used for matching duration entities.
-var durationScanner = reg.MustCompile(`^(?:` + duration + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a duration element. The first string in the array is the entire
-// matched string.
-func scanDuration(v []byte) []string {
-	return bytesToStrings(durationScanner.FindSubmatch(v))
-}
-
-// IDENTIFIER SYNTAX
-
-// This scanner is used for matching identifiers.
-var identifierScanner = reg.MustCompile(`^(?:` + identifier + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for an identifier. The first string in the array is the entire
-// matched string.
-func scanIdentifier(v []byte) []string {
-	return bytesToStrings(identifierScanner.FindSubmatch(v))
-}
-
-// This scanner is used for matching integers.
-var integerScanner = reg.MustCompile(`^(?:` + integer + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for an integer. The first string in the array is the entire
-// matched string.
-func scanInteger(v []byte) []string {
-	return bytesToStrings(integerScanner.FindSubmatch(v))
-}
-
-// KEYWORD SYNTAX
-
-// This function returns for the specified string an array of the matching
-// subgroups for a keyword. The first string in the array is the entire
-// matched string.
-func scanKeyword(v []byte) []string {
-	var result []string
-	for _, keyword := range keywords {
-		if byt.HasPrefix(v, keyword) {
-			result = append(result, string(keyword))
-		}
-	}
-	return result
-}
-
-// MOMENT ELEMENT SYNTAX
-
-// This scanner is used for matching moment entities.
-var momentScanner = reg.MustCompile(`^(?:` + moment + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a moment element. The first string in the array is the entire
-// matched string.
-func scanMoment(v []byte) []string {
-	return bytesToStrings(momentScanner.FindSubmatch(v))
-}
-
-// MONIKER STRING SYNTAX
-
-// This scanner is used for matching moniker strings.
-var monikerScanner = reg.MustCompile(`^(?:` + moniker + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a moniker string. The first string in the array is the entire
-// matched string.
-func scanMoniker(v []byte) []string {
-	return bytesToStrings(monikerScanner.FindSubmatch(v))
 }
 
 // NARRATIVE STRING SYNTAX
@@ -811,308 +748,4 @@ func scanNarrative(v []byte) []string {
 	result = append(result, string(v[3:last]))   // Excludes quote delimeters.
 	return result
 }
-
-// NOTE SYNTAX
-
-// This scanner is used for matching notes.
-var noteScanner = reg.MustCompile(`^(?:` + note + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a note. The first string in the array is the entire matched
-// string.
-func scanNote(v []byte) []string {
-	return bytesToStrings(noteScanner.FindSubmatch(v))
-}
-
-// NUMBER ELEMENT SYNTAX
-
-// This scanner is used for matching number entities.
-var numberScanner = reg.MustCompile(`^(?:` + number + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a number element. The first string in the array is the entire
-// matched string.
-func scanNumber(v []byte) []string {
-	return bytesToStrings(numberScanner.FindSubmatch(v))
-}
-
-// This scanner is used for matching real numbers.
-var realScanner = reg.MustCompile(`^(?:` + real_ + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a real number. The first string in the array is the entire
-// matched string.
-func scanReal(v []byte) []string {
-	return bytesToStrings(realScanner.FindSubmatch(v))
-}
-
-// PATTERN ELEMENT SYNTAX
-
-// This scanner is used for matching pattern entities.
-var patternScanner = reg.MustCompile(`^(?:` + pattern + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a pattern element. The first string in the array is the entire
-// matched string.
-func scanPattern(v []byte) []string {
-	return bytesToStrings(patternScanner.FindSubmatch(v))
-}
-
-// PERCENTAGE ELEMENT SYNTAX
-
-// This scanner is used for matching percentage entities.
-var percentageScanner = reg.MustCompile(`^(?:` + percentage + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a percentage element. The first string in the array is the entire
-// matched string.
-func scanPercentage(v []byte) []string {
-	return bytesToStrings(percentageScanner.FindSubmatch(v))
-}
-
-// PROBABILITY ELEMENT SYNTAX
-
-// This scanner is used for matching probability entities.
-var probabilityScanner = reg.MustCompile(`^(?:` + probability + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a probability element. The first string in the array is the
-// entire matched string.
-func scanProbability(v []byte) []string {
-	return bytesToStrings(probabilityScanner.FindSubmatch(v))
-}
-
-// QUOTE STRING SYNTAX
-
-// This scanner is used for matching quoted strings.
-var quoteScanner = reg.MustCompile(`^(?:` + quote + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a quoted string. The first string in the array is the entire
-// matched string.
-func scanQuote(v []byte) []string {
-	return bytesToStrings(quoteScanner.FindSubmatch(v))
-}
-
-// RESOURCE ELEMENT SYNTAX
-
-// This scanner is used for matching resource entities.
-var resourceScanner = reg.MustCompile(`^(?:` + resource + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a resource element. The first string in the array is the entire
-// matched string.
-func scanResource(v []byte) []string {
-	return bytesToStrings(resourceScanner.FindSubmatch(v))
-}
-
-// SYMBOL STRING SYNTAX
-
-// This scanner is used for matching symbol strings.
-var symbolScanner = reg.MustCompile(`^(?:` + symbol + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a symbol string. The first string in the array is the entire
-// matched string.
-func scanSymbol(v []byte) []string {
-	return bytesToStrings(symbolScanner.FindSubmatch(v))
-}
-
-// TAG ELEMENT SYNTAX
-
-// This scanner is used for matching tag entities.
-var tagScanner = reg.MustCompile(`^(?:` + tag + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a tag element. The first string in the array is the entire
-// matched string.
-func scanTag(v []byte) []string {
-	return bytesToStrings(tagScanner.FindSubmatch(v))
-}
-
-// VERSION STRING SYNTAX
-
-// This scanner is used for matching version strings.
-var versionScanner = reg.MustCompile(`^(?:` + version + `)`)
-
-// This function returns for the specified string an array of the matching
-// subgroups for a version string. The first string in the array is the entire
-// matched string.
-func scanVersion(v []byte) []string {
-	return bytesToStrings(versionScanner.FindSubmatch(v))
-}
-
-// CONSTANT DEFINITIONS
-
-// This is the POSIX standard end-of-line character constant.
-const EOL = "\n"
-
-// These constant definitions capture regular expression subpatterns.
-const (
-	angle       = `~(` + magnitude + `|` + zero + `)`
-	authority   = `[^/\n]+`
-	base16      = `[0-9a-f]`
-	base32      = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
-	base64      = `[A-Za-z0-9+/]`
-	binary      = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)*)` + space + `*<'`
-	boolean     = `false|true`
-	bytecode    = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
-	character   = `(?:` + escape + `|[^"` + eol + `])`
-	complex_    = `\((?:` + rectangular + `|` + polar + `)\)`
-	dates       = years + `?` + months + `?` + days + `?`
-	day         = `(?:[012][1-9])|(?:[3][01])`
-	days        = `(` + tspan + `D)`
-	digit       = `\pN` // All unicode digits.
-	duration    = `~(` + sign + `?)P(?:` + weeks + `|` + dates + `(?:` + times + `)?)`
-	e           = `e`
-	eol         = `\n`
-	escape      = `\\(?:(?:` + unicode + `)|[abfnrtv'"\\])`
-	exponent    = `E` + sign + `?` + ordinal
-	float       = sign + `?` + magnitude
-	fraction    = `\.[0-9]+`
-	fragment    = `[^>\n]+`
-	hour        = `(?:[01][0-9])|(?:[2][0-3])`
-	hours       = `(` + tspan + `H)`
-	identifier  = letter + `(?:` + letter + `|` + digit + `)*`
-	imaginary   = sign + `?` + magnitude + `?i`
-	infinity    = sign + `?(?:infinity|∞)`
-	instruction = base16 + base16 + base16 + base16
-	integer     = zero + `|` + sign + `?` + ordinal
-	letter      = `\pL` // All unicode letters and connectors like underscores.
-	magnitude   = `(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
-	minute      = `[0-5][0-9]`
-	minutes     = `(` + tspan + `M)`
-	moment      = `<(` + sign + `)?(` + year + `)(?:-(` + month + `)(?:-(` + day + `)` +
-		`(?:T(` + hour + `)(?::(` + minute + `)(?::((?:` + second + `)(?:` + fraction + `)?))?)?)?)?)?>`
-	moniker     = `(?:/` + name + `)+` // Cannot capture each name...
-	month       = `(?:[0][1-9])|(?:[1][012])`
-	months      = `(` + tspan + `M)`
-	name        = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
-	note        = `! [^\n]*`
-	number      = imaginary + `|` + real_ + `|` + complex_
-	ordinal     = `[1-9][0-9]*`
-	path        = `[^?#>\n]*`
-	pattern     = `none` + `|` + regex + `|` + `any`
-	percentage  = `(` + real_ + `)%`
-	pi          = `pi|π`
-	phi         = `phi|φ`
-	polar       = `(` + magnitude + `)(e\^)(` + angle + `i)`
-	probability = fraction + `|1\.`
-	query       = `[^#>\n]*`
-	quote       = `"(` + character + `*)"`
-	real_       = undefined + `|` + infinity + `|` + float + `|` + zero
-	rectangular = `(` + float + `)(, )(` + imaginary + `)`
-	regex       = `"(` + character + `+)"\?`
-	resource    = `<(` + `(` + scheme + `):` + `(?:` + `//(` + authority + `)` + `)?` + `(` + path + `)` +
-		`(?:` + `\?(` + query + `)` + `)?` + `(?:` + `#(` + fragment + `)` + `)?` + `)>`
-	scalar    = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
-	scheme    = `[a-zA-Z][0-9a-zA-Z+-.]*`
-	second    = `(?:[0-5][0-9])|(?:[6][01])`
-	seconds   = `(` + tspan + `S)`
-	separator = `[-+.]`
-	sign      = `[+-]`
-	space     = ` `
-	symbol    = `\$(` + identifier + `(?:-` + ordinal + `)?)`
-	tag       = `#(` + base32 + `+)`
-	tau       = `tau|τ`
-	times     = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
-	tspan     = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
-	undefined = `undefined`
-	unicode   = `u` + base16 + `{4}|U` + base16 + `{8}`
-	version   = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
-	weeks     = `(` + tspan + `W)`
-	year      = `(?:` + ordinal + `|` + zero + `)`
-	years     = `(` + tspan + `Y)`
-	zero      = `0`
-)
-
-// This array contains the full set of keywords used by the Bali Document
-// Notation™ (BDN). They are in reverse order for proper matching for
-// overlapping words like "no" and "not".  Currently there are no overlapping
-// words.
-var keywords = [][]byte{
-	[]byte("with"),
-	[]byte("while"),
-	[]byte("to"),
-	[]byte("throw"),
-	[]byte("select"),
-	[]byte("save"),
-	[]byte("return"),
-	[]byte("retrieve"),
-	[]byte("reject"),
-	[]byte("publish"),
-	[]byte("post"),
-	[]byte("on"),
-	[]byte("notarize"),
-	[]byte("matching"),
-	[]byte("loop"),
-	[]byte("level"),
-	[]byte("let"),
-	[]byte("in"),
-	[]byte("if"),
-	[]byte("from"),
-	[]byte("each"),
-	[]byte("do"),
-	[]byte("discard"),
-	[]byte("continue"),
-	[]byte("checkout"),
-	[]byte("break"),
-	[]byte("at"),
-	[]byte("as"),
-	[]byte("any"),
-	[]byte("accept"),
-	[]byte("XOR"),
-	[]byte("SANS"),
-	[]byte("OR"),
-	[]byte("NOT"),
-	[]byte("MATCHES"),
-	[]byte("IS"),
-	[]byte("AND"),
-}
-
-// This array contains the full set of delimiters used by the Bali Document
-// Notation™ (BDN). They are in reverse order for proper matching.
-var delimiters = [][]byte{
-	[]byte("~"),
-	[]byte("}"),
-	[]byte("|"),
-	[]byte("{"),
-	[]byte("^"),
-	[]byte("]"),
-	[]byte("["),
-	[]byte("@"),
-	[]byte("?="),
-	[]byte(">"),
-	[]byte("="),
-	[]byte("≠"),
-	[]byte("<-"),
-	[]byte("<"),
-	[]byte(";"),
-	[]byte(":="),
-	[]byte(":"),
-	[]byte("/="),
-	[]byte("//"),
-	[]byte("/"),
-	[]byte(".."),
-	[]byte("."),
-	[]byte("-="),
-	[]byte("-"),
-	[]byte(","),
-	[]byte("+="),
-	[]byte("+"),
-	[]byte("*="),
-	[]byte("*"),
-	[]byte(")"),
-	[]byte("("),
-	[]byte("&"),
-}
-
-// PRIVATE FUNCTIONS
-
-func bytesToStrings(bytes [][]byte) []string {
-	var strings = make([]string, len(bytes))
-	for index, array := range bytes {
-		strings[index] = string(array)
-	}
-	return strings
-}
+*/

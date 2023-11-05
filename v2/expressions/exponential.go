@@ -17,12 +17,12 @@ import (
 // EXPONENTIAL EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new exponential expression.
-func Exponential(base abs.Expression, operator abs.Operator, exponent abs.Expression) abs.ExponentialLike {
+func Exponential(base abs.Expression, operator abs.Operator, exponent abs.Expression) abs.BinaryOperationLike {
 	var v = &exponentialExpression{}
 	// Perform argument validation.
-	v.SetBase(base)
+	v.SetFirst(base)
 	v.SetOperator(operator)
-	v.SetExponent(exponent)
+	v.SetSecond(exponent)
 	return v
 }
 
@@ -34,42 +34,42 @@ type exponentialExpression struct {
 	exponent abs.Expression
 }
 
-// This method returns the base expression in this exponential expression.
-func (v *exponentialExpression) GetBase() abs.Expression {
+// This method returns the first expression in this exponential expression.
+func (v *exponentialExpression) GetFirst() abs.Expression {
 	return v.base
 }
 
-// This method sets the base expression in this exponential expression to the
+// This method sets the first expression in this exponential expression to the
 // specified value.
-func (v *exponentialExpression) SetBase(base abs.Expression) {
+func (v *exponentialExpression) SetFirst(base abs.Expression) {
 	if base == nil {
 		panic("The base expression in a exponential expression cannot be nil.")
 	}
 	v.base = base
 }
 
-// This method returns the comparison operator in this exponential expression.
+// This method returns the exponential operator in this exponential expression.
 func (v *exponentialExpression) GetOperator() abs.Operator {
 	return v.operator
 }
 
-// This method sets the comparison operator in this exponential expression to the
+// This method sets the exponential operator in this exponential expression to the
 // specified value.
 func (v *exponentialExpression) SetOperator(operator abs.Operator) {
 	if operator != abs.CARET {
-		panic("The operator in a comparison expression must be a valid exponential operator.")
+		panic("The operator in a exponential expression must be a valid exponential operator.")
 	}
 	v.operator = operator
 }
 
-// This method returns the exponent expression in this exponential expression.
-func (v *exponentialExpression) GetExponent() abs.Expression {
+// This method returns the second expression in this exponential expression.
+func (v *exponentialExpression) GetSecond() abs.Expression {
 	return v.exponent
 }
 
-// This method sets the exponent expression in this exponential expression to
+// This method sets the second expression in this exponential expression to
 // the specified value.
-func (v *exponentialExpression) SetExponent(exponent abs.Expression) {
+func (v *exponentialExpression) SetSecond(exponent abs.Expression) {
 	if exponent == nil {
 		panic("The exponent expression in a exponential expression cannot be nil.")
 	}

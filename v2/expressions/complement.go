@@ -17,7 +17,7 @@ import (
 // COMPLEMENT EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new complement expression.
-func Complement(operator abs.Operator, expression abs.Expression) abs.ComplementLike {
+func Complement(operator abs.Operator, expression abs.Expression) abs.UnaryOperationLike {
 	var v = &complementExpression{}
 	// Perform argument validation.
 	v.SetOperator(operator)

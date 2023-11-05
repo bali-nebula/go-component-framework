@@ -20,14 +20,14 @@ import (
 func Invocation(
 	target abs.Expression,
 	operator abs.Operator,
-	message string,
+	method string,
 	arguments abs.Sequential[abs.Expression],
 ) abs.InvocationLike {
 	var v = &invocationExpression{}
 	// Perform argument validation.
 	v.SetTarget(target)
 	v.SetOperator(operator)
-	v.SetMessage(message)
+	v.SetMethod(method)
 	v.SetArguments(arguments)
 	return v
 }
@@ -37,7 +37,7 @@ func Invocation(
 type invocationExpression struct {
 	target    abs.Expression
 	operator  abs.Operator
-	message   string
+	method    string
 	arguments abs.Sequential[abs.Expression]
 }
 
@@ -55,7 +55,7 @@ func (v *invocationExpression) GetTarget() abs.Expression {
 // This method sets the target expression for this invocation expression.
 func (v *invocationExpression) SetTarget(target abs.Expression) {
 	if target == nil {
-		panic("An invocation expression requires a target expression for the message.")
+		panic("An invocation expression requires a target expression for the method.")
 	}
 	v.target = target
 }
@@ -73,17 +73,17 @@ func (v *invocationExpression) SetOperator(operator abs.Operator) {
 	v.operator = operator
 }
 
-// This method returns the message name for this invocation expression.
-func (v *invocationExpression) GetMessage() string {
-	return v.message
+// This method returns the method name for this invocation expression.
+func (v *invocationExpression) GetMethod() string {
+	return v.method
 }
 
-// This method sets the message name for this invocation expression.
-func (v *invocationExpression) SetMessage(message string) {
-	if len(message) == 0 {
-		panic("An invocation expression requires a message name.")
+// This method sets the method name for this invocation expression.
+func (v *invocationExpression) SetMethod(method string) {
+	if len(method) == 0 {
+		panic("An invocation expression requires a method name.")
 	}
-	v.message = message
+	v.method = method
 }
 
 // This method returns the list of arguments for this invocation expression.

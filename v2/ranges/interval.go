@@ -254,8 +254,8 @@ func (v *interval) indexToValue(index int) abs.Discrete {
 		discrete = ele.MomentFromInt(index)
 	case abs.IntegerLike:
 		discrete = ele.Integer(index)
-	case abs.RuneLike:
-		discrete = ele.Rune(index)
+	case abs.CharacterLike:
+		discrete = ele.Character(index)
 	default:
 		var message = fmt.Sprintf("The discrete type was not found: %T", discrete)
 		panic(message)

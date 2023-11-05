@@ -17,7 +17,7 @@ import (
 // DEREFERENCE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new dereference expression.
-func Dereference(operator abs.Operator, expression abs.Expression) abs.DereferenceLike {
+func Dereference(operator abs.Operator, expression abs.Expression) abs.UnaryOperationLike {
 	var v = &dereferenceExpression{}
 	// Perform argument validation.
 	v.SetOperator(operator)

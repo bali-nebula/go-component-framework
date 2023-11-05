@@ -17,7 +17,7 @@ import (
 // PRECEDENCE EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new precedence expression.
-func Precedence(expression abs.Expression) abs.PrecedenceLike {
+func Precedence(expression abs.Expression) abs.UnaryOperationLike {
 	var v = &precedenceExpression{}
 	// Perform argument validation.
 	v.SetExpression(expression)
@@ -28,6 +28,16 @@ func Precedence(expression abs.Expression) abs.PrecedenceLike {
 // expression.
 type precedenceExpression struct {
 	expression abs.Expression
+}
+
+// This method returns the precedence operator in this precedence expression.
+func (v *precedenceExpression) GetOperator() abs.Operator {
+	return abs.PRECEDENCE
+}
+
+// This method sets the precedence operator in this precedence expression to the
+// specified value.
+func (v *precedenceExpression) SetOperator(operator abs.Operator) {
 }
 
 // This method returns the expression wrapped by this precedence expression.

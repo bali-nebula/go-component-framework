@@ -13,12 +13,12 @@ package abstractions
 // TYPE DEFINITIONS
 
 type (
-	String      any
-	Value       any
-	Ordinal     uint
 	Instruction uint16
 	Line        string
 	Name        string
+	Ordinal     uint
+	String      any
+	Value       any
 )
 
 func InstructionFromBytes(leftByte, rightByte byte) Instruction {
@@ -37,13 +37,6 @@ func (v Instruction) GetRightByte() byte {
 }
 
 // INDIVIDUAL INTERFACES
-
-// This interface defines the methods supported by all sequences of values.
-type Sequential[V Value] interface {
-	IsEmpty() bool
-	GetSize() int
-	AsArray() []V
-}
 
 // This interface defines the methods supported by all sequences whose values can
 // be accessed using indices. The indices of an accessible sequence are ORDINAL
@@ -87,6 +80,12 @@ type Ratcheted[V Value] interface {
 	GetNext() V
 }
 
+type Sequential[V Value] interface {
+	IsEmpty() bool
+	GetSize() int
+	AsArray() []V
+}
+
 // CONSOLIDATED INTERFACES
 
 type BinaryLike interface {
@@ -101,10 +100,26 @@ type BytecodeLike interface {
 	Accessible[Instruction]
 }
 
+type ByteIteratorLike interface {
+	Ratcheted[byte]
+}
+
+type InstructionIteratorLike interface {
+	Ratcheted[Instruction]
+}
+
+type LineIteratorLike interface {
+	Ratcheted[Line]
+}
+
 type MonikerLike interface {
 	Lexical
 	Sequential[Name]
 	Accessible[Name]
+}
+
+type NameIteratorLike interface {
+	Ratcheted[Name]
 }
 
 type NarrativeLike interface {
@@ -113,10 +128,18 @@ type NarrativeLike interface {
 	Accessible[Line]
 }
 
+type OrdinalIteratorLike interface {
+	Ratcheted[Ordinal]
+}
+
 type QuoteLike interface {
 	Lexical
 	Sequential[rune]
 	Accessible[rune]
+}
+
+type RuneIteratorLike interface {
+	Ratcheted[rune]
 }
 
 type SymbolLike interface {
@@ -133,28 +156,4 @@ type VersionLike interface {
 	Lexical
 	Sequential[Ordinal]
 	Accessible[Ordinal]
-}
-
-type ByteIteratorLike interface {
-	Ratcheted[byte]
-}
-
-type InstructionIteratorLike interface {
-	Ratcheted[Instruction]
-}
-
-type NameIteratorLike interface {
-	Ratcheted[Name]
-}
-
-type LineIteratorLike interface {
-	Ratcheted[Line]
-}
-
-type RuneIteratorLike interface {
-	Ratcheted[rune]
-}
-
-type OrdinalIteratorLike interface {
-	Ratcheted[Ordinal]
 }

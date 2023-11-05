@@ -18,7 +18,7 @@ import (
 // LOGICAL EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new logical expression.
-func Logical(first abs.Expression, operator abs.Operator, second abs.Expression) abs.LogicalLike {
+func Logical(first abs.Expression, operator abs.Operator, second abs.Expression) abs.BinaryOperationLike {
 	var v = &logicalExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)

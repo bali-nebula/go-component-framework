@@ -17,7 +17,7 @@ import (
 // COMPARISON EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new comparison expression.
-func Comparison(first abs.Expression, operator abs.Operator, second abs.Expression) abs.ComparisonLike {
+func Comparison(first abs.Expression, operator abs.Operator, second abs.Expression) abs.BinaryOperationLike {
 	var v = &comparisonExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)

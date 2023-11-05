@@ -12,6 +12,7 @@ package components
 
 import (
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
+	col "github.com/craterdog/go-collection-framework/v2"
 )
 
 // COMPONENT IMPLEMENTATION
@@ -208,4 +209,19 @@ func (v *component) GetNote() abs.NoteLike {
 // This method sets the note for this component.
 func (v *component) SetNote(note abs.NoteLike) {
 	v.note = note
+}
+
+// COMPONENT ITERATOR IMPLEMENTATION
+
+// This constructor creates a new instance of a components iterator that can be
+// used to traverse the components in the specified sequence.
+func ComponentIterator(sequence abs.Sequential[abs.ComponentLike]) abs.ComponentIteratorLike {
+	var v = col.Iterator[abs.ComponentLike](sequence)
+	return &components{v}
+}
+
+// This type defines the structure and methods for a components iterator. The
+// iterator operates on a sequence of components.
+type components struct {
+	abs.ComponentIteratorLike
 }

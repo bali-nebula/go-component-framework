@@ -17,6 +17,8 @@ type (
 	Extent int
 )
 
+// CONSTANT DEFINITIONS
+
 // This type and its associated constants define whether or not each endpoint in
 // a bounded collection is included in the range of possible values.
 const (
@@ -43,6 +45,11 @@ type Bounded[V Primitive] interface {
 
 // CONSOLIDATED INTERFACES
 
+type ContinuumLike interface {
+	Bounded[Continuous]
+	Searchable[Continuous]
+}
+
 type IntervalLike interface {
 	Bounded[Discrete]
 	Sequential[Discrete]
@@ -53,9 +60,4 @@ type IntervalLike interface {
 type SpectrumLike interface {
 	Bounded[Lexical]
 	Searchable[Lexical]
-}
-
-type ContinuumLike interface {
-	Bounded[Continuous]
-	Searchable[Continuous]
 }

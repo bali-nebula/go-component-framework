@@ -232,11 +232,11 @@ func (v *parser) parseBinary() (abs.BinaryLike, *Token, bool) {
 	var token *Token
 	var binary abs.BinaryLike
 	token = v.nextToken()
-	if token.Type != TokenBinary {
-		v.backupOne()
+	if token.Type != TokenBINARY {
+		v.backupOne(token)
 		return binary, token, false
 	}
-	var matches = scanBinary([]byte(token.Value))
+	var matches = bytesToStrings(binaryScanner.FindSubmatch([]byte(token.Value)))
 	// Remove all whitespace and the "'>" and "<'" delimiters.
 	binary = str.BinaryFromString(sts.Map(func(r rune) rune {
 		if uni.IsSpace(r) {
@@ -278,11 +278,11 @@ func (v *parser) parseBytecode() (abs.BytecodeLike, *Token, bool) {
 	var token *Token
 	var bytecode abs.BytecodeLike
 	token = v.nextToken()
-	if token.Type != TokenBytecode {
-		v.backupOne()
+	if token.Type != TokenBYTECODE {
+		v.backupOne(token)
 		return bytecode, token, false
 	}
-	var matches = scanBytecode([]byte(token.Value))
+	var matches = bytesToStrings(bytecodeScanner.FindSubmatch([]byte(token.Value)))
 	// Remove all whitespace and the "'" delimiters.
 	bytecode = str.BytecodeFromString(sts.Map(func(r rune) rune {
 		if uni.IsSpace(r) {
@@ -315,11 +315,11 @@ func (v *parser) parseMoniker() (abs.MonikerLike, *Token, bool) {
 	var token *Token
 	var moniker abs.MonikerLike
 	token = v.nextToken()
-	if token.Type != TokenMoniker {
-		v.backupOne()
+	if token.Type != TokenMONIKER {
+		v.backupOne(token)
 		return moniker, token, false
 	}
-	var matches = scanMoniker([]byte(token.Value))
+	var matches = bytesToStrings(monikerScanner.FindSubmatch([]byte(token.Value)))
 	moniker = str.MonikerFromString(matches[0])
 	return moniker, token, true
 }
@@ -337,8 +337,8 @@ func (v *parser) parseNarrative() (abs.NarrativeLike, *Token, bool) {
 	var token *Token
 	var narrative abs.NarrativeLike
 	token = v.nextToken()
-	if token.Type != TokenNarrative {
-		v.backupOne()
+	if token.Type != TokenNARRATIVE {
+		v.backupOne(token)
 		return narrative, token, false
 	}
 	narrative = str.NarrativeFromString(trimIndentation(token.Value))
@@ -371,11 +371,11 @@ func (v *parser) parseQuote() (abs.QuoteLike, *Token, bool) {
 	var token *Token
 	var quote abs.QuoteLike
 	token = v.nextToken()
-	if token.Type != TokenQuote {
-		v.backupOne()
+	if token.Type != TokenQUOTE {
+		v.backupOne(token)
 		return quote, token, false
 	}
-	var matches = scanQuote([]byte(token.Value))
+	var matches = bytesToStrings(quoteScanner.FindSubmatch([]byte(token.Value)))
 	// We must unquote the full token string properly.
 	var unquoted, _ = stc.Unquote(matches[0])
 	quote = str.QuoteFromString(unquoted)
@@ -435,11 +435,11 @@ func (v *parser) parseSymbol() (abs.SymbolLike, *Token, bool) {
 	var token *Token
 	var symbol abs.SymbolLike
 	token = v.nextToken()
-	if token.Type != TokenSymbol {
-		v.backupOne()
+	if token.Type != TokenSYMBOL {
+		v.backupOne(token)
 		return symbol, token, false
 	}
-	var matches = scanSymbol([]byte(token.Value))
+	var matches = bytesToStrings(symbolScanner.FindSubmatch([]byte(token.Value)))
 	symbol = str.SymbolFromString(matches[1]) // Remove the leading '$'.
 	return symbol, token, true
 }
@@ -459,11 +459,11 @@ func (v *parser) parseTag() (abs.TagLike, *Token, bool) {
 	var token *Token
 	var tag abs.TagLike
 	token = v.nextToken()
-	if token.Type != TokenTag {
-		v.backupOne()
+	if token.Type != TokenTAG {
+		v.backupOne(token)
 		return tag, token, false
 	}
-	var matches = scanTag([]byte(token.Value))
+	var matches = bytesToStrings(tagScanner.FindSubmatch([]byte(token.Value)))
 	tag = str.TagFromString(matches[1]) // Remove the leading "#".
 	return tag, token, true
 }
@@ -482,11 +482,11 @@ func (v *parser) parseVersion() (abs.VersionLike, *Token, bool) {
 	var token *Token
 	var version abs.VersionLike
 	token = v.nextToken()
-	if token.Type != TokenVersion {
-		v.backupOne()
+	if token.Type != TokenVERSION {
+		v.backupOne(token)
 		return version, token, false
 	}
-	var matches = scanVersion([]byte(token.Value))
+	var matches = bytesToStrings(versionScanner.FindSubmatch([]byte(token.Value)))
 	version = str.VersionFromString(matches[1]) // Remove the leading "v".
 	return version, token, true
 }

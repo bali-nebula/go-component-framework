@@ -8,29 +8,16 @@
  * Initiative. (See http://opensource.org/licenses/MIT)                        *
  *******************************************************************************/
 
-package abstractions
+package procedures
 
-// INDIVIDUAL INTERFACES
+import (
+	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
+	col "github.com/craterdog/go-collection-framework/v2"
+)
 
-type Custodial interface {
-	Exists() bool
-	Load() []byte
-	Store(configuration []byte)
-	Delete()
-}
+// PROCEDURE IMPLEMENTATION
 
-type Mechanized interface {
-	GetState() int
-	SetState(state int)
-	TransitionState(event int) int
-}
-
-// CONSOLIDATED INTERFACES
-
-type ConfiguratorLike interface {
-	Custodial
-}
-
-type ControllerLike interface {
-	Mechanized
+// This constructor creates a new procedure.
+func Procedure() abs.ProcedureLike {
+	return col.List[abs.StatementLike]()
 }

@@ -91,9 +91,9 @@ func TestIntervalsWithMoments(t *tes.T) {
 }
 
 func TestIntervalsWithEmojis(t *tes.T) {
-	var r1 = ele.Rune('😀')
-	var r2 = ele.Rune('😆')
-	var r3 = ele.Rune('🤣')
+	var r1 = ele.Character('😀')
+	var r2 = ele.Character('😆')
+	var r3 = ele.Character('🤣')
 	var s = ran.Interval(r1, abs.INCLUSIVE, r3)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 804, s.GetSize())
@@ -105,15 +105,15 @@ func TestIntervalsWithEmojis(t *tes.T) {
 	ass.True(t, s.ContainsValue(r2))
 }
 
-func TestIntervalsWithRunes(t *tes.T) {
-	var rA = ele.Rune('A')
-	var ra = ele.Rune('a')
-	var rb = ele.Rune('b')
-	var rc = ele.Rune('c')
-	var rd = ele.Rune('d')
-	var re = ele.Rune('e')
-	var rf = ele.Rune('f')
-	var rg = ele.Rune('g')
+func TestIntervalsWithCharacters(t *tes.T) {
+	var rA = ele.Character('A')
+	var ra = ele.Character('a')
+	var rb = ele.Character('b')
+	var rc = ele.Character('c')
+	var rd = ele.Character('d')
+	var re = ele.Character('e')
+	var rf = ele.Character('f')
+	var rg = ele.Character('g')
 	var s = ran.Interval(ra, abs.LEFT, rf)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())

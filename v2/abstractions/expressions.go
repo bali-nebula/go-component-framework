@@ -14,134 +14,10 @@ package abstractions
 
 type (
 	Expression any
+	Operator   int
 )
 
-// INDIVIDUAL INTERFACES
-
-// This interface defines the methods supported by all arithmetic-like expressions.
-type ArithmeticLike interface {
-	GetFirst() Expression
-	SetFirst(first Expression)
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetSecond() Expression
-	SetSecond(second Expression)
-}
-
-// This interface defines the methods supported by all chaining-like expressions.
-type ChainingLike interface {
-	GetFirst() Expression
-	SetFirst(first Expression)
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetSecond() Expression
-	SetSecond(second Expression)
-}
-
-// This interface defines the methods supported by all comparison-like expressions.
-type ComparisonLike interface {
-	GetFirst() Expression
-	SetFirst(first Expression)
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetSecond() Expression
-	SetSecond(second Expression)
-}
-
-// This interface defines the methods supported by all complement-like expressions.
-type ComplementLike interface {
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetExpression() Expression
-	SetExpression(expression Expression)
-}
-
-// This interface defines the methods supported by all dereference-like expressions.
-type DereferenceLike interface {
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetExpression() Expression
-	SetExpression(expression Expression)
-}
-
-// This interface defines the methods supported by all exponential-like expressions.
-type ExponentialLike interface {
-	GetBase() Expression
-	SetBase(base Expression)
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetExponent() Expression
-	SetExponent(exponent Expression)
-}
-
-// This interface defines the methods supported by all intrinsic-like expressions.
-type IntrinsicLike interface {
-	GetFunction() string
-	SetFunction(function string)
-	GetArguments() Sequential[Expression]
-	SetArguments(arguments Sequential[Expression])
-}
-
-// This interface defines the methods supported by all inversion-like expressions.
-type InversionLike interface {
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetExpression() Expression
-	SetExpression(expression Expression)
-}
-
-// This interface defines the methods supported by all invocation-like expressions.
-type InvocationLike interface {
-	IsSynchronous() bool
-	GetTarget() Expression
-	SetTarget(target Expression)
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetMessage() string
-	SetMessage(message string)
-	GetArguments() Sequential[Expression]
-	SetArguments(arguments Sequential[Expression])
-}
-
-// This interface defines the methods supported by all logical-like expressions.
-type LogicalLike interface {
-	GetFirst() Expression
-	SetFirst(first Expression)
-	GetOperator() Operator
-	SetOperator(operator Operator)
-	GetSecond() Expression
-	SetSecond(second Expression)
-}
-
-// This interface defines the methods supported by all magnitude-like expressions.
-type MagnitudeLike interface {
-	GetExpression() Expression
-	SetExpression(expression Expression)
-}
-
-// This interface defines the methods supported by all precedence-like expressions.
-type PrecedenceLike interface {
-	GetExpression() Expression
-	SetExpression(expression Expression)
-}
-
-// This interface defines the methods supported by all item-like expressions.
-type SubcomponentLike interface {
-	GetComposite() Expression
-	SetComposite(composite Expression)
-	GetIndices() Sequential[Expression]
-	SetIndices(indices Sequential[Expression])
-}
-
-// This interface defines the methods supported by all variable-like expressions.
-type VariableLike interface {
-	GetIdentifier() string
-	SetIdentifier(identifier string)
-}
-
 // CONSTANT DEFINITIONS
-
-type Operator int
 
 const (
 	_          Operator = iota // Invalid
@@ -174,4 +50,55 @@ const (
 	SANS                       // SANS
 	OR                         // OR
 	XOR                        // XOR
+	MAGNITUDE                  // | |
+	PRECEDENCE                 // ( )
 )
+
+// INDIVIDUAL INTERFACES
+
+type BinaryOperationLike interface {
+	GetFirst() Expression
+	SetFirst(first Expression)
+	GetOperator() Operator
+	SetOperator(operator Operator)
+	GetSecond() Expression
+	SetSecond(second Expression)
+}
+
+type IntrinsicLike interface {
+	GetFunction() string
+	SetFunction(function string)
+	GetArguments() Sequential[Expression]
+	SetArguments(arguments Sequential[Expression])
+}
+
+type InvocationLike interface {
+	IsSynchronous() bool
+	GetTarget() Expression
+	SetTarget(target Expression)
+	GetOperator() Operator
+	SetOperator(operator Operator)
+	GetMethod() string
+	SetMethod(method string)
+	GetArguments() Sequential[Expression]
+	SetArguments(arguments Sequential[Expression])
+}
+
+type SubcomponentLike interface {
+	GetComposite() Expression
+	SetComposite(composite Expression)
+	GetIndices() Sequential[Expression]
+	SetIndices(indices Sequential[Expression])
+}
+
+type UnaryOperationLike interface {
+	GetOperator() Operator
+	SetOperator(operator Operator)
+	GetExpression() Expression
+	SetExpression(expression Expression)
+}
+
+type VariableLike interface {
+	GetIdentifier() string
+	SetIdentifier(identifier string)
+}

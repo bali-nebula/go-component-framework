@@ -26,7 +26,7 @@ func TestComponentIterators(t *tes.T) {
 	list.AddValue(foo)
 	list.AddValue(bar)
 	list.AddValue(baz)
-	var iterator = col.ComponentIterator(list)
+	var iterator = com.ComponentIterator(list)
 	ass.False(t, iterator.HasPrevious())
 	ass.True(t, iterator.HasNext())
 	ass.Equal(t, foo, iterator.GetNext())

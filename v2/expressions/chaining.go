@@ -17,7 +17,7 @@ import (
 // CHAINING EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new chaining expression.
-func Chaining(first abs.Expression, operator abs.Operator, second abs.Expression) abs.ChainingLike {
+func Chaining(first abs.Expression, operator abs.Operator, second abs.Expression) abs.BinaryOperationLike {
 	var v = &chainingExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)
@@ -48,16 +48,16 @@ func (v *chainingExpression) SetFirst(first abs.Expression) {
 	v.first = first
 }
 
-// This method returns the comparison operator in this chaining expression.
+// This method returns the chaining operator in this chaining expression.
 func (v *chainingExpression) GetOperator() abs.Operator {
 	return v.operator
 }
 
-// This method sets the comparison operator in this chaining expression to the
+// This method sets the chaining operator in this chaining expression to the
 // specified value.
 func (v *chainingExpression) SetOperator(operator abs.Operator) {
 	if operator != abs.AMPERSAND {
-		panic("The operator in a comparison expression must be a valid chaining operator.")
+		panic("The operator in a chaining expression must be a valid chaining operator.")
 	}
 	v.operator = operator
 }

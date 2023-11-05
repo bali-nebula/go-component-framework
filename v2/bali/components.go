@@ -15,8 +15,7 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	col "github.com/bali-nebula/go-component-framework/v2/collections"
 	com "github.com/bali-nebula/go-component-framework/v2/components"
-	str "github.com/bali-nebula/go-component-framework/v2/strings"
-	cof "github.com/craterdog/go-collection-framework/v2"
+	cox "github.com/craterdog/go-collection-framework/v2"
 	sts "strings"
 )
 
@@ -98,8 +97,8 @@ func (v *formatter) formatAnnotation(annotation abs.Annotation) {
 func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 	var comment abs.CommentLike
 	var token = v.nextToken()
-	if token.Type != TokenComment {
-		v.backupOne()
+	if token.Type != TokenCOMMENT {
+		v.backupOne(token)
 		return comment, token, false
 	}
 	comment = com.Comment(trimIndentation(token.Value))
@@ -111,7 +110,7 @@ func (v *parser) parseComment() (abs.CommentLike, *Token, bool) {
 func (v *formatter) formatComment(comment abs.CommentLike) {
 	v.AppendString(`!>`)
 	v.depth++
-	var iterator = cof.Iterator[string](comment)
+	var iterator = cox.Iterator[string](comment)
 	for iterator.HasNext() {
 		var line = iterator.GetNext()
 		if len(line) > 0 {
@@ -173,17 +172,20 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 	}
 	_, _, ok = v.parseEOL()
 	if !ok {
-		context, token, ok = v.parseInlineContext()
+		context, _, ok = v.parseInlineParameters()
 		if !ok {
-			v.backupOne() // Put back the '(' character.
+			// This is not a context.
+			v.backupOne(token) // Put back the '(' character.
 			return context, token, false
 		}
 	} else {
-		context, token, ok = v.parseMultilineContext()
+		context, token, ok = v.parseMultilineParameters()
 		if !ok {
-			v.backupOne() // Put back the EOL character.
-			v.backupOne() // Put back the '(' character.
-			return context, token, false
+			var message = v.formatError(token)
+			message += generateGrammar("parameter",
+				"$context",
+				"$parameters")
+			panic(message)
 		}
 	}
 	_, token, ok = v.parseDelimiter(")")
@@ -201,21 +203,16 @@ func (v *parser) parseContext() (abs.ContextLike, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatContext(context abs.ContextLike) {
 	v.AppendString("(")
-	var names = context.GetNames()
-	var iterator = cof.Iterator[abs.SymbolLike](names)
-	switch names.GetSize() {
+	var iterator = com.ParameterIterator(context)
+	switch context.GetSize() {
 	case 1:
-		var name = iterator.GetNext()
-		var value = context.GetValue(name)
-		var parameter = com.Parameter(name, value)
+		var parameter = iterator.GetNext()
 		v.formatParameter(parameter)
 	default:
 		v.depth++
 		for iterator.HasNext() {
 			v.AppendNewline()
-			var name = iterator.GetNext()
-			var value = context.GetValue(name)
-			var parameter = com.Parameter(name, value)
+			var parameter = iterator.GetNext()
 			v.formatParameter(parameter)
 		}
 		v.depth--
@@ -228,8 +225,8 @@ func (v *formatter) formatContext(context abs.ContextLike) {
 // the token and whether or not the delimiter was found.
 func (v *parser) parseDelimiter(delimiter string) (string, *Token, bool) {
 	var token = v.nextToken()
-	if token.Type == TokenEOF || token.Value != delimiter {
-		v.backupOne()
+	if token.Type != TokenDELIMITER || token.Value != delimiter {
+		v.backupOne(token)
 		return delimiter, token, false
 	}
 	return delimiter, token, true
@@ -298,10 +295,10 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatTag(value)
 	case abs.SymbolLike:
 		v.formatSymbol(value)
-	case abs.SeriesLike:
-		v.formatSeries(value)
-	case abs.MappingLike:
-		v.formatMapping(value)
+	case abs.ValuesLike:
+		v.formatValues(value)
+	case abs.AssociationsLike:
+		v.formatAssociations(value)
 	case abs.IntervalLike:
 		v.formatInterval(value)
 	case abs.SpectrumLike:
@@ -320,7 +317,7 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 func (v *parser) parseEOF() (*Token, *Token, bool) {
 	var token = v.nextToken()
 	if token.Type != TokenEOF {
-		v.backupOne()
+		v.backupOne(token)
 		return token, token, false
 	}
 	return token, token, true
@@ -331,7 +328,7 @@ func (v *parser) parseEOF() (*Token, *Token, bool) {
 func (v *parser) parseEOL() (*Token, *Token, bool) {
 	var token = v.nextToken()
 	if token.Type != TokenEOL {
-		v.backupOne()
+		v.backupOne(token)
 		return token, token, false
 	}
 	return token, token, true
@@ -342,8 +339,8 @@ func (v *parser) parseEOL() (*Token, *Token, bool) {
 func (v *parser) parseIdentifier() (string, *Token, bool) {
 	var identifier string = "<UNKNOWN>"
 	var token = v.nextToken()
-	if token.Type != TokenIdentifier {
-		v.backupOne()
+	if token.Type != TokenIDENTIFIER {
+		v.backupOne(token)
 		return identifier, token, false
 	}
 	identifier = token.Value
@@ -358,11 +355,11 @@ func (v *formatter) formatIdentifier(identifier string) {
 
 // It returns the component context and whether or not the component context
 // was successfully parsed.
-func (v *parser) parseInlineContext() (abs.ContextLike, *Token, bool) {
+func (v *parser) parseInlineParameters() (abs.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var context abs.ContextLike
 	var parameter abs.ParameterLike
+	var context = com.Context()
 	_, token, ok = v.parseDelimiter(":")
 	if ok {
 		// A context must have at least one parameter.
@@ -380,11 +377,10 @@ func (v *parser) parseInlineContext() (abs.ContextLike, *Token, bool) {
 		// This is not an inline context.
 		return context, token, false
 	}
-	context = com.Context()
 	for {
-		var name = parameter.GetKey()
+		var key = parameter.GetKey()
 		var value = parameter.GetValue()
-		context.SetValue(name, value)
+		context.SetValue(key, value)
 		// Every subsequent parameter must be preceded by a ','.
 		_, token, ok = v.parseDelimiter(",")
 		if !ok {
@@ -410,8 +406,8 @@ func (v *parser) parseInlineContext() (abs.ContextLike, *Token, bool) {
 // the token and whether or not the keyword was found.
 func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
 	var token = v.nextToken()
-	if token.Type != TokenKeyword || token.Value != keyword {
-		v.backupOne()
+	if token.Type != TokenKEYWORD || token.Value != keyword {
+		v.backupOne(token)
 		return keyword, token, false
 	}
 	return keyword, token, true
@@ -420,11 +416,11 @@ func (v *parser) parseKeyword(keyword string) (string, *Token, bool) {
 // This method attempts to parse a component context with multiline parameters.
 // It returns the component context and whether or not the component context
 // was successfully parsed.
-func (v *parser) parseMultilineContext() (abs.ContextLike, *Token, bool) {
+func (v *parser) parseMultilineParameters() (abs.ContextLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var parameter abs.ParameterLike
-	var context abs.ContextLike
+	var context = com.Context()
 	parameter, token, ok = v.parseParameter()
 	if !ok {
 		// A context must have at least one parameter.
@@ -437,11 +433,10 @@ func (v *parser) parseMultilineContext() (abs.ContextLike, *Token, bool) {
 			"$value")
 		panic(message)
 	}
-	context = com.Context()
 	for {
-		var name = parameter.GetKey()
+		var key = parameter.GetKey()
 		var value = parameter.GetValue()
-		context.SetValue(name, value)
+		context.SetValue(key, value)
 		// Every parameter must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
@@ -465,8 +460,8 @@ func (v *parser) parseMultilineContext() (abs.ContextLike, *Token, bool) {
 func (v *parser) parseNote() (abs.NoteLike, *Token, bool) {
 	var note abs.NoteLike
 	var token = v.nextToken()
-	if token.Type != TokenNote {
-		v.backupOne()
+	if token.Type != TokenNOTE {
+		v.backupOne(token)
 		return note, token, false
 	}
 	note = com.Note(token.Value[2:]) // Remove the leading "! ".
@@ -486,17 +481,17 @@ func (v *formatter) formatNote(note abs.NoteLike) {
 func (v *parser) parseParameter() (abs.ParameterLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var name abs.SymbolLike
+	var symbol abs.SymbolLike
 	var value abs.ComponentLike
-	name, token, ok = v.parseSymbol()
+	symbol, token, ok = v.parseSymbol()
 	if !ok {
 		// This is not a parameter.
 		return nil, token, false
 	}
-	_, token, ok = v.parseDelimiter(":")
+	_, _, ok = v.parseDelimiter(":")
 	if !ok {
 		// This is not a parameter.
-		v.backupOne() // Put back the symbol token.
+		v.backupOne(token) // Put back the symbol token.
 		return nil, token, false
 	}
 	// This must be a parameter.
@@ -504,7 +499,7 @@ func (v *parser) parseParameter() (abs.ParameterLike, *Token, bool) {
 	if !ok {
 		panic("Expected a value after the ':' character.")
 	}
-	var parameter = com.Parameter(name, value)
+	var parameter = com.Parameter(symbol, value)
 	return parameter, token, true
 }
 
@@ -577,34 +572,38 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 	// Check for an explicit component type.
 	var type_ string
 	if context != nil {
-		var name = str.SymbolFromString("type")
-		var component = context.GetValue(name)
-		if component != nil {
-			var moniker = component.ExtractMoniker()
-			type_ = moniker.AsString()
+		var iterator = com.ParameterIterator(context)
+		for iterator.HasNext() {
+			var parameter = iterator.GetNext()
+			if parameter.GetKey().AsString() == "$type" {
+				var component = parameter.GetValue()
+				var moniker = component.ExtractMoniker()
+				type_ = moniker.AsString()
+				break
+			}
 		}
 	}
 	// Check for a collection entity.
 	switch entity.(type) {
-	case abs.SeriesLike:
-		// The type is a series of components.
+	case abs.ValuesLike:
+		// The type is a values of components.
 		var sequence = entity.(abs.Sequential[abs.ComponentLike])
 		switch type_ {
 		case "/bali/types/collections/Set/v1":
-			// The series type is a set.
+			// The values type is a set.
 			entity = col.SetFromSequence(sequence)
 		case "/bali/types/collections/Queue/v1":
-			// The series type is a queue.
+			// The values type is a queue.
 			entity = col.QueueFromSequence(sequence)
 		case "/bali/types/collections/Stack/v1":
-			// The series type is a stack.
+			// The values type is a stack.
 			entity = col.StackFromSequence(sequence)
 		default:
-			// The default series type is a list.
+			// The default values type is a list.
 			entity = col.ListFromSequence(sequence)
 		}
-	case abs.MappingLike:
-		// The mapping type is a catalog.
+	case abs.AssociationsLike:
+		// The associations type is a catalog.
 		var sequence = entity.(abs.Sequential[abs.AssociationLike])
 		entity = col.CatalogFromSequence(sequence)
 	default:
@@ -630,11 +629,13 @@ func adjustContext(component abs.ComponentLike) abs.ContextLike {
 	if type_ != "" {
 		if context == nil {
 			context = com.Context()
-			component.SetContext(context)
+		} else {
+			context = com.ContextFromSequence(context)
 		}
-		var name = Symbol("$type")
+		component.SetContext(context)
+		var symbol = Symbol("$type")
 		var value = Component(type_)
-		context.SetValue(name, value)
+		context.SetValue(symbol, value)
 	}
 	return context
 }

@@ -15,30 +15,30 @@ import (
 	mat "math"
 )
 
-// RUNE IMPLEMENTATION
+// CHARACTER IMPLEMENTATION
 
-// This constructor returns the minimum value for a rune endpoint.
-func MinimumRune() abs.RuneLike {
-	return Rune(0)
+// This constructor returns the minimum value for a character endpoint.
+func MinimumCharacter() abs.CharacterLike {
+	return Character(0)
 }
 
-// This constructor returns the maximum value for a rune endpoint.
-func MaximumRune() abs.RuneLike {
-	return Rune(mat.MaxInt32)
+// This constructor returns the maximum value for a character endpoint.
+func MaximumCharacter() abs.CharacterLike {
+	return Character(mat.MaxInt32)
 }
 
-// This type defines the methods associated with rune endpoints. It extends the
+// This type defines the methods associated with character endpoints. It extends the
 // native Go int32 type.
-type Rune int32
+type Character int32
 
 // DISCRETE INTERFACE
 
-// This method returns a boolean value for this rune.
-func (v Rune) AsBoolean() bool {
+// This method returns a boolean value for this character.
+func (v Character) AsBoolean() bool {
 	return v > -1
 }
 
-// This method returns an integer value for this rune.
-func (v Rune) AsInteger() int {
+// This method returns an integer value for this character.
+func (v Character) AsInteger() int {
 	return int(v)
 }

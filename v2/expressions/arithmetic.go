@@ -18,7 +18,7 @@ import (
 // ARITHMETIC EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new arithmetic expression.
-func Arithmetic(first abs.Expression, operator abs.Operator, second abs.Expression) abs.ArithmeticLike {
+func Arithmetic(first abs.Expression, operator abs.Operator, second abs.Expression) abs.BinaryOperationLike {
 	var v = &arithmeticExpression{}
 	// Perform argument validation.
 	v.SetFirst(first)

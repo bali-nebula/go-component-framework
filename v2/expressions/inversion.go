@@ -17,7 +17,7 @@ import (
 // INVERSION EXPRESSION IMPLEMENTATION
 
 // This constructor creates a new inversion expression.
-func Inversion(operator abs.Operator, expression abs.Expression) abs.InversionLike {
+func Inversion(operator abs.Operator, expression abs.Expression) abs.UnaryOperationLike {
 	var v = &inversionExpression{}
 	// Perform argument validation.
 	v.SetOperator(operator)

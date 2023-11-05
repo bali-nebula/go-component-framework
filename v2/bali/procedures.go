@@ -62,10 +62,10 @@ func (v *parser) parseAttribute() (abs.AttributeLike, *Token, bool) {
 		// This is not an attribute.
 		return attribute, token, false
 	}
-	indices, token, ok = v.parseIndices()
+	indices, _, ok = v.parseIndices()
 	if !ok {
 		// This is not an attribute.
-		v.backupOne() // Put back the identifier token.
+		v.backupOne(token) // Put back the identifier token.
 		return attribute, token, false
 	}
 	attribute = pro.Attribute(variable, indices)
@@ -400,38 +400,41 @@ func (v *formatter) formatIndices(indices abs.Sequential[abs.Expression]) {
 // This method attempts to parse a list of inline statements. It returns
 // the list of statements and whether or not the list of statements was
 // successfully parsed.
-func (v *parser) parseInlineProcedure() (abs.ProcedureLike, *Token, bool) {
+func (v *parser) parseInlineStatements() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
-	var procedure = col.List[abs.StatementLike]()
+	var statements = col.List[abs.StatementLike]()
 	statement, token, ok = v.parseStatement()
 	if !ok {
-		// A non-empty procedure must have at least one statement.
+		// A non-empty statements must have at least one statement.
 		var message = v.formatError(token)
 		message += generateGrammar("statement",
+			"$procedure",
 			"$statements",
-			"$statement")
+			"$statement",
+		)
 		panic(message)
 	}
 	for {
-		procedure.AddValue(statement)
+		statements.AddValue(statement)
 		// Every subsequent statement must be preceded by a ';'.
 		_, token, ok = v.parseDelimiter(";")
 		if !ok {
 			// No more statements.
-			break
+			return statements, token, true
 		}
 		statement, token, ok = v.parseStatement()
 		if !ok {
 			var message = v.formatError(token)
 			message += generateGrammar("statement",
+				"$procedure",
 				"$statements",
-				"$statement")
+				"$statement",
+			)
 			panic(message)
 		}
 	}
-	return procedure, token, true
 }
 
 // This method attempts to parse a let clause. It returns the let
@@ -618,21 +621,30 @@ func (v *formatter) formatMainClause(mainClause abs.Clause) {
 // list of statements and whether or not the list of statements was successfully
 // parsed. Note that to support blank lines nil values will be added to the list
 // of statements for each blank line.
-func (v *parser) parseMultilineProcedure() (abs.ProcedureLike, *Token, bool) {
+func (v *parser) parseMultilineStatements() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var statement abs.StatementLike
-	var procedure = col.List[abs.StatementLike]()
-	statement, _, _ = v.parseStatement()
+	var statements = col.List[abs.StatementLike]()
 	for {
-		// Every statement must be followed by an EOL.
+		// An optional statement allows blank lines.
+		statement, _, _ = v.parseStatement()
+		// Every optional statement must be followed by an EOL.
 		_, token, ok = v.parseEOL()
 		if !ok {
-			// There are no more statements in this block.
-			return procedure, token, true
+			if statements.IsEmpty() {
+				var message = v.formatError(token)
+				message += generateGrammar("statement",
+					"$procedure",
+					"$statements",
+					"$statement",
+				)
+				panic(message)
+			}
+			// There were no more statements in this statements.
+			return statements, token, true
 		}
-		procedure.AddValue(statement)
-		statement, _, _ = v.parseStatement()
+		statements.AddValue(statement)
 	}
 }
 
@@ -810,7 +822,7 @@ func (v *formatter) formatPostClause(clause abs.PostClauseLike) {
 func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	var ok bool
 	var token *Token
-	var procedure abs.ProcedureLike = col.List[abs.StatementLike]()
+	var procedure abs.ProcedureLike
 	_, token, ok = v.parseDelimiter("{")
 	if !ok {
 		return procedure, token, false
@@ -818,19 +830,32 @@ func (v *parser) parseProcedure() (abs.ProcedureLike, *Token, bool) {
 	_, token, ok = v.parseDelimiter("}")
 	if ok {
 		// This is an empty inline list of statements.
+		procedure = col.List[abs.StatementLike]()
 		return procedure, token, true
 	}
 	_, _, ok = v.parseEOL()
-	if !ok {
-		procedure, _, _ = v.parseInlineProcedure()
+	if ok {
+		procedure, token, ok = v.parseMultilineStatements()
 	} else {
-		procedure, _, _ = v.parseMultilineProcedure()
+		procedure, token, ok = v.parseInlineStatements()
+	}
+	if !ok {
+		var message = v.formatError(token)
+		message += generateGrammar("statements",
+			"$procedure",
+			"$statements",
+			"$statement",
+		)
+		panic(message)
 	}
 	_, token, ok = v.parseDelimiter("}")
 	if !ok {
 		var message = v.formatError(token)
 		message += generateGrammar("}",
-			"$procedure")
+			"$procedure",
+			"$statements",
+			"$statement",
+		)
 		panic(message)
 	}
 	return procedure, token, true

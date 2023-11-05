@@ -46,6 +46,21 @@ func (v *association) SetValue(value abs.ComponentLike) {
 	v.value = value
 }
 
+// ASSOCIATION ITERATOR IMPLEMENTATION
+
+// This constructor creates a new instance of an associations iterator that can be
+// used to traverse the associations in the specified sequence.
+func AssociationIterator(sequence abs.Sequential[abs.AssociationLike]) abs.AssociationIteratorLike {
+	var v = col.Iterator[abs.AssociationLike](sequence)
+	return &associations{v}
+}
+
+// This type defines the structure and methods for an associations iterator. The
+// iterator operates on a sequence of associations.
+type associations struct {
+	abs.AssociationIteratorLike
+}
+
 // CATALOG IMPLEMENTATION
 
 // This constructor creates a new empty catalog.

@@ -73,7 +73,23 @@ func ParseComponent(source string) abs.ComponentLike {
 
 // This function parses an entity from a source string.
 func ParseEntity(source string) abs.Entity {
-	return ParseComponent(source).GetEntity()
+	var ok bool
+	var token *Token
+	var entity abs.Entity
+	var parser = Parser([]byte(source + EOL))
+	entity, token, ok = parser.parseEntity()
+	if !ok {
+		var message = parser.formatError(token)
+		message += generateGrammar("entity",
+			"element",
+			"string",
+			"range",
+			"collection",
+			"procedure",
+		)
+		panic(message)
+	}
+	return entity
 }
 
 // This function parses an entity from a source string.
@@ -99,7 +115,7 @@ func ParseContext(source string) abs.ContextLike {
 // This constructor creates a new parser using the specified byte array.
 func Parser(source []byte) *parser {
 	var tokens = make(chan Token, 256)
-	Scanner(source, tokens) // Starts scanning in a go routine.
+	ScanTokens(source, tokens) // Starts scanning in a separate go routine.
 	var p = &parser{
 		source: source,
 		next:   col.StackWithCapacity[*Token](4),
@@ -110,10 +126,9 @@ func Parser(source []byte) *parser {
 
 // This type defines the structure and methods for the parser agent.
 type parser struct {
-	source         []byte
-	next           col.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
-	tokens         chan Token            // The queue of unread tokens coming from the scanner.
-	p1, p2, p3, p4 *Token                // The previous four tokens that have been retrieved.
+	source []byte
+	next   col.StackLike[*Token] // The stack of the retrieved tokens that have been put back.
+	tokens chan Token            // The queue of unread tokens coming from the scanner.
 }
 
 // This method attempts to read the next token from the token stream and return
@@ -126,22 +141,20 @@ func (v *parser) nextToken() *Token {
 			panic("The token channel terminated without an EOF or error token.")
 		}
 		next = &token
-		if next.Type == TokenError {
+		if next.Type == TokenERROR {
 			var message = v.formatError(next)
 			panic(message)
 		}
 	} else {
 		next = v.next.RemoveTop()
 	}
-	v.p4, v.p3, v.p2, v.p1 = v.p3, v.p2, v.p1, next
 	return next
 }
 
 // This method puts back the current token onto the token stream so that it can
 // be retrieved by another parsing method.
-func (v *parser) backupOne() {
-	v.next.AddValue(v.p1)
-	v.p1, v.p2, v.p3, v.p4 = v.p2, v.p3, v.p4, nil
+func (v *parser) backupOne(token *Token) {
+	v.next.AddValue(token)
 }
 
 // This method returns an error message containing the context for a parsing
