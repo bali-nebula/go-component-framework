@@ -20,7 +20,7 @@ import (
 // TYPE DEFINITIONS
 
 type (
-	Components   []any
+	Values       []any
 	Associations [][2]any
 )
 
@@ -50,10 +50,10 @@ func List(source string) abs.ListLike {
 
 // This constructor returns a new list component initialized with the
 // specified associations and parameterized with the specified context.
-func ListWithContext(components Components, context abs.ContextLike) abs.ComponentLike {
+func ListWithContext(values Values, context abs.ContextLike) abs.ComponentLike {
 	var component abs.ComponentLike
 	var list = col.List()
-	for _, value := range components {
+	for _, value := range values {
 		component = Component(value)
 		list.AddValue(component)
 	}
@@ -79,10 +79,10 @@ func Set(source string) abs.SetLike {
 
 // This constructor returns a new set component initialized with the
 // specified associations and parameterized with the specified context.
-func SetWithContext(components Components, context abs.ContextLike) abs.ComponentLike {
+func SetWithContext(values Values, context abs.ContextLike) abs.ComponentLike {
 	var component abs.ComponentLike
 	var set = col.Set()
-	for _, value := range components {
+	for _, value := range values {
 		component = Component(value)
 		set.AddValue(component)
 	}
@@ -146,8 +146,9 @@ func (v *formatter) formatAssociation(association abs.AssociationLike) {
 	v.formatComponent(value)
 }
 
-// This method attempts to parse a collection of components. It returns the
-// collection and whether or not the collection was successfully parsed.
+// This method attempts to parse a collection of values or associations. It
+// returns the collection and whether or not the collection was successfully
+// parsed.
 func (v *parser) parseCollection() (abs.Collection, *Token, bool) {
 	var ok bool
 	var token *Token

@@ -103,6 +103,7 @@ func ParseContext(source string) abs.ContextLike {
 		var message = parser.formatError(token)
 		message += generateGrammar("context",
 			"$component",
+			"$entity",
 			"$context",
 			"$parameters")
 		panic(message)

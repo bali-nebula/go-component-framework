@@ -586,7 +586,7 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 	// Check for a collection entity.
 	switch entity.(type) {
 	case abs.ValuesLike:
-		// The type is a values of components.
+		// The type is a collection of values.
 		var sequence = entity.(abs.Sequential[abs.ComponentLike])
 		switch type_ {
 		case "/bali/types/collections/Set/v1":

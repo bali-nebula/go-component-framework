@@ -16,6 +16,7 @@ type (
 	Collection any
 	Key        any
 	Primitive  any
+	Value      any
 )
 
 // INDIVIDUAL INTERFACES

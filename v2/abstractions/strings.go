@@ -18,7 +18,6 @@ type (
 	Name        string
 	Ordinal     uint
 	String      any
-	Value       any
 )
 
 func InstructionFromBytes(leftByte, rightByte byte) Instruction {

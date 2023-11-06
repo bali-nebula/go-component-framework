@@ -17,105 +17,105 @@ import (
 
 // SET IMPLEMENTATION
 
-// This constructor creates a new empty component set.
+// This constructor creates a new empty value set.
 func Set() abs.SetLike {
 	var v = col.Set[abs.ComponentLike]()
 	return &set{v}
 }
 
-// This constructor creates a new set from the specified sequence of components.
+// This constructor creates a new set from the specified sequence of values.
 func SetFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.SetLike {
 	var v = col.SetFromSequence[abs.ComponentLike](sequence)
 	return &set{v}
 }
 
-// This type defines the structure and methods associated with a component set.
+// This type defines the structure and methods associated with a value set.
 type set struct {
-	components col.SetLike[abs.ComponentLike]
+	values col.SetLike[abs.ComponentLike]
 }
 
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this set is empty.
 func (v *set) IsEmpty() bool {
-	return v.components.IsEmpty()
+	return v.values.IsEmpty()
 }
 
-// This method returns the number of components contained in this set.
+// This method returns the number of values contained in this set.
 func (v *set) GetSize() int {
-	return v.components.GetSize()
+	return v.values.GetSize()
 }
 
-// This method returns all the components in this set. The components retrieved are in
+// This method returns all the values in this set. The values retrieved are in
 // the same order as they are in the set.
 func (v *set) AsArray() []abs.ComponentLike {
-	return v.components.AsArray()
+	return v.values.AsArray()
 }
 
 // ACCESSIBLE INTERFACE
 
-// This method retrieves from this set the component that is associated with the
+// This method retrieves from this set the value that is associated with the
 // specified index.
 func (v *set) GetValue(index int) abs.ComponentLike {
-	return v.components.GetValue(index)
+	return v.values.GetValue(index)
 }
 
-// This method retrieves from this set all components from the first index through
+// This method retrieves from this set all values from the first index through
 // the last index (inclusive).
 func (v *set) GetValues(first int, last int) abs.Sequential[abs.ComponentLike] {
-	return v.components.GetValues(first, last)
+	return v.values.GetValues(first, last)
 }
 
 // SEARCHABLE INTERFACE
 
-// This method returns the index of the FIRST occurrence of the specified component in
-// this set, or zero if this set does not contain the component.
-func (v *set) GetIndex(component abs.ComponentLike) int {
-	return v.components.GetIndex(component)
+// This method returns the index of the FIRST occurrence of the specified value in
+// this set, or zero if this set does not contain the value.
+func (v *set) GetIndex(value abs.ComponentLike) int {
+	return v.values.GetIndex(value)
 }
 
-// This method determines whether or not this set contains the specified component.
-func (v *set) ContainsValue(component abs.ComponentLike) bool {
-	return v.components.ContainsValue(component)
+// This method determines whether or not this set contains the specified value.
+func (v *set) ContainsValue(value abs.ComponentLike) bool {
+	return v.values.ContainsValue(value)
 }
 
 // This method determines whether or not this set contains ANY of the specified
-// components.
-func (v *set) ContainsAny(components abs.Sequential[abs.ComponentLike]) bool {
-	return v.components.ContainsAny(components)
+// values.
+func (v *set) ContainsAny(values abs.Sequential[abs.ComponentLike]) bool {
+	return v.values.ContainsAny(values)
 }
 
 // This method determines whether or not this set contains ALL of the specified
-// components.
-func (v *set) ContainsAll(components abs.Sequential[abs.ComponentLike]) bool {
-	return v.components.ContainsAll(components)
+// values.
+func (v *set) ContainsAll(values abs.Sequential[abs.ComponentLike]) bool {
+	return v.values.ContainsAll(values)
 }
 
 // FLEXIBLE INTERFACE
 
-// This method adds the specified component to this set if it is not already a
+// This method adds the specified value to this set if it is not already a
 // member of the set.
-func (v *set) AddValue(component abs.ComponentLike) {
-	v.components.AddValue(component)
+func (v *set) AddValue(value abs.ComponentLike) {
+	v.values.AddValue(value)
 }
 
-// This method adds the specified components to this set if they are not already
+// This method adds the specified values to this set if they are not already
 // members of the set.
-func (v *set) AddValues(components abs.Sequential[abs.ComponentLike]) {
-	v.components.AddValues(components)
+func (v *set) AddValues(values abs.Sequential[abs.ComponentLike]) {
+	v.values.AddValues(values)
 }
 
-// This method removes the specified component from this set.
-func (v *set) RemoveValue(component abs.ComponentLike) {
-	v.components.RemoveValue(component)
+// This method removes the specified value from this set.
+func (v *set) RemoveValue(value abs.ComponentLike) {
+	v.values.RemoveValue(value)
 }
 
-// This method removes the specified components from this set.
-func (v *set) RemoveValues(components abs.Sequential[abs.ComponentLike]) {
-	v.components.RemoveValues(components)
+// This method removes the specified values from this set.
+func (v *set) RemoveValues(values abs.Sequential[abs.ComponentLike]) {
+	v.values.RemoveValues(values)
 }
 
-// This method removes all components from this set.
+// This method removes all values from this set.
 func (v *set) RemoveAll() {
-	v.components.RemoveAll()
+	v.values.RemoveAll()
 }

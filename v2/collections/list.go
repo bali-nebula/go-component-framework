@@ -31,27 +31,27 @@ func ListFromSequence(sequence abs.Sequential[abs.ComponentLike]) abs.ListLike {
 }
 
 // This type defines the structure and methods associated with a list of
-// components.
+// values.
 type list struct {
-	components col.ListLike[abs.ComponentLike]
+	values col.ListLike[abs.ComponentLike]
 }
 
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this list is empty.
 func (v *list) IsEmpty() bool {
-	return v.components.IsEmpty()
+	return v.values.IsEmpty()
 }
 
-// This method returns the number of components contained in this list.
+// This method returns the number of values contained in this list.
 func (v *list) GetSize() int {
-	return v.components.GetSize()
+	return v.values.GetSize()
 }
 
-// This method returns all the components in this list. The components retrieved are in
+// This method returns all the values in this list. The values retrieved are in
 // the same order as they are in the list.
 func (v *list) AsArray() []abs.ComponentLike {
-	return v.components.AsArray()
+	return v.values.AsArray()
 }
 
 // ACCESSIBLE INTERFACE
@@ -59,108 +59,108 @@ func (v *list) AsArray() []abs.ComponentLike {
 // This method retrieves from this list the component that is associated with the
 // specified index.
 func (v *list) GetValue(index int) abs.ComponentLike {
-	return v.components.GetValue(index)
+	return v.values.GetValue(index)
 }
 
-// This method retrieves from this list all components from the first index through
+// This method retrieves from this list all values from the first index through
 // the last index (inclusive).
 func (v *list) GetValues(first int, last int) abs.Sequential[abs.ComponentLike] {
-	return v.components.GetValues(first, last)
+	return v.values.GetValues(first, last)
 }
 
 // UPDATABLE INTERFACE
 
 // This method sets the component in this list that is associated with the specified
 // index to be the specified component.
-func (v *list) SetValue(index int, component abs.ComponentLike) {
-	v.components.SetValue(index, component)
+func (v *list) SetValue(index int, value abs.ComponentLike) {
+	v.values.SetValue(index, value)
 }
 
-// This method sets the components in this list starting with the specified index
-// to the specified components.
-func (v *list) SetValues(index int, components abs.Sequential[abs.ComponentLike]) {
-	v.components.SetValues(index, components)
+// This method sets the values in this list starting with the specified index
+// to the specified values.
+func (v *list) SetValues(index int, values abs.Sequential[abs.ComponentLike]) {
+	v.values.SetValues(index, values)
 }
 
 // SEARCHABLE INTERFACE
 
 // This method returns the index of the FIRST occurrence of the specified component in
 // this list, or zero if this list does not contain the component.
-func (v *list) GetIndex(component abs.ComponentLike) int {
-	return v.components.GetIndex(component)
+func (v *list) GetIndex(value abs.ComponentLike) int {
+	return v.values.GetIndex(value)
 }
 
 // This method determines whether or not this list contains the specified component.
-func (v *list) ContainsValue(component abs.ComponentLike) bool {
-	return v.components.ContainsValue(component)
+func (v *list) ContainsValue(value abs.ComponentLike) bool {
+	return v.values.ContainsValue(value)
 }
 
 // This method determines whether or not this list contains ANY of the specified
-// components.
-func (v *list) ContainsAny(components abs.Sequential[abs.ComponentLike]) bool {
-	return v.components.ContainsAny(components)
+// values.
+func (v *list) ContainsAny(values abs.Sequential[abs.ComponentLike]) bool {
+	return v.values.ContainsAny(values)
 }
 
 // This method determines whether or not this list contains ALL of the specified
-// components.
-func (v *list) ContainsAll(components abs.Sequential[abs.ComponentLike]) bool {
-	return v.components.ContainsAll(components)
+// values.
+func (v *list) ContainsAll(values abs.Sequential[abs.ComponentLike]) bool {
+	return v.values.ContainsAll(values)
 }
 
 // MALLEABLE INTERFACE
 
 // This method appends the specified component to the end of this list.
-func (v *list) AddValue(component abs.ComponentLike) {
-	v.components.AddValue(component)
+func (v *list) AddValue(value abs.ComponentLike) {
+	v.values.AddValue(value)
 }
 
-// This method appends the specified components to the end of this list.
-func (v *list) AddValues(components abs.Sequential[abs.ComponentLike]) {
-	v.components.AddValues(components)
+// This method appends the specified values to the end of this list.
+func (v *list) AddValues(values abs.Sequential[abs.ComponentLike]) {
+	v.values.AddValues(values)
 }
 
 // This method inserts the specified component into this list in the specified
-// slot between existing components.
-func (v *list) InsertValue(slot int, component abs.ComponentLike) {
-	v.components.InsertValue(slot, component)
+// slot between existing values.
+func (v *list) InsertValue(slot int, value abs.ComponentLike) {
+	v.values.InsertValue(slot, value)
 }
 
-// This method inserts the specified components into this list in the specified
-// slot between existing components.
-func (v *list) InsertValues(slot int, components abs.Sequential[abs.ComponentLike]) {
-	v.components.InsertValues(slot, components)
+// This method inserts the specified values into this list in the specified
+// slot between existing values.
+func (v *list) InsertValues(slot int, values abs.Sequential[abs.ComponentLike]) {
+	v.values.InsertValues(slot, values)
 }
 
 // This method removes the component at the specified index from this list. The
 // removed component is returned.
 func (v *list) RemoveValue(index int) abs.ComponentLike {
-	return v.components.RemoveValue(index)
+	return v.values.RemoveValue(index)
 }
 
-// This method removes the components in the specified index range from this list.
-// The removed components are returned.
+// This method removes the values in the specified index range from this list.
+// The removed values are returned.
 func (v *list) RemoveValues(first int, last int) abs.Sequential[abs.ComponentLike] {
-	return v.components.RemoveValues(first, last)
+	return v.values.RemoveValues(first, last)
 }
 
-// This method removes all components from this list.
+// This method removes all values from this list.
 func (v *list) RemoveAll() {
-	v.components.RemoveAll()
+	v.values.RemoveAll()
 }
 
 // SORTABLE INTERFACE
 
-// This method sorts the components in this list using the natural rank function.
+// This method sorts the values in this list using the natural rank function.
 func (v *list) SortValues() {
-	v.components.SortValues()
+	v.values.SortValues()
 }
 
-// This method reverses the order of all components in this list.
+// This method reverses the order of all values in this list.
 func (v *list) ReverseValues() {
-	v.components.ReverseValues()
+	v.values.ReverseValues()
 }
 
-// This method pseudo-randomly shuffles the components in this list.
+// This method pseudo-randomly shuffles the values in this list.
 func (v *list) ShuffleValues() {
-	v.components.ShuffleValues()
+	v.values.ShuffleValues()
 }

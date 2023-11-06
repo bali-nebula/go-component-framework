@@ -139,7 +139,7 @@ var grammar = map[string]string{
 	"$exception":     `expression`,
 	"$exponential":   `expression "^" expression`,
 	"$expression": `
-      component  ! entity context? NOTE?
+      value  ! component
     | intrinsic  ! function "(" arguments? ")"
     | variable  ! IDENTIFIER
     | precedence  ! "(" expression ")"
