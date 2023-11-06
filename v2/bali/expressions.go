@@ -345,7 +345,7 @@ func (v *parser) parseExpression() (abs.Expression, *Token, bool) {
 	var ok bool
 	var token *Token
 	var expression abs.Expression
-	expression, token, ok = v.parseComponent()
+	expression, token, ok = v.parseValue()
 	if !ok {
 		expression, token, ok = v.parseIntrinsic()
 	}
@@ -377,9 +377,9 @@ func (v *parser) parseExpression() (abs.Expression, *Token, bool) {
 // state of the formatter.
 func (v *formatter) formatExpression(expression abs.Expression) {
 	switch exp.GetType(expression) {
-	case "ComponentExpression":
-		var value = expression.(abs.ComponentLike)
-		v.formatComponent(value)
+	case "ValueExpression":
+		var value = expression.(abs.ValueLike)
+		v.formatValue(value)
 	case "IntrinsicExpression":
 		var value = expression.(abs.IntrinsicLike)
 		v.formatIntrinsic(value)
@@ -894,8 +894,24 @@ func (v *formatter) formatOperator(operator abs.Operator) {
 	}
 }
 
-// This method attempts to parse an identifier. It returns the identifier
-// string and whether or not the identifier was successfully parsed.
+// This method attempts to parse a value. It returns the value
+// string and whether or not the value was successfully parsed.
+func (v *parser) parseValue() (abs.ValueLike, *Token, bool) {
+	var ok bool
+	var token *Token
+	var value abs.ValueLike
+	var component abs.ComponentLike
+	component, token, ok = v.parseComponent()
+	if !ok {
+		// This is not a value.
+		return value, token, false
+	}
+	value = exp.Value(component)
+	return value, token, true
+}
+
+// This method attempts to parse a variable. It returns the variable
+// string and whether or not the variable was successfully parsed.
 func (v *parser) parseVariable() (abs.VariableLike, *Token, bool) {
 	var variable abs.VariableLike
 	var token = v.nextToken()
@@ -907,7 +923,14 @@ func (v *parser) parseVariable() (abs.VariableLike, *Token, bool) {
 	return variable, token, true
 }
 
-// This method adds the canonical format for the specified identifier to the
+// This method adds the canonical format for the specified value to the
+// state of the formatter.
+func (v *formatter) formatValue(value abs.ValueLike) {
+	var component = value.GetComponent()
+	v.formatComponent(component)
+}
+
+// This method adds the canonical format for the specified variable to the
 // state of the formatter.
 func (v *formatter) formatVariable(variable abs.VariableLike) {
 	var identifier = variable.GetIdentifier()

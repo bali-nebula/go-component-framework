@@ -98,6 +98,11 @@ type UnaryOperationLike interface {
 	SetExpression(expression Expression)
 }
 
+type ValueLike interface {
+	GetComponent() ComponentLike
+	SetComponent(component ComponentLike)
+}
+
 type VariableLike interface {
 	GetIdentifier() string
 	SetIdentifier(identifier string)

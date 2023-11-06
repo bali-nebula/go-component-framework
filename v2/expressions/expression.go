@@ -23,8 +23,8 @@ import (
 // The type switch CAN distinguish between the private structure types.
 func GetType(expression abs.Expression) string {
 	switch value := expression.(type) {
-	case abs.ComponentLike:
-		return "ComponentExpression"
+	case *valueExpression:
+		return "ValueExpression"
 	case *intrinsicExpression:
 		return "IntrinsicExpression"
 	case *variableExpression:
