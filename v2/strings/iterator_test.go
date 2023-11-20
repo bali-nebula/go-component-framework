@@ -76,12 +76,12 @@ func TestInstructionIterators(t *tes.T) {
 	ass.Equal(t, i2, iterator.GetNext())
 }
 
-func TestNameIterators(t *tes.T) {
-	var bali = abs.Name("bali")
-	var types = abs.Name("types")
-	var abstractions = abs.Name("abstractions")
-	var moniker = str.MonikerFromString("/bali/types/abstractions")
-	var iterator = str.NameIterator(moniker)
+func TestIdentifierIterators(t *tes.T) {
+	var bali = abs.Identifier("bali")
+	var types = abs.Identifier("types")
+	var abstractions = abs.Identifier("abstractions")
+	var name = str.NameFromString("/bali/types/abstractions")
+	var iterator = str.IdentifierIterator(name)
 	ass.False(t, iterator.HasPrevious())
 	ass.True(t, iterator.HasNext())
 	ass.Equal(t, bali, iterator.GetNext())

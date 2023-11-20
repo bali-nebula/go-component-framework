@@ -173,7 +173,7 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 	var token *Token
 	var recipient abs.Recipient
 	var level abs.Expression
-	var moniker abs.Expression
+	var name abs.Expression
 	var clause abs.CheckoutClauseLike
 	_, token, ok = v.parseKeyword("checkout")
 	if !ok {
@@ -214,15 +214,15 @@ func (v *parser) parseCheckoutClause() (abs.CheckoutClauseLike, *Token, bool) {
 			"$checkoutClause")
 		panic(message)
 	}
-	moniker, token, ok = v.parseExpression()
+	name, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("moniker",
+		message += generateGrammar("name",
 			"$checkoutClause",
-			"$moniker")
+			"$name")
 		panic(message)
 	}
-	clause = pro.CheckoutClause(recipient, level, moniker)
+	clause = pro.CheckoutClause(recipient, level, name)
 	return clause, token, true
 }
 
@@ -238,8 +238,8 @@ func (v *formatter) formatCheckoutClause(clause abs.CheckoutClauseLike) {
 		v.formatExpression(level)
 	}
 	v.AppendString(" from ")
-	var moniker = clause.GetMoniker()
-	v.formatExpression(moniker)
+	var name = clause.GetName()
+	v.formatExpression(name)
 }
 
 // This method attempts to parse a continue clause. It returns the continue
@@ -654,7 +654,7 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 	var ok bool
 	var token *Token
 	var document abs.Expression
-	var moniker abs.Expression
+	var name abs.Expression
 	var clause abs.NotarizeClauseLike
 	_, token, ok = v.parseKeyword("notarize")
 	if !ok {
@@ -676,15 +676,15 @@ func (v *parser) parseNotarizeClause() (abs.NotarizeClauseLike, *Token, bool) {
 			"$notarizeClause")
 		panic(message)
 	}
-	moniker, token, ok = v.parseExpression()
+	name, token, ok = v.parseExpression()
 	if !ok {
 		var message = v.formatError(token)
-		message += generateGrammar("moniker",
+		message += generateGrammar("name",
 			"$notarizeClause",
-			"$moniker")
+			"$name")
 		panic(message)
 	}
-	clause = pro.NotarizeClause(document, moniker)
+	clause = pro.NotarizeClause(document, name)
 	return clause, token, true
 }
 
@@ -695,8 +695,8 @@ func (v *formatter) formatNotarizeClause(clause abs.NotarizeClauseLike) {
 	var document = clause.GetDocument()
 	v.formatExpression(document)
 	v.AppendString(" as ")
-	var moniker = clause.GetMoniker()
-	v.formatExpression(moniker)
+	var name = clause.GetName()
+	v.formatExpression(name)
 }
 
 // This method attempts to parse an on clause. It returns the on clause

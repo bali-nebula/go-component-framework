@@ -22,7 +22,7 @@ var firstFloat, lastFloat = -1.2, 3.4
 var firstInt, lastInt = 3, 7
 var firstInteger, lastInteger = bal.Integer(-1), bal.Integer(1)
 var firstMoment, lastMoment = bal.Moment(-12), bal.Moment(123)
-var firstMoniker, lastMoniker = bal.Moniker("/bali/foo"), bal.Moniker("/bali/fuz")
+var firstName, lastName = bal.Name("/bali/foo"), bal.Name("/bali/fuz")
 var firstPattern, lastPattern = bal.Pattern(`"ca+d"?`), bal.Pattern(`"ca+t"?`)
 var firstPercentage, lastPercentage = bal.Percentage(-10), bal.Percentage(150)
 var firstProbability, lastProbability = bal.Probability(false), bal.Probability(true)
@@ -35,7 +35,7 @@ var firstTag, lastTag = bal.Tag("#TAB"), bal.Tag("#TAG")
 var firstVersion, lastVersion = bal.Version("v1.2"), bal.Version("v1.2.3")
 
 func TestSpectra(t *tes.T) {
-	bal.Spectrum(firstMoniker, abs.INCLUSIVE, lastMoniker, nil)
+	bal.Spectrum(firstName, abs.INCLUSIVE, lastName, nil)
 	bal.Spectrum(firstPattern, abs.INCLUSIVE, lastPattern, nil)
 	bal.Spectrum(firstQuote, abs.INCLUSIVE, lastQuote, nil)
 	bal.Spectrum(firstResource, abs.INCLUSIVE, lastResource, nil)

@@ -24,7 +24,6 @@ import (
 // This map is useful when creating scanner and parser error messages.
 var grammar = map[string]string{
 	"$ANGLE":       `'~' (ZERO | MAGNITUDE)`,
-	"$ANY":         `"any"`,
 	"$AUTHORITY":   `~('/' | CONTROL)+`,
 	"$BASE10":      `'0'..'9'`,
 	"$BASE16":      `'0'..'9' | 'a'..'f'`,
@@ -56,18 +55,16 @@ var grammar = map[string]string{
 	"$MINUTE":      `'0'..'5' '0'..'9'`,
 	"$MINUTES":     `TIMESPAN 'M'`,
 	"$MOMENT":      `'<' SIGN? YEAR ('-' MONTH ('-' DAY ('T' HOUR (':' MINUTE (':' SECOND FRACTION?)?)?)?)?)? '>'`,
-	"$MONIKER":     `('/' NAME)+`,
 	"$MONTH":       `'0' '1'..'9' | '1' '0'..'2'`,
 	"$MONTHS":      `TIMESPAN 'M'`,
-	"$NAME":        `LETTER (SEPARATOR? (LETTER | DIGIT))*`,
-	"$NARRATIVE":   `'"' '>' EOL (NARRATIVE | ~('<' '"'))* EOL SPACE* '<' '"'`,
-	"$NONE":        `"none"`,
+	"$NAME":        `('/' IDENTIFIER)+`,
+	"$NARRATIVE":   `'"' '>' EOL ANY* EOL SPACE* '<' '"'`,
 	"$NOTE":        `"! " (~CONTROL)*`,
 	"$NUMBER":      `REAL | IMAGINARY | COMPLEX`,
 	"$ONE":         `"1."`,
 	"$ORDINAL":     `'1'..'9' '0'..'9'*`,
 	"$PATH":        `~('?' | '#' | '>' | CONTROL)*`,
-	"$PATTERN":     `NONE | REGEX | ANY`,
+	"$PATTERN":     `"none" | REGEX | "any"`,
 	"$PERCENTAGE":  `REAL '%'`,
 	"$PHI":         `"phi" | 'φ'`,
 	"$PI":          `"pi" | 'π'`,
@@ -112,7 +109,7 @@ var grammar = map[string]string{
 	"$bag":            `expression`,
 	"$breakClause":    `"break" "loop"`,
 	"$chaining":       `expression "&" expression`,
-	"$checkoutClause": `"checkout" recipient ("at" "level" ordinal)? "from" moniker`,
+	"$checkoutClause": `"checkout" recipient ("at" "level" level)? "from" name`,
 	"$collection":     `"[" (associations | values) "]"`,
 	"$comparison":     `expression ("<" | "=" | ">" | "≠" | "IS" | "MATCHES") expression`,
 	"$complement":     `"NOT" expression`,
@@ -123,7 +120,7 @@ var grammar = map[string]string{
 	"$continueClause": `"continue" "loop"`,
 	"$control": `
       ifClause  ! "if" condition "do" procedure
-    | selectClause  ! "select" target ("matching" pattern "do" procedure)+
+    | selectClause  ! "select" target ("matching" template "do" procedure)+
     | whileClause  ! "while" condition "do" procedure
     | withClause  ! "with" "each" item "in" sequence "do" procedure
     | continueClause  ! "continue" "loop"
@@ -165,6 +162,7 @@ var grammar = map[string]string{
 	"$item":       `SYMBOL`,
 	"$key":        `primitive`,
 	"$letClause":  `("let" recipient (":=" | "?=" | "+=" | "-=" | "*=" | "/="))? expression`,
+	"$level":      `expression`,
 	"$logical":    `expression ("AND" | "SANS" | "OR" | "XOR") expression`,
 	"$magnitude":  `"|" expression "|"`,
 	"$mainClause": `control | assignment | messaging | repository`,
@@ -176,34 +174,31 @@ var grammar = map[string]string{
     | rejectClause  ! "reject" message
     | publishClause  ! "publish" event`,
 	"$method":         `IDENTIFIER`,
-	"$moniker":        `expression`,
-	"$name":           `SYMBOL`,
-	"$notarizeClause": `"notarize" document "as" moniker`,
-	"$onClause":       `"on" failure ("matching" pattern "do" procedure)+`,
-	"$ordinal":        `expression`,
-	"$parameter":      `name ":" value`,
+	"$name":           `expression`,
+	"$notarizeClause": `"notarize" document "as" name`,
+	"$onClause":       `"on" failure ("matching" template "do" procedure)+`,
+	"$parameter":      `SYMBOL ":" value`,
 	"$parameters": `
       parameter ("," parameter)*
     | EOL (parameter EOL)+  ! At least one parameter is required.`,
-	"$pattern":       `expression`,
 	"$postClause":    `"post" message "to" bag`,
 	"$precedence":    `"(" expression ")"`,
 	"$primitive":     `element | string`,
 	"$procedure":     `"{" statements "}"`,
 	"$publishClause": `"publish" event`,
 	"$range":         `("[" | "(") primitive ".." primitive (")" | "]")`,
-	"$recipient":     `name | attribute`,
+	"$recipient":     `SYMBOL | attribute`,
 	"$rejectClause":  `"reject" message`,
 	"$repository": `
-      checkoutClause  ! "checkout" recipient ("at" "level" ordinal)? "from" moniker
+      checkoutClause  ! "checkout" recipient ("at" "level" level)? "from" name
     | saveClause  ! "save" document "as" recipient
     | discardClause  ! "discard" document
-    | notarizeClause  ! "notarize" document "as" moniker`,
+    | notarizeClause  ! "notarize" document "as" name`,
 	"$result":         `expression`,
 	"$retrieveClause": `"retrieve" recipient "from" bag`,
 	"$returnClause":   `"return" result`,
 	"$saveClause":     `"save" document "as" recipient`,
-	"$selectClause":   `"select" target ("matching" pattern "do" procedure)+`,
+	"$selectClause":   `"select" target ("matching" template "do" procedure)+`,
 	"$sequence":       `expression`,
 	"$source":         `component EOF  ! EOF is the end-of-file marker.`,
 	"$statement":      `(annotation EOL)? mainClause onClause? NOTE?`,
@@ -211,9 +206,10 @@ var grammar = map[string]string{
       statement (";" statement)*
     | EOL (statement? EOL)+  ! Allows blank lines.
     | " "  ! No statements.`,
-	"$string":       `BINARY | BYTECODE | MONIKER | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION`,
+	"$string":       `BINARY | BYTECODE | NAME | NARRATIVE | QUOTE | SYMBOL | TAG | VERSION`,
 	"$subcomponent": `composite "[" indices "]"`,
 	"$target":       `expression`,
+	"$template":     `expression`,
 	"$throwClause":  `"throw" exception`,
 	"$value":        `component`,
 	"$values": `

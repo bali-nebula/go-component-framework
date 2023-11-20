@@ -76,6 +76,11 @@ func (v *component) ExtractCatalog() abs.CatalogLike {
 	return v.entity.(abs.CatalogLike)
 }
 
+// This method returns the entity for this component as a citation.
+func (v *component) ExtractCitation() abs.CitationLike {
+	return v.entity.(abs.CitationLike)
+}
+
 // This method returns the entity for this component as a continuum.
 func (v *component) ExtractContinuum() abs.ContinuumLike {
 	return v.entity.(abs.ContinuumLike)
@@ -101,9 +106,9 @@ func (v *component) ExtractMoment() abs.MomentLike {
 	return v.entity.(abs.MomentLike)
 }
 
-// This method returns the entity for this component as a moniker.
-func (v *component) ExtractMoniker() abs.MonikerLike {
-	return v.entity.(abs.MonikerLike)
+// This method returns the entity for this component as a name.
+func (v *component) ExtractName() abs.NameLike {
+	return v.entity.(abs.NameLike)
 }
 
 // This method returns the entity for this component as a narrative.

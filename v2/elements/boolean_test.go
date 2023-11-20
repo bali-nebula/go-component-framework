@@ -17,56 +17,56 @@ import (
 )
 
 func TestFalseBooleans(t *tes.T) {
-	var v = ele.Boolean(false)
+	var v = ele.BooleanFromBool(false)
 	ass.False(t, v.AsBoolean())
 }
 
 func TestTrueBooleans(t *tes.T) {
-	var v = ele.Boolean(true)
+	var v = ele.BooleanFromBool(true)
 	ass.True(t, v.AsBoolean())
 }
 
 func TestBooleansLibrary(t *tes.T) {
-	var T = ele.Boolean(true)
-	var F = ele.Boolean(false)
+	var T = ele.BooleanFromBool(true)
+	var F = ele.BooleanFromBool(false)
 
-	var andNot = ele.Booleans.And(ele.Booleans.Not(T), ele.Booleans.Not(T))
-	var notOr = ele.Booleans.Not(ele.Booleans.Or(T, T))
+	var andNot = ele.Boolean.And(ele.Boolean.Not(T), ele.Boolean.Not(T))
+	var notOr = ele.Boolean.Not(ele.Boolean.Or(T, T))
 	ass.Equal(t, andNot, notOr)
 
-	andNot = ele.Booleans.And(ele.Booleans.Not(T), ele.Booleans.Not(F))
-	notOr = ele.Booleans.Not(ele.Booleans.Or(T, F))
+	andNot = ele.Boolean.And(ele.Boolean.Not(T), ele.Boolean.Not(F))
+	notOr = ele.Boolean.Not(ele.Boolean.Or(T, F))
 	ass.Equal(t, andNot, notOr)
 
-	andNot = ele.Booleans.And(ele.Booleans.Not(F), ele.Booleans.Not(T))
-	notOr = ele.Booleans.Not(ele.Booleans.Or(F, T))
+	andNot = ele.Boolean.And(ele.Boolean.Not(F), ele.Boolean.Not(T))
+	notOr = ele.Boolean.Not(ele.Boolean.Or(F, T))
 	ass.Equal(t, andNot, notOr)
 
-	andNot = ele.Booleans.And(ele.Booleans.Not(F), ele.Booleans.Not(F))
-	notOr = ele.Booleans.Not(ele.Booleans.Or(F, F))
+	andNot = ele.Boolean.And(ele.Boolean.Not(F), ele.Boolean.Not(F))
+	notOr = ele.Boolean.Not(ele.Boolean.Or(F, F))
 	ass.Equal(t, andNot, notOr)
 
-	var sans = ele.Booleans.And(T, ele.Booleans.Not(T))
-	ass.Equal(t, sans, ele.Booleans.Sans(T, T))
+	var sans = ele.Boolean.And(T, ele.Boolean.Not(T))
+	ass.Equal(t, sans, ele.Boolean.Sans(T, T))
 
-	sans = ele.Booleans.And(T, ele.Booleans.Not(F))
-	ass.Equal(t, sans, ele.Booleans.Sans(T, F))
+	sans = ele.Boolean.And(T, ele.Boolean.Not(F))
+	ass.Equal(t, sans, ele.Boolean.Sans(T, F))
 
-	sans = ele.Booleans.And(F, ele.Booleans.Not(T))
-	ass.Equal(t, sans, ele.Booleans.Sans(F, T))
+	sans = ele.Boolean.And(F, ele.Boolean.Not(T))
+	ass.Equal(t, sans, ele.Boolean.Sans(F, T))
 
-	sans = ele.Booleans.And(F, ele.Booleans.Not(F))
-	ass.Equal(t, sans, ele.Booleans.Sans(F, F))
+	sans = ele.Boolean.And(F, ele.Boolean.Not(F))
+	ass.Equal(t, sans, ele.Boolean.Sans(F, F))
 
-	var xor = ele.Booleans.Or(ele.Booleans.Sans(T, T), ele.Booleans.Sans(T, T))
-	ass.Equal(t, xor, ele.Booleans.Xor(T, T))
+	var xor = ele.Boolean.Or(ele.Boolean.Sans(T, T), ele.Boolean.Sans(T, T))
+	ass.Equal(t, xor, ele.Boolean.Xor(T, T))
 
-	xor = ele.Booleans.Or(ele.Booleans.Sans(T, F), ele.Booleans.Sans(F, T))
-	ass.Equal(t, xor, ele.Booleans.Xor(T, F))
+	xor = ele.Boolean.Or(ele.Boolean.Sans(T, F), ele.Boolean.Sans(F, T))
+	ass.Equal(t, xor, ele.Boolean.Xor(T, F))
 
-	xor = ele.Booleans.Or(ele.Booleans.Sans(F, T), ele.Booleans.Sans(T, F))
-	ass.Equal(t, xor, ele.Booleans.Xor(F, T))
+	xor = ele.Boolean.Or(ele.Boolean.Sans(F, T), ele.Boolean.Sans(T, F))
+	ass.Equal(t, xor, ele.Boolean.Xor(F, T))
 
-	xor = ele.Booleans.Or(ele.Booleans.Sans(F, F), ele.Booleans.Sans(F, F))
-	ass.Equal(t, xor, ele.Booleans.Xor(F, F))
+	xor = ele.Boolean.Or(ele.Boolean.Sans(F, F), ele.Boolean.Sans(F, F))
+	ass.Equal(t, xor, ele.Boolean.Xor(F, F))
 }

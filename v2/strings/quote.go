@@ -64,7 +64,7 @@ func QuoteFromSequence(sequence abs.Sequential[rune]) abs.QuoteLike {
 // the quote string.
 type Quote string
 
-// QUANTIZED INTERFACE
+// LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
 func (v Quote) AsString() string {

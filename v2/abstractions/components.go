@@ -28,16 +28,24 @@ type Encapsulated interface {
 	SetNote(note NoteLike)
 	GetEntity() Entity
 	SetEntity(entity Entity)
+	/*
+		IsElement() bool
+		IsString() bool
+		IsRange() bool
+		IsCollection() bool
+		IsProcedure() bool
+	*/
 	ExtractAngle() AngleLike
 	ExtractBinary() BinaryLike
 	ExtractBoolean() BooleanLike
 	ExtractCatalog() CatalogLike
+	ExtractCitation() CitationLike
 	ExtractContinuum() ContinuumLike
 	ExtractDuration() DurationLike
 	ExtractInterval() IntervalLike
 	ExtractList() ListLike
 	ExtractMoment() MomentLike
-	ExtractMoniker() MonikerLike
+	ExtractName() NameLike
 	ExtractNarrative() NarrativeLike
 	ExtractNumber() NumberLike
 	ExtractPattern() PatternLike

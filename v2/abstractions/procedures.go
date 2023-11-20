@@ -46,8 +46,8 @@ type CheckoutClauseLike interface {
 	SetRecipient(recipient Recipient)
 	GetLevel() Expression
 	SetLevel(level Expression)
-	GetMoniker() Expression
-	SetMoniker(moniker Expression)
+	GetName() Expression
+	SetName(name Expression)
 }
 
 type ContinueClauseLike interface {
@@ -74,8 +74,8 @@ type LetClauseLike interface {
 type NotarizeClauseLike interface {
 	GetDocument() Expression
 	SetDocument(document Expression)
-	GetMoniker() Expression
-	SetMoniker(moniker Expression)
+	GetName() Expression
+	SetName(name Expression)
 }
 
 type OnClauseLike interface {

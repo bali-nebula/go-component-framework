@@ -73,7 +73,7 @@ func VersionFromSequence(sequence abs.Sequential[abs.Ordinal]) abs.VersionLike {
 // the version string.
 type Version string
 
-// QUANTIZED INTERFACE
+// LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
 func (v Version) AsString() string {

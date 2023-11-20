@@ -17,8 +17,8 @@ import (
 )
 
 func TestNonePattern(t *tes.T) {
-	var v = ele.PatternFromString(`^none$`)
-	ass.Equal(t, `^none$`, v.AsString())
+	var v = ele.PatternFromString(`none`)
+	ass.Equal(t, `none`, v.AsString())
 
 	var text = ""
 	ass.False(t, v.MatchesText(text))
@@ -34,8 +34,8 @@ func TestNonePattern(t *tes.T) {
 }
 
 func TestAnyPattern(t *tes.T) {
-	var v = ele.PatternFromString(`.*`)
-	ass.Equal(t, `.*`, v.AsString())
+	var v = ele.PatternFromString(`any`)
+	ass.Equal(t, `any`, v.AsString())
 
 	var text = ""
 	ass.True(t, v.MatchesText(text))
@@ -51,8 +51,8 @@ func TestAnyPattern(t *tes.T) {
 }
 
 func TestSomePattern(t *tes.T) {
-	var v = ele.PatternFromString(`c(.+t)`)
-	ass.Equal(t, `c(.+t)`, v.AsString())
+	var v = ele.PatternFromString(`"c(.+t)"?`)
+	ass.Equal(t, `"c(.+t)"?`, v.AsString())
 
 	var text = "ct"
 	ass.False(t, v.MatchesText(text))

@@ -45,19 +45,19 @@ type instructionIterator struct {
 	abs.InstructionIteratorLike
 }
 
-// NAME ITERATOR IMPLEMENTATION
+// IDENTIFIER ITERATOR IMPLEMENTATION
 
-// This constructor creates a new instance of a name iterator that can be used
-// to traverse the names in the specified sequence.
-func NameIterator(sequence abs.Sequential[abs.Name]) abs.NameIteratorLike {
-	var iterator = col.Iterator[abs.Name](sequence)
-	return &nameIterator{iterator}
+// This constructor creates a new instance of a identifier iterator that can be
+// used to traverse the identifiers in the specified sequence.
+func IdentifierIterator(sequence abs.Sequential[abs.Identifier]) abs.IdentifierIteratorLike {
+	var iterator = col.Iterator[abs.Identifier](sequence)
+	return &identifierIterator{iterator}
 }
 
-// This type defines the structure and methods for a name iterator. The
-// iterator operates on a sequence of names.
-type nameIterator struct {
-	abs.NameIteratorLike
+// This type defines the structure and methods for a identifier iterator. The
+// iterator operates on a sequence of identifiers.
+type identifierIterator struct {
+	abs.IdentifierIteratorLike
 }
 
 // LINE ITERATOR IMPLEMENTATION

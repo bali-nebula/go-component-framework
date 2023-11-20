@@ -58,7 +58,7 @@ func NarrativeFromSequence(sequence abs.Sequential[abs.Line]) abs.NarrativeLike 
 // For valid string formats for this type see `../abstractions/language.go`.
 type Narrative string
 
-// QUANTIZED INTERFACE
+// LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
 func (v Narrative) AsString() string {

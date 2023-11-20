@@ -17,21 +17,21 @@ import (
 	tes "testing"
 )
 
-func TestMoniker(t *tes.T) {
-	var v1 = str.MonikerFromString("/bali/types/abstractions/String/v1.2.3")
-	ass.Equal(t, "/bali/types/abstractions/String/v1.2.3", v1.AsString())
+func TestName(t *tes.T) {
+	var v1 = str.NameFromString("/bali/types/abstractions/String")
+	ass.Equal(t, "/bali/types/abstractions/String", v1.AsString())
 	ass.False(t, v1.IsEmpty())
-	ass.Equal(t, 5, v1.GetSize())
-	ass.Equal(t, abs.Name("bali"), v1.GetValue(1))
-	ass.Equal(t, abs.Name("v1.2.3"), v1.GetValue(-1))
-	var v2 = str.MonikerFromArray(v1.AsArray())
+	ass.Equal(t, 4, v1.GetSize())
+	ass.Equal(t, abs.Identifier("bali"), v1.GetValue(1))
+	ass.Equal(t, abs.Identifier("String"), v1.GetValue(-1))
+	var v2 = str.NameFromArray(v1.AsArray())
 	ass.Equal(t, v1.AsString(), v2.AsString())
-	var v3 = str.MonikerFromSequence(v1.GetValues(1, 2))
+	var v3 = str.NameFromSequence(v1.GetValues(1, 2))
 	ass.Equal(t, "/bali/types", v3.AsString())
 }
 
-func TestMonikersLibrary(t *tes.T) {
-	var v1 = str.MonikerFromString("/bali/types/abstractions")
-	var v2 = str.MonikerFromString("/String/v1.2.3")
-	ass.Equal(t, "/bali/types/abstractions/String/v1.2.3", str.Monikers.Concatenate(v1, v2).AsString())
+func TestNamesLibrary(t *tes.T) {
+	var v1 = str.NameFromString("/bali/types/abstractions")
+	var v2 = str.NameFromString("/String")
+	ass.Equal(t, "/bali/types/abstractions/String", str.Names.Concatenate(v1, v2).AsString())
 }

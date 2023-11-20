@@ -13,6 +13,7 @@ package bali
 import (
 	byt "bytes"
 	//fmt "fmt"
+	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	reg "regexp"
 	sts "strings"
 	uni "unicode"
@@ -40,7 +41,7 @@ const (
 	TokenINTRINSIC   TokenType = "INTRINSIC"
 	TokenKEYWORD     TokenType = "KEYWORD"
 	TokenMOMENT      TokenType = "MOMENT"
-	TokenMONIKER     TokenType = "MONIKER"
+	TokenNAME        TokenType = "NAME"
 	TokenNARRATIVE   TokenType = "NARRATIVE"
 	TokenNOTE        TokenType = "NOTE"
 	TokenNUMBER      TokenType = "NUMBER"
@@ -197,7 +198,7 @@ func (v *scanner) processToken() bool {
 	// String token types.
 	case v.scanBINARY():
 	case v.scanBYTECODE():
-	case v.scanMONIKER():
+	case v.scanNAME():
 	case v.scanNARRATIVE():
 	case v.scanQUOTE():
 	case v.scanSYMBOL():
@@ -221,7 +222,7 @@ func (v *scanner) processToken() bool {
 // to the token channel. It returns true if a new angle token was found.
 func (v *scanner) scanANGLE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(angleScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.AngleMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenANGLE)
 		return true
@@ -233,7 +234,7 @@ func (v *scanner) scanANGLE() bool {
 // to the token channel. It returns true if a new binary token was found.
 func (v *scanner) scanBINARY() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(binaryScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.BinaryMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenBINARY)
 		return true
@@ -245,7 +246,7 @@ func (v *scanner) scanBINARY() bool {
 // to the token channel. It returns true if a new boolean token was found.
 func (v *scanner) scanBOOLEAN() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(booleanScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.BooleanMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenBOOLEAN)
 		return true
@@ -257,7 +258,7 @@ func (v *scanner) scanBOOLEAN() bool {
 // to the token channel. It returns true if a new bytecode token was found.
 func (v *scanner) scanBYTECODE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(bytecodeScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.BytecodeMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenBYTECODE)
 		return true
@@ -269,7 +270,7 @@ func (v *scanner) scanBYTECODE() bool {
 // to the token channel. It returns true if a new comment token was found.
 func (v *scanner) scanCOMMENT() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(commentScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.CommentMatcher.FindSubmatch(s))
 	//matches = scanComment(s)
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenCOMMENT)
@@ -282,7 +283,7 @@ func (v *scanner) scanCOMMENT() bool {
 // to the token channel. It returns true if a new delimiter token was found.
 func (v *scanner) scanDELIMITER() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(delimiterScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.DelimiterMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenDELIMITER)
 		return true
@@ -294,7 +295,7 @@ func (v *scanner) scanDELIMITER() bool {
 // to the token channel. It returns true if a new duration token was found.
 func (v *scanner) scanDURATION() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(durationScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.DurationMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenDURATION)
 		return true
@@ -306,7 +307,7 @@ func (v *scanner) scanDURATION() bool {
 // to the token channel. It returns true if a new EOL token was found.
 func (v *scanner) scanEOL() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(eolScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.EolMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenEOL)
 		return true
@@ -318,7 +319,7 @@ func (v *scanner) scanEOL() bool {
 // to the token channel. It returns true if a new identifier token was found.
 func (v *scanner) scanIDENTIFIER() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(identifierScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.IdentifierMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenIDENTIFIER)
 		return true
@@ -330,7 +331,7 @@ func (v *scanner) scanIDENTIFIER() bool {
 // to the token channel. It returns true if a new intrinsic token was found.
 func (v *scanner) scanINTRINSIC() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(intrinsicScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.IntrinsicMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		// Check to see if the match is part of an identifier.
 		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
@@ -346,7 +347,7 @@ func (v *scanner) scanINTRINSIC() bool {
 // to the token channel. It returns true if a new keyword token was found.
 func (v *scanner) scanKEYWORD() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(keywordScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.KeywordMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		// Check to see if the match is part of an identifier.
 		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
@@ -362,7 +363,7 @@ func (v *scanner) scanKEYWORD() bool {
 // to the token channel. It returns true if a new moment token was found.
 func (v *scanner) scanMOMENT() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(momentScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.MomentMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenMOMENT)
 		return true
@@ -370,13 +371,13 @@ func (v *scanner) scanMOMENT() bool {
 	return false
 }
 
-// This method adds a new moniker token with the current scanner information
-// to the token channel. It returns true if a new moniker token was found.
-func (v *scanner) scanMONIKER() bool {
+// This method adds a new name token with the current scanner information
+// to the token channel. It returns true if a new name token was found.
+func (v *scanner) scanNAME() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(monikerScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.NameMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
-		v.emitToken(matches[0], TokenMONIKER)
+		v.emitToken(matches[0], TokenNAME)
 		return true
 	}
 	return false
@@ -386,7 +387,7 @@ func (v *scanner) scanMONIKER() bool {
 // to the token channel. It returns true if a new narrative token was found.
 func (v *scanner) scanNARRATIVE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(narrativeScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.NarrativeMatcher.FindSubmatch(s))
 	//matches = scanNarrative(s)
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenNARRATIVE)
@@ -399,7 +400,7 @@ func (v *scanner) scanNARRATIVE() bool {
 // to the token channel. It returns true if a new note token was found.
 func (v *scanner) scanNOTE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(noteScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.NoteMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenNOTE)
 		return true
@@ -411,7 +412,7 @@ func (v *scanner) scanNOTE() bool {
 // to the token channel. It returns true if a new number token was found.
 func (v *scanner) scanNUMBER() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(numberScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.NumberMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		// Check to see if the match is part of an identifier or keyword.
 		var r, _ = utf.DecodeRune(v.source[v.nextByte+len(matches[0]):])
@@ -427,7 +428,7 @@ func (v *scanner) scanNUMBER() bool {
 // to the token channel. It returns true if a new pattern token was found.
 func (v *scanner) scanPATTERN() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(patternScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.PatternMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenPATTERN)
 		return true
@@ -439,7 +440,7 @@ func (v *scanner) scanPATTERN() bool {
 // to the token channel. It returns true if a new percentage token was found.
 func (v *scanner) scanPERCENTAGE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(percentageScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.PercentageMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenPERCENTAGE)
 		return true
@@ -451,7 +452,7 @@ func (v *scanner) scanPERCENTAGE() bool {
 // to the token channel. It returns true if a new probability token was found.
 func (v *scanner) scanPROBABILITY() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(probabilityScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.ProbabilityMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		// Check to see if the match is part of a range.
 		if matches[0] != "1." ||
@@ -468,7 +469,7 @@ func (v *scanner) scanPROBABILITY() bool {
 // to the token channel. It returns true if a new quote token was found.
 func (v *scanner) scanQUOTE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(quoteScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.QuoteMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenQUOTE)
 		return true
@@ -480,7 +481,7 @@ func (v *scanner) scanQUOTE() bool {
 // to the token channel. It returns true if a new resource token was found.
 func (v *scanner) scanRESOURCE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(resourceScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.ResourceMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenRESOURCE)
 		return true
@@ -492,7 +493,7 @@ func (v *scanner) scanRESOURCE() bool {
 // to the token channel. It returns true if a new symbol token was found.
 func (v *scanner) scanSYMBOL() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(symbolScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.SymbolMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenSYMBOL)
 		return true
@@ -504,7 +505,7 @@ func (v *scanner) scanSYMBOL() bool {
 // to the token channel. It returns true if a new tag token was found.
 func (v *scanner) scanTAG() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(tagScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.TagMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenTAG)
 		return true
@@ -516,7 +517,7 @@ func (v *scanner) scanTAG() bool {
 // to the token channel. It returns true if a new version token was found.
 func (v *scanner) scanVERSION() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(versionScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.VersionMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenVERSION)
 		return true
@@ -528,127 +529,13 @@ func (v *scanner) scanVERSION() bool {
 // to the token channel. It returns true if a new whitespace token was found.
 func (v *scanner) scanWHITESPACE() bool {
 	var s = v.source[v.nextByte:]
-	var matches = bytesToStrings(whitespaceScanner.FindSubmatch(s))
+	var matches = bytesToStrings(uti.WhitespaceMatcher.FindSubmatch(s))
 	if len(matches) > 0 {
 		v.emitToken(matches[0], TokenWHITESPACE)
 		return true
 	}
 	return false
 }
-
-// These constant definitions capture regular expression subpatterns.
-const (
-	angle       = `~(` + magnitude + `|` + zero + `)`
-	authority   = `[^/\n]+`
-	base16      = `[0-9a-f]`
-	base32      = `[0-9A-DF-HJ-NP-TV-Z]` // "E", "I", "O", and "U" have been removed.
-	base64      = `[A-Za-z0-9+/]`
-	binary      = `'>` + eol + `((?:` + space + `*` + base64 + `+` + eol + `)*)` + space + `*<'`
-	boolean     = `false|true`
-	bytecode    = `'((?:` + instruction + `(?:` + space + instruction + `)*)*)'`
-	character   = `(?:` + escape + `|[^"` + eol + `])`
-	comment     = `!>` + eol + `((?:.|` + eol + `)*?)` + eol + space + `*<!`
-	complex_    = `\((?:` + rectangular + `|` + polar + `)\)`
-	dates       = years + `?` + months + `?` + days + `?`
-	day         = `(?:[012][1-9])|(?:[3][01])`
-	days        = `(` + span + `D)`
-	delimiter   = `≠|~|\}|\||\{|\^|\]|\[|@|\?=|>|=|<-|<|;|:=|:|/=|//|/|\.\.|\.|-=|-|,|\+=|\+|\*=|\*|\)|\(|&`
-	digit       = `\pN` // All unicode digits.
-	duration    = `~(` + sign + `?)P(?:` + weeks + `|` + dates + `(?:` + times + `)?)`
-	e           = `e`
-	eol         = `\n`
-	escape      = `\\(?:(?:` + unicode + `)|[abfnrtv'"\\])`
-	exponent    = `E` + sign + `?` + ordinal
-	float       = sign + `?` + magnitude
-	fraction    = `\.[0-9]+`
-	fragment    = `[^>\n]+`
-	hour        = `(?:[01][0-9])|(?:[2][0-3])`
-	hours       = `(` + span + `H)`
-	identifier  = letter + `(?:` + letter + `|` + digit + `)*`
-	imaginary   = sign + `?` + magnitude + `?i`
-	infinity    = sign + `?(?:infinity|∞)`
-	instruction = base16 + base16 + base16 + base16
-	integer     = zero + `|` + sign + `?` + ordinal
-	intrinsic   = `ANY|LOWER_CASE|UPPER_CASE|DIGIT|ESCAPE|CONTROL|EOF`
-	keyword     = `AND|IS|MATCHES|NOT|OR|SANS|XOR|accept|as|at|break|checkout|continue|discard|do|each|from|if|in|let|level|loop|matching|notarize|on|post|publish|reject|retrieve|return|save|select|throw|to|while|with`
-	letter      = `\pL` // All unicode letters and connectors like underscores.
-	magnitude   = `(?:` + e + `|` + pi + `|` + phi + `|` + tau + `|` + scalar + `)`
-	minute      = `[0-5][0-9]`
-	minutes     = `(` + span + `M)`
-	moment      = `<(` + sign + `)?(` + year + `)(?:-(` + month + `)(?:-(` + day + `)` +
-		`(?:T(` + hour + `)(?::(` + minute + `)(?::((?:` + second + `)(?:` + fraction + `)?))?)?)?)?)?>`
-	moniker     = `(?:/` + name + `)+` // Cannot capture each name...
-	month       = `(?:[0][1-9])|(?:[1][012])`
-	months      = `(` + span + `M)`
-	name        = letter + `(?:` + separator + `?(?:` + letter + `|` + digit + `))*`
-	narrative   = `">` + eol + `((?:.|` + eol + `)*?)` + eol + space + `*<"`
-	note        = `! [^\n]*`
-	number      = imaginary + `|` + real_ + `|` + complex_
-	ordinal     = `[1-9][0-9]*`
-	path        = `[^?#>\n]*`
-	pattern     = `none` + `|` + regex + `|` + `any`
-	percentage  = `(` + real_ + `)%`
-	pi          = `pi|π`
-	phi         = `phi|φ`
-	polar       = `(` + magnitude + `)(e\^)(` + angle + `i)`
-	probability = fraction + `|1\.`
-	query       = `[^#>\n]*`
-	quote       = `"(` + character + `*)"`
-	real_       = undefined + `|` + infinity + `|` + float + `|` + zero
-	rectangular = `(` + float + `)(, )(` + imaginary + `)`
-	regex       = `"(` + character + `+)"\?`
-	resource    = `<(` + `(` + scheme + `):` + `(?:` + `//(` + authority + `)` + `)?` + `(` + path + `)` + `(?:` + `\?(` + query + `)` + `)?` + `(?:` + `#(` + fragment + `)` + `)?` + `)>`
-	scalar      = `(?:` + ordinal + `(?:` + fraction + `)?|` + zero + fraction + `)(?:` + exponent + `)?`
-	scheme      = `[a-zA-Z][0-9a-zA-Z+-.]*`
-	second      = `(?:[0-5][0-9])|(?:[6][01])`
-	seconds     = `(` + span + `S)`
-	separator   = `[-+.]`
-	sign        = `[+-]`
-	space       = ` `
-	symbol      = `\$(` + identifier + `(?:-` + ordinal + `)?)`
-	tag         = `#(` + base32 + `+)`
-	tau         = `tau|τ`
-	times       = `(T)` + hours + `?` + minutes + `?` + seconds + `?`
-	span        = `(?:` + zero + `|` + ordinal + `(?:` + fraction + `)?)`
-	undefined   = `undefined`
-	unicode     = `u` + base16 + `{4}|U` + base16 + `{8}`
-	version     = `v(` + ordinal + `(?:\.` + ordinal + `)*)` // Cannot capture each ordinal...
-	weeks       = `(` + span + `W)`
-	whitespace  = `[` + space + `]+`
-	year        = `(?:` + ordinal + `|` + zero + `)`
-	years       = `(` + span + `Y)`
-	zero        = `0`
-)
-
-var (
-	angleScanner       = reg.MustCompile(`^(?:` + angle + `)`)
-	binaryScanner      = reg.MustCompile(`^(?:` + binary + `)`)
-	booleanScanner     = reg.MustCompile(`^(?:` + boolean + `)`)
-	bytecodeScanner    = reg.MustCompile(`^(?:` + bytecode + `)`)
-	commentScanner     = reg.MustCompile(`^(?:` + comment + `)`)
-	delimiterScanner   = reg.MustCompile(`^(?:` + delimiter + `)`)
-	durationScanner    = reg.MustCompile(`^(?:` + duration + `)`)
-	eolScanner         = reg.MustCompile(`^(?:` + eol + `)`)
-	identifierScanner  = reg.MustCompile(`^(?:` + identifier + `)`)
-	integerScanner     = reg.MustCompile(`^(?:` + integer + `)`)
-	intrinsicScanner   = reg.MustCompile(`^(?:` + intrinsic + `)`)
-	keywordScanner     = reg.MustCompile(`^(?:` + keyword + `)`)
-	momentScanner      = reg.MustCompile(`^(?:` + moment + `)`)
-	monikerScanner     = reg.MustCompile(`^(?:` + moniker + `)`)
-	narrativeScanner   = reg.MustCompile(`^(?:` + narrative + `)`)
-	noteScanner        = reg.MustCompile(`^(?:` + note + `)`)
-	numberScanner      = reg.MustCompile(`^(?:` + number + `)`)
-	patternScanner     = reg.MustCompile(`^(?:` + pattern + `)`)
-	percentageScanner  = reg.MustCompile(`^(?:` + percentage + `)`)
-	probabilityScanner = reg.MustCompile(`^(?:` + probability + `)`)
-	quoteScanner       = reg.MustCompile(`^(?:` + quote + `)`)
-	realScanner        = reg.MustCompile(`^(?:` + real_ + `)`)
-	resourceScanner    = reg.MustCompile(`^(?:` + resource + `)`)
-	symbolScanner      = reg.MustCompile(`^(?:` + symbol + `)`)
-	tagScanner         = reg.MustCompile(`^(?:` + tag + `)`)
-	versionScanner     = reg.MustCompile(`^(?:` + version + `)`)
-	whitespaceScanner  = reg.MustCompile(`^(?:` + whitespace + `)`)
-)
 
 /*
 // COMMENT SYNTAX

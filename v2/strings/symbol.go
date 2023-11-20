@@ -42,7 +42,7 @@ func SymbolFromString(string_ string) abs.SymbolLike {
 // make up the symbol.
 type Symbol string
 
-// QUANTIZED INTERFACE
+// LEXICAL INTERFACE
 
 // This method returns a string value for this lexical element.
 func (v Symbol) AsString() string {

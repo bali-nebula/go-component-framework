@@ -13,8 +13,11 @@ package elements
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
+	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 	cmp "math/cmplx"
+	stc "strconv"
+	sts "strings"
 )
 
 // CONSTANT DEFINITIONS
@@ -23,12 +26,12 @@ var zero = complex(0, 0)
 var infinity = cmp.Inf()
 var undefined = cmp.NaN()
 
-var I abs.NumberLike = Number(complex(0.0, 1.0))
-var One abs.NumberLike = Number(complex(1.0, 0.0))
-var Phi abs.NumberLike = Number(complex(mat.Phi, 0.0))
-var Zero abs.NumberLike = Number(zero)
-var Infinity abs.NumberLike = Number(infinity)
-var Undefined abs.NumberLike = Number(undefined)
+var I abs.NumberLike = number_(complex(0.0, 1.0))
+var One abs.NumberLike = number_(complex(1.0, 0.0))
+var Phi abs.NumberLike = number_(complex(mat.Phi, 0.0))
+var Zero abs.NumberLike = number_(zero)
+var Infinity abs.NumberLike = number_(infinity)
+var Undefined abs.NumberLike = number_(undefined)
 
 // NUMBER IMPLEMENTATION
 
@@ -102,13 +105,62 @@ func NumberFromComplex(complex_ complex128) abs.NumberLike {
 		// Lock onto 0, -1, 1, -i, i, and ∞ if necessary.
 		var r = lockMagnitude(real(complex_))
 		var i = lockMagnitude(imag(complex_))
-		return Number(complex(r, i))
+		return number_(complex(r, i))
 	}
 }
 
-func NumberFromPolar(magnitude float64, phase abs.AngleLike) abs.NumberLike {
-	var complex_ = cmp.Rect(magnitude, phase.AsReal())
+func NumberFromPolar(magnitude float64, phase float64) abs.NumberLike {
+	var complex_ = cmp.Rect(magnitude, phase)
 	return NumberFromComplex(complex_)
+}
+
+// This constructor creates a new number from the specified string value.
+func NumberFromString(string_ string) abs.NumberLike {
+	var matches = uti.NumberMatcher.FindStringSubmatch(string_)
+	if len(matches) == 0 {
+		var message = fmt.Sprintf("Attempted to construct a number from an invalid string: %v", string_)
+		panic(message)
+	}
+	var complex_ complex128
+	switch {
+	case len(matches[2]) > 0:
+		// This is a complex number in rectangular form.
+		var realPart = floatFromString(matches[1])
+		var imaginaryPart = floatFromString(matches[3][:len(matches[3])-1])
+		complex_ = complex(realPart, imaginaryPart)
+	case len(matches[5]) > 0:
+		// This is a complex number in polar form.
+		var magnitude = floatFromString(matches[4])
+		var phase = floatFromString(matches[7])
+		complex_ = cmp.Rect(magnitude, phase)
+	default:
+		// This is a pure (non-complex) number.
+		switch matches[0] {
+		case "undefined":
+			complex_ = cmp.NaN()
+		case "infinity", "∞":
+			complex_ = cmp.Inf()
+		case "0":
+			complex_ = complex(0, 0)
+		case "+i", "i":
+			complex_ = complex(0, 1)
+		case "-i":
+			complex_ = complex(0, -1)
+		case "+pi", "pi", "-pi", "+phi", "phi", "-phi":
+			// We must handle the constants that end in "i" separately.
+			complex_ = complex(floatFromString(matches[1]), 0)
+		default:
+			if sts.HasSuffix(matches[0], "i") {
+				// This is a pure imaginary number.
+				complex_ = complex(0, floatFromString(matches[0][:len(matches[0])-1]))
+			} else {
+				// This is a pure real number.
+				complex_ = complex(floatFromString(matches[0]), 0)
+			}
+		}
+	}
+	var number = NumberFromComplex(complex_)
+	return number
 }
 
 // This constructor returns the minimum value for a number.
@@ -124,111 +176,142 @@ func MaximumNumber() abs.NumberLike {
 // This type defines the methods associated with number elements. It extends the
 // native Go complex128 type and may represent an integer, real, or complex
 // number.
-type Number complex128
+type number_ complex128
+
+// COMPLEX INTERFACE
+
+// This method returns a native complex value for this continuous component.
+func (v number_) AsComplex() complex128 {
+	return complex128(v)
+}
+
+// This method returns the real part of this complex component.
+func (v number_) GetReal() float64 {
+	return real(v)
+}
+
+// This method returns the imaginary part of this complex component.
+func (v number_) GetImaginary() float64 {
+	return imag(v)
+}
+
+// This method returns the magnitude of this complex component.
+func (v number_) GetMagnitude() float64 {
+	return lockMagnitude(cmp.Abs(complex128(v)))
+}
+
+// This method returns the phase angle of this complex component.
+func (v number_) GetPhase() float64 {
+	return cmp.Phase(complex128(v))
+}
 
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous component.
-func (v Number) AsReal() float64 {
+func (v number_) AsReal() float64 {
 	return real(v)
 }
 
 // This method determines whether or not this number is zero.
-func (v Number) IsZero() bool {
+func (v number_) IsZero() bool {
 	return real(v) == 0 && imag(v) == 0
 }
 
 // This method determines whether or not this number is infinite.
-func (v Number) IsInfinite() bool {
+func (v number_) IsInfinite() bool {
 	return mat.IsInf(real(v), 0) || mat.IsInf(imag(v), 0)
 }
 
 // This method determines whether or not this number is undefined.
-func (v Number) IsUndefined() bool {
+func (v number_) IsUndefined() bool {
 	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
+}
+
+// LEXICAL INTERFACE
+
+// This method returns a string value for this lexical element.
+func (v number_) AsString() string {
+	var string_ string
+	switch {
+	case v.IsZero():
+		string_ = "0"
+	case v.IsInfinite():
+		string_ = "∞"
+	case v.IsUndefined():
+		string_ = "undefined"
+	default:
+		var realPart = v.GetReal()
+		var imagPart = v.GetImaginary()
+		switch {
+		case imagPart == 0:
+			string_ = stringFromReal(realPart)
+		case realPart == 0:
+			string_ = stringFromImaginary(imagPart)
+		default:
+			string_ += "("
+			string_ += stringFromReal(realPart)
+			string_ += ", "
+			string_ += stringFromImaginary(imagPart)
+			string_ += ")"
+		}
+	}
+	return string_
 }
 
 // POLARIZED INTERFACE
 
 // This method determines whether or not this polarized component is negative.
-func (v Number) IsNegative() bool {
+func (v number_) IsNegative() bool {
 	return real(v) < 0
 }
 
-// COMPLEX INTERFACE
-
-// This method returns a native complex value for this continuous component.
-func (v Number) AsComplex() complex128 {
-	return complex128(v)
-}
-
-// This method returns the real part of this complex component.
-func (v Number) GetReal() float64 {
-	return real(v)
-}
-
-// This method returns the imaginary part of this complex component.
-func (v Number) GetImaginary() float64 {
-	return imag(v)
-}
-
-// This method returns the magnitude of this complex component.
-func (v Number) GetMagnitude() float64 {
-	return lockMagnitude(cmp.Abs(complex128(v)))
-}
-
-// This method returns the phase angle of this complex component.
-func (v Number) GetPhase() abs.AngleLike {
-	return AngleFromFloat(cmp.Phase(complex128(v)))
-}
-
-// NUMBERS LIBRARY
+// NUMBER LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // number elements.
-var Numbers = &numbers{}
+var Number = &numbers_{}
 
 // This type defines an empty structure and the group of methods bound to it
 // that define the library functions for number elements.
-type numbers struct{}
+type numbers_ struct{}
 
 // SCALABLE INTERFACE
 
 // This library function returns the inverse of the specified number.
-func (l *numbers) Inverse(number abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Inverse(number abs.NumberLike) abs.NumberLike {
 	return NumberFromComplex(-number.AsComplex())
 }
 
 // This library function returns the sum of the specified numbers.
-func (l *numbers) Sum(first, second abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Sum(first, second abs.NumberLike) abs.NumberLike {
 	return NumberFromComplex(first.AsComplex() + second.AsComplex())
 }
 
 // This library function returns the difference of the specified numbers.
-func (l *numbers) Difference(first, second abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Difference(first, second abs.NumberLike) abs.NumberLike {
 	return NumberFromComplex(first.AsComplex() - second.AsComplex())
 }
 
 // This library function returns the specified number scaled by the specified
 // factor.
-func (l *numbers) Scaled(number abs.NumberLike, factor float64) abs.NumberLike {
+func (l *numbers_) Scaled(number abs.NumberLike, factor float64) abs.NumberLike {
 	return l.Product(number, NumberFromComplex(complex(factor, 0)))
 }
 
 // NUMERICAL INTERFACE
 
 // This library function returns the reciprocal of the specified number.
-func (l *numbers) Reciprocal(number abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Reciprocal(number abs.NumberLike) abs.NumberLike {
 	return NumberFromComplex(1.0 / number.AsComplex())
 }
 
 // This library function returns the complex conjugate of the specified number.
-func (l *numbers) Conjugate(number abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Conjugate(number abs.NumberLike) abs.NumberLike {
 	return NumberFromComplex(cmp.Conj(number.AsComplex()))
 }
 
 // This library function returns the product of the specified numbers.
-func (l *numbers) Product(first, second abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Product(first, second abs.NumberLike) abs.NumberLike {
 	switch {
 	case first.IsUndefined() || second.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -245,7 +328,7 @@ func (l *numbers) Product(first, second abs.NumberLike) abs.NumberLike {
 }
 
 // This library function returns the quotient of the specified numbers.
-func (l *numbers) Quotient(first, second abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Quotient(first, second abs.NumberLike) abs.NumberLike {
 	switch {
 	case first.IsUndefined() || second.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -274,19 +357,19 @@ func (l *numbers) Quotient(first, second abs.NumberLike) abs.NumberLike {
 }
 
 // This library function returns the remainder of the specified numbers.
-func (l *numbers) Remainder(first, second abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Remainder(first, second abs.NumberLike) abs.NumberLike {
 	var m1 = cmp.Abs(first.AsComplex())
 	var p1 = cmp.Phase(first.AsComplex())
 	var m2 = cmp.Abs(second.AsComplex())
 	var p2 = cmp.Phase(second.AsComplex())
 	var magnitude = lockMagnitude(mat.Remainder(m1, m2))
-	var phase = AngleFromFloat(p2 - p1)
+	var phase = lockPhase(p2 - p1)
 	return NumberFromPolar(magnitude, phase)
 }
 
 // This library function returns the result of raising the specified base to the
 // specified exponent.
-func (l *numbers) Power(base, exponent abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Power(base, exponent abs.NumberLike) abs.NumberLike {
 	switch {
 	case base.IsUndefined() || exponent.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -322,7 +405,7 @@ func (l *numbers) Power(base, exponent abs.NumberLike) abs.NumberLike {
 
 // This library function returns the result of taking the logarithm using the
 // specified base of the specified number.
-func (l *numbers) Logarithm(base, number abs.NumberLike) abs.NumberLike {
+func (l *numbers_) Logarithm(base, number abs.NumberLike) abs.NumberLike {
 	// logB(z) => ln(z) / ln(b)
 	var lnB = cmp.Log(base.AsComplex())
 	var lnZ = cmp.Log(number.AsComplex())
@@ -350,4 +433,89 @@ func lockMagnitude(v float64) float64 {
 	default:
 		return v
 	}
+}
+
+// This function converts a string into a real value.
+func floatFromString(string_ string) float64 {
+	switch string_ {
+	case "+", "":
+		return 1
+	case "-":
+		return -1
+	case "+e", "e":
+		return mat.E
+	case "-e":
+		return -mat.E
+	case "+pi", "+π", "pi", "π":
+		return mat.Pi
+	case "-pi", "-π":
+		return -mat.Pi
+	case "+phi", "+φ", "phi", "φ":
+		return mat.Phi
+	case "-phi", "-φ":
+		return -mat.Phi
+	case "+tau", "+τ", "tau", "τ":
+		return mat.Pi * 2.0
+	case "-tau", "-τ":
+		return -mat.Pi * 2.0
+	default:
+		var float, _ = stc.ParseFloat(string_, 64)
+		return float
+	}
+}
+
+// This returns the string for the specified imaginary number.
+func stringFromImaginary(i float64) string {
+	var s string
+	switch i {
+	case 1:
+		s = "i"
+	case -1:
+		s = "-i"
+	case mat.E:
+		s = "ei"
+	case -mat.E:
+		s = "-ei"
+	case mat.Pi:
+		s = "πi"
+	case -mat.Pi:
+		s = "-πi"
+	case mat.Phi:
+		s = "φi"
+	case -mat.Phi:
+		s = "-φi"
+	case mat.Pi * 2.0:
+		s = "τi"
+	case -mat.Pi * 2.0:
+		s = "-τi"
+	default:
+		s = stc.FormatFloat(i, 'G', -1, 64) + "i"
+	}
+	return s
+}
+
+// This returns the string for the specified real number.
+func stringFromReal(r float64) string {
+	var s string
+	switch r {
+	case mat.E:
+		s = "e"
+	case -mat.E:
+		s = "-e"
+	case mat.Pi:
+		s = "π"
+	case -mat.Pi:
+		s = "-π"
+	case mat.Phi:
+		s = "φ"
+	case -mat.Phi:
+		s = "-φ"
+	case mat.Pi * 2.0:
+		s = "τ"
+	case -mat.Pi * 2.0:
+		s = "-τ"
+	default:
+		s = stc.FormatFloat(r, 'G', -1, 64)
+	}
+	return s
 }

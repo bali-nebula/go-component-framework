@@ -41,6 +41,12 @@ type Binding[K Key, V Value] interface {
 	SetValue(value V)
 }
 
+// This interface defines the methods supported by all extensive types.
+// It binds a readonly key with a setable value.
+type Extensive interface {
+	IsSubstantial() bool
+}
+
 // This interface defines the methods supported by all sequences whose values
 // are accessed using first-in-first-out (FIFO) semantics.
 type FIFO[V Value] interface {

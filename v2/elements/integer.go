@@ -11,41 +11,65 @@
 package elements
 
 import (
+	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
+	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
+	stc "strconv"
 )
 
-// INTEGER IMPLEMENTATION
+// INTEGER INTERFACE
+
+// This constructor creates a new integer element from the specified string.
+func IntegerFromString(string_ string) abs.IntegerLike {
+	var matches = uti.IntegerMatcher.FindStringSubmatch(string_)
+	if len(matches) == 0 {
+		var message = fmt.Sprintf("Attempted to construct an integer from an invalid string: %v", string_)
+		panic(message)
+	}
+	var integer, _ = stc.ParseInt(matches[0], 10, 0)
+	return integer_(integer)
+}
 
 // This constructor returns the minimum value for an integer endpoint.
 func MinimumInteger() abs.IntegerLike {
-	return Integer(0)
+	return integer_(0)
 }
 
 // This constructor returns the maximum value for an integer endpoint.
 func MaximumInteger() abs.IntegerLike {
-	return Integer(mat.MaxInt)
+	return integer_(mat.MaxInt)
 }
+
+// INTEGER IMPLEMENTATION
 
 // This type defines the methods associated with integer endpoints. It extends the
 // native Go int type.
-type Integer int
+type integer_ int
 
 // DISCRETE INTERFACE
 
 // This method returns a boolean value for this rune.
-func (v Integer) AsBoolean() bool {
+func (v integer_) AsBoolean() bool {
 	return v != 0
 }
 
 // This method returns an integer value for this rune.
-func (v Integer) AsInteger() int {
+func (v integer_) AsInteger() int {
 	return int(v)
+}
+
+// LEXICAL INTERFACE
+
+// This method returns a string value for this lexical element.
+func (v integer_) AsString() string {
+	var string_ = stc.FormatInt(int64(v), 10)
+	return string_
 }
 
 // POLARIZED INTERFACE
 
 // This method determines whether or not this rune is negative.
-func (v Integer) IsNegative() bool {
+func (v integer_) IsNegative() bool {
 	return v < 0
 }

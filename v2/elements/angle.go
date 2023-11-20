@@ -11,8 +11,11 @@
 package elements
 
 import (
+	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
+	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
+	stc "strconv"
 )
 
 // CONSTANT DEFINITIONS
@@ -20,24 +23,14 @@ import (
 // See "The Tau Manifesto" at https://tauday.com/tau-manifesto
 const tau = 2.0 * mat.Pi
 
-var Pi abs.AngleLike = Angle(mat.Pi)
+var Pi abs.AngleLike = angle_(mat.Pi)
 
-var Tau abs.AngleLike = Angle(tau)
+var Tau abs.AngleLike = angle_(tau)
 
-// ANGLE IMPLEMENTATION
+// ANGLE INTERFACE
 
-// This constructor returns the minimum value for an angle.
-func MinimumAngle() abs.AngleLike {
-	return Angle(0)
-}
-
-// This constructor returns the maximum value for an angle.
-func MaximumAngle() abs.AngleLike {
-	return Tau
-}
-
-// This constructor creates a new angle from the specified value and normalizes
-// the value to be in the allowed range for angles [0..τ).
+// This constructor creates a new angle from the specified float value and
+// normalizes the value to be in the allowed range for angles [0..τ).
 func AngleFromFloat(float float64) abs.AngleLike {
 	var tau = 2.0 * mat.Pi
 	if float < -tau || float >= tau {
@@ -48,66 +41,108 @@ func AngleFromFloat(float float64) abs.AngleLike {
 		// Normalize the angle to the range [0..τ).
 		float = float + tau
 	}
-	return Angle(lockPhase(float))
+	var angle = angle_(lockPhase(float))
+	return angle
 }
+
+// This constructor creates a new angle from the specified string value and
+// normalizes the value to be in the allowed range for angles [0..τ).
+func AngleFromString(string_ string) abs.AngleLike {
+	var matches = uti.AngleMatcher.FindStringSubmatch(string_)
+	if len(matches) == 0 {
+		var message = fmt.Sprintf("Attempted to construct an angle from an invalid string: %v", string_)
+		panic(message)
+	}
+	var float = floatFromString(matches[1]) // Strip off the leading '~' character.
+	var angle = AngleFromFloat(float)
+	return angle
+}
+
+// This constructor returns the minimum value for an angle.
+func MinimumAngle() abs.AngleLike {
+	return AngleFromFloat(0)
+}
+
+// This constructor returns the maximum value for an angle.
+func MaximumAngle() abs.AngleLike {
+	return Tau
+}
+
+// ANGLE IMPLEMENTATION
 
 // This type defines the methods associated with angle elements. It extends the
 // native Go float64 type and represents a radian based angle in the range
 // [0..2π).
-type Angle float64
+type angle_ float64
 
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous element.
-func (v Angle) AsReal() float64 {
+func (v angle_) AsReal() float64 {
 	return float64(v)
 }
 
 // This method determines whether or not this continuous element is zero.
-func (v Angle) IsZero() bool {
+func (v angle_) IsZero() bool {
 	return v == 0 || v == Tau
 }
 
 // This method determines whether or not this continuous element is infinite.
-func (v Angle) IsInfinite() bool {
+func (v angle_) IsInfinite() bool {
 	return false
 }
 
 // This method determines whether or not this continuous element is undefined.
-func (v Angle) IsUndefined() bool {
+func (v angle_) IsUndefined() bool {
 	return false
 }
 
-// ANGLES LIBRARY
+// LEXICAL INTERFACE
+
+// This method returns a string value for this lexical element.
+func (v angle_) AsString() string {
+	var s string
+	switch v {
+	case Pi:
+		s = "~π"
+	case Tau:
+		s = "~τ"
+	default:
+		s = "~" + stc.FormatFloat(float64(v), 'G', -1, 64)
+	}
+	return s
+}
+
+// ANGLE LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // angle elements.
-var Angles = &angles{}
+var Angle = &angles_{}
 
 // This type defines an empty structure and the group of methods bound to it
 // that define the library functions for angle elements.
-type angles struct{}
+type angles_ struct{}
 
 // SCALABLE INTERFACE
 
 // This library function returns the inverse of the specified angle.
-func (l *angles) Inverse(angle abs.AngleLike) abs.AngleLike {
+func (l *angles_) Inverse(angle abs.AngleLike) abs.AngleLike {
 	return AngleFromFloat(angle.AsReal() - mat.Pi)
 }
 
 // This library function returns the sum of the specified angles.
-func (l *angles) Sum(first, second abs.AngleLike) abs.AngleLike {
+func (l *angles_) Sum(first, second abs.AngleLike) abs.AngleLike {
 	return AngleFromFloat(first.AsReal() + second.AsReal())
 }
 
 // This library function returns the difference of the specified angles.
-func (l *angles) Difference(first, second abs.AngleLike) abs.AngleLike {
+func (l *angles_) Difference(first, second abs.AngleLike) abs.AngleLike {
 	return AngleFromFloat(first.AsReal() - second.AsReal())
 }
 
 // This library function returns the specified angle scaled by the specified
 // factor.
-func (l *angles) Scaled(angle abs.AngleLike, factor float64) abs.AngleLike {
+func (l *angles_) Scaled(angle abs.AngleLike, factor float64) abs.AngleLike {
 	return AngleFromFloat(angle.AsReal() * factor)
 }
 
@@ -115,25 +150,25 @@ func (l *angles) Scaled(angle abs.AngleLike, factor float64) abs.AngleLike {
 
 // This library function returns the complement of the specified angle. The
 // complementary angles add up to π/2.
-func (l *angles) Complement(angle abs.AngleLike) abs.AngleLike {
+func (l *angles_) Complement(angle abs.AngleLike) abs.AngleLike {
 	return AngleFromFloat(mat.Pi/2.0 - angle.AsReal())
 }
 
 // This library function returns the supplement of the specified angle. The
 // supplementary angles add up to π.
-func (l *angles) Supplement(angle abs.AngleLike) abs.AngleLike {
+func (l *angles_) Supplement(angle abs.AngleLike) abs.AngleLike {
 	return AngleFromFloat(mat.Pi - angle.AsReal())
 }
 
 // This library function returns the conjugate of the specified angle. The
 // conjugate angles add up to 2π (zero).
-func (l *angles) Conjugate(angle abs.AngleLike) abs.AngleLike {
+func (l *angles_) Conjugate(angle abs.AngleLike) abs.AngleLike {
 	return AngleFromFloat(-angle.AsReal())
 }
 
 // This library function returns the trigonometric cosine of the specified
 // angle.
-func (l *angles) Cosine(angle abs.AngleLike) float64 {
+func (l *angles_) Cosine(angle abs.AngleLike) float64 {
 	switch angle.AsReal() {
 	case 0.0:
 		return 1.0
@@ -160,12 +195,12 @@ func (l *angles) Cosine(angle abs.AngleLike) float64 {
 
 // This library function returns the angle whose trigonometric cosine is the
 // specified distance along the x-axis.
-func (l *angles) ArcCosine(x float64) abs.AngleLike {
+func (l *angles_) ArcCosine(x float64) abs.AngleLike {
 	return AngleFromFloat(mat.Acos(x))
 }
 
 // This library function returns the trigonometric sine of the specified angle.
-func (l *angles) Sine(angle abs.AngleLike) float64 {
+func (l *angles_) Sine(angle abs.AngleLike) float64 {
 	switch angle.AsReal() {
 	case 0.0:
 		return 0.0
@@ -192,13 +227,13 @@ func (l *angles) Sine(angle abs.AngleLike) float64 {
 
 // This library function returns the angle whose trigonometric sine is the
 // specified distance along the y-axis.
-func (l *angles) ArcSine(y float64) abs.AngleLike {
+func (l *angles_) ArcSine(y float64) abs.AngleLike {
 	return AngleFromFloat(mat.Asin(y))
 }
 
 // This library function returns the trigonometric tangent of the specified
 // angle.
-func (l *angles) Tangent(angle abs.AngleLike) float64 {
+func (l *angles_) Tangent(angle abs.AngleLike) float64 {
 	switch angle.AsReal() {
 	case 0.0:
 		return 0.0
@@ -225,7 +260,7 @@ func (l *angles) Tangent(angle abs.AngleLike) float64 {
 
 // This library function returns the angle whose trigonometric tangent is the
 // specified ratio of the distances along the y-axis and x-axis.
-func (l *angles) ArcTangent(x, y float64) abs.AngleLike {
+func (l *angles_) ArcTangent(x, y float64) abs.AngleLike {
 	return AngleFromFloat(mat.Atan2(y, x))
 }
 

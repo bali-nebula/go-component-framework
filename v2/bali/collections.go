@@ -426,8 +426,8 @@ func (v *formatter) formatPrimitive(primitive abs.Primitive) {
 		v.formatBinary(value)
 	case abs.BytecodeLike:
 		v.formatBytecode(value)
-	case abs.MonikerLike:
-		v.formatMoniker(value)
+	case abs.NameLike:
+		v.formatName(value)
 	case abs.NarrativeLike:
 		v.formatNarrative(value)
 	case abs.QuoteLike:

@@ -68,28 +68,6 @@ func Bytecode(value abs.Value) abs.BytecodeLike {
 	return bytecode
 }
 
-// This constructor returns a new moniker string initialized with the specified
-// value.
-func Moniker(value abs.Value) abs.MonikerLike {
-	var moniker abs.MonikerLike
-	switch actual := value.(type) {
-	case []abs.Name:
-		moniker = str.MonikerFromArray(actual)
-	case abs.Sequential[abs.Name]:
-		moniker = str.MonikerFromSequence(actual)
-	case string:
-		moniker = ParseEntity(actual).(abs.MonikerLike)
-	case abs.ComponentLike:
-		moniker = actual.GetEntity().(abs.MonikerLike)
-	default:
-		var message = fmt.Sprintf(
-			"The value (of type %T) cannot be converted to a moniker string: %v",
-			actual, actual)
-		panic(message)
-	}
-	return moniker
-}
-
 // This constructor returns a new narrative string initialized with the specified
 // value.
 func Narrative(value abs.Value) abs.NarrativeLike {
@@ -309,28 +287,6 @@ func (v *formatter) formatBytecode(bytecode abs.BytecodeLike) {
 	v.AppendString("'")
 }
 
-// This method attempts to parse a moniker string. It returns the moniker string
-// and whether or not the moniker string was successfully parsed.
-func (v *parser) parseMoniker() (abs.MonikerLike, *Token, bool) {
-	var token *Token
-	var moniker abs.MonikerLike
-	token = v.nextToken()
-	if token.Type != TokenMONIKER {
-		v.backupOne(token)
-		return moniker, token, false
-	}
-	var matches = bytesToStrings(monikerScanner.FindSubmatch([]byte(token.Value)))
-	moniker = str.MonikerFromString(matches[0])
-	return moniker, token, true
-}
-
-// This method adds the canonical format for the specified string to the state
-// of the formatter.
-func (v *formatter) formatMoniker(moniker abs.MonikerLike) {
-	var s = moniker.AsString()
-	v.AppendString(s)
-}
-
 // This method attempts to parse a narrative string. It returns the narrative
 // string and whether or not the narrative string was successfully parsed.
 func (v *parser) parseNarrative() (abs.NarrativeLike, *Token, bool) {
@@ -402,7 +358,7 @@ func (v *parser) parseString() (abs.String, *Token, bool) {
 		s, token, ok = v.parseBytecode()
 	}
 	if !ok {
-		s, token, ok = v.parseMoniker()
+		s, token, ok = v.parseName()
 	}
 	if !ok {
 		s, token, ok = v.parseNarrative()

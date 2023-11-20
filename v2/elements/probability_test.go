@@ -49,47 +49,47 @@ func TestOtherProbabilities(t *tes.T) {
 	ass.Equal(t, 0.75, v3.AsReal())
 }
 
-func TestProbabilitiesLibrary(t *tes.T) {
+func TestProbabilitieLibrary(t *tes.T) {
 	var T = ele.ProbabilityFromFloat(0.75)
 	var F = ele.ProbabilityFromFloat(0.25)
 
-	var andNot = ele.Probabilities.And(ele.Probabilities.Not(T), ele.Probabilities.Not(T))
-	var notOr = ele.Probabilities.Not(ele.Probabilities.Or(T, T))
+	var andNot = ele.Probability.And(ele.Probability.Not(T), ele.Probability.Not(T))
+	var notOr = ele.Probability.Not(ele.Probability.Or(T, T))
 	ass.Equal(t, andNot, notOr)
 
-	andNot = ele.Probabilities.And(ele.Probabilities.Not(T), ele.Probabilities.Not(F))
-	notOr = ele.Probabilities.Not(ele.Probabilities.Or(T, F))
+	andNot = ele.Probability.And(ele.Probability.Not(T), ele.Probability.Not(F))
+	notOr = ele.Probability.Not(ele.Probability.Or(T, F))
 	ass.Equal(t, andNot, notOr)
 
-	andNot = ele.Probabilities.And(ele.Probabilities.Not(F), ele.Probabilities.Not(T))
-	notOr = ele.Probabilities.Not(ele.Probabilities.Or(F, T))
+	andNot = ele.Probability.And(ele.Probability.Not(F), ele.Probability.Not(T))
+	notOr = ele.Probability.Not(ele.Probability.Or(F, T))
 	ass.Equal(t, andNot, notOr)
 
-	andNot = ele.Probabilities.And(ele.Probabilities.Not(F), ele.Probabilities.Not(F))
-	notOr = ele.Probabilities.Not(ele.Probabilities.Or(F, F))
+	andNot = ele.Probability.And(ele.Probability.Not(F), ele.Probability.Not(F))
+	notOr = ele.Probability.Not(ele.Probability.Or(F, F))
 	ass.Equal(t, andNot, notOr)
 
-	var sans = ele.Probabilities.And(T, ele.Probabilities.Not(T))
-	ass.Equal(t, sans, ele.Probabilities.Sans(T, T))
+	var sans = ele.Probability.And(T, ele.Probability.Not(T))
+	ass.Equal(t, sans, ele.Probability.Sans(T, T))
 
-	sans = ele.Probabilities.And(T, ele.Probabilities.Not(F))
-	ass.Equal(t, sans, ele.Probabilities.Sans(T, F))
+	sans = ele.Probability.And(T, ele.Probability.Not(F))
+	ass.Equal(t, sans, ele.Probability.Sans(T, F))
 
-	sans = ele.Probabilities.And(F, ele.Probabilities.Not(T))
-	ass.Equal(t, sans, ele.Probabilities.Sans(F, T))
+	sans = ele.Probability.And(F, ele.Probability.Not(T))
+	ass.Equal(t, sans, ele.Probability.Sans(F, T))
 
-	sans = ele.Probabilities.And(F, ele.Probabilities.Not(F))
-	ass.Equal(t, sans, ele.Probabilities.Sans(F, F))
+	sans = ele.Probability.And(F, ele.Probability.Not(F))
+	ass.Equal(t, sans, ele.Probability.Sans(F, F))
 
-	var xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(T, T).AsReal() + ele.Probabilities.Sans(T, T).AsReal())
-	ass.Equal(t, xor, ele.Probabilities.Xor(T, T))
+	var xor = ele.ProbabilityFromFloat(ele.Probability.Sans(T, T).AsReal() + ele.Probability.Sans(T, T).AsReal())
+	ass.Equal(t, xor, ele.Probability.Xor(T, T))
 
-	xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(T, F).AsReal() + ele.Probabilities.Sans(F, T).AsReal())
-	ass.Equal(t, xor, ele.Probabilities.Xor(T, F))
+	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(T, F).AsReal() + ele.Probability.Sans(F, T).AsReal())
+	ass.Equal(t, xor, ele.Probability.Xor(T, F))
 
-	xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(F, T).AsReal() + ele.Probabilities.Sans(T, F).AsReal())
-	ass.Equal(t, xor, ele.Probabilities.Xor(F, T))
+	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(F, T).AsReal() + ele.Probability.Sans(T, F).AsReal())
+	ass.Equal(t, xor, ele.Probability.Xor(F, T))
 
-	xor = ele.ProbabilityFromFloat(ele.Probabilities.Sans(F, F).AsReal() + ele.Probabilities.Sans(F, F).AsReal())
-	ass.Equal(t, xor, ele.Probabilities.Xor(F, F))
+	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(F, F).AsReal() + ele.Probability.Sans(F, F).AsReal())
+	ass.Equal(t, xor, ele.Probability.Xor(F, F))
 }

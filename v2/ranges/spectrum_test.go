@@ -18,15 +18,15 @@ import (
 	tes "testing"
 )
 
-func TestSpectrWithMonikers(t *tes.T) {
-	var first = str.MonikerFromString("/bali/types/abstractions")
-	var last = str.MonikerFromString("/bali/types/strings")
+func TestSpectrWithNames(t *tes.T) {
+	var first = str.NameFromString("/bali/types/abstractions")
+	var last = str.NameFromString("/bali/types/strings")
 	var s = ran.Spectrum(first, abs.RIGHT, last)
-	ass.False(t, s.ContainsValue(str.MonikerFromString("/bali")))
+	ass.False(t, s.ContainsValue(str.NameFromString("/bali")))
 	ass.False(t, s.ContainsValue(first))
-	ass.True(t, s.ContainsValue(str.MonikerFromString("/bali/types/abstractions/Sequential/v1")))
+	ass.True(t, s.ContainsValue(str.NameFromString("/bali/types/abstractions/Sequential/v1")))
 	ass.True(t, s.ContainsValue(last))
-	ass.False(t, s.ContainsValue(str.MonikerFromString("/bali/types/strings/Version/v1")))
+	ass.False(t, s.ContainsValue(str.NameFromString("/bali/types/strings/Version/v1")))
 	ass.Equal(t, first, s.GetFirst())
 	ass.Equal(t, abs.RIGHT, s.GetExtent())
 	ass.Equal(t, last, s.GetLast())

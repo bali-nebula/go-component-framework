@@ -17,12 +17,12 @@ import (
 // CHECKOUT CLAUSE IMPLEMENTATION
 
 // This constructor creates a new checkout clause.
-func CheckoutClause(recipient abs.Recipient, level abs.Expression, moniker abs.Expression) abs.CheckoutClauseLike {
+func CheckoutClause(recipient abs.Recipient, level abs.Expression, name abs.Expression) abs.CheckoutClauseLike {
 	var v = &checkoutClause{}
 	// Perform argument validation.
 	v.SetRecipient(recipient)
 	v.SetLevel(level)
-	v.SetMoniker(moniker)
+	v.SetName(name)
 	return v
 }
 
@@ -31,7 +31,7 @@ func CheckoutClause(recipient abs.Recipient, level abs.Expression, moniker abs.E
 type checkoutClause struct {
 	recipient abs.Recipient
 	level     abs.Expression // The version level to be incremented (optional).
-	moniker   abs.Expression // A moniker to the citation for the document to be checked out.
+	name      abs.Expression // A name to the citation for the document to be checked out.
 }
 
 // This method returns the recipient for this checkout clause.
@@ -57,15 +57,15 @@ func (v *checkoutClause) SetLevel(level abs.Expression) {
 	v.level = level
 }
 
-// This method returns the citation moniker for this checkout clause.
-func (v *checkoutClause) GetMoniker() abs.Expression {
-	return v.moniker
+// This method returns the citation name for this checkout clause.
+func (v *checkoutClause) GetName() abs.Expression {
+	return v.name
 }
 
-// This method sets the citation moniker for this checkout clause.
-func (v *checkoutClause) SetMoniker(moniker abs.Expression) {
-	if moniker == nil {
-		panic("A checkout clause requires a citation moniker.")
+// This method sets the citation name for this checkout clause.
+func (v *checkoutClause) SetName(name abs.Expression) {
+	if name == nil {
+		panic("A checkout clause requires a citation name.")
 	}
-	v.moniker = moniker
+	v.name = name
 }

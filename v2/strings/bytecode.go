@@ -75,7 +75,7 @@ func BytecodeFromSequence(sequence abs.Sequential[abs.Instruction]) abs.Bytecode
 // the bytecode string.
 type Bytecode string
 
-// QUANTIZED INTERFACE
+// LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
 func (v Bytecode) AsString() string {

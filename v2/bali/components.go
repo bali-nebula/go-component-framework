@@ -265,8 +265,8 @@ func (v *formatter) formatEntity(entity abs.Entity) {
 		v.formatBinary(value)
 	case abs.BytecodeLike:
 		v.formatBytecode(value)
-	case abs.MonikerLike:
-		v.formatMoniker(value)
+	case abs.NameLike:
+		v.formatName(value)
 	case abs.NarrativeLike:
 		v.formatNarrative(value)
 	case abs.QuoteLike:
@@ -368,7 +368,7 @@ func (v *parser) parseInlineParameters() (abs.ContextLike, *Token, bool) {
 			"$context",
 			"$parameters",
 			"$parameter",
-			"$name",
+			"$symbol",
 			"$value")
 		panic(message)
 	}
@@ -394,7 +394,7 @@ func (v *parser) parseInlineParameters() (abs.ContextLike, *Token, bool) {
 				"$context",
 				"$parameters",
 				"$parameter",
-				"$name",
+				"$symbol",
 				"$value")
 			panic(message)
 		}
@@ -429,7 +429,7 @@ func (v *parser) parseMultilineParameters() (abs.ContextLike, *Token, bool) {
 			"$context",
 			"$parameters",
 			"$parameter",
-			"$name",
+			"$symbol",
 			"$value")
 		panic(message)
 	}
@@ -475,7 +475,7 @@ func (v *formatter) formatNote(note abs.NoteLike) {
 	v.AppendString(string(note.AsArray()))
 }
 
-// This method attempts to parse a parameter containing a name and value. It
+// This method attempts to parse a parameter containing a symbol and value. It
 // returns the parameter and whether or not the parameter was successfully
 // parsed.
 func (v *parser) parseParameter() (abs.ParameterLike, *Token, bool) {
@@ -577,8 +577,8 @@ func adjustEntity(entity abs.Entity, context abs.ContextLike) abs.Entity {
 			var parameter = iterator.GetNext()
 			if parameter.GetKey().AsString() == "$type" {
 				var component = parameter.GetValue()
-				var moniker = component.ExtractMoniker()
-				type_ = moniker.AsString()
+				var name = component.ExtractName()
+				type_ = name.AsString()
 				break
 			}
 		}

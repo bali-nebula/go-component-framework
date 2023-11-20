@@ -70,7 +70,7 @@ func TagOfSize(size int) abs.TagLike {
 // the native Go string type.
 type Tag string
 
-// QUANTIZED INTERFACE
+// LEXICAL INTERFACE
 
 // This method returns a string value for this lexical element.
 func (v Tag) AsString() string {

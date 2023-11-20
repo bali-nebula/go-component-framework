@@ -17,11 +17,11 @@ import (
 // NOTARIZE CLAUSE IMPLEMENTATION
 
 // This constructor creates a new notarize clause.
-func NotarizeClause(document, moniker abs.Expression) abs.NotarizeClauseLike {
+func NotarizeClause(document, name abs.Expression) abs.NotarizeClauseLike {
 	var v = &notarizeClause{}
 	// Perform argument validation.
 	v.SetDocument(document)
-	v.SetMoniker(moniker)
+	v.SetName(name)
 	return v
 }
 
@@ -29,7 +29,7 @@ func NotarizeClause(document, moniker abs.Expression) abs.NotarizeClauseLike {
 // clause.
 type notarizeClause struct {
 	document abs.Expression
-	moniker  abs.Expression
+	name     abs.Expression
 }
 
 // This method returns the document expression for this notarize clause.
@@ -45,15 +45,15 @@ func (v *notarizeClause) SetDocument(document abs.Expression) {
 	v.document = document
 }
 
-// This method returns the citation moniker for this notarize clause.
-func (v *notarizeClause) GetMoniker() abs.Expression {
-	return v.moniker
+// This method returns the citation name for this notarize clause.
+func (v *notarizeClause) GetName() abs.Expression {
+	return v.name
 }
 
-// This method sets the citation moniker for this notarize clause.
-func (v *notarizeClause) SetMoniker(moniker abs.Expression) {
-	if moniker == nil {
-		panic("A notarize clause requires a citation moniker.")
+// This method sets the citation name for this notarize clause.
+func (v *notarizeClause) SetName(name abs.Expression) {
+	if name == nil {
+		panic("A notarize clause requires a citation name.")
 	}
-	v.moniker = moniker
+	v.name = name
 }

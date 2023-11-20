@@ -69,7 +69,7 @@ func BinaryFromSequence(sequence abs.Sequential[byte]) abs.BinaryLike {
 // the binary string.
 type Binary string
 
-// QUANTIZED INTERFACE
+// LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
 func (v Binary) AsString() string {

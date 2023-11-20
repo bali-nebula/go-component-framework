@@ -135,9 +135,9 @@ func Spectrum(first abs.Value, extent abs.Extent, last abs.Value, context abs.Co
 		var actualFirst = str.QuoteFromString(first.(string))
 		var actualLast = str.QuoteFromString(last.(string))
 		entity = ran.Spectrum(actualFirst, extent, actualLast)
-	case abs.MonikerLike:
-		var actualFirst = first.(abs.MonikerLike)
-		var actualLast = last.(abs.MonikerLike)
+	case abs.NameLike:
+		var actualFirst = first.(abs.NameLike)
+		var actualLast = last.(abs.NameLike)
 		entity = ran.Spectrum(actualFirst, extent, actualLast)
 	case abs.PatternLike:
 		var actualFirst = first.(abs.PatternLike)
@@ -327,7 +327,7 @@ func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 		endpoint, token, ok = v.parseMoment()
 	}
 	if !ok {
-		endpoint, token, ok = v.parseMoniker()
+		endpoint, token, ok = v.parseName()
 	}
 	if !ok {
 		endpoint, token, ok = v.parsePattern()
@@ -376,8 +376,8 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 	// The order of these cases is very important since Go only compares the
 	// set of methods supported by each interface. An interface that is a subset
 	// of another interface must be checked AFTER that interface.
-	case abs.MonikerLike:
-		v.formatMoniker(value)
+	case abs.NameLike:
+		v.formatName(value)
 	case abs.QuoteLike:
 		v.formatQuote(value)
 	case abs.VersionLike:
@@ -611,78 +611,37 @@ func (v *formatter) formatInteger(number abs.IntegerLike) {
 // This method attempts to parse a real number. It returns the real number
 // and whether or not the real number was successfully parsed.
 func (v *parser) parseReal() (ele.Real, *Token, bool) {
-	var number ele.Real
+	var real_ ele.Real
 	var token = v.nextToken()
-	if token.Type != TokenNUMBER {
+	if token.Type != TokenREAL {
 		v.backupOne(token)
-		return number, token, false
+		return real_, token, false
 	}
-	var err any
-	var r float64
-	var matches = bytesToStrings(realScanner.FindSubmatch([]byte(token.Value)))
-	switch {
-	case matches[0] == "undefined":
-		r = mat.NaN()
-	case matches[0] == "+infinity" || matches[0] == "+∞":
-		r = mat.Inf(1)
-	case matches[0] == "-infinity" || matches[0] == "-∞":
-		r = mat.Inf(-1)
-	case matches[0] == "pi", matches[0] == "-pi", matches[0] == "phi", matches[0] == "-phi":
-		r = stringToFloat(matches[0])
-	default:
-		r, err = stc.ParseFloat(matches[0], 64)
-		if err != nil {
-			r = stringToFloat(matches[0])
-		}
-	}
-	number = ele.Real(r)
-	return number, token, true
+	var real_ = ele.RealFromString(token.Value)
+	return real_, token, true
 }
 
 // This method adds the canonical format for the specified real number to the
 // state of the formatter.
-func (v *formatter) formatReal(number abs.RealLike) {
-	switch {
-	case number.IsZero():
-		v.AppendString("0")
-	case number.IsInfinite():
-		if number.IsNegative() {
-			v.AppendString("-")
-		} else {
-			v.AppendString("+")
-		}
-		v.AppendString("∞")
-	case number.IsUndefined():
-		v.AppendString("undefined")
-	default:
-		v.formatFloat(number.AsReal())
-	}
+func (v *formatter) formatReal(real_ abs.RealLike) {
+	v.AppendString(real_.AsString())
 }
 
 // This method attempts to parse a character. It returns the character and whether or not
 // the character was successfully parsed.
 func (v *parser) parseCharacter() (ele.Character, *Token, bool) {
-	var number = ele.Character(-1)
-	var quote, token, ok = v.parseQuote()
-	if !ok {
-		return number, token, false
-	}
-	var s = quote.AsString()
-	var r, size = utf.DecodeRuneInString(s)
-	if len(s) != size {
-		// This is not a character.
+	var character ele.Character
+	var token = v.nextToken()
+	if token.Type != TokenCHARACTER {
 		v.backupOne(token)
-		return number, token, false
+		return character, token, false
 	}
-	number = ele.Character(r)
-	return number, token, true
+	var character = ele.CharacterFromString(token.Value)
+	return character, token, true
 }
 
 // This method adds the canonical format for the specified character to the state of
 // the formatter.
-func (v *formatter) formatCharacter(number abs.CharacterLike) {
-	var integer = number.AsInteger()
-	var characters = []rune{rune(integer)}
-	var quote = str.QuoteFromString(string(characters))
-	v.formatQuote(quote)
+func (v *formatter) formatCharacter(character abs.CharacterLike) {
+	v.AppendString(character.AsString())
 }

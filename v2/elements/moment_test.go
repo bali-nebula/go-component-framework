@@ -17,7 +17,7 @@ import (
 )
 
 func TestIntegerMoments(t *tes.T) {
-	var v = ele.MomentFromInt(1238589296789)
+	var v = ele.MomentFromMilliseconds(1238589296789)
 	ass.Equal(t, 1238589296789, v.AsInteger())
 	ass.Equal(t, 1238589296789.0, v.AsMilliseconds())
 	ass.Equal(t, 1238589296.789, v.AsSeconds())
@@ -39,10 +39,10 @@ func TestIntegerMoments(t *tes.T) {
 
 func TestMomentsLibrary(t *tes.T) {
 	var before = ele.Now()
-	var duration = ele.DurationFromInt(12345)
-	var after = ele.MomentFromInt(before.AsInteger() + duration.AsInteger())
+	var duration = ele.DurationFromMilliseconds(12345)
+	var after = ele.MomentFromMilliseconds(before.AsInteger() + duration.AsInteger())
 
-	ass.Equal(t, duration, ele.Moments.Duration(before, after))
-	ass.Equal(t, after, ele.Moments.Later(before, duration))
-	ass.Equal(t, before, ele.Moments.Earlier(after, duration))
+	ass.Equal(t, duration, ele.Moment.Duration(before, after))
+	ass.Equal(t, after, ele.Moment.Later(before, duration))
+	ass.Equal(t, before, ele.Moment.Earlier(after, duration))
 }

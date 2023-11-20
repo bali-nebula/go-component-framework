@@ -13,9 +13,9 @@ package abstractions
 // TYPE DEFINITIONS
 
 type (
+	Identifier  string
 	Instruction uint16
 	Line        string
-	Name        string
 	Ordinal     uint
 	String      any
 )
@@ -111,14 +111,14 @@ type LineIteratorLike interface {
 	Ratcheted[Line]
 }
 
-type MonikerLike interface {
+type NameLike interface {
 	Lexical
-	Sequential[Name]
-	Accessible[Name]
+	Sequential[Identifier]
+	Accessible[Identifier]
 }
 
-type NameIteratorLike interface {
-	Ratcheted[Name]
+type IdentifierIteratorLike interface {
+	Ratcheted[Identifier]
 }
 
 type NarrativeLike interface {

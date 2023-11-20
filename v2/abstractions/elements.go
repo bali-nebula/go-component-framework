@@ -23,7 +23,7 @@ type Complex interface {
 	GetReal() float64
 	GetImaginary() float64
 	GetMagnitude() float64
-	GetPhase() AngleLike
+	GetPhase() float64
 }
 
 type Continuous interface {
@@ -45,6 +45,10 @@ type Lexical interface {
 type Matchable interface {
 	MatchesText(text string) bool
 	GetMatches(text string) []string
+}
+
+type Named interface {
+	GetName() string
 }
 
 type Polarized interface {
@@ -81,40 +85,57 @@ type Temporal interface {
 	GetYears() int
 }
 
+type Versioned interface {
+	GetVersion() string
+}
+
 // CONSOLIDATED INTERFACES
 
 type AngleLike interface {
 	Continuous
+	Lexical
 }
 
 type BooleanLike interface {
 	Discrete
+	Lexical
 }
 
 type CharacterLike interface {
 	Discrete
+	Lexical
+}
+
+type CitationLike interface {
+	Lexical
+	Named
+	Versioned
 }
 
 type DurationLike interface {
 	Discrete
+	Lexical
 	Polarized
 	Temporal
 }
 
 type IntegerLike interface {
 	Discrete
+	Lexical
 	Polarized
 }
 
 type MomentLike interface {
 	Discrete
+	Lexical
 	Temporal
 }
 
 type NumberLike interface {
-	Continuous
-	Polarized
 	Complex
+	Continuous
+	Lexical
+	Polarized
 }
 
 type PatternLike interface {
@@ -123,18 +144,21 @@ type PatternLike interface {
 }
 
 type PercentageLike interface {
-	Discrete
 	Continuous
+	Discrete
+	Lexical
 	Polarized
 }
 
 type ProbabilityLike interface {
-	Discrete
 	Continuous
+	Discrete
+	Lexical
 }
 
 type RealLike interface {
 	Continuous
+	Lexical
 	Polarized
 }
 
