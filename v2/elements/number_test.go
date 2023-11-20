@@ -25,7 +25,7 @@ func TestZero(t *tes.T) {
 	ass.False(t, v.IsInfinite())
 	ass.False(t, v.IsUndefined())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 }
@@ -37,7 +37,7 @@ func TestInfinity(t *tes.T) {
 	ass.True(t, v.IsInfinite())
 	ass.False(t, v.IsUndefined())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, mat.Inf(1), v.AsReal())
+	ass.Equal(t, mat.Inf(1), v.AsFloat())
 	ass.Equal(t, mat.Inf(1), v.GetReal())
 	ass.Equal(t, mat.Inf(1), v.GetImaginary())
 }
@@ -49,7 +49,7 @@ func TestUndefined(t *tes.T) {
 	ass.False(t, v.IsInfinite())
 	ass.True(t, v.IsUndefined())
 	ass.False(t, v.IsNegative())
-	ass.True(t, mat.IsNaN(v.AsReal()))
+	ass.True(t, mat.IsNaN(v.AsFloat()))
 	ass.True(t, mat.IsNaN(v.GetReal()))
 	ass.True(t, mat.IsNaN(v.GetImaginary()))
 }
@@ -58,7 +58,7 @@ func TestPositivePureReals(t *tes.T) {
 	var v = ele.NumberFromComplex(0.25)
 	ass.Equal(t, 0.25+0i, v.AsComplex())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.25, v.AsReal())
+	ass.Equal(t, 0.25, v.AsFloat())
 	ass.Equal(t, 0.25, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 }
@@ -67,7 +67,7 @@ func TestPositivePureImaginaries(t *tes.T) {
 	var v = ele.NumberFromComplex(0.25i)
 	ass.Equal(t, 0+0.25i, v.AsComplex())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 0.25, v.GetImaginary())
 }
@@ -76,7 +76,7 @@ func TestNegativePureReals(t *tes.T) {
 	var v = ele.NumberFromComplex(-0.75)
 	ass.Equal(t, -0.75+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
-	ass.Equal(t, -0.75, v.AsReal())
+	ass.Equal(t, -0.75, v.AsFloat())
 	ass.Equal(t, -0.75, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 }
@@ -85,7 +85,7 @@ func TestNegativePureImaginaries(t *tes.T) {
 	var v = ele.NumberFromComplex(-0.75i)
 	ass.Equal(t, 0-0.75i, v.AsComplex())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, -0.75, v.GetImaginary())
 }
@@ -94,7 +94,7 @@ func TestNumberFromPolar(t *tes.T) {
 	var v = ele.NumberFromPolar(1.0, mat.Pi)
 	ass.Equal(t, -1.0+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
-	ass.Equal(t, -1.0, v.AsReal())
+	ass.Equal(t, -1.0, v.AsFloat())
 	ass.Equal(t, -1.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 	ass.Equal(t, 1.0, v.GetMagnitude())
@@ -105,7 +105,7 @@ func TestNumberFromString(t *tes.T) {
 	var v = ele.NumberFromString("(1e^~πi)")
 	ass.Equal(t, -1.0+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
-	ass.Equal(t, -1.0, v.AsReal())
+	ass.Equal(t, -1.0, v.AsFloat())
 	ass.Equal(t, -1.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 	ass.Equal(t, 1.0, v.GetMagnitude())

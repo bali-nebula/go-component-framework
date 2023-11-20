@@ -17,39 +17,37 @@ import (
 	tes "testing"
 )
 
-func TestUndefinedReals(t *tes.T) {
-	var v = ele.RealFromString(`undefined`)
-	ass.Equal(t, `undefined`, v.AsString())
-}
+func TestInfiniteFloats(t *tes.T) {
+	var v = ele.FloatFromString(`+infinity`)
+	ass.Equal(t, `∞`, v.AsString())
 
-func TestInfiniteReals(t *tes.T) {
-	var v = ele.RealFromString(`+infinity`)
-	ass.Equal(t, `+∞`, v.AsString())
+	v = ele.FloatFromString(`+∞`)
+	ass.Equal(t, `∞`, v.AsString())
 
-	v = ele.RealFromString(`+∞`)
-	ass.Equal(t, `+∞`, v.AsString())
+	v = ele.FloatFromString(`∞`)
+	ass.Equal(t, `∞`, v.AsString())
 
-	v = ele.RealFromString(`-infinity`)
+	v = ele.FloatFromString(`-infinity`)
 	ass.Equal(t, `-∞`, v.AsString())
 
-	v = ele.RealFromString(`-∞`)
+	v = ele.FloatFromString(`-∞`)
 	ass.Equal(t, `-∞`, v.AsString())
 }
 
-func TestZeroReals(t *tes.T) {
-	var v = ele.RealFromString(`0`)
+func TestZeroFloats(t *tes.T) {
+	var v = ele.FloatFromString(`0`)
 	ass.Equal(t, `0`, v.AsString())
 }
 
-func TestPositiveReals(t *tes.T) {
-	var v = ele.RealFromString(`12.3`)
+func TestPositiveFloats(t *tes.T) {
+	var v = ele.FloatFromString(`12.3`)
 	ass.Equal(t, `12.3`, v.AsString())
 
-	v = ele.RealFromString(`+π`)
+	v = ele.FloatFromString(`+π`)
 	ass.Equal(t, `π`, v.AsString())
 }
 
-func TestNegativeReals(t *tes.T) {
-	var v = ele.RealFromString(`-e`)
+func TestNegativeFloats(t *tes.T) {
+	var v = ele.FloatFromString(`-e`)
 	ass.Equal(t, `-e`, v.AsString())
 }

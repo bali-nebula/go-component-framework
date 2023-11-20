@@ -19,7 +19,7 @@ import (
 
 func TestZeroAngles(t *tes.T) {
 	var v = ele.AngleFromFloat(0)
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 
 	v = ele.AngleFromString("~0")
 	ass.Equal(t, "~0", v.AsString())
@@ -27,7 +27,7 @@ func TestZeroAngles(t *tes.T) {
 
 func TestPositiveAngles(t *tes.T) {
 	var v = ele.AngleFromFloat(mat.Pi)
-	ass.Equal(t, mat.Pi, v.AsReal())
+	ass.Equal(t, mat.Pi, v.AsFloat())
 
 	v = ele.AngleFromString("~π")
 	ass.Equal(t, "~π", v.AsString())
@@ -35,10 +35,10 @@ func TestPositiveAngles(t *tes.T) {
 
 func TestNegativeAngles(t *tes.T) {
 	var v = ele.AngleFromFloat(-mat.Pi)
-	ass.Equal(t, mat.Pi, v.AsReal())
+	ass.Equal(t, mat.Pi, v.AsFloat())
 
 	v = ele.AngleFromFloat(-mat.Pi / 2.0)
-	ass.Equal(t, 1.5*mat.Pi, v.AsReal())
+	ass.Equal(t, 1.5*mat.Pi, v.AsFloat())
 }
 
 func TestAnglesLibrary(t *tes.T) {

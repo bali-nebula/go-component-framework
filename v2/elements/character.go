@@ -21,6 +21,16 @@ import (
 
 // CHARACTER INTERFACE
 
+// This constructor creates a new character element from the specified rune.
+func CharacterFromRune(rune_ rune) abs.CharacterLike {
+	return character_(rune_)
+}
+
+// This constructor creates a new character element from the specified integer.
+func CharacterFromInteger(integer int) abs.CharacterLike {
+	return character_(int32(integer))
+}
+
 // This constructor creates a new character element from the specified string.
 func CharacterFromString(string_ string) abs.CharacterLike {
 	var matches = uti.CharacterMatcher.FindStringSubmatch(string_)

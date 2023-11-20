@@ -16,7 +16,6 @@ import (
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 	cmp "math/cmplx"
-	stc "strconv"
 	sts "strings"
 )
 
@@ -208,7 +207,7 @@ func (v number_) GetPhase() float64 {
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous component.
-func (v number_) AsReal() float64 {
+func (v number_) AsFloat() float64 {
 	return real(v)
 }
 
@@ -244,14 +243,14 @@ func (v number_) AsString() string {
 		var imagPart = v.GetImaginary()
 		switch {
 		case imagPart == 0:
-			string_ = stringFromReal(realPart)
+			string_ = stringFromFloat(realPart)
 		case realPart == 0:
-			string_ = stringFromImaginary(imagPart)
+			string_ = imaginaryFromFloat(imagPart)
 		default:
 			string_ += "("
-			string_ += stringFromReal(realPart)
+			string_ += stringFromFloat(realPart)
 			string_ += ", "
-			string_ += stringFromImaginary(imagPart)
+			string_ += imaginaryFromFloat(imagPart)
 			string_ += ")"
 		}
 	}
@@ -435,87 +434,16 @@ func lockMagnitude(v float64) float64 {
 	}
 }
 
-// This function converts a string into a real value.
-func floatFromString(string_ string) float64 {
-	switch string_ {
-	case "+", "":
-		return 1
-	case "-":
-		return -1
-	case "+e", "e":
-		return mat.E
-	case "-e":
-		return -mat.E
-	case "+pi", "+π", "pi", "π":
-		return mat.Pi
-	case "-pi", "-π":
-		return -mat.Pi
-	case "+phi", "+φ", "phi", "φ":
-		return mat.Phi
-	case "-phi", "-φ":
-		return -mat.Phi
-	case "+tau", "+τ", "tau", "τ":
-		return mat.Pi * 2.0
-	case "-tau", "-τ":
-		return -mat.Pi * 2.0
-	default:
-		var float, _ = stc.ParseFloat(string_, 64)
-		return float
-	}
-}
-
-// This returns the string for the specified imaginary number.
-func stringFromImaginary(i float64) string {
-	var s string
-	switch i {
+// This returns the imaginary string for the specified floating point number.
+func imaginaryFromFloat(imaginary float64) string {
+	var string_ string
+	switch imaginary {
 	case 1:
-		s = "i"
+		string_ = "i"
 	case -1:
-		s = "-i"
-	case mat.E:
-		s = "ei"
-	case -mat.E:
-		s = "-ei"
-	case mat.Pi:
-		s = "πi"
-	case -mat.Pi:
-		s = "-πi"
-	case mat.Phi:
-		s = "φi"
-	case -mat.Phi:
-		s = "-φi"
-	case mat.Pi * 2.0:
-		s = "τi"
-	case -mat.Pi * 2.0:
-		s = "-τi"
+		string_ = "-i"
 	default:
-		s = stc.FormatFloat(i, 'G', -1, 64) + "i"
+		string_ = stringFromFloat(imaginary) + "i"
 	}
-	return s
-}
-
-// This returns the string for the specified real number.
-func stringFromReal(r float64) string {
-	var s string
-	switch r {
-	case mat.E:
-		s = "e"
-	case -mat.E:
-		s = "-e"
-	case mat.Pi:
-		s = "π"
-	case -mat.Pi:
-		s = "-π"
-	case mat.Phi:
-		s = "φ"
-	case -mat.Phi:
-		s = "-φ"
-	case mat.Pi * 2.0:
-		s = "τ"
-	case -mat.Pi * 2.0:
-		s = "-τ"
-	default:
-		s = stc.FormatFloat(r, 'G', -1, 64)
-	}
-	return s
+	return string_
 }

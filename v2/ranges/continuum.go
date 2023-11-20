@@ -100,9 +100,9 @@ func (v *continuum) GetIndex(value abs.Continuous) int {
 // This method determines whether or not the specified value is included in this
 // continuous range.
 func (v *continuum) ContainsValue(value abs.Continuous) bool {
-	var first = v.first.AsReal()
-	var candidate = value.AsReal()
-	var last = v.last.AsReal()
+	var first = v.first.AsFloat()
+	var candidate = value.AsFloat()
+	var last = v.last.AsFloat()
 	switch v.extent {
 	case abs.INCLUSIVE:
 		return col.RankValues(first, candidate) <= 0 && col.RankValues(candidate, last) <= 0
@@ -164,8 +164,8 @@ func (v *continuum) validateContinuum() {
 	}
 
 	// Validate the endpoints.
-	var first = v.first.AsReal()
-	var last = v.last.AsReal()
+	var first = v.first.AsFloat()
+	var last = v.last.AsFloat()
 	var rank = col.RankValues(first, last)
 	switch {
 	case rank < 0:

@@ -20,6 +20,11 @@ import (
 
 // INTEGER INTERFACE
 
+// This constructor creates a new integer element from the specified integer.
+func IntegerFromInteger(integer int) abs.IntegerLike {
+	return integer_(integer)
+}
+
 // This constructor creates a new integer element from the specified string.
 func IntegerFromString(string_ string) abs.IntegerLike {
 	var matches = uti.IntegerMatcher.FindStringSubmatch(string_)

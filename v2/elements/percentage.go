@@ -62,7 +62,7 @@ type percentage_ float64
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous element.
-func (v percentage_) AsReal() float64 {
+func (v percentage_) AsFloat() float64 {
 	return float64(v / 100.0)
 }
 
@@ -97,7 +97,7 @@ func (v percentage_) AsInteger() int {
 
 // This method returns a string value for this lexical element.
 func (v percentage_) AsString() string {
-	var string_ = stringFromReal(float64(v)) + "%"
+	var string_ = stringFromFloat(float64(v)) + "%"
 	return string_
 }
 

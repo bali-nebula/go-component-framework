@@ -20,20 +20,20 @@ import (
 
 func TestZeroAngles(t *tes.T) {
 	var v = bal.Angle(0)
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 }
 
 func TestPositiveAngles(t *tes.T) {
 	var v = bal.Angle(mat.Pi)
-	ass.Equal(t, mat.Pi, v.AsReal())
+	ass.Equal(t, mat.Pi, v.AsFloat())
 }
 
 func TestNegativeAngles(t *tes.T) {
 	var v1 = bal.Angle(-mat.Pi)
-	ass.Equal(t, mat.Pi, v1.AsReal())
+	ass.Equal(t, mat.Pi, v1.AsFloat())
 
 	var v2 = bal.Angle(-mat.Pi / 2.0)
-	ass.Equal(t, 1.5*mat.Pi, v2.AsReal())
+	ass.Equal(t, 1.5*mat.Pi, v2.AsFloat())
 }
 
 func TestStringBooleans(t *tes.T) {
@@ -168,7 +168,7 @@ func TestZero(t *tes.T) {
 	ass.False(t, v.IsInfinite())
 	ass.False(t, v.IsUndefined())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 }
@@ -180,7 +180,7 @@ func TestInfinity(t *tes.T) {
 	ass.True(t, v.IsInfinite())
 	ass.False(t, v.IsUndefined())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, mat.Inf(1), v.AsReal())
+	ass.Equal(t, mat.Inf(1), v.AsFloat())
 	ass.Equal(t, mat.Inf(1), v.GetReal())
 	ass.Equal(t, mat.Inf(1), v.GetImaginary())
 }
@@ -192,7 +192,7 @@ func TestUndefined(t *tes.T) {
 	ass.False(t, v.IsInfinite())
 	ass.True(t, v.IsUndefined())
 	ass.False(t, v.IsNegative())
-	ass.True(t, mat.IsNaN(v.AsReal()))
+	ass.True(t, mat.IsNaN(v.AsFloat()))
 	ass.True(t, mat.IsNaN(v.GetReal()))
 	ass.True(t, mat.IsNaN(v.GetImaginary()))
 }
@@ -201,7 +201,7 @@ func TestPositiveReals(t *tes.T) {
 	var v = bal.Number(0.25)
 	ass.Equal(t, 0.25+0i, v.AsComplex())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.25, v.AsReal())
+	ass.Equal(t, 0.25, v.AsFloat())
 	ass.Equal(t, 0.25, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 }
@@ -210,7 +210,7 @@ func TestPositiveImaginaries(t *tes.T) {
 	var v = bal.Number(0.25i)
 	ass.Equal(t, 0+0.25i, v.AsComplex())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, 0.25, v.GetImaginary())
 }
@@ -219,7 +219,7 @@ func TestNegativeReals(t *tes.T) {
 	var v = bal.Number(-0.75)
 	ass.Equal(t, -0.75+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
-	ass.Equal(t, -0.75, v.AsReal())
+	ass.Equal(t, -0.75, v.AsFloat())
 	ass.Equal(t, -0.75, v.GetReal())
 	ass.Equal(t, 0.0, v.GetImaginary())
 }
@@ -228,7 +228,7 @@ func TestNegativeImaginaries(t *tes.T) {
 	var v = bal.Number(-0.75i)
 	ass.Equal(t, 0-0.75i, v.AsComplex())
 	ass.False(t, v.IsNegative())
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 	ass.Equal(t, 0.0, v.GetReal())
 	ass.Equal(t, -0.75, v.GetImaginary())
 }
@@ -290,24 +290,24 @@ func TestSomePattern(t *tes.T) {
 
 func TestStringPercentages(t *tes.T) {
 	var v = bal.Percentage("100%")
-	ass.Equal(t, 1.0, v.AsReal())
+	ass.Equal(t, 1.0, v.AsFloat())
 }
 
 func TestZeroPercentages(t *tes.T) {
 	var v = bal.Percentage(0.0)
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 }
 
 func TestPositivePercentages(t *tes.T) {
 	var v = bal.Percentage(25)
 	ass.Equal(t, 25, v.AsInteger())
-	ass.Equal(t, 0.25, v.AsReal())
+	ass.Equal(t, 0.25, v.AsFloat())
 }
 
 func TestNegativePercentages(t *tes.T) {
 	var v = bal.Percentage(-75)
 	ass.Equal(t, -75, v.AsInteger())
-	ass.Equal(t, -0.75, v.AsReal())
+	ass.Equal(t, -0.75, v.AsFloat())
 }
 
 func TestStringProbabilities(t *tes.T) {
@@ -320,31 +320,31 @@ func TestStringProbabilities(t *tes.T) {
 
 func TestBooleanProbabilities(t *tes.T) {
 	var v1 = bal.Probability(false)
-	ass.Equal(t, 0.0, v1.AsReal())
+	ass.Equal(t, 0.0, v1.AsFloat())
 
 	var v2 = bal.Probability(true)
-	ass.Equal(t, 1.0, v2.AsReal())
+	ass.Equal(t, 1.0, v2.AsFloat())
 }
 
 func TestZeroProbabilities(t *tes.T) {
 	var v = bal.Probability(0.0)
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 }
 
 func TestOneProbabilities(t *tes.T) {
 	var v = bal.Probability(1.0)
-	ass.Equal(t, 1.0, v.AsReal())
+	ass.Equal(t, 1.0, v.AsFloat())
 }
 
 func TestOtherProbabilities(t *tes.T) {
 	var v1 = bal.Probability(0.25)
-	ass.Equal(t, 0.25, v1.AsReal())
+	ass.Equal(t, 0.25, v1.AsFloat())
 
 	var v2 = bal.Probability(0.5)
-	ass.Equal(t, 0.5, v2.AsReal())
+	ass.Equal(t, 0.5, v2.AsFloat())
 
 	var v3 = bal.Probability(0.75)
-	ass.Equal(t, 0.75, v3.AsReal())
+	ass.Equal(t, 0.75, v3.AsFloat())
 }
 
 func TestResourceWithAuthorityAndPath(t *tes.T) {

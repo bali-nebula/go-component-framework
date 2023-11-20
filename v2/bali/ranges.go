@@ -91,34 +91,34 @@ func Integer(value abs.Value) abs.IntegerLike {
 }
 
 // This constructor returns a new real endpoint with the specified value.
-func Real(value abs.Value) abs.RealLike {
-	var real_ abs.RealLike
+func Float(value abs.Value) abs.FloatLike {
+	var real_ abs.FloatLike
 	switch actual := value.(type) {
 	case uint:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case uint8:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case uint16:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case uint32:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case uint64:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case int:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case int8:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case int16:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case int32:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case int64:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case float32:
-		real_ = ele.Real(float64(actual))
+		real_ = ele.Float(float64(actual))
 	case float64:
-		real_ = ele.Real(float64(actual))
-	case abs.RealLike:
+		real_ = ele.Float(float64(actual))
+	case abs.FloatLike:
 		real_ = actual
 	default:
 		var message = fmt.Sprintf("The value (of type %T) cannot be converted to a real: %v", actual, actual)
@@ -247,52 +247,52 @@ func Continuum(first abs.Value, extent abs.Extent, last abs.Value, context abs.C
 	var entity abs.Entity
 	switch actual := first.(type) {
 	case uint:
-		var actualFirst = ele.Real(float64(first.(uint)))
-		var actualLast = ele.Real(float64(last.(uint)))
+		var actualFirst = ele.Float(float64(first.(uint)))
+		var actualLast = ele.Float(float64(last.(uint)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint8:
-		var actualFirst = ele.Real(float64(first.(uint8)))
-		var actualLast = ele.Real(float64(last.(uint8)))
+		var actualFirst = ele.Float(float64(first.(uint8)))
+		var actualLast = ele.Float(float64(last.(uint8)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint16:
-		var actualFirst = ele.Real(float64(first.(uint16)))
-		var actualLast = ele.Real(float64(last.(uint16)))
+		var actualFirst = ele.Float(float64(first.(uint16)))
+		var actualLast = ele.Float(float64(last.(uint16)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint32:
-		var actualFirst = ele.Real(float64(first.(uint32)))
-		var actualLast = ele.Real(float64(last.(uint32)))
+		var actualFirst = ele.Float(float64(first.(uint32)))
+		var actualLast = ele.Float(float64(last.(uint32)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case uint64:
-		var actualFirst = ele.Real(float64(first.(uint64)))
-		var actualLast = ele.Real(float64(last.(uint64)))
+		var actualFirst = ele.Float(float64(first.(uint64)))
+		var actualLast = ele.Float(float64(last.(uint64)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int:
-		var actualFirst = ele.Real(float64(first.(int)))
-		var actualLast = ele.Real(float64(last.(int)))
+		var actualFirst = ele.Float(float64(first.(int)))
+		var actualLast = ele.Float(float64(last.(int)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int8:
-		var actualFirst = ele.Real(float64(first.(int8)))
-		var actualLast = ele.Real(float64(last.(int8)))
+		var actualFirst = ele.Float(float64(first.(int8)))
+		var actualLast = ele.Float(float64(last.(int8)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int16:
-		var actualFirst = ele.Real(float64(first.(int16)))
-		var actualLast = ele.Real(float64(last.(int16)))
+		var actualFirst = ele.Float(float64(first.(int16)))
+		var actualLast = ele.Float(float64(last.(int16)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int32:
-		var actualFirst = ele.Real(float64(first.(int32)))
-		var actualLast = ele.Real(float64(last.(int32)))
+		var actualFirst = ele.Float(float64(first.(int32)))
+		var actualLast = ele.Float(float64(last.(int32)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case int64:
-		var actualFirst = ele.Real(float64(first.(int64)))
-		var actualLast = ele.Real(float64(last.(int64)))
+		var actualFirst = ele.Float(float64(first.(int64)))
+		var actualLast = ele.Float(float64(last.(int64)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case float32:
-		var actualFirst = ele.Real(float64(first.(float32)))
-		var actualLast = ele.Real(float64(last.(float32)))
+		var actualFirst = ele.Float(float64(first.(float32)))
+		var actualLast = ele.Float(float64(last.(float32)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case float64:
-		var actualFirst = ele.Real(float64(first.(float64)))
-		var actualLast = ele.Real(float64(last.(float64)))
+		var actualFirst = ele.Float(float64(first.(float64)))
+		var actualLast = ele.Float(float64(last.(float64)))
 		entity = ran.Continuum(actualFirst, extent, actualLast)
 	case abs.PercentageLike:
 		var actualFirst = first.(abs.PercentageLike)
@@ -342,7 +342,7 @@ func (v *parser) parseEndpoint() (abs.Primitive, *Token, bool) {
 		endpoint, token, ok = v.parseQuote()
 	}
 	if !ok {
-		endpoint, token, ok = v.parseReal()
+		endpoint, token, ok = v.parseFloat()
 	}
 	if !ok {
 		endpoint, token, ok = v.parseInteger()
@@ -388,8 +388,8 @@ func (v *formatter) formatEndpoint(endpoint abs.Primitive) {
 		v.formatMoment(value)
 	case abs.PercentageLike:
 		v.formatPercentage(value)
-	case abs.RealLike:
-		v.formatReal(value)
+	case abs.FloatLike:
+		v.formatFloat(value)
 	case abs.IntegerLike:
 		v.formatInteger(value)
 	case abs.ProbabilityLike:
@@ -610,20 +610,20 @@ func (v *formatter) formatInteger(number abs.IntegerLike) {
 
 // This method attempts to parse a real number. It returns the real number
 // and whether or not the real number was successfully parsed.
-func (v *parser) parseReal() (ele.Real, *Token, bool) {
-	var real_ ele.Real
+func (v *parser) parseFloat() (ele.Float, *Token, bool) {
+	var real_ ele.Float
 	var token = v.nextToken()
 	if token.Type != TokenREAL {
 		v.backupOne(token)
 		return real_, token, false
 	}
-	var real_ = ele.RealFromString(token.Value)
+	var real_ = ele.FloatFromString(token.Value)
 	return real_, token, true
 }
 
 // This method adds the canonical format for the specified real number to the
 // state of the formatter.
-func (v *formatter) formatReal(real_ abs.RealLike) {
+func (v *formatter) formatFloat(real_ abs.FloatLike) {
 	v.AppendString(real_.AsString())
 }
 

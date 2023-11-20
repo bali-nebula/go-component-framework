@@ -87,7 +87,7 @@ type probability_ float64
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous element.
-func (v probability_) AsReal() float64 {
+func (v probability_) AsFloat() float64 {
 	return float64(v)
 }
 
@@ -128,7 +128,7 @@ func (v probability_) AsInteger() int {
 
 // This method returns a string value for this lexical element.
 func (v probability_) AsString() string {
-	var float = v.AsReal()
+	var float = v.AsFloat()
 	var string_ = stc.FormatFloat(float, 'f', -1, 64)
 	switch float {
 	case 0:
@@ -159,29 +159,29 @@ type probabilities_ struct{}
 // This library function returns the logical inverse of the specified
 // probability.
 func (l *probabilities_) Not(probability abs.ProbabilityLike) abs.ProbabilityLike {
-	return probability_(1.0 - probability.AsReal())
+	return probability_(1.0 - probability.AsFloat())
 }
 
 // This library function returns the logical conjunction of the specified
 // probability elements.
 func (l *probabilities_) And(first, second abs.ProbabilityLike) abs.ProbabilityLike {
-	return probability_(first.AsReal() * second.AsReal())
+	return probability_(first.AsFloat() * second.AsFloat())
 }
 
 // This library function returns the logical material non-implication of the
 // specified probability elements.
 func (l *probabilities_) Sans(first, second abs.ProbabilityLike) abs.ProbabilityLike {
-	return probability_(first.AsReal() * (1.0 - second.AsReal()))
+	return probability_(first.AsFloat() * (1.0 - second.AsFloat()))
 }
 
 // This library function returns the logical disjunction of the specified
 // probability elements.
 func (l *probabilities_) Or(first, second abs.ProbabilityLike) abs.ProbabilityLike {
-	return probability_(first.AsReal() + second.AsReal() - (first.AsReal() * second.AsReal()))
+	return probability_(first.AsFloat() + second.AsFloat() - (first.AsFloat() * second.AsFloat()))
 }
 
 // This library function returns the logical exclusive disjunction of the
 // specified probability elements.
 func (l *probabilities_) Xor(first, second abs.ProbabilityLike) abs.ProbabilityLike {
-	return probability_(first.AsReal() + second.AsReal() - (2.0 * first.AsReal() * second.AsReal()))
+	return probability_(first.AsFloat() + second.AsFloat() - (2.0 * first.AsFloat() * second.AsFloat()))
 }

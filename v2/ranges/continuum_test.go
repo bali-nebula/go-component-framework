@@ -59,10 +59,10 @@ func TestContinuaWithProbabilities(t *tes.T) {
 	ass.Equal(t, p1, s.GetLast())
 }
 
-func TestContinuaWithReals(t *tes.T) {
-	var minimum = ele.MinimumReal()
-	var zero = ele.Real(0)
-	var maximum = ele.MaximumReal()
+func TestContinuaWithFloats(t *tes.T) {
+	var minimum = ele.MinimumFloat()
+	var zero = ele.FloatFromFloat(0)
+	var maximum = ele.MaximumFloat()
 	var s = ran.Continuum(minimum, abs.EXCLUSIVE, maximum)
 	ass.True(t, s.ContainsValue(zero))
 	ass.Equal(t, minimum, s.GetFirst())

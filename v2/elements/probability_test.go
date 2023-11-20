@@ -18,20 +18,20 @@ import (
 
 func TestBooleanProbabilities(t *tes.T) {
 	var v1 = ele.ProbabilityFromBool(false)
-	ass.Equal(t, 0.0, v1.AsReal())
+	ass.Equal(t, 0.0, v1.AsFloat())
 
 	var v2 = ele.ProbabilityFromBool(true)
-	ass.Equal(t, 1.0, v2.AsReal())
+	ass.Equal(t, 1.0, v2.AsFloat())
 }
 
 func TestZeroProbabilities(t *tes.T) {
 	var v = ele.ProbabilityFromFloat(0.0)
-	ass.Equal(t, 0.0, v.AsReal())
+	ass.Equal(t, 0.0, v.AsFloat())
 }
 
 func TestOneProbabilities(t *tes.T) {
 	var v = ele.ProbabilityFromFloat(1.0)
-	ass.Equal(t, 1.0, v.AsReal())
+	ass.Equal(t, 1.0, v.AsFloat())
 }
 
 func TestRandomProbabilities(t *tes.T) {
@@ -40,13 +40,13 @@ func TestRandomProbabilities(t *tes.T) {
 
 func TestOtherProbabilities(t *tes.T) {
 	var v1 = ele.ProbabilityFromFloat(0.25)
-	ass.Equal(t, 0.25, v1.AsReal())
+	ass.Equal(t, 0.25, v1.AsFloat())
 
 	var v2 = ele.ProbabilityFromFloat(0.5)
-	ass.Equal(t, 0.5, v2.AsReal())
+	ass.Equal(t, 0.5, v2.AsFloat())
 
 	var v3 = ele.ProbabilityFromFloat(0.75)
-	ass.Equal(t, 0.75, v3.AsReal())
+	ass.Equal(t, 0.75, v3.AsFloat())
 }
 
 func TestProbabilitieLibrary(t *tes.T) {
@@ -81,15 +81,15 @@ func TestProbabilitieLibrary(t *tes.T) {
 	sans = ele.Probability.And(F, ele.Probability.Not(F))
 	ass.Equal(t, sans, ele.Probability.Sans(F, F))
 
-	var xor = ele.ProbabilityFromFloat(ele.Probability.Sans(T, T).AsReal() + ele.Probability.Sans(T, T).AsReal())
+	var xor = ele.ProbabilityFromFloat(ele.Probability.Sans(T, T).AsFloat() + ele.Probability.Sans(T, T).AsFloat())
 	ass.Equal(t, xor, ele.Probability.Xor(T, T))
 
-	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(T, F).AsReal() + ele.Probability.Sans(F, T).AsReal())
+	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(T, F).AsFloat() + ele.Probability.Sans(F, T).AsFloat())
 	ass.Equal(t, xor, ele.Probability.Xor(T, F))
 
-	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(F, T).AsReal() + ele.Probability.Sans(T, F).AsReal())
+	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(F, T).AsFloat() + ele.Probability.Sans(T, F).AsFloat())
 	ass.Equal(t, xor, ele.Probability.Xor(F, T))
 
-	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(F, F).AsReal() + ele.Probability.Sans(F, F).AsReal())
+	xor = ele.ProbabilityFromFloat(ele.Probability.Sans(F, F).AsFloat() + ele.Probability.Sans(F, F).AsFloat())
 	ass.Equal(t, xor, ele.Probability.Xor(F, F))
 }

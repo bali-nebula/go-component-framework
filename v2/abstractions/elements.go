@@ -27,7 +27,7 @@ type Complex interface {
 }
 
 type Continuous interface {
-	AsReal() float64
+	AsFloat() float64
 	IsZero() bool
 	IsInfinite() bool
 	IsUndefined() bool
@@ -119,6 +119,12 @@ type DurationLike interface {
 	Temporal
 }
 
+type FloatLike interface {
+	Continuous
+	Lexical
+	Polarized
+}
+
 type IntegerLike interface {
 	Discrete
 	Lexical
@@ -154,12 +160,6 @@ type ProbabilityLike interface {
 	Continuous
 	Discrete
 	Lexical
-}
-
-type RealLike interface {
-	Continuous
-	Lexical
-	Polarized
 }
 
 type ResourceLike interface {

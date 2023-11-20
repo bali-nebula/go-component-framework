@@ -78,7 +78,7 @@ type angle_ float64
 // CONTINUOUS INTERFACE
 
 // This method returns a real value for this continuous element.
-func (v angle_) AsReal() float64 {
+func (v angle_) AsFloat() float64 {
 	return float64(v)
 }
 
@@ -127,23 +127,23 @@ type angles_ struct{}
 
 // This library function returns the inverse of the specified angle.
 func (l *angles_) Inverse(angle abs.AngleLike) abs.AngleLike {
-	return AngleFromFloat(angle.AsReal() - mat.Pi)
+	return AngleFromFloat(angle.AsFloat() - mat.Pi)
 }
 
 // This library function returns the sum of the specified angles.
 func (l *angles_) Sum(first, second abs.AngleLike) abs.AngleLike {
-	return AngleFromFloat(first.AsReal() + second.AsReal())
+	return AngleFromFloat(first.AsFloat() + second.AsFloat())
 }
 
 // This library function returns the difference of the specified angles.
 func (l *angles_) Difference(first, second abs.AngleLike) abs.AngleLike {
-	return AngleFromFloat(first.AsReal() - second.AsReal())
+	return AngleFromFloat(first.AsFloat() - second.AsFloat())
 }
 
 // This library function returns the specified angle scaled by the specified
 // factor.
 func (l *angles_) Scaled(angle abs.AngleLike, factor float64) abs.AngleLike {
-	return AngleFromFloat(angle.AsReal() * factor)
+	return AngleFromFloat(angle.AsFloat() * factor)
 }
 
 // ANGULAR INTERFACE
@@ -151,25 +151,25 @@ func (l *angles_) Scaled(angle abs.AngleLike, factor float64) abs.AngleLike {
 // This library function returns the complement of the specified angle. The
 // complementary angles add up to π/2.
 func (l *angles_) Complement(angle abs.AngleLike) abs.AngleLike {
-	return AngleFromFloat(mat.Pi/2.0 - angle.AsReal())
+	return AngleFromFloat(mat.Pi/2.0 - angle.AsFloat())
 }
 
 // This library function returns the supplement of the specified angle. The
 // supplementary angles add up to π.
 func (l *angles_) Supplement(angle abs.AngleLike) abs.AngleLike {
-	return AngleFromFloat(mat.Pi - angle.AsReal())
+	return AngleFromFloat(mat.Pi - angle.AsFloat())
 }
 
 // This library function returns the conjugate of the specified angle. The
 // conjugate angles add up to 2π (zero).
 func (l *angles_) Conjugate(angle abs.AngleLike) abs.AngleLike {
-	return AngleFromFloat(-angle.AsReal())
+	return AngleFromFloat(-angle.AsFloat())
 }
 
 // This library function returns the trigonometric cosine of the specified
 // angle.
 func (l *angles_) Cosine(angle abs.AngleLike) float64 {
-	switch angle.AsReal() {
+	switch angle.AsFloat() {
 	case 0.0:
 		return 1.0
 	case mat.Pi * 0.25:
@@ -189,7 +189,7 @@ func (l *angles_) Cosine(angle abs.AngleLike) float64 {
 	case tau:
 		return 1.0
 	default:
-		return mat.Cos(angle.AsReal())
+		return mat.Cos(angle.AsFloat())
 	}
 }
 
@@ -201,7 +201,7 @@ func (l *angles_) ArcCosine(x float64) abs.AngleLike {
 
 // This library function returns the trigonometric sine of the specified angle.
 func (l *angles_) Sine(angle abs.AngleLike) float64 {
-	switch angle.AsReal() {
+	switch angle.AsFloat() {
 	case 0.0:
 		return 0.0
 	case mat.Pi * 0.25:
@@ -221,7 +221,7 @@ func (l *angles_) Sine(angle abs.AngleLike) float64 {
 	case tau:
 		return 0.0
 	default:
-		return mat.Sin(angle.AsReal())
+		return mat.Sin(angle.AsFloat())
 	}
 }
 
@@ -234,7 +234,7 @@ func (l *angles_) ArcSine(y float64) abs.AngleLike {
 // This library function returns the trigonometric tangent of the specified
 // angle.
 func (l *angles_) Tangent(angle abs.AngleLike) float64 {
-	switch angle.AsReal() {
+	switch angle.AsFloat() {
 	case 0.0:
 		return 0.0
 	case mat.Pi * 0.25:
@@ -254,7 +254,7 @@ func (l *angles_) Tangent(angle abs.AngleLike) float64 {
 	case tau:
 		return 0.0
 	default:
-		return mat.Tan(angle.AsReal())
+		return mat.Tan(angle.AsFloat())
 	}
 }
 

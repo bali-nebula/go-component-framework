@@ -25,7 +25,7 @@ var None abs.PatternLike = pattern_(`^none$`)
 
 // PATTERN INTERFACE
 
-// This constructor creates a new pattern entity from the specified string.
+// This constructor creates a new pattern element from the specified string.
 func PatternFromString(string_ string) abs.PatternLike {
 	var matches = uti.PatternMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {

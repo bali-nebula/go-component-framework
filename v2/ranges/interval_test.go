@@ -20,13 +20,13 @@ import (
 )
 
 func TestIntervalsWithDurations(t *tes.T) {
-	var two = ele.DurationFromInt(2)
-	var three = ele.DurationFromInt(3)
-	var four = ele.DurationFromInt(4)
-	var five = ele.DurationFromInt(5)
-	var six = ele.DurationFromInt(6)
-	var seven = ele.DurationFromInt(7)
-	var eight = ele.DurationFromInt(8)
+	var two = ele.DurationFromMilliseconds(2)
+	var three = ele.DurationFromMilliseconds(3)
+	var four = ele.DurationFromMilliseconds(4)
+	var five = ele.DurationFromMilliseconds(5)
+	var six = ele.DurationFromMilliseconds(6)
+	var seven = ele.DurationFromMilliseconds(7)
+	var eight = ele.DurationFromMilliseconds(8)
 	var s = ran.Interval(three, abs.INCLUSIVE, seven)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
@@ -58,13 +58,13 @@ func TestIntervalsWithDurations(t *tes.T) {
 }
 
 func TestIntervalsWithMoments(t *tes.T) {
-	var two = ele.MomentFromInt(2)
-	var three = ele.MomentFromInt(3)
-	var four = ele.MomentFromInt(4)
-	var five = ele.MomentFromInt(5)
-	var six = ele.MomentFromInt(6)
-	var seven = ele.MomentFromInt(7)
-	var eight = ele.MomentFromInt(8)
+	var two = ele.MomentFromMilliseconds(2)
+	var three = ele.MomentFromMilliseconds(3)
+	var four = ele.MomentFromMilliseconds(4)
+	var five = ele.MomentFromMilliseconds(5)
+	var six = ele.MomentFromMilliseconds(6)
+	var seven = ele.MomentFromMilliseconds(7)
+	var eight = ele.MomentFromMilliseconds(8)
 	var s = ran.Interval(three, abs.RIGHT, seven)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())
@@ -91,9 +91,9 @@ func TestIntervalsWithMoments(t *tes.T) {
 }
 
 func TestIntervalsWithEmojis(t *tes.T) {
-	var r1 = ele.Character('😀')
-	var r2 = ele.Character('😆')
-	var r3 = ele.Character('🤣')
+	var r1 = ele.CharacterFromRune('😀')
+	var r2 = ele.CharacterFromRune('😆')
+	var r3 = ele.CharacterFromRune('🤣')
 	var s = ran.Interval(r1, abs.INCLUSIVE, r3)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 804, s.GetSize())
@@ -106,14 +106,14 @@ func TestIntervalsWithEmojis(t *tes.T) {
 }
 
 func TestIntervalsWithCharacters(t *tes.T) {
-	var rA = ele.Character('A')
-	var ra = ele.Character('a')
-	var rb = ele.Character('b')
-	var rc = ele.Character('c')
-	var rd = ele.Character('d')
-	var re = ele.Character('e')
-	var rf = ele.Character('f')
-	var rg = ele.Character('g')
+	var rA = ele.CharacterFromRune('A')
+	var ra = ele.CharacterFromRune('a')
+	var rb = ele.CharacterFromRune('b')
+	var rc = ele.CharacterFromRune('c')
+	var rd = ele.CharacterFromRune('d')
+	var re = ele.CharacterFromRune('e')
+	var rf = ele.CharacterFromRune('f')
+	var rg = ele.CharacterFromRune('g')
 	var s = ran.Interval(ra, abs.LEFT, rf)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 5, s.GetSize())
@@ -133,12 +133,12 @@ func TestIntervalsWithCharacters(t *tes.T) {
 }
 
 func TestIntervalsWithIntegers(t *tes.T) {
-	var i1 = ele.Integer(1)
-	var i2 = ele.Integer(2)
-	var i3 = ele.Integer(3)
-	var i4 = ele.Integer(4)
-	var i5 = ele.Integer(5)
-	var i6 = ele.Integer(6)
+	var i1 = ele.IntegerFromInteger(1)
+	var i2 = ele.IntegerFromInteger(2)
+	var i3 = ele.IntegerFromInteger(3)
+	var i4 = ele.IntegerFromInteger(4)
+	var i5 = ele.IntegerFromInteger(5)
+	var i6 = ele.IntegerFromInteger(6)
 	var s = ran.Interval(i1, abs.RIGHT, i5)
 	ass.False(t, s.IsEmpty())
 	ass.Equal(t, 4, s.GetSize())

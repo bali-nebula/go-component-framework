@@ -528,7 +528,7 @@ func (v *formatter) formatPercentage(percentage abs.PercentageLike) {
 		float = float64(element)
 	} else {
 		// This approach introduces round-off errors.
-		float = 100.0 * percentage.AsReal()
+		float = 100.0 * percentage.AsFloat()
 	}
 	var s = stc.FormatFloat(float, 'G', -1, 64) + "%"
 	v.AppendString(s)
@@ -551,7 +551,7 @@ func (v *parser) parseProbability() (abs.ProbabilityLike, *Token, bool) {
 // This method adds the canonical format for the specified element to the state
 // of the formatter.
 func (v *formatter) formatProbability(probability abs.ProbabilityLike) {
-	var value = probability.AsReal()
+	var value = probability.AsFloat()
 	var s = stc.FormatFloat(value, 'f', -1, 64)
 	switch {
 	// Zero is formatted as ".0".
