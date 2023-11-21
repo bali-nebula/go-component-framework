@@ -20,11 +20,11 @@ import (
 	tim "time"
 )
 
-// CONSTANT DEFINITIONS
+// MOMENT ELEMENT CONSTANTS
 
 const Epoch = moment_(0)
 
-// MOMENT INTERFACE
+// MOMENT ELEMENT CONSTRUCTORS
 
 // This constructor creates a new moment in time element from the specified
 // integer number of milliseconds since the UNIX Epoch in the UTC timezone.
@@ -66,12 +66,13 @@ func MaximumMoment() abs.MomentLike {
 	return moment
 }
 
-// MOMENT IMPLEMENTATION
+// MOMENT ELEMENT METHODS
 
-// This type defines the methods associated with moment in time elements. It
-// extends the native Go int type and represents the number of milliseconds
-// after the UNIX Epoch (Midnight, January 1, 1970 UTC) for a moment of tim.
-// All moments are based on UTC.
+// This private type implements the MomentLike interface.  It extends the native
+// Go `int` type and represents the number of milliseconds after the UNIX Epoch
+// (Midnight, January 1, 1970 UTC) for a moment of time.  All moments are based
+// on UTC.  For moments before the UNIX Epoch the number of milliseconds is
+// negative.
 type moment_ int
 
 // DISCRETE INTERFACE
@@ -227,7 +228,7 @@ func (v moment_) GetYears() int {
 	return t.Year()
 }
 
-// PRIVATE INTERFACE
+// PRIVATE METHODS
 
 // This function returns the go Time value for the specified UNIX milliseconds.
 func (v moment_) asTime() tim.Time {
@@ -235,7 +236,7 @@ func (v moment_) asTime() tim.Time {
 	return tim.UnixMilli(milliseconds).UTC()
 }
 
-// MOMENT LIBRARY
+// MOMENT ELEMENT LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // moment elements.

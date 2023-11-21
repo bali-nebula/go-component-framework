@@ -17,7 +17,7 @@ import (
 	stc "strconv"
 )
 
-// PROBABILITY INTERFACE
+// PROBABILITY ELEMENT CONSTRUCTORS
 
 // This constructor creates a new probability element and constrains the value
 // to be in the allowed range for probabilities [0..1].
@@ -77,11 +77,10 @@ func MaximumProbability() abs.ProbabilityLike {
 	return probability
 }
 
-// PROBABILITY IMPLEMENTATION
+// PROBABILITY ELEMENT METHODS
 
-// This type defines the methods associated with probability elements. It
-// extends the native Go float64 type and represents a probability in the range
-// [0..1].
+// This private type implements the ProbabilityLike interface.  It extends the
+// native Go `float64` type and represents a probability in the range [0..1].
 type probability_ float64
 
 // CONTINUOUS INTERFACE
@@ -144,7 +143,7 @@ func (v probability_) AsString() string {
 	return string_
 }
 
-// PROBABILITY LIBRARY
+// PROBABILITY ELEMENT LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // probability elements.

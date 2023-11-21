@@ -19,7 +19,7 @@ import (
 	sts "strings"
 )
 
-// CONSTANT DEFINITIONS
+// NUMBER ELEMENT CONSTANTS
 
 var zero = complex(0, 0)
 var infinity = cmp.Inf()
@@ -32,7 +32,7 @@ var Zero abs.NumberLike = number_(zero)
 var Infinity abs.NumberLike = number_(infinity)
 var Undefined abs.NumberLike = number_(undefined)
 
-// NUMBER IMPLEMENTATION
+// NUMBER ELEMENT CONSTRUCTORS
 
 // This constructor creates a new number that is mapped to the Riemann Sphere.
 //   - https://en.wikipedia.org/wiki/Riemann_sphere
@@ -108,6 +108,7 @@ func NumberFromComplex(complex_ complex128) abs.NumberLike {
 	}
 }
 
+// This constructor creates a new number from the specified polar values.
 func NumberFromPolar(magnitude float64, phase float64) abs.NumberLike {
 	var complex_ = cmp.Rect(magnitude, phase)
 	return NumberFromComplex(complex_)
@@ -172,8 +173,10 @@ func MaximumNumber() abs.NumberLike {
 	return Infinity
 }
 
-// This type defines the methods associated with number elements. It extends the
-// native Go complex128 type and may represent an integer, real, or complex
+// NUMBER ELEMENT METHODS
+
+// This private type implements the NumberLike interface.  It extends the native
+// Go `complex128` type and may represent an integer, floating point, or complex
 // number.
 type number_ complex128
 
@@ -264,7 +267,7 @@ func (v number_) IsNegative() bool {
 	return real(v) < 0
 }
 
-// NUMBER LIBRARY
+// NUMBER ELEMENT LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // number elements.
@@ -429,6 +432,25 @@ func lockMagnitude(v float64) float64 {
 		return 1
 	case mat.IsInf(v, 0):
 		return mat.Inf(1)
+	default:
+		return v
+	}
+}
+
+// This function uses the single precision floating point range to lock a double
+// precision phase onto 0, π/2, π, or 3π/2 if the phase falls outside the single
+// precision range for these values. Otherwise, the phase is returned unchanged.
+func lockPhase(v float64) float64 {
+	var v32 float32 = float32(v)
+	switch {
+	case mat.Abs(v) <= 1.2246467991473515e-16:
+		return 0
+	case v32 == float32(0.5*mat.Pi):
+		return 0.5 * mat.Pi
+	case v32 == float32(mat.Pi):
+		return mat.Pi
+	case v32 == float32(1.5*mat.Pi):
+		return 1.5 * mat.Pi
 	default:
 		return v
 	}

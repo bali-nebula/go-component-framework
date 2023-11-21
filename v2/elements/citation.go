@@ -17,7 +17,7 @@ import (
 	sts "strings"
 )
 
-// CITATION INTERFACE
+// CITATION ELEMENT CONSTRUCTORS
 
 // This constructor creates a new citation from the specified string value.
 func CitationFromString(string_ string) abs.CitationLike {
@@ -30,9 +30,10 @@ func CitationFromString(string_ string) abs.CitationLike {
 	return citation
 }
 
-// CITATION IMPLEMENTATION
+// CITATION ELEMENT METHODS
 
-// This type defines the methods associated with a citation element.
+// This private type implements the CitationLike interface.  It extends the
+// native Go `string` type.
 type citation_ string
 
 // LEXICAL INTERFACE

@@ -19,7 +19,7 @@ import (
 	utf "unicode/utf8"
 )
 
-// CHARACTER INTERFACE
+// CHARACTER ELEMENT CONSTRUCTORS
 
 // This constructor creates a new character element from the specified rune.
 func CharacterFromRune(rune_ rune) abs.CharacterLike {
@@ -53,10 +53,10 @@ func MaximumCharacter() abs.CharacterLike {
 	return character_(mat.MaxInt32)
 }
 
-// CHARACTER IMPLEMENTATION
+// CHARACTER ELEMENT METHODS
 
-// This type defines the methods associated with character endpoints. It extends the
-// native Go int32 type.
+// This private type implements the CharacterLike interface.  It extends the
+// native Go `int32` type.
 type character_ int32
 
 // DISCRETE INTERFACE

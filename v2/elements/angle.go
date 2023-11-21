@@ -18,7 +18,7 @@ import (
 	stc "strconv"
 )
 
-// CONSTANT DEFINITIONS
+// ANGLE ELEMENT CONSTANTS
 
 // See "The Tau Manifesto" at https://tauday.com/tau-manifesto
 const tau = 2.0 * mat.Pi
@@ -27,7 +27,7 @@ var Pi abs.AngleLike = angle_(mat.Pi)
 
 var Tau abs.AngleLike = angle_(tau)
 
-// ANGLE INTERFACE
+// ANGLE ELEMENT CONSTRUCTORS
 
 // This constructor creates a new angle from the specified float value and
 // normalizes the value to be in the allowed range for angles [0..τ).
@@ -68,11 +68,10 @@ func MaximumAngle() abs.AngleLike {
 	return Tau
 }
 
-// ANGLE IMPLEMENTATION
+// ANGLE ELEMENT METHODS
 
-// This type defines the methods associated with angle elements. It extends the
-// native Go float64 type and represents a radian based angle in the range
-// [0..2π).
+// This private type implements the AngleLike interface.  It extends the native
+// Go `float64` type and represents a radian based angle in the range [0..2π).
 type angle_ float64
 
 // CONTINUOUS INTERFACE
@@ -113,7 +112,7 @@ func (v angle_) AsString() string {
 	return s
 }
 
-// ANGLE LIBRARY
+// ANGLE ELEMENT LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // angle elements.
@@ -262,26 +261,4 @@ func (l *angles_) Tangent(angle abs.AngleLike) float64 {
 // specified ratio of the distances along the y-axis and x-axis.
 func (l *angles_) ArcTangent(x, y float64) abs.AngleLike {
 	return AngleFromFloat(mat.Atan2(y, x))
-}
-
-// PRIVATE FUNCTIONS
-
-// This function uses the single precision floating point range to lock a double
-// precision phase angle onto 0, π/2, π, or 3π/2 if the angle falls outside the
-// single precision range for these values. Otherwise, the phase angle is
-// returned unchanged.
-func lockPhase(v float64) float64 {
-	var v32 float32 = float32(v)
-	switch {
-	case mat.Abs(v) <= 1.2246467991473515e-16:
-		return 0
-	case v32 == float32(0.5*mat.Pi):
-		return 0.5 * mat.Pi
-	case v32 == float32(mat.Pi):
-		return mat.Pi
-	case v32 == float32(1.5*mat.Pi):
-		return 1.5 * mat.Pi
-	default:
-		return v
-	}
 }

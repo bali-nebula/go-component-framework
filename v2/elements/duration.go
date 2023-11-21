@@ -19,7 +19,7 @@ import (
 	sts "strings"
 )
 
-// CONSTANT DEFINITIONS
+// DURATION ELEMENT CONSTANTS
 
 // These are locked to the Earth's daily revolutions.
 
@@ -40,7 +40,7 @@ const DaysPerMonth float64 = float64(MillisecondsPerMonth) / float64(Millisecond
 const WeeksPerMonth float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerWeek) // ~4.348125 weeks/month
 const DaysPerYear float64 = float64(MillisecondsPerYear) / float64(MillisecondsPerDay)     // ~365.2425 days/year
 
-// DURATION INTERFACE
+// DURATION ELEMENT CONSTRUCTORS
 
 // This constructor creates a new duration of time element from the specified
 // integer number of milliseconds.
@@ -73,11 +73,11 @@ func MaximumDuration() abs.DurationLike {
 	return duration
 }
 
-// DURATION IMPLEMENTATION
+// DURATION ELEMENT METHODS
 
-// This type defines the methods associated with time duration elements. It
-// extends the native Go `int` type and its value represents the number of
-// milliseconds for the entire duration of time. Durations can be negative.
+// This private type implements the DurationLike interface.  It extends the
+// native Go `int` type and its value represents the number of milliseconds
+// for the entire duration of time. Durations can be negative.
 type duration_ int
 
 // DISCRETE INTERFACE

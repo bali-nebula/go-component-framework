@@ -18,7 +18,7 @@ import (
 	stc "strconv"
 )
 
-// INTEGER INTERFACE
+// INTEGER ELEMENT CONSTRUCTORS
 
 // This constructor creates a new integer element from the specified integer.
 func IntegerFromInteger(integer int) abs.IntegerLike {
@@ -46,10 +46,10 @@ func MaximumInteger() abs.IntegerLike {
 	return integer_(mat.MaxInt)
 }
 
-// INTEGER IMPLEMENTATION
+// INTEGER ELEMENT METHODS
 
-// This type defines the methods associated with integer endpoints. It extends the
-// native Go int type.
+// This private type implements the IntegerLike interface.  It extends the
+// native Go `int` type.
 type integer_ int
 
 // DISCRETE INTERFACE

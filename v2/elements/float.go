@@ -18,7 +18,7 @@ import (
 	stc "strconv"
 )
 
-// FLOAT INTERFACE
+// FLOAT ELEMENT CONSTRUCTORS
 
 // This constructor creates a new float element from the specified float.
 func FloatFromFloat(float float64) abs.FloatLike {
@@ -46,10 +46,10 @@ func MaximumFloat() abs.FloatLike {
 	return float_(mat.Inf(1))
 }
 
-// FLOAT IMPLEMENTATION
+// FLOAT ELEMENT METHODS
 
-// This type defines the methods associated with float endpoints. It extends the
-// native Go float64 type.
+// This private type implements the FloatLike interface.  It extends the native
+// Go `float64` type.
 type float_ float64
 
 // CONTINUOUS INTERFACE

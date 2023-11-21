@@ -16,13 +16,13 @@ import (
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 )
 
-// CONSTANT DEFINITIONS
+// BOOLEAN ELEMENT CONSTANTS
 
 var False abs.BooleanLike = boolean_(false)
 
 var True abs.BooleanLike = boolean_(true)
 
-// BOOLEAN INTERFACE
+// BOOLEAN ELEMENT CONSTRUCTORS
 
 // This constructor creates a new boolean from the specified bool value.
 func BooleanFromBoolean(bool_ bool) abs.BooleanLike {
@@ -41,10 +41,10 @@ func BooleanFromString(string_ string) abs.BooleanLike {
 	return boolean
 }
 
-// BOOLEAN IMPLEMENTATION
+// BOOLEAN ELEMENT METHODS
 
-// This type defines the methods associated with boolean elements. It extends
-// the native Go bool type.
+// This private type implements the BooleanLike interface.  It extends the
+// native Go `bool` type.
 type boolean_ bool
 
 // DISCRETE INTERFACE
@@ -76,7 +76,7 @@ func (v boolean_) AsString() string {
 	return s
 }
 
-// BOOLEAN LIBRARY
+// BOOLEAN ELEMENT LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // boolean elements.
