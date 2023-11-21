@@ -13,31 +13,22 @@ package strings
 import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
+	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	col "github.com/craterdog/go-collection-framework/v2"
-	reg "regexp"
 	sts "strings"
 )
 
-// NAME STRING IMPLEMENTATION
-
-// These constants are used to define a regular expression for matching
-// name strings.
-const (
-	letter = `\pL` // All unicode letters and connectors like underscores.
-	digit  = `\pN` // All unicode digits.
-	name   = `(?:/` + identifier + `)+`
-)
-
-// This scanner is used for matching name strings.
-var nameScanner = reg.MustCompile(`^(?:` + name + `)$`)
+// NAME STRING INTERFACE
 
 // This constructor creates a new name string from the specified string.
 func NameFromString(string_ string) abs.NameLike {
-	if !nameScanner.MatchString(string_) {
+	var matches = uti.NameMatcher.FindStringSubmatch(string_)
+	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a name string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Name(string_)
+	var name = name_(matches[0])
+	return name
 }
 
 // This constructor attempts to create a new name string from the specified
@@ -47,7 +38,7 @@ func NameFromArray(array []abs.Identifier) abs.NameLike {
 	for _, identifier := range array {
 		builder.WriteString("/" + string(identifier))
 	}
-	var name = Name(builder.String())
+	var name = name_(builder.String())
 	return name
 }
 
@@ -55,37 +46,40 @@ func NameFromArray(array []abs.Identifier) abs.NameLike {
 // sequence. It returns the corresponding name string.
 func NameFromSequence(sequence abs.Sequential[abs.Identifier]) abs.NameLike {
 	var array = sequence.AsArray()
-	return NameFromArray(array)
+	var name = NameFromArray(array)
+	return name
 }
+
+// NAME STRING IMPLEMENTATION
 
 // This type defines the methods associated with a name string that
 // extends the native Go string type and represents the string of identifiers
 // that make up the name.
-type Name string
+type name_ string
 
 // LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
-func (v Name) AsString() string {
+func (v name_) AsString() string {
 	return string(v)
 }
 
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.
-func (v Name) IsEmpty() bool {
+func (v name_) IsEmpty() bool {
 	return false // Names must have at least one identifier.
 }
 
 // This method returns the number of identifiers contained in this string.
-func (v Name) GetSize() int {
+func (v name_) GetSize() int {
 	var identifiers = v.AsArray()
 	return len(identifiers)
 }
 
 // This method returns all the identifiers in this string. The identifiers
 // retrieved are in the same order as they are in the string.
-func (v Name) AsArray() []abs.Identifier {
+func (v name_) AsArray() []abs.Identifier {
 	var identifiers = sts.Split(string(v[1:]), "/")
 	var array = make([]abs.Identifier, len(identifiers))
 	for index, identifier := range identifiers {
@@ -98,7 +92,7 @@ func (v Name) AsArray() []abs.Identifier {
 
 // This method retrieves from this string the identifier that is associated with
 // the specified index.
-func (v Name) GetValue(index int) abs.Identifier {
+func (v name_) GetValue(index int) abs.Identifier {
 	var array = v.AsArray()
 	var identifiers = col.Array[abs.Identifier](array)
 	return identifiers.GetValue(index)
@@ -106,24 +100,24 @@ func (v Name) GetValue(index int) abs.Identifier {
 
 // This method retrieves from this string all identifiers from the first index
 // through the last index (inclusive).
-func (v Name) GetValues(first int, last int) abs.Sequential[abs.Identifier] {
+func (v name_) GetValues(first int, last int) abs.Sequential[abs.Identifier] {
 	var array = v.AsArray()
 	var identifiers = col.Array[abs.Identifier](array)
 	return identifiers.GetValues(first, last)
 }
 
-// LIBRARY FUNCTIONS
+// NAME LIBRARY
 
-// This constant defines a namespace within this package for all name string
-// library functions.
-const Names names = false
+// This singleton creates a unique name space for the library functions for
+// name strings.
+var Name = &names_{}
 
-// This type defines the library functions associated with name strings.
-type names bool
+// This type defines an empty structure and the group of methods bound to it
+// that define the library functions for name strings.
+type names_ struct{}
 
-// This function returns the concatenation of the two specified name
-// strings.
-func (l names) Concatenate(first, second abs.NameLike) abs.NameLike {
+// This function returns the concatenation of the two specified name strings.
+func (l *names_) Concatenate(first, second abs.NameLike) abs.NameLike {
 	var name = first.AsString() + second.AsString()
-	return Name(name)
+	return name_(name)
 }

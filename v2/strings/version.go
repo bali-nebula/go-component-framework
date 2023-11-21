@@ -122,17 +122,18 @@ func (v Version) GetValues(first int, last int) abs.Sequential[abs.Ordinal] {
 	return ordinals.GetValues(first, last)
 }
 
-// LIBRARY FUNCTIONS
+// VERSION LIBRARY
 
-// This constant defines a namespace within this package for all version string
-// library functions.
-const Versions versions = false
+// This singleton creates a unique name space for the library functions for
+// version strings.
+var Version = &versions_{}
 
-// This type defines the library functions associated with version strings.
-type versions bool
+// This type defines an empty structure and the group of methods bound to it
+// that define the library functions for version strings.
+type versions_ struct{}
 
 // This function returns the concatenation of the two specified version strings.
-func (l versions) Concatenate(first, second abs.VersionLike) abs.VersionLike {
+func (l *versions) Concatenate(first, second abs.VersionLike) abs.VersionLike {
 	var version = first.AsString() + "." + second.AsString()
 	return Version(version)
 }
@@ -149,7 +150,7 @@ func (l versions) Concatenate(first, second abs.VersionLike) abs.VersionLike {
 // version string being incremented. A level that is greater than the size of
 // current version will result in a new level with the value of `1` being
 // appended to the copy of the current version string.
-func (l versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs.VersionLike {
+func (l *versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs.VersionLike {
 	// Adjust the size of the ordinals as needed.
 	var ordinals = current.AsArray()
 	var size = abs.Ordinal(len(ordinals))
@@ -185,7 +186,7 @@ func (l versions) GetNextVersion(current abs.VersionLike, level abs.Ordinal) abs
 //	level 1:    v5.7              v6         (interface/symantic changes)
 //	level 2:    v5.7              v5.8       (optimization/bug fixes)
 //	level 3:    v5.7              v5.7.1     (changes being tested)
-func (l versions) IsValidNextVersion(current, next abs.VersionLike) bool {
+func (l *versions) IsValidNextVersion(current, next abs.VersionLike) bool {
 	// Make sure the version sizes are compatible.
 	var currentOrdinals = current.AsArray()
 	var currentSize = len(currentOrdinals)

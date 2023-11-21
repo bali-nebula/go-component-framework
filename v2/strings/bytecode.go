@@ -15,38 +15,25 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	col "github.com/craterdog/go-collection-framework/v2"
-	reg "regexp"
+	sts "strings"
 )
 
-// BYTECODE STRING IMPLEMENTATION
-
-// These constants are used to define a regular expression for matching
-// bytecode strings.
-const (
-	bytecode = `(` + base16 + `*)`
-)
-
-// This scanner is used for matching bytecode strings.
-var bytecodeScanner = reg.MustCompile(`^(?:` + bytecode + `)$`)
+// BYTECODE STRING INTERFACE
 
 // This constructor creates a new bytecode string from the specified string.
 func BytecodeFromString(string_ string) abs.BytecodeLike {
-	if !bytecodeScanner.MatchString(string_) {
+	var matches = uti.BytecodeMatcher.FindStringSubmatch(string_)
+	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a bytecode string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Bytecode(string_)
+	var encoded = matches[1]                    // Strip off the "'" delimiters.
+	encoded = sts.ReplaceAll(encoded, " ", "")  // Remove all spaces.
+	return bytecode_(encoded)
 }
 
-// This constructor creates a new binary string from the specified byte array.
-// It returns the corresponding binary string.
-func BytecodeFromBytes(bytes []byte) abs.BytecodeLike {
-	var encoded = uti.Base16Encode(bytes)
-	return Bytecode(encoded)
-}
-
-// This constructor creates a new bytecode string from the specified instruction array.
-// It returns the corresponding bytecode string.
+// This constructor creates a new bytecode string from the specified array of
+// instructions.
 func BytecodeFromArray(array []abs.Instruction) abs.BytecodeLike {
 	var list = col.List[byte]()
 	var instructions = col.ListFromArray(array)
@@ -60,43 +47,45 @@ func BytecodeFromArray(array []abs.Instruction) abs.BytecodeLike {
 	}
 	var bytes = list.AsArray()
 	var encoded = uti.Base16Encode(bytes)
-	return Bytecode(encoded)
+	return bytecode_(encoded)
 }
 
-// This constructor creates a new bytecode string from the specified byte
-// sequence. It returns the corresponding bytecode string.
+// This constructor creates a new bytecode string from the specified sequence of
+// instructions.
 func BytecodeFromSequence(sequence abs.Sequential[abs.Instruction]) abs.BytecodeLike {
 	var array = sequence.AsArray()
 	return BytecodeFromArray(array)
 }
 
+// BYTECODE STRING IMPLEMENTATION
+
 // This type defines the methods associated with a bytecode string that extends
 // the native Go string type and represents the string of instructions that make up
 // the bytecode string.
-type Bytecode string
+type bytecode_ string
 
 // LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
-func (v Bytecode) AsString() string {
-	return string(v)
+func (v bytecode_) AsString() string {
+	return "'" + string(v) + "'"
 }
 
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.
-func (v Bytecode) IsEmpty() bool {
+func (v bytecode_) IsEmpty() bool {
 	return len(v) == 0
 }
 
 // This method returns the number of instructions contained in this string.
-func (v Bytecode) GetSize() int {
+func (v bytecode_) GetSize() int {
 	return len(v.AsArray())
 }
 
 // This method returns all the instructions in this string. The instructions retrieved
 // are in the same order as they are in the string.
-func (v Bytecode) AsArray() []abs.Instruction {
+func (v bytecode_) AsArray() []abs.Instruction {
 	var encoded = string(v)
 	var decoded = uti.Base16Decode(encoded)
 	var bytes = col.ListFromArray(decoded)
@@ -115,7 +104,7 @@ func (v Bytecode) AsArray() []abs.Instruction {
 
 // This method retrieves from this string the instruction that is associated
 // with the specified index.
-func (v Bytecode) GetValue(index int) abs.Instruction {
+func (v bytecode_) GetValue(index int) abs.Instruction {
 	var array = v.AsArray()
 	var instructions = col.Array[abs.Instruction](array)
 	return instructions.GetValue(index)
@@ -123,7 +112,7 @@ func (v Bytecode) GetValue(index int) abs.Instruction {
 
 // This method retrieves from this string all instructions from the first index
 // through the last index (inclusive).
-func (v Bytecode) GetValues(first int, last int) abs.Sequential[abs.Instruction] {
+func (v bytecode_) GetValues(first int, last int) abs.Sequential[abs.Instruction] {
 	var array = v.AsArray()
 	var instructions = col.Array[abs.Instruction](array)
 	return instructions.GetValues(first, last)

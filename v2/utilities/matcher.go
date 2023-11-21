@@ -87,7 +87,7 @@ const (
 	identifier  = letter + `(?:` + letter + `|` + digit + `)*`
 	imaginary   = `(?:` + sign + `|` + real_ + `)?i`
 	infinity    = `infinity|∞`
-	instruction = base16 + base16 + base16 + base16
+	instruction = base16 + `{4}`
 	integer     = zero + `|` + sign + `?` + ordinal
 	intrinsic   = `ANY|LOWER_CASE|UPPER_CASE|DIGIT|ESCAPE|CONTROL|EOF`
 	keyword     = `AND|IS|MATCHES|NOT|OR|SANS|XOR|accept|as|at|break|checkout|continue|discard|do|each|from|if|in|let|level|loop|matching|notarize|on|post|publish|reject|retrieve|return|save|select|throw|to|while|with`
@@ -100,7 +100,7 @@ const (
 	month       = `(?:[0][1-9])|(?:[1][012])`
 	months      = `(` + span + `M)`
 	name        = `(?:/` + identifier + `)+` // Cannot capture each identifier...
-	narrative   = `">` + eol + `((?:.|` + eol + `)*?)` + eol + space + `*<"`
+	narrative   = `">` + eol + `((?:.|` + eol + `)*` + eol + `)` + space + `*<"`
 	note        = `! [^` + control + `]*`
 	number      = imaginary + `|` + real_ + `|` + complex_ + `|` + zero + `|` + infinity + `|` + undefined
 	ordinal     = `[1-9][0-9]*`

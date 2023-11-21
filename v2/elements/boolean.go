@@ -25,7 +25,7 @@ var True abs.BooleanLike = boolean_(true)
 // BOOLEAN INTERFACE
 
 // This constructor creates a new boolean from the specified bool value.
-func BooleanFromBool(bool_ bool) abs.BooleanLike {
+func BooleanFromBoolean(bool_ bool) abs.BooleanLike {
 	return boolean_(bool_)
 }
 
@@ -37,7 +37,7 @@ func BooleanFromString(string_ string) abs.BooleanLike {
 		panic(message)
 	}
 	var bool_ = matches[0] == "true"
-	var boolean = BooleanFromBool(bool_)
+	var boolean = BooleanFromBoolean(bool_)
 	return boolean
 }
 
@@ -90,25 +90,25 @@ type booleans_ struct{}
 
 // This library function returns the logical inverse of the specified boolean.
 func (l *booleans_) Not(boolean abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBool(!boolean.AsBoolean())
+	return BooleanFromBoolean(!boolean.AsBoolean())
 }
 
 // This library function returns the logical conjunction of the specified
 // boolean elements.
 func (l *booleans_) And(first, second abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBool(first.AsBoolean() && second.AsBoolean())
+	return BooleanFromBoolean(first.AsBoolean() && second.AsBoolean())
 }
 
 // This library function returns the logical material non-implication of the
 // specified boolean elements.
 func (l *booleans_) Sans(first, second abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBool(first.AsBoolean() && !second.AsBoolean())
+	return BooleanFromBoolean(first.AsBoolean() && !second.AsBoolean())
 }
 
 // This library function returns the logical disjunction of the specified
 // boolean elements.
 func (l *booleans_) Or(first, second abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBool(first.AsBoolean() || second.AsBoolean())
+	return BooleanFromBoolean(first.AsBoolean() || second.AsBoolean())
 }
 
 // This library function returns the logical exclusive disjunction of the

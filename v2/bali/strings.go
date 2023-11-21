@@ -34,7 +34,7 @@ func Binary(value abs.Value) abs.BinaryLike {
 	case abs.Sequential[byte]:
 		binary = str.BinaryFromSequence(actual)
 	case string:
-		binary = ParseEntity(actual).(abs.BinaryLike)
+		binary = str.BinaryFromString(actual)
 	case abs.ComponentLike:
 		binary = actual.GetEntity().(abs.BinaryLike)
 	default:
@@ -56,7 +56,7 @@ func Bytecode(value abs.Value) abs.BytecodeLike {
 	case abs.Sequential[abs.Instruction]:
 		bytecode = str.BytecodeFromSequence(actual)
 	case string:
-		bytecode = ParseEntity(actual).(abs.BytecodeLike)
+		bytecode = str.BytecodeFromString(actual)
 	case abs.ComponentLike:
 		bytecode = actual.GetEntity().(abs.BytecodeLike)
 	default:
@@ -78,7 +78,7 @@ func Narrative(value abs.Value) abs.NarrativeLike {
 	case abs.Sequential[abs.Line]:
 		narrative = str.NarrativeFromSequence(actual)
 	case string:
-		narrative = ParseEntity(actual).(abs.NarrativeLike)
+		narrative = str.NarrativeFromString(actual)
 	case abs.ComponentLike:
 		narrative = actual.GetEntity().(abs.NarrativeLike)
 	default:
@@ -100,7 +100,7 @@ func Quote(value abs.Value) abs.QuoteLike {
 	case abs.Sequential[rune]:
 		quote = str.QuoteFromSequence(actual)
 	case string:
-		quote = ParseEntity(actual).(abs.QuoteLike)
+		quote = str.QuoteFromString(actual)
 	case abs.ComponentLike:
 		quote = actual.GetEntity().(abs.QuoteLike)
 	default:
@@ -118,7 +118,7 @@ func Symbol(value abs.Value) abs.SymbolLike {
 	var symbol abs.SymbolLike
 	switch actual := value.(type) {
 	case string:
-		symbol = ParseEntity(actual).(abs.SymbolLike)
+		symbol = str.SymbolFromString(actual)
 	case abs.SymbolLike:
 		symbol = actual
 	case abs.ComponentLike:
@@ -163,7 +163,7 @@ func Tag(value abs.Value) abs.TagLike {
 	case []byte:
 		tag = str.TagFromBytes(actual)
 	case string:
-		tag = ParseEntity(actual).(abs.TagLike)
+		tag = str.TagFromString(actual)
 	case abs.TagLike:
 		tag = actual
 	case abs.ComponentLike:
@@ -185,7 +185,7 @@ func Version(value abs.Value) abs.VersionLike {
 	case abs.Sequential[abs.Ordinal]:
 		version = str.VersionFromSequence(actual)
 	case string:
-		version = ParseEntity(actual).(abs.VersionLike)
+		version = str.VersionFromString(actual)
 	case abs.ComponentLike:
 		version = actual.GetEntity().(abs.VersionLike)
 	default:
@@ -226,6 +226,9 @@ func (v *parser) parseBinary() (abs.BinaryLike, *Token, bool) {
 }
 
 const lineLength = 60 // 60 base 64 characters encode 45 bytes per line.
+
+func (v *formatter) formatName(name abs.NameLike) {
+}
 
 // This method adds the canonical format for the specified string to the state
 // of the formatter.

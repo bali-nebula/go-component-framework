@@ -17,15 +17,17 @@ import (
 )
 
 func TestEmptyBytecode(t *tes.T) {
-	var v = str.BytecodeFromString("")
-	ass.Equal(t, "", v.AsString())
+	var bytecode = `''`
+	var v = str.BytecodeFromString(bytecode)
+	ass.Equal(t, bytecode, v.AsString())
 	ass.True(t, v.IsEmpty())
 	ass.Equal(t, 0, v.GetSize())
 }
 
 func TestBytecode(t *tes.T) {
-	var v = str.BytecodeFromString("abcd1234")
-	ass.Equal(t, "abcd1234", v.AsString())
+	var bytecode = `'abcd1234'`
+	var v = str.BytecodeFromString(bytecode)
+	ass.Equal(t, bytecode, v.AsString())
 	ass.False(t, v.IsEmpty())
 	ass.Equal(t, 2, v.GetSize())
 	ass.Equal(t, v.AsArray(), str.BytecodeFromArray(v.AsArray()).AsArray())

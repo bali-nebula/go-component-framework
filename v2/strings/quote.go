@@ -112,16 +112,17 @@ func (v Quote) GetValues(first int, last int) abs.Sequential[rune] {
 	return runes.GetValues(first, last)
 }
 
-// LIBRARY FUNCTIONS
+// QUOTE LIBRARY
 
-// This constant defines a namespace within this package for all quote string
-// library functions.
-const Quotes quotes = false
+// This singleton creates a unique name space for the library functions for
+// quote strings.
+var Quote = &quotes_{}
 
-// This type defines the library functions associated with quote strings.
-type quotes bool
+// This type defines an empty structure and the group of methods bound to it
+// that define the library functions for quote strings.
+type quotes_ struct{}
 
 // This function returns the concatenation of the two specified quote strings.
-func (l quotes) Concatenate(first, second abs.QuoteLike) abs.QuoteLike {
+func (l *quotes) Concatenate(first, second abs.QuoteLike) abs.QuoteLike {
 	return Quote(first.AsString() + second.AsString())
 }

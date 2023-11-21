@@ -15,46 +15,29 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	col "github.com/craterdog/go-collection-framework/v2"
-	reg "regexp"
+	sts "strings"
 )
 
-// BINARY STRING IMPLEMENTATION
-
-// These constants are used to define a regular expression for matching
-// binary strings.
-const (
-	base64 = `[A-Za-z0-9+/]`
-	binary = `(` + base64 + `*)`
-)
-
-// This scanner is used for matching binary strings.
-var binaryScanner = reg.MustCompile(`^(?:` + binary + `)$`)
+// BINARY STRING INTERFACE
 
 // This constructor creates a new binary string from the specified string.
 func BinaryFromString(string_ string) abs.BinaryLike {
-	if !binaryScanner.MatchString(string_) {
+	var matches = uti.BinaryMatcher.FindStringSubmatch(string_)
+	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a binary string from an invalid string: %v", string_)
 		panic(message)
 	}
-	return Binary(string_)
-}
-
-// This constructor creates a new binary string from the specified byte array.
-// It returns the corresponding binary string.
-func BinaryFromBytes(bytes []byte) abs.BinaryLike {
-	var encoded = uti.Base64Encode(bytes)
-	return Binary(encoded)
+	var binary = matches[1]                   // Strip off the "'>\n" and "<'" delimiters.
+	binary = sts.ReplaceAll(binary, " ", "")  // Remove all spaces.
+	binary = sts.ReplaceAll(binary, "\n", "") // Remove all EOLs.
+	return binary_(binary)
 }
 
 // This constructor creates a new binary string from the specified byte array.
 // It returns the corresponding binary string.
 func BinaryFromArray(array []byte) abs.BinaryLike {
-	var bytes = make([]byte, len(array))
-	for index, b := range array {
-		bytes[index] = byte(b)
-	}
-	var encoded = uti.Base64Encode(bytes)
-	return Binary(encoded)
+	var encoded = uti.Base64Encode(array)
+	return binary_(encoded)
 }
 
 // This constructor creates a new binary string from the specified byte
@@ -64,39 +47,50 @@ func BinaryFromSequence(sequence abs.Sequential[byte]) abs.BinaryLike {
 	return BinaryFromArray(array)
 }
 
+// BINARY STRING IMPLEMENTATION
+
 // This type defines the methods associated with a binary string that extends
 // the native Go string type and represents the string of bytes that make up
 // the binary string.
-type Binary string
+type binary_ string
 
 // LEXICAL INTERFACE
 
 // This method returns a string value for this lexical string.
-func (v Binary) AsString() string {
-	return string(v)
+func (v binary_) AsString() string {
+	var indentation = "    "
+	var encoded = string(v)
+	var width = 60
+	var length = len(encoded)
+	var string_ = "'>\n"
+	if length > 0 {
+		var index int
+		for index = 0; index+width < length; index += width {
+			string_ += indentation + encoded[index:index+width]
+		}
+		string_ += indentation + encoded[index:] + "\n"
+	}
+	string_ += "<'"
+	return string_
 }
 
 // SEQUENTIAL INTERFACE
 
 // This method determines whether or not this string is empty.
-func (v Binary) IsEmpty() bool {
+func (v binary_) IsEmpty() bool {
 	return len(v) == 0
 }
 
 // This method returns the number of bytes contained in this string.
-func (v Binary) GetSize() int {
+func (v binary_) GetSize() int {
 	return len(v.AsArray())
 }
 
 // This method returns all the bytes in this string. The bytes retrieved
 // are in the same order as they are in the string.
-func (v Binary) AsArray() []byte {
+func (v binary_) AsArray() []byte {
 	var encoded = string(v)
-	var bytes = uti.Base64Decode(encoded)
-	var array = make([]byte, len(bytes))
-	for index, b := range bytes {
-		array[index] = byte(b)
-	}
+	var array = uti.Base64Decode(encoded)
 	return array
 }
 
@@ -104,7 +98,7 @@ func (v Binary) AsArray() []byte {
 
 // This method retrieves from this string the byte that is associated
 // with the specified index.
-func (v Binary) GetValue(index int) byte {
+func (v binary_) GetValue(index int) byte {
 	var array = v.AsArray()
 	var bytes = col.Array[byte](array)
 	return bytes.GetValue(index)
@@ -112,24 +106,25 @@ func (v Binary) GetValue(index int) byte {
 
 // This method retrieves from this string all bytes from the first index
 // through the last index (inclusive).
-func (v Binary) GetValues(first int, last int) abs.Sequential[byte] {
+func (v binary_) GetValues(first int, last int) abs.Sequential[byte] {
 	var array = v.AsArray()
 	var bytes = col.Array[byte](array)
 	return bytes.GetValues(first, last)
 }
 
-// LIBRARY FUNCTIONS
+// BINARY LIBRARY
 
-// This constant defines a namespace within this package for all binary string
-// library functions.
-const Binaries binaries = false
+// This singleton creates a unique name space for the library functions for
+// binary strings.
+var Binary = &binaries_{}
 
-// This type defines the library functions associated with binary strings.
-type binaries bool
+// This type defines an empty structure and the group of methods bound to it
+// that define the library functions for binary strings.
+type binaries_ struct{}
 
 // This function returns the concatenation of the two specified binary
 // strings.
-func (l binaries) Concatenate(first, second abs.BinaryLike) abs.BinaryLike {
+func (l *binaries_) Concatenate(first, second abs.BinaryLike) abs.BinaryLike {
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
 	var allBytes = make([]byte, len(firstBytes)+len(secondBytes))
@@ -140,7 +135,7 @@ func (l binaries) Concatenate(first, second abs.BinaryLike) abs.BinaryLike {
 
 // This function returns the logical (bitwise) inverse of the specified
 // binary string.
-func (l binaries) Not(binary abs.BinaryLike) abs.BinaryLike {
+func (l *binaries_) Not(binary abs.BinaryLike) abs.BinaryLike {
 	var bytes = binary.AsArray()
 	var size = len(bytes)
 	for i := 0; i < size; i++ {
@@ -151,7 +146,7 @@ func (l binaries) Not(binary abs.BinaryLike) abs.BinaryLike {
 
 // This function returns the logical (bitwise) conjunction of the
 // specified binary strings.
-func (l binaries) And(first, second abs.BinaryLike) abs.BinaryLike {
+func (l *binaries_) And(first, second abs.BinaryLike) abs.BinaryLike {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
@@ -174,7 +169,7 @@ func (l binaries) And(first, second abs.BinaryLike) abs.BinaryLike {
 
 // This function returns the logical (bitwise) material non-implication
 // of the specified binary strings.
-func (l binaries) Sans(first, second abs.BinaryLike) abs.BinaryLike {
+func (l *binaries_) Sans(first, second abs.BinaryLike) abs.BinaryLike {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
@@ -197,7 +192,7 @@ func (l binaries) Sans(first, second abs.BinaryLike) abs.BinaryLike {
 
 // This function returns the logical (bitwise) disjunction of the
 // specified binary strings.
-func (l binaries) Or(first, second abs.BinaryLike) abs.BinaryLike {
+func (l *binaries_) Or(first, second abs.BinaryLike) abs.BinaryLike {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
@@ -220,7 +215,7 @@ func (l binaries) Or(first, second abs.BinaryLike) abs.BinaryLike {
 
 // This function returns the logical (bitwise) exclusive disjunction of
 // the specified binary strings.
-func (l binaries) Xor(first, second abs.BinaryLike) abs.BinaryLike {
+func (l *binaries_) Xor(first, second abs.BinaryLike) abs.BinaryLike {
 	var result []byte
 	var firstBytes = first.AsArray()
 	var secondBytes = second.AsArray()
