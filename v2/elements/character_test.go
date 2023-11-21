@@ -18,31 +18,31 @@ import (
 )
 
 func TestASCIICharacters(t *tes.T) {
-	var v = ele.CharacterFromString(`"a"`)
+	var v = ele.Character.FromString(`"a"`)
 	ass.Equal(t, `"a"`, v.AsString())
 
-	v = ele.CharacterFromString(`"'"`)
+	v = ele.Character.FromString(`"'"`)
 	ass.Equal(t, `"'"`, v.AsString())
 }
 
 func TestUnicodeCharacters(t *tes.T) {
-	var v = ele.CharacterFromString(`"😊"`)
+	var v = ele.Character.FromString(`"😊"`)
 	ass.Equal(t, `"😊"`, v.AsString())
 
-	v = ele.CharacterFromString(`"界"`)
+	v = ele.Character.FromString(`"界"`)
 	ass.Equal(t, `"界"`, v.AsString())
 }
 
 func TestEscapedCharacters(t *tes.T) {
-	var v = ele.CharacterFromString(`"\""`)
+	var v = ele.Character.FromString(`"\""`)
 	ass.Equal(t, `"\""`, v.AsString())
 
-	v = ele.CharacterFromString(`"\\"`)
+	v = ele.Character.FromString(`"\\"`)
 	ass.Equal(t, `"\\"`, v.AsString())
 
-	v = ele.CharacterFromString(`"\n"`)
+	v = ele.Character.FromString(`"\n"`)
 	ass.Equal(t, `"\n"`, v.AsString())
 
-	v = ele.CharacterFromString(`"\t"`)
+	v = ele.Character.FromString(`"\t"`)
 	ass.Equal(t, `"\t"`, v.AsString())
 }

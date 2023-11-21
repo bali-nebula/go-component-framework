@@ -17,13 +17,13 @@ import (
 	reg "regexp"
 )
 
-// PATTERN ELEMENT CONSTANTS
+// PATTERN CONSTANTS
 
 var Any abs.PatternLike = pattern_(`.*`)
 
 var None abs.PatternLike = pattern_(`^none$`)
 
-// PATTERN ELEMENT CONSTRUCTORS
+// PATTERN CONSTRUCTORS
 
 // This constructor creates a new pattern element from the specified string.
 func PatternFromString(string_ string) abs.PatternLike {
@@ -46,7 +46,7 @@ func PatternFromString(string_ string) abs.PatternLike {
 	return pattern
 }
 
-// PATTERN ELEMENT METHODS
+// PATTERN METHODS
 
 // This private type implements the PatternLike interface.  It extends the
 // native Go `string` type and represents the regular expression corresponding

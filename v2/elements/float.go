@@ -18,15 +18,26 @@ import (
 	stc "strconv"
 )
 
-// FLOAT ELEMENT CONSTRUCTORS
+// FLOAT CLASS DEFINITION
+
+// This public singleton creates a unique name space for the float class.
+var Float = &floats_{}
+
+// This private type defines the structure associated with the class constants
+// and class methods for the float elements.
+type floats_ struct {
+	// This class has no class constants.
+}
+
+// FLOAT CLASS METHODS
 
 // This constructor creates a new float element from the specified float.
-func FloatFromFloat(float float64) abs.FloatLike {
+func (t *floats_) FromFloat(float float64) abs.FloatLike {
 	return float_(float)
 }
 
 // This constructor creates a new float element from the specified string.
-func FloatFromString(string_ string) abs.FloatLike {
+func (t *floats_) FromString(string_ string) abs.FloatLike {
 	var matches = uti.FloatMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a float from an invalid string: %v", string_)
@@ -37,16 +48,16 @@ func FloatFromString(string_ string) abs.FloatLike {
 }
 
 // This constructor returns the minimum value for a float endpoint.
-func MinimumFloat() abs.FloatLike {
+func (t *floats_) MinimumValue() abs.FloatLike {
 	return float_(mat.Inf(-1))
 }
 
 // This constructor returns the maximum value for a float endpoint.
-func MaximumFloat() abs.FloatLike {
+func (t *floats_) MaximumValue() abs.FloatLike {
 	return float_(mat.Inf(1))
 }
 
-// FLOAT ELEMENT METHODS
+// FLOAT INSTANCE METHODS
 
 // This private type implements the FloatLike interface.  It extends the native
 // Go `float64` type.

@@ -18,36 +18,36 @@ import (
 )
 
 func TestInfiniteFloats(t *tes.T) {
-	var v = ele.FloatFromString(`+infinity`)
+	var v = ele.Float.FromString(`+infinity`)
 	ass.Equal(t, `∞`, v.AsString())
 
-	v = ele.FloatFromString(`+∞`)
+	v = ele.Float.FromString(`+∞`)
 	ass.Equal(t, `∞`, v.AsString())
 
-	v = ele.FloatFromString(`∞`)
+	v = ele.Float.FromString(`∞`)
 	ass.Equal(t, `∞`, v.AsString())
 
-	v = ele.FloatFromString(`-infinity`)
+	v = ele.Float.FromString(`-infinity`)
 	ass.Equal(t, `-∞`, v.AsString())
 
-	v = ele.FloatFromString(`-∞`)
+	v = ele.Float.FromString(`-∞`)
 	ass.Equal(t, `-∞`, v.AsString())
 }
 
 func TestZeroFloats(t *tes.T) {
-	var v = ele.FloatFromString(`0`)
+	var v = ele.Float.FromString(`0`)
 	ass.Equal(t, `0`, v.AsString())
 }
 
 func TestPositiveFloats(t *tes.T) {
-	var v = ele.FloatFromString(`12.3`)
+	var v = ele.Float.FromString(`12.3`)
 	ass.Equal(t, `12.3`, v.AsString())
 
-	v = ele.FloatFromString(`+π`)
+	v = ele.Float.FromString(`+π`)
 	ass.Equal(t, `π`, v.AsString())
 }
 
 func TestNegativeFloats(t *tes.T) {
-	var v = ele.FloatFromString(`-e`)
+	var v = ele.Float.FromString(`-e`)
 	ass.Equal(t, `-e`, v.AsString())
 }

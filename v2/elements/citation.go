@@ -17,10 +17,21 @@ import (
 	sts "strings"
 )
 
-// CITATION ELEMENT CONSTRUCTORS
+// CITATION CLASS DEFINITION
+
+// This public singleton creates a unique name space for the citation class.
+var Citation = &citations_{}
+
+// This private type defines the structure associated with the class constants
+// and class methods for the citation elements.
+type citations_ struct {
+	// This class has no class constants.
+}
+
+// CITATION CLASS METHODS
 
 // This constructor creates a new citation from the specified string value.
-func CitationFromString(string_ string) abs.CitationLike {
+func (t *citations_) FromString(string_ string) abs.CitationLike {
 	var matches = uti.CitationMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a citation from an invalid string: %v", string_)
@@ -30,7 +41,7 @@ func CitationFromString(string_ string) abs.CitationLike {
 	return citation
 }
 
-// CITATION ELEMENT METHODS
+// CITATION INSTANCE METHODS
 
 // This private type implements the CitationLike interface.  It extends the
 // native Go `string` type.

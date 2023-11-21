@@ -16,32 +16,80 @@ import (
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 )
 
-// BOOLEAN ELEMENT CONSTANTS
+// BOOLEAN CLASS DEFINITION
 
-var False abs.BooleanLike = boolean_(false)
+// This public singleton creates a unique name space for the boolean class.
+var Boolean = &booleans_{boolean_(false), boolean_(true)}
 
-var True abs.BooleanLike = boolean_(true)
+// This private type defines the structure associated with the class constants
+// and class methods for the boolean elements.
+type booleans_ struct {
+	false_ abs.BooleanLike
+	true_  abs.BooleanLike
+}
 
-// BOOLEAN ELEMENT CONSTRUCTORS
+// BOOLEAN CLASS CONSTANTS
+
+// This class constant represents a false boolean element.
+func (t *booleans_) False() abs.BooleanLike {
+	return t.false_
+}
+
+// This class constant represents a true boolean element.
+func (t *booleans_) True() abs.BooleanLike {
+	return t.true_
+}
+
+// BOOLEAN CLASS METHODS
 
 // This constructor creates a new boolean from the specified bool value.
-func BooleanFromBoolean(bool_ bool) abs.BooleanLike {
-	return boolean_(bool_)
+func (t *booleans_) FromBoolean(boolean bool) abs.BooleanLike {
+	return boolean_(boolean)
 }
 
 // This constructor creates a new boolean from the specified string value.
-func BooleanFromString(string_ string) abs.BooleanLike {
+func (t *booleans_) FromString(string_ string) abs.BooleanLike {
 	var matches = uti.BooleanMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a boolean from an invalid string: %v", string_)
 		panic(message)
 	}
-	var bool_ = matches[0] == "true"
-	var boolean = BooleanFromBoolean(bool_)
+	var boolean = t.FromBoolean(matches[0] == "true")
 	return boolean
 }
 
-// BOOLEAN ELEMENT METHODS
+// LOGICAL INTERFACE
+
+// This class method returns the logical inverse of the specified boolean.
+func (t *booleans_) Not(boolean abs.BooleanLike) abs.BooleanLike {
+	return t.FromBoolean(!boolean.AsBoolean())
+}
+
+// This class method returns the logical conjunction of the specified
+// boolean elements.
+func (t *booleans_) And(first, second abs.BooleanLike) abs.BooleanLike {
+	return t.FromBoolean(first.AsBoolean() && second.AsBoolean())
+}
+
+// This class method returns the logical material non-implication of the
+// specified boolean elements.
+func (t *booleans_) Sans(first, second abs.BooleanLike) abs.BooleanLike {
+	return t.FromBoolean(first.AsBoolean() && !second.AsBoolean())
+}
+
+// This class method returns the logical disjunction of the specified
+// boolean elements.
+func (t *booleans_) Or(first, second abs.BooleanLike) abs.BooleanLike {
+	return t.FromBoolean(first.AsBoolean() || second.AsBoolean())
+}
+
+// This class method returns the logical exclusive disjunction of the
+// specified boolean elements.
+func (t *booleans_) Xor(first, second abs.BooleanLike) abs.BooleanLike {
+	return t.Or(t.Sans(first, second), t.Sans(second, first))
+}
+
+// BOOLEAN INSTANCE METHODS
 
 // This private type implements the BooleanLike interface.  It extends the
 // native Go `bool` type.
@@ -49,12 +97,12 @@ type boolean_ bool
 
 // DISCRETE INTERFACE
 
-// This method returns a boolean value for this discrete element.
+// This instance method returns a boolean value for this discrete element.
 func (v boolean_) AsBoolean() bool {
 	return bool(v)
 }
 
-// This method returns an integer value for this discrete element.
+// This instance method returns an integer value for this discrete element.
 func (v boolean_) AsInteger() int {
 	if v {
 		return 1
@@ -64,55 +112,14 @@ func (v boolean_) AsInteger() int {
 
 // LEXICAL INTERFACE
 
-// This method returns a string value for this lexical element.
+// This instance method returns a string value for this lexical element.
 func (v boolean_) AsString() string {
-	var s string
+	var string_ string
 	switch v {
 	case true:
-		s = "true"
+		string_ = "true"
 	case false:
-		s = "false"
+		string_ = "false"
 	}
-	return s
-}
-
-// BOOLEAN ELEMENT LIBRARY
-
-// This singleton creates a unique name space for the library functions for
-// boolean elements.
-var Boolean = &booleans_{}
-
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for boolean elements.
-type booleans_ struct{}
-
-// LOGICAL INTERFACE
-
-// This library function returns the logical inverse of the specified boolean.
-func (l *booleans_) Not(boolean abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBoolean(!boolean.AsBoolean())
-}
-
-// This library function returns the logical conjunction of the specified
-// boolean elements.
-func (l *booleans_) And(first, second abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBoolean(first.AsBoolean() && second.AsBoolean())
-}
-
-// This library function returns the logical material non-implication of the
-// specified boolean elements.
-func (l *booleans_) Sans(first, second abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBoolean(first.AsBoolean() && !second.AsBoolean())
-}
-
-// This library function returns the logical disjunction of the specified
-// boolean elements.
-func (l *booleans_) Or(first, second abs.BooleanLike) abs.BooleanLike {
-	return BooleanFromBoolean(first.AsBoolean() || second.AsBoolean())
-}
-
-// This library function returns the logical exclusive disjunction of the
-// specified boolean elements.
-func (l *booleans_) Xor(first, second abs.BooleanLike) abs.BooleanLike {
-	return Boolean.Or(Boolean.Sans(first, second), Boolean.Sans(second, first))
+	return string_
 }

@@ -18,39 +18,39 @@ import (
 )
 
 func TestZeroAngles(t *tes.T) {
-	var v = ele.AngleFromFloat(0)
+	var v = ele.Angle.FromFloat(0)
 	ass.Equal(t, 0.0, v.AsFloat())
 
-	v = ele.AngleFromString("~0")
+	v = ele.Angle.FromString("~0")
 	ass.Equal(t, "~0", v.AsString())
 }
 
 func TestPositiveAngles(t *tes.T) {
-	var v = ele.AngleFromFloat(mat.Pi)
+	var v = ele.Angle.FromFloat(mat.Pi)
 	ass.Equal(t, mat.Pi, v.AsFloat())
 
-	v = ele.AngleFromString("~π")
+	v = ele.Angle.FromString("~π")
 	ass.Equal(t, "~π", v.AsString())
 }
 
 func TestNegativeAngles(t *tes.T) {
-	var v = ele.AngleFromFloat(-mat.Pi)
+	var v = ele.Angle.FromFloat(-mat.Pi)
 	ass.Equal(t, mat.Pi, v.AsFloat())
 
-	v = ele.AngleFromFloat(-mat.Pi / 2.0)
+	v = ele.Angle.FromFloat(-mat.Pi / 2.0)
 	ass.Equal(t, 1.5*mat.Pi, v.AsFloat())
 }
 
 func TestAnglesLibrary(t *tes.T) {
-	var v0 = ele.AngleFromFloat(0)
-	var v1 = ele.AngleFromFloat(mat.Pi * 0.25)
-	var v2 = ele.AngleFromFloat(mat.Pi * 0.5)
-	var v3 = ele.AngleFromFloat(mat.Pi * 0.75)
-	var v4 = ele.AngleFromFloat(mat.Pi)
-	var v5 = ele.AngleFromFloat(mat.Pi * 1.25)
-	var v6 = ele.AngleFromFloat(mat.Pi * 1.5)
-	var v7 = ele.AngleFromFloat(mat.Pi * 1.75)
-	var v8 = ele.Tau
+	var v0 = ele.Angle.Zero()
+	var v1 = ele.Angle.FromFloat(mat.Pi * 0.25)
+	var v2 = ele.Angle.FromFloat(mat.Pi * 0.5)
+	var v3 = ele.Angle.FromFloat(mat.Pi * 0.75)
+	var v4 = ele.Angle.Pi()
+	var v5 = ele.Angle.FromFloat(mat.Pi * 1.25)
+	var v6 = ele.Angle.FromFloat(mat.Pi * 1.5)
+	var v7 = ele.Angle.FromFloat(mat.Pi * 1.75)
+	var v8 = ele.Angle.Tau()
 
 	ass.Equal(t, v4, ele.Angle.Inverse(v0))
 	ass.Equal(t, v5, ele.Angle.Inverse(v1))

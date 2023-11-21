@@ -18,19 +18,19 @@ import (
 )
 
 func TestZeroIntegers(t *tes.T) {
-	var v = ele.IntegerFromString(`0`)
+	var v = ele.Integer.FromString(`0`)
 	ass.Equal(t, `0`, v.AsString())
 }
 
 func TestPositiveIntegers(t *tes.T) {
-	var v = ele.IntegerFromString(`42`)
+	var v = ele.Integer.FromString(`42`)
 	ass.Equal(t, `42`, v.AsString())
 
-	v = ele.IntegerFromString(`+5`)
+	v = ele.Integer.FromString(`+5`)
 	ass.Equal(t, `5`, v.AsString())
 }
 
 func TestNegativeIntegers(t *tes.T) {
-	var v = ele.IntegerFromString(`-1`)
+	var v = ele.Integer.FromString(`-1`)
 	ass.Equal(t, `-1`, v.AsString())
 }

@@ -18,15 +18,26 @@ import (
 	stc "strconv"
 )
 
-// INTEGER ELEMENT CONSTRUCTORS
+// INTEGER CLASS DEFINITION
+
+// This public singleton creates a unique name space for the integer class.
+var Integer = &integers_{}
+
+// This private type defines the structure associated with the class constants
+// and class methods for the integer elements.
+type integers_ struct {
+	// This class has no class constants.
+}
+
+// INTEGER CLASS METHODS
 
 // This constructor creates a new integer element from the specified integer.
-func IntegerFromInteger(integer int) abs.IntegerLike {
+func (t *integers_) FromInteger(integer int) abs.IntegerLike {
 	return integer_(integer)
 }
 
 // This constructor creates a new integer element from the specified string.
-func IntegerFromString(string_ string) abs.IntegerLike {
+func (t *integers_) FromString(string_ string) abs.IntegerLike {
 	var matches = uti.IntegerMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct an integer from an invalid string: %v", string_)
@@ -37,16 +48,16 @@ func IntegerFromString(string_ string) abs.IntegerLike {
 }
 
 // This constructor returns the minimum value for an integer endpoint.
-func MinimumInteger() abs.IntegerLike {
+func (t *integers_) MinimumValue() abs.IntegerLike {
 	return integer_(0)
 }
 
 // This constructor returns the maximum value for an integer endpoint.
-func MaximumInteger() abs.IntegerLike {
+func (t *integers_) MaximumValue() abs.IntegerLike {
 	return integer_(mat.MaxInt)
 }
 
-// INTEGER ELEMENT METHODS
+// INTEGER METHODS
 
 // This private type implements the IntegerLike interface.  It extends the
 // native Go `int` type.

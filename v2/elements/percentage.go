@@ -18,7 +18,7 @@ import (
 	stc "strconv"
 )
 
-// PERCENTAGE ELEMENT CONSTRUCTORS
+// PERCENTAGE CONSTRUCTORS
 
 // This constructor creates a new percentage element from the specified integer.
 func PercentageFromInt(integer int) abs.PercentageLike {
@@ -52,7 +52,7 @@ func MaximumPercentage() abs.PercentageLike {
 	return percentage_(100)
 }
 
-// PERCENTAGE ELEMENT METHODS
+// PERCENTAGE METHODS
 
 // This private type implements the PercentageLike interface.  It extends the
 // native Go `float64` type and represents a percentage. Percentages can be

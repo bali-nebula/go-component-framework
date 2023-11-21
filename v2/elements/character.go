@@ -19,20 +19,31 @@ import (
 	utf "unicode/utf8"
 )
 
-// CHARACTER ELEMENT CONSTRUCTORS
+// CHARACTER CLASS DEFINITION
+
+// This public singleton creates a unique name space for the character class.
+var Character = &characters_{}
+
+// This private type defines the structure associated with the class constants
+// and class methods for the character elements.
+type characters_ struct {
+	// This class has no class constants.
+}
+
+// CHARACTER CLASS METHODS
 
 // This constructor creates a new character element from the specified rune.
-func CharacterFromRune(rune_ rune) abs.CharacterLike {
+func (t *characters_) FromRune(rune_ rune) abs.CharacterLike {
 	return character_(rune_)
 }
 
 // This constructor creates a new character element from the specified integer.
-func CharacterFromInteger(integer int) abs.CharacterLike {
+func (t *characters_) FromInteger(integer int) abs.CharacterLike {
 	return character_(int32(integer))
 }
 
 // This constructor creates a new character element from the specified string.
-func CharacterFromString(string_ string) abs.CharacterLike {
+func (t *characters_) FromString(string_ string) abs.CharacterLike {
 	var matches = uti.CharacterMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a character from an invalid string: %v", string_)
@@ -44,16 +55,16 @@ func CharacterFromString(string_ string) abs.CharacterLike {
 }
 
 // This constructor returns the minimum value for a character endpoint.
-func MinimumCharacter() abs.CharacterLike {
+func (t *characters_) MinimumValue() abs.CharacterLike {
 	return character_(0)
 }
 
 // This constructor returns the maximum value for a character endpoint.
-func MaximumCharacter() abs.CharacterLike {
+func (t *characters_) MaximumValue() abs.CharacterLike {
 	return character_(mat.MaxInt32)
 }
 
-// CHARACTER ELEMENT METHODS
+// CHARACTER INSTANCE METHODS
 
 // This private type implements the CharacterLike interface.  It extends the
 // native Go `int32` type.

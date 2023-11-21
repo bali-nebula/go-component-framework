@@ -20,53 +20,85 @@ import (
 	tim "time"
 )
 
-// MOMENT ELEMENT CONSTANTS
+// MOMENT CLASS DEFINITION
 
-const Epoch = moment_(0)
+// This public singleton creates a unique name space for the moment class.
+var Moment = &moments_{moment_(0)}
 
-// MOMENT ELEMENT CONSTRUCTORS
+// This private type defines the structure associated with the class constants
+// and class methods for the moment elements.
+type moments_ struct {
+	epoch abs.MomentLike
+}
+
+// MOMENT CLASS CONSTANTS
+
+// This class constant represents the moment of the UNIX Epoch.
+func (t *moments_) Epoch() abs.MomentLike {
+	return t.epoch
+}
+
+// MOMENT CLASS METHODS
 
 // This constructor creates a new moment in time element from the specified
 // integer number of milliseconds since the UNIX Epoch in the UTC timezone.
-func MomentFromMilliseconds(milliseconds int) abs.MomentLike {
+func (t *moments_) FromMilliseconds(milliseconds int) abs.MomentLike {
 	var moment = moment_(milliseconds)
 	return moment
 }
 
 // This constructor creates a new moment in time element from the specified
 // string value.
-func MomentFromString(string_ string) abs.MomentLike {
+func (t *moments_) FromString(string_ string) abs.MomentLike {
 	var matches = uti.MomentMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a moment from an invalid string: %v", string_)
 		panic(message)
 	}
 	var milliseconds = hackedParseDateAsMilliseconds(matches)
-	var moment = MomentFromMilliseconds(milliseconds)
+	var moment = t.FromMilliseconds(milliseconds)
 	return moment
 }
 
 // This constructor creates a new moment in time element for the current time
 // in the UTC timezone.
-func Now() abs.MomentLike {
+func (t *moments_) Now() abs.MomentLike {
 	var now = int(tim.Now().UTC().UnixMilli())
-	var moment = MomentFromMilliseconds(now)
+	var moment = t.FromMilliseconds(now)
 	return moment
 }
 
 // This constructor returns the earliest value for a moment in time element.
-func MinimumMoment() abs.MomentLike {
-	var moment = MomentFromMilliseconds(mat.MinInt)
+func (t *moments_) MinimumValue() abs.MomentLike {
+	var moment = t.FromMilliseconds(mat.MinInt)
 	return moment
 }
 
 // This constructor returns the latest value for a moment in time element.
-func MaximumMoment() abs.MomentLike {
-	var moment = MomentFromMilliseconds(mat.MaxInt)
+func (t *moments_) MaximumValue() abs.MomentLike {
+	var moment = t.FromMilliseconds(mat.MaxInt)
 	return moment
 }
 
-// MOMENT ELEMENT METHODS
+// This library function returns the duration of time between the two specified
+// moments in tim.
+func (t *moments_) Duration(first, second abs.MomentLike) abs.DurationLike {
+	return Duration.FromMilliseconds(second.AsInteger() - first.AsInteger())
+}
+
+// This library function returns the moment in time that is earlier than the
+// specified moment in time by the specified duration of tim.
+func (t *moments_) Earlier(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+	return t.FromMilliseconds(moment.AsInteger() - duration.AsInteger())
+}
+
+// This library function returns the moment in time that is later than the
+// specified moment in time by the specified duration of tim.
+func (t *moments_) Later(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+	return t.FromMilliseconds(moment.AsInteger() + duration.AsInteger())
+}
+
+// MOMENT INSTANCE METHODS
 
 // This private type implements the MomentLike interface.  It extends the native
 // Go `int` type and represents the number of milliseconds after the UNIX Epoch
@@ -170,13 +202,13 @@ func (v moment_) AsWeeks() float64 {
 // This method returns the total number of months since the UNIX Epoch
 // in this moment.
 func (v moment_) AsMonths() float64 {
-	return v.AsDays() / DaysPerMonth
+	return v.AsDays() / Duration.DaysPerMonth()
 }
 
 // This method returns the total number of years since the UNIX Epoch
 // in this moment.
 func (v moment_) AsYears() float64 {
-	return v.AsDays() / DaysPerYear
+	return v.AsDays() / Duration.DaysPerYear()
 }
 
 // This method returns the millisecond part of this moment.
@@ -234,34 +266,6 @@ func (v moment_) GetYears() int {
 func (v moment_) asTime() tim.Time {
 	var milliseconds int64 = int64(v)
 	return tim.UnixMilli(milliseconds).UTC()
-}
-
-// MOMENT ELEMENT LIBRARY
-
-// This singleton creates a unique name space for the library functions for
-// moment elements.
-var Moment = &moments_{}
-
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for moment elements.
-type moments_ struct{}
-
-// This library function returns the duration of time between the two specified
-// moments in tim.
-func (l *moments_) Duration(first, second abs.MomentLike) abs.DurationLike {
-	return DurationFromMilliseconds(second.AsInteger() - first.AsInteger())
-}
-
-// This library function returns the moment in time that is earlier than the
-// specified moment in time by the specified duration of tim.
-func (l *moments_) Earlier(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
-	return MomentFromMilliseconds(moment.AsInteger() - duration.AsInteger())
-}
-
-// This library function returns the moment in time that is later than the
-// specified moment in time by the specified duration of tim.
-func (l *moments_) Later(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
-	return MomentFromMilliseconds(moment.AsInteger() + duration.AsInteger())
 }
 
 // PRIVATE FUNCTIONS

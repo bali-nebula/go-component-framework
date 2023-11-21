@@ -19,7 +19,7 @@ import (
 	sts "strings"
 )
 
-// NUMBER ELEMENT CONSTANTS
+// NUMBER CONSTANTS
 
 var zero = complex(0, 0)
 var infinity = cmp.Inf()
@@ -32,7 +32,7 @@ var Zero abs.NumberLike = number_(zero)
 var Infinity abs.NumberLike = number_(infinity)
 var Undefined abs.NumberLike = number_(undefined)
 
-// NUMBER ELEMENT CONSTRUCTORS
+// NUMBER CONSTRUCTORS
 
 // This constructor creates a new number that is mapped to the Riemann Sphere.
 //   - https://en.wikipedia.org/wiki/Riemann_sphere
@@ -173,7 +173,7 @@ func MaximumNumber() abs.NumberLike {
 	return Infinity
 }
 
-// NUMBER ELEMENT METHODS
+// NUMBER METHODS
 
 // This private type implements the NumberLike interface.  It extends the native
 // Go `complex128` type and may represent an integer, floating point, or complex
@@ -267,7 +267,7 @@ func (v number_) IsNegative() bool {
 	return real(v) < 0
 }
 
-// NUMBER ELEMENT LIBRARY
+// NUMBER LIBRARY
 
 // This singleton creates a unique name space for the library functions for
 // number elements.

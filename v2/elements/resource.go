@@ -17,7 +17,7 @@ import (
 	uri "net/url"
 )
 
-// RESOURCE ELEMENT CONSTRUCTORS
+// RESOURCE CONSTRUCTORS
 
 // This constructor creates a new resource element from the specified universal
 // resource identifier (URI) string embedded in "<" and ">" delimiters.
@@ -38,7 +38,7 @@ func ResourceFromURI(url *uri.URL) abs.ResourceLike {
 	return resource
 }
 
-// RESOURCE ELEMENT METHODS
+// RESOURCE METHODS
 
 // This private type implements the ResourceLike interface.  It extends the
 // native Go `string` type and represents the URI corresponding to that web
