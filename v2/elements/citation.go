@@ -17,10 +17,11 @@ import (
 	sts "strings"
 )
 
-// CITATION CLASS DEFINITION
+// CLASS DEFINITIONS
 
-// This public singleton creates a unique name space for the citation class.
-var Citation = &citations_{}
+// This private type implements the CitationLike interface.  It extends the
+// native Go `string` type.
+type citation_ string
 
 // This private type defines the structure associated with the class constants
 // and class methods for the citation elements.
@@ -28,10 +29,10 @@ type citations_ struct {
 	// This class has no class constants.
 }
 
-// CITATION CLASS METHODS
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new citation from the specified string value.
-func (t *citations_) FromString(string_ string) abs.CitationLike {
+func (c *citations_) FromString(string_ string) abs.CitationLike {
 	var matches = uti.CitationMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a citation from an invalid string: %v", string_)
@@ -41,20 +42,16 @@ func (t *citations_) FromString(string_ string) abs.CitationLike {
 	return citation
 }
 
-// CITATION INSTANCE METHODS
+// CLASS METHODS
 
-// This private type implements the CitationLike interface.  It extends the
-// native Go `string` type.
-type citation_ string
-
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v citation_) AsString() string {
 	return string(v)
 }
 
-// NAMED INTERFACE
+// Named Interface
 
 // This method returns the name part of this citation.
 func (v citation_) GetName() string {
@@ -62,7 +59,7 @@ func (v citation_) GetName() string {
 	return string(v[:index])
 }
 
-// VERSIONED INTERFACE
+// Versioned Interface
 
 // This method returns the version part of this citation.
 func (v citation_) GetVersion() string {

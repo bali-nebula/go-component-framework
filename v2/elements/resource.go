@@ -45,14 +45,14 @@ func ResourceFromURI(url *uri.URL) abs.ResourceLike {
 // resource.
 type resource_ string
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v resource_) AsString() string {
 	return "<" + string(v) + ">"
 }
 
-// SEGMENTED INTERFACE
+// Segmented Interface
 
 // This method returns the scheme part of this resource element.
 func (v resource_) GetScheme() string {

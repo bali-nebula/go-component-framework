@@ -15,13 +15,13 @@ import (
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
-	stc "strconv"
 )
 
-// FLOAT CLASS DEFINITION
+// CLASS DEFINITIONS
 
-// This public singleton creates a unique name space for the float class.
-var Float = &floats_{}
+// This private type implements the FloatLike interface.  It extends the native
+// Go `float64` type.
+type float_ float64
 
 // This private type defines the structure associated with the class constants
 // and class methods for the float elements.
@@ -29,15 +29,15 @@ type floats_ struct {
 	// This class has no class constants.
 }
 
-// FLOAT CLASS METHODS
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new float element from the specified float.
-func (t *floats_) FromFloat(float float64) abs.FloatLike {
+func (c *floats_) FromFloat(float float64) abs.FloatLike {
 	return float_(float)
 }
 
 // This constructor creates a new float element from the specified string.
-func (t *floats_) FromString(string_ string) abs.FloatLike {
+func (c *floats_) FromString(string_ string) abs.FloatLike {
 	var matches = uti.FloatMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a float from an invalid string: %v", string_)
@@ -47,23 +47,23 @@ func (t *floats_) FromString(string_ string) abs.FloatLike {
 	return float_(float)
 }
 
+// CLASS FUNCTIONS
+
+// Limited Interface
+
 // This constructor returns the minimum value for a float endpoint.
-func (t *floats_) MinimumValue() abs.FloatLike {
+func (c *floats_) MinimumValue() abs.FloatLike {
 	return float_(mat.Inf(-1))
 }
 
 // This constructor returns the maximum value for a float endpoint.
-func (t *floats_) MaximumValue() abs.FloatLike {
+func (c *floats_) MaximumValue() abs.FloatLike {
 	return float_(mat.Inf(1))
 }
 
-// FLOAT INSTANCE METHODS
+// CLASS METHODS
 
-// This private type implements the FloatLike interface.  It extends the native
-// Go `float64` type.
-type float_ float64
-
-// CONTINUOUS INTERFACE
+// Continuous Interface
 
 // This method returns a float value for this floating point number.
 func (v float_) AsFloat() float64 {
@@ -85,7 +85,7 @@ func (v float_) IsUndefined() bool {
 	return mat.IsNaN(float64(v))
 }
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v float_) AsString() string {
@@ -93,71 +93,9 @@ func (v float_) AsString() string {
 	return string_
 }
 
-// POLARIZED INTERFACE
+// Polarized Interface
 
 // This method determines whether or not this floating point number is negative.
 func (v float_) IsNegative() bool {
 	return v < 0
-}
-
-// PRIVATE FUNCTIONS
-
-// This function converts a string into a real value.
-func floatFromString(string_ string) float64 {
-	var float float64
-	switch string_ {
-	case "+e", "e":
-		float = mat.E
-	case "-e":
-		float = -mat.E
-	case "+pi", "+π", "pi", "π":
-		float = mat.Pi
-	case "-pi", "-π":
-		float = -mat.Pi
-	case "+phi", "+φ", "phi", "φ":
-		float = mat.Phi
-	case "-phi", "-φ":
-		float = -mat.Phi
-	case "+tau", "+τ", "tau", "τ":
-		float = mat.Pi * 2.0
-	case "-tau", "-τ":
-		float = -mat.Pi * 2.0
-	case "+infinity", "+∞", "infinity", "∞":
-		float = mat.Inf(1)
-	case "-infinity", "-∞":
-		float = mat.Inf(-1)
-	default:
-		float, _ = stc.ParseFloat(string_, 64)
-	}
-	return float
-}
-
-// This returns the string for the specified floating point number.
-func stringFromFloat(float float64) string {
-	var string_ string
-	switch float {
-	case mat.E:
-		string_ = "e"
-	case -mat.E:
-		string_ = "-e"
-	case mat.Pi:
-		string_ = "π"
-	case -mat.Pi:
-		string_ = "-π"
-	case mat.Phi:
-		string_ = "φ"
-	case -mat.Phi:
-		string_ = "-φ"
-	case mat.Pi * 2.0:
-		string_ = "τ"
-	case -mat.Pi * 2.0:
-		string_ = "-τ"
-	case mat.Inf(1):
-		string_ = "∞"
-	case mat.Inf(-1):
-		string_ = "-∞"
-	default:
-		string_ = stc.FormatFloat(float, 'G', -1, 64)
-	}
-	return string_
 }

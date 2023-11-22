@@ -53,7 +53,7 @@ func PatternFromString(string_ string) abs.PatternLike {
 // to that pattern.
 type pattern_ string
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v pattern_) AsString() string {
@@ -69,7 +69,7 @@ func (v pattern_) AsString() string {
 	return string_
 }
 
-// MATCHABLE INTERFACE
+// Matchable Interface
 
 // This method determines whether or not this pattern matches the specified text
 // string.

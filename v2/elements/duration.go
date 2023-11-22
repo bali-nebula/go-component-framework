@@ -19,40 +19,12 @@ import (
 	sts "strings"
 )
 
-// DURATION CLASS DEFINITION
+// CLASS DEFINITIONS
 
-// These private constants represents the ratios of various units of time.
-const (
-	// These are locked to the Earth's daily revolutions.
-	millisecondsPerSecond int = 1000
-	millisecondsPerMinute int = millisecondsPerSecond * 60
-	millisecondsPerHour   int = millisecondsPerMinute * 60
-	millisecondsPerDay    int = millisecondsPerHour * 24
-	millisecondsPerWeek   int = millisecondsPerDay * 7
-
-	// These are locked to the Earth's yearly orbit around the sun.
-	millisecondsPerYear  int = 31556952000
-	millisecondsPerMonth int = millisecondsPerYear / 12 // An average but exact value.
-
-	// Tying the two together is where things get messy.
-	daysPerMonth  float64 = float64(millisecondsPerMonth) / float64(millisecondsPerDay)  // ~30.436875 days/month
-	weeksPerMonth float64 = float64(millisecondsPerMonth) / float64(millisecondsPerWeek) // ~4.348125 weeks/month
-	daysPerYear   float64 = float64(millisecondsPerYear) / float64(millisecondsPerDay)   // ~365.2425 days/year
-)
-
-// This public singleton creates a unique name space for the duration class.
-var Duration = &durations_{
-	millisecondsPerSecond,
-	millisecondsPerMinute,
-	millisecondsPerHour,
-	millisecondsPerDay,
-	millisecondsPerWeek,
-	millisecondsPerMonth,
-	millisecondsPerYear,
-	daysPerMonth,
-	weeksPerMonth,
-	daysPerYear,
-}
+// This private type implements the DurationLike interface.  It extends the
+// native Go `int` type and its value represents the number of milliseconds
+// for the entire duration of time. Durations can be negative.
+type duration_ int
 
 // This private type defines the structure associated with the class constants
 // and class methods for the duration elements.
@@ -65,103 +37,102 @@ type durations_ struct {
 	millisecondsPerMonth  int
 	millisecondsPerYear   int
 	daysPerMonth          float64
-	weeksPerMonth         float64
 	daysPerYear           float64
+	weeksPerMonth         float64
 }
 
-// DURATION CLASS CONSTANTS
+// CLASS CONSTANTS
 
 // This class constant represents the number of milliseconds in a second.
-func (t *durations_) MillisecondsPerSecond() int {
-	return t.millisecondsPerSecond
+func (c *durations_) MillisecondsPerSecond() int {
+	return c.millisecondsPerSecond
 }
 
 // This class constant represents the number of milliseconds in a minute.
-func (t *durations_) MillisecondsPerMinute() int {
-	return t.millisecondsPerMinute
+func (c *durations_) MillisecondsPerMinute() int {
+	return c.millisecondsPerMinute
 }
 
 // This class constant represents the number of milliseconds in a hour.
-func (t *durations_) MillisecondsPerHour() int {
-	return t.millisecondsPerHour
+func (c *durations_) MillisecondsPerHour() int {
+	return c.millisecondsPerHour
 }
 
 // This class constant represents the number of milliseconds in a day.
-func (t *durations_) MillisecondsPerDay() int {
-	return t.millisecondsPerDay
+func (c *durations_) MillisecondsPerDay() int {
+	return c.millisecondsPerDay
 }
 
 // This class constant represents the number of milliseconds in a week.
-func (t *durations_) MillisecondsPerWeek() int {
-	return t.millisecondsPerWeek
+func (c *durations_) MillisecondsPerWeek() int {
+	return c.millisecondsPerWeek
 }
 
 // This class constant represents the number of milliseconds in a month.
-func (t *durations_) MillisecondsPerMonth() int {
-	return t.millisecondsPerMonth
+func (c *durations_) MillisecondsPerMonth() int {
+	return c.millisecondsPerMonth
 }
 
 // This class constant represents the number of milliseconds in a year.
-func (t *durations_) MillisecondsPerYear() int {
-	return t.millisecondsPerYear
+func (c *durations_) MillisecondsPerYear() int {
+	return c.millisecondsPerYear
 }
 
 // This class constant represents the number of days in a month.
-func (t *durations_) DaysPerMonth() float64 {
-	return t.daysPerMonth
-}
-
-// This class constant represents the number of weeks in a month.
-func (t *durations_) WeeksPerMonth() float64 {
-	return t.weeksPerMonth
+func (c *durations_) DaysPerMonth() float64 {
+	return c.daysPerMonth
 }
 
 // This class constant represents the number of days in a year.
-func (t *durations_) DaysPerYear() float64 {
-	return t.daysPerYear
+func (c *durations_) DaysPerYear() float64 {
+	return c.daysPerYear
 }
 
-// DURATION CLASS METHODS
+// This class constant represents the number of weeks in a month.
+func (c *durations_) WeeksPerMonth() float64 {
+	return c.weeksPerMonth
+}
+
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new duration of time element from the specified
 // integer number of milliseconds.
-func (t *durations_) FromMilliseconds(milliseconds int) abs.DurationLike {
+func (c *durations_) FromMilliseconds(milliseconds int) abs.DurationLike {
 	var duration = duration_(milliseconds)
 	return duration
 }
 
 // This constructor creates a new duration from the specified string value.
-func (t *durations_) FromString(string_ string) abs.DurationLike {
+func (c *durations_) FromString(string_ string) abs.DurationLike {
 	var matches = uti.DurationMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a duration from an invalid string: %v", string_)
 		panic(message)
 	}
 	var milliseconds = millisecondsFromMatches(matches)
-	var duration = t.FromMilliseconds(milliseconds)
+	var duration = c.FromMilliseconds(milliseconds)
 	return duration
 }
 
+// CLASS FUNCTIONS
+
+// Limited Interface
+
 // This constructor returns the minimum value for a duration of time.
-func (t *durations_) MinimumValue() abs.DurationLike {
-	var duration = t.FromMilliseconds(0)
+func (c *durations_) MinimumValue() abs.DurationLike {
+	var duration = c.FromMilliseconds(0)
 	return duration
 }
 
 // This constructor returns the maximum value for a duration of time.
-func (t *durations_) MaximumValue() abs.DurationLike {
-	var duration = t.FromMilliseconds(mat.MaxInt)
+func (c *durations_) MaximumValue() abs.DurationLike {
+	var duration = c.FromMilliseconds(mat.MaxInt)
 	return duration
 }
 
-// DURATION INSTANCE METHODS
+// CLASS METHODS
 
-// This private type implements the DurationLike interface.  It extends the
-// native Go `int` type and its value represents the number of milliseconds
-// for the entire duration of time. Durations can be negative.
-type duration_ int
-
-// DISCRETE INTERFACE
+// Discrete Interface
 
 // This method returns a boolean value for this discrete element.
 func (v duration_) AsBoolean() bool {
@@ -173,7 +144,7 @@ func (v duration_) AsInteger() int {
 	return int(v)
 }
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v duration_) AsString() string {
@@ -233,14 +204,14 @@ func (v duration_) AsString() string {
 	return builder.String()
 }
 
-// POLARIZED INTERFACE
+// Polarized Interface
 
 // This method determines whether or not this polarized component is negative.
 func (v duration_) IsNegative() bool {
 	return v < 0
 }
 
-// TEMPORAL INTERFACE
+// Temporal Interface
 
 // This method returns the total number of milliseconds in this duration.
 func (v duration_) AsMilliseconds() float64 {
@@ -345,50 +316,4 @@ func (v duration_) GetYears() int {
 	var milliseconds = magnitude(int(v))
 	var years = milliseconds / millisecondsPerYear // Strip off the months and below.
 	return years
-}
-
-// PRIVATE FUNCTIONS
-
-// This function returns the magnitude (absolute value) of the specified value.
-func magnitude(value int) int {
-	if value < 0 {
-		return -value
-	}
-	return value
-}
-
-func millisecondsFromMatches(matches []string) int {
-	var milliseconds = 0.0
-	var sign = 1.0
-	var isTime = false
-	for _, match := range matches[1:] {
-		if match != "" {
-			var stype = match[len(match)-1:] // Strip off the time span.
-			var tspan = match[:len(match)-1] // Strip off the span type.
-			var float, _ = stc.ParseFloat(tspan, 64)
-			switch stype {
-			case "-":
-				sign = -1
-			case "W":
-				milliseconds += float * float64(millisecondsPerWeek)
-			case "Y":
-				milliseconds += float * float64(millisecondsPerYear)
-			case "M":
-				if isTime {
-					milliseconds += float * float64(millisecondsPerMinute)
-				} else {
-					milliseconds += float * float64(millisecondsPerMonth)
-				}
-			case "D":
-				milliseconds += float * float64(millisecondsPerDay)
-			case "T":
-				isTime = true
-			case "H":
-				milliseconds += float * float64(millisecondsPerHour)
-			case "S":
-				milliseconds += float * float64(millisecondsPerSecond)
-			}
-		}
-	}
-	return int(sign * milliseconds)
 }

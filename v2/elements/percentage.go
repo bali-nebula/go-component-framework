@@ -42,6 +42,8 @@ func PercentageFromString(string_ string) abs.PercentageLike {
 	return percentage
 }
 
+// Limited Interface
+
 // This constructor returns the minimum value for a percentage.
 func MinimumPercentage() abs.PercentageLike {
 	return percentage_(0)
@@ -59,7 +61,7 @@ func MaximumPercentage() abs.PercentageLike {
 // negative.
 type percentage_ float64
 
-// CONTINUOUS INTERFACE
+// Continuous Interface
 
 // This method returns a real value for this continuous element.
 func (v percentage_) AsFloat() float64 {
@@ -81,7 +83,7 @@ func (v percentage_) IsUndefined() bool {
 	return mat.IsNaN(float64(v))
 }
 
-// DISCRETE INTERFACE
+// Discrete Interface
 
 // This method returns a boolean value for this discrete element.
 func (v percentage_) AsBoolean() bool {
@@ -93,7 +95,7 @@ func (v percentage_) AsInteger() int {
 	return int(float64(v))
 }
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v percentage_) AsString() string {
@@ -101,7 +103,7 @@ func (v percentage_) AsString() string {
 	return string_
 }
 
-// POLARIZED INTERFACE
+// Polarized Interface
 
 // This method determines whether or not this polarized component is negative.
 func (v percentage_) IsNegative() bool {

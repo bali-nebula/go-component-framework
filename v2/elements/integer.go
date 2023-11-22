@@ -18,10 +18,11 @@ import (
 	stc "strconv"
 )
 
-// INTEGER CLASS DEFINITION
+// CLASS DEFINITIONS
 
-// This public singleton creates a unique name space for the integer class.
-var Integer = &integers_{}
+// This private type implements the IntegerLike interface.  It extends the
+// native Go `int` type.
+type integer_ int
 
 // This private type defines the structure associated with the class constants
 // and class methods for the integer elements.
@@ -29,15 +30,15 @@ type integers_ struct {
 	// This class has no class constants.
 }
 
-// INTEGER CLASS METHODS
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new integer element from the specified integer.
-func (t *integers_) FromInteger(integer int) abs.IntegerLike {
+func (c *integers_) FromInteger(integer int) abs.IntegerLike {
 	return integer_(integer)
 }
 
 // This constructor creates a new integer element from the specified string.
-func (t *integers_) FromString(string_ string) abs.IntegerLike {
+func (c *integers_) FromString(string_ string) abs.IntegerLike {
 	var matches = uti.IntegerMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct an integer from an invalid string: %v", string_)
@@ -47,23 +48,23 @@ func (t *integers_) FromString(string_ string) abs.IntegerLike {
 	return integer_(integer)
 }
 
+// CLASS FUNCTIONS
+
+// Limited Interface
+
 // This constructor returns the minimum value for an integer endpoint.
-func (t *integers_) MinimumValue() abs.IntegerLike {
+func (c *integers_) MinimumValue() abs.IntegerLike {
 	return integer_(0)
 }
 
 // This constructor returns the maximum value for an integer endpoint.
-func (t *integers_) MaximumValue() abs.IntegerLike {
+func (c *integers_) MaximumValue() abs.IntegerLike {
 	return integer_(mat.MaxInt)
 }
 
-// INTEGER METHODS
+// CLASS METHODS
 
-// This private type implements the IntegerLike interface.  It extends the
-// native Go `int` type.
-type integer_ int
-
-// DISCRETE INTERFACE
+// Discrete Interface
 
 // This method returns a boolean value for this rune.
 func (v integer_) AsBoolean() bool {
@@ -75,7 +76,7 @@ func (v integer_) AsInteger() int {
 	return int(v)
 }
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v integer_) AsString() string {
@@ -83,7 +84,7 @@ func (v integer_) AsString() string {
 	return string_
 }
 
-// POLARIZED INTERFACE
+// Polarized Interface
 
 // This method determines whether or not this rune is negative.
 func (v integer_) IsNegative() bool {

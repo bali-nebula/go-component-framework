@@ -19,10 +19,11 @@ import (
 	utf "unicode/utf8"
 )
 
-// CHARACTER CLASS DEFINITION
+// CLASS DEFINITIONS
 
-// This public singleton creates a unique name space for the character class.
-var Character = &characters_{}
+// This private type implements the CharacterLike interface.  It extends the
+// native Go `int32` type.
+type character_ int32
 
 // This private type defines the structure associated with the class constants
 // and class methods for the character elements.
@@ -30,20 +31,20 @@ type characters_ struct {
 	// This class has no class constants.
 }
 
-// CHARACTER CLASS METHODS
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new character element from the specified rune.
-func (t *characters_) FromRune(rune_ rune) abs.CharacterLike {
+func (c *characters_) FromRune(rune_ rune) abs.CharacterLike {
 	return character_(rune_)
 }
 
 // This constructor creates a new character element from the specified integer.
-func (t *characters_) FromInteger(integer int) abs.CharacterLike {
+func (c *characters_) FromInteger(integer int) abs.CharacterLike {
 	return character_(int32(integer))
 }
 
 // This constructor creates a new character element from the specified string.
-func (t *characters_) FromString(string_ string) abs.CharacterLike {
+func (c *characters_) FromString(string_ string) abs.CharacterLike {
 	var matches = uti.CharacterMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a character from an invalid string: %v", string_)
@@ -54,23 +55,23 @@ func (t *characters_) FromString(string_ string) abs.CharacterLike {
 	return character_(rune_)
 }
 
+// CLASS FUNCTIONS
+
+// Limited Interface
+
 // This constructor returns the minimum value for a character endpoint.
-func (t *characters_) MinimumValue() abs.CharacterLike {
+func (c *characters_) MinimumValue() abs.CharacterLike {
 	return character_(0)
 }
 
 // This constructor returns the maximum value for a character endpoint.
-func (t *characters_) MaximumValue() abs.CharacterLike {
+func (c *characters_) MaximumValue() abs.CharacterLike {
 	return character_(mat.MaxInt32)
 }
 
-// CHARACTER INSTANCE METHODS
+// CLASS METHODS
 
-// This private type implements the CharacterLike interface.  It extends the
-// native Go `int32` type.
-type character_ int32
-
-// DISCRETE INTERFACE
+// Discrete Interface
 
 // This method returns a boolean value for this character.
 func (v character_) AsBoolean() bool {
@@ -82,7 +83,7 @@ func (v character_) AsInteger() int {
 	return int(v)
 }
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v character_) AsString() string {

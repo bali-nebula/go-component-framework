@@ -65,6 +65,8 @@ func RandomProbability() abs.ProbabilityLike {
 	return probability
 }
 
+// Limited Interface
+
 // This constructor returns the minimum value for a probability.
 func MinimumProbability() abs.ProbabilityLike {
 	var probability = probability_(0)
@@ -83,7 +85,7 @@ func MaximumProbability() abs.ProbabilityLike {
 // native Go `float64` type and represents a probability in the range [0..1].
 type probability_ float64
 
-// CONTINUOUS INTERFACE
+// Continuous Interface
 
 // This method returns a real value for this continuous element.
 func (v probability_) AsFloat() float64 {
@@ -105,7 +107,7 @@ func (v probability_) IsUndefined() bool {
 	return false
 }
 
-// DISCRETE INTERFACE
+// Discrete Interface
 
 // This method returns a probability value for this discrete element.
 func (v probability_) AsBoolean() bool {
@@ -123,7 +125,7 @@ func (v probability_) AsInteger() int {
 	return 0
 }
 
-// LEXICAL INTERFACE
+// Lexical Interface
 
 // This method returns a string value for this lexical element.
 func (v probability_) AsString() string {
@@ -153,7 +155,7 @@ var Probability = &probabilities_{}
 // that define the library functions for probability elements.
 type probabilities_ struct{}
 
-// LOGICAL INTERFACE
+// Logical Interface
 
 // This library function returns the logical inverse of the specified
 // probability.
