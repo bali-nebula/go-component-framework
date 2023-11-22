@@ -59,37 +59,6 @@ func (c *booleans_) FromString(string_ string) abs.BooleanLike {
 	return boolean
 }
 
-// CLASS FUNCTIONS
-
-// This class method returns the logical inverse of the specified boolean.
-func (c *booleans_) Not(boolean abs.BooleanLike) abs.BooleanLike {
-	return c.FromBoolean(!boolean.AsBoolean())
-}
-
-// This class method returns the logical conjunction of the specified
-// boolean elements.
-func (c *booleans_) And(first, second abs.BooleanLike) abs.BooleanLike {
-	return c.FromBoolean(first.AsBoolean() && second.AsBoolean())
-}
-
-// This class method returns the logical material non-implication of the
-// specified boolean elements.
-func (c *booleans_) Sans(first, second abs.BooleanLike) abs.BooleanLike {
-	return c.FromBoolean(first.AsBoolean() && !second.AsBoolean())
-}
-
-// This class method returns the logical disjunction of the specified
-// boolean elements.
-func (c *booleans_) Or(first, second abs.BooleanLike) abs.BooleanLike {
-	return c.FromBoolean(first.AsBoolean() || second.AsBoolean())
-}
-
-// This class method returns the logical exclusive disjunction of the
-// specified boolean elements.
-func (c *booleans_) Xor(first, second abs.BooleanLike) abs.BooleanLike {
-	return c.Or(c.Sans(first, second), c.Sans(second, first))
-}
-
 // CLASS METHODS
 
 // Discrete Interface
@@ -119,4 +88,35 @@ func (v boolean_) AsString() string {
 		string_ = "false"
 	}
 	return string_
+}
+
+// CLASS FUNCTIONS
+
+// This class method returns the logical inverse of the specified boolean.
+func (c *booleans_) Not(boolean abs.BooleanLike) abs.BooleanLike {
+	return c.FromBoolean(!boolean.AsBoolean())
+}
+
+// This class method returns the logical conjunction of the specified
+// boolean elements.
+func (c *booleans_) And(first, second abs.BooleanLike) abs.BooleanLike {
+	return c.FromBoolean(first.AsBoolean() && second.AsBoolean())
+}
+
+// This class method returns the logical material non-implication of the
+// specified boolean elements.
+func (c *booleans_) Sans(first, second abs.BooleanLike) abs.BooleanLike {
+	return c.FromBoolean(first.AsBoolean() && !second.AsBoolean())
+}
+
+// This class method returns the logical disjunction of the specified
+// boolean elements.
+func (c *booleans_) Or(first, second abs.BooleanLike) abs.BooleanLike {
+	return c.FromBoolean(first.AsBoolean() || second.AsBoolean())
+}
+
+// This class method returns the logical exclusive disjunction of the
+// specified boolean elements.
+func (c *booleans_) Xor(first, second abs.BooleanLike) abs.BooleanLike {
+	return c.Or(c.Sans(first, second), c.Sans(second, first))
 }

@@ -56,6 +56,14 @@ func (c *moments_) Epoch() abs.MomentLike {
 
 // CLASS CONSTRUCTORS
 
+// This constructor creates a new moment in time element for the current time
+// in the UTC timezone.
+func (c *moments_) Now() abs.MomentLike {
+	var now = int(tim.Now().UTC().UnixMilli())
+	var moment = c.FromMilliseconds(now)
+	return moment
+}
+
 // This constructor creates a new moment in time element from the specified
 // integer number of milliseconds since the UNIX Epoch in the UTC timezone.
 func (c *moments_) FromMilliseconds(milliseconds int) abs.MomentLike {
@@ -74,34 +82,6 @@ func (c *moments_) FromString(string_ string) abs.MomentLike {
 	var milliseconds = hackedParseDateAsMilliseconds(matches)
 	var moment = c.FromMilliseconds(milliseconds)
 	return moment
-}
-
-// This constructor creates a new moment in time element for the current time
-// in the UTC timezone.
-func (c *moments_) Now() abs.MomentLike {
-	var now = int(tim.Now().UTC().UnixMilli())
-	var moment = c.FromMilliseconds(now)
-	return moment
-}
-
-// CLASS FUNCTIONS
-
-// This library function returns the duration of time between the two specified
-// moments in tim.
-func (c *moments_) Duration(first, second abs.MomentLike) abs.DurationLike {
-	return Duration.FromMilliseconds(second.AsInteger() - first.AsInteger())
-}
-
-// This library function returns the moment in time that is earlier than the
-// specified moment in time by the specified duration of tim.
-func (c *moments_) Earlier(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
-	return c.FromMilliseconds(moment.AsInteger() - duration.AsInteger())
-}
-
-// This library function returns the moment in time that is later than the
-// specified moment in time by the specified duration of tim.
-func (c *moments_) Later(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
-	return c.FromMilliseconds(moment.AsInteger() + duration.AsInteger())
 }
 
 // CLASS METHODS
@@ -266,4 +246,24 @@ func (v moment_) GetYears() int {
 func (v moment_) asTime() tim.Time {
 	var milliseconds int64 = int64(v)
 	return tim.UnixMilli(milliseconds).UTC()
+}
+
+// CLASS FUNCTIONS
+
+// This library function returns the duration of time between the two specified
+// moments in tim.
+func (c *moments_) Duration(first, second abs.MomentLike) abs.DurationLike {
+	return Duration.FromMilliseconds(second.AsInteger() - first.AsInteger())
+}
+
+// This library function returns the moment in time that is earlier than the
+// specified moment in time by the specified duration of tim.
+func (c *moments_) Earlier(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+	return c.FromMilliseconds(moment.AsInteger() - duration.AsInteger())
+}
+
+// This library function returns the moment in time that is later than the
+// specified moment in time by the specified duration of tim.
+func (c *moments_) Later(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+	return c.FromMilliseconds(moment.AsInteger() + duration.AsInteger())
 }

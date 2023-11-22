@@ -194,6 +194,95 @@ func (c *numbers_) FromString(string_ string) abs.NumberLike {
 	return number
 }
 
+// CLASS METHODS
+
+// Complex Interface
+
+// This method returns a native complex value for this continuous component.
+func (v number_) AsComplex() complex128 {
+	return complex128(v)
+}
+
+// This method returns the real part of this complex component.
+func (v number_) GetReal() float64 {
+	return real(v)
+}
+
+// This method returns the imaginary part of this complex component.
+func (v number_) GetImaginary() float64 {
+	return imag(v)
+}
+
+// This method returns the magnitude of this complex component.
+func (v number_) GetMagnitude() float64 {
+	return lockMagnitude(cmp.Abs(complex128(v)))
+}
+
+// This method returns the phase angle of this complex component.
+func (v number_) GetPhase() float64 {
+	return cmp.Phase(complex128(v))
+}
+
+// Continuous Interface
+
+// This method returns a real value for this continuous component.
+func (v number_) AsFloat() float64 {
+	return real(v)
+}
+
+// This method determines whether or not this number is zero.
+func (v number_) IsZero() bool {
+	return real(v) == 0 && imag(v) == 0
+}
+
+// This method determines whether or not this number is infinite.
+func (v number_) IsInfinite() bool {
+	return mat.IsInf(real(v), 0) || mat.IsInf(imag(v), 0)
+}
+
+// This method determines whether or not this number is undefined.
+func (v number_) IsUndefined() bool {
+	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
+}
+
+// Lexical Interface
+
+// This method returns a string value for this lexical element.
+func (v number_) AsString() string {
+	var string_ string
+	switch {
+	case v.IsZero():
+		string_ = "0"
+	case v.IsInfinite():
+		string_ = "∞"
+	case v.IsUndefined():
+		string_ = "undefined"
+	default:
+		var realPart = v.GetReal()
+		var imagPart = v.GetImaginary()
+		switch {
+		case imagPart == 0:
+			string_ = stringFromFloat(realPart)
+		case realPart == 0:
+			string_ = stringFromImaginary(imagPart)
+		default:
+			string_ += "("
+			string_ += stringFromFloat(realPart)
+			string_ += ", "
+			string_ += stringFromImaginary(imagPart)
+			string_ += ")"
+		}
+	}
+	return string_
+}
+
+// Polarized Interface
+
+// This method determines whether or not this polarized component is negative.
+func (v number_) IsNegative() bool {
+	return real(v) < 0
+}
+
 // CLASS FUNCTIONS
 
 // This library function returns the inverse of the specified number.
@@ -342,93 +431,4 @@ func (c *numbers_) Logarithm(base, number abs.NumberLike) abs.NumberLike {
 	var logB = lnZ / lnB
 	number = c.FromComplex(logB)
 	return number
-}
-
-// CLASS METHODS
-
-// Complex Interface
-
-// This method returns a native complex value for this continuous component.
-func (v number_) AsComplex() complex128 {
-	return complex128(v)
-}
-
-// This method returns the real part of this complex component.
-func (v number_) GetReal() float64 {
-	return real(v)
-}
-
-// This method returns the imaginary part of this complex component.
-func (v number_) GetImaginary() float64 {
-	return imag(v)
-}
-
-// This method returns the magnitude of this complex component.
-func (v number_) GetMagnitude() float64 {
-	return lockMagnitude(cmp.Abs(complex128(v)))
-}
-
-// This method returns the phase angle of this complex component.
-func (v number_) GetPhase() float64 {
-	return cmp.Phase(complex128(v))
-}
-
-// Continuous Interface
-
-// This method returns a real value for this continuous component.
-func (v number_) AsFloat() float64 {
-	return real(v)
-}
-
-// This method determines whether or not this number is zero.
-func (v number_) IsZero() bool {
-	return real(v) == 0 && imag(v) == 0
-}
-
-// This method determines whether or not this number is infinite.
-func (v number_) IsInfinite() bool {
-	return mat.IsInf(real(v), 0) || mat.IsInf(imag(v), 0)
-}
-
-// This method determines whether or not this number is undefined.
-func (v number_) IsUndefined() bool {
-	return mat.IsNaN(real(v)) || mat.IsNaN(imag(v))
-}
-
-// Lexical Interface
-
-// This method returns a string value for this lexical element.
-func (v number_) AsString() string {
-	var string_ string
-	switch {
-	case v.IsZero():
-		string_ = "0"
-	case v.IsInfinite():
-		string_ = "∞"
-	case v.IsUndefined():
-		string_ = "undefined"
-	default:
-		var realPart = v.GetReal()
-		var imagPart = v.GetImaginary()
-		switch {
-		case imagPart == 0:
-			string_ = stringFromFloat(realPart)
-		case realPart == 0:
-			string_ = stringFromImaginary(imagPart)
-		default:
-			string_ += "("
-			string_ += stringFromFloat(realPart)
-			string_ += ", "
-			string_ += stringFromImaginary(imagPart)
-			string_ += ")"
-		}
-	}
-	return string_
-}
-
-// Polarized Interface
-
-// This method determines whether or not this polarized component is negative.
-func (v number_) IsNegative() bool {
-	return real(v) < 0
 }

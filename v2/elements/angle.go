@@ -89,6 +89,49 @@ func (c *angles_) FromString(string_ string) abs.AngleLike {
 	return angle
 }
 
+// CLASS METHODS
+
+// Continuous Interface
+
+// This instance method returns a real value for this continuous element.
+func (v angle_) AsFloat() float64 {
+	return float64(v)
+}
+
+// This instance method determines whether or not this continuous element is
+// zero.
+func (v angle_) IsZero() bool {
+	return v == Angle.zero || v == Angle.tau
+}
+
+// This instance method determines whether or not this continuous element is
+// infinite.
+func (v angle_) IsInfinite() bool {
+	return false
+}
+
+// This instance method determines whether or not this continuous element is
+// undefined.
+func (v angle_) IsUndefined() bool {
+	return false
+}
+
+// Lexical Interface
+
+// This instance method returns a string value for this lexical element.
+func (v angle_) AsString() string {
+	var string_ string
+	switch v {
+	case Angle.pi:
+		string_ = "~π"
+	case Angle.tau:
+		string_ = "~τ"
+	default:
+		string_ = "~" + stc.FormatFloat(float64(v), 'G', -1, 64)
+	}
+	return string_
+}
+
 // CLASS FUNCTIONS
 
 // This class method returns the inverse of the specified angle.
@@ -232,47 +275,4 @@ func (c *angles_) Tangent(angle abs.AngleLike) float64 {
 // specified ratio of the distances along the y-axis and x-axis.
 func (c *angles_) ArcTangent(x, y float64) abs.AngleLike {
 	return c.FromFloat(mat.Atan2(y, x))
-}
-
-// CLASS METHODS
-
-// Continuous Interface
-
-// This instance method returns a real value for this continuous element.
-func (v angle_) AsFloat() float64 {
-	return float64(v)
-}
-
-// This instance method determines whether or not this continuous element is
-// zero.
-func (v angle_) IsZero() bool {
-	return v == Angle.zero || v == Angle.tau
-}
-
-// This instance method determines whether or not this continuous element is
-// infinite.
-func (v angle_) IsInfinite() bool {
-	return false
-}
-
-// This instance method determines whether or not this continuous element is
-// undefined.
-func (v angle_) IsUndefined() bool {
-	return false
-}
-
-// Lexical Interface
-
-// This instance method returns a string value for this lexical element.
-func (v angle_) AsString() string {
-	var string_ string
-	switch v {
-	case Angle.pi:
-		string_ = "~π"
-	case Angle.tau:
-		string_ = "~τ"
-	default:
-		string_ = "~" + stc.FormatFloat(float64(v), 'G', -1, 64)
-	}
-	return string_
 }

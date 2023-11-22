@@ -26,7 +26,7 @@ import (
 
 // PACKAGE CONSTANTS
 
-// This private package constant represents the value tau (τ).
+// This private constant represents the value tau (τ).
 // See "The Tau Manifesto" at https://tauday.com/tau-manifesto
 const tau = 2.0 * mat.Pi
 
@@ -51,26 +51,26 @@ const (
 
 // PACKAGE TYPES
 
-// This public singleton creates a unique name space for the angle class.
+// This public singleton exports a unique name space for the angle class.
 var Angle = &angles_{
 	angle_(0.0),    // ~0
 	angle_(mat.Pi), // ~pi
 	angle_(tau),    // ~tau
 }
 
-// This public singleton creates a unique name space for the boolean class.
+// This public singleton exports a unique name space for the boolean class.
 var Boolean = &booleans_{
 	boolean_(false),
 	boolean_(true),
 }
 
-// This public singleton creates a unique name space for the character class.
+// This public singleton exports a unique name space for the character class.
 var Character = &characters_{}
 
-// This public singleton creates a unique name space for the citation class.
+// This public singleton exports a unique name space for the citation class.
 var Citation = &citations_{}
 
-// This public singleton creates a unique name space for the duration class.
+// This public singleton exports a unique name space for the duration class.
 var Duration = &durations_{
 	millisecondsPerSecond,
 	millisecondsPerMinute,
@@ -84,18 +84,18 @@ var Duration = &durations_{
 	weeksPerMonth,
 }
 
-// This public singleton creates a unique name space for the float class.
+// This public singleton exports a unique name space for the float class.
 var Float = &floats_{}
 
-// This public singleton creates a unique name space for the integer class.
+// This public singleton exports a unique name space for the integer class.
 var Integer = &integers_{}
 
-// This public singleton creates a unique name space for the moment class.
+// This public singleton exports a unique name space for the moment class.
 var Moment = &moments_{
 	moment_(0), // UNIX Epoch
 }
 
-// This public singleton creates a unique name space for the number class.
+// This public singleton exports a unique name space for the number class.
 var Number = &numbers_{
 	number_(complex(0, 0)),          // 0
 	number_(complex(1, 0)),          // 1
@@ -262,7 +262,7 @@ var isoFormats = [...]string{
 //
 //	https://en.wikipedia.org/wiki/Holocene_calendar#Conversion
 //
-// we must resort to some hacking...
+// we must resort to some hacking with this private function...
 func hackedParseDateAsMilliseconds(matches []string) int {
 
 	// First, we replace the year with year zero.
