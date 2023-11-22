@@ -19,22 +19,86 @@ import (
 	sts "strings"
 )
 
-// NUMBER CONSTANTS
+// NUMBER CLASS DEFINITION
 
-var zero = complex(0, 0)
-var infinity = cmp.Inf()
-var undefined = cmp.NaN()
+// This public singleton creates a unique name space for the number class.
+var Number = &numbers_{
+	number_(complex(0, 0)),
+	number_(complex(1, 0)),
+	number_(complex(0, 1)),
+	number_(complex(mat.E, 0)),
+	number_(complex(mat.Pi, 0)),
+	number_(complex(mat.Phi, 0)),
+	number_(complex(2.0*mat.Pi, 0)),
+	number_(cmp.Inf()),
+	number_(cmp.NaN()),
+}
 
-var I abs.NumberLike = number_(complex(0.0, 1.0))
-var One abs.NumberLike = number_(complex(1.0, 0.0))
-var Phi abs.NumberLike = number_(complex(mat.Phi, 0.0))
-var Zero abs.NumberLike = number_(zero)
-var Infinity abs.NumberLike = number_(infinity)
-var Undefined abs.NumberLike = number_(undefined)
+// This private type defines the structure associated with the class constants
+// and class methods for the number elements.
+type numbers_ struct {
+	zero      abs.NumberLike
+	one       abs.NumberLike
+	i         abs.NumberLike
+	e         abs.NumberLike
+	pi        abs.NumberLike
+	phi       abs.NumberLike
+	tau       abs.NumberLike
+	infinity  abs.NumberLike
+	undefined abs.NumberLike
+}
 
-// NUMBER CONSTRUCTORS
+// NUMBER CLASS CONSTANTS
 
-// This constructor creates a new number that is mapped to the Riemann Sphere.
+// This class constant represents the number zero.
+func (t *numbers_) Zero() abs.NumberLike {
+	return t.zero
+}
+
+// This class constant represents the number one.
+func (t *numbers_) One() abs.NumberLike {
+	return t.one
+}
+
+// This class constant represents the number i.
+func (t *numbers_) I() abs.NumberLike {
+	return t.i
+}
+
+// This class constant represents the number e.
+func (t *numbers_) E() abs.NumberLike {
+	return t.e
+}
+
+// This class constant represents the number pi.
+func (t *numbers_) Pi() abs.NumberLike {
+	return t.pi
+}
+
+// This class constant represents the number phi.
+func (t *numbers_) Phi() abs.NumberLike {
+	return t.phi
+}
+
+// This class constant represents the number tau.
+func (t *numbers_) Tau() abs.NumberLike {
+	return t.tau
+}
+
+// This class constant represents an infinite number.
+func (t *numbers_) Infinity() abs.NumberLike {
+	return t.infinity
+}
+
+// This class constant represents an undefined number.
+func (t *numbers_) Undefined() abs.NumberLike {
+	return t.undefined
+}
+
+// NUMBER CLASS METHODS
+
+// This constructor creates a new number element from the specified complex
+// number.  Each number element is mapped to the Riemann Sphere.
 //   - https://en.wikipedia.org/wiki/Riemann_sphere
 //
 // This mapping removes many of the idiosyncrasies associated with the normal
@@ -89,33 +153,36 @@ var Undefined abs.NumberLike = number_(undefined)
 // crutch that leads to misleading convergence information for oscillating
 // functions. In the case of numerical analysis it is probably better to track
 // the course of the function as it converges than to look at the final value.
-func NumberFromComplex(complex_ complex128) abs.NumberLike {
+func (t *numbers_) FromComplex(complex_ complex128) abs.NumberLike {
+	var number abs.NumberLike
 	switch {
 	case cmp.Abs(complex_) == 0:
 		// Normalize all versions of zero.
-		return Zero
+		number = t.zero
 	case cmp.IsInf(complex_):
 		// Normalize any negative infinities or infinite i's.
-		return Infinity
+		number = t.infinity
 	case cmp.IsNaN(complex_):
 		// Normalize any NaN's mixed with valid numbers.
-		return Undefined
+		number = t.undefined
 	default:
 		// Lock onto 0, -1, 1, -i, i, and ∞ if necessary.
-		var r = lockMagnitude(real(complex_))
-		var i = lockMagnitude(imag(complex_))
-		return number_(complex(r, i))
+		var realPart = lockMagnitude(real(complex_))
+		var imaginaryPart = lockMagnitude(imag(complex_))
+		number = number_(complex(realPart, imaginaryPart))
 	}
+	return number
 }
 
 // This constructor creates a new number from the specified polar values.
-func NumberFromPolar(magnitude float64, phase float64) abs.NumberLike {
+func (t *numbers_) FromPolar(magnitude float64, phase float64) abs.NumberLike {
 	var complex_ = cmp.Rect(magnitude, phase)
-	return NumberFromComplex(complex_)
+	var number = t.FromComplex(complex_)
+	return number
 }
 
 // This constructor creates a new number from the specified string value.
-func NumberFromString(string_ string) abs.NumberLike {
+func (t *numbers_) FromString(string_ string) abs.NumberLike {
 	var matches = uti.NumberMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a number from an invalid string: %v", string_)
@@ -159,21 +226,173 @@ func NumberFromString(string_ string) abs.NumberLike {
 			}
 		}
 	}
-	var number = NumberFromComplex(complex_)
+	var number = t.FromComplex(complex_)
 	return number
 }
 
 // This constructor returns the minimum value for a number.
-func MinimumNumber() abs.NumberLike {
-	return Zero
+func (t *numbers_) MinimumValue() abs.NumberLike {
+	return t.zero
 }
 
 // This constructor returns the maximum value for a number.
-func MaximumNumber() abs.NumberLike {
-	return Infinity
+func (t *numbers_) MaximumValue() abs.NumberLike {
+	return t.infinity
 }
 
-// NUMBER METHODS
+// SCALABLE INTERFACE
+
+// This library function returns the inverse of the specified number.
+func (t *numbers_) Inverse(number abs.NumberLike) abs.NumberLike {
+	number = t.FromComplex(-number.AsComplex())
+	return number
+}
+
+// This library function returns the sum of the specified numbers.
+func (t *numbers_) Sum(first, second abs.NumberLike) abs.NumberLike {
+	var number = t.FromComplex(first.AsComplex() + second.AsComplex())
+	return number
+}
+
+// This library function returns the difference of the specified numbers.
+func (t *numbers_) Difference(first, second abs.NumberLike) abs.NumberLike {
+	var number = t.FromComplex(first.AsComplex() - second.AsComplex())
+	return number
+}
+
+// This library function returns the specified number scaled by the specified
+// factor.
+func (t *numbers_) Scaled(number abs.NumberLike, factor float64) abs.NumberLike {
+	number = t.Product(number, t.FromComplex(complex(factor, 0)))
+	return number
+}
+
+// NUMERICAL INTERFACE
+
+// This library function returns the reciprocal of the specified number.
+func (t *numbers_) Reciprocal(number abs.NumberLike) abs.NumberLike {
+	number = t.FromComplex(1.0 / number.AsComplex())
+	return number
+}
+
+// This library function returns the complex conjugate of the specified number.
+func (t *numbers_) Conjugate(number abs.NumberLike) abs.NumberLike {
+	number = t.FromComplex(cmp.Conj(number.AsComplex()))
+	return number
+}
+
+// This library function returns the product of the specified numbers.
+func (t *numbers_) Product(first, second abs.NumberLike) abs.NumberLike {
+	var number abs.NumberLike
+	switch {
+	case first.IsUndefined() || second.IsUndefined():
+		// Any undefined arguments result in an undefined result.
+		number = t.undefined
+	case first.IsInfinite() && !second.IsZero():
+		// Infinity times anything other than zero is infinite.
+		number = t.infinity
+	case second.IsInfinite() && !first.IsZero():
+		// Anything other than zero times infinity is infinite.
+		number = t.infinity
+	default:
+		number = t.FromComplex(first.AsComplex() * second.AsComplex())
+	}
+	return number
+}
+
+// This library function returns the quotient of the specified numbers.
+func (t *numbers_) Quotient(first, second abs.NumberLike) abs.NumberLike {
+	var number abs.NumberLike
+	switch {
+	case first.IsUndefined() || second.IsUndefined():
+		// Any undefined arguments result in an undefined result.
+		number = t.undefined
+	case first.IsZero() && second.IsZero():
+		// Zero divided by zero is undefined.
+		number = t.undefined
+	case first.IsInfinite() && second.IsInfinite():
+		// Infinity divided by infinity is undefined.
+		number = t.undefined
+	case first.IsZero() && !second.IsZero():
+		// Zero divided by anything other than zero is zero.
+		number = t.zero
+	case second.IsZero() && !first.IsZero():
+		// Anything other than zero divided by zero is infinite.
+		number = t.infinity
+	case first.IsInfinite() && !second.IsInfinite():
+		// Zero divided by anything other than zero is zero.
+		number = t.infinity
+	case second.IsInfinite() && !first.IsInfinite():
+		// Anything other than zero divided by zero is infinite.
+		number = t.zero
+	default:
+		number = t.FromComplex(first.AsComplex() / second.AsComplex())
+	}
+	return number
+}
+
+// This library function returns the remainder of the specified numbers.
+func (t *numbers_) Remainder(first, second abs.NumberLike) abs.NumberLike {
+	var m1 = cmp.Abs(first.AsComplex())
+	var p1 = cmp.Phase(first.AsComplex())
+	var m2 = cmp.Abs(second.AsComplex())
+	var p2 = cmp.Phase(second.AsComplex())
+	var magnitude = lockMagnitude(mat.Remainder(m1, m2))
+	var phase = lockPhase(p2 - p1)
+	var number = t.FromPolar(magnitude, phase)
+	return number
+}
+
+// This library function returns the result of raising the specified base to the
+// specified exponent.
+func (t *numbers_) Power(base, exponent abs.NumberLike) abs.NumberLike {
+	var number abs.NumberLike
+	switch {
+	case base.IsUndefined() || exponent.IsUndefined():
+		// Any undefined arguments result in an undefined result.
+		number = t.undefined
+	case exponent.IsZero():
+		// Anything to the zero power is 1 by definition.
+		number = t.one
+	case base.IsZero():
+		// Zero to any power other than zero is still zero.
+		number = t.zero
+	case base.IsInfinite():
+		// Infinity to any power other than zero is infinite.
+		number = t.infinity
+	case exponent.IsInfinite():
+		var magnitude = base.GetMagnitude()
+		switch {
+		case magnitude < 1:
+			// A magnitude less than one to an infinite power is zero.
+			number = t.zero
+		case magnitude == 1:
+			// A magnitude equal to one to an infinite power is one.
+			number = t.one
+		case magnitude > 1:
+			// A magnitude greater than one to an infinite power is infinite.
+			number = t.infinity
+		default:
+			panic(fmt.Sprintf("An impossible magnitude was encountered: %v", magnitude))
+		}
+	default:
+		number = t.FromComplex(cmp.Pow(base.AsComplex(), exponent.AsComplex()))
+	}
+	return number
+}
+
+// This library function returns the result of taking the logarithm using the
+// specified base of the specified number.
+func (t *numbers_) Logarithm(base, number abs.NumberLike) abs.NumberLike {
+	// logB(z) => ln(z) / ln(b)
+	var lnB = cmp.Log(base.AsComplex())
+	var lnZ = cmp.Log(number.AsComplex())
+	var logB = lnZ / lnB
+	number = t.FromComplex(logB)
+	return number
+}
+
+// NUMBER INSTANCE METHODS
 
 // This private type implements the NumberLike interface.  It extends the native
 // Go `complex128` type and may represent an integer, floating point, or complex
@@ -248,12 +467,12 @@ func (v number_) AsString() string {
 		case imagPart == 0:
 			string_ = stringFromFloat(realPart)
 		case realPart == 0:
-			string_ = imaginaryFromFloat(imagPart)
+			string_ = stringFromImaginary(imagPart)
 		default:
 			string_ += "("
 			string_ += stringFromFloat(realPart)
 			string_ += ", "
-			string_ += imaginaryFromFloat(imagPart)
+			string_ += stringFromImaginary(imagPart)
 			string_ += ")"
 		}
 	}
@@ -267,197 +486,47 @@ func (v number_) IsNegative() bool {
 	return real(v) < 0
 }
 
-// NUMBER LIBRARY
-
-// This singleton creates a unique name space for the library functions for
-// number elements.
-var Number = &numbers_{}
-
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for number elements.
-type numbers_ struct{}
-
-// SCALABLE INTERFACE
-
-// This library function returns the inverse of the specified number.
-func (l *numbers_) Inverse(number abs.NumberLike) abs.NumberLike {
-	return NumberFromComplex(-number.AsComplex())
-}
-
-// This library function returns the sum of the specified numbers.
-func (l *numbers_) Sum(first, second abs.NumberLike) abs.NumberLike {
-	return NumberFromComplex(first.AsComplex() + second.AsComplex())
-}
-
-// This library function returns the difference of the specified numbers.
-func (l *numbers_) Difference(first, second abs.NumberLike) abs.NumberLike {
-	return NumberFromComplex(first.AsComplex() - second.AsComplex())
-}
-
-// This library function returns the specified number scaled by the specified
-// factor.
-func (l *numbers_) Scaled(number abs.NumberLike, factor float64) abs.NumberLike {
-	return l.Product(number, NumberFromComplex(complex(factor, 0)))
-}
-
-// NUMERICAL INTERFACE
-
-// This library function returns the reciprocal of the specified number.
-func (l *numbers_) Reciprocal(number abs.NumberLike) abs.NumberLike {
-	return NumberFromComplex(1.0 / number.AsComplex())
-}
-
-// This library function returns the complex conjugate of the specified number.
-func (l *numbers_) Conjugate(number abs.NumberLike) abs.NumberLike {
-	return NumberFromComplex(cmp.Conj(number.AsComplex()))
-}
-
-// This library function returns the product of the specified numbers.
-func (l *numbers_) Product(first, second abs.NumberLike) abs.NumberLike {
-	switch {
-	case first.IsUndefined() || second.IsUndefined():
-		// Any undefined arguments result in an undefined result.
-		return Undefined
-	case first.IsInfinite() && !second.IsZero():
-		// Infinity times anything other than zero is infinite.
-		return Infinity
-	case second.IsInfinite() && !first.IsZero():
-		// Anything other than zero times infinity is infinite.
-		return Infinity
-	default:
-		return NumberFromComplex(first.AsComplex() * second.AsComplex())
-	}
-}
-
-// This library function returns the quotient of the specified numbers.
-func (l *numbers_) Quotient(first, second abs.NumberLike) abs.NumberLike {
-	switch {
-	case first.IsUndefined() || second.IsUndefined():
-		// Any undefined arguments result in an undefined result.
-		return Undefined
-	case first.IsZero() && second.IsZero():
-		// Zero divided by zero is undefined.
-		return Undefined
-	case first.IsInfinite() && second.IsInfinite():
-		// Infinity divided by infinity is undefined.
-		return Undefined
-	case first.IsZero() && !second.IsZero():
-		// Zero divided by anything other than zero is zero.
-		return Zero
-	case second.IsZero() && !first.IsZero():
-		// Anything other than zero divided by zero is infinite.
-		return Infinity
-	case first.IsInfinite() && !second.IsInfinite():
-		// Zero divided by anything other than zero is zero.
-		return Infinity
-	case second.IsInfinite() && !first.IsInfinite():
-		// Anything other than zero divided by zero is infinite.
-		return Zero
-	default:
-		return NumberFromComplex(first.AsComplex() / second.AsComplex())
-	}
-}
-
-// This library function returns the remainder of the specified numbers.
-func (l *numbers_) Remainder(first, second abs.NumberLike) abs.NumberLike {
-	var m1 = cmp.Abs(first.AsComplex())
-	var p1 = cmp.Phase(first.AsComplex())
-	var m2 = cmp.Abs(second.AsComplex())
-	var p2 = cmp.Phase(second.AsComplex())
-	var magnitude = lockMagnitude(mat.Remainder(m1, m2))
-	var phase = lockPhase(p2 - p1)
-	return NumberFromPolar(magnitude, phase)
-}
-
-// This library function returns the result of raising the specified base to the
-// specified exponent.
-func (l *numbers_) Power(base, exponent abs.NumberLike) abs.NumberLike {
-	switch {
-	case base.IsUndefined() || exponent.IsUndefined():
-		// Any undefined arguments result in an undefined result.
-		return Undefined
-	case exponent.IsZero():
-		// Anything to the zero power is 1 by definition.
-		return One
-	case base.IsZero():
-		// Zero to any power other than zero is still zero.
-		return Zero
-	case base.IsInfinite():
-		// Infinity to any power other than zero is infinite.
-		return Infinity
-	case exponent.IsInfinite():
-		var magnitude = base.GetMagnitude()
-		switch {
-		case magnitude < 1:
-			// A magnitude less than one to an infinite power is zero.
-			return Zero
-		case magnitude == 1:
-			// A magnitude equal to one to an infinite power is one.
-			return One
-		case magnitude > 1:
-			// A magnitude greater than one to an infinite power is infinite.
-			return Infinity
-		default:
-			panic(fmt.Sprintf("An impossible magnitude was encountered: %v", magnitude))
-		}
-	default:
-		return NumberFromComplex(cmp.Pow(base.AsComplex(), exponent.AsComplex()))
-	}
-}
-
-// This library function returns the result of taking the logarithm using the
-// specified base of the specified number.
-func (l *numbers_) Logarithm(base, number abs.NumberLike) abs.NumberLike {
-	// logB(z) => ln(z) / ln(b)
-	var lnB = cmp.Log(base.AsComplex())
-	var lnZ = cmp.Log(number.AsComplex())
-	var logB = lnZ / lnB
-	return NumberFromComplex(logB)
-}
-
 // PRIVATE FUNCTIONS
 
 // This function uses the single precision floating point range to lock a double
 // precision magnitude onto 0, 1, -1, or ∞ if the magnitude falls outside the
 // single precision range for these values. Otherwise, the magnitude is returned
 // unchanged.
-func lockMagnitude(v float64) float64 {
-	var v32 float32 = float32(v)
+func lockMagnitude(magnitude float64) float64 {
+	var magnitude32 = float32(magnitude)
 	switch {
-	case mat.Abs(v) <= 1.2246467991473515e-16:
-		return 0
-	case v32 == -1:
-		return -1
-	case v32 == 1:
-		return 1
-	case mat.IsInf(v, 0):
-		return mat.Inf(1)
-	default:
-		return v
+	case mat.Abs(magnitude) <= 1.2246467991473515e-16:
+		magnitude = 0
+	case magnitude32 == -1:
+		magnitude = -1
+	case magnitude32 == 1:
+		magnitude = 1
+	case mat.IsInf(magnitude, 0):
+		magnitude = mat.Inf(1)
 	}
+	return magnitude
 }
 
 // This function uses the single precision floating point range to lock a double
 // precision phase onto 0, π/2, π, or 3π/2 if the phase falls outside the single
 // precision range for these values. Otherwise, the phase is returned unchanged.
-func lockPhase(v float64) float64 {
-	var v32 float32 = float32(v)
+func lockPhase(phase float64) float64 {
+	var phase32 = float32(phase)
 	switch {
-	case mat.Abs(v) <= 1.2246467991473515e-16:
-		return 0
-	case v32 == float32(0.5*mat.Pi):
-		return 0.5 * mat.Pi
-	case v32 == float32(mat.Pi):
-		return mat.Pi
-	case v32 == float32(1.5*mat.Pi):
-		return 1.5 * mat.Pi
-	default:
-		return v
+	case mat.Abs(phase) <= 1.2246467991473515e-16:
+		phase = 0
+	case phase32 == float32(0.5*mat.Pi):
+		phase = 0.5 * mat.Pi
+	case phase32 == float32(mat.Pi):
+		phase = mat.Pi
+	case phase32 == float32(1.5*mat.Pi):
+		phase = 1.5 * mat.Pi
 	}
+	return phase
 }
 
-// This returns the imaginary string for the specified floating point number.
-func imaginaryFromFloat(imaginary float64) string {
+// This returns the string for the specified imaginary floating point number.
+func stringFromImaginary(imaginary float64) string {
 	var string_ string
 	switch imaginary {
 	case 1:

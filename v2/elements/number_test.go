@@ -19,7 +19,7 @@ import (
 )
 
 func TestZero(t *tes.T) {
-	var v = ele.NumberFromComplex(0 + 0i)
+	var v = ele.Number.FromComplex(0 + 0i)
 	ass.Equal(t, 0+0i, v.AsComplex())
 	ass.True(t, v.IsZero())
 	ass.False(t, v.IsInfinite())
@@ -31,7 +31,7 @@ func TestZero(t *tes.T) {
 }
 
 func TestInfinity(t *tes.T) {
-	var v = ele.NumberFromComplex(cmp.Inf())
+	var v = ele.Number.FromComplex(cmp.Inf())
 	ass.Equal(t, cmp.Inf(), v.AsComplex())
 	ass.False(t, v.IsZero())
 	ass.True(t, v.IsInfinite())
@@ -43,7 +43,7 @@ func TestInfinity(t *tes.T) {
 }
 
 func TestUndefined(t *tes.T) {
-	var v = ele.NumberFromComplex(cmp.NaN())
+	var v = ele.Number.FromComplex(cmp.NaN())
 	ass.True(t, cmp.IsNaN(v.AsComplex()))
 	ass.False(t, v.IsZero())
 	ass.False(t, v.IsInfinite())
@@ -55,7 +55,7 @@ func TestUndefined(t *tes.T) {
 }
 
 func TestPositivePureReals(t *tes.T) {
-	var v = ele.NumberFromComplex(0.25)
+	var v = ele.Number.FromComplex(0.25)
 	ass.Equal(t, 0.25+0i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.25, v.AsFloat())
@@ -64,7 +64,7 @@ func TestPositivePureReals(t *tes.T) {
 }
 
 func TestPositivePureImaginaries(t *tes.T) {
-	var v = ele.NumberFromComplex(0.25i)
+	var v = ele.Number.FromComplex(0.25i)
 	ass.Equal(t, 0+0.25i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsFloat())
@@ -73,7 +73,7 @@ func TestPositivePureImaginaries(t *tes.T) {
 }
 
 func TestNegativePureReals(t *tes.T) {
-	var v = ele.NumberFromComplex(-0.75)
+	var v = ele.Number.FromComplex(-0.75)
 	ass.Equal(t, -0.75+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -0.75, v.AsFloat())
@@ -82,7 +82,7 @@ func TestNegativePureReals(t *tes.T) {
 }
 
 func TestNegativePureImaginaries(t *tes.T) {
-	var v = ele.NumberFromComplex(-0.75i)
+	var v = ele.Number.FromComplex(-0.75i)
 	ass.Equal(t, 0-0.75i, v.AsComplex())
 	ass.False(t, v.IsNegative())
 	ass.Equal(t, 0.0, v.AsFloat())
@@ -91,7 +91,7 @@ func TestNegativePureImaginaries(t *tes.T) {
 }
 
 func TestNumberFromPolar(t *tes.T) {
-	var v = ele.NumberFromPolar(1.0, mat.Pi)
+	var v = ele.Number.FromPolar(1.0, mat.Pi)
 	ass.Equal(t, -1.0+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -1.0, v.AsFloat())
@@ -102,7 +102,7 @@ func TestNumberFromPolar(t *tes.T) {
 }
 
 func TestNumberFromString(t *tes.T) {
-	var v = ele.NumberFromString("(1e^~πi)")
+	var v = ele.Number.FromString("(1e^~πi)")
 	ass.Equal(t, -1.0+0i, v.AsComplex())
 	ass.True(t, v.IsNegative())
 	ass.Equal(t, -1.0, v.AsFloat())
@@ -110,30 +110,30 @@ func TestNumberFromString(t *tes.T) {
 	ass.Equal(t, 0.0, v.GetImaginary())
 	ass.Equal(t, 1.0, v.GetMagnitude())
 	ass.Equal(t, mat.Pi, v.GetPhase())
-	_ = ele.NumberFromString("(1.2, -3.4i)")
-	_ = ele.NumberFromString("undefined")
-	_ = ele.NumberFromString("infinity")
-	_ = ele.NumberFromString("∞")
-	_ = ele.NumberFromString("+1")
-	_ = ele.NumberFromString("1")
-	_ = ele.NumberFromString("-π")
-	_ = ele.NumberFromString("+i")
-	_ = ele.NumberFromString("i")
-	_ = ele.NumberFromString("-i")
+	_ = ele.Number.FromString("(1.2, -3.4i)")
+	_ = ele.Number.FromString("undefined")
+	_ = ele.Number.FromString("infinity")
+	_ = ele.Number.FromString("∞")
+	_ = ele.Number.FromString("+1")
+	_ = ele.Number.FromString("1")
+	_ = ele.Number.FromString("-π")
+	_ = ele.Number.FromString("+i")
+	_ = ele.Number.FromString("i")
+	_ = ele.Number.FromString("-i")
 }
 
 func TestNumberLibrary(t *tes.T) {
-	var zero = ele.Zero
-	var i = ele.I
-	var minusi = ele.NumberFromComplex(-1i)
-	var half = ele.NumberFromComplex(0.5)
-	var minushalf = ele.NumberFromComplex(-0.5)
-	var one = ele.One
-	var minusone = ele.NumberFromComplex(-1)
-	var two = ele.NumberFromComplex(2.0)
-	var minustwo = ele.NumberFromComplex(-2.0)
-	var infinity = ele.Infinity
-	var undefined = ele.Undefined
+	var zero = ele.Number.Zero()
+	var i = ele.Number.I()
+	var minusi = ele.Number.FromComplex(-1i)
+	var half = ele.Number.FromComplex(0.5)
+	var minushalf = ele.Number.FromComplex(-0.5)
+	var one = ele.Number.One()
+	var minusone = ele.Number.FromComplex(-1)
+	var two = ele.Number.FromComplex(2.0)
+	var minustwo = ele.Number.FromComplex(-2.0)
+	var infinity = ele.Number.Infinity()
+	var undefined = ele.Number.Undefined()
 
 	//	-z
 	ass.Equal(t, zero, ele.Number.Inverse(zero))
