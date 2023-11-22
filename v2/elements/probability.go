@@ -65,8 +65,6 @@ func RandomProbability() abs.ProbabilityLike {
 	return probability
 }
 
-// Limited Interface
-
 // This constructor returns the minimum value for a probability.
 func MinimumProbability() abs.ProbabilityLike {
 	var probability = probability_(0)

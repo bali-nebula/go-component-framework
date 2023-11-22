@@ -27,7 +27,7 @@ import (
 type duration_ int
 
 // This private type defines the structure associated with the class constants
-// and class methods for the duration elements.
+// and class functions for the duration elements.
 type durations_ struct {
 	millisecondsPerSecond int
 	millisecondsPerMinute int
@@ -42,6 +42,18 @@ type durations_ struct {
 }
 
 // CLASS CONSTANTS
+
+// This class constant represents the minimum value for a duration of time.
+func (c *durations_) MinimumValue() abs.DurationLike {
+	var duration = c.FromMilliseconds(0)
+	return duration
+}
+
+// This class constant represents the maximum value for a duration of time.
+func (c *durations_) MaximumValue() abs.DurationLike {
+	var duration = c.FromMilliseconds(mat.MaxInt)
+	return duration
+}
 
 // This class constant represents the number of milliseconds in a second.
 func (c *durations_) MillisecondsPerSecond() int {
@@ -111,22 +123,6 @@ func (c *durations_) FromString(string_ string) abs.DurationLike {
 	}
 	var milliseconds = millisecondsFromMatches(matches)
 	var duration = c.FromMilliseconds(milliseconds)
-	return duration
-}
-
-// CLASS FUNCTIONS
-
-// Limited Interface
-
-// This constructor returns the minimum value for a duration of time.
-func (c *durations_) MinimumValue() abs.DurationLike {
-	var duration = c.FromMilliseconds(0)
-	return duration
-}
-
-// This constructor returns the maximum value for a duration of time.
-func (c *durations_) MaximumValue() abs.DurationLike {
-	var duration = c.FromMilliseconds(mat.MaxInt)
 	return duration
 }
 

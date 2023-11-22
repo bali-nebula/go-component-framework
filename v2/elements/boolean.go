@@ -23,7 +23,7 @@ import (
 type boolean_ bool
 
 // This private type defines the structure associated with the class constants
-// and class methods for the boolean elements.
+// and class functions for the boolean elements.
 type booleans_ struct {
 	false_ abs.BooleanLike
 	true_  abs.BooleanLike
@@ -60,8 +60,6 @@ func (c *booleans_) FromString(string_ string) abs.BooleanLike {
 }
 
 // CLASS FUNCTIONS
-
-// Logical Interface
 
 // This class method returns the logical inverse of the specified boolean.
 func (c *booleans_) Not(boolean abs.BooleanLike) abs.BooleanLike {

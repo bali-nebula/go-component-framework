@@ -24,7 +24,7 @@ import (
 type citation_ string
 
 // This private type defines the structure associated with the class constants
-// and class methods for the citation elements.
+// and class functions for the citation elements.
 type citations_ struct {
 	// This class has no class constants.
 }

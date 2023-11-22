@@ -26,7 +26,7 @@ import (
 type number_ complex128
 
 // This private type defines the structure associated with the class constants
-// and class methods for the number elements.
+// and class functions for the number elements.
 type numbers_ struct {
 	zero      abs.NumberLike
 	one       abs.NumberLike
@@ -40,6 +40,16 @@ type numbers_ struct {
 }
 
 // CLASS CONSTANTS
+
+// This class constant represents the minimum value for a number.
+func (c *numbers_) MinimumValue() abs.NumberLike {
+	return c.zero
+}
+
+// This class constant represents the maximum value for a number.
+func (c *numbers_) MaximumValue() abs.NumberLike {
+	return c.infinity
+}
 
 // This class constant represents the number zero.
 func (c *numbers_) Zero() abs.NumberLike {
@@ -186,20 +196,6 @@ func (c *numbers_) FromString(string_ string) abs.NumberLike {
 
 // CLASS FUNCTIONS
 
-// Limited Interface
-
-// This constructor returns the minimum value for a number.
-func (c *numbers_) MinimumValue() abs.NumberLike {
-	return c.zero
-}
-
-// This constructor returns the maximum value for a number.
-func (c *numbers_) MaximumValue() abs.NumberLike {
-	return c.infinity
-}
-
-// Scalable Interface
-
 // This library function returns the inverse of the specified number.
 func (c *numbers_) Inverse(number abs.NumberLike) abs.NumberLike {
 	number = c.FromComplex(-number.AsComplex())
@@ -224,8 +220,6 @@ func (c *numbers_) Scaled(number abs.NumberLike, factor float64) abs.NumberLike 
 	number = c.Product(number, c.FromComplex(complex(factor, 0)))
 	return number
 }
-
-// Numerical Interface
 
 // This library function returns the reciprocal of the specified number.
 func (c *numbers_) Reciprocal(number abs.NumberLike) abs.NumberLike {

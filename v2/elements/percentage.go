@@ -42,8 +42,6 @@ func PercentageFromString(string_ string) abs.PercentageLike {
 	return percentage
 }
 
-// Limited Interface
-
 // This constructor returns the minimum value for a percentage.
 func MinimumPercentage() abs.PercentageLike {
 	return percentage_(0)

@@ -25,9 +25,21 @@ import (
 type integer_ int
 
 // This private type defines the structure associated with the class constants
-// and class methods for the integer elements.
+// and class functions for the integer elements.
 type integers_ struct {
 	// This class has no class constants.
+}
+
+// CLASS CONSTANTS
+
+// This class constant represents the minimum value for an integer endpoint.
+func (c *integers_) MinimumValue() abs.IntegerLike {
+	return integer_(0)
+}
+
+// This class constant represents the maximum value for an integer endpoint.
+func (c *integers_) MaximumValue() abs.IntegerLike {
+	return integer_(mat.MaxInt)
 }
 
 // CLASS CONSTRUCTORS
@@ -46,20 +58,6 @@ func (c *integers_) FromString(string_ string) abs.IntegerLike {
 	}
 	var integer, _ = stc.ParseInt(matches[0], 10, 0)
 	return integer_(integer)
-}
-
-// CLASS FUNCTIONS
-
-// Limited Interface
-
-// This constructor returns the minimum value for an integer endpoint.
-func (c *integers_) MinimumValue() abs.IntegerLike {
-	return integer_(0)
-}
-
-// This constructor returns the maximum value for an integer endpoint.
-func (c *integers_) MaximumValue() abs.IntegerLike {
-	return integer_(mat.MaxInt)
 }
 
 // CLASS METHODS

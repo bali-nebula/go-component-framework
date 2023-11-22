@@ -24,9 +24,21 @@ import (
 type float_ float64
 
 // This private type defines the structure associated with the class constants
-// and class methods for the float elements.
+// and class functions for the float elements.
 type floats_ struct {
 	// This class has no class constants.
+}
+
+// CLASS CONSTANTS
+
+// This class constant represents the minimum value for a float endpoint.
+func (c *floats_) MinimumValue() abs.FloatLike {
+	return float_(mat.Inf(-1))
+}
+
+// This class constant represents the maximum value for a float endpoint.
+func (c *floats_) MaximumValue() abs.FloatLike {
+	return float_(mat.Inf(1))
 }
 
 // CLASS CONSTRUCTORS
@@ -45,20 +57,6 @@ func (c *floats_) FromString(string_ string) abs.FloatLike {
 	}
 	var float = floatFromString(matches[0])
 	return float_(float)
-}
-
-// CLASS FUNCTIONS
-
-// Limited Interface
-
-// This constructor returns the minimum value for a float endpoint.
-func (c *floats_) MinimumValue() abs.FloatLike {
-	return float_(mat.Inf(-1))
-}
-
-// This constructor returns the maximum value for a float endpoint.
-func (c *floats_) MaximumValue() abs.FloatLike {
-	return float_(mat.Inf(1))
 }
 
 // CLASS METHODS

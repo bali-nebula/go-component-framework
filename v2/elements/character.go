@@ -26,9 +26,21 @@ import (
 type character_ int32
 
 // This private type defines the structure associated with the class constants
-// and class methods for the character elements.
+// and class functions for the character elements.
 type characters_ struct {
 	// This class has no class constants.
+}
+
+// CLASS CONSTANTS
+
+// This class constant represents the minimum value for a character endpoint.
+func (c *characters_) MinimumValue() abs.CharacterLike {
+	return character_(0)
+}
+
+// This class constant represents the maximum value for a character endpoint.
+func (c *characters_) MaximumValue() abs.CharacterLike {
+	return character_(mat.MaxInt32)
 }
 
 // CLASS CONSTRUCTORS
@@ -53,20 +65,6 @@ func (c *characters_) FromString(string_ string) abs.CharacterLike {
 	var character, _ = stc.Unquote(matches[0])
 	var rune_, _ = utf.DecodeRuneInString(character)
 	return character_(rune_)
-}
-
-// CLASS FUNCTIONS
-
-// Limited Interface
-
-// This constructor returns the minimum value for a character endpoint.
-func (c *characters_) MinimumValue() abs.CharacterLike {
-	return character_(0)
-}
-
-// This constructor returns the maximum value for a character endpoint.
-func (c *characters_) MaximumValue() abs.CharacterLike {
-	return character_(mat.MaxInt32)
 }
 
 // CLASS METHODS

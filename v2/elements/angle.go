@@ -25,7 +25,7 @@ import (
 type angle_ float64
 
 // This private type defines the structure associated with the class constants
-// and class methods for the angle elements.
+// and class functions for the angle elements.
 type angles_ struct {
 	zero abs.AngleLike
 	pi   abs.AngleLike
@@ -33,6 +33,16 @@ type angles_ struct {
 }
 
 // CLASS CONSTANTS
+
+// This class constant represents the minimum value for an angle.
+func (c *angles_) MinimumValue() abs.AngleLike {
+	return c.zero
+}
+
+// This class constant represents the maximum value for an angle.
+func (c *angles_) MaximumValue() abs.AngleLike {
+	return c.tau
+}
 
 // This class constant represents an angle of zero.
 func (c *angles_) Zero() abs.AngleLike {
@@ -81,20 +91,6 @@ func (c *angles_) FromString(string_ string) abs.AngleLike {
 
 // CLASS FUNCTIONS
 
-// Limited Interface
-
-// This constructor returns the minimum value for an angle.
-func (c *angles_) MinimumValue() abs.AngleLike {
-	return c.zero
-}
-
-// This constructor returns the maximum value for an angle.
-func (c *angles_) MaximumValue() abs.AngleLike {
-	return c.tau
-}
-
-// Scalable Interface
-
 // This class method returns the inverse of the specified angle.
 func (c *angles_) Inverse(angle abs.AngleLike) abs.AngleLike {
 	return c.FromFloat(angle.AsFloat() - mat.Pi)
@@ -115,8 +111,6 @@ func (c *angles_) Difference(first, second abs.AngleLike) abs.AngleLike {
 func (c *angles_) Scaled(angle abs.AngleLike, factor float64) abs.AngleLike {
 	return c.FromFloat(angle.AsFloat() * factor)
 }
-
-// Angular Interface
 
 // This class method returns the complement of the specified angle. The
 // complementary angles add up to π/2.

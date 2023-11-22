@@ -30,12 +30,24 @@ import (
 type moment_ int
 
 // This private type defines the structure associated with the class constants
-// and class methods for the moment elements.
+// and class functions for the moment elements.
 type moments_ struct {
 	epoch abs.MomentLike
 }
 
 // CLASS CONSTANTS
+
+// This class constant represents the earliest value for a moment in time element.
+func (c *moments_) MinimumValue() abs.MomentLike {
+	var moment = c.FromMilliseconds(mat.MinInt)
+	return moment
+}
+
+// This class constant represents the latest value for a moment in time element.
+func (c *moments_) MaximumValue() abs.MomentLike {
+	var moment = c.FromMilliseconds(mat.MaxInt)
+	return moment
+}
 
 // This class constant represents the moment of the UNIX Epoch.
 func (c *moments_) Epoch() abs.MomentLike {
@@ -73,20 +85,6 @@ func (c *moments_) Now() abs.MomentLike {
 }
 
 // CLASS FUNCTIONS
-
-// Limited Interface
-
-// This constructor returns the earliest value for a moment in time element.
-func (c *moments_) MinimumValue() abs.MomentLike {
-	var moment = c.FromMilliseconds(mat.MinInt)
-	return moment
-}
-
-// This constructor returns the latest value for a moment in time element.
-func (c *moments_) MaximumValue() abs.MomentLike {
-	var moment = c.FromMilliseconds(mat.MaxInt)
-	return moment
-}
 
 // This library function returns the duration of time between the two specified
 // moments in tim.
