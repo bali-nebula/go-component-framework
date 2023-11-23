@@ -51,7 +51,7 @@ func (c *resources_) FromURI(url *uri.URL) abs.ResourceLike {
 	return resource
 }
 
-// RESOURCE METHODS
+// CLASS METHODS
 
 // Lexical Interface
 

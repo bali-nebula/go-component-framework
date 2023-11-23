@@ -137,49 +137,48 @@ var Resource = &resources_{}
 
 // PACKAGE FUNCTIONS
 
-// This private function returns the magnitude (absolute value) of the specified value.
-func magnitude(value int) int {
-	if value < 0 {
-		return -value
-	}
-	return value
-}
-
-// This private function returns the milliseconds value from the specified matches.
-func millisecondsFromMatches(matches []string) int {
-	var milliseconds = 0.0
-	var sign = 1.0
-	var isTime = false
-	for _, match := range matches[1:] {
-		if match != "" {
-			var stype = match[len(match)-1:] // Strip off the time span.
-			var tspan = match[:len(match)-1] // Strip off the span type.
-			var float, _ = stc.ParseFloat(tspan, 64)
-			switch stype {
-			case "-":
-				sign = -1
-			case "W":
-				milliseconds += float * float64(millisecondsPerWeek)
-			case "Y":
-				milliseconds += float * float64(millisecondsPerYear)
-			case "M":
-				if isTime {
-					milliseconds += float * float64(millisecondsPerMinute)
-				} else {
-					milliseconds += float * float64(millisecondsPerMonth)
-				}
-			case "D":
-				milliseconds += float * float64(millisecondsPerDay)
-			case "T":
-				isTime = true
-			case "H":
-				milliseconds += float * float64(millisecondsPerHour)
-			case "S":
-				milliseconds += float * float64(millisecondsPerSecond)
+// This private function returns the complex number associated with the
+// specified regular expression matches.
+func complexFromMatches(matches []string) complex128 {
+	var complex_ complex128
+	switch {
+	case len(matches[2]) > 0:
+		// This is a complex number in rectangular form.
+		var realPart = floatFromString(matches[1])
+		var imaginaryPart = floatFromString(matches[3][:len(matches[3])-1])
+		complex_ = complex(realPart, imaginaryPart)
+	case len(matches[5]) > 0:
+		// This is a complex number in polar form.
+		var magnitude = floatFromString(matches[4])
+		var phase = floatFromString(matches[7])
+		complex_ = cmp.Rect(magnitude, phase)
+	default:
+		// This is a pure (non-complex) number.
+		switch matches[0] {
+		case "undefined":
+			complex_ = cmp.NaN()
+		case "infinity", "∞":
+			complex_ = cmp.Inf()
+		case "0":
+			complex_ = complex(0, 0)
+		case "+i", "i":
+			complex_ = complex(0, 1)
+		case "-i":
+			complex_ = complex(0, -1)
+		case "+pi", "pi", "-pi", "+phi", "phi", "-phi":
+			// We must handle the constants that end in "i" separately.
+			complex_ = complex(floatFromString(matches[1]), 0)
+		default:
+			if sts.HasSuffix(matches[0], "i") {
+				// This is a pure imaginary number.
+				complex_ = complex(0, floatFromString(matches[0][:len(matches[0])-1]))
+			} else {
+				// This is a pure real number.
+				complex_ = complex(floatFromString(matches[0]), 0)
 			}
 		}
 	}
-	return int(sign * milliseconds)
+	return complex_
 }
 
 // This private function returns the floating point value for the specified
@@ -213,37 +212,6 @@ func floatFromString(string_ string) float64 {
 	return float
 }
 
-// This private function returns the string for the specified floating point
-// number.
-func stringFromFloat(float float64) string {
-	var string_ string
-	switch float {
-	case mat.E:
-		string_ = "e"
-	case -mat.E:
-		string_ = "-e"
-	case mat.Pi:
-		string_ = "π"
-	case -mat.Pi:
-		string_ = "-π"
-	case mat.Phi:
-		string_ = "φ"
-	case -mat.Phi:
-		string_ = "-φ"
-	case mat.Pi * 2.0:
-		string_ = "τ"
-	case -mat.Pi * 2.0:
-		string_ = "-τ"
-	case mat.Inf(1):
-		string_ = "∞"
-	case mat.Inf(-1):
-		string_ = "-∞"
-	default:
-		string_ = stc.FormatFloat(float, 'G', -1, 64)
-	}
-	return string_
-}
-
 // This private function formats the specified ordinal value to the specified
 // number of digits.
 func formatOrdinal(ordinal, digits int) string {
@@ -263,7 +231,7 @@ func formatOrdinal(ordinal, digits int) string {
 //	"January 2nd, 2006 at 3:04:05pm in the MST timezone"
 //
 // Anyway, it is what it is, but this hides it from the rest of the code.
-var isoFormats = [...]string{
+var hackedIsoFormats = [...]string{
 	"<2006-01-02T15:04:05.000>",
 	"<2006-01-02T15:04:05>",
 	"<2006-01-02T15:04>",
@@ -297,7 +265,7 @@ func hackedParseDateAsMilliseconds(matches []string) int {
 	var patched = sts.Replace(matches[0], yearString, "0000", 1)
 
 	// Next, we attempt to parse the patched moment using our Go based formats.
-	for _, format := range isoFormats {
+	for _, format := range hackedIsoFormats {
 		var date, err = tim.Parse(format, patched) // Parsed in UTC.
 		if err == nil {
 
@@ -360,6 +328,82 @@ func lockPhase(phase float64) float64 {
 	return phase
 }
 
+// This private function returns the magnitude (absolute value) of the specified value.
+func magnitude(value int) int {
+	if value < 0 {
+		return -value
+	}
+	return value
+}
+
+// This private function returns the milliseconds value from the specified matches.
+func millisecondsFromMatches(matches []string) int {
+	var milliseconds = 0.0
+	var sign = 1.0
+	var isTime = false
+	for _, match := range matches[1:] {
+		if match != "" {
+			var stype = match[len(match)-1:] // Strip off the time span.
+			var tspan = match[:len(match)-1] // Strip off the span type.
+			var float, _ = stc.ParseFloat(tspan, 64)
+			switch stype {
+			case "-":
+				sign = -1
+			case "W":
+				milliseconds += float * float64(millisecondsPerWeek)
+			case "Y":
+				milliseconds += float * float64(millisecondsPerYear)
+			case "M":
+				if isTime {
+					milliseconds += float * float64(millisecondsPerMinute)
+				} else {
+					milliseconds += float * float64(millisecondsPerMonth)
+				}
+			case "D":
+				milliseconds += float * float64(millisecondsPerDay)
+			case "T":
+				isTime = true
+			case "H":
+				milliseconds += float * float64(millisecondsPerHour)
+			case "S":
+				milliseconds += float * float64(millisecondsPerSecond)
+			}
+		}
+	}
+	return int(sign * milliseconds)
+}
+
+// This private function returns the string for the specified floating point
+// number.
+func stringFromFloat(float float64) string {
+	var string_ string
+	switch float {
+	case mat.E:
+		string_ = "e"
+	case -mat.E:
+		string_ = "-e"
+	case mat.Pi:
+		string_ = "π"
+	case -mat.Pi:
+		string_ = "-π"
+	case mat.Phi:
+		string_ = "φ"
+	case -mat.Phi:
+		string_ = "-φ"
+	case mat.Pi * 2.0:
+		string_ = "τ"
+	case -mat.Pi * 2.0:
+		string_ = "-τ"
+	case mat.Inf(1):
+		string_ = "∞"
+	case mat.Inf(-1):
+		string_ = "-∞"
+	default:
+		string_ = stc.FormatFloat(float, 'G', -1, 64)
+	}
+	return string_
+}
+
 // This private function returns the string for the specified imaginary floating
 // point number.
 func stringFromImaginary(imaginary float64) string {
@@ -373,48 +417,4 @@ func stringFromImaginary(imaginary float64) string {
 		string_ = stringFromFloat(imaginary) + "i"
 	}
 	return string_
-}
-
-// This private function returns the complex number associated with the
-// specified regular expression matches.
-func complexFromMatches(matches []string) complex128 {
-	var complex_ complex128
-	switch {
-	case len(matches[2]) > 0:
-		// This is a complex number in rectangular form.
-		var realPart = floatFromString(matches[1])
-		var imaginaryPart = floatFromString(matches[3][:len(matches[3])-1])
-		complex_ = complex(realPart, imaginaryPart)
-	case len(matches[5]) > 0:
-		// This is a complex number in polar form.
-		var magnitude = floatFromString(matches[4])
-		var phase = floatFromString(matches[7])
-		complex_ = cmp.Rect(magnitude, phase)
-	default:
-		// This is a pure (non-complex) number.
-		switch matches[0] {
-		case "undefined":
-			complex_ = cmp.NaN()
-		case "infinity", "∞":
-			complex_ = cmp.Inf()
-		case "0":
-			complex_ = complex(0, 0)
-		case "+i", "i":
-			complex_ = complex(0, 1)
-		case "-i":
-			complex_ = complex(0, -1)
-		case "+pi", "pi", "-pi", "+phi", "phi", "-phi":
-			// We must handle the constants that end in "i" separately.
-			complex_ = complex(floatFromString(matches[1]), 0)
-		default:
-			if sts.HasSuffix(matches[0], "i") {
-				// This is a pure imaginary number.
-				complex_ = complex(0, floatFromString(matches[0][:len(matches[0])-1]))
-			} else {
-				// This is a pure real number.
-				complex_ = complex(floatFromString(matches[0]), 0)
-			}
-		}
-	}
-	return complex_
 }
