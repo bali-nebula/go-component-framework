@@ -14,7 +14,6 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
-	mat "math"
 	stc "strconv"
 )
 
@@ -27,19 +26,20 @@ type integer_ int
 // This private type defines the structure associated with the class constants
 // and class functions for the integer elements.
 type integers_ struct {
-	// This class has no class constants.
+	minimum abs.IntegerLike
+	maximum abs.IntegerLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for an integer endpoint.
 func (c *integers_) MinimumValue() abs.IntegerLike {
-	return integer_(0)
+	return c.minimum
 }
 
 // This class constant represents the maximum value for an integer endpoint.
 func (c *integers_) MaximumValue() abs.IntegerLike {
-	return integer_(mat.MaxInt)
+	return c.maximum
 }
 
 // CLASS CONSTRUCTORS

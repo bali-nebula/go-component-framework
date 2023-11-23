@@ -14,7 +14,6 @@ import (
 	fmt "fmt"
 	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
-	mat "math"
 	stc "strconv"
 	utf "unicode/utf8"
 )
@@ -28,19 +27,20 @@ type character_ int32
 // This private type defines the structure associated with the class constants
 // and class functions for the character elements.
 type characters_ struct {
-	// This class has no class constants.
+	minimum abs.CharacterLike
+	maximum abs.CharacterLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for a character endpoint.
 func (c *characters_) MinimumValue() abs.CharacterLike {
-	return character_(0)
+	return c.minimum
 }
 
 // This class constant represents the maximum value for a character endpoint.
 func (c *characters_) MaximumValue() abs.CharacterLike {
-	return character_(mat.MaxInt32)
+	return c.maximum
 }
 
 // CLASS CONSTRUCTORS

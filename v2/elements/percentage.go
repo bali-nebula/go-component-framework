@@ -18,20 +18,34 @@ import (
 	stc "strconv"
 )
 
-// PERCENTAGE CONSTRUCTORS
+// CLASS DEFINITIONS
+
+// This private type implements the PercentageLike interface.  It extends the
+// native Go `float64` type and represents a percentage. Percentages can be
+// negative.
+type percentage_ float64
+
+// This private type defines the structure associated with the class constants
+// and class functions for the percentage elements.
+type percentages_ struct {
+	// This class has no class constants.
+}
+
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new percentage element from the specified integer.
-func PercentageFromInt(integer int) abs.PercentageLike {
+func (c *percentages_) FromInt(integer int) abs.PercentageLike {
 	return percentage_(float64(integer))
 }
 
-// This constructor creates a new percentage element from the specified float.
-func PercentageFromFloat(float float64) abs.PercentageLike {
+// This constructor creates a new percentage element from the specified floating
+// point value.
+func (c *percentages_) FromFloat(float float64) abs.PercentageLike {
 	return percentage_(float)
 }
 
 // This constructor creates a new percentage element from the specified string.
-func PercentageFromString(string_ string) abs.PercentageLike {
+func (c *percentages_) FromString(string_ string) abs.PercentageLike {
 	var matches = uti.PercentageMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a percentage from an invalid string: %v", string_)
@@ -42,22 +56,7 @@ func PercentageFromString(string_ string) abs.PercentageLike {
 	return percentage
 }
 
-// This constructor returns the minimum value for a percentage.
-func MinimumPercentage() abs.PercentageLike {
-	return percentage_(0)
-}
-
-// This constructor returns the maximum value for a percentage.
-func MaximumPercentage() abs.PercentageLike {
-	return percentage_(100)
-}
-
-// PERCENTAGE METHODS
-
-// This private type implements the PercentageLike interface.  It extends the
-// native Go `float64` type and represents a percentage. Percentages can be
-// negative.
-type percentage_ float64
+// CLASS METHODS
 
 // Continuous Interface
 

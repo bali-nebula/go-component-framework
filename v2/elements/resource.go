@@ -17,11 +17,24 @@ import (
 	uri "net/url"
 )
 
-// RESOURCE CONSTRUCTORS
+// CLASS DEFINITIONS
+
+// This private type implements the ResourceLike interface.  It extends the
+// native Go `string` type and represents the URI corresponding to that web
+// resource.
+type resource_ string
+
+// This private type defines the structure associated with the class constants
+// and class functions for the resource elements.
+type resources_ struct {
+	// This class has no class constants.
+}
+
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new resource element from the specified universal
 // resource identifier (URI) string embedded in "<" and ">" delimiters.
-func ResourceFromString(string_ string) abs.ResourceLike {
+func (c *resources_) FromString(string_ string) abs.ResourceLike {
 	var matches = uti.ResourceMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a resource from an invalid string: %v", string_)
@@ -33,17 +46,12 @@ func ResourceFromString(string_ string) abs.ResourceLike {
 
 // This constructor creates a new resource element from the specified universal
 // resource identifier (URI) pointer.
-func ResourceFromURI(url *uri.URL) abs.ResourceLike {
+func (c *resources_) FromURI(url *uri.URL) abs.ResourceLike {
 	var resource = resource_(url.String())
 	return resource
 }
 
 // RESOURCE METHODS
-
-// This private type implements the ResourceLike interface.  It extends the
-// native Go `string` type and represents the URI corresponding to that web
-// resource.
-type resource_ string
 
 // Lexical Interface
 

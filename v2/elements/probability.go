@@ -17,11 +17,36 @@ import (
 	stc "strconv"
 )
 
-// PROBABILITY CONSTRUCTORS
+// CLASS DEFINITIONS
+
+// This private type implements the ProbabilityLike interface.  It extends the
+// native Go `float64` type and represents a probability in the range [0..1].
+type probability_ float64
+
+// This private type defines the structure associated with the class constants
+// and class functions for the probability elements.
+type probabilities_ struct {
+	minimum abs.ProbabilityLike
+	maximum abs.ProbabilityLike
+}
+
+// CLASS CONSTANTS
+
+// This class constant represents the minimum value for a probability element.
+func (c *probabilities_) MinimumValue() abs.ProbabilityLike {
+	return c.minimum
+}
+
+// This class constant represents the maximum value for a probability element.
+func (c *probabilities_) MaximumValue() abs.ProbabilityLike {
+	return c.maximum
+}
+
+// CLASS CONSTRUCTORS
 
 // This constructor creates a new probability element and constrains the value
 // to be in the allowed range for probabilities [0..1].
-func ProbabilityFromFloat(float float64) abs.ProbabilityLike {
+func (c *probabilities_) FromFloat(float float64) abs.ProbabilityLike {
 	var probability abs.ProbabilityLike
 	switch {
 	case float < 0.0:
@@ -36,7 +61,7 @@ func ProbabilityFromFloat(float float64) abs.ProbabilityLike {
 
 // This constructor creates a new probability element from the specified boolean
 // value.
-func ProbabilityFromBool(boolean bool) abs.ProbabilityLike {
+func (c *probabilities_) FromBool(boolean bool) abs.ProbabilityLike {
 	var probability abs.ProbabilityLike
 	switch boolean {
 	case true:
@@ -48,7 +73,7 @@ func ProbabilityFromBool(boolean bool) abs.ProbabilityLike {
 }
 
 // This constructor creates a new probability element from the specified string.
-func ProbabilityFromString(string_ string) abs.ProbabilityLike {
+func (c *probabilities_) FromString(string_ string) abs.ProbabilityLike {
 	var matches = uti.ProbabilityMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a probability from an invalid string: %v", string_)
@@ -60,28 +85,12 @@ func ProbabilityFromString(string_ string) abs.ProbabilityLike {
 }
 
 // This constructor creates a new random probability.
-func RandomProbability() abs.ProbabilityLike {
+func (c *probabilities_) Random() abs.ProbabilityLike {
 	var probability = probability_(uti.RandomProbability())
 	return probability
 }
 
-// This constructor returns the minimum value for a probability.
-func MinimumProbability() abs.ProbabilityLike {
-	var probability = probability_(0)
-	return probability
-}
-
-// This constructor returns the maximum value for a probability.
-func MaximumProbability() abs.ProbabilityLike {
-	var probability = probability_(1)
-	return probability
-}
-
-// PROBABILITY METHODS
-
-// This private type implements the ProbabilityLike interface.  It extends the
-// native Go `float64` type and represents a probability in the range [0..1].
-type probability_ float64
+// CLASS METHODS
 
 // Continuous Interface
 
@@ -143,17 +152,7 @@ func (v probability_) AsString() string {
 	return string_
 }
 
-// PROBABILITY LIBRARY
-
-// This singleton creates a unique name space for the library functions for
-// probability elements.
-var Probability = &probabilities_{}
-
-// This type defines an empty structure and the group of methods bound to it
-// that define the library functions for probability elements.
-type probabilities_ struct{}
-
-// Logical Interface
+// CLASS FUNCTIONS
 
 // This library function returns the logical inverse of the specified
 // probability.

@@ -65,7 +65,10 @@ var Boolean = &booleans_{
 }
 
 // This public singleton exports a unique name space for the character class.
-var Character = &characters_{}
+var Character = &characters_{
+	character_(0),            // minimum
+	character_(mat.MaxInt32), // maximum
+}
 
 // This public singleton exports a unique name space for the citation class.
 var Citation = &citations_{}
@@ -85,10 +88,16 @@ var Duration = &durations_{
 }
 
 // This public singleton exports a unique name space for the float class.
-var Float = &floats_{}
+var Float = &floats_{
+	float_(mat.Inf(-1)), // minimum
+	float_(mat.Inf(1)),  // maximum
+}
 
 // This public singleton exports a unique name space for the integer class.
-var Integer = &integers_{}
+var Integer = &integers_{
+	integer_(mat.MinInt), // minimum
+	integer_(mat.MaxInt), // maximum
+}
 
 // This public singleton exports a unique name space for the moment class.
 var Moment = &moments_{
@@ -107,6 +116,24 @@ var Number = &numbers_{
 	number_(cmp.Inf()),              // infinity
 	number_(cmp.NaN()),              // undefined
 }
+
+// This public singleton exports a unique name space for the pattern class.
+var Pattern = &patterns_{
+	pattern_(`.*`),     // any
+	pattern_(`^none$`), // none
+}
+
+// This public singleton exports a unique name space for the percentage class.
+var Percentage = &percentages_{}
+
+// This public singleton exports a unique name space for the probability class.
+var Probability = &probabilities_{
+	probability_(0), // minimum
+	probability_(1), // maximum
+}
+
+// This public singleton exports a unique name space for the resource class.
+var Resource = &resources_{}
 
 // PACKAGE FUNCTIONS
 
