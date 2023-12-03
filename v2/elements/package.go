@@ -12,6 +12,13 @@
 This package defines the elemental types that are found in Bali Document
 Notation™ (Bali). All element types are immutable and—for better
 performance—are implemented as extensions to existing Go primitive types.
+
+For detailed documentation on this package refer to the wiki:
+  - https://github.com/bali-nebula/go-component-framework/wiki/Elements
+
+All UpperCase type, constant, abstraction, function and class names are visible
+to other projects that import this package. All lowercase names are private to
+this package.
 */
 package elements
 
@@ -24,7 +31,20 @@ import (
 	tim "time"
 )
 
+// PACKAGE TYPES
+
+// Specialized Types
+
+// This specialized type definition represents a specialization of the primitive
+// Go any data type.  It is used as a generic type for any of the element types
+// defined in this package.
+type (
+	Element any
+)
+
 // PACKAGE CONSTANTS
+
+// Private Constants
 
 // This private constant represents the value tau (τ).
 // See "The Tau Manifesto" at https://tauday.com/tau-manifesto
@@ -49,93 +69,208 @@ const (
 	weeksPerMonth float64 = float64(millisecondsPerMonth) / float64(millisecondsPerWeek) // ~4.348125 weeks/month
 )
 
-// PACKAGE TYPES
+// PACKAGE ABSTRACTIONS
 
-// This public singleton exports a unique name space for the angle class.
-var Angle = &angles_{
-	angle_(0.0),    // ~0
-	angle_(mat.Pi), // ~pi
-	angle_(tau),    // ~tau
+// Abstract Interfaces
+
+// This abstract interface defines the set of method signatures that must be
+// supported by all complex numeric types.
+type Complex interface {
+	AsComplex() complex128
+	GetReal() float64
+	GetImaginary() float64
+	GetMagnitude() float64
+	GetPhase() float64
 }
 
-// This public singleton exports a unique name space for the boolean class.
-var Boolean = &booleans_{
-	boolean_(false),
-	boolean_(true),
+// This abstract interface defines the set of method signatures that must be
+// supported by all continuous numeric types.
+type Continuous interface {
+	AsFloat() float64
+	IsZero() bool
+	IsInfinite() bool
+	IsUndefined() bool
 }
 
-// This public singleton exports a unique name space for the character class.
-var Character = &characters_{
-	character_(0),            // minimum
-	character_(mat.MaxInt32), // maximum
+// This abstract interface defines the set of method signatures that must be
+// supported by all discrete numeric types.
+type Discrete interface {
+	AsBoolean() bool
+	AsInteger() int
 }
 
-// This public singleton exports a unique name space for the citation class.
-var Citation = &citations_{}
-
-// This public singleton exports a unique name space for the duration class.
-var Duration = &durations_{
-	millisecondsPerSecond,
-	millisecondsPerMinute,
-	millisecondsPerHour,
-	millisecondsPerDay,
-	millisecondsPerWeek,
-	millisecondsPerMonth,
-	millisecondsPerYear,
-	daysPerMonth,
-	daysPerYear,
-	weeksPerMonth,
+// This abstract interface defines the set of method signatures that must be
+// supported by all lexical string types.
+type Lexical interface {
+	AsString() string
 }
 
-// This public singleton exports a unique name space for the float class.
-var Float = &floats_{
-	float_(mat.Inf(-1)), // minimum
-	float_(mat.Inf(1)),  // maximum
+// This abstract interface defines the set of method signatures that must be
+// supported by all matchable pattern types.
+type Matchable interface {
+	MatchesText(text string) bool
+	GetMatches(text string) []string
 }
 
-// This public singleton exports a unique name space for the integer class.
-var Integer = &integers_{
-	integer_(mat.MinInt), // minimum
-	integer_(mat.MaxInt), // maximum
+// This abstract interface defines the set of method signatures that must be
+// supported by all named identifier types.
+type Named interface {
+	GetName() string
 }
 
-// This public singleton exports a unique name space for the moment class.
-var Moment = &moments_{
-	moment_(0), // UNIX Epoch
+// This abstract interface defines the set of method signatures that must be
+// supported by all polarized numeric types.
+type Polarized interface {
+	IsNegative() bool
 }
 
-// This public singleton exports a unique name space for the number class.
-var Number = &numbers_{
-	number_(complex(0, 0)),          // 0
-	number_(complex(1, 0)),          // 1
-	number_(complex(0, 1)),          // i
-	number_(complex(mat.E, 0)),      // e
-	number_(complex(mat.Pi, 0)),     // pi
-	number_(complex(mat.Phi, 0)),    // phi
-	number_(complex(2.0*mat.Pi, 0)), // tau
-	number_(cmp.Inf()),              // infinity
-	number_(cmp.NaN()),              // undefined
+// This abstract interface defines the set of method signatures that must be
+// supported by all segmented string types.
+type Segmented interface {
+	GetScheme() string
+	GetAuthority() string
+	GetPath() string
+	GetQuery() string
+	GetFragment() string
 }
 
-// This public singleton exports a unique name space for the pattern class.
-var Pattern = &patterns_{
-	pattern_(`.*`),     // any
-	pattern_(`^none$`), // none
+// This abstract interface defines the set of method signatures that must be
+// supported by all temporal duration types.
+type Temporal interface {
+	// Return the entire time in specific units.
+	AsMilliseconds() float64
+	AsSeconds() float64
+	AsMinutes() float64
+	AsHours() float64
+	AsDays() float64
+	AsWeeks() float64
+	AsMonths() float64
+	AsYears() float64
+
+	// Return a specific part of the entire time.
+	GetMilliseconds() int
+	GetSeconds() int
+	GetMinutes() int
+	GetHours() int
+	GetDays() int
+	GetWeeks() int
+	GetMonths() int
+	GetYears() int
 }
 
-// This public singleton exports a unique name space for the percentage class.
-var Percentage = &percentages_{}
-
-// This public singleton exports a unique name space for the probability class.
-var Probability = &probabilities_{
-	probability_(0), // minimum
-	probability_(1), // maximum
+// This abstract interface defines the set of method signatures that must be
+// supported by all versioned identifier types.
+type Versioned interface {
+	GetVersion() string
 }
 
-// This public singleton exports a unique name space for the resource class.
-var Resource = &resources_{}
+// Abstract Types
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all angle-like types.
+type AngleLike interface {
+	Continuous
+	Lexical
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all boolean-like types.
+type BooleanLike interface {
+	Discrete
+	Lexical
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all character-like types.
+type CharacterLike interface {
+	Discrete
+	Lexical
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all citation-like types.
+type CitationLike interface {
+	Lexical
+	Named
+	Versioned
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all duration-like types.
+type DurationLike interface {
+	Discrete
+	Lexical
+	Polarized
+	Temporal
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all float-like types.
+type FloatLike interface {
+	Continuous
+	Lexical
+	Polarized
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all integer-like types.
+type IntegerLike interface {
+	Discrete
+	Lexical
+	Polarized
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all moment-like types.
+type MomentLike interface {
+	Discrete
+	Lexical
+	Temporal
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all number-like types.
+type NumberLike interface {
+	Complex
+	Continuous
+	Lexical
+	Polarized
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all pattern-like types.
+type PatternLike interface {
+	Lexical
+	Matchable
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all percentage-like types.
+type PercentageLike interface {
+	Continuous
+	Discrete
+	Lexical
+	Polarized
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all probability-like types.
+type ProbabilityLike interface {
+	Continuous
+	Discrete
+	Lexical
+}
+
+// This abstract type defines the set of abstract interfaces that must be
+// supported by all resource-like types.
+type ResourceLike interface {
+	Lexical
+	Segmented
+}
 
 // PACKAGE FUNCTIONS
+
+// Private Functions
 
 // This private function returns the complex number associated with the
 // specified regular expression matches.
@@ -417,4 +552,148 @@ func stringFromImaginary(imaginary float64) string {
 		string_ = stringFromFloat(imaginary) + "i"
 	}
 	return string_
+}
+
+// PACKAGE CLASSES
+
+// This function returns a reference to the angle class type and
+// initializes any class constants.
+func Angle() *angleClass_ {
+	var class = &angleClass_{
+		angle_(0.0),    // Angle.Zero()
+		angle_(mat.Pi), // Angle.Pi()
+		angle_(tau),    // Angle.Tau()
+	}
+	return class
+}
+
+// This function returns a reference to the boolean class type and
+// initializes any class constants.
+func Boolean() *booleanClass_ {
+	var class = &booleanClass_{
+		boolean_(false), // Boolean.False()
+		boolean_(true),  // Boolean.True()
+	}
+	return class
+}
+
+// This function returns a reference to the character class type and
+// initializes any class constants.
+func Character() *characterClass_ {
+	var class = &characterClass_{
+		character_(0),            // Character.Minimum()
+		character_(mat.MaxInt32), // Character.Maximum()
+	}
+	return class
+}
+
+// This function returns a reference to the citation class type and
+// initializes any class constants.
+func Citation() *citationClass_ {
+	var class = &citationClass_{
+		// No class constants to initialize.
+	}
+	return class
+}
+
+// This function returns a reference to the duration class type and
+// initializes any class constants.
+func Duration() *durationClass_ {
+	var class = &durationClass_{
+		millisecondsPerSecond, // Duration.MillisecondsPerSecond()
+		millisecondsPerMinute, // Duration.MillisecondsPerMinute()
+		millisecondsPerHour,   // Duration.MillisecondsPerHour()
+		millisecondsPerDay,    // Duration.MillisecondsPerDay()
+		millisecondsPerWeek,   // Duration.MillisecondsPerWeek()
+		millisecondsPerMonth,  // Duration.MillisecondsPerMonth()
+		millisecondsPerYear,   // Duration.MillisecondsPerYear()
+		daysPerMonth,          // Duration.DaysPerMonth()
+		daysPerYear,           // Duration.DaysPerYear()
+		weeksPerMonth,         // Duration.WeeksPerMonth()
+	}
+	return class
+}
+
+// This function returns a reference to the float class type and
+// initializes any class constants.
+func Float() *floatClass_ {
+	var class = &floatClass_{
+		float_(mat.Inf(-1)), // Float.Minimum()
+		float_(mat.Inf(1)),  // Float.Maximum()
+	}
+	return class
+}
+
+// This function returns a reference to the integer class type and
+// initializes any class constants.
+func Integer() *integerClass_ {
+	var class = &integerClass_{
+		integer_(mat.MinInt), // Integer.Minimum()
+		integer_(mat.MaxInt), // Integer.Maximum()
+	}
+	return class
+}
+
+// This function returns a reference to the moment class type and
+// initializes any class constants.
+func Moment() *momentClass_ {
+	var class = &momentClass_{
+		moment_(0), // Moment.Epoch()
+	}
+	return class
+}
+
+// This function returns a reference to the number class type and
+// initializes any class constants.
+func Number() *numberClass_ {
+	var class = &numberClass_{
+		number_(complex(0, 0)),          // Number.Zero()
+		number_(complex(1, 0)),          // Number.One()
+		number_(complex(0, 1)),          // Number.I()
+		number_(complex(mat.E, 0)),      // Number.E()
+		number_(complex(mat.Pi, 0)),     // Number.Pi()
+		number_(complex(mat.Phi, 0)),    // Number.Phi()
+		number_(complex(2.0*mat.Pi, 0)), // Number.Tau()
+		number_(cmp.Inf()),              // Number.Infinity()
+		number_(cmp.NaN()),              // Number.Undefined()
+	}
+	return class
+}
+
+// This function returns a reference to the pattern class type and
+// initializes any class constants.
+func Pattern() *patternClass_ {
+	var class = &patternClass_{
+		pattern_(`.*`),     // Pattern.Any()
+		pattern_(`^none$`), // Pattern.None()
+	}
+	return class
+}
+
+// This function returns a reference to the percentage class type and
+// initializes any class constants.
+func Percentage() *percentageClass_ {
+	var class = &percentageClass_{
+		// No class constants to initialize.
+	}
+	return class
+}
+
+// This function returns a reference to the probability class type and
+// initializes any class constants.
+func Probability() *probabilityClass_ {
+	var class = &probabilityClass_{
+		probability_(0), // Probability.Minimum()
+		probability_(1), // Probability.Maximum()
+	}
+	return class
+}
+
+// This function returns a reference to the resource class type and
+// initializes any class constants.
+func Resource() *resourceClass_ {
+	var class = &resourceClass_{
+		// No class constants to initialize.
+	}
+	return class
 }

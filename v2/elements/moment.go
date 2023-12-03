@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 	stc "strconv"
@@ -31,26 +30,26 @@ type moment_ int
 
 // This private type defines the structure associated with the class constants
 // and class functions for the moment elements.
-type moments_ struct {
-	epoch abs.MomentLike
+type momentClass_ struct {
+	epoch MomentLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the earliest value for a moment in time element.
-func (c *moments_) MinimumValue() abs.MomentLike {
+func (c *momentClass_) MinimumValue() MomentLike {
 	var moment = c.FromMilliseconds(mat.MinInt)
 	return moment
 }
 
 // This class constant represents the latest value for a moment in time element.
-func (c *moments_) MaximumValue() abs.MomentLike {
+func (c *momentClass_) MaximumValue() MomentLike {
 	var moment = c.FromMilliseconds(mat.MaxInt)
 	return moment
 }
 
 // This class constant represents the moment of the UNIX Epoch.
-func (c *moments_) Epoch() abs.MomentLike {
+func (c *momentClass_) Epoch() MomentLike {
 	return c.epoch
 }
 
@@ -58,7 +57,7 @@ func (c *moments_) Epoch() abs.MomentLike {
 
 // This constructor creates a new moment in time element for the current time
 // in the UTC timezone.
-func (c *moments_) Now() abs.MomentLike {
+func (c *momentClass_) Now() MomentLike {
 	var now = int(tim.Now().UTC().UnixMilli())
 	var moment = c.FromMilliseconds(now)
 	return moment
@@ -66,14 +65,14 @@ func (c *moments_) Now() abs.MomentLike {
 
 // This constructor creates a new moment in time element from the specified
 // integer number of milliseconds since the UNIX Epoch in the UTC timezone.
-func (c *moments_) FromMilliseconds(milliseconds int) abs.MomentLike {
+func (c *momentClass_) FromMilliseconds(milliseconds int) MomentLike {
 	var moment = moment_(milliseconds)
 	return moment
 }
 
 // This constructor creates a new moment in time element from the specified
 // string value.
-func (c *moments_) FromString(string_ string) abs.MomentLike {
+func (c *momentClass_) FromString(string_ string) MomentLike {
 	var matches = uti.MomentMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a moment from an invalid string: %v", string_)
@@ -181,13 +180,13 @@ func (v moment_) AsWeeks() float64 {
 // This method returns the total number of months since the UNIX Epoch
 // in this moment.
 func (v moment_) AsMonths() float64 {
-	return v.AsDays() / Duration.DaysPerMonth()
+	return v.AsDays() / Duration().DaysPerMonth()
 }
 
 // This method returns the total number of years since the UNIX Epoch
 // in this moment.
 func (v moment_) AsYears() float64 {
-	return v.AsDays() / Duration.DaysPerYear()
+	return v.AsDays() / Duration().DaysPerYear()
 }
 
 // This method returns the millisecond part of this moment.
@@ -252,18 +251,18 @@ func (v moment_) asTime() tim.Time {
 
 // This library function returns the duration of time between the two specified
 // moments in tim.
-func (c *moments_) Duration(first, second abs.MomentLike) abs.DurationLike {
-	return Duration.FromMilliseconds(second.AsInteger() - first.AsInteger())
+func (c *momentClass_) Duration(first, second MomentLike) DurationLike {
+	return Duration().FromMilliseconds(second.AsInteger() - first.AsInteger())
 }
 
 // This library function returns the moment in time that is earlier than the
 // specified moment in time by the specified duration of tim.
-func (c *moments_) Earlier(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+func (c *momentClass_) Earlier(moment MomentLike, duration DurationLike) MomentLike {
 	return c.FromMilliseconds(moment.AsInteger() - duration.AsInteger())
 }
 
 // This library function returns the moment in time that is later than the
 // specified moment in time by the specified duration of tim.
-func (c *moments_) Later(moment abs.MomentLike, duration abs.DurationLike) abs.MomentLike {
+func (c *momentClass_) Later(moment MomentLike, duration DurationLike) MomentLike {
 	return c.FromMilliseconds(moment.AsInteger() + duration.AsInteger())
 }

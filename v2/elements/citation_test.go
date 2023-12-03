@@ -16,8 +16,10 @@ import (
 	tes "testing"
 )
 
+var Citation = ele.Citation()
+
 func TestCitation(t *tes.T) {
-	var v1 = ele.Citation.FromString("/bali/types/abstractions/String/v1.2.3")
+	var v1 = Citation.FromString("/bali/types/abstractions/String/v1.2.3")
 	ass.Equal(t, "/bali/types/abstractions/String/v1.2.3", v1.AsString())
 	ass.Equal(t, "/bali/types/abstractions/String", v1.GetName())
 	ass.Equal(t, "v1.2.3", v1.GetVersion())

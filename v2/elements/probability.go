@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	stc "strconv"
 )
@@ -25,20 +24,20 @@ type probability_ float64
 
 // This private type defines the structure associated with the class constants
 // and class functions for the probability elements.
-type probabilities_ struct {
-	minimum abs.ProbabilityLike
-	maximum abs.ProbabilityLike
+type probabilityClass_ struct {
+	minimum ProbabilityLike
+	maximum ProbabilityLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for a probability element.
-func (c *probabilities_) MinimumValue() abs.ProbabilityLike {
+func (c *probabilityClass_) MinimumValue() ProbabilityLike {
 	return c.minimum
 }
 
 // This class constant represents the maximum value for a probability element.
-func (c *probabilities_) MaximumValue() abs.ProbabilityLike {
+func (c *probabilityClass_) MaximumValue() ProbabilityLike {
 	return c.maximum
 }
 
@@ -46,8 +45,8 @@ func (c *probabilities_) MaximumValue() abs.ProbabilityLike {
 
 // This constructor creates a new probability element and constrains the value
 // to be in the allowed range for probabilities [0..1].
-func (c *probabilities_) FromFloat(float float64) abs.ProbabilityLike {
-	var probability abs.ProbabilityLike
+func (c *probabilityClass_) FromFloat(float float64) ProbabilityLike {
+	var probability ProbabilityLike
 	switch {
 	case float < 0.0:
 		probability = probability_(0.0)
@@ -61,8 +60,8 @@ func (c *probabilities_) FromFloat(float float64) abs.ProbabilityLike {
 
 // This constructor creates a new probability element from the specified boolean
 // value.
-func (c *probabilities_) FromBool(boolean bool) abs.ProbabilityLike {
-	var probability abs.ProbabilityLike
+func (c *probabilityClass_) FromBool(boolean bool) ProbabilityLike {
+	var probability ProbabilityLike
 	switch boolean {
 	case true:
 		probability = probability_(1)
@@ -73,7 +72,7 @@ func (c *probabilities_) FromBool(boolean bool) abs.ProbabilityLike {
 }
 
 // This constructor creates a new probability element from the specified string.
-func (c *probabilities_) FromString(string_ string) abs.ProbabilityLike {
+func (c *probabilityClass_) FromString(string_ string) ProbabilityLike {
 	var matches = uti.ProbabilityMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a probability from an invalid string: %v", string_)
@@ -85,7 +84,7 @@ func (c *probabilities_) FromString(string_ string) abs.ProbabilityLike {
 }
 
 // This constructor creates a new random probability.
-func (c *probabilities_) Random() abs.ProbabilityLike {
+func (c *probabilityClass_) Random() ProbabilityLike {
 	var probability = probability_(uti.RandomProbability())
 	return probability
 }
@@ -156,30 +155,30 @@ func (v probability_) AsString() string {
 
 // This library function returns the logical inverse of the specified
 // probability.
-func (l *probabilities_) Not(probability abs.ProbabilityLike) abs.ProbabilityLike {
+func (l *probabilityClass_) Not(probability ProbabilityLike) ProbabilityLike {
 	return probability_(1.0 - probability.AsFloat())
 }
 
 // This library function returns the logical conjunction of the specified
 // probability elements.
-func (l *probabilities_) And(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+func (l *probabilityClass_) And(first, second ProbabilityLike) ProbabilityLike {
 	return probability_(first.AsFloat() * second.AsFloat())
 }
 
 // This library function returns the logical material non-implication of the
 // specified probability elements.
-func (l *probabilities_) Sans(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+func (l *probabilityClass_) Sans(first, second ProbabilityLike) ProbabilityLike {
 	return probability_(first.AsFloat() * (1.0 - second.AsFloat()))
 }
 
 // This library function returns the logical disjunction of the specified
 // probability elements.
-func (l *probabilities_) Or(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+func (l *probabilityClass_) Or(first, second ProbabilityLike) ProbabilityLike {
 	return probability_(first.AsFloat() + second.AsFloat() - (first.AsFloat() * second.AsFloat()))
 }
 
 // This library function returns the logical exclusive disjunction of the
 // specified probability elements.
-func (l *probabilities_) Xor(first, second abs.ProbabilityLike) abs.ProbabilityLike {
+func (l *probabilityClass_) Xor(first, second ProbabilityLike) ProbabilityLike {
 	return probability_(first.AsFloat() + second.AsFloat() - (2.0 * first.AsFloat() * second.AsFloat()))
 }

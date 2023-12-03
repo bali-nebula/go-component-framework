@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	reg "regexp"
 )
@@ -26,28 +25,28 @@ type pattern_ string
 
 // This private type defines the structure associated with the class constants
 // and class functions for the pattern elements.
-type patterns_ struct {
-	any_ abs.PatternLike
-	none abs.PatternLike
+type patternClass_ struct {
+	any_ PatternLike
+	none PatternLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the pattern that matches any string.
-func (c *patterns_) Any() abs.PatternLike {
+func (c *patternClass_) Any() PatternLike {
 	return c.any_
 }
 
 // This class constant represents the pattern that only matches the "none"
 // string.
-func (c *patterns_) None() abs.PatternLike {
+func (c *patternClass_) None() PatternLike {
 	return c.none
 }
 
 // CLASS CONSTRUCTORS
 
 // This constructor creates a new pattern element from the specified string.
-func (c *patterns_) FromString(string_ string) abs.PatternLike {
+func (c *patternClass_) FromString(string_ string) PatternLike {
 	var matches = uti.PatternMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a pattern from an invalid string: %v", string_)

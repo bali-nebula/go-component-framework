@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 	cmp "math/cmplx"
@@ -27,72 +26,72 @@ type number_ complex128
 
 // This private type defines the structure associated with the class constants
 // and class functions for the number elements.
-type numbers_ struct {
-	zero      abs.NumberLike
-	one       abs.NumberLike
-	i         abs.NumberLike
-	e         abs.NumberLike
-	pi        abs.NumberLike
-	phi       abs.NumberLike
-	tau       abs.NumberLike
-	infinity  abs.NumberLike
-	undefined abs.NumberLike
+type numberClass_ struct {
+	zero      NumberLike
+	one       NumberLike
+	i         NumberLike
+	e         NumberLike
+	pi        NumberLike
+	phi       NumberLike
+	tau       NumberLike
+	infinity  NumberLike
+	undefined NumberLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for a number.
-func (c *numbers_) MinimumValue() abs.NumberLike {
+func (c *numberClass_) MinimumValue() NumberLike {
 	return c.zero
 }
 
 // This class constant represents the maximum value for a number.
-func (c *numbers_) MaximumValue() abs.NumberLike {
+func (c *numberClass_) MaximumValue() NumberLike {
 	return c.infinity
 }
 
 // This class constant represents the number zero.
-func (c *numbers_) Zero() abs.NumberLike {
+func (c *numberClass_) Zero() NumberLike {
 	return c.zero
 }
 
 // This class constant represents the number one.
-func (c *numbers_) One() abs.NumberLike {
+func (c *numberClass_) One() NumberLike {
 	return c.one
 }
 
 // This class constant represents the number i.
-func (c *numbers_) I() abs.NumberLike {
+func (c *numberClass_) I() NumberLike {
 	return c.i
 }
 
 // This class constant represents the number e.
-func (c *numbers_) E() abs.NumberLike {
+func (c *numberClass_) E() NumberLike {
 	return c.e
 }
 
 // This class constant represents the number pi.
-func (c *numbers_) Pi() abs.NumberLike {
+func (c *numberClass_) Pi() NumberLike {
 	return c.pi
 }
 
 // This class constant represents the number phi.
-func (c *numbers_) Phi() abs.NumberLike {
+func (c *numberClass_) Phi() NumberLike {
 	return c.phi
 }
 
 // This class constant represents the number tau.
-func (c *numbers_) Tau() abs.NumberLike {
+func (c *numberClass_) Tau() NumberLike {
 	return c.tau
 }
 
 // This class constant represents an infinite number.
-func (c *numbers_) Infinity() abs.NumberLike {
+func (c *numberClass_) Infinity() NumberLike {
 	return c.infinity
 }
 
 // This class constant represents an undefined number.
-func (c *numbers_) Undefined() abs.NumberLike {
+func (c *numberClass_) Undefined() NumberLike {
 	return c.undefined
 }
 
@@ -154,8 +153,8 @@ func (c *numbers_) Undefined() abs.NumberLike {
 // crutch that leads to misleading convergence information for oscillating
 // functions. In the case of numerical analysis it is probably better to track
 // the course of the function as it converges than to look at the final value.
-func (c *numbers_) FromComplex(complex_ complex128) abs.NumberLike {
-	var number abs.NumberLike
+func (c *numberClass_) FromComplex(complex_ complex128) NumberLike {
+	var number NumberLike
 	switch {
 	case cmp.Abs(complex_) == 0:
 		// Normalize all versions of zero.
@@ -176,14 +175,14 @@ func (c *numbers_) FromComplex(complex_ complex128) abs.NumberLike {
 }
 
 // This constructor creates a new number from the specified polar values.
-func (c *numbers_) FromPolar(magnitude float64, phase float64) abs.NumberLike {
+func (c *numberClass_) FromPolar(magnitude float64, phase float64) NumberLike {
 	var complex_ = cmp.Rect(magnitude, phase)
 	var number = c.FromComplex(complex_)
 	return number
 }
 
 // This constructor creates a new number from the specified string value.
-func (c *numbers_) FromString(string_ string) abs.NumberLike {
+func (c *numberClass_) FromString(string_ string) NumberLike {
 	var matches = uti.NumberMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a number from an invalid string: %v", string_)
@@ -286,45 +285,45 @@ func (v number_) IsNegative() bool {
 // CLASS FUNCTIONS
 
 // This library function returns the inverse of the specified number.
-func (c *numbers_) Inverse(number abs.NumberLike) abs.NumberLike {
+func (c *numberClass_) Inverse(number NumberLike) NumberLike {
 	number = c.FromComplex(-number.AsComplex())
 	return number
 }
 
 // This library function returns the sum of the specified numbers.
-func (c *numbers_) Sum(first, second abs.NumberLike) abs.NumberLike {
+func (c *numberClass_) Sum(first, second NumberLike) NumberLike {
 	var number = c.FromComplex(first.AsComplex() + second.AsComplex())
 	return number
 }
 
 // This library function returns the difference of the specified numbers.
-func (c *numbers_) Difference(first, second abs.NumberLike) abs.NumberLike {
+func (c *numberClass_) Difference(first, second NumberLike) NumberLike {
 	var number = c.FromComplex(first.AsComplex() - second.AsComplex())
 	return number
 }
 
 // This library function returns the specified number scaled by the specified
 // factor.
-func (c *numbers_) Scaled(number abs.NumberLike, factor float64) abs.NumberLike {
+func (c *numberClass_) Scaled(number NumberLike, factor float64) NumberLike {
 	number = c.Product(number, c.FromComplex(complex(factor, 0)))
 	return number
 }
 
 // This library function returns the reciprocal of the specified number.
-func (c *numbers_) Reciprocal(number abs.NumberLike) abs.NumberLike {
+func (c *numberClass_) Reciprocal(number NumberLike) NumberLike {
 	number = c.FromComplex(1.0 / number.AsComplex())
 	return number
 }
 
 // This library function returns the complex conjugate of the specified number.
-func (c *numbers_) Conjugate(number abs.NumberLike) abs.NumberLike {
+func (c *numberClass_) Conjugate(number NumberLike) NumberLike {
 	number = c.FromComplex(cmp.Conj(number.AsComplex()))
 	return number
 }
 
 // This library function returns the product of the specified numbers.
-func (c *numbers_) Product(first, second abs.NumberLike) abs.NumberLike {
-	var number abs.NumberLike
+func (c *numberClass_) Product(first, second NumberLike) NumberLike {
+	var number NumberLike
 	switch {
 	case first.IsUndefined() || second.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -342,8 +341,8 @@ func (c *numbers_) Product(first, second abs.NumberLike) abs.NumberLike {
 }
 
 // This library function returns the quotient of the specified numbers.
-func (c *numbers_) Quotient(first, second abs.NumberLike) abs.NumberLike {
-	var number abs.NumberLike
+func (c *numberClass_) Quotient(first, second NumberLike) NumberLike {
+	var number NumberLike
 	switch {
 	case first.IsUndefined() || second.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -373,7 +372,7 @@ func (c *numbers_) Quotient(first, second abs.NumberLike) abs.NumberLike {
 }
 
 // This library function returns the remainder of the specified numbers.
-func (c *numbers_) Remainder(first, second abs.NumberLike) abs.NumberLike {
+func (c *numberClass_) Remainder(first, second NumberLike) NumberLike {
 	var m1 = cmp.Abs(first.AsComplex())
 	var p1 = cmp.Phase(first.AsComplex())
 	var m2 = cmp.Abs(second.AsComplex())
@@ -386,8 +385,8 @@ func (c *numbers_) Remainder(first, second abs.NumberLike) abs.NumberLike {
 
 // This library function returns the result of raising the specified base to the
 // specified exponent.
-func (c *numbers_) Power(base, exponent abs.NumberLike) abs.NumberLike {
-	var number abs.NumberLike
+func (c *numberClass_) Power(base, exponent NumberLike) NumberLike {
+	var number NumberLike
 	switch {
 	case base.IsUndefined() || exponent.IsUndefined():
 		// Any undefined arguments result in an undefined result.
@@ -424,7 +423,7 @@ func (c *numbers_) Power(base, exponent abs.NumberLike) abs.NumberLike {
 
 // This library function returns the result of taking the logarithm using the
 // specified base of the specified number.
-func (c *numbers_) Logarithm(base, number abs.NumberLike) abs.NumberLike {
+func (c *numberClass_) Logarithm(base, number NumberLike) NumberLike {
 	// logB(z) => ln(z) / ln(b)
 	var lnB = cmp.Log(base.AsComplex())
 	var lnZ = cmp.Log(number.AsComplex())

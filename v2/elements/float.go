@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 )
@@ -25,32 +24,32 @@ type float_ float64
 
 // This private type defines the structure associated with the class constants
 // and class functions for the float elements.
-type floats_ struct {
-	minimum abs.FloatLike
-	maximum abs.FloatLike
+type floatClass_ struct {
+	minimum FloatLike
+	maximum FloatLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for a float endpoint.
-func (c *floats_) MinimumValue() abs.FloatLike {
+func (c *floatClass_) MinimumValue() FloatLike {
 	return c.minimum
 }
 
 // This class constant represents the maximum value for a float endpoint.
-func (c *floats_) MaximumValue() abs.FloatLike {
+func (c *floatClass_) MaximumValue() FloatLike {
 	return c.maximum
 }
 
 // CLASS CONSTRUCTORS
 
 // This constructor creates a new float element from the specified float.
-func (c *floats_) FromFloat(float float64) abs.FloatLike {
+func (c *floatClass_) FromFloat(float float64) FloatLike {
 	return float_(float)
 }
 
 // This constructor creates a new float element from the specified string.
-func (c *floats_) FromString(string_ string) abs.FloatLike {
+func (c *floatClass_) FromString(string_ string) FloatLike {
 	var matches = uti.FloatMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a float from an invalid string: %v", string_)

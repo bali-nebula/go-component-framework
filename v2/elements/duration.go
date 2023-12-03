@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 	stc "strconv"
@@ -28,7 +27,7 @@ type duration_ int
 
 // This private type defines the structure associated with the class constants
 // and class functions for the duration elements.
-type durations_ struct {
+type durationClass_ struct {
 	millisecondsPerSecond int
 	millisecondsPerMinute int
 	millisecondsPerHour   int
@@ -44,64 +43,64 @@ type durations_ struct {
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for a duration of time.
-func (c *durations_) MinimumValue() abs.DurationLike {
+func (c *durationClass_) MinimumValue() DurationLike {
 	var duration = c.FromMilliseconds(0)
 	return duration
 }
 
 // This class constant represents the maximum value for a duration of time.
-func (c *durations_) MaximumValue() abs.DurationLike {
+func (c *durationClass_) MaximumValue() DurationLike {
 	var duration = c.FromMilliseconds(mat.MaxInt)
 	return duration
 }
 
 // This class constant represents the number of milliseconds in a second.
-func (c *durations_) MillisecondsPerSecond() int {
+func (c *durationClass_) MillisecondsPerSecond() int {
 	return c.millisecondsPerSecond
 }
 
 // This class constant represents the number of milliseconds in a minute.
-func (c *durations_) MillisecondsPerMinute() int {
+func (c *durationClass_) MillisecondsPerMinute() int {
 	return c.millisecondsPerMinute
 }
 
 // This class constant represents the number of milliseconds in a hour.
-func (c *durations_) MillisecondsPerHour() int {
+func (c *durationClass_) MillisecondsPerHour() int {
 	return c.millisecondsPerHour
 }
 
 // This class constant represents the number of milliseconds in a day.
-func (c *durations_) MillisecondsPerDay() int {
+func (c *durationClass_) MillisecondsPerDay() int {
 	return c.millisecondsPerDay
 }
 
 // This class constant represents the number of milliseconds in a week.
-func (c *durations_) MillisecondsPerWeek() int {
+func (c *durationClass_) MillisecondsPerWeek() int {
 	return c.millisecondsPerWeek
 }
 
 // This class constant represents the number of milliseconds in a month.
-func (c *durations_) MillisecondsPerMonth() int {
+func (c *durationClass_) MillisecondsPerMonth() int {
 	return c.millisecondsPerMonth
 }
 
 // This class constant represents the number of milliseconds in a year.
-func (c *durations_) MillisecondsPerYear() int {
+func (c *durationClass_) MillisecondsPerYear() int {
 	return c.millisecondsPerYear
 }
 
 // This class constant represents the number of days in a month.
-func (c *durations_) DaysPerMonth() float64 {
+func (c *durationClass_) DaysPerMonth() float64 {
 	return c.daysPerMonth
 }
 
 // This class constant represents the number of days in a year.
-func (c *durations_) DaysPerYear() float64 {
+func (c *durationClass_) DaysPerYear() float64 {
 	return c.daysPerYear
 }
 
 // This class constant represents the number of weeks in a month.
-func (c *durations_) WeeksPerMonth() float64 {
+func (c *durationClass_) WeeksPerMonth() float64 {
 	return c.weeksPerMonth
 }
 
@@ -109,13 +108,13 @@ func (c *durations_) WeeksPerMonth() float64 {
 
 // This constructor creates a new duration of time element from the specified
 // integer number of milliseconds.
-func (c *durations_) FromMilliseconds(milliseconds int) abs.DurationLike {
+func (c *durationClass_) FromMilliseconds(milliseconds int) DurationLike {
 	var duration = duration_(milliseconds)
 	return duration
 }
 
 // This constructor creates a new duration from the specified string value.
-func (c *durations_) FromString(string_ string) abs.DurationLike {
+func (c *durationClass_) FromString(string_ string) DurationLike {
 	var matches = uti.DurationMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a duration from an invalid string: %v", string_)

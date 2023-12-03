@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 	stc "strconv"
@@ -27,25 +26,25 @@ type percentage_ float64
 
 // This private type defines the structure associated with the class constants
 // and class functions for the percentage elements.
-type percentages_ struct {
+type percentageClass_ struct {
 	// This class has no class constants.
 }
 
 // CLASS CONSTRUCTORS
 
 // This constructor creates a new percentage element from the specified integer.
-func (c *percentages_) FromInt(integer int) abs.PercentageLike {
+func (c *percentageClass_) FromInt(integer int) PercentageLike {
 	return percentage_(float64(integer))
 }
 
 // This constructor creates a new percentage element from the specified floating
 // point value.
-func (c *percentages_) FromFloat(float float64) abs.PercentageLike {
+func (c *percentageClass_) FromFloat(float float64) PercentageLike {
 	return percentage_(float)
 }
 
 // This constructor creates a new percentage element from the specified string.
-func (c *percentages_) FromString(string_ string) abs.PercentageLike {
+func (c *percentageClass_) FromString(string_ string) PercentageLike {
 	var matches = uti.PercentageMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a percentage from an invalid string: %v", string_)

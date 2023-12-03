@@ -17,20 +17,22 @@ import (
 	tes "testing"
 )
 
+var Integer = ele.Integer()
+
 func TestZeroIntegers(t *tes.T) {
-	var v = ele.Integer.FromString(`0`)
+	var v = Integer.FromString(`0`)
 	ass.Equal(t, `0`, v.AsString())
 }
 
 func TestPositiveIntegers(t *tes.T) {
-	var v = ele.Integer.FromString(`42`)
+	var v = Integer.FromString(`42`)
 	ass.Equal(t, `42`, v.AsString())
 
-	v = ele.Integer.FromString(`+5`)
+	v = Integer.FromString(`+5`)
 	ass.Equal(t, `5`, v.AsString())
 }
 
 func TestNegativeIntegers(t *tes.T) {
-	var v = ele.Integer.FromString(`-1`)
+	var v = Integer.FromString(`-1`)
 	ass.Equal(t, `-1`, v.AsString())
 }

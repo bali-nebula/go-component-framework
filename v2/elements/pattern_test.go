@@ -16,8 +16,10 @@ import (
 	tes "testing"
 )
 
+var Pattern = ele.Pattern()
+
 func TestNonePattern(t *tes.T) {
-	var v = ele.Pattern.FromString(`none`)
+	var v = Pattern.FromString(`none`)
 	ass.Equal(t, `none`, v.AsString())
 
 	var text = ""
@@ -34,7 +36,7 @@ func TestNonePattern(t *tes.T) {
 }
 
 func TestAnyPattern(t *tes.T) {
-	var v = ele.Pattern.FromString(`any`)
+	var v = Pattern.FromString(`any`)
 	ass.Equal(t, `any`, v.AsString())
 
 	var text = ""
@@ -51,7 +53,7 @@ func TestAnyPattern(t *tes.T) {
 }
 
 func TestSomePattern(t *tes.T) {
-	var v = ele.Pattern.FromString(`"c(.+t)"?`)
+	var v = Pattern.FromString(`"c(.+t)"?`)
 	ass.Equal(t, `"c(.+t)"?`, v.AsString())
 
 	var text = "ct"

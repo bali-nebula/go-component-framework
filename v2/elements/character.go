@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	stc "strconv"
 	utf "unicode/utf8"
@@ -26,37 +25,37 @@ type character_ int32
 
 // This private type defines the structure associated with the class constants
 // and class functions for the character elements.
-type characters_ struct {
-	minimum abs.CharacterLike
-	maximum abs.CharacterLike
+type characterClass_ struct {
+	minimum CharacterLike
+	maximum CharacterLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for a character endpoint.
-func (c *characters_) MinimumValue() abs.CharacterLike {
+func (c *characterClass_) MinimumValue() CharacterLike {
 	return c.minimum
 }
 
 // This class constant represents the maximum value for a character endpoint.
-func (c *characters_) MaximumValue() abs.CharacterLike {
+func (c *characterClass_) MaximumValue() CharacterLike {
 	return c.maximum
 }
 
 // CLASS CONSTRUCTORS
 
 // This constructor creates a new character element from the specified rune.
-func (c *characters_) FromRune(rune_ rune) abs.CharacterLike {
+func (c *characterClass_) FromRune(rune_ rune) CharacterLike {
 	return character_(rune_)
 }
 
 // This constructor creates a new character element from the specified integer.
-func (c *characters_) FromInteger(integer int) abs.CharacterLike {
+func (c *characterClass_) FromInteger(integer int) CharacterLike {
 	return character_(int32(integer))
 }
 
 // This constructor creates a new character element from the specified string.
-func (c *characters_) FromString(string_ string) abs.CharacterLike {
+func (c *characterClass_) FromString(string_ string) CharacterLike {
 	var matches = uti.CharacterMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a character from an invalid string: %v", string_)

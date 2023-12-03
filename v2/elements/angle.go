@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	mat "math"
 	stc "strconv"
@@ -26,44 +25,44 @@ type angle_ float64
 
 // This private type defines the structure associated with the class constants
 // and class functions for the angle elements.
-type angles_ struct {
-	zero abs.AngleLike
-	pi   abs.AngleLike
-	tau  abs.AngleLike
+type angleClass_ struct {
+	zero AngleLike
+	pi   AngleLike
+	tau  AngleLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for an angle.
-func (c *angles_) MinimumValue() abs.AngleLike {
+func (c *angleClass_) MinimumValue() AngleLike {
 	return c.zero
 }
 
 // This class constant represents the maximum value for an angle.
-func (c *angles_) MaximumValue() abs.AngleLike {
+func (c *angleClass_) MaximumValue() AngleLike {
 	return c.tau
 }
 
 // This class constant represents an angle of zero.
-func (c *angles_) Zero() abs.AngleLike {
+func (c *angleClass_) Zero() AngleLike {
 	return c.zero
 }
 
 // This class constant represents an angle of pi.
-func (c *angles_) Pi() abs.AngleLike {
+func (c *angleClass_) Pi() AngleLike {
 	return c.pi
 }
 
 // This class constant represents an angle of tau.
-func (c *angles_) Tau() abs.AngleLike {
+func (c *angleClass_) Tau() AngleLike {
 	return c.tau
 }
 
 // CLASS CONSTRUCTORS
 
 // This constructor creates a new angle from the specified float value and
-// normalizes the value to be in the allowed range for angles [0..τ).
-func (c *angles_) FromFloat(float float64) abs.AngleLike {
+// normalizes the value to be in the allowed range for angleClass [0..τ).
+func (c *angleClass_) FromFloat(float float64) AngleLike {
 	if float < -tau || float >= tau {
 		// Normalize the angle to the range [-τ..τ).
 		float = mat.Remainder(float, tau)
@@ -77,8 +76,8 @@ func (c *angles_) FromFloat(float float64) abs.AngleLike {
 }
 
 // This constructor creates a new angle from the specified string value and
-// normalizes the value to be in the allowed range for angles [0..τ).
-func (c *angles_) FromString(string_ string) abs.AngleLike {
+// normalizes the value to be in the allowed range for angleClass [0..τ).
+func (c *angleClass_) FromString(string_ string) AngleLike {
 	var matches = uti.AngleMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct an angle from an invalid string: %v", string_)
@@ -101,7 +100,7 @@ func (v angle_) AsFloat() float64 {
 // This instance method determines whether or not this continuous element is
 // zero.
 func (v angle_) IsZero() bool {
-	return v == Angle.zero || v == Angle.tau
+	return v == Angle().Zero() || v == Angle().Tau()
 }
 
 // This instance method determines whether or not this continuous element is
@@ -122,9 +121,9 @@ func (v angle_) IsUndefined() bool {
 func (v angle_) AsString() string {
 	var string_ string
 	switch v {
-	case Angle.pi:
+	case Angle().Pi():
 		string_ = "~π"
-	case Angle.tau:
+	case Angle().Tau():
 		string_ = "~τ"
 	default:
 		string_ = "~" + stc.FormatFloat(float64(v), 'G', -1, 64)
@@ -135,47 +134,47 @@ func (v angle_) AsString() string {
 // CLASS FUNCTIONS
 
 // This class method returns the inverse of the specified angle.
-func (c *angles_) Inverse(angle abs.AngleLike) abs.AngleLike {
+func (c *angleClass_) Inverse(angle AngleLike) AngleLike {
 	return c.FromFloat(angle.AsFloat() - mat.Pi)
 }
 
-// This class method returns the sum of the specified angles.
-func (c *angles_) Sum(first, second abs.AngleLike) abs.AngleLike {
+// This class method returns the sum of the specified angleClass.
+func (c *angleClass_) Sum(first, second AngleLike) AngleLike {
 	return c.FromFloat(first.AsFloat() + second.AsFloat())
 }
 
-// This class method returns the difference of the specified angles.
-func (c *angles_) Difference(first, second abs.AngleLike) abs.AngleLike {
+// This class method returns the difference of the specified angleClass.
+func (c *angleClass_) Difference(first, second AngleLike) AngleLike {
 	return c.FromFloat(first.AsFloat() - second.AsFloat())
 }
 
 // This class method returns the specified angle scaled by the specified
 // factor.
-func (c *angles_) Scaled(angle abs.AngleLike, factor float64) abs.AngleLike {
+func (c *angleClass_) Scaled(angle AngleLike, factor float64) AngleLike {
 	return c.FromFloat(angle.AsFloat() * factor)
 }
 
 // This class method returns the complement of the specified angle. The
-// complementary angles add up to π/2.
-func (c *angles_) Complement(angle abs.AngleLike) abs.AngleLike {
+// complementary angleClass add up to π/2.
+func (c *angleClass_) Complement(angle AngleLike) AngleLike {
 	return c.FromFloat(mat.Pi/2.0 - angle.AsFloat())
 }
 
 // This class method returns the supplement of the specified angle. The
-// supplementary angles add up to π.
-func (c *angles_) Supplement(angle abs.AngleLike) abs.AngleLike {
+// supplementary angleClass add up to π.
+func (c *angleClass_) Supplement(angle AngleLike) AngleLike {
 	return c.FromFloat(mat.Pi - angle.AsFloat())
 }
 
 // This class method returns the conjugate of the specified angle. The
-// conjugate angles add up to 2π (zero).
-func (c *angles_) Conjugate(angle abs.AngleLike) abs.AngleLike {
+// conjugate angleClass add up to 2π (zero).
+func (c *angleClass_) Conjugate(angle AngleLike) AngleLike {
 	return c.FromFloat(-angle.AsFloat())
 }
 
 // This class method returns the trigonometric cosine of the specified
 // angle.
-func (c *angles_) Cosine(angle abs.AngleLike) float64 {
+func (c *angleClass_) Cosine(angle AngleLike) float64 {
 	var cosine float64
 	switch angle.AsFloat() {
 	case 0.0:
@@ -204,12 +203,12 @@ func (c *angles_) Cosine(angle abs.AngleLike) float64 {
 
 // This class method returns the angle whose trigonometric cosine is the
 // specified distance along the x-axis.
-func (c *angles_) ArcCosine(x float64) abs.AngleLike {
+func (c *angleClass_) ArcCosine(x float64) AngleLike {
 	return c.FromFloat(mat.Acos(x))
 }
 
 // This class method returns the trigonometric sine of the specified angle.
-func (c *angles_) Sine(angle abs.AngleLike) float64 {
+func (c *angleClass_) Sine(angle AngleLike) float64 {
 	var sine float64
 	switch angle.AsFloat() {
 	case 0.0:
@@ -238,13 +237,13 @@ func (c *angles_) Sine(angle abs.AngleLike) float64 {
 
 // This class method returns the angle whose trigonometric sine is the
 // specified distance along the y-axis.
-func (c *angles_) ArcSine(y float64) abs.AngleLike {
+func (c *angleClass_) ArcSine(y float64) AngleLike {
 	return c.FromFloat(mat.Asin(y))
 }
 
 // This class method returns the trigonometric tangent of the specified
 // angle.
-func (c *angles_) Tangent(angle abs.AngleLike) float64 {
+func (c *angleClass_) Tangent(angle AngleLike) float64 {
 	var tangent float64
 	switch angle.AsFloat() {
 	case 0.0:
@@ -273,6 +272,6 @@ func (c *angles_) Tangent(angle abs.AngleLike) float64 {
 
 // This class method returns the angle whose trigonometric tangent is the
 // specified ratio of the distances along the y-axis and x-axis.
-func (c *angles_) ArcTangent(x, y float64) abs.AngleLike {
+func (c *angleClass_) ArcTangent(x, y float64) AngleLike {
 	return c.FromFloat(mat.Atan2(y, x))
 }

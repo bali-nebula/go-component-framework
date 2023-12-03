@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	stc "strconv"
 )
@@ -25,32 +24,32 @@ type integer_ int
 
 // This private type defines the structure associated with the class constants
 // and class functions for the integer elements.
-type integers_ struct {
-	minimum abs.IntegerLike
-	maximum abs.IntegerLike
+type integerClass_ struct {
+	minimum IntegerLike
+	maximum IntegerLike
 }
 
 // CLASS CONSTANTS
 
 // This class constant represents the minimum value for an integer endpoint.
-func (c *integers_) MinimumValue() abs.IntegerLike {
+func (c *integerClass_) MinimumValue() IntegerLike {
 	return c.minimum
 }
 
 // This class constant represents the maximum value for an integer endpoint.
-func (c *integers_) MaximumValue() abs.IntegerLike {
+func (c *integerClass_) MaximumValue() IntegerLike {
 	return c.maximum
 }
 
 // CLASS CONSTRUCTORS
 
 // This constructor creates a new integer element from the specified integer.
-func (c *integers_) FromInteger(integer int) abs.IntegerLike {
+func (c *integerClass_) FromInteger(integer int) IntegerLike {
 	return integer_(integer)
 }
 
 // This constructor creates a new integer element from the specified string.
-func (c *integers_) FromString(string_ string) abs.IntegerLike {
+func (c *integerClass_) FromString(string_ string) IntegerLike {
 	var matches = uti.IntegerMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct an integer from an invalid string: %v", string_)

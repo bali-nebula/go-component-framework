@@ -12,7 +12,6 @@ package elements
 
 import (
 	fmt "fmt"
-	abs "github.com/bali-nebula/go-component-framework/v2/abstractions"
 	uti "github.com/bali-nebula/go-component-framework/v2/utilities"
 	uri "net/url"
 )
@@ -26,7 +25,7 @@ type resource_ string
 
 // This private type defines the structure associated with the class constants
 // and class functions for the resource elements.
-type resources_ struct {
+type resourceClass_ struct {
 	// This class has no class constants.
 }
 
@@ -34,7 +33,7 @@ type resources_ struct {
 
 // This constructor creates a new resource element from the specified universal
 // resource identifier (URI) string embedded in "<" and ">" delimiters.
-func (c *resources_) FromString(string_ string) abs.ResourceLike {
+func (c *resourceClass_) FromString(string_ string) ResourceLike {
 	var matches = uti.ResourceMatcher.FindStringSubmatch(string_)
 	if len(matches) == 0 {
 		var message = fmt.Sprintf("Attempted to construct a resource from an invalid string: %v", string_)
@@ -46,7 +45,7 @@ func (c *resources_) FromString(string_ string) abs.ResourceLike {
 
 // This constructor creates a new resource element from the specified universal
 // resource identifier (URI) pointer.
-func (c *resources_) FromURI(url *uri.URL) abs.ResourceLike {
+func (c *resourceClass_) FromURI(url *uri.URL) ResourceLike {
 	var resource = resource_(url.String())
 	return resource
 }

@@ -16,8 +16,10 @@ import (
 	tes "testing"
 )
 
+var Resource = ele.Resource()
+
 func TestResourceWithAuthorityAndPath(t *tes.T) {
-	var v = ele.Resource.FromString("<https://craterdog.com/About.html>")
+	var v = Resource.FromString("<https://craterdog.com/About.html>")
 	ass.Equal(t, "<https://craterdog.com/About.html>", v.AsString())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -27,7 +29,7 @@ func TestResourceWithAuthorityAndPath(t *tes.T) {
 }
 
 func TestResourceWithPath(t *tes.T) {
-	var v = ele.Resource.FromString("<mailto:craterdog@google.com>")
+	var v = Resource.FromString("<mailto:craterdog@google.com>")
 	ass.Equal(t, "<mailto:craterdog@google.com>", v.AsString())
 	ass.Equal(t, "mailto", v.GetScheme())
 	ass.Equal(t, "", v.GetAuthority())
@@ -37,7 +39,7 @@ func TestResourceWithPath(t *tes.T) {
 }
 
 func TestResourceWithAuthorityAndPathAndQuery(t *tes.T) {
-	var v = ele.Resource.FromString("<https://craterdog.com/?foo=bar;bar=baz>")
+	var v = Resource.FromString("<https://craterdog.com/?foo=bar;bar=baz>")
 	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz>", v.AsString())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -47,7 +49,7 @@ func TestResourceWithAuthorityAndPathAndQuery(t *tes.T) {
 }
 
 func TestResourceWithAuthorityAndPathAndFragment(t *tes.T) {
-	var v = ele.Resource.FromString("<https://craterdog.com/#Home>")
+	var v = Resource.FromString("<https://craterdog.com/#Home>")
 	ass.Equal(t, "<https://craterdog.com/#Home>", v.AsString())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
@@ -57,7 +59,7 @@ func TestResourceWithAuthorityAndPathAndFragment(t *tes.T) {
 }
 
 func TestResourceWithAuthorityAndPathAndQueryAndFragment(t *tes.T) {
-	var v = ele.Resource.FromString("<https://craterdog.com/?foo=bar;bar=baz#Home>")
+	var v = Resource.FromString("<https://craterdog.com/?foo=bar;bar=baz#Home>")
 	ass.Equal(t, "<https://craterdog.com/?foo=bar;bar=baz#Home>", v.AsString())
 	ass.Equal(t, "https", v.GetScheme())
 	ass.Equal(t, "craterdog.com", v.GetAuthority())
