@@ -59,7 +59,7 @@ func (c *characterClass_) MakeFromRune(rune_ rune) CharacterLike {
 	return character_(rune_)
 }
 
-func (c *characterClass_) MakeFromInteger(integer int) CharacterLike {
+func (c *characterClass_) MakeFromInteger(integer int64) CharacterLike {
 	return character_(integer)
 }
 
@@ -95,8 +95,8 @@ func (v character_) AsBoolean() bool {
 	return v > -1
 }
 
-func (v character_) AsInteger() int {
-	return int(v)
+func (v character_) AsInteger() int64 {
+	return int64(v)
 }
 
 // Lexical

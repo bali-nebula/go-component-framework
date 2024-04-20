@@ -108,7 +108,7 @@ func (v boolean_) AsBoolean() bool {
 	return bool(v)
 }
 
-func (v boolean_) AsInteger() int {
+func (v boolean_) AsInteger() int64 {
 	if v {
 		return 1
 	}

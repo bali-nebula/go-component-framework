@@ -113,8 +113,8 @@ func (v *probability_) AsBoolean() bool {
 	return result_
 }
 
-func (v *probability_) AsInteger() int {
-	var result_ int
+func (v *probability_) AsInteger() int64 {
+	var result_ int64
 	// TBA - Implement the method.
 	return result_
 }

@@ -12,14 +12,18 @@
 
 package element
 
-import ()
+import (
+	mat "math"
+	stc "strconv"
+)
 
 // CLASS ACCESS
 
 // Reference
 
 var integerClass = &integerClass_{
-	// This class has no private constants to initialize.
+	minimumValue_: integer_(mat.MinInt),
+	maximumValue_: integer_(mat.MaxInt),
 }
 
 // Function
@@ -33,8 +37,8 @@ func Integer() IntegerClassLike {
 // Target
 
 type integerClass_ struct {
-	minimumValue_ IntegerLike
-	maximumValue_ IntegerLike
+	minimumValue_ integer_
+	maximumValue_ integer_
 }
 
 // Constants
@@ -49,56 +53,62 @@ func (c *integerClass_) MaximumValue() IntegerLike {
 
 // Constructors
 
-func (c *integerClass_) MakeFromInteger(integer int) IntegerLike {
-	return &integer_{}
+func (c *integerClass_) MakeFromInteger(integer int64) IntegerLike {
+	return integer_(integer)
 }
 
 func (c *integerClass_) MakeFromString(string_ string) IntegerLike {
-	return &integer_{}
+	var matches = matchInteger(string_)
+	var integer = integerFromString(matches[0])
+	return integer_(integer)
 }
-
-// Functions
 
 // INSTANCE METHODS
 
 // Target
 
-type integer_ struct {
-	// TBA - Add private instance attributes.
-}
+type integer_ int64
 
 // Attributes
 
 // Discrete
 
-func (v *integer_) AsBoolean() bool {
-	var result_ bool
-	// TBA - Implement the method.
-	return result_
+func (v integer_) AsBoolean() bool {
+	return v != 0
 }
 
-func (v *integer_) AsInteger() int {
-	var result_ int
-	// TBA - Implement the method.
-	return result_
+func (v integer_) AsInteger() int64 {
+	return int64(v)
 }
 
 // Lexical
 
-func (v *integer_) AsString() string {
-	var result_ string
-	// TBA - Implement the method.
-	return result_
+func (v integer_) AsString() string {
+	return stc.FormatInt(int64(v), 10)
 }
 
 // Polarized
 
-func (v *integer_) IsNegative() bool {
-	var result_ bool
-	// TBA - Implement the method.
-	return result_
+func (v integer_) IsNegative() bool {
+	return v < 0
 }
 
-// Public
+// PACKAGE FUNCTIONS
 
 // Private
+
+func integerFromString(string_ string) int64 {
+	var integer, err = stc.ParseInt(string_, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	return integer
+}
+
+func matchInteger(string_ string) []string {
+	var matches = []string{
+		string_,
+	}
+	// TBA - Add the pattern matching code...
+	return matches
+}

@@ -63,7 +63,7 @@ that must be supported by each instance of a discrete elemental class.
 type Discrete interface {
 	// Methods
 	AsBoolean() bool
-	AsInteger() int
+	AsInteger() int64
 }
 
 /*
@@ -72,14 +72,14 @@ that must be supported by each instance of a factored elemental class.
 */
 type Factored interface {
 	// Methods
-	GetMilliseconds() int
-	GetSeconds() int
-	GetMinutes() int
-	GetHours() int
-	GetDays() int
-	GetWeeks() int
-	GetMonths() int
-	GetYears() int
+	GetMilliseconds() int64
+	GetSeconds() int64
+	GetMinutes() int64
+	GetHours() int64
+	GetDays() int64
+	GetWeeks() int64
+	GetMonths() int64
+	GetYears() int64
 }
 
 /*
@@ -250,7 +250,7 @@ type CharacterClassLike interface {
 
 	// Constructors
 	MakeFromRune(rune_ rune) CharacterLike
-	MakeFromInteger(integer int) CharacterLike
+	MakeFromInteger(integer int64) CharacterLike
 	MakeFromString(string_ string) CharacterLike
 
 	// Functions
@@ -277,19 +277,19 @@ type DurationClassLike interface {
 	// Constants
 	MinimumValue() DurationLike
 	MaximumValue() DurationLike
-	MillisecondsPerSecond() int
-	MillisecondsPerMinute() int
-	MillisecondsPerHour() int
-	MillisecondsPerDay() int
-	MillisecondsPerWeek() int
-	MillisecondsPerMonth() int
-	MillisecondsPerYear() int
+	MillisecondsPerSecond() int64
+	MillisecondsPerMinute() int64
+	MillisecondsPerHour() int64
+	MillisecondsPerDay() int64
+	MillisecondsPerWeek() int64
+	MillisecondsPerMonth() int64
+	MillisecondsPerYear() int64
 	DaysPerMonth() float64
 	DaysPerYear() float64
 	WeeksPerMonth() float64
 
 	// Constructors
-	MakeFromMilliseconds(milliseconds int) DurationLike
+	MakeFromMilliseconds(milliseconds int64) DurationLike
 	MakeFromString(string_ string) DurationLike
 }
 
@@ -319,7 +319,7 @@ type IntegerClassLike interface {
 	MaximumValue() IntegerLike
 
 	// Constructors
-	MakeFromInteger(integer int) IntegerLike
+	MakeFromInteger(integer int64) IntegerLike
 	MakeFromString(string_ string) IntegerLike
 }
 
@@ -336,7 +336,7 @@ type MomentClassLike interface {
 
 	// Constructors
 	Make() MomentLike
-	MakeFromMilliseconds(milliseconds int) MomentLike
+	MakeFromMilliseconds(milliseconds int64) MomentLike
 	MakeFromString(string_ string) MomentLike
 
 	// Functions
@@ -440,7 +440,7 @@ percentage-like concrete class.
 */
 type PercentageClassLike interface {
 	// Constructors
-	MakeFromInteger(integer int) PercentageLike
+	MakeFromInteger(integer int64) PercentageLike
 	MakeFromFloat(float float64) PercentageLike
 	MakeFromString(string_ string) PercentageLike
 }
@@ -569,6 +569,7 @@ type MomentLike interface {
 	Discrete
 	Lexical
 	Temporal
+	Factored
 }
 
 /*

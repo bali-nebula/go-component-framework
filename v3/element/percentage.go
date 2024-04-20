@@ -40,7 +40,7 @@ type percentageClass_ struct {
 
 // Constructors
 
-func (c *percentageClass_) MakeFromInteger(integer int) PercentageLike {
+func (c *percentageClass_) MakeFromInteger(integer int64) PercentageLike {
 	return &percentage_{}
 }
 
@@ -98,8 +98,8 @@ func (v *percentage_) AsBoolean() bool {
 	return result_
 }
 
-func (v *percentage_) AsInteger() int {
-	var result_ int
+func (v *percentage_) AsInteger() int64 {
+	var result_ int64
 	// TBA - Implement the method.
 	return result_
 }

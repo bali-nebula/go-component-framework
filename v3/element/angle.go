@@ -241,21 +241,25 @@ func (v angle_) IsUndefined() bool {
 // Lexical
 
 func (v angle_) AsString() string {
-	var string_ string
-	switch v {
-	case angleClass.pi_:
-		string_ = "~π"
-	case angleClass.tau_:
-		string_ = "~τ"
-	default:
-		string_ = "~" + stc.FormatFloat(float64(v), 'G', -1, 64)
-	}
-	return string_
+	return stringFromAngle(v)
 }
 
 // PACKAGE FUNCTIONS
 
 // Private
+
+func stringFromAngle(angle angle_) string {
+	var string_ string
+	switch angle {
+	case angleClass.pi_:
+		string_ = "~π"
+	case angleClass.tau_:
+		string_ = "~τ"
+	default:
+		string_ = "~" + stc.FormatFloat(float64(angle), 'G', -1, 64)
+	}
+	return string_
+}
 
 func angleFromFloat(float float64) angle_ {
 	float = normalizeValue(float)
