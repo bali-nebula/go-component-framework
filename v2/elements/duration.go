@@ -28,16 +28,7 @@ type duration_ int
 // This private type defines the structure associated with the class constants
 // and class functions for the duration elements.
 type durationClass_ struct {
-	millisecondsPerSecond int
-	millisecondsPerMinute int
-	millisecondsPerHour   int
-	millisecondsPerDay    int
-	millisecondsPerWeek   int
-	millisecondsPerMonth  int
-	millisecondsPerYear   int
-	daysPerMonth          float64
-	daysPerYear           float64
-	weeksPerMonth         float64
+	// This class has no constants.
 }
 
 // CLASS CONSTANTS
@@ -56,52 +47,52 @@ func (c *durationClass_) MaximumValue() DurationLike {
 
 // This class constant represents the number of milliseconds in a second.
 func (c *durationClass_) MillisecondsPerSecond() int {
-	return c.millisecondsPerSecond
+	return MillisecondsPerSecond
 }
 
 // This class constant represents the number of milliseconds in a minute.
 func (c *durationClass_) MillisecondsPerMinute() int {
-	return c.millisecondsPerMinute
+	return MillisecondsPerMinute
 }
 
 // This class constant represents the number of milliseconds in a hour.
 func (c *durationClass_) MillisecondsPerHour() int {
-	return c.millisecondsPerHour
+	return MillisecondsPerHour
 }
 
 // This class constant represents the number of milliseconds in a day.
 func (c *durationClass_) MillisecondsPerDay() int {
-	return c.millisecondsPerDay
+	return MillisecondsPerDay
 }
 
 // This class constant represents the number of milliseconds in a week.
 func (c *durationClass_) MillisecondsPerWeek() int {
-	return c.millisecondsPerWeek
+	return MillisecondsPerWeek
 }
 
 // This class constant represents the number of milliseconds in a month.
 func (c *durationClass_) MillisecondsPerMonth() int {
-	return c.millisecondsPerMonth
+	return MillisecondsPerMonth
 }
 
 // This class constant represents the number of milliseconds in a year.
 func (c *durationClass_) MillisecondsPerYear() int {
-	return c.millisecondsPerYear
+	return MillisecondsPerYear
 }
 
 // This class constant represents the number of days in a month.
 func (c *durationClass_) DaysPerMonth() float64 {
-	return c.daysPerMonth
+	return DaysPerMonth
 }
 
 // This class constant represents the number of days in a year.
 func (c *durationClass_) DaysPerYear() float64 {
-	return c.daysPerYear
+	return DaysPerYear
 }
 
 // This class constant represents the number of weeks in a month.
 func (c *durationClass_) WeeksPerMonth() float64 {
-	return c.weeksPerMonth
+	return WeeksPerMonth
 }
 
 // CLASS CONSTRUCTORS
@@ -240,75 +231,75 @@ func (v duration_) AsWeeks() float64 {
 
 // This method returns the total number of months in this duration.
 func (v duration_) AsMonths() float64 {
-	return v.AsDays() / daysPerMonth
+	return v.AsDays() / DaysPerMonth
 }
 
 // This method returns the total number of years in this duration.
 func (v duration_) AsYears() float64 {
-	return v.AsDays() / daysPerYear
+	return v.AsDays() / DaysPerYear
 }
 
 // This method returns the milliseconds part of this duration.
 func (v duration_) GetMilliseconds() int {
-	var milliseconds = magnitude(int(v)) % millisecondsPerSecond
+	var milliseconds = magnitude(int(v)) % MillisecondsPerSecond
 	return milliseconds
 }
 
 // This method returns the seconds part of this duration.
 func (v duration_) GetSeconds() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * millisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * millisecondsPerMonth)        // Strip off the months.
-	milliseconds = milliseconds - (v.GetDays() * millisecondsPerDay)            // Strip off the days.
-	milliseconds = milliseconds - (v.GetHours() * millisecondsPerHour)          // Strip off the hours.
-	milliseconds = milliseconds - (v.GetMinutes() * millisecondsPerMinute)      // Strip off the minutes.
-	var seconds = milliseconds / millisecondsPerSecond                          // Strip off the milliseconds.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	milliseconds = milliseconds - (v.GetDays() * MillisecondsPerDay)            // Strip off the days.
+	milliseconds = milliseconds - (v.GetHours() * MillisecondsPerHour)          // Strip off the hours.
+	milliseconds = milliseconds - (v.GetMinutes() * MillisecondsPerMinute)      // Strip off the minutes.
+	var seconds = milliseconds / MillisecondsPerSecond                          // Strip off the milliseconds.
 	return seconds
 }
 
 // This method returns the minutes part of this duration.
 func (v duration_) GetMinutes() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * millisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * millisecondsPerMonth)        // Strip off the months.
-	milliseconds = milliseconds - (v.GetDays() * millisecondsPerDay)            // Strip off the days.
-	milliseconds = milliseconds - (v.GetHours() * millisecondsPerHour)          // Strip off the hours.
-	var minutes = milliseconds / millisecondsPerMinute                          // Strip off the seconds and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	milliseconds = milliseconds - (v.GetDays() * MillisecondsPerDay)            // Strip off the days.
+	milliseconds = milliseconds - (v.GetHours() * MillisecondsPerHour)          // Strip off the hours.
+	var minutes = milliseconds / MillisecondsPerMinute                          // Strip off the seconds and below.
 	return minutes
 }
 
 // This method returns the hours part of this duration.
 func (v duration_) GetHours() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * millisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * millisecondsPerMonth)        // Strip off the months.
-	milliseconds = milliseconds - (v.GetDays() * millisecondsPerDay)            // Strip off the days.
-	var hours = milliseconds / millisecondsPerHour                              // Strip off the minutes and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	milliseconds = milliseconds - (v.GetDays() * MillisecondsPerDay)            // Strip off the days.
+	var hours = milliseconds / MillisecondsPerHour                              // Strip off the minutes and below.
 	return hours
 }
 
 // This method returns the days part of this duration.
 func (v duration_) GetDays() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * millisecondsPerYear) // Strip off the years.
-	milliseconds = milliseconds - (v.GetMonths() * millisecondsPerMonth)        // Strip off the months.
-	var days = milliseconds / millisecondsPerDay                                // Strip off the hours and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	milliseconds = milliseconds - (v.GetMonths() * MillisecondsPerMonth)        // Strip off the months.
+	var days = milliseconds / MillisecondsPerDay                                // Strip off the hours and below.
 	return days
 }
 
 // This method returns the weeks part of this duration.
 func (v duration_) GetWeeks() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * millisecondsPerYear) // Strip off the years.
-	var weeks = milliseconds / millisecondsPerWeek                              // Strip off the days and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	var weeks = milliseconds / MillisecondsPerWeek                              // Strip off the days and below.
 	return weeks
 }
 
 // This method returns the months part of this duration.
 func (v duration_) GetMonths() int {
-	var milliseconds = magnitude(int(v)) - (v.GetYears() * millisecondsPerYear) // Strip off the years.
-	var months = milliseconds / millisecondsPerMonth                            // Strip off the days and below.
+	var milliseconds = magnitude(int(v)) - (v.GetYears() * MillisecondsPerYear) // Strip off the years.
+	var months = milliseconds / MillisecondsPerMonth                            // Strip off the days and below.
 	return months
 }
 
 // This method returns the years part of this duration.
 func (v duration_) GetYears() int {
 	var milliseconds = magnitude(int(v))
-	var years = milliseconds / millisecondsPerYear // Strip off the months and below.
+	var years = milliseconds / MillisecondsPerYear // Strip off the months and below.
 	return years
 }

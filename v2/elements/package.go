@@ -44,29 +44,41 @@ type (
 
 // PACKAGE CONSTANTS
 
-// Private Constants
+// Public Constants
 
-// This private constant represents the value tau (τ).
+// This public constant represents the value tau (τ).
 // See "The Tau Manifesto" at https://tauday.com/tau-manifesto
-const tau = 2.0 * mat.Pi
+const Tau = 2.0 * mat.Pi
 
-// These private constants represent the ratios of various units of time.
+// These public constants represent the ratios of various units of time.
 const (
 	// These are locked to the Earth's daily revolutions.
-	millisecondsPerSecond int = 1000
-	millisecondsPerMinute int = millisecondsPerSecond * 60
-	millisecondsPerHour   int = millisecondsPerMinute * 60
-	millisecondsPerDay    int = millisecondsPerHour * 24
-	millisecondsPerWeek   int = millisecondsPerDay * 7
+	MillisecondsPerSecond int = 1000
+	MillisecondsPerMinute int = MillisecondsPerSecond * 60
+	MillisecondsPerHour   int = MillisecondsPerMinute * 60
+	MillisecondsPerDay    int = MillisecondsPerHour * 24
+	MillisecondsPerWeek   int = MillisecondsPerDay * 7
 
 	// These are locked to the Earth's yearly orbit around the sun.
-	millisecondsPerYear  int = 31556952000
-	millisecondsPerMonth int = millisecondsPerYear / 12 // An average but exact value.
+	MillisecondsPerYear  int = 31556952000
+	MillisecondsPerMonth int = MillisecondsPerYear / 12 // An average but exact value.
 
 	// Tying the two together is where things get messy.
-	daysPerMonth  float64 = float64(millisecondsPerMonth) / float64(millisecondsPerDay)  // ~30.436875 days/month
-	daysPerYear   float64 = float64(millisecondsPerYear) / float64(millisecondsPerDay)   // ~365.2425 days/year
-	weeksPerMonth float64 = float64(millisecondsPerMonth) / float64(millisecondsPerWeek) // ~4.348125 weeks/month
+	DaysPerMonth  float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerDay)  // ~30.436875 days/month
+	DaysPerYear   float64 = float64(MillisecondsPerYear) / float64(MillisecondsPerDay)   // ~365.2425 days/year
+	WeeksPerMonth float64 = float64(MillisecondsPerMonth) / float64(MillisecondsPerWeek) // ~4.348125 weeks/month
+)
+
+// Private Constants
+
+// These private constants implement the singleton pattern to provide a single
+// references to each element class type structure.
+var (
+	angleClassSingleton = &angleClass_{
+		angle_(0.0),    // Angle.Zero()
+		angle_(mat.Pi), // Angle.Pi()
+		angle_(Tau),    // Angle.Tau()
+	}
 )
 
 // PACKAGE ABSTRACTIONS
@@ -485,23 +497,23 @@ func millisecondsFromMatches(matches []string) int {
 			case "-":
 				sign = -1
 			case "W":
-				milliseconds += float * float64(millisecondsPerWeek)
+				milliseconds += float * float64(MillisecondsPerWeek)
 			case "Y":
-				milliseconds += float * float64(millisecondsPerYear)
+				milliseconds += float * float64(MillisecondsPerYear)
 			case "M":
 				if isTime {
-					milliseconds += float * float64(millisecondsPerMinute)
+					milliseconds += float * float64(MillisecondsPerMinute)
 				} else {
-					milliseconds += float * float64(millisecondsPerMonth)
+					milliseconds += float * float64(MillisecondsPerMonth)
 				}
 			case "D":
-				milliseconds += float * float64(millisecondsPerDay)
+				milliseconds += float * float64(MillisecondsPerDay)
 			case "T":
 				isTime = true
 			case "H":
-				milliseconds += float * float64(millisecondsPerHour)
+				milliseconds += float * float64(MillisecondsPerHour)
 			case "S":
-				milliseconds += float * float64(millisecondsPerSecond)
+				milliseconds += float * float64(MillisecondsPerSecond)
 			}
 		}
 	}
@@ -559,23 +571,28 @@ func stringFromImaginary(imaginary float64) string {
 // This function returns a reference to the angle class type and
 // initializes any class constants.
 func Angle() *angleClass_ {
-	var class = &angleClass_{
-		angle_(0.0),    // Angle.Zero()
-		angle_(mat.Pi), // Angle.Pi()
-		angle_(tau),    // Angle.Tau()
-	}
-	return class
+	return angleClassSingleton
 }
 
 // This function returns a reference to the boolean class type and
 // initializes any class constants.
 func Boolean() *booleanClass_ {
-	var class = &booleanClass_{
-		boolean_(false), // Boolean.False()
-		boolean_(true),  // Boolean.True()
+	var class *booleanClass_
+	var key = fmt.Sprintf("%t", class)
+	var value = booleanClassSingletons[key]
+	if value == nil {
+		var class = &booleanClass_{
+			boolean_(false), // Boolean.False()
+			boolean_(true),  // Boolean.True()
+		}
+		booleanClassSingletons[key] = class
+	} else {
+		class = value.(*booleanClass_)
 	}
 	return class
 }
+
+var booleanClassSingletons = map[string]any{}
 
 // This function returns a reference to the character class type and
 // initializes any class constants.
@@ -599,18 +616,7 @@ func Citation() *citationClass_ {
 // This function returns a reference to the duration class type and
 // initializes any class constants.
 func Duration() *durationClass_ {
-	var class = &durationClass_{
-		millisecondsPerSecond, // Duration.MillisecondsPerSecond()
-		millisecondsPerMinute, // Duration.MillisecondsPerMinute()
-		millisecondsPerHour,   // Duration.MillisecondsPerHour()
-		millisecondsPerDay,    // Duration.MillisecondsPerDay()
-		millisecondsPerWeek,   // Duration.MillisecondsPerWeek()
-		millisecondsPerMonth,  // Duration.MillisecondsPerMonth()
-		millisecondsPerYear,   // Duration.MillisecondsPerYear()
-		daysPerMonth,          // Duration.DaysPerMonth()
-		daysPerYear,           // Duration.DaysPerYear()
-		weeksPerMonth,         // Duration.WeeksPerMonth()
-	}
+	var class = &durationClass_{}
 	return class
 }
 

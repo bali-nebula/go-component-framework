@@ -63,13 +63,13 @@ func (c *angleClass_) Tau() AngleLike {
 // This constructor creates a new angle from the specified float value and
 // normalizes the value to be in the allowed range for angleClass [0..τ).
 func (c *angleClass_) FromFloat(float float64) AngleLike {
-	if float < -tau || float >= tau {
+	if float < -Tau || float >= Tau {
 		// Normalize the angle to the range [-τ..τ).
-		float = mat.Remainder(float, tau)
+		float = mat.Remainder(float, Tau)
 	}
 	if float < 0.0 {
 		// Normalize the angle to the range [0..τ).
-		float = float + tau
+		float = float + Tau
 	}
 	var angle = angle_(lockPhase(float))
 	return angle
@@ -193,7 +193,7 @@ func (c *angleClass_) Cosine(angle AngleLike) float64 {
 		cosine = 0.0
 	case mat.Pi * 1.75:
 		cosine = 0.5 * mat.Sqrt2
-	case tau:
+	case Tau:
 		cosine = 1.0
 	default:
 		cosine = mat.Cos(angle.AsFloat())
@@ -227,7 +227,7 @@ func (c *angleClass_) Sine(angle AngleLike) float64 {
 		sine = -1.0
 	case mat.Pi * 1.75:
 		sine = -0.5 * mat.Sqrt2
-	case tau:
+	case Tau:
 		sine = 0.0
 	default:
 		sine = mat.Sin(angle.AsFloat())
@@ -262,7 +262,7 @@ func (c *angleClass_) Tangent(angle AngleLike) float64 {
 		tangent = mat.Inf(1)
 	case mat.Pi * 1.75:
 		tangent = -1.0
-	case tau:
+	case Tau:
 		tangent = 0.0
 	default:
 		tangent = mat.Tan(angle.AsFloat())
