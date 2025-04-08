@@ -1,0 +1,1224 @@
+/*
+................................................................................
+.    Copyright (c) 2009-2024 Crater Dog Technologies.  All Rights Reserved.    .
+................................................................................
+.  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.               .
+.                                                                              .
+.  This code is free software; you can redistribute it and/or modify it under  .
+.  the terms of The MIT License (MIT), as published by the Open Source         .
+.  Initiative. (See https://opensource.org/license/MIT)                        .
+................................................................................
+*/
+
+package agent
+
+import (
+	ast "github.com/bali-nebula/go-component-framework/v3/bali/ast"
+	sts "strings"
+)
+
+// CLASS ACCESS
+
+// Reference
+
+var formatterClass = &formatterClass_{
+	maximumDepth_: 8,  // 8 levels deep is the maximum allowed.
+	blockLength_:  60, // 60 base 64 characters encode 45 bytes per line.
+}
+
+// Function
+
+func Formatter() FormatterClassLike {
+	return formatterClass
+}
+
+// CLASS METHODS
+
+// Target
+
+type formatterClass_ struct {
+	maximumDepth_ uint
+	blockLength_  int
+}
+
+// Constructors
+
+func (c *formatterClass_) Make() FormatterLike {
+	return &formatter_{
+		class_: c,
+	}
+}
+
+// INSTANCE METHODS
+
+// Target
+
+type formatter_ struct {
+	class_  FormatterClassLike
+	depth_  uint
+	result_ sts.Builder
+}
+
+// Attributes
+
+func (v *formatter_) GetClass() FormatterClassLike {
+	return v.class_
+}
+
+// Public
+
+func (v *formatter_) FormatEntity(entity ast.EntityLike) string {
+	v.formatEntity(entity)
+	return v.getResult()
+}
+
+func (v *formatter_) FormatDocument(document ast.DocumentLike) string {
+	v.formatDocument(document)
+	return v.getResult()
+}
+
+// Private
+
+// This function checks to see if the entity is a collection and if so adjusts
+// it to be the right collection type.
+func (v *formatter_) adjustEntity(
+	entity ast.EntityLike,
+	context ast.ContextLike,
+) ast.EntityLike {
+	// Check for an explicit component type.
+	var type_ string
+	if context != nil {
+		var iterator = com.ParameterIterator(context)
+		for iterator.HasNext() {
+			var parameter = iterator.GetNext()
+			if parameter.GetKey().AsString() == "$type" {
+				var component = parameter.GetValue()
+				var name = component.ExtractName()
+				type_ = name.AsString()
+				break
+			}
+		}
+	}
+	// Check for a collection entity.
+	switch entity.(type) {
+	case ast.ValuesLike:
+		// The type is a collection of values.
+		var sequence = entity.(ast.Sequential[ast.ComponentLike])
+		switch type_ {
+		case "/bali/types/collections/Set/v1":
+			// The values type is a set.
+			entity = col.SetFromSequence(sequence)
+		case "/bali/types/collections/Queue/v1":
+			// The values type is a queue.
+			entity = col.QueueFromSequence(sequence)
+		case "/bali/types/collections/Stack/v1":
+			// The values type is a stack.
+			entity = col.StackFromSequence(sequence)
+		default:
+			// The default values type is a list.
+			entity = col.ListFromSequence(sequence)
+		}
+	case ast.AssociationsLike:
+		// The associations type is a catalog.
+		var sequence = entity.(ast.Sequential[ast.AssociationLike])
+		entity = col.CatalogFromSequence(sequence)
+	default:
+		// The entity is not a collection.
+	}
+	return entity
+}
+
+// This function removes the first and last line delimiters (shown as "xx")
+// and the indentation from each line of the specified multi-line string.
+//
+// The following is an indented string with dashes showing the indentation:
+//
+//	----xx
+//	----  This is the first line
+//	----of a short, multi-line
+//
+//	----indented paragraph.
+//	----xx <-- No EOL here
+//
+// It will be trimmed to:
+//
+//	  This is the first line
+//	of a short, multi-line
+//
+//	indented paragraph.
+//
+// The remaining lines are no longer indented.
+func (v *formatter_) adjustIndentation(string_ string) string {
+	var trimmed string
+	var lines = sts.Split(string_, EOL)
+	var size = len(lines) - 1
+	var last = lines[size]
+	var count = len(last) + 2 // The correct number of spaces in the indentation.
+	var indentation = sts.Repeat(" ", count)
+	lines = lines[1:size] // Strip off the first and last delimitier lines.
+	for _, line := range lines {
+		if !sts.HasPrefix(line, indentation) {
+			// Remove any incorrect indentation
+			line = sts.TrimLeft(line, " ")
+			if len(line) > 0 {
+				// Insert the correct indentation.
+				line = indentation + line
+			}
+		}
+		if len(line) == 0 {
+			// This is an empty line.
+			trimmed += EOL
+		} else {
+			// Strip off the indentation.
+			trimmed += line[count:] + EOL
+		}
+	}
+	// Strip off the last end-of-line character.
+	trimmed = trimmed[:len(trimmed)-1]
+	return trimmed
+}
+
+func (v *formatter_) appendNewline() {
+	var separator = "\n"
+	var indentation = "\t"
+	var level uint
+	for ; level < v.depth_; level++ {
+		separator += indentation
+	}
+	v.appendString(separator)
+}
+
+func (v *formatter_) appendString(s string) {
+	v.result_.WriteString(s)
+}
+
+func (v *formatter_) formatAcceptClause(clause ast.AcceptClauseLike) {
+	v.appendString("accept ")
+	var message = clause.GetMessage()
+	v.formatExpression(message)
+}
+
+func (v *formatter_) formatAngle(angle ast.AngleLike) {
+	var source = angle.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatAnnotation(annotation ast.Annotation) {
+	switch value := annotation.(type) {
+	case ast.NoteLike:
+		v.formatNote(value)
+	case ast.CommentLike:
+		v.formatComment(value)
+	default:
+		panic(fmt.Sprintf("An invalid annotation (of type %T) was passed to the formatter: %v", value, value))
+	}
+}
+
+func (v *formatter_) formatArguments(arguments ast.Sequential[ast.Expression]) {
+	v.appendString("(")
+	var iterator = col.Iterator[ast.Expression](arguments)
+	if iterator.HasNext() {
+		var argument = iterator.GetNext()
+		v.formatExpression(argument)
+	}
+	for iterator.HasNext() {
+		v.appendString(", ")
+		var argument = iterator.GetNext()
+		v.formatExpression(argument)
+	}
+	v.appendString(")")
+}
+
+func (v *formatter_) formatArithmetic(arithmetic ast.BinaryOperationLike) {
+	var first = arithmetic.GetFirst()
+	v.formatExpression(first)
+	v.appendString(" ")
+	var operator = arithmetic.GetOperator()
+	v.formatOperator(operator)
+	v.appendString(" ")
+	var second = arithmetic.GetSecond()
+	v.formatExpression(second)
+}
+
+func (v *formatter_) formatAssociation(association ast.AssociationLike) {
+	var key = association.GetKey()
+	v.formatPrimitive(key)
+	v.appendString(": ")
+	var value = association.GetValue()
+	v.formatComponent(value)
+}
+
+func (v *formatter_) formatAssociations(associations ast.AssociationsLike) {
+	v.appendString("[")
+	var iterator = col.AssociationIterator(associations)
+	switch associations.GetSize() {
+	case 0:
+		v.appendString(":")
+	case 1:
+		var association = iterator.GetNext()
+		v.formatAssociation(association)
+	default:
+		v.depth++
+		for iterator.HasNext() {
+			v.appendNewline()
+			var association = iterator.GetNext()
+			v.formatAssociation(association)
+		}
+		v.depth--
+		v.appendNewline()
+	}
+	v.appendString("]")
+}
+
+func (v *formatter_) formatAttribute(attribute ast.AttributeLike) {
+	var variable = attribute.GetVariable()
+	v.appendString(variable)
+	var indices = attribute.GetIndices()
+	v.formatIndices(indices)
+}
+
+func (v *formatter_) formatBinary(binary ast.BinaryLike) {
+	v.appendString("'>")
+	v.depth++
+	var s = binary.AsString()
+	var length = len(s)
+	if length > 0 {
+		for index := 0; index < length; {
+			v.appendNewline()
+			var next = index + v.blockLength_
+			if next > length {
+				next = length
+			}
+			v.appendString(s[index:next])
+			index = next
+		}
+	}
+	v.depth--
+	v.appendNewline()
+	v.appendString("<'")
+}
+
+func (v *formatter_) formatBlock(block ast.BlockLike) {
+	var expression = block.GetExpression()
+	v.formatExpression(expression)
+	v.appendString(" do ")
+	var procedure = block.GetProcedure()
+	v.formatProcedure(procedure)
+}
+
+func (v *formatter_) formatBoolean(boolean ast.BooleanLike) {
+	var source = boolean.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatBreakClause(clause ast.BreakClauseLike) {
+	v.appendString("break loop")
+}
+
+func (v *formatter_) formatBytecode(bytecode ast.BytecodeLike) {
+	v.appendString("'")
+	var s = bytecode.AsString()
+	var length = len(s)
+	if length > 0 {
+		v.appendString(s[0:4])
+	}
+	for index := 4; index < length; index += 4 {
+		v.appendString(" ")
+		v.appendString(s[index : index+4])
+	}
+	v.appendString("'")
+}
+
+func (v *formatter_) formatChaining(chaining ast.BinaryOperationLike) {
+	var first = chaining.GetFirst()
+	v.formatExpression(first)
+	v.appendString(" ")
+	var operator = chaining.GetOperator()
+	v.formatOperator(operator)
+	v.appendString(" ")
+	var second = chaining.GetSecond()
+	v.formatExpression(second)
+}
+
+func (v *formatter_) formatCharacter(character ast.CharacterLike) {
+	v.appendString(character.AsString())
+}
+
+func (v *formatter_) formatCheckoutClause(clause ast.CheckoutClauseLike) {
+	v.appendString("checkout ")
+	var recipient = clause.GetRecipient()
+	v.formatRecipient(recipient)
+	var level = clause.GetLevel()
+	if level != nil {
+		v.appendString(" at level ")
+		v.formatExpression(level)
+	}
+	v.appendString(" from ")
+	var name = clause.GetName()
+	v.formatExpression(name)
+}
+
+func (v *formatter_) formatComment(comment ast.CommentLike) {
+	v.appendString(`!>`)
+	v.depth++
+	var iterator = cox.Iterator[string](comment)
+	for iterator.HasNext() {
+		var line = iterator.GetNext()
+		if len(line) > 0 {
+			v.appendNewline()
+			v.appendString(line)
+		} else {
+			v.appendString(EOL)
+		}
+	}
+	v.depth--
+	v.appendNewline()
+	v.appendString(`<!`)
+}
+
+func (v *formatter_) formatComparison(comparison ast.BinaryOperationLike) {
+	var first = comparison.GetFirst()
+	v.formatExpression(first)
+	v.appendString(" ")
+	var operator = comparison.GetOperator()
+	v.formatOperator(operator)
+	v.appendString(" ")
+	var second = comparison.GetSecond()
+	v.formatExpression(second)
+}
+
+func (v *formatter_) formatComplement(complement ast.UnaryOperationLike) {
+	var operator = complement.GetOperator()
+	v.formatOperator(operator)
+	v.appendString(" ")
+	var expression = complement.GetExpression()
+	v.formatExpression(expression)
+}
+
+func (v *formatter_) formatComponent(component ast.ComponentLike) {
+	var entity = component.GetEntity()
+	v.formatEntity(entity)
+	var context = v.component.GetContext()
+	if context != nil {
+		v.formatContext(context)
+	}
+}
+
+func (v *formatter_) formatContext(context ast.ContextLike) {
+	v.appendString("(")
+	var parameters = context.GetParameters()
+	v.formatParameters(parameters)
+	v.appendString(")")
+}
+
+func (v *formatter_) formatContinueClause(clause ast.ContinueClauseLike) {
+	v.appendString("continue loop")
+}
+
+func (v *formatter_) formatContinuum(continuum ast.ContinuumLike) {
+	var extent = continuum.GetExtent()
+	var left, right string
+	switch extent {
+	case ast.INCLUSIVE:
+		left, right = "[", "]"
+	case ast.RIGHT:
+		left, right = "(", "]"
+	case ast.LEFT:
+		left, right = "[", ")"
+	case ast.EXCLUSIVE:
+		left, right = "(", ")"
+	default:
+		panic(fmt.Sprintf("The range contains an unknown extent type: %v", extent))
+	}
+	v.appendString(left)
+	var first = continuum.GetFirst()
+	v.formatEndpoint(first)
+	v.appendString("..")
+	var last = continuum.GetLast()
+	v.formatEndpoint(last)
+	v.appendString(right)
+}
+
+func (v *formatter_) formatDereference(dereference ast.UnaryOperationLike) {
+	var operator = dereference.GetOperator()
+	v.formatOperator(operator)
+	var expression = dereference.GetExpression()
+	v.formatExpression(expression)
+}
+
+func (v *formatter_) formatDiscardClause(clause ast.DiscardClauseLike) {
+	v.appendString("discard ")
+	var draft = clause.GetDraft()
+	v.formatExpression(draft)
+}
+
+func (v *formatter_) formatDocument(document ast.DocumentLike) {
+	var header = document.GetHeader()
+	v.formatHeader(header)
+	var component = document.GetComponent()
+	v.formatComponent(component)
+}
+
+func (v *formatter_) formatDuration(duration ast.DurationLike) {
+	var source = duration.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatEndpoint(endpoint ast.Primitive) {
+	switch value := endpoint.(type) {
+	// The order of these cases is very important since Go only compares the
+	// set of methods supported by each interface. An interface that is a subset
+	// of another interface must be checked AFTER that interface.
+	case ast.NameLike:
+		v.formatName(value)
+	case ast.QuoteLike:
+		v.formatQuote(value)
+	case ast.VersionLike:
+		v.formatVersion(value)
+	case ast.DurationLike:
+		v.formatDuration(value)
+	case ast.MomentLike:
+		v.formatMoment(value)
+	case ast.PercentageLike:
+		v.formatPercentage(value)
+	case ast.FloatLike:
+		v.formatFloat(value)
+	case ast.IntegerLike:
+		v.formatInteger(value)
+	case ast.ProbabilityLike:
+		v.formatProbability(value)
+	case ast.AngleLike:
+		v.formatAngle(value)
+	case ast.CharacterLike:
+		v.formatCharacter(value)
+	case ast.PatternLike:
+		v.formatPattern(value)
+	case ast.ResourceLike:
+		v.formatResource(value)
+	case ast.TagLike:
+		v.formatTag(value)
+	case ast.SymbolLike:
+		v.formatSymbol(value)
+	default:
+		panic(fmt.Sprintf("An invalid endpoint (of type %T) was passed to the formatter: %v", value, value))
+	}
+}
+
+func (v *formatter_) formatEntity(entity ast.EntityLike) {
+case element != nil:
+		v.formatElement(value)
+	case string_ != nil:
+		v.formatString(value)
+	case range_ != nil:
+		v.formatRange(value)
+	case collection != nil:
+		v.formatCollection(value)
+	case procedure != nil:
+		v.formatProcedure(value)
+	default:
+		panic("Attempted to format an empty entity.")
+	}
+}
+
+func (v *formatter_) formatExponential(exponential ast.BinaryOperationLike) {
+	var base = exponential.GetFirst()
+	v.formatExpression(base)
+	v.appendString(" ")
+	var operator = exponential.GetOperator()
+	v.formatOperator(operator)
+	v.appendString(" ")
+	var exponent = exponential.GetSecond()
+	v.formatExpression(exponent)
+}
+
+func (v *formatter_) formatExpression(expression ast.Expression) {
+	switch exp.GetType(expression) {
+	case "ValueExpression":
+		var value = expression.(ast.ValueLike)
+		v.formatValue(value)
+	case "IntrinsicExpression":
+		var value = expression.(ast.IntrinsicLike)
+		v.formatIntrinsic(value)
+	case "VariableExpression":
+		var value = expression.(ast.VariableLike)
+		v.formatVariable(value)
+	case "PrecedenceExpression":
+		var value = expression.(ast.UnaryOperationLike)
+		v.formatPrecedence(value)
+	case "DereferenceExpression":
+		var value = expression.(ast.UnaryOperationLike)
+		v.formatDereference(value)
+	case "InvocationExpression":
+		var value = expression.(ast.InvocationLike)
+		v.formatInvocation(value)
+	case "SubcomponentExpression":
+		var value = expression.(ast.SubcomponentLike)
+		v.formatSubcomponent(value)
+	case "ChainingExpression":
+		var value = expression.(ast.BinaryOperationLike)
+		v.formatChaining(value)
+	case "ExponentialExpression":
+		var value = expression.(ast.BinaryOperationLike)
+		v.formatExponential(value)
+	case "InversionExpression":
+		var value = expression.(ast.UnaryOperationLike)
+		v.formatInversion(value)
+	case "ArithmeticExpression":
+		var value = expression.(ast.BinaryOperationLike)
+		v.formatArithmetic(value)
+	case "MagnitudeExpression":
+		var value = expression.(ast.UnaryOperationLike)
+		v.formatMagnitude(value)
+	case "ComparisonExpression":
+		var value = expression.(ast.BinaryOperationLike)
+		v.formatComparison(value)
+	case "ComplementExpression":
+		var value = expression.(ast.UnaryOperationLike)
+		v.formatComplement(value)
+	case "LogicalExpression":
+		var value = expression.(ast.BinaryOperationLike)
+		v.formatLogical(value)
+	default:
+		var message = fmt.Sprintf("An invalid expression type was passed to the formatter: %v", expression)
+		panic(message)
+	}
+}
+
+func (v *formatter_) formatFloat(real_ ast.FloatLike) {
+	v.appendString(real_.AsString())
+}
+
+func (v *formatter_) formatHeader(header ast.HeaderLike) {
+	var comment = header.GetComment()
+	v.appendString(comment)
+	v.appendNewline()
+	v.appendNewline()
+}
+
+func (v *formatter_) formatIdentifier(identifier string) {
+	v.appendString(identifier)
+}
+
+func (v *formatter_) formatIfClause(clause ast.IfClauseLike) {
+	v.appendString("if ")
+	var block = clause.GetBlock()
+	v.formatBlock(block)
+}
+
+func (v *formatter_) formatIndices(indices ast.Sequential[ast.Expression]) {
+	v.appendString("[")
+	var iterator = col.Iterator[ast.Expression](indices)
+	var index = iterator.GetNext() // There is always at least one index.
+	v.formatExpression(index)
+	for iterator.HasNext() {
+		v.appendString(", ")
+		index = iterator.GetNext()
+		v.formatExpression(index)
+	}
+	v.appendString("]")
+}
+
+func (v *formatter_) formatInteger(number ast.IntegerLike) {
+	var integer = number.AsInteger()
+	v.appendString(stc.FormatInt(int64(integer), 10))
+}
+
+func (v *formatter_) formatInterval(interval ast.IntervalLike) {
+	var extent = interval.GetExtent()
+	var left, right string
+	switch extent {
+	case ast.INCLUSIVE:
+		left, right = "[", "]"
+	case ast.RIGHT:
+		left, right = "(", "]"
+	case ast.LEFT:
+		left, right = "[", ")"
+	case ast.EXCLUSIVE:
+		left, right = "(", ")"
+	default:
+		panic(fmt.Sprintf("The range contains an unknown extent type: %v", extent))
+	}
+	v.appendString(left)
+	var first = interval.GetFirst()
+	v.formatEndpoint(first)
+	v.appendString("..")
+	var last = interval.GetLast()
+	v.formatEndpoint(last)
+	v.appendString(right)
+}
+
+func (v *formatter_) formatIntrinsic(dereference ast.IntrinsicLike) {
+	var function = dereference.GetFunction()
+	v.appendString(function)
+	var arguments = dereference.GetArguments()
+	v.formatArguments(arguments)
+}
+
+func (v *formatter_) formatInversion(inversion ast.UnaryOperationLike) {
+	var operator = inversion.GetOperator()
+	v.formatOperator(operator)
+	var expression = inversion.GetExpression()
+	v.formatExpression(expression)
+}
+
+func (v *formatter_) formatInvocation(invocation ast.InvocationLike) {
+	var target = invocation.GetTarget()
+	v.formatExpression(target)
+	var operator = invocation.GetOperator()
+	v.formatOperator(operator)
+	var message = invocation.GetMethod()
+	v.appendString(message)
+	var arguments = invocation.GetArguments()
+	v.formatArguments(arguments)
+}
+
+func (v *formatter_) formatLetClause(clause ast.LetClauseLike) {
+	if clause.HasRecipient() {
+		v.appendString("let ")
+		var recipient, operator = clause.GetRecipient()
+		v.formatRecipient(recipient)
+		v.appendString(" ")
+		v.formatOperator(operator)
+		v.appendString(" ")
+	}
+	var expression = clause.GetExpression()
+	v.formatExpression(expression)
+}
+
+func (v *formatter_) formatLogical(logical ast.BinaryOperationLike) {
+	var first = logical.GetFirst()
+	v.formatExpression(first)
+	v.appendString(" ")
+	var operator = logical.GetOperator()
+	v.formatOperator(operator)
+	v.appendString(" ")
+	var second = logical.GetSecond()
+	v.formatExpression(second)
+}
+
+func (v *formatter_) formatMagnitude(magnitude ast.UnaryOperationLike) {
+	v.appendString("|")
+	var expression = magnitude.GetExpression()
+	v.formatExpression(expression)
+	v.appendString("|")
+}
+
+func (v *formatter_) formatMainClause(mainClause ast.Clause) {
+	switch pro.GetType(mainClause) {
+	case "AcceptClause":
+		var value = mainClause.(ast.AcceptClauseLike)
+		v.formatAcceptClause(value)
+	case "BreakClause":
+		var value = mainClause.(ast.BreakClauseLike)
+		v.formatBreakClause(value)
+	case "CheckoutClause":
+		var value = mainClause.(ast.CheckoutClauseLike)
+		v.formatCheckoutClause(value)
+	case "ContinueClause":
+		var value = mainClause.(ast.ContinueClauseLike)
+		v.formatContinueClause(value)
+	case "DiscardClause":
+		var value = mainClause.(ast.DiscardClauseLike)
+		v.formatDiscardClause(value)
+	case "IfClause":
+		var value = mainClause.(ast.IfClauseLike)
+		v.formatIfClause(value)
+	case "LetClause":
+		var value = mainClause.(ast.LetClauseLike)
+		v.formatLetClause(value)
+	case "NotarizeClause":
+		var value = mainClause.(ast.NotarizeClauseLike)
+		v.formatNotarizeClause(value)
+	case "PostClause":
+		var value = mainClause.(ast.PostClauseLike)
+		v.formatPostClause(value)
+	case "PublishClause":
+		var value = mainClause.(ast.PublishClauseLike)
+		v.formatPublishClause(value)
+	case "RejectClause":
+		var value = mainClause.(ast.RejectClauseLike)
+		v.formatRejectClause(value)
+	case "RetrieveClause":
+		var value = mainClause.(ast.RetrieveClauseLike)
+		v.formatRetrieveClause(value)
+	case "ReturnClause":
+		var value = mainClause.(ast.ReturnClauseLike)
+		v.formatReturnClause(value)
+	case "SaveClause":
+		var value = mainClause.(ast.SaveClauseLike)
+		v.formatSaveClause(value)
+	case "SelectClause":
+		var value = mainClause.(ast.SelectClauseLike)
+		v.formatSelectClause(value)
+	case "ThrowClause":
+		var value = mainClause.(ast.ThrowClauseLike)
+		v.formatThrowClause(value)
+	case "WhileClause":
+		var value = mainClause.(ast.WhileClauseLike)
+		v.formatWhileClause(value)
+	case "WithClause":
+		var value = mainClause.(ast.WithClauseLike)
+		v.formatWithClause(value)
+	default:
+		var message = fmt.Sprintf("An invalid main clause  type was passed to the formatter: %v", mainClause)
+		panic(message)
+	}
+}
+
+func (v *formatter_) formatMoment(moment ast.MomentLike) {
+	var source = moment.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatName(name ast.NameLike) {
+}
+
+func (v *formatter_) formatNarrative(narrative ast.NarrativeLike) {
+	var s = narrative.AsString()
+	var lines = sts.Split(s, EOL)
+	v.appendString(`">`)
+	v.depth++
+	for _, line := range lines {
+		if len(line) > 0 {
+			v.appendNewline()
+			v.appendString(line)
+		} else {
+			v.appendString(EOL)
+		}
+	}
+	v.depth--
+	v.appendNewline()
+	v.appendString(`<"`)
+}
+
+func (v *formatter_) formatNotarizeClause(clause ast.NotarizeClauseLike) {
+	v.appendString("notarize ")
+	var document = clause.GetDocument()
+	v.formatExpression(document)
+	v.appendString(" as ")
+	var name = clause.GetName()
+	v.formatExpression(name)
+}
+
+func (v *formatter_) formatNote(note ast.NoteLike) {
+	v.appendString("! ")
+	v.appendString(string(note.AsArray()))
+}
+
+func (v *formatter_) formatNumber(number ast.NumberLike) {
+	var source = number.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatOnClause(clause ast.OnClauseLike) {
+	v.appendString(" on ")
+	var failure = clause.GetFailure()
+	var identifier = failure.AsString()
+	v.appendString("$")
+	v.formatIdentifier(identifier)
+	var blocks = clause.GetBlocks()
+	var iterator = col.Iterator[ast.BlockLike](blocks)
+	for iterator.HasNext() {
+		var block = iterator.GetNext()
+		v.appendString(" matching ")
+		v.formatBlock(block)
+	}
+}
+
+func (v *formatter_) formatOperator(operator ast.Operator) {
+	switch operator {
+	case ast.AMPERSAND:
+		v.appendString("&")
+	case ast.AND:
+		v.appendString("AND")
+	case ast.ARROW:
+		v.appendString("<-")
+	case ast.ASSIGN:
+		v.appendString(":=")
+	case ast.AT:
+		v.appendString("@")
+	case ast.BAR:
+		v.appendString("|")
+	case ast.CARET:
+		v.appendString("^")
+	case ast.DEFAULT:
+		v.appendString("?=")
+	case ast.DIFFERENCE:
+		v.appendString("-=")
+	case ast.DOT:
+		v.appendString(".")
+	case ast.EQUAL:
+		v.appendString("=")
+	case ast.IS:
+		v.appendString("IS")
+	case ast.LESS:
+		v.appendString("<")
+	case ast.MATCHES:
+		v.appendString("MATCHES")
+	case ast.MINUS:
+		v.appendString("-")
+	case ast.MODULO:
+		v.appendString("//")
+	case ast.MORE:
+		v.appendString(">")
+	case ast.NOT:
+		v.appendString("NOT")
+	case ast.OR:
+		v.appendString("OR")
+	case ast.PLUS:
+		v.appendString("+")
+	case ast.PRODUCT:
+		v.appendString("*=")
+	case ast.QUOTIENT:
+		v.appendString("/=")
+	case ast.SANS:
+		v.appendString("SANS")
+	case ast.SLASH:
+		v.appendString("/")
+	case ast.STAR:
+		v.appendString("*")
+	case ast.SUM:
+		v.appendString("+=")
+	case ast.TILDA:
+		v.appendString("~")
+	case ast.UNEQUAL:
+		v.appendString("≠")
+	case ast.XOR:
+		v.appendString("XOR")
+	default:
+		var message = fmt.Sprintf("An unexpected operator token was received by the formatter: %v\n", operator)
+		panic(message)
+	}
+}
+
+func (v *formatter_) formatParameter(parameter ast.ParameterLike) {
+	var key = parameter.GetKey()
+	v.appendString("$")
+	v.formatIdentifier(key.AsString())
+	v.appendString(": ")
+	var value = parameter.GetValue()
+	v.formatComponent(value)
+}
+
+func (v *formatter_) formatParameters(parameters ast.ParametersLike) {
+	var inline = parameters.GetParameters()
+	var multiline = parameters.GetAnnotatedParameters()
+	switch {
+	case inline != nil:
+		var iterator = inline.GetIterator()
+		var parameter = iterator.GetNext()
+		v.formatParameter(parameter)
+		for iterator.HasNext() {
+			v.appendString(", ")
+			var parameter = iterator.GetNext()
+			v.formatParameter(parameter)
+		}
+	case multiline != nil:
+		v.depth++
+		var iterator = multiline.GetIterator()
+		for iterator.HasNext() {
+			var parameter = iterator.GetNext()
+			v.formatAnnotatedParameter(parameter)
+		}
+		v.depth--
+		v.appendNewline()
+	default:
+		panic("Attempted to format an parameter sequence.")
+}
+
+func (v *formatter_) formatPattern(pattern ast.PatternLike) {
+	var source = pattern.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatPercentage(percentage ast.PercentageLike) {
+	var source = percentage.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatPostClause(clause ast.PostClauseLike) {
+	v.appendString("post ")
+	var message = clause.GetMessage()
+	v.formatExpression(message)
+	v.appendString(" to ")
+	var bag = clause.GetBag()
+	v.formatExpression(bag)
+}
+
+func (v *formatter_) formatPrecedence(precedence ast.UnaryOperationLike) {
+	v.appendString("(")
+	var expression = precedence.GetExpression()
+	v.formatExpression(expression)
+	v.appendString(")")
+}
+
+func (v *formatter_) formatPrimitive(primitive ast.Primitive) {
+	switch value := primitive.(type) {
+	// The order of these cases is very important since Go only compares the
+	// set of methods supported by each interface. An interface that is a subset
+	// of another interface must be checked AFTER that interface.
+	case ast.BinaryLike:
+		v.formatBinary(value)
+	case ast.BytecodeLike:
+		v.formatBytecode(value)
+	case ast.NameLike:
+		v.formatName(value)
+	case ast.NarrativeLike:
+		v.formatNarrative(value)
+	case ast.QuoteLike:
+		v.formatQuote(value)
+	case ast.VersionLike:
+		v.formatVersion(value)
+	case ast.DurationLike:
+		v.formatDuration(value)
+	case ast.MomentLike:
+		v.formatMoment(value)
+	case ast.NumberLike:
+		v.formatNumber(value)
+	case ast.PercentageLike:
+		v.formatPercentage(value)
+	case ast.ProbabilityLike:
+		v.formatProbability(value)
+	case ast.AngleLike:
+		v.formatAngle(value)
+	case ast.BooleanLike:
+		v.formatBoolean(value)
+	case ast.PatternLike:
+		v.formatPattern(value)
+	case ast.ResourceLike:
+		v.formatResource(value)
+	case ast.TagLike:
+		v.formatTag(value)
+	case ast.SymbolLike:
+		v.formatSymbol(value)
+	default:
+		panic(fmt.Sprintf("An invalid primitive (of type %T) was passed to the formatter: %v", value, value))
+	}
+}
+
+func (v *formatter_) formatProbability(probability ast.ProbabilityLike) {
+	var source = probability.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatProcedure(procedure ast.ProcedureLike) {
+	v.appendString("{")
+	switch procedure.GetSize() {
+	case 0:
+		v.appendString(" ")
+	default:
+		var iterator = col.Iterator[ast.StatementLike](procedure)
+		v.depth++
+		for iterator.HasNext() {
+			var statement = iterator.GetNext()
+			if statement != nil {
+				// This is not a blank line so format the statement.
+				v.appendNewline()
+				v.formatStatement(statement)
+			} else {
+				v.appendString(EOL)
+			}
+		}
+		v.depth--
+		v.appendNewline()
+	}
+	v.appendString("}")
+}
+
+func (v *formatter_) formatPublishClause(clause ast.PublishClauseLike) {
+	v.appendString("publish ")
+	var event = clause.GetEvent()
+	v.formatExpression(event)
+}
+
+func (v *formatter_) formatQuote(quote ast.QuoteLike) {
+	// We must requote the string string properly.
+	var s = stc.Quote(quote.AsString())
+	v.appendString(s)
+}
+
+func (v *formatter_) formatRecipient(recipient ast.Recipient) {
+	switch value := recipient.(type) {
+	case ast.SymbolLike:
+		v.formatSymbol(value)
+	case ast.AttributeLike:
+		v.formatAttribute(value)
+	default:
+		panic(fmt.Sprintf("An invalid recipient (of type %T) was passed to the formatter: %v", value, value))
+	}
+}
+
+func (v *formatter_) formatRejectClause(clause ast.RejectClauseLike) {
+	v.appendString("reject ")
+	var message = clause.GetMessage()
+	v.formatExpression(message)
+}
+
+func (v *formatter_) formatResource(resource ast.ResourceLike) {
+	var source = resource.AsString()
+	v.appendString(source)
+}
+
+func (v *formatter_) formatRetrieveClause(clause ast.RetrieveClauseLike) {
+	v.appendString("retrieve ")
+	var recipient = clause.GetRecipient()
+	v.formatRecipient(recipient)
+	v.appendString(" from ")
+	var bag = clause.GetBag()
+	v.formatExpression(bag)
+}
+
+func (v *formatter_) formatReturnClause(clause ast.ReturnClauseLike) {
+	v.appendString("return ")
+	var result = clause.GetResult()
+	v.formatExpression(result)
+}
+
+func (v *formatter_) formatSaveClause(clause ast.SaveClauseLike) {
+	v.appendString("save ")
+	var document = clause.GetDocument()
+	v.formatExpression(document)
+	v.appendString(" as ")
+	var recipient = clause.GetRecipient()
+	v.formatRecipient(recipient)
+}
+
+func (v *formatter_) formatSelectClause(clause ast.SelectClauseLike) {
+	v.appendString("select ")
+	var target = clause.GetTarget()
+	v.formatExpression(target)
+	var blocks = clause.GetBlocks()
+	var iterator = col.Iterator[ast.BlockLike](blocks)
+	for iterator.HasNext() {
+		var block = iterator.GetNext()
+		v.appendString(" matching ")
+		v.formatBlock(block)
+	}
+}
+
+func (v *formatter_) formatSpectrum(spectrum ast.SpectrumLike) {
+	var extent = spectrum.GetExtent()
+	var left, right string
+	switch extent {
+	case ast.INCLUSIVE:
+		left, right = "[", "]"
+	case ast.RIGHT:
+		left, right = "(", "]"
+	case ast.LEFT:
+		left, right = "[", ")"
+	case ast.EXCLUSIVE:
+		left, right = "(", ")"
+	default:
+		panic(fmt.Sprintf("The range contains an unknown extent type: %v", extent))
+	}
+	v.appendString(left)
+	var first = spectrum.GetFirst()
+	v.formatEndpoint(first)
+	v.appendString("..")
+	var last = spectrum.GetLast()
+	v.formatEndpoint(last)
+	v.appendString(right)
+}
+
+func (v *formatter_) formatStatement(statement ast.StatementLike) {
+	var annotation = statement.GetAnnotation()
+	if annotation != nil {
+		v.formatAnnotation(annotation)
+		v.appendNewline()
+	}
+	var mainClause = statement.GetMainClause()
+	v.formatMainClause(mainClause)
+	var onClause = statement.GetOnClause()
+	if onClause != nil {
+		v.formatOnClause(onClause)
+	}
+	var note = statement.GetNote()
+	if note != nil {
+		v.formatNote(note)
+	}
+}
+
+func (v *formatter_) formatSubcomponent(subcomponent ast.SubcomponentLike) {
+	var composite = subcomponent.GetComposite()
+	v.formatExpression(composite)
+	var indices = subcomponent.GetIndices()
+	v.formatIndices(indices)
+}
+
+func (v *formatter_) formatSymbol(symbol ast.SymbolLike) {
+	var identifier = symbol.AsString()
+	var s = "$" + identifier
+	v.appendString(s)
+}
+
+func (v *formatter_) formatTag(tag ast.TagLike) {
+	var encoded = tag.AsString()
+	var s = "#" + encoded
+	v.appendString(s)
+}
+
+func (v *formatter_) formatThrowClause(clause ast.ThrowClauseLike) {
+	v.appendString("throw ")
+	var exception = clause.GetException()
+	v.formatExpression(exception)
+}
+
+func (v *formatter_) formatValue(value ast.ValueLike) {
+	var component = value.GetComponent()
+	v.formatComponent(component)
+}
+
+func (v *formatter_) formatValues(values ast.ValuesLike) {
+	v.appendString("[")
+	var iterator = com.ComponentIterator(values)
+	switch values.GetSize() {
+	case 0:
+		v.appendString(" ")
+	case 1:
+		var value = iterator.GetNext()
+		v.formatComponent(value)
+	default:
+		v.depth++
+		for iterator.HasNext() {
+			v.appendNewline()
+			var value = iterator.GetNext()
+			v.formatComponent(value)
+		}
+		v.depth--
+		v.appendNewline()
+	}
+	v.appendString("]")
+}
+
+func (v *formatter_) formatVariable(variable ast.VariableLike) {
+	var identifier = variable.GetIdentifier()
+	v.appendString(identifier)
+}
+
+func (v *formatter_) formatVersion(version ast.VersionLike) {
+	var s = "v" + version.AsString()
+	v.appendString(s)
+}
+
+func (v *formatter_) formatWhileClause(clause ast.WhileClauseLike) {
+	v.appendString("while ")
+	var block = clause.GetBlock()
+	v.formatBlock(block)
+}
+
+func (v *formatter_) formatWithClause(clause ast.WithClauseLike) {
+	v.appendString("with each ")
+	var item = clause.GetItem()
+	var identifier = item.AsString()
+	v.appendString("$")
+	v.formatIdentifier(identifier)
+	v.appendString(" in ")
+	var block = clause.GetBlock()
+	v.formatBlock(block)
+}
+
+func (v *formatter_) getResult() string {
+	var result = v.result_.String()
+	v.result_.Reset()
+	return result
+}

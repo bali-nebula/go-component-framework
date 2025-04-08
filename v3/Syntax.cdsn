@@ -1,0 +1,482 @@
+!>
+................................................................................
+.    Copyright (c) 2009-2025 Crater Dog Technologies.  All Rights Reserved.    .
+................................................................................
+.  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.               .
+.                                                                              .
+.  This code is free software; you can redistribute it and/or modify it under  .
+.  the terms of The MIT License (MIT), as published by the Open Source         .
+.  Initiative. (See https://opensource.org/license/MIT)                        .
+................................................................................
+<!
+
+!>
+BALI DOCUMENT NOTATION
+This document contains a formal definition of the Bali Document Notation™ (Bali)
+using Crater Dog Syntax Notation™ (CDSN).
+
+For more information on CDSN see the wiki at:
+  - https://github.com/craterdog/go-syntax-notation/wiki
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                               RULE DEFINITIONS                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+<!
+$Document: comment Component
+
+$Component: Entity Context?
+
+$Entity:
+  - Element
+  - String
+  - Range
+  - Collection
+  - Procedure
+
+$Context: "(" Parameters ")"
+
+$Parameters:
+  - InlineParameters
+  - MultilineParameters
+
+$InlineParameters: Parameter AdditionalParameter*
+
+$MultilineParameters: AnnotatedParameter+
+
+$AdditionalParameter: "," Parameter
+
+$AnnotatedParameter: Parameter note?
+
+$Parameter: Label ":" Component
+
+$Label: symbol
+
+$Element:
+  - angle
+  - boolean
+  - duration
+  - moment
+  - number
+  - pattern
+  - percentage
+  - probability
+  - resource
+
+$String:
+  - binary
+  - bytecode
+  - name
+  - narrative
+  - quote
+  - symbol
+  - tag
+  - version
+
+$Range: open Primitive ".." Primitive close
+
+$Primitive:
+  - Element
+  - String
+
+$Collection: "[" Items "]"
+
+$Items:
+  - Associations
+  - Values
+
+$Associations:
+  - InlineAssociations
+  - MultilineAssociations
+  - EmptyAssociations
+
+$InlineAssociations: Association AdditionalAssociation*
+
+$MultilineAssociations: AnnotatedAssociation+
+
+$EmptyAssociations: ":"
+
+$AdditionalAssociation: "," Association
+
+$AnnotatedAssociation: Association note?
+
+$Association: Key ":" Value
+
+$Key: Primitive
+
+$Value: Component
+
+$Values:
+  - InlineValues
+  - MultilineValues
+  - EmptyValues
+
+$InlineValues: Value AdditionalValue*
+
+$MultilineValues: AnnotatedValue+
+
+$EmptyValues: " "
+
+$AdditionalValue: "," Value
+
+$AnnotatedValue: Value note?
+
+$Procedure: "{" Statements "}"
+
+$Statements:
+  - InlineStatements
+  - MultilineStatements
+  - EmptyStatements
+
+$InlineStatements: Statement AdditionalStatement*
+
+$MultilineStatements: AnnotatedStatement+
+
+$EmptyStatements: " "
+
+$AdditionalStatement: ";" Statement
+
+$AnnotatedStatement: Statement note?
+
+$Statement: MainClause OnClause?
+
+$MainClause:
+  - Flow
+  - Induction
+  - Messaging
+  - Repository
+
+$OnClause: "on" Failure MatchHandler+
+
+$MatchHandler: "matching" Template "do" Procedure
+
+$Failure: symbol
+
+$Template: Expression
+
+$Flow:
+  - IfClause
+  - SelectClause
+  - WhileClause
+  - WithClause
+  - ContinueClause
+  - BreakClause
+  - ReturnClause
+  - ThrowClause
+
+$Induction:
+  - DoClause
+  - LetClause
+
+$Messaging:
+  - PostClause
+  - RetrieveClause
+  - AcceptClause
+  - RejectClause
+  - PublishClause
+
+$Repository:
+  - CheckoutClause
+  - SaveClause
+  - DiscardClause
+  - NotarizeClause
+
+$IfClause: "if" Condition "do" Procedure
+
+$Condition: Expression
+
+$SelectClause: "select" Target MatchHandler+
+
+$Target: Expression
+
+$WhileClause: "while" Condition "do" Procedure
+
+$WithClause: "with" "each" Item "in" Sequence "do" Procedure
+
+$Item: symbol
+
+$Sequence: Expression
+
+$ContinueClause: "continue" "loop"
+
+$BreakClause: "break" "loop"
+
+$ReturnClause: "return" Result
+
+$Result: Expression
+
+$ThrowClause: "throw" Exception
+
+$Exception: Expression
+
+$DoClause: "do" Operation
+
+$Operation:
+  - Intrinsic
+  - Invocation
+
+$Intrinsic: Function "(" Arguments? ")"
+
+$Function: identifier
+
+$Invocation: Target invocationOperator Method "(" Arguments? ")"
+
+$Method: identifier
+
+$Arguments: Argument AdditionalArgument*
+
+$AdditionalArgument: "," Argument
+
+$Argument: Expression
+
+$LetClause: "let" Recipient assignmentOperator Expression
+
+$Recipient:
+  - Label
+  - Attribute
+
+$Attribute: Variable "[" Indices "]"
+
+$Variable: identifier
+
+$Indices: Index AdditionalIndex*
+
+$AdditionalIndex: "," Index
+
+$Index: Expression
+
+$PostClause: "post" Message "to" Bag
+
+$Message: Expression
+
+$Bag: Expression
+
+$RetrieveClause: "retrieve" Recipient "from" Bag
+
+$AcceptClause: "accept" Message
+
+$RejectClause: "reject" Message
+
+$PublishClause: "publish" Event
+
+$Event: Expression
+
+$CheckoutClause: "checkout" Recipient AtLevel? "from" Citation
+
+$AtLevel: "at" "level" Expression
+
+$Citation: Expression
+
+$SaveClause: "save" Draft "as" Citation
+
+$Draft: Expression
+
+$DiscardClause: "discard" Draft
+
+$NotarizeClause: "notarize" Draft "as" Citation
+
+$Expression:
+  - Component
+  - Intrinsic
+  - Variable
+  - Precedence
+  - Dereference
+  - Invocation
+  - Subcomponent
+  - Chaining
+  - Exponential
+  - Inversion
+  - Arithmetic
+  - Magnitude
+  - Comparison
+  - Complement
+  - Logical
+
+$Precedence: "(" Expression ")"
+
+$Dereference: "@" Expression
+
+$Subcomponent: Composite "[" Indices "]"
+
+$Composite: Expression
+
+$Chaining: Expression "&" Expression
+
+$Exponential: Expression "^" Expression
+
+$Inversion: inversionOperator Expression
+
+$Arithmetic: Expression arithmeticOperator Expression
+
+$Magnitude: "|" Expression "|"
+
+$Comparison: Expression comparisonOperator Expression
+
+$Complement: "NOT" Expression
+
+$Logical: Expression logicalOperator Expression
+
+!>
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                            EXPRESSION DEFINITIONS                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+<!
+$angle: '~' (zero | magnitude)
+
+$alpha: ['A'..'Z' 'a'..'z']
+
+$alphanumeric: alpha | base10
+
+$arithmeticOperator: "*" | "/" | "//" | "+" | "-"
+
+$assignmentOperator: ":=" | "?=" | "+=" | "-=" | "*=" | "/="
+
+$authority: ~['/' CONTROL]+
+
+$base10: ['0'..'9']
+
+$base16: base10 | ['a'..'f']
+
+$base32: base10 | ['A'..'D' 'F'..'H' 'J'..'N' 'P'..'T' 'V'..'Z']
+
+$base64: alphanumeric | ['+' '/']
+
+$binary: "'>" EOL space* base64+ EOL* space* "<'"
+
+$boolean: "false" | "true"
+
+$bytecode: "'" (instruction (space instruction)*)* "'"
+
+$character: escape | ~['"' CONTROL]
+
+$close: [']' ')']
+
+$comment: "!>" ANY* "<!"
+
+$comparisonOperator: "<" | "=" | ">" | "IS" | "MATCHES"
+
+$complex: '(' (rectangular | polar) ')'
+
+$day: ['0'..'2' '1'..'9'] | ['3' '0'..'1']
+
+$days: timespan 'D'
+
+$duration: '~' sign? 'P' (weeks | years? months? days? ('T' hours? minutes? seconds?)?)
+
+$e: 'e'
+
+$escape: '\' (unicode | ['a' 'b' 'f' 'n' 'r' 't' 'v' '"' '\'])
+
+$exponent: 'e' sign? ordinal
+
+$float: sign? magnitude
+
+$fraction: '.' base10+
+
+$fragment: ~['>' CONTROL]*
+
+$hour: ['0'..'1' '0'..'9'] | ['2' '0'..'3']
+
+$hours: timespan 'H'
+
+$identifier: letter (letter | DIGIT)*
+
+$imaginary: sign? magnitude? 'i'
+
+$infinity: sign? ("infinity" | '∞')
+
+$instruction: base16{4}
+
+$inversionOperator: "-" | "/" | "*"
+
+$invocationOperator: "." | "<-"
+
+$letter: LOWER | UPPER
+
+$logicalOperator: "AND" | "SAN" | "IOR" | "XOR"
+
+$magnitude: e | pi | phi | tau | scalar
+
+$minute: ['0'..'5' '0'..'9']
+
+$minutes: timespan 'M'
+
+$moment: '<' sign? year ('-' month ('-' day ('T' hour (':' minute (':' second fraction?)?)?)?)?)? '>'
+
+$month: ['0' '1'..'9'] | ['1' '0'..'2']
+
+$months: timespan 'M'
+
+$name: ('/' identifier)+
+
+$narrative: '"' '>' EOL ANY* EOL space* '<' '"'
+
+$note: "! " ~[CONTROL]*
+
+$number: real | imaginary | complex
+
+$one: "1."
+
+$open: ['[' '(']
+
+$ordinal: ['1'..'9'] base10*
+
+$path: ~['?' '#' '>' CONTROL]*
+
+$pattern: "none" | regex | "any"
+
+$percentage: real '%'
+
+$phi: "phi" | 'φ'
+
+$pi: "pi" | 'π'
+
+$polar: magnitude "e^" angle 'i'
+
+$probability: fraction | one
+
+$query: ~['#' '>' CONTROL]*
+
+$quote: '"' character* '"'
+
+$real: zero | float | infinity | undefined
+
+$rectangular: float ", " float 'i'
+
+$regex: '"' character+ '"' '?'
+
+$resource: '<' scheme ':' ("//" authority)? '/' path ('?' query)? ('#' fragment)? '>'
+
+$scalar: (zero fraction | ordinal fraction?) exponent?
+
+$scheme: alpha (alphanumeric | '+' | '-' | '.')*
+
+$second: ['0'..'5' '0'..'9'] | ['6' '0'..'1']
+
+$seconds: timespan 'S'
+
+$sign: '+' | '-'
+
+$space: ' '
+
+$symbol: '$' identifier
+
+$tag: '#' base32+
+
+$tau: "tau" | 'τ'
+
+$timespan: zero | (ordinal fraction?)
+
+$undefined: "undefined"
+
+$unicode: ('u' base16{4}) | ('U' base16{8})
+
+$version: 'v' ordinal ('.' ordinal)*
+
+$weeks: timespan 'W'
+
+$year: zero | ordinal
+
+$years: timespan 'Y'
+
+$zero: '0'
+
