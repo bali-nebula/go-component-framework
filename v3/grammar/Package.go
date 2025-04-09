@@ -56,27 +56,19 @@ type TokenType uint8
 const (
 	ErrorToken TokenType = iota
 	AngleToken
-	ArithmeticOperatorToken
-	AssignmentOperatorToken
 	BinaryToken
 	BooleanToken
 	BytecodeToken
-	CloseToken
 	CommentToken
-	ComparisonOperatorToken
 	DelimiterToken
 	DurationToken
 	IdentifierToken
-	InversionOperatorToken
-	InvocationOperatorToken
-	LogicalOperatorToken
 	MomentToken
 	NameToken
 	NarrativeToken
 	NewlineToken
 	NoteToken
 	NumberToken
-	OpenToken
 	PatternToken
 	PercentageToken
 	ProbabilityToken
@@ -299,12 +291,6 @@ type Methodical interface {
 	ProcessAngle(
 		angle string,
 	)
-	ProcessArithmeticOperator(
-		arithmeticOperator string,
-	)
-	ProcessAssignmentOperator(
-		assignmentOperator string,
-	)
 	ProcessBinary(
 		binary string,
 	)
@@ -314,29 +300,14 @@ type Methodical interface {
 	ProcessBytecode(
 		bytecode string,
 	)
-	ProcessClose(
-		close_ string,
-	)
 	ProcessComment(
 		comment string,
-	)
-	ProcessComparisonOperator(
-		comparisonOperator string,
 	)
 	ProcessDuration(
 		duration string,
 	)
 	ProcessIdentifier(
 		identifier string,
-	)
-	ProcessInversionOperator(
-		inversionOperator string,
-	)
-	ProcessInvocationOperator(
-		invocationOperator string,
-	)
-	ProcessLogicalOperator(
-		logicalOperator string,
 	)
 	ProcessMoment(
 		moment string,
@@ -355,9 +326,6 @@ type Methodical interface {
 	)
 	ProcessNumber(
 		number string,
-	)
-	ProcessOpen(
-		open string,
 	)
 	ProcessPattern(
 		pattern string,
@@ -473,6 +441,24 @@ type Methodical interface {
 		index uint,
 		size uint,
 	)
+	PreprocessAmplitude(
+		amplitude ast.AmplitudeLike,
+	)
+	ProcessAmplitudeSlot(
+		slot uint,
+	)
+	PostprocessAmplitude(
+		amplitude ast.AmplitudeLike,
+	)
+	PreprocessAnd(
+		and ast.AndLike,
+	)
+	ProcessAndSlot(
+		slot uint,
+	)
+	PostprocessAnd(
+		and ast.AndLike,
+	)
 	PreprocessAnnotatedAssociation(
 		annotatedAssociation ast.AnnotatedAssociationLike,
 		index uint,
@@ -551,6 +537,33 @@ type Methodical interface {
 	)
 	PostprocessArithmetic(
 		arithmetic ast.ArithmeticLike,
+	)
+	PreprocessArithmeticOperator(
+		arithmeticOperator ast.ArithmeticOperatorLike,
+	)
+	ProcessArithmeticOperatorSlot(
+		slot uint,
+	)
+	PostprocessArithmeticOperator(
+		arithmeticOperator ast.ArithmeticOperatorLike,
+	)
+	PreprocessArrow(
+		arrow ast.ArrowLike,
+	)
+	ProcessArrowSlot(
+		slot uint,
+	)
+	PostprocessArrow(
+		arrow ast.ArrowLike,
+	)
+	PreprocessAssignmentOperator(
+		assignmentOperator ast.AssignmentOperatorLike,
+	)
+	ProcessAssignmentOperatorSlot(
+		slot uint,
+	)
+	PostprocessAssignmentOperator(
+		assignmentOperator ast.AssignmentOperatorLike,
 	)
 	PreprocessAssociation(
 		association ast.AssociationLike,
@@ -642,6 +655,15 @@ type Methodical interface {
 	PostprocessCollection(
 		collection ast.CollectionLike,
 	)
+	PreprocessColonEquals(
+		colonEquals ast.ColonEqualsLike,
+	)
+	ProcessColonEqualsSlot(
+		slot uint,
+	)
+	PostprocessColonEquals(
+		colonEquals ast.ColonEqualsLike,
+	)
 	PreprocessComparison(
 		comparison ast.ComparisonLike,
 	)
@@ -650,6 +672,15 @@ type Methodical interface {
 	)
 	PostprocessComparison(
 		comparison ast.ComparisonLike,
+	)
+	PreprocessComparisonOperator(
+		comparisonOperator ast.ComparisonOperatorLike,
+	)
+	ProcessComparisonOperatorSlot(
+		slot uint,
+	)
+	PostprocessComparisonOperator(
+		comparisonOperator ast.ComparisonOperatorLike,
 	)
 	PreprocessComplement(
 		complement ast.ComplementLike,
@@ -705,6 +736,15 @@ type Methodical interface {
 	PostprocessContinueClause(
 		continueClause ast.ContinueClauseLike,
 	)
+	PreprocessDefaultEquals(
+		defaultEquals ast.DefaultEqualsLike,
+	)
+	ProcessDefaultEqualsSlot(
+		slot uint,
+	)
+	PostprocessDefaultEquals(
+		defaultEquals ast.DefaultEqualsLike,
+	)
 	PreprocessDereference(
 		dereference ast.DereferenceLike,
 	)
@@ -722,6 +762,24 @@ type Methodical interface {
 	)
 	PostprocessDiscardClause(
 		discardClause ast.DiscardClauseLike,
+	)
+	PreprocessDivide(
+		divide ast.DivideLike,
+	)
+	ProcessDivideSlot(
+		slot uint,
+	)
+	PostprocessDivide(
+		divide ast.DivideLike,
+	)
+	PreprocessDivideEquals(
+		divideEquals ast.DivideEqualsLike,
+	)
+	ProcessDivideEqualsSlot(
+		slot uint,
+	)
+	PostprocessDivideEquals(
+		divideEquals ast.DivideEqualsLike,
 	)
 	PreprocessDoClause(
 		doClause ast.DoClauseLike,
@@ -741,6 +799,15 @@ type Methodical interface {
 	PostprocessDocument(
 		document ast.DocumentLike,
 	)
+	PreprocessDot(
+		dot ast.DotLike,
+	)
+	ProcessDotSlot(
+		slot uint,
+	)
+	PostprocessDot(
+		dot ast.DotLike,
+	)
 	PreprocessDraft(
 		draft ast.DraftLike,
 	)
@@ -759,33 +826,6 @@ type Methodical interface {
 	PostprocessElement(
 		element ast.ElementLike,
 	)
-	PreprocessEmptyAssociations(
-		emptyAssociations ast.EmptyAssociationsLike,
-	)
-	ProcessEmptyAssociationsSlot(
-		slot uint,
-	)
-	PostprocessEmptyAssociations(
-		emptyAssociations ast.EmptyAssociationsLike,
-	)
-	PreprocessEmptyStatements(
-		emptyStatements ast.EmptyStatementsLike,
-	)
-	ProcessEmptyStatementsSlot(
-		slot uint,
-	)
-	PostprocessEmptyStatements(
-		emptyStatements ast.EmptyStatementsLike,
-	)
-	PreprocessEmptyValues(
-		emptyValues ast.EmptyValuesLike,
-	)
-	ProcessEmptyValuesSlot(
-		slot uint,
-	)
-	PostprocessEmptyValues(
-		emptyValues ast.EmptyValuesLike,
-	)
 	PreprocessEntity(
 		entity ast.EntityLike,
 	)
@@ -794,6 +834,15 @@ type Methodical interface {
 	)
 	PostprocessEntity(
 		entity ast.EntityLike,
+	)
+	PreprocessEquals(
+		equals ast.EqualsLike,
+	)
+	ProcessEqualsSlot(
+		slot uint,
+	)
+	PostprocessEquals(
+		equals ast.EqualsLike,
 	)
 	PreprocessEvent(
 		event ast.EventLike,
@@ -857,6 +906,15 @@ type Methodical interface {
 	)
 	PostprocessFunction(
 		function ast.FunctionLike,
+	)
+	PreprocessIOR(
+		iOR ast.IORLike,
+	)
+	ProcessIORSlot(
+		slot uint,
+	)
+	PostprocessIOR(
+		iOR ast.IORLike,
 	)
 	PreprocessIfClause(
 		ifClause ast.IfClauseLike,
@@ -948,6 +1006,15 @@ type Methodical interface {
 	PostprocessInversion(
 		inversion ast.InversionLike,
 	)
+	PreprocessInversionOperator(
+		inversionOperator ast.InversionOperatorLike,
+	)
+	ProcessInversionOperatorSlot(
+		slot uint,
+	)
+	PostprocessInversionOperator(
+		inversionOperator ast.InversionOperatorLike,
+	)
 	PreprocessInvocation(
 		invocation ast.InvocationLike,
 	)
@@ -956,6 +1023,24 @@ type Methodical interface {
 	)
 	PostprocessInvocation(
 		invocation ast.InvocationLike,
+	)
+	PreprocessInvocationOperator(
+		invocationOperator ast.InvocationOperatorLike,
+	)
+	ProcessInvocationOperatorSlot(
+		slot uint,
+	)
+	PostprocessInvocationOperator(
+		invocationOperator ast.InvocationOperatorLike,
+	)
+	PreprocessIs(
+		is ast.IsLike,
+	)
+	ProcessIsSlot(
+		slot uint,
+	)
+	PostprocessIs(
+		is ast.IsLike,
 	)
 	PreprocessItem(
 		item ast.ItemLike,
@@ -993,6 +1078,42 @@ type Methodical interface {
 	PostprocessLabel(
 		label ast.LabelLike,
 	)
+	PreprocessLeftBracket(
+		leftBracket ast.LeftBracketLike,
+	)
+	ProcessLeftBracketSlot(
+		slot uint,
+	)
+	PostprocessLeftBracket(
+		leftBracket ast.LeftBracketLike,
+	)
+	PreprocessLeftRound(
+		leftRound ast.LeftRoundLike,
+	)
+	ProcessLeftRoundSlot(
+		slot uint,
+	)
+	PostprocessLeftRound(
+		leftRound ast.LeftRoundLike,
+	)
+	PreprocessLeftSquare(
+		leftSquare ast.LeftSquareLike,
+	)
+	ProcessLeftSquareSlot(
+		slot uint,
+	)
+	PostprocessLeftSquare(
+		leftSquare ast.LeftSquareLike,
+	)
+	PreprocessLess(
+		less ast.LessLike,
+	)
+	ProcessLessSlot(
+		slot uint,
+	)
+	PostprocessLess(
+		less ast.LessLike,
+	)
 	PreprocessLetClause(
 		letClause ast.LetClauseLike,
 	)
@@ -1011,14 +1132,14 @@ type Methodical interface {
 	PostprocessLogical(
 		logical ast.LogicalLike,
 	)
-	PreprocessMagnitude(
-		magnitude ast.MagnitudeLike,
+	PreprocessLogicalOperator(
+		logicalOperator ast.LogicalOperatorLike,
 	)
-	ProcessMagnitudeSlot(
+	ProcessLogicalOperatorSlot(
 		slot uint,
 	)
-	PostprocessMagnitude(
-		magnitude ast.MagnitudeLike,
+	PostprocessLogicalOperator(
+		logicalOperator ast.LogicalOperatorLike,
 	)
 	PreprocessMainClause(
 		mainClause ast.MainClauseLike,
@@ -1041,6 +1162,15 @@ type Methodical interface {
 		matchHandler ast.MatchHandlerLike,
 		index uint,
 		size uint,
+	)
+	PreprocessMatches(
+		matches ast.MatchesLike,
+	)
+	ProcessMatchesSlot(
+		slot uint,
+	)
+	PostprocessMatches(
+		matches ast.MatchesLike,
 	)
 	PreprocessMessage(
 		message ast.MessageLike,
@@ -1068,6 +1198,42 @@ type Methodical interface {
 	)
 	PostprocessMethod(
 		method ast.MethodLike,
+	)
+	PreprocessMinus(
+		minus ast.MinusLike,
+	)
+	ProcessMinusSlot(
+		slot uint,
+	)
+	PostprocessMinus(
+		minus ast.MinusLike,
+	)
+	PreprocessMinusEquals(
+		minusEquals ast.MinusEqualsLike,
+	)
+	ProcessMinusEqualsSlot(
+		slot uint,
+	)
+	PostprocessMinusEquals(
+		minusEquals ast.MinusEqualsLike,
+	)
+	PreprocessModulo(
+		modulo ast.ModuloLike,
+	)
+	ProcessModuloSlot(
+		slot uint,
+	)
+	PostprocessModulo(
+		modulo ast.ModuloLike,
+	)
+	PreprocessMore(
+		more ast.MoreLike,
+	)
+	ProcessMoreSlot(
+		slot uint,
+	)
+	PostprocessMore(
+		more ast.MoreLike,
 	)
 	PreprocessMultilineAssociations(
 		multilineAssociations ast.MultilineAssociationsLike,
@@ -1104,6 +1270,15 @@ type Methodical interface {
 	)
 	PostprocessMultilineValues(
 		multilineValues ast.MultilineValuesLike,
+	)
+	PreprocessNoAssociations(
+		noAssociations ast.NoAssociationsLike,
+	)
+	ProcessNoAssociationsSlot(
+		slot uint,
+	)
+	PostprocessNoAssociations(
+		noAssociations ast.NoAssociationsLike,
 	)
 	PreprocessNotarizeClause(
 		notarizeClause ast.NotarizeClauseLike,
@@ -1149,6 +1324,24 @@ type Methodical interface {
 	)
 	PostprocessParameters(
 		parameters ast.ParametersLike,
+	)
+	PreprocessPlus(
+		plus ast.PlusLike,
+	)
+	ProcessPlusSlot(
+		slot uint,
+	)
+	PostprocessPlus(
+		plus ast.PlusLike,
+	)
+	PreprocessPlusEquals(
+		plusEquals ast.PlusEqualsLike,
+	)
+	ProcessPlusEqualsSlot(
+		slot uint,
+	)
+	PostprocessPlusEquals(
+		plusEquals ast.PlusEqualsLike,
 	)
 	PreprocessPostClause(
 		postClause ast.PostClauseLike,
@@ -1258,6 +1451,42 @@ type Methodical interface {
 	PostprocessReturnClause(
 		returnClause ast.ReturnClauseLike,
 	)
+	PreprocessRightBracket(
+		rightBracket ast.RightBracketLike,
+	)
+	ProcessRightBracketSlot(
+		slot uint,
+	)
+	PostprocessRightBracket(
+		rightBracket ast.RightBracketLike,
+	)
+	PreprocessRightRound(
+		rightRound ast.RightRoundLike,
+	)
+	ProcessRightRoundSlot(
+		slot uint,
+	)
+	PostprocessRightRound(
+		rightRound ast.RightRoundLike,
+	)
+	PreprocessRightSquare(
+		rightSquare ast.RightSquareLike,
+	)
+	ProcessRightSquareSlot(
+		slot uint,
+	)
+	PostprocessRightSquare(
+		rightSquare ast.RightSquareLike,
+	)
+	PreprocessSAN(
+		sAN ast.SANLike,
+	)
+	ProcessSANSlot(
+		slot uint,
+	)
+	PostprocessSAN(
+		sAN ast.SANLike,
+	)
 	PreprocessSaveClause(
 		saveClause ast.SaveClauseLike,
 	)
@@ -1348,6 +1577,24 @@ type Methodical interface {
 	PostprocessThrowClause(
 		throwClause ast.ThrowClauseLike,
 	)
+	PreprocessTimes(
+		times ast.TimesLike,
+	)
+	ProcessTimesSlot(
+		slot uint,
+	)
+	PostprocessTimes(
+		times ast.TimesLike,
+	)
+	PreprocessTimesEquals(
+		timesEquals ast.TimesEqualsLike,
+	)
+	ProcessTimesEqualsSlot(
+		slot uint,
+	)
+	PostprocessTimesEquals(
+		timesEquals ast.TimesEqualsLike,
+	)
 	PreprocessValue(
 		value ast.ValueLike,
 	)
@@ -1392,5 +1639,14 @@ type Methodical interface {
 	)
 	PostprocessWithClause(
 		withClause ast.WithClauseLike,
+	)
+	PreprocessXOR(
+		xOR ast.XORLike,
+	)
+	ProcessXORSlot(
+		slot uint,
+	)
+	PostprocessXOR(
+		xOR ast.XORLike,
 	)
 }

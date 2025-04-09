@@ -19,39 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func LetClauseClass() LetClauseClassLike {
-	return letClauseClass()
+func IORClass() IORClassLike {
+	return iORClass()
 }
 
 // Constructor Methods
 
-func (c *letClauseClass_) LetClause(
-	recipient RecipientLike,
-	assignmentOperator AssignmentOperatorLike,
-	expression ExpressionLike,
-) LetClauseLike {
-	if uti.IsUndefined(recipient) {
-		panic("The \"recipient\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(assignmentOperator) {
-		panic("The \"assignmentOperator\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
-	}
-	var instance = &letClause_{
+func (c *iORClass_) IOR() IORLike {
+	var instance = &iOR_{
 		// Initialize the instance attributes.
-		recipient_:          recipient,
-		assignmentOperator_: assignmentOperator,
-		expression_:         expression,
 	}
 	return instance
 }
@@ -60,47 +42,32 @@ func (c *letClauseClass_) LetClause(
 
 // Principal Methods
 
-func (v *letClause_) GetClass() LetClauseClassLike {
-	return letClauseClass()
+func (v *iOR_) GetClass() IORClassLike {
+	return iORClass()
 }
 
 // Attribute Methods
-
-func (v *letClause_) GetRecipient() RecipientLike {
-	return v.recipient_
-}
-
-func (v *letClause_) GetAssignmentOperator() AssignmentOperatorLike {
-	return v.assignmentOperator_
-}
-
-func (v *letClause_) GetExpression() ExpressionLike {
-	return v.expression_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type letClause_ struct {
+type iOR_ struct {
 	// Declare the instance attributes.
-	recipient_          RecipientLike
-	assignmentOperator_ AssignmentOperatorLike
-	expression_         ExpressionLike
 }
 
 // Class Structure
 
-type letClauseClass_ struct {
+type iORClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func letClauseClass() *letClauseClass_ {
-	return letClauseClassReference_
+func iORClass() *iORClass_ {
+	return iORClassReference_
 }
 
-var letClauseClassReference_ = &letClauseClass_{
+var iORClassReference_ = &iORClass_{
 	// Initialize the class constants.
 }

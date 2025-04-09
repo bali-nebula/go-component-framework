@@ -35,7 +35,7 @@ func ComparisonClass() ComparisonClassLike {
 
 func (c *comparisonClass_) Comparison(
 	expression1 ExpressionLike,
-	comparisonOperator string,
+	comparisonOperator ComparisonOperatorLike,
 	expression2 ExpressionLike,
 ) ComparisonLike {
 	if uti.IsUndefined(expression1) {
@@ -70,7 +70,7 @@ func (v *comparison_) GetExpression1() ExpressionLike {
 	return v.expression1_
 }
 
-func (v *comparison_) GetComparisonOperator() string {
+func (v *comparison_) GetComparisonOperator() ComparisonOperatorLike {
 	return v.comparisonOperator_
 }
 
@@ -85,7 +85,7 @@ func (v *comparison_) GetExpression2() ExpressionLike {
 type comparison_ struct {
 	// Declare the instance attributes.
 	expression1_        ExpressionLike
-	comparisonOperator_ string
+	comparisonOperator_ ComparisonOperatorLike
 	expression2_        ExpressionLike
 }
 

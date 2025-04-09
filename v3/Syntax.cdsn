@@ -72,13 +72,29 @@ $String:
   - tag
   - version
 
-$Range: open Primitive ".." Primitive close
+$Range: LeftBracket Primitive ".." Primitive RightBracket
+
+$LeftBracket:
+  - LeftSquare
+  - LeftRound
+
+$LeftSquare: "["
+
+$LeftRound: "("
 
 $Primitive:
   - Element
   - String
 
-$Collection: "[" Items "]"
+$RightBracket:
+  - RightSquare
+  - RightRound
+
+$RightSquare: "]"
+
+$RightRound: ")"
+
+$Collection: "[" Items? "]"
 
 $Items:
   - Associations
@@ -87,13 +103,13 @@ $Items:
 $Associations:
   - InlineAssociations
   - MultilineAssociations
-  - EmptyAssociations
+  - NoAssociations
 
 $InlineAssociations: Association AdditionalAssociation*
 
 $MultilineAssociations: AnnotatedAssociation+
 
-$EmptyAssociations: ":"
+$NoAssociations: ":"
 
 $AdditionalAssociation: "," Association
 
@@ -108,30 +124,24 @@ $Value: Component
 $Values:
   - InlineValues
   - MultilineValues
-  - EmptyValues
 
 $InlineValues: Value AdditionalValue*
 
 $MultilineValues: AnnotatedValue+
 
-$EmptyValues: " "
-
 $AdditionalValue: "," Value
 
 $AnnotatedValue: Value note?
 
-$Procedure: "{" Statements "}"
+$Procedure: "{" Statements? "}"
 
 $Statements:
   - InlineStatements
   - MultilineStatements
-  - EmptyStatements
 
 $InlineStatements: Statement AdditionalStatement*
 
 $MultilineStatements: AnnotatedStatement+
-
-$EmptyStatements: " "
 
 $AdditionalStatement: ";" Statement
 
@@ -218,7 +228,15 @@ $Intrinsic: Function "(" Arguments? ")"
 
 $Function: identifier
 
-$Invocation: Target invocationOperator Method "(" Arguments? ")"
+$Invocation: Target InvocationOperator Method "(" Arguments? ")"
+
+$InvocationOperator:
+  - Dot
+  - Arrow
+
+$Dot: "."
+
+$Arrow: "<-"
 
 $Method: identifier
 
@@ -228,7 +246,27 @@ $AdditionalArgument: "," Argument
 
 $Argument: Expression
 
-$LetClause: "let" Recipient assignmentOperator Expression
+$LetClause: "let" Recipient AssignmentOperator Expression
+
+$AssignmentOperator:
+  - ColonEquals
+  - DefaultEquals
+  - PlusEquals
+  - MinusEquals
+  - TimesEquals
+  - DivideEquals
+
+$ColonEquals: ":="
+
+$DefaultEquals: "?="
+
+$PlusEquals: "+="
+
+$MinusEquals: "-="
+
+$TimesEquals: "*="
+
+$DivideEquals: "/="
 
 $Recipient:
   - Label
@@ -286,7 +324,7 @@ $Expression:
   - Exponential
   - Inversion
   - Arithmetic
-  - Magnitude
+  - Amplitude
   - Comparison
   - Complement
   - Logical
@@ -303,17 +341,70 @@ $Chaining: Expression "&" Expression
 
 $Exponential: Expression "^" Expression
 
-$Inversion: inversionOperator Expression
+$Inversion: InversionOperator Expression
 
-$Arithmetic: Expression arithmeticOperator Expression
+$InversionOperator:
+  - Minus
+  - Divide
+  - Times
 
-$Magnitude: "|" Expression "|"
+$Minus: "-"
 
-$Comparison: Expression comparisonOperator Expression
+$Divide: "/"
+
+$Times: "*"
+
+$Arithmetic: Expression ArithmeticOperator Expression
+
+$ArithmeticOperator:
+  - Times
+  - Divide
+  - Modulo
+  - Plus
+  - Minus
+
+$Modulo: "//"
+
+$Plus: "+"
+
+$Amplitude: "|" Expression "|"
+
+$Comparison: Expression ComparisonOperator Expression
+
+$ComparisonOperator:
+  - Less
+  - Equals
+  - More
+  - Is
+  - Matches
+
+$Less: "<"
+
+$Equals: "="
+
+$More: ">"
+
+$Is: "IS"
+
+$Matches: "MATCHES"
 
 $Complement: "NOT" Expression
 
-$Logical: Expression logicalOperator Expression
+$Logical: Expression LogicalOperator Expression
+
+$LogicalOperator:
+  - And
+  - SAN
+  - IOR
+  - XOR
+
+$And: "AND"
+
+$SAN: "SAN"
+
+$IOR: "IOR"
+
+$XOR: "XOR"
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -325,10 +416,6 @@ $angle: '~' (zero | magnitude)
 $alpha: ['A'..'Z' 'a'..'z']
 
 $alphanumeric: alpha | base10
-
-$arithmeticOperator: "*" | "/" | "//" | "+" | "-"
-
-$assignmentOperator: ":=" | "?=" | "+=" | "-=" | "*=" | "/="
 
 $authority: ~['/' CONTROL]+
 
@@ -348,11 +435,7 @@ $bytecode: "'" (instruction (space instruction)*)* "'"
 
 $character: escape | ~['"' CONTROL]
 
-$close: [']' ')']
-
 $comment: "!>" ANY* "<!"
-
-$comparisonOperator: "<" | "=" | ">" | "IS" | "MATCHES"
 
 $complex: '(' (rectangular | polar) ')'
 
@@ -362,11 +445,9 @@ $days: timespan 'D'
 
 $duration: '~' sign? 'P' (weeks | years? months? days? ('T' hours? minutes? seconds?)?)
 
-$e: 'e'
-
 $escape: '\' (unicode | ['a' 'b' 'f' 'n' 'r' 't' 'v' '"' '\'])
 
-$exponent: 'e' sign? ordinal
+$exponent: 'E' sign? ordinal
 
 $float: sign? magnitude
 
@@ -378,23 +459,15 @@ $hour: ['0'..'1' '0'..'9'] | ['2' '0'..'3']
 
 $hours: timespan 'H'
 
-$identifier: letter (letter | DIGIT)*
-
 $imaginary: sign? magnitude? 'i'
 
 $infinity: sign? ("infinity" | '∞')
 
 $instruction: base16{4}
 
-$inversionOperator: "-" | "/" | "*"
-
-$invocationOperator: "." | "<-"
-
 $letter: LOWER | UPPER
 
-$logicalOperator: "AND" | "SAN" | "IOR" | "XOR"
-
-$magnitude: e | pi | phi | tau | scalar
+$magnitude: "e" | "pi" | "π" | "phi" | "φ"| "tau" | "τ" | scalar
 
 $minute: ['0'..'5' '0'..'9']
 
@@ -412,11 +485,7 @@ $narrative: '"' '>' EOL ANY* EOL space* '<' '"'
 
 $note: "! " ~[CONTROL]*
 
-$number: real | imaginary | complex
-
 $one: "1."
-
-$open: ['[' '(']
 
 $ordinal: ['1'..'9'] base10*
 
@@ -426,13 +495,11 @@ $pattern: "none" | regex | "any"
 
 $percentage: real '%'
 
-$phi: "phi" | 'φ'
-
-$pi: "pi" | 'π'
+$number: real | imaginary | complex  ! Must be after percentage.
 
 $polar: magnitude "e^" angle 'i'
 
-$probability: fraction | one
+$probability: fraction | one  ! Must be after number.
 
 $query: ~['#' '>' CONTROL]*
 
@@ -462,8 +529,6 @@ $symbol: '$' identifier
 
 $tag: '#' base32+
 
-$tau: "tau" | 'τ'
-
 $timespan: zero | (ordinal fraction?)
 
 $undefined: "undefined"
@@ -479,4 +544,6 @@ $year: zero | ordinal
 $years: timespan 'Y'
 
 $zero: '0'
+
+$identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
 

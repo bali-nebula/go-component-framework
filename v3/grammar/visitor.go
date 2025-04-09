@@ -138,6 +138,22 @@ func (v *visitor_) visitAdditionalValue(
 	v.processor_.PostprocessValue(value)
 }
 
+func (v *visitor_) visitAmplitude(
+	amplitude ast.AmplitudeLike,
+) {
+	// Visit a single expression rule.
+	var expression = amplitude.GetExpression()
+	v.processor_.PreprocessExpression(expression)
+	v.visitExpression(expression)
+	v.processor_.PostprocessExpression(expression)
+}
+
+func (v *visitor_) visitAnd(
+	and ast.AndLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitAnnotatedAssociation(
 	annotatedAssociation ast.AnnotatedAssociationLike,
 ) {
@@ -269,9 +285,11 @@ func (v *visitor_) visitArithmetic(
 	// Visit slot 1 between references.
 	v.processor_.ProcessArithmeticSlot(1)
 
-	// Visit a single arithmeticOperator token.
+	// Visit a single arithmeticOperator rule.
 	var arithmeticOperator = arithmetic.GetArithmeticOperator()
-	v.processor_.ProcessArithmeticOperator(arithmeticOperator)
+	v.processor_.PreprocessArithmeticOperator(arithmeticOperator)
+	v.visitArithmeticOperator(arithmeticOperator)
+	v.processor_.PostprocessArithmeticOperator(arithmeticOperator)
 
 	// Visit slot 2 between references.
 	v.processor_.ProcessArithmeticSlot(2)
@@ -281,6 +299,86 @@ func (v *visitor_) visitArithmetic(
 	v.processor_.PreprocessExpression(expression2)
 	v.visitExpression(expression2)
 	v.processor_.PostprocessExpression(expression2)
+}
+
+func (v *visitor_) visitArithmeticOperator(
+	arithmeticOperator ast.ArithmeticOperatorLike,
+) {
+	// Visit the possible arithmeticOperator types.
+	switch actual := arithmeticOperator.GetAny().(type) {
+	case ast.TimesLike:
+		v.processor_.PreprocessTimes(actual)
+		v.visitTimes(actual)
+		v.processor_.PostprocessTimes(actual)
+	case ast.DivideLike:
+		v.processor_.PreprocessDivide(actual)
+		v.visitDivide(actual)
+		v.processor_.PostprocessDivide(actual)
+	case ast.ModuloLike:
+		v.processor_.PreprocessModulo(actual)
+		v.visitModulo(actual)
+		v.processor_.PostprocessModulo(actual)
+	case ast.PlusLike:
+		v.processor_.PreprocessPlus(actual)
+		v.visitPlus(actual)
+		v.processor_.PostprocessPlus(actual)
+	case ast.MinusLike:
+		v.processor_.PreprocessMinus(actual)
+		v.visitMinus(actual)
+		v.processor_.PostprocessMinus(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
+func (v *visitor_) visitArrow(
+	arrow ast.ArrowLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitAssignmentOperator(
+	assignmentOperator ast.AssignmentOperatorLike,
+) {
+	// Visit the possible assignmentOperator types.
+	switch actual := assignmentOperator.GetAny().(type) {
+	case ast.ColonEqualsLike:
+		v.processor_.PreprocessColonEquals(actual)
+		v.visitColonEquals(actual)
+		v.processor_.PostprocessColonEquals(actual)
+	case ast.DefaultEqualsLike:
+		v.processor_.PreprocessDefaultEquals(actual)
+		v.visitDefaultEquals(actual)
+		v.processor_.PostprocessDefaultEquals(actual)
+	case ast.PlusEqualsLike:
+		v.processor_.PreprocessPlusEquals(actual)
+		v.visitPlusEquals(actual)
+		v.processor_.PostprocessPlusEquals(actual)
+	case ast.MinusEqualsLike:
+		v.processor_.PreprocessMinusEquals(actual)
+		v.visitMinusEquals(actual)
+		v.processor_.PostprocessMinusEquals(actual)
+	case ast.TimesEqualsLike:
+		v.processor_.PreprocessTimesEquals(actual)
+		v.visitTimesEquals(actual)
+		v.processor_.PostprocessTimesEquals(actual)
+	case ast.DivideEqualsLike:
+		v.processor_.PreprocessDivideEquals(actual)
+		v.visitDivideEquals(actual)
+		v.processor_.PostprocessDivideEquals(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
 }
 
 func (v *visitor_) visitAssociation(
@@ -315,10 +413,10 @@ func (v *visitor_) visitAssociations(
 		v.processor_.PreprocessMultilineAssociations(actual)
 		v.visitMultilineAssociations(actual)
 		v.processor_.PostprocessMultilineAssociations(actual)
-	case ast.EmptyAssociationsLike:
-		v.processor_.PreprocessEmptyAssociations(actual)
-		v.visitEmptyAssociations(actual)
-		v.processor_.PostprocessEmptyAssociations(actual)
+	case ast.NoAssociationsLike:
+		v.processor_.PreprocessNoAssociations(actual)
+		v.visitNoAssociations(actual)
+		v.processor_.PostprocessNoAssociations(actual)
 	case string:
 		switch {
 		default:
@@ -436,11 +534,19 @@ func (v *visitor_) visitCitation(
 func (v *visitor_) visitCollection(
 	collection ast.CollectionLike,
 ) {
-	// Visit a single items rule.
-	var items = collection.GetItems()
-	v.processor_.PreprocessItems(items)
-	v.visitItems(items)
-	v.processor_.PostprocessItems(items)
+	// Visit an optional items rule.
+	var optionalItems = collection.GetOptionalItems()
+	if uti.IsDefined(optionalItems) {
+		v.processor_.PreprocessItems(optionalItems)
+		v.visitItems(optionalItems)
+		v.processor_.PostprocessItems(optionalItems)
+	}
+}
+
+func (v *visitor_) visitColonEquals(
+	colonEquals ast.ColonEqualsLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitComparison(
@@ -455,9 +561,11 @@ func (v *visitor_) visitComparison(
 	// Visit slot 1 between references.
 	v.processor_.ProcessComparisonSlot(1)
 
-	// Visit a single comparisonOperator token.
+	// Visit a single comparisonOperator rule.
 	var comparisonOperator = comparison.GetComparisonOperator()
-	v.processor_.ProcessComparisonOperator(comparisonOperator)
+	v.processor_.PreprocessComparisonOperator(comparisonOperator)
+	v.visitComparisonOperator(comparisonOperator)
+	v.processor_.PostprocessComparisonOperator(comparisonOperator)
 
 	// Visit slot 2 between references.
 	v.processor_.ProcessComparisonSlot(2)
@@ -467,6 +575,41 @@ func (v *visitor_) visitComparison(
 	v.processor_.PreprocessExpression(expression2)
 	v.visitExpression(expression2)
 	v.processor_.PostprocessExpression(expression2)
+}
+
+func (v *visitor_) visitComparisonOperator(
+	comparisonOperator ast.ComparisonOperatorLike,
+) {
+	// Visit the possible comparisonOperator types.
+	switch actual := comparisonOperator.GetAny().(type) {
+	case ast.LessLike:
+		v.processor_.PreprocessLess(actual)
+		v.visitLess(actual)
+		v.processor_.PostprocessLess(actual)
+	case ast.EqualsLike:
+		v.processor_.PreprocessEquals(actual)
+		v.visitEquals(actual)
+		v.processor_.PostprocessEquals(actual)
+	case ast.MoreLike:
+		v.processor_.PreprocessMore(actual)
+		v.visitMore(actual)
+		v.processor_.PostprocessMore(actual)
+	case ast.IsLike:
+		v.processor_.PreprocessIs(actual)
+		v.visitIs(actual)
+		v.processor_.PostprocessIs(actual)
+	case ast.MatchesLike:
+		v.processor_.PreprocessMatches(actual)
+		v.visitMatches(actual)
+		v.processor_.PostprocessMatches(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
 }
 
 func (v *visitor_) visitComplement(
@@ -536,6 +679,12 @@ func (v *visitor_) visitContinueClause(
 	// This method does not need to process anything.
 }
 
+func (v *visitor_) visitDefaultEquals(
+	defaultEquals ast.DefaultEqualsLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitDereference(
 	dereference ast.DereferenceLike,
 ) {
@@ -554,6 +703,18 @@ func (v *visitor_) visitDiscardClause(
 	v.processor_.PreprocessDraft(draft)
 	v.visitDraft(draft)
 	v.processor_.PostprocessDraft(draft)
+}
+
+func (v *visitor_) visitDivide(
+	divide ast.DivideLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitDivideEquals(
+	divideEquals ast.DivideEqualsLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitDoClause(
@@ -581,6 +742,12 @@ func (v *visitor_) visitDocument(
 	v.processor_.PreprocessComponent(component)
 	v.visitComponent(component)
 	v.processor_.PostprocessComponent(component)
+}
+
+func (v *visitor_) visitDot(
+	dot ast.DotLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitDraft(
@@ -626,24 +793,6 @@ func (v *visitor_) visitElement(
 	}
 }
 
-func (v *visitor_) visitEmptyAssociations(
-	emptyAssociations ast.EmptyAssociationsLike,
-) {
-	// This method does not need to process anything.
-}
-
-func (v *visitor_) visitEmptyStatements(
-	emptyStatements ast.EmptyStatementsLike,
-) {
-	// This method does not need to process anything.
-}
-
-func (v *visitor_) visitEmptyValues(
-	emptyValues ast.EmptyValuesLike,
-) {
-	// This method does not need to process anything.
-}
-
 func (v *visitor_) visitEntity(
 	entity ast.EntityLike,
 ) {
@@ -677,6 +826,12 @@ func (v *visitor_) visitEntity(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
+}
+
+func (v *visitor_) visitEquals(
+	equals ast.EqualsLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitEvent(
@@ -767,10 +922,10 @@ func (v *visitor_) visitExpression(
 		v.processor_.PreprocessArithmetic(actual)
 		v.visitArithmetic(actual)
 		v.processor_.PostprocessArithmetic(actual)
-	case ast.MagnitudeLike:
-		v.processor_.PreprocessMagnitude(actual)
-		v.visitMagnitude(actual)
-		v.processor_.PostprocessMagnitude(actual)
+	case ast.AmplitudeLike:
+		v.processor_.PreprocessAmplitude(actual)
+		v.visitAmplitude(actual)
+		v.processor_.PostprocessAmplitude(actual)
 	case ast.ComparisonLike:
 		v.processor_.PreprocessComparison(actual)
 		v.visitComparison(actual)
@@ -854,6 +1009,12 @@ func (v *visitor_) visitFunction(
 	// Visit a single identifier token.
 	var identifier = function.GetIdentifier()
 	v.processor_.ProcessIdentifier(identifier)
+}
+
+func (v *visitor_) visitIOR(
+	iOR ast.IORLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitIfClause(
@@ -1097,9 +1258,11 @@ func (v *visitor_) visitIntrinsic(
 func (v *visitor_) visitInversion(
 	inversion ast.InversionLike,
 ) {
-	// Visit a single inversionOperator token.
+	// Visit a single inversionOperator rule.
 	var inversionOperator = inversion.GetInversionOperator()
-	v.processor_.ProcessInversionOperator(inversionOperator)
+	v.processor_.PreprocessInversionOperator(inversionOperator)
+	v.visitInversionOperator(inversionOperator)
+	v.processor_.PostprocessInversionOperator(inversionOperator)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessInversionSlot(1)
@@ -1109,6 +1272,33 @@ func (v *visitor_) visitInversion(
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
+}
+
+func (v *visitor_) visitInversionOperator(
+	inversionOperator ast.InversionOperatorLike,
+) {
+	// Visit the possible inversionOperator types.
+	switch actual := inversionOperator.GetAny().(type) {
+	case ast.MinusLike:
+		v.processor_.PreprocessMinus(actual)
+		v.visitMinus(actual)
+		v.processor_.PostprocessMinus(actual)
+	case ast.DivideLike:
+		v.processor_.PreprocessDivide(actual)
+		v.visitDivide(actual)
+		v.processor_.PostprocessDivide(actual)
+	case ast.TimesLike:
+		v.processor_.PreprocessTimes(actual)
+		v.visitTimes(actual)
+		v.processor_.PostprocessTimes(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
 }
 
 func (v *visitor_) visitInvocation(
@@ -1123,9 +1313,11 @@ func (v *visitor_) visitInvocation(
 	// Visit slot 1 between references.
 	v.processor_.ProcessInvocationSlot(1)
 
-	// Visit a single invocationOperator token.
+	// Visit a single invocationOperator rule.
 	var invocationOperator = invocation.GetInvocationOperator()
-	v.processor_.ProcessInvocationOperator(invocationOperator)
+	v.processor_.PreprocessInvocationOperator(invocationOperator)
+	v.visitInvocationOperator(invocationOperator)
+	v.processor_.PostprocessInvocationOperator(invocationOperator)
 
 	// Visit slot 2 between references.
 	v.processor_.ProcessInvocationSlot(2)
@@ -1146,6 +1338,35 @@ func (v *visitor_) visitInvocation(
 		v.visitArguments(optionalArguments)
 		v.processor_.PostprocessArguments(optionalArguments)
 	}
+}
+
+func (v *visitor_) visitInvocationOperator(
+	invocationOperator ast.InvocationOperatorLike,
+) {
+	// Visit the possible invocationOperator types.
+	switch actual := invocationOperator.GetAny().(type) {
+	case ast.DotLike:
+		v.processor_.PreprocessDot(actual)
+		v.visitDot(actual)
+		v.processor_.PostprocessDot(actual)
+	case ast.ArrowLike:
+		v.processor_.PreprocessArrow(actual)
+		v.visitArrow(actual)
+		v.processor_.PostprocessArrow(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
+func (v *visitor_) visitIs(
+	is ast.IsLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitItem(
@@ -1197,6 +1418,47 @@ func (v *visitor_) visitLabel(
 	v.processor_.ProcessSymbol(symbol)
 }
 
+func (v *visitor_) visitLeftBracket(
+	leftBracket ast.LeftBracketLike,
+) {
+	// Visit the possible leftBracket types.
+	switch actual := leftBracket.GetAny().(type) {
+	case ast.LeftSquareLike:
+		v.processor_.PreprocessLeftSquare(actual)
+		v.visitLeftSquare(actual)
+		v.processor_.PostprocessLeftSquare(actual)
+	case ast.LeftRoundLike:
+		v.processor_.PreprocessLeftRound(actual)
+		v.visitLeftRound(actual)
+		v.processor_.PostprocessLeftRound(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
+func (v *visitor_) visitLeftRound(
+	leftRound ast.LeftRoundLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitLeftSquare(
+	leftSquare ast.LeftSquareLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitLess(
+	less ast.LessLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitLetClause(
 	letClause ast.LetClauseLike,
 ) {
@@ -1209,9 +1471,11 @@ func (v *visitor_) visitLetClause(
 	// Visit slot 1 between references.
 	v.processor_.ProcessLetClauseSlot(1)
 
-	// Visit a single assignmentOperator token.
+	// Visit a single assignmentOperator rule.
 	var assignmentOperator = letClause.GetAssignmentOperator()
-	v.processor_.ProcessAssignmentOperator(assignmentOperator)
+	v.processor_.PreprocessAssignmentOperator(assignmentOperator)
+	v.visitAssignmentOperator(assignmentOperator)
+	v.processor_.PostprocessAssignmentOperator(assignmentOperator)
 
 	// Visit slot 2 between references.
 	v.processor_.ProcessLetClauseSlot(2)
@@ -1235,9 +1499,11 @@ func (v *visitor_) visitLogical(
 	// Visit slot 1 between references.
 	v.processor_.ProcessLogicalSlot(1)
 
-	// Visit a single logicalOperator token.
+	// Visit a single logicalOperator rule.
 	var logicalOperator = logical.GetLogicalOperator()
-	v.processor_.ProcessLogicalOperator(logicalOperator)
+	v.processor_.PreprocessLogicalOperator(logicalOperator)
+	v.visitLogicalOperator(logicalOperator)
+	v.processor_.PostprocessLogicalOperator(logicalOperator)
 
 	// Visit slot 2 between references.
 	v.processor_.ProcessLogicalSlot(2)
@@ -1249,14 +1515,35 @@ func (v *visitor_) visitLogical(
 	v.processor_.PostprocessExpression(expression2)
 }
 
-func (v *visitor_) visitMagnitude(
-	magnitude ast.MagnitudeLike,
+func (v *visitor_) visitLogicalOperator(
+	logicalOperator ast.LogicalOperatorLike,
 ) {
-	// Visit a single expression rule.
-	var expression = magnitude.GetExpression()
-	v.processor_.PreprocessExpression(expression)
-	v.visitExpression(expression)
-	v.processor_.PostprocessExpression(expression)
+	// Visit the possible logicalOperator types.
+	switch actual := logicalOperator.GetAny().(type) {
+	case ast.AndLike:
+		v.processor_.PreprocessAnd(actual)
+		v.visitAnd(actual)
+		v.processor_.PostprocessAnd(actual)
+	case ast.SANLike:
+		v.processor_.PreprocessSAN(actual)
+		v.visitSAN(actual)
+		v.processor_.PostprocessSAN(actual)
+	case ast.IORLike:
+		v.processor_.PreprocessIOR(actual)
+		v.visitIOR(actual)
+		v.processor_.PostprocessIOR(actual)
+	case ast.XORLike:
+		v.processor_.PreprocessXOR(actual)
+		v.visitXOR(actual)
+		v.processor_.PostprocessXOR(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
 }
 
 func (v *visitor_) visitMainClause(
@@ -1307,6 +1594,12 @@ func (v *visitor_) visitMatchHandler(
 	v.processor_.PreprocessProcedure(procedure)
 	v.visitProcedure(procedure)
 	v.processor_.PostprocessProcedure(procedure)
+}
+
+func (v *visitor_) visitMatches(
+	matches ast.MatchesLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitMessage(
@@ -1360,6 +1653,30 @@ func (v *visitor_) visitMethod(
 	// Visit a single identifier token.
 	var identifier = method.GetIdentifier()
 	v.processor_.ProcessIdentifier(identifier)
+}
+
+func (v *visitor_) visitMinus(
+	minus ast.MinusLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitMinusEquals(
+	minusEquals ast.MinusEqualsLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitModulo(
+	modulo ast.ModuloLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitMore(
+	more ast.MoreLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitMultilineAssociations(
@@ -1456,6 +1773,12 @@ func (v *visitor_) visitMultilineValues(
 			annotatedValuesSize,
 		)
 	}
+}
+
+func (v *visitor_) visitNoAssociations(
+	noAssociations ast.NoAssociationsLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitNotarizeClause(
@@ -1575,6 +1898,18 @@ func (v *visitor_) visitParameters(
 	}
 }
 
+func (v *visitor_) visitPlus(
+	plus ast.PlusLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitPlusEquals(
+	plusEquals ast.PlusEqualsLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitPostClause(
 	postClause ast.PostClauseLike,
 ) {
@@ -1630,11 +1965,13 @@ func (v *visitor_) visitPrimitive(
 func (v *visitor_) visitProcedure(
 	procedure ast.ProcedureLike,
 ) {
-	// Visit a single statements rule.
-	var statements = procedure.GetStatements()
-	v.processor_.PreprocessStatements(statements)
-	v.visitStatements(statements)
-	v.processor_.PostprocessStatements(statements)
+	// Visit an optional statements rule.
+	var optionalStatements = procedure.GetOptionalStatements()
+	if uti.IsDefined(optionalStatements) {
+		v.processor_.PreprocessStatements(optionalStatements)
+		v.visitStatements(optionalStatements)
+		v.processor_.PostprocessStatements(optionalStatements)
+	}
 }
 
 func (v *visitor_) visitPublishClause(
@@ -1650,9 +1987,11 @@ func (v *visitor_) visitPublishClause(
 func (v *visitor_) visitRange(
 	range_ ast.RangeLike,
 ) {
-	// Visit a single open token.
-	var open = range_.GetOpen()
-	v.processor_.ProcessOpen(open)
+	// Visit a single leftBracket rule.
+	var leftBracket = range_.GetLeftBracket()
+	v.processor_.PreprocessLeftBracket(leftBracket)
+	v.visitLeftBracket(leftBracket)
+	v.processor_.PostprocessLeftBracket(leftBracket)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessRangeSlot(1)
@@ -1675,9 +2014,11 @@ func (v *visitor_) visitRange(
 	// Visit slot 3 between references.
 	v.processor_.ProcessRangeSlot(3)
 
-	// Visit a single close token.
-	var close_ = range_.GetClose()
-	v.processor_.ProcessClose(close_)
+	// Visit a single rightBracket rule.
+	var rightBracket = range_.GetRightBracket()
+	v.processor_.PreprocessRightBracket(rightBracket)
+	v.visitRightBracket(rightBracket)
+	v.processor_.PostprocessRightBracket(rightBracket)
 }
 
 func (v *visitor_) visitRecipient(
@@ -1783,6 +2124,47 @@ func (v *visitor_) visitReturnClause(
 	v.processor_.PostprocessResult(result)
 }
 
+func (v *visitor_) visitRightBracket(
+	rightBracket ast.RightBracketLike,
+) {
+	// Visit the possible rightBracket types.
+	switch actual := rightBracket.GetAny().(type) {
+	case ast.RightSquareLike:
+		v.processor_.PreprocessRightSquare(actual)
+		v.visitRightSquare(actual)
+		v.processor_.PostprocessRightSquare(actual)
+	case ast.RightRoundLike:
+		v.processor_.PreprocessRightRound(actual)
+		v.visitRightRound(actual)
+		v.processor_.PostprocessRightRound(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
+func (v *visitor_) visitRightRound(
+	rightRound ast.RightRoundLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitRightSquare(
+	rightSquare ast.RightSquareLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitSAN(
+	sAN ast.SANLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -1879,10 +2261,6 @@ func (v *visitor_) visitStatements(
 		v.processor_.PreprocessMultilineStatements(actual)
 		v.visitMultilineStatements(actual)
 		v.processor_.PostprocessMultilineStatements(actual)
-	case ast.EmptyStatementsLike:
-		v.processor_.PreprocessEmptyStatements(actual)
-		v.visitEmptyStatements(actual)
-		v.processor_.PostprocessEmptyStatements(actual)
 	case string:
 		switch {
 		default:
@@ -1973,6 +2351,18 @@ func (v *visitor_) visitThrowClause(
 	v.processor_.PostprocessException(exception)
 }
 
+func (v *visitor_) visitTimes(
+	times ast.TimesLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitTimesEquals(
+	timesEquals ast.TimesEqualsLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitValue(
 	value ast.ValueLike,
 ) {
@@ -1996,10 +2386,6 @@ func (v *visitor_) visitValues(
 		v.processor_.PreprocessMultilineValues(actual)
 		v.visitMultilineValues(actual)
 		v.processor_.PostprocessMultilineValues(actual)
-	case ast.EmptyValuesLike:
-		v.processor_.PreprocessEmptyValues(actual)
-		v.visitEmptyValues(actual)
-		v.processor_.PostprocessEmptyValues(actual)
 	case string:
 		switch {
 		default:
@@ -2063,6 +2449,12 @@ func (v *visitor_) visitWithClause(
 	v.processor_.PreprocessProcedure(procedure)
 	v.visitProcedure(procedure)
 	v.processor_.PostprocessProcedure(procedure)
+}
+
+func (v *visitor_) visitXOR(
+	xOR ast.XORLike,
+) {
+	// This method does not need to process anything.
 }
 
 // Instance Structure

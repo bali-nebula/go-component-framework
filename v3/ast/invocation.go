@@ -35,7 +35,7 @@ func InvocationClass() InvocationClassLike {
 
 func (c *invocationClass_) Invocation(
 	target TargetLike,
-	invocationOperator string,
+	invocationOperator InvocationOperatorLike,
 	method MethodLike,
 	optionalArguments ArgumentsLike,
 ) InvocationLike {
@@ -72,7 +72,7 @@ func (v *invocation_) GetTarget() TargetLike {
 	return v.target_
 }
 
-func (v *invocation_) GetInvocationOperator() string {
+func (v *invocation_) GetInvocationOperator() InvocationOperatorLike {
 	return v.invocationOperator_
 }
 
@@ -91,7 +91,7 @@ func (v *invocation_) GetOptionalArguments() ArgumentsLike {
 type invocation_ struct {
 	// Declare the instance attributes.
 	target_             TargetLike
-	invocationOperator_ string
+	invocationOperator_ InvocationOperatorLike
 	method_             MethodLike
 	optionalArguments_  ArgumentsLike
 }

@@ -35,7 +35,7 @@ func LogicalClass() LogicalClassLike {
 
 func (c *logicalClass_) Logical(
 	expression1 ExpressionLike,
-	logicalOperator string,
+	logicalOperator LogicalOperatorLike,
 	expression2 ExpressionLike,
 ) LogicalLike {
 	if uti.IsUndefined(expression1) {
@@ -70,7 +70,7 @@ func (v *logical_) GetExpression1() ExpressionLike {
 	return v.expression1_
 }
 
-func (v *logical_) GetLogicalOperator() string {
+func (v *logical_) GetLogicalOperator() LogicalOperatorLike {
 	return v.logicalOperator_
 }
 
@@ -85,7 +85,7 @@ func (v *logical_) GetExpression2() ExpressionLike {
 type logical_ struct {
 	// Declare the instance attributes.
 	expression1_     ExpressionLike
-	logicalOperator_ string
+	logicalOperator_ LogicalOperatorLike
 	expression2_     ExpressionLike
 }
 

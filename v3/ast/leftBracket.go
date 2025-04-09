@@ -27,31 +27,21 @@ import (
 
 // Access Function
 
-func LetClauseClass() LetClauseClassLike {
-	return letClauseClass()
+func LeftBracketClass() LeftBracketClassLike {
+	return leftBracketClass()
 }
 
 // Constructor Methods
 
-func (c *letClauseClass_) LetClause(
-	recipient RecipientLike,
-	assignmentOperator AssignmentOperatorLike,
-	expression ExpressionLike,
-) LetClauseLike {
-	if uti.IsUndefined(recipient) {
-		panic("The \"recipient\" attribute is required by this class.")
+func (c *leftBracketClass_) LeftBracket(
+	any_ any,
+) LeftBracketLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(assignmentOperator) {
-		panic("The \"assignmentOperator\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
-	}
-	var instance = &letClause_{
+	var instance = &leftBracket_{
 		// Initialize the instance attributes.
-		recipient_:          recipient,
-		assignmentOperator_: assignmentOperator,
-		expression_:         expression,
+		any_: any_,
 	}
 	return instance
 }
@@ -60,47 +50,37 @@ func (c *letClauseClass_) LetClause(
 
 // Principal Methods
 
-func (v *letClause_) GetClass() LetClauseClassLike {
-	return letClauseClass()
+func (v *leftBracket_) GetClass() LeftBracketClassLike {
+	return leftBracketClass()
 }
 
 // Attribute Methods
 
-func (v *letClause_) GetRecipient() RecipientLike {
-	return v.recipient_
-}
-
-func (v *letClause_) GetAssignmentOperator() AssignmentOperatorLike {
-	return v.assignmentOperator_
-}
-
-func (v *letClause_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *leftBracket_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type letClause_ struct {
+type leftBracket_ struct {
 	// Declare the instance attributes.
-	recipient_          RecipientLike
-	assignmentOperator_ AssignmentOperatorLike
-	expression_         ExpressionLike
+	any_ any
 }
 
 // Class Structure
 
-type letClauseClass_ struct {
+type leftBracketClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func letClauseClass() *letClauseClass_ {
-	return letClauseClassReference_
+func leftBracketClass() *leftBracketClass_ {
+	return leftBracketClassReference_
 }
 
-var letClauseClassReference_ = &letClauseClass_{
+var leftBracketClassReference_ = &leftBracketClass_{
 	// Initialize the class constants.
 }

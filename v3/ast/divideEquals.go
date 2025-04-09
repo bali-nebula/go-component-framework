@@ -19,39 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func LetClauseClass() LetClauseClassLike {
-	return letClauseClass()
+func DivideEqualsClass() DivideEqualsClassLike {
+	return divideEqualsClass()
 }
 
 // Constructor Methods
 
-func (c *letClauseClass_) LetClause(
-	recipient RecipientLike,
-	assignmentOperator AssignmentOperatorLike,
-	expression ExpressionLike,
-) LetClauseLike {
-	if uti.IsUndefined(recipient) {
-		panic("The \"recipient\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(assignmentOperator) {
-		panic("The \"assignmentOperator\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
-	}
-	var instance = &letClause_{
+func (c *divideEqualsClass_) DivideEquals() DivideEqualsLike {
+	var instance = &divideEquals_{
 		// Initialize the instance attributes.
-		recipient_:          recipient,
-		assignmentOperator_: assignmentOperator,
-		expression_:         expression,
 	}
 	return instance
 }
@@ -60,47 +42,32 @@ func (c *letClauseClass_) LetClause(
 
 // Principal Methods
 
-func (v *letClause_) GetClass() LetClauseClassLike {
-	return letClauseClass()
+func (v *divideEquals_) GetClass() DivideEqualsClassLike {
+	return divideEqualsClass()
 }
 
 // Attribute Methods
-
-func (v *letClause_) GetRecipient() RecipientLike {
-	return v.recipient_
-}
-
-func (v *letClause_) GetAssignmentOperator() AssignmentOperatorLike {
-	return v.assignmentOperator_
-}
-
-func (v *letClause_) GetExpression() ExpressionLike {
-	return v.expression_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type letClause_ struct {
+type divideEquals_ struct {
 	// Declare the instance attributes.
-	recipient_          RecipientLike
-	assignmentOperator_ AssignmentOperatorLike
-	expression_         ExpressionLike
 }
 
 // Class Structure
 
-type letClauseClass_ struct {
+type divideEqualsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func letClauseClass() *letClauseClass_ {
-	return letClauseClassReference_
+func divideEqualsClass() *divideEqualsClass_ {
+	return divideEqualsClassReference_
 }
 
-var letClauseClassReference_ = &letClauseClass_{
+var divideEqualsClassReference_ = &divideEqualsClass_{
 	// Initialize the class constants.
 }

@@ -27,21 +27,21 @@ import (
 
 // Access Function
 
-func MagnitudeClass() MagnitudeClassLike {
-	return magnitudeClass()
+func RightBracketClass() RightBracketClassLike {
+	return rightBracketClass()
 }
 
 // Constructor Methods
 
-func (c *magnitudeClass_) Magnitude(
-	expression ExpressionLike,
-) MagnitudeLike {
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
+func (c *rightBracketClass_) RightBracket(
+	any_ any,
+) RightBracketLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &magnitude_{
+	var instance = &rightBracket_{
 		// Initialize the instance attributes.
-		expression_: expression,
+		any_: any_,
 	}
 	return instance
 }
@@ -50,37 +50,37 @@ func (c *magnitudeClass_) Magnitude(
 
 // Principal Methods
 
-func (v *magnitude_) GetClass() MagnitudeClassLike {
-	return magnitudeClass()
+func (v *rightBracket_) GetClass() RightBracketClassLike {
+	return rightBracketClass()
 }
 
 // Attribute Methods
 
-func (v *magnitude_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *rightBracket_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type magnitude_ struct {
+type rightBracket_ struct {
 	// Declare the instance attributes.
-	expression_ ExpressionLike
+	any_ any
 }
 
 // Class Structure
 
-type magnitudeClass_ struct {
+type rightBracketClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func magnitudeClass() *magnitudeClass_ {
-	return magnitudeClassReference_
+func rightBracketClass() *rightBracketClass_ {
+	return rightBracketClassReference_
 }
 
-var magnitudeClassReference_ = &magnitudeClass_{
+var rightBracketClassReference_ = &rightBracketClass_{
 	// Initialize the class constants.
 }

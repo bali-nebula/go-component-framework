@@ -19,21 +19,29 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func EmptyAssociationsClass() EmptyAssociationsClassLike {
-	return emptyAssociationsClass()
+func InvocationOperatorClass() InvocationOperatorClassLike {
+	return invocationOperatorClass()
 }
 
 // Constructor Methods
 
-func (c *emptyAssociationsClass_) EmptyAssociations() EmptyAssociationsLike {
-	var instance = &emptyAssociations_{
+func (c *invocationOperatorClass_) InvocationOperator(
+	any_ any,
+) InvocationOperatorLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
+	var instance = &invocationOperator_{
 		// Initialize the instance attributes.
+		any_: any_,
 	}
 	return instance
 }
@@ -42,32 +50,37 @@ func (c *emptyAssociationsClass_) EmptyAssociations() EmptyAssociationsLike {
 
 // Principal Methods
 
-func (v *emptyAssociations_) GetClass() EmptyAssociationsClassLike {
-	return emptyAssociationsClass()
+func (v *invocationOperator_) GetClass() InvocationOperatorClassLike {
+	return invocationOperatorClass()
 }
 
 // Attribute Methods
+
+func (v *invocationOperator_) GetAny() any {
+	return v.any_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type emptyAssociations_ struct {
+type invocationOperator_ struct {
 	// Declare the instance attributes.
+	any_ any
 }
 
 // Class Structure
 
-type emptyAssociationsClass_ struct {
+type invocationOperatorClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func emptyAssociationsClass() *emptyAssociationsClass_ {
-	return emptyAssociationsClassReference_
+func invocationOperatorClass() *invocationOperatorClass_ {
+	return invocationOperatorClassReference_
 }
 
-var emptyAssociationsClassReference_ = &emptyAssociationsClass_{
+var invocationOperatorClassReference_ = &invocationOperatorClass_{
 	// Initialize the class constants.
 }

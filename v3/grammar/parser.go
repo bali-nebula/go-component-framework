@@ -413,6 +413,102 @@ func (v *parser_) parseAdditionalValue() (
 	return
 }
 
+func (v *parser_) parseAmplitude() (
+	amplitude ast.AmplitudeLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "|" delimiter.
+	_, token, ok = v.parseDelimiter("|")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Amplitude rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Amplitude", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single Expression rule.
+	var expression ast.ExpressionLike
+	expression, token, ok = v.parseExpression()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Amplitude rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Amplitude", token)
+		panic(message)
+	}
+
+	// Attempt to parse a single "|" delimiter.
+	_, token, ok = v.parseDelimiter("|")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Amplitude rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Amplitude", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Amplitude rule.
+	ok = true
+	v.remove(tokens)
+	amplitude = ast.AmplitudeClass().Amplitude(expression)
+	return
+}
+
+func (v *parser_) parseAnd() (
+	and ast.AndLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "AND" delimiter.
+	_, token, ok = v.parseDelimiter("AND")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single And rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$And", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single And rule.
+	ok = true
+	v.remove(tokens)
+	and = ast.AndClass().And()
+	return
+}
+
 func (v *parser_) parseAnnotatedAssociation() (
 	annotatedAssociation ast.AnnotatedAssociationLike,
 	token TokenLike,
@@ -692,22 +788,21 @@ func (v *parser_) parseArithmetic() (
 		panic(message)
 	}
 
-	// Attempt to parse a single arithmeticOperator token.
-	var arithmeticOperator string
-	arithmeticOperator, token, ok = v.parseToken(ArithmeticOperatorToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Arithmetic rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Arithmetic", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single ArithmeticOperator rule.
+	var arithmeticOperator ast.ArithmeticOperatorLike
+	arithmeticOperator, token, ok = v.parseArithmeticOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Arithmetic rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Arithmetic", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single Expression rule.
@@ -735,6 +830,154 @@ func (v *parser_) parseArithmetic() (
 		arithmeticOperator,
 		expression2,
 	)
+	return
+}
+
+func (v *parser_) parseArithmeticOperator() (
+	arithmeticOperator ast.ArithmeticOperatorLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Times ArithmeticOperator.
+	var times ast.TimesLike
+	times, token, ok = v.parseTimes()
+	if ok {
+		// Found a single Times ArithmeticOperator.
+		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(times)
+		return
+	}
+
+	// Attempt to parse a single Divide ArithmeticOperator.
+	var divide ast.DivideLike
+	divide, token, ok = v.parseDivide()
+	if ok {
+		// Found a single Divide ArithmeticOperator.
+		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(divide)
+		return
+	}
+
+	// Attempt to parse a single Modulo ArithmeticOperator.
+	var modulo ast.ModuloLike
+	modulo, token, ok = v.parseModulo()
+	if ok {
+		// Found a single Modulo ArithmeticOperator.
+		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(modulo)
+		return
+	}
+
+	// Attempt to parse a single Plus ArithmeticOperator.
+	var plus ast.PlusLike
+	plus, token, ok = v.parsePlus()
+	if ok {
+		// Found a single Plus ArithmeticOperator.
+		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(plus)
+		return
+	}
+
+	// Attempt to parse a single Minus ArithmeticOperator.
+	var minus ast.MinusLike
+	minus, token, ok = v.parseMinus()
+	if ok {
+		// Found a single Minus ArithmeticOperator.
+		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(minus)
+		return
+	}
+
+	// This is not a single ArithmeticOperator rule.
+	return
+}
+
+func (v *parser_) parseArrow() (
+	arrow ast.ArrowLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "<-" delimiter.
+	_, token, ok = v.parseDelimiter("<-")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Arrow rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Arrow", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Arrow rule.
+	ok = true
+	v.remove(tokens)
+	arrow = ast.ArrowClass().Arrow()
+	return
+}
+
+func (v *parser_) parseAssignmentOperator() (
+	assignmentOperator ast.AssignmentOperatorLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single ColonEquals AssignmentOperator.
+	var colonEquals ast.ColonEqualsLike
+	colonEquals, token, ok = v.parseColonEquals()
+	if ok {
+		// Found a single ColonEquals AssignmentOperator.
+		assignmentOperator = ast.AssignmentOperatorClass().AssignmentOperator(colonEquals)
+		return
+	}
+
+	// Attempt to parse a single DefaultEquals AssignmentOperator.
+	var defaultEquals ast.DefaultEqualsLike
+	defaultEquals, token, ok = v.parseDefaultEquals()
+	if ok {
+		// Found a single DefaultEquals AssignmentOperator.
+		assignmentOperator = ast.AssignmentOperatorClass().AssignmentOperator(defaultEquals)
+		return
+	}
+
+	// Attempt to parse a single PlusEquals AssignmentOperator.
+	var plusEquals ast.PlusEqualsLike
+	plusEquals, token, ok = v.parsePlusEquals()
+	if ok {
+		// Found a single PlusEquals AssignmentOperator.
+		assignmentOperator = ast.AssignmentOperatorClass().AssignmentOperator(plusEquals)
+		return
+	}
+
+	// Attempt to parse a single MinusEquals AssignmentOperator.
+	var minusEquals ast.MinusEqualsLike
+	minusEquals, token, ok = v.parseMinusEquals()
+	if ok {
+		// Found a single MinusEquals AssignmentOperator.
+		assignmentOperator = ast.AssignmentOperatorClass().AssignmentOperator(minusEquals)
+		return
+	}
+
+	// Attempt to parse a single TimesEquals AssignmentOperator.
+	var timesEquals ast.TimesEqualsLike
+	timesEquals, token, ok = v.parseTimesEquals()
+	if ok {
+		// Found a single TimesEquals AssignmentOperator.
+		assignmentOperator = ast.AssignmentOperatorClass().AssignmentOperator(timesEquals)
+		return
+	}
+
+	// Attempt to parse a single DivideEquals AssignmentOperator.
+	var divideEquals ast.DivideEqualsLike
+	divideEquals, token, ok = v.parseDivideEquals()
+	if ok {
+		// Found a single DivideEquals AssignmentOperator.
+		assignmentOperator = ast.AssignmentOperatorClass().AssignmentOperator(divideEquals)
+		return
+	}
+
+	// This is not a single AssignmentOperator rule.
 	return
 }
 
@@ -829,12 +1072,12 @@ func (v *parser_) parseAssociations() (
 		return
 	}
 
-	// Attempt to parse a single EmptyAssociations Associations.
-	var emptyAssociations ast.EmptyAssociationsLike
-	emptyAssociations, token, ok = v.parseEmptyAssociations()
+	// Attempt to parse a single NoAssociations Associations.
+	var noAssociations ast.NoAssociationsLike
+	noAssociations, token, ok = v.parseNoAssociations()
 	if ok {
-		// Found a single EmptyAssociations Associations.
-		associations = ast.AssociationsClass().Associations(emptyAssociations)
+		// Found a single NoAssociations Associations.
+		associations = ast.AssociationsClass().Associations(noAssociations)
 		return
 	}
 
@@ -1288,21 +1531,12 @@ func (v *parser_) parseCollection() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Items rule.
-	var items ast.ItemsLike
-	items, token, ok = v.parseItems()
-	switch {
-	case ok:
+	// Attempt to parse an optional Items rule.
+	var optionalItems ast.ItemsLike
+	optionalItems, _, ok = v.parseItems()
+	if ok {
 		// No additional put backs allowed at this point.
 		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Collection rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Collection", token)
-		panic(message)
 	}
 
 	// Attempt to parse a single "]" delimiter.
@@ -1325,7 +1559,38 @@ func (v *parser_) parseCollection() (
 	// Found a single Collection rule.
 	ok = true
 	v.remove(tokens)
-	collection = ast.CollectionClass().Collection(items)
+	collection = ast.CollectionClass().Collection(optionalItems)
+	return
+}
+
+func (v *parser_) parseColonEquals() (
+	colonEquals ast.ColonEqualsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single ":=" delimiter.
+	_, token, ok = v.parseDelimiter(":=")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ColonEquals rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ColonEquals", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ColonEquals rule.
+	ok = true
+	v.remove(tokens)
+	colonEquals = ast.ColonEqualsClass().ColonEquals()
 	return
 }
 
@@ -1353,22 +1618,21 @@ func (v *parser_) parseComparison() (
 		panic(message)
 	}
 
-	// Attempt to parse a single comparisonOperator token.
-	var comparisonOperator string
-	comparisonOperator, token, ok = v.parseToken(ComparisonOperatorToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Comparison rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Comparison", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single ComparisonOperator rule.
+	var comparisonOperator ast.ComparisonOperatorLike
+	comparisonOperator, token, ok = v.parseComparisonOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Comparison rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Comparison", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single Expression rule.
@@ -1396,6 +1660,60 @@ func (v *parser_) parseComparison() (
 		comparisonOperator,
 		expression2,
 	)
+	return
+}
+
+func (v *parser_) parseComparisonOperator() (
+	comparisonOperator ast.ComparisonOperatorLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Less ComparisonOperator.
+	var less ast.LessLike
+	less, token, ok = v.parseLess()
+	if ok {
+		// Found a single Less ComparisonOperator.
+		comparisonOperator = ast.ComparisonOperatorClass().ComparisonOperator(less)
+		return
+	}
+
+	// Attempt to parse a single Equals ComparisonOperator.
+	var equals ast.EqualsLike
+	equals, token, ok = v.parseEquals()
+	if ok {
+		// Found a single Equals ComparisonOperator.
+		comparisonOperator = ast.ComparisonOperatorClass().ComparisonOperator(equals)
+		return
+	}
+
+	// Attempt to parse a single More ComparisonOperator.
+	var more ast.MoreLike
+	more, token, ok = v.parseMore()
+	if ok {
+		// Found a single More ComparisonOperator.
+		comparisonOperator = ast.ComparisonOperatorClass().ComparisonOperator(more)
+		return
+	}
+
+	// Attempt to parse a single Is ComparisonOperator.
+	var is ast.IsLike
+	is, token, ok = v.parseIs()
+	if ok {
+		// Found a single Is ComparisonOperator.
+		comparisonOperator = ast.ComparisonOperatorClass().ComparisonOperator(is)
+		return
+	}
+
+	// Attempt to parse a single Matches ComparisonOperator.
+	var matches ast.MatchesLike
+	matches, token, ok = v.parseMatches()
+	if ok {
+		// Found a single Matches ComparisonOperator.
+		comparisonOperator = ast.ComparisonOperatorClass().ComparisonOperator(matches)
+		return
+	}
+
+	// This is not a single ComparisonOperator rule.
 	return
 }
 
@@ -1664,6 +1982,37 @@ func (v *parser_) parseContinueClause() (
 	return
 }
 
+func (v *parser_) parseDefaultEquals() (
+	defaultEquals ast.DefaultEqualsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "?=" delimiter.
+	_, token, ok = v.parseDelimiter("?=")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single DefaultEquals rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$DefaultEquals", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single DefaultEquals rule.
+	ok = true
+	v.remove(tokens)
+	defaultEquals = ast.DefaultEqualsClass().DefaultEquals()
+	return
+}
+
 func (v *parser_) parseDereference() (
 	dereference ast.DereferenceLike,
 	token TokenLike,
@@ -1757,6 +2106,68 @@ func (v *parser_) parseDiscardClause() (
 	ok = true
 	v.remove(tokens)
 	discardClause = ast.DiscardClauseClass().DiscardClause(draft)
+	return
+}
+
+func (v *parser_) parseDivide() (
+	divide ast.DivideLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "/" delimiter.
+	_, token, ok = v.parseDelimiter("/")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Divide rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Divide", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Divide rule.
+	ok = true
+	v.remove(tokens)
+	divide = ast.DivideClass().Divide()
+	return
+}
+
+func (v *parser_) parseDivideEquals() (
+	divideEquals ast.DivideEqualsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "/=" delimiter.
+	_, token, ok = v.parseDelimiter("/=")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single DivideEquals rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$DivideEquals", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single DivideEquals rule.
+	ok = true
+	v.remove(tokens)
+	divideEquals = ast.DivideEqualsClass().DivideEquals()
 	return
 }
 
@@ -1857,6 +2268,37 @@ func (v *parser_) parseDocument() (
 		comment,
 		component,
 	)
+	return
+}
+
+func (v *parser_) parseDot() (
+	dot ast.DotLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "." delimiter.
+	_, token, ok = v.parseDelimiter(".")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Dot rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Dot", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Dot rule.
+	ok = true
+	v.remove(tokens)
+	dot = ast.DotClass().Dot()
 	return
 }
 
@@ -1981,99 +2423,6 @@ func (v *parser_) parseElement() (
 	return
 }
 
-func (v *parser_) parseEmptyAssociations() (
-	emptyAssociations ast.EmptyAssociationsLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single ":" delimiter.
-	_, token, ok = v.parseDelimiter(":")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single EmptyAssociations rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$EmptyAssociations", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single EmptyAssociations rule.
-	ok = true
-	v.remove(tokens)
-	emptyAssociations = ast.EmptyAssociationsClass().EmptyAssociations()
-	return
-}
-
-func (v *parser_) parseEmptyStatements() (
-	emptyStatements ast.EmptyStatementsLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single " " delimiter.
-	_, token, ok = v.parseDelimiter(" ")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single EmptyStatements rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$EmptyStatements", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single EmptyStatements rule.
-	ok = true
-	v.remove(tokens)
-	emptyStatements = ast.EmptyStatementsClass().EmptyStatements()
-	return
-}
-
-func (v *parser_) parseEmptyValues() (
-	emptyValues ast.EmptyValuesLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single " " delimiter.
-	_, token, ok = v.parseDelimiter(" ")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single EmptyValues rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$EmptyValues", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single EmptyValues rule.
-	ok = true
-	v.remove(tokens)
-	emptyValues = ast.EmptyValuesClass().EmptyValues()
-	return
-}
-
 func (v *parser_) parseEntity() (
 	entity ast.EntityLike,
 	token TokenLike,
@@ -2125,6 +2474,37 @@ func (v *parser_) parseEntity() (
 	}
 
 	// This is not a single Entity rule.
+	return
+}
+
+func (v *parser_) parseEquals() (
+	equals ast.EqualsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "=" delimiter.
+	_, token, ok = v.parseDelimiter("=")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Equals rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Equals", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Equals rule.
+	ok = true
+	v.remove(tokens)
+	equals = ast.EqualsClass().Equals()
 	return
 }
 
@@ -2362,12 +2742,12 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
-	// Attempt to parse a single Magnitude Expression.
-	var magnitude ast.MagnitudeLike
-	magnitude, token, ok = v.parseMagnitude()
+	// Attempt to parse a single Amplitude Expression.
+	var amplitude ast.AmplitudeLike
+	amplitude, token, ok = v.parseAmplitude()
 	if ok {
-		// Found a single Magnitude Expression.
-		expression = ast.ExpressionClass().Expression(magnitude)
+		// Found a single Amplitude Expression.
+		expression = ast.ExpressionClass().Expression(amplitude)
 		return
 	}
 
@@ -2544,6 +2924,37 @@ func (v *parser_) parseFunction() (
 	ok = true
 	v.remove(tokens)
 	function = ast.FunctionClass().Function(identifier)
+	return
+}
+
+func (v *parser_) parseIOR() (
+	iOR ast.IORLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "IOR" delimiter.
+	_, token, ok = v.parseDelimiter("IOR")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single IOR rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$IOR", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single IOR rule.
+	ok = true
+	v.remove(tokens)
+	iOR = ast.IORClass().IOR()
 	return
 }
 
@@ -3073,22 +3484,21 @@ func (v *parser_) parseInversion() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single inversionOperator token.
-	var inversionOperator string
-	inversionOperator, token, ok = v.parseToken(InversionOperatorToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Inversion rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Inversion", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single InversionOperator rule.
+	var inversionOperator ast.InversionOperatorLike
+	inversionOperator, token, ok = v.parseInversionOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Inversion rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Inversion", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single Expression rule.
@@ -3118,6 +3528,42 @@ func (v *parser_) parseInversion() (
 	return
 }
 
+func (v *parser_) parseInversionOperator() (
+	inversionOperator ast.InversionOperatorLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Minus InversionOperator.
+	var minus ast.MinusLike
+	minus, token, ok = v.parseMinus()
+	if ok {
+		// Found a single Minus InversionOperator.
+		inversionOperator = ast.InversionOperatorClass().InversionOperator(minus)
+		return
+	}
+
+	// Attempt to parse a single Divide InversionOperator.
+	var divide ast.DivideLike
+	divide, token, ok = v.parseDivide()
+	if ok {
+		// Found a single Divide InversionOperator.
+		inversionOperator = ast.InversionOperatorClass().InversionOperator(divide)
+		return
+	}
+
+	// Attempt to parse a single Times InversionOperator.
+	var times ast.TimesLike
+	times, token, ok = v.parseTimes()
+	if ok {
+		// Found a single Times InversionOperator.
+		inversionOperator = ast.InversionOperatorClass().InversionOperator(times)
+		return
+	}
+
+	// This is not a single InversionOperator rule.
+	return
+}
+
 func (v *parser_) parseInvocation() (
 	invocation ast.InvocationLike,
 	token TokenLike,
@@ -3142,22 +3588,21 @@ func (v *parser_) parseInvocation() (
 		panic(message)
 	}
 
-	// Attempt to parse a single invocationOperator token.
-	var invocationOperator string
-	invocationOperator, token, ok = v.parseToken(InvocationOperatorToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Invocation rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Invocation", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single InvocationOperator rule.
+	var invocationOperator ast.InvocationOperatorLike
+	invocationOperator, token, ok = v.parseInvocationOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Invocation rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Invocation", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single Method rule.
@@ -3228,6 +3673,64 @@ func (v *parser_) parseInvocation() (
 		method,
 		optionalArguments,
 	)
+	return
+}
+
+func (v *parser_) parseInvocationOperator() (
+	invocationOperator ast.InvocationOperatorLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Dot InvocationOperator.
+	var dot ast.DotLike
+	dot, token, ok = v.parseDot()
+	if ok {
+		// Found a single Dot InvocationOperator.
+		invocationOperator = ast.InvocationOperatorClass().InvocationOperator(dot)
+		return
+	}
+
+	// Attempt to parse a single Arrow InvocationOperator.
+	var arrow ast.ArrowLike
+	arrow, token, ok = v.parseArrow()
+	if ok {
+		// Found a single Arrow InvocationOperator.
+		invocationOperator = ast.InvocationOperatorClass().InvocationOperator(arrow)
+		return
+	}
+
+	// This is not a single InvocationOperator rule.
+	return
+}
+
+func (v *parser_) parseIs() (
+	is ast.IsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "IS" delimiter.
+	_, token, ok = v.parseDelimiter("IS")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Is rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Is", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Is rule.
+	ok = true
+	v.remove(tokens)
+	is = ast.IsClass().Is()
 	return
 }
 
@@ -3353,6 +3856,126 @@ func (v *parser_) parseLabel() (
 	return
 }
 
+func (v *parser_) parseLeftBracket() (
+	leftBracket ast.LeftBracketLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single LeftSquare LeftBracket.
+	var leftSquare ast.LeftSquareLike
+	leftSquare, token, ok = v.parseLeftSquare()
+	if ok {
+		// Found a single LeftSquare LeftBracket.
+		leftBracket = ast.LeftBracketClass().LeftBracket(leftSquare)
+		return
+	}
+
+	// Attempt to parse a single LeftRound LeftBracket.
+	var leftRound ast.LeftRoundLike
+	leftRound, token, ok = v.parseLeftRound()
+	if ok {
+		// Found a single LeftRound LeftBracket.
+		leftBracket = ast.LeftBracketClass().LeftBracket(leftRound)
+		return
+	}
+
+	// This is not a single LeftBracket rule.
+	return
+}
+
+func (v *parser_) parseLeftRound() (
+	leftRound ast.LeftRoundLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single LeftRound rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$LeftRound", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single LeftRound rule.
+	ok = true
+	v.remove(tokens)
+	leftRound = ast.LeftRoundClass().LeftRound()
+	return
+}
+
+func (v *parser_) parseLeftSquare() (
+	leftSquare ast.LeftSquareLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single LeftSquare rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$LeftSquare", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single LeftSquare rule.
+	ok = true
+	v.remove(tokens)
+	leftSquare = ast.LeftSquareClass().LeftSquare()
+	return
+}
+
+func (v *parser_) parseLess() (
+	less ast.LessLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "<" delimiter.
+	_, token, ok = v.parseDelimiter("<")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Less rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Less", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Less rule.
+	ok = true
+	v.remove(tokens)
+	less = ast.LessClass().Less()
+	return
+}
+
 func (v *parser_) parseLetClause() (
 	letClause ast.LetClauseLike,
 	token TokenLike,
@@ -3394,22 +4017,21 @@ func (v *parser_) parseLetClause() (
 		panic(message)
 	}
 
-	// Attempt to parse a single assignmentOperator token.
-	var assignmentOperator string
-	assignmentOperator, token, ok = v.parseToken(AssignmentOperatorToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single LetClause rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$LetClause", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single AssignmentOperator rule.
+	var assignmentOperator ast.AssignmentOperatorLike
+	assignmentOperator, token, ok = v.parseAssignmentOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single LetClause rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$LetClause", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single Expression rule.
@@ -3464,22 +4086,21 @@ func (v *parser_) parseLogical() (
 		panic(message)
 	}
 
-	// Attempt to parse a single logicalOperator token.
-	var logicalOperator string
-	logicalOperator, token, ok = v.parseToken(LogicalOperatorToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Logical rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Logical", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single LogicalOperator rule.
+	var logicalOperator ast.LogicalOperatorLike
+	logicalOperator, token, ok = v.parseLogicalOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Logical rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Logical", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single Expression rule.
@@ -3510,68 +4131,48 @@ func (v *parser_) parseLogical() (
 	return
 }
 
-func (v *parser_) parseMagnitude() (
-	magnitude ast.MagnitudeLike,
+func (v *parser_) parseLogicalOperator() (
+	logicalOperator ast.LogicalOperatorLike,
 	token TokenLike,
 	ok bool,
 ) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "|" delimiter.
-	_, token, ok = v.parseDelimiter("|")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Magnitude rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Magnitude", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Expression rule.
-	var expression ast.ExpressionLike
-	expression, token, ok = v.parseExpression()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Magnitude rule.
-		v.putBack(tokens)
+	// Attempt to parse a single And LogicalOperator.
+	var and ast.AndLike
+	and, token, ok = v.parseAnd()
+	if ok {
+		// Found a single And LogicalOperator.
+		logicalOperator = ast.LogicalOperatorClass().LogicalOperator(and)
 		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Magnitude", token)
-		panic(message)
 	}
 
-	// Attempt to parse a single "|" delimiter.
-	_, token, ok = v.parseDelimiter("|")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Magnitude rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Magnitude", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single SAN LogicalOperator.
+	var sAN ast.SANLike
+	sAN, token, ok = v.parseSAN()
+	if ok {
+		// Found a single SAN LogicalOperator.
+		logicalOperator = ast.LogicalOperatorClass().LogicalOperator(sAN)
+		return
 	}
 
-	// Found a single Magnitude rule.
-	ok = true
-	v.remove(tokens)
-	magnitude = ast.MagnitudeClass().Magnitude(expression)
+	// Attempt to parse a single IOR LogicalOperator.
+	var iOR ast.IORLike
+	iOR, token, ok = v.parseIOR()
+	if ok {
+		// Found a single IOR LogicalOperator.
+		logicalOperator = ast.LogicalOperatorClass().LogicalOperator(iOR)
+		return
+	}
+
+	// Attempt to parse a single XOR LogicalOperator.
+	var xOR ast.XORLike
+	xOR, token, ok = v.parseXOR()
+	if ok {
+		// Found a single XOR LogicalOperator.
+		logicalOperator = ast.LogicalOperatorClass().LogicalOperator(xOR)
+		return
+	}
+
+	// This is not a single LogicalOperator rule.
 	return
 }
 
@@ -3705,6 +4306,37 @@ func (v *parser_) parseMatchHandler() (
 	return
 }
 
+func (v *parser_) parseMatches() (
+	matches ast.MatchesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "MATCHES" delimiter.
+	_, token, ok = v.parseDelimiter("MATCHES")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Matches rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Matches", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Matches rule.
+	ok = true
+	v.remove(tokens)
+	matches = ast.MatchesClass().Matches()
+	return
+}
+
 func (v *parser_) parseMessage() (
 	message ast.MessageLike,
 	token TokenLike,
@@ -3819,6 +4451,130 @@ func (v *parser_) parseMethod() (
 	ok = true
 	v.remove(tokens)
 	method = ast.MethodClass().Method(identifier)
+	return
+}
+
+func (v *parser_) parseMinus() (
+	minus ast.MinusLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "-" delimiter.
+	_, token, ok = v.parseDelimiter("-")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Minus rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Minus", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Minus rule.
+	ok = true
+	v.remove(tokens)
+	minus = ast.MinusClass().Minus()
+	return
+}
+
+func (v *parser_) parseMinusEquals() (
+	minusEquals ast.MinusEqualsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "-=" delimiter.
+	_, token, ok = v.parseDelimiter("-=")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MinusEquals rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MinusEquals", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single MinusEquals rule.
+	ok = true
+	v.remove(tokens)
+	minusEquals = ast.MinusEqualsClass().MinusEquals()
+	return
+}
+
+func (v *parser_) parseModulo() (
+	modulo ast.ModuloLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "//" delimiter.
+	_, token, ok = v.parseDelimiter("//")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Modulo rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Modulo", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Modulo rule.
+	ok = true
+	v.remove(tokens)
+	modulo = ast.ModuloClass().Modulo()
+	return
+}
+
+func (v *parser_) parseMore() (
+	more ast.MoreLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single ">" delimiter.
+	_, token, ok = v.parseDelimiter(">")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single More rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$More", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single More rule.
+	ok = true
+	v.remove(tokens)
+	more = ast.MoreClass().More()
 	return
 }
 
@@ -3979,6 +4735,37 @@ annotatedValuesLoop:
 	ok = true
 	v.remove(tokens)
 	multilineValues = ast.MultilineValuesClass().MultilineValues(annotatedValues)
+	return
+}
+
+func (v *parser_) parseNoAssociations() (
+	noAssociations ast.NoAssociationsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single ":" delimiter.
+	_, token, ok = v.parseDelimiter(":")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoAssociations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoAssociations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single NoAssociations rule.
+	ok = true
+	v.remove(tokens)
+	noAssociations = ast.NoAssociationsClass().NoAssociations()
 	return
 }
 
@@ -4266,6 +5053,68 @@ func (v *parser_) parseParameters() (
 	return
 }
 
+func (v *parser_) parsePlus() (
+	plus ast.PlusLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "+" delimiter.
+	_, token, ok = v.parseDelimiter("+")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Plus rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Plus", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Plus rule.
+	ok = true
+	v.remove(tokens)
+	plus = ast.PlusClass().Plus()
+	return
+}
+
+func (v *parser_) parsePlusEquals() (
+	plusEquals ast.PlusEqualsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "+=" delimiter.
+	_, token, ok = v.parseDelimiter("+=")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single PlusEquals rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$PlusEquals", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single PlusEquals rule.
+	ok = true
+	v.remove(tokens)
+	plusEquals = ast.PlusEqualsClass().PlusEquals()
+	return
+}
+
 func (v *parser_) parsePostClause() (
 	postClause ast.PostClauseLike,
 	token TokenLike,
@@ -4467,21 +5316,12 @@ func (v *parser_) parseProcedure() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Statements rule.
-	var statements ast.StatementsLike
-	statements, token, ok = v.parseStatements()
-	switch {
-	case ok:
+	// Attempt to parse an optional Statements rule.
+	var optionalStatements ast.StatementsLike
+	optionalStatements, _, ok = v.parseStatements()
+	if ok {
 		// No additional put backs allowed at this point.
 		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Procedure rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Procedure", token)
-		panic(message)
 	}
 
 	// Attempt to parse a single "}" delimiter.
@@ -4504,7 +5344,7 @@ func (v *parser_) parseProcedure() (
 	// Found a single Procedure rule.
 	ok = true
 	v.remove(tokens)
-	procedure = ast.ProcedureClass().Procedure(statements)
+	procedure = ast.ProcedureClass().Procedure(optionalStatements)
 	return
 }
 
@@ -4563,22 +5403,21 @@ func (v *parser_) parseRange() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single open token.
-	var open string
-	open, token, ok = v.parseToken(OpenToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Range rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Range", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single LeftBracket rule.
+	var leftBracket ast.LeftBracketLike
+	leftBracket, token, ok = v.parseLeftBracket()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Range rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Range", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single Primitive rule.
@@ -4632,32 +5471,31 @@ func (v *parser_) parseRange() (
 		panic(message)
 	}
 
-	// Attempt to parse a single close token.
-	var close_ string
-	close_, token, ok = v.parseToken(CloseToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Range rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Range", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single RightBracket rule.
+	var rightBracket ast.RightBracketLike
+	rightBracket, token, ok = v.parseRightBracket()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Range rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Range", token)
+		panic(message)
 	}
 
 	// Found a single Range rule.
 	ok = true
 	v.remove(tokens)
 	range_ = ast.RangeClass().Range(
-		open,
+		leftBracket,
 		primitive1,
 		primitive2,
-		close_,
+		rightBracket,
 	)
 	return
 }
@@ -4946,6 +5784,126 @@ func (v *parser_) parseReturnClause() (
 	return
 }
 
+func (v *parser_) parseRightBracket() (
+	rightBracket ast.RightBracketLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single RightSquare RightBracket.
+	var rightSquare ast.RightSquareLike
+	rightSquare, token, ok = v.parseRightSquare()
+	if ok {
+		// Found a single RightSquare RightBracket.
+		rightBracket = ast.RightBracketClass().RightBracket(rightSquare)
+		return
+	}
+
+	// Attempt to parse a single RightRound RightBracket.
+	var rightRound ast.RightRoundLike
+	rightRound, token, ok = v.parseRightRound()
+	if ok {
+		// Found a single RightRound RightBracket.
+		rightBracket = ast.RightBracketClass().RightBracket(rightRound)
+		return
+	}
+
+	// This is not a single RightBracket rule.
+	return
+}
+
+func (v *parser_) parseRightRound() (
+	rightRound ast.RightRoundLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single RightRound rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$RightRound", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single RightRound rule.
+	ok = true
+	v.remove(tokens)
+	rightRound = ast.RightRoundClass().RightRound()
+	return
+}
+
+func (v *parser_) parseRightSquare() (
+	rightSquare ast.RightSquareLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single RightSquare rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$RightSquare", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single RightSquare rule.
+	ok = true
+	v.remove(tokens)
+	rightSquare = ast.RightSquareClass().RightSquare()
+	return
+}
+
+func (v *parser_) parseSAN() (
+	sAN ast.SANLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "SAN" delimiter.
+	_, token, ok = v.parseDelimiter("SAN")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single SAN rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$SAN", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single SAN rule.
+	ok = true
+	v.remove(tokens)
+	sAN = ast.SANClass().SAN()
+	return
+}
+
 func (v *parser_) parseSaveClause() (
 	saveClause ast.SaveClauseLike,
 	token TokenLike,
@@ -5201,15 +6159,6 @@ func (v *parser_) parseStatements() (
 	if ok {
 		// Found a single MultilineStatements Statements.
 		statements = ast.StatementsClass().Statements(multilineStatements)
-		return
-	}
-
-	// Attempt to parse a single EmptyStatements Statements.
-	var emptyStatements ast.EmptyStatementsLike
-	emptyStatements, token, ok = v.parseEmptyStatements()
-	if ok {
-		// Found a single EmptyStatements Statements.
-		statements = ast.StatementsClass().Statements(emptyStatements)
 		return
 	}
 
@@ -5493,6 +6442,68 @@ func (v *parser_) parseThrowClause() (
 	return
 }
 
+func (v *parser_) parseTimes() (
+	times ast.TimesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "*" delimiter.
+	_, token, ok = v.parseDelimiter("*")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Times rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Times", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Times rule.
+	ok = true
+	v.remove(tokens)
+	times = ast.TimesClass().Times()
+	return
+}
+
+func (v *parser_) parseTimesEquals() (
+	timesEquals ast.TimesEqualsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "*=" delimiter.
+	_, token, ok = v.parseDelimiter("*=")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single TimesEquals rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$TimesEquals", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single TimesEquals rule.
+	ok = true
+	v.remove(tokens)
+	timesEquals = ast.TimesEqualsClass().TimesEquals()
+	return
+}
+
 func (v *parser_) parseValue() (
 	value ast.ValueLike,
 	token TokenLike,
@@ -5544,15 +6555,6 @@ func (v *parser_) parseValues() (
 	if ok {
 		// Found a single MultilineValues Values.
 		values = ast.ValuesClass().Values(multilineValues)
-		return
-	}
-
-	// Attempt to parse a single EmptyValues Values.
-	var emptyValues ast.EmptyValuesLike
-	emptyValues, token, ok = v.parseEmptyValues()
-	if ok {
-		// Found a single EmptyValues Values.
-		values = ast.ValuesClass().Values(emptyValues)
 		return
 	}
 
@@ -5814,6 +6816,37 @@ func (v *parser_) parseWithClause() (
 	return
 }
 
+func (v *parser_) parseXOR() (
+	xOR ast.XORLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "XOR" delimiter.
+	_, token, ok = v.parseDelimiter("XOR")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single XOR rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$XOR", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single XOR rule.
+	ok = true
+	v.remove(tokens)
+	xOR = ast.XORClass().XOR()
+	return
+}
+
 func (v *parser_) parseDelimiter(
 	expectedValue string,
 ) (
@@ -6024,21 +7057,31 @@ var parserClassReference_ = &parserClass_{
   - symbol
   - tag
   - version`,
-			"$Range": `open Primitive ".." Primitive close`,
+			"$Range": `LeftBracket Primitive ".." Primitive RightBracket`,
+			"$LeftBracket": `
+  - LeftSquare
+  - LeftRound`,
+			"$LeftSquare": `"["`,
+			"$LeftRound":  `"("`,
 			"$Primitive": `
   - Element
   - String`,
-			"$Collection": `"[" Items "]"`,
+			"$RightBracket": `
+  - RightSquare
+  - RightRound`,
+			"$RightSquare": `"]"`,
+			"$RightRound":  `")"`,
+			"$Collection":  `"[" Items? "]"`,
 			"$Items": `
   - Associations
   - Values`,
 			"$Associations": `
   - InlineAssociations
   - MultilineAssociations
-  - EmptyAssociations`,
+  - NoAssociations`,
 			"$InlineAssociations":    `Association AdditionalAssociation*`,
 			"$MultilineAssociations": `AnnotatedAssociation+`,
-			"$EmptyAssociations":     `":"`,
+			"$NoAssociations":        `":"`,
 			"$AdditionalAssociation": `"," Association`,
 			"$AnnotatedAssociation":  `Association note?`,
 			"$Association":           `Key ":" Value`,
@@ -6046,21 +7089,17 @@ var parserClassReference_ = &parserClass_{
 			"$Value":                 `Component`,
 			"$Values": `
   - InlineValues
-  - MultilineValues
-  - EmptyValues`,
+  - MultilineValues`,
 			"$InlineValues":    `Value AdditionalValue*`,
 			"$MultilineValues": `AnnotatedValue+`,
-			"$EmptyValues":     `" "`,
 			"$AdditionalValue": `"," Value`,
 			"$AnnotatedValue":  `Value note?`,
-			"$Procedure":       `"{" Statements "}"`,
+			"$Procedure":       `"{" Statements? "}"`,
 			"$Statements": `
   - InlineStatements
-  - MultilineStatements
-  - EmptyStatements`,
+  - MultilineStatements`,
 			"$InlineStatements":    `Statement AdditionalStatement*`,
 			"$MultilineStatements": `AnnotatedStatement+`,
-			"$EmptyStatements":     `" "`,
 			"$AdditionalStatement": `";" Statement`,
 			"$AnnotatedStatement":  `Statement note?`,
 			"$Statement":           `MainClause OnClause?`,
@@ -6114,14 +7153,32 @@ var parserClassReference_ = &parserClass_{
 			"$Operation": `
   - Intrinsic
   - Invocation`,
-			"$Intrinsic":          `Function "(" Arguments? ")"`,
-			"$Function":           `identifier`,
-			"$Invocation":         `Target invocationOperator Method "(" Arguments? ")"`,
+			"$Intrinsic":  `Function "(" Arguments? ")"`,
+			"$Function":   `identifier`,
+			"$Invocation": `Target InvocationOperator Method "(" Arguments? ")"`,
+			"$InvocationOperator": `
+  - Dot
+  - Arrow`,
+			"$Dot":                `"."`,
+			"$Arrow":              `"<-"`,
 			"$Method":             `identifier`,
 			"$Arguments":          `Argument AdditionalArgument*`,
 			"$AdditionalArgument": `"," Argument`,
 			"$Argument":           `Expression`,
-			"$LetClause":          `"let" Recipient assignmentOperator Expression`,
+			"$LetClause":          `"let" Recipient AssignmentOperator Expression`,
+			"$AssignmentOperator": `
+  - ColonEquals
+  - DefaultEquals
+  - PlusEquals
+  - MinusEquals
+  - TimesEquals
+  - DivideEquals`,
+			"$ColonEquals":   `":="`,
+			"$DefaultEquals": `"?="`,
+			"$PlusEquals":    `"+="`,
+			"$MinusEquals":   `"-="`,
+			"$TimesEquals":   `"*="`,
+			"$DivideEquals":  `"/="`,
 			"$Recipient": `
   - Label
   - Attribute`,
@@ -6157,7 +7214,7 @@ var parserClassReference_ = &parserClass_{
   - Exponential
   - Inversion
   - Arithmetic
-  - Magnitude
+  - Amplitude
   - Comparison
   - Complement
   - Logical`,
@@ -6167,12 +7224,47 @@ var parserClassReference_ = &parserClass_{
 			"$Composite":    `Expression`,
 			"$Chaining":     `Expression "&" Expression`,
 			"$Exponential":  `Expression "^" Expression`,
-			"$Inversion":    `inversionOperator Expression`,
-			"$Arithmetic":   `Expression arithmeticOperator Expression`,
-			"$Magnitude":    `"|" Expression "|"`,
-			"$Comparison":   `Expression comparisonOperator Expression`,
-			"$Complement":   `"NOT" Expression`,
-			"$Logical":      `Expression logicalOperator Expression`,
+			"$Inversion":    `InversionOperator Expression`,
+			"$InversionOperator": `
+  - Minus
+  - Divide
+  - Times`,
+			"$Minus":      `"-"`,
+			"$Divide":     `"/"`,
+			"$Times":      `"*"`,
+			"$Arithmetic": `Expression ArithmeticOperator Expression`,
+			"$ArithmeticOperator": `
+  - Times
+  - Divide
+  - Modulo
+  - Plus
+  - Minus`,
+			"$Modulo":     `"//"`,
+			"$Plus":       `"+"`,
+			"$Amplitude":  `"|" Expression "|"`,
+			"$Comparison": `Expression ComparisonOperator Expression`,
+			"$ComparisonOperator": `
+  - Less
+  - Equals
+  - More
+  - Is
+  - Matches`,
+			"$Less":       `"<"`,
+			"$Equals":     `"="`,
+			"$More":       `">"`,
+			"$Is":         `"IS"`,
+			"$Matches":    `"MATCHES"`,
+			"$Complement": `"NOT" Expression`,
+			"$Logical":    `Expression LogicalOperator Expression`,
+			"$LogicalOperator": `
+  - And
+  - SAN
+  - IOR
+  - XOR`,
+			"$And": `"AND"`,
+			"$SAN": `"SAN"`,
+			"$IOR": `"IOR"`,
+			"$XOR": `"XOR"`,
 		},
 	),
 }

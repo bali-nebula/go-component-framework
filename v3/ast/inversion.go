@@ -34,7 +34,7 @@ func InversionClass() InversionClassLike {
 // Constructor Methods
 
 func (c *inversionClass_) Inversion(
-	inversionOperator string,
+	inversionOperator InversionOperatorLike,
 	expression ExpressionLike,
 ) InversionLike {
 	if uti.IsUndefined(inversionOperator) {
@@ -61,7 +61,7 @@ func (v *inversion_) GetClass() InversionClassLike {
 
 // Attribute Methods
 
-func (v *inversion_) GetInversionOperator() string {
+func (v *inversion_) GetInversionOperator() InversionOperatorLike {
 	return v.inversionOperator_
 }
 
@@ -75,7 +75,7 @@ func (v *inversion_) GetExpression() ExpressionLike {
 
 type inversion_ struct {
 	// Declare the instance attributes.
-	inversionOperator_ string
+	inversionOperator_ InversionOperatorLike
 	expression_        ExpressionLike
 }
 

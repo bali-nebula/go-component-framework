@@ -34,13 +34,13 @@ func RangeClass() RangeClassLike {
 // Constructor Methods
 
 func (c *rangeClass_) Range(
-	open string,
+	leftBracket LeftBracketLike,
 	primitive1 PrimitiveLike,
 	primitive2 PrimitiveLike,
-	close_ string,
+	rightBracket RightBracketLike,
 ) RangeLike {
-	if uti.IsUndefined(open) {
-		panic("The \"open\" attribute is required by this class.")
+	if uti.IsUndefined(leftBracket) {
+		panic("The \"leftBracket\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(primitive1) {
 		panic("The \"primitive1\" attribute is required by this class.")
@@ -48,15 +48,15 @@ func (c *rangeClass_) Range(
 	if uti.IsUndefined(primitive2) {
 		panic("The \"primitive2\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(close_) {
-		panic("The \"close\" attribute is required by this class.")
+	if uti.IsUndefined(rightBracket) {
+		panic("The \"rightBracket\" attribute is required by this class.")
 	}
 	var instance = &range_{
 		// Initialize the instance attributes.
-		open_:       open,
-		primitive1_: primitive1,
-		primitive2_: primitive2,
-		close_:      close_,
+		leftBracket_:  leftBracket,
+		primitive1_:   primitive1,
+		primitive2_:   primitive2,
+		rightBracket_: rightBracket,
 	}
 	return instance
 }
@@ -71,8 +71,8 @@ func (v *range_) GetClass() RangeClassLike {
 
 // Attribute Methods
 
-func (v *range_) GetOpen() string {
-	return v.open_
+func (v *range_) GetLeftBracket() LeftBracketLike {
+	return v.leftBracket_
 }
 
 func (v *range_) GetPrimitive1() PrimitiveLike {
@@ -83,8 +83,8 @@ func (v *range_) GetPrimitive2() PrimitiveLike {
 	return v.primitive2_
 }
 
-func (v *range_) GetClose() string {
-	return v.close_
+func (v *range_) GetRightBracket() RightBracketLike {
+	return v.rightBracket_
 }
 
 // PROTECTED INTERFACE
@@ -93,10 +93,10 @@ func (v *range_) GetClose() string {
 
 type range_ struct {
 	// Declare the instance attributes.
-	open_       string
-	primitive1_ PrimitiveLike
-	primitive2_ PrimitiveLike
-	close_      string
+	leftBracket_  LeftBracketLike
+	primitive1_   PrimitiveLike
+	primitive2_   PrimitiveLike
+	rightBracket_ RightBracketLike
 }
 
 // Class Structure

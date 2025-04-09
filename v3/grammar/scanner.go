@@ -195,33 +195,25 @@ loop:
 		case v.foundToken(NewlineToken):
 		case v.foundToken(SpaceToken):
 		case v.foundToken(AngleToken):
-		case v.foundToken(ArithmeticOperatorToken):
-		case v.foundToken(AssignmentOperatorToken):
 		case v.foundToken(BinaryToken):
 		case v.foundToken(BooleanToken):
 		case v.foundToken(BytecodeToken):
-		case v.foundToken(CloseToken):
 		case v.foundToken(CommentToken):
-		case v.foundToken(ComparisonOperatorToken):
 		case v.foundToken(DurationToken):
-		case v.foundToken(IdentifierToken):
-		case v.foundToken(InversionOperatorToken):
-		case v.foundToken(InvocationOperatorToken):
-		case v.foundToken(LogicalOperatorToken):
 		case v.foundToken(MomentToken):
 		case v.foundToken(NameToken):
 		case v.foundToken(NarrativeToken):
 		case v.foundToken(NoteToken):
-		case v.foundToken(NumberToken):
-		case v.foundToken(OpenToken):
 		case v.foundToken(PatternToken):
 		case v.foundToken(PercentageToken):
+		case v.foundToken(NumberToken):
 		case v.foundToken(ProbabilityToken):
 		case v.foundToken(QuoteToken):
 		case v.foundToken(ResourceToken):
 		case v.foundToken(SymbolToken):
 		case v.foundToken(TagToken):
 		case v.foundToken(VersionToken):
+		case v.foundToken(IdentifierToken):
 		default:
 			v.foundError()
 			break loop
@@ -261,74 +253,58 @@ var scannerClassReference_ = &scannerClass_{
 	tokens_: fra.CatalogFromMap[TokenType, string](
 		map[TokenType]string{
 			// Define identifiers for each type of token.
-			ErrorToken:              "error",
-			AngleToken:              "angle",
-			ArithmeticOperatorToken: "arithmeticOperator",
-			AssignmentOperatorToken: "assignmentOperator",
-			BinaryToken:             "binary",
-			BooleanToken:            "boolean",
-			BytecodeToken:           "bytecode",
-			CloseToken:              "close",
-			CommentToken:            "comment",
-			ComparisonOperatorToken: "comparisonOperator",
-			DelimiterToken:          "delimiter",
-			DurationToken:           "duration",
-			IdentifierToken:         "identifier",
-			InversionOperatorToken:  "inversionOperator",
-			InvocationOperatorToken: "invocationOperator",
-			LogicalOperatorToken:    "logicalOperator",
-			MomentToken:             "moment",
-			NameToken:               "name",
-			NarrativeToken:          "narrative",
-			NewlineToken:            "newline",
-			NoteToken:               "note",
-			NumberToken:             "number",
-			OpenToken:               "open",
-			PatternToken:            "pattern",
-			PercentageToken:         "percentage",
-			ProbabilityToken:        "probability",
-			QuoteToken:              "quote",
-			ResourceToken:           "resource",
-			SpaceToken:              "space",
-			SymbolToken:             "symbol",
-			TagToken:                "tag",
-			VersionToken:            "version",
+			ErrorToken:       "error",
+			AngleToken:       "angle",
+			BinaryToken:      "binary",
+			BooleanToken:     "boolean",
+			BytecodeToken:    "bytecode",
+			CommentToken:     "comment",
+			DelimiterToken:   "delimiter",
+			DurationToken:    "duration",
+			IdentifierToken:  "identifier",
+			MomentToken:      "moment",
+			NameToken:        "name",
+			NarrativeToken:   "narrative",
+			NewlineToken:     "newline",
+			NoteToken:        "note",
+			NumberToken:      "number",
+			PatternToken:     "pattern",
+			PercentageToken:  "percentage",
+			ProbabilityToken: "probability",
+			QuoteToken:       "quote",
+			ResourceToken:    "resource",
+			SpaceToken:       "space",
+			SymbolToken:      "symbol",
+			TagToken:         "tag",
+			VersionToken:     "version",
 		},
 	),
 	matchers_: fra.CatalogFromMap[TokenType, *reg.Regexp](
 		map[TokenType]*reg.Regexp{
 			// Define pattern matchers for each type of token.
-			AngleToken:              reg.MustCompile("^" + angle_),
-			ArithmeticOperatorToken: reg.MustCompile("^" + arithmeticOperator_),
-			AssignmentOperatorToken: reg.MustCompile("^" + assignmentOperator_),
-			BinaryToken:             reg.MustCompile("^" + binary_),
-			BooleanToken:            reg.MustCompile("^" + boolean_),
-			BytecodeToken:           reg.MustCompile("^" + bytecode_),
-			CloseToken:              reg.MustCompile("^" + close_),
-			CommentToken:            reg.MustCompile("^" + comment_),
-			ComparisonOperatorToken: reg.MustCompile("^" + comparisonOperator_),
-			DelimiterToken:          reg.MustCompile("^" + delimiter_),
-			DurationToken:           reg.MustCompile("^" + duration_),
-			IdentifierToken:         reg.MustCompile("^" + identifier_),
-			InversionOperatorToken:  reg.MustCompile("^" + inversionOperator_),
-			InvocationOperatorToken: reg.MustCompile("^" + invocationOperator_),
-			LogicalOperatorToken:    reg.MustCompile("^" + logicalOperator_),
-			MomentToken:             reg.MustCompile("^" + moment_),
-			NameToken:               reg.MustCompile("^" + name_),
-			NarrativeToken:          reg.MustCompile("^" + narrative_),
-			NewlineToken:            reg.MustCompile("^" + newline_),
-			NoteToken:               reg.MustCompile("^" + note_),
-			NumberToken:             reg.MustCompile("^" + number_),
-			OpenToken:               reg.MustCompile("^" + open_),
-			PatternToken:            reg.MustCompile("^" + pattern_),
-			PercentageToken:         reg.MustCompile("^" + percentage_),
-			ProbabilityToken:        reg.MustCompile("^" + probability_),
-			QuoteToken:              reg.MustCompile("^" + quote_),
-			ResourceToken:           reg.MustCompile("^" + resource_),
-			SpaceToken:              reg.MustCompile("^" + space_),
-			SymbolToken:             reg.MustCompile("^" + symbol_),
-			TagToken:                reg.MustCompile("^" + tag_),
-			VersionToken:            reg.MustCompile("^" + version_),
+			AngleToken:       reg.MustCompile("^" + angle_),
+			BinaryToken:      reg.MustCompile("^" + binary_),
+			BooleanToken:     reg.MustCompile("^" + boolean_),
+			BytecodeToken:    reg.MustCompile("^" + bytecode_),
+			CommentToken:     reg.MustCompile("^" + comment_),
+			DelimiterToken:   reg.MustCompile("^" + delimiter_),
+			DurationToken:    reg.MustCompile("^" + duration_),
+			IdentifierToken:  reg.MustCompile("^" + identifier_),
+			MomentToken:      reg.MustCompile("^" + moment_),
+			NameToken:        reg.MustCompile("^" + name_),
+			NarrativeToken:   reg.MustCompile("^" + narrative_),
+			NewlineToken:     reg.MustCompile("^" + newline_),
+			NoteToken:        reg.MustCompile("^" + note_),
+			NumberToken:      reg.MustCompile("^" + number_),
+			PatternToken:     reg.MustCompile("^" + pattern_),
+			PercentageToken:  reg.MustCompile("^" + percentage_),
+			ProbabilityToken: reg.MustCompile("^" + probability_),
+			QuoteToken:       reg.MustCompile("^" + quote_),
+			ResourceToken:    reg.MustCompile("^" + resource_),
+			SpaceToken:       reg.MustCompile("^" + space_),
+			SymbolToken:      reg.MustCompile("^" + symbol_),
+			TagToken:         reg.MustCompile("^" + tag_),
+			VersionToken:     reg.MustCompile("^" + version_),
 		},
 	),
 }
@@ -353,86 +329,74 @@ const (
 	upper_   = "\\p{Lu}"
 
 	// Define the regular expression patterns for each token type.
-	delimiter_          = "(?:with|while|to|throw|select|save|return|retrieve|reject|publish|post|on|notarize|matching|loop|level|let|in|if|from|each|do|discard|continue|checkout|break|at|as|accept|\\}|\\||\\{|\\^|\\]|\\[|\\.\\.|\\)|\\(|NOT|@|;|:|,|&| )"
-	newline_            = "(?:" + eol_ + ")"
-	space_              = "(?: )"
-	angle_              = "(?:~((?:" + zero_ + ")|(?:" + magnitude_ + ")))"
-	alpha_              = "(?:[A-Za-z])"
-	alphanumeric_       = "(?:(?:" + alpha_ + ")|(?:" + base10_ + "))"
-	arithmeticOperator_ = "(?:\\*|/|//|\\+|-)"
-	assignmentOperator_ = "(?::=|\\?=|\\+=|-=|\\*=|/=)"
-	authority_          = "(?:[^/" + control_ + "]+)"
-	base10_             = "(?:[0-9])"
-	base16_             = "(?:(?:" + base10_ + ")|[a-f])"
-	base32_             = "(?:(?:" + base10_ + ")|[A-DF-HJ-NP-TV-Z])"
-	base64_             = "(?:(?:" + alphanumeric_ + ")|[\\+/])"
-	binary_             = "(?:'>" + eol_ + "(?:" + space_ + ")*(?:" + base64_ + ")+" + eol_ + "*(?:" + space_ + ")*<')"
-	boolean_            = "(?:false|true)"
-	bytecode_           = "(?:'((?:" + instruction_ + ")((?:" + space_ + ")(?:" + instruction_ + "))*)*')"
-	character_          = "(?:(?:" + escape_ + ")|[^\"" + control_ + "])"
-	close_              = "(?:[\\]\\)])"
-	comment_            = "(?:!>" + any_ + "*?<!)"
-	comparisonOperator_ = "(?:<|=|>|IS|MATCHES)"
-	complex_            = "(?:\\(((?:" + rectangular_ + ")|(?:" + polar_ + "))\\))"
-	day_                = "(?:[0-21-9]|[30-1])"
-	days_               = "(?:(?:" + timespan_ + ")D)"
-	duration_           = "(?:~(?:" + sign_ + ")?P((?:" + weeks_ + ")|(?:" + years_ + ")?(?:" + months_ + ")?(?:" + days_ + ")?(T(?:" + hours_ + ")?(?:" + minutes_ + ")?(?:" + seconds_ + ")?)?))"
-	e_                  = "(?:e)"
-	escape_             = "(?:\\\\((?:" + unicode_ + ")|[abfnrtv\"\\\\]))"
-	exponent_           = "(?:e(?:" + sign_ + ")?(?:" + ordinal_ + "))"
-	float_              = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + "))"
-	fraction_           = "(?:\\.(?:" + base10_ + ")+)"
-	fragment_           = "(?:[^>" + control_ + "]*)"
-	hour_               = "(?:[0-10-9]|[20-3])"
-	hours_              = "(?:(?:" + timespan_ + ")H)"
-	identifier_         = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
-	imaginary_          = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + ")?i)"
-	infinity_           = "(?:(?:" + sign_ + ")?(infinity|�))"
-	instruction_        = "(?:(?:" + base16_ + "){4})"
-	inversionOperator_  = "(?:-|/|\\*)"
-	invocationOperator_ = "(?:\\.|<-)"
-	letter_             = "(?:" + lower_ + "|" + upper_ + ")"
-	logicalOperator_    = "(?:AND|SAN|IOR|XOR)"
-	magnitude_          = "(?:(?:" + e_ + ")|(?:" + pi_ + ")|(?:" + phi_ + ")|(?:" + tau_ + ")|(?:" + scalar_ + "))"
-	minute_             = "(?:[0-50-9])"
-	minutes_            = "(?:(?:" + timespan_ + ")M)"
-	moment_             = "(?:<(?:" + sign_ + ")?(?:" + year_ + ")(-(?:" + month_ + ")(-(?:" + day_ + ")(T(?:" + hour_ + ")(:(?:" + minute_ + ")(:(?:" + second_ + ")(?:" + fraction_ + ")?)?)?)?)?)?>)"
-	month_              = "(?:[01-9]|[10-2])"
-	months_             = "(?:(?:" + timespan_ + ")M)"
-	name_               = "(?:(/(?:" + identifier_ + "))+)"
-	narrative_          = "(?:\">" + eol_ + "" + any_ + "*?" + eol_ + "(?:" + space_ + ")*<\")"
-	note_               = "(?:! [^" + control_ + "]*)"
-	number_             = "(?:(?:" + real_ + ")|(?:" + imaginary_ + ")|(?:" + complex_ + "))"
-	one_                = "(?:1\\.)"
-	open_               = "(?:[\\[\\(])"
-	ordinal_            = "(?:[1-9](?:" + base10_ + ")*)"
-	path_               = "(?:[^\\?#>" + control_ + "]*)"
-	pattern_            = "(?:none|(?:" + regex_ + ")|any)"
-	percentage_         = "(?:(?:" + real_ + ")%)"
-	phi_                = "(?:phi|�)"
-	pi_                 = "(?:pi|�)"
-	polar_              = "(?:(?:" + magnitude_ + ")e\\^(?:" + angle_ + ")i)"
-	probability_        = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
-	query_              = "(?:[^#>" + control_ + "]*)"
-	quote_              = "(?:\"(?:" + character_ + ")*\")"
-	real_               = "(?:(?:" + zero_ + ")|(?:" + float_ + ")|(?:" + infinity_ + ")|(?:" + undefined_ + "))"
-	rectangular_        = "(?:(?:" + float_ + "), (?:" + float_ + ")i)"
-	regex_              = "(?:\"(?:" + character_ + ")+\"\\?)"
-	resource_           = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
-	scalar_             = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)?)"
-	scheme_             = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|\\+|-|\\.)*)"
-	second_             = "(?:[0-50-9]|[60-1])"
-	seconds_            = "(?:(?:" + timespan_ + ")S)"
-	sign_               = "(?:\\+|-)"
-	symbol_             = "(?:\\$(?:" + identifier_ + "))"
-	tag_                = "(?:#(?:" + base32_ + ")+)"
-	tau_                = "(?:tau|�)"
-	timespan_           = "(?:(?:" + zero_ + ")|((?:" + ordinal_ + ")(?:" + fraction_ + ")?))"
-	undefined_          = "(?:undefined)"
-	unicode_            = "(?:(u(?:" + base16_ + "){4})|(U(?:" + base16_ + "){8}))"
-	version_            = "(?:v(?:" + ordinal_ + ")(\\.(?:" + ordinal_ + "))*)"
-	weeks_              = "(?:(?:" + timespan_ + ")W)"
-	year_               = "(?:(?:" + zero_ + ")|(?:" + ordinal_ + "))"
-	years_              = "(?:(?:" + timespan_ + ")Y)"
-	zero_               = "(?:0)"
+	delimiter_    = "(?:with|while|to|throw|select|save|return|retrieve|reject|publish|post|on|notarize|matching|loop|level|let|in|if|from|each|do|discard|continue|checkout|break|at|as|accept|\\}|\\||\\{|\\^|\\]|\\[|\\?=|\\.\\.|\\.|\\+=|\\+|\\*=|\\*|\\)|\\(|XOR|SAN|NOT|MATCHES|IS|IOR|AND|@|>|=|<-|<|;|:=|:|/=|//|/|-=|-|,|&)"
+	newline_      = "(?:" + eol_ + ")"
+	space_        = "(?: )"
+	angle_        = "(?:~((?:" + zero_ + ")|(?:" + magnitude_ + ")))"
+	alpha_        = "(?:[A-Za-z])"
+	alphanumeric_ = "(?:(?:" + alpha_ + ")|(?:" + base10_ + "))"
+	authority_    = "(?:[^/" + control_ + "]+)"
+	base10_       = "(?:[0-9])"
+	base16_       = "(?:(?:" + base10_ + ")|[a-f])"
+	base32_       = "(?:(?:" + base10_ + ")|[A-DF-HJ-NP-TV-Z])"
+	base64_       = "(?:(?:" + alphanumeric_ + ")|[\\+/])"
+	binary_       = "(?:'>" + eol_ + "(?:" + space_ + ")*(?:" + base64_ + ")+" + eol_ + "*(?:" + space_ + ")*<')"
+	boolean_      = "(?:false|true)"
+	bytecode_     = "(?:'((?:" + instruction_ + ")((?:" + space_ + ")(?:" + instruction_ + "))*)*')"
+	character_    = "(?:(?:" + escape_ + ")|[^\"" + control_ + "])"
+	comment_      = "(?:!>" + any_ + "*?<!)"
+	complex_      = "(?:\\(((?:" + rectangular_ + ")|(?:" + polar_ + "))\\))"
+	day_          = "(?:[0-21-9]|[30-1])"
+	days_         = "(?:(?:" + timespan_ + ")D)"
+	duration_     = "(?:~(?:" + sign_ + ")?P((?:" + weeks_ + ")|(?:" + years_ + ")?(?:" + months_ + ")?(?:" + days_ + ")?(T(?:" + hours_ + ")?(?:" + minutes_ + ")?(?:" + seconds_ + ")?)?))"
+	escape_       = "(?:\\\\((?:" + unicode_ + ")|[abfnrtv\"\\\\]))"
+	exponent_     = "(?:E(?:" + sign_ + ")?(?:" + ordinal_ + "))"
+	float_        = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + "))"
+	fraction_     = "(?:\\.(?:" + base10_ + ")+)"
+	fragment_     = "(?:[^>" + control_ + "]*)"
+	hour_         = "(?:[0-10-9]|[20-3])"
+	hours_        = "(?:(?:" + timespan_ + ")H)"
+	imaginary_    = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + ")?i)"
+	infinity_     = "(?:(?:" + sign_ + ")?(infinity|�))"
+	instruction_  = "(?:(?:" + base16_ + "){4})"
+	letter_       = "(?:" + lower_ + "|" + upper_ + ")"
+	magnitude_    = "(?:e|pi|π|phi|φ|tau|τ|(?:" + scalar_ + "))"
+	minute_       = "(?:[0-50-9])"
+	minutes_      = "(?:(?:" + timespan_ + ")M)"
+	moment_       = "(?:<(?:" + sign_ + ")?(?:" + year_ + ")(-(?:" + month_ + ")(-(?:" + day_ + ")(T(?:" + hour_ + ")(:(?:" + minute_ + ")(:(?:" + second_ + ")(?:" + fraction_ + ")?)?)?)?)?)?>)"
+	month_        = "(?:[01-9]|[10-2])"
+	months_       = "(?:(?:" + timespan_ + ")M)"
+	name_         = "(?:(/(?:" + identifier_ + "))+)"
+	narrative_    = "(?:\">" + eol_ + "" + any_ + "*?" + eol_ + "(?:" + space_ + ")*<\")"
+	note_         = "(?:! [^" + control_ + "]*)"
+	one_          = "(?:1\\.)"
+	ordinal_      = "(?:[1-9](?:" + base10_ + ")*)"
+	path_         = "(?:[^\\?#>" + control_ + "]*)"
+	pattern_      = "(?:none|(?:" + regex_ + ")|any)"
+	percentage_   = "(?:(?:" + real_ + ")%)"
+	number_       = "(?:(?:" + real_ + ")|(?:" + imaginary_ + ")|(?:" + complex_ + "))"
+	polar_        = "(?:(?:" + magnitude_ + ")e\\^(?:" + angle_ + ")i)"
+	probability_  = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
+	query_        = "(?:[^#>" + control_ + "]*)"
+	quote_        = "(?:\"(?:" + character_ + ")*\")"
+	real_         = "(?:(?:" + zero_ + ")|(?:" + float_ + ")|(?:" + infinity_ + ")|(?:" + undefined_ + "))"
+	rectangular_  = "(?:(?:" + float_ + "), (?:" + float_ + ")i)"
+	regex_        = "(?:\"(?:" + character_ + ")+\"\\?)"
+	resource_     = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
+	scalar_       = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)?)"
+	scheme_       = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|\\+|-|\\.)*)"
+	second_       = "(?:[0-50-9]|[60-1])"
+	seconds_      = "(?:(?:" + timespan_ + ")S)"
+	sign_         = "(?:\\+|-)"
+	symbol_       = "(?:\\$(?:" + identifier_ + "))"
+	tag_          = "(?:#(?:" + base32_ + ")+)"
+	timespan_     = "(?:(?:" + zero_ + ")|((?:" + ordinal_ + ")(?:" + fraction_ + ")?))"
+	undefined_    = "(?:undefined)"
+	unicode_      = "(?:(u(?:" + base16_ + "){4})|(U(?:" + base16_ + "){8}))"
+	version_      = "(?:v(?:" + ordinal_ + ")(\\.(?:" + ordinal_ + "))*)"
+	weeks_        = "(?:(?:" + timespan_ + ")W)"
+	year_         = "(?:(?:" + zero_ + ")|(?:" + ordinal_ + "))"
+	years_        = "(?:(?:" + timespan_ + ")Y)"
+	zero_         = "(?:0)"
+	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
 )

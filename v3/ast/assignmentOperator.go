@@ -19,21 +19,29 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func EmptyStatementsClass() EmptyStatementsClassLike {
-	return emptyStatementsClass()
+func AssignmentOperatorClass() AssignmentOperatorClassLike {
+	return assignmentOperatorClass()
 }
 
 // Constructor Methods
 
-func (c *emptyStatementsClass_) EmptyStatements() EmptyStatementsLike {
-	var instance = &emptyStatements_{
+func (c *assignmentOperatorClass_) AssignmentOperator(
+	any_ any,
+) AssignmentOperatorLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
+	var instance = &assignmentOperator_{
 		// Initialize the instance attributes.
+		any_: any_,
 	}
 	return instance
 }
@@ -42,32 +50,37 @@ func (c *emptyStatementsClass_) EmptyStatements() EmptyStatementsLike {
 
 // Principal Methods
 
-func (v *emptyStatements_) GetClass() EmptyStatementsClassLike {
-	return emptyStatementsClass()
+func (v *assignmentOperator_) GetClass() AssignmentOperatorClassLike {
+	return assignmentOperatorClass()
 }
 
 // Attribute Methods
+
+func (v *assignmentOperator_) GetAny() any {
+	return v.any_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type emptyStatements_ struct {
+type assignmentOperator_ struct {
 	// Declare the instance attributes.
+	any_ any
 }
 
 // Class Structure
 
-type emptyStatementsClass_ struct {
+type assignmentOperatorClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func emptyStatementsClass() *emptyStatementsClass_ {
-	return emptyStatementsClassReference_
+func assignmentOperatorClass() *assignmentOperatorClass_ {
+	return assignmentOperatorClassReference_
 }
 
-var emptyStatementsClassReference_ = &emptyStatementsClass_{
+var assignmentOperatorClassReference_ = &assignmentOperatorClass_{
 	// Initialize the class constants.
 }

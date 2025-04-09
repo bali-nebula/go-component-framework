@@ -35,7 +35,7 @@ func ArithmeticClass() ArithmeticClassLike {
 
 func (c *arithmeticClass_) Arithmetic(
 	expression1 ExpressionLike,
-	arithmeticOperator string,
+	arithmeticOperator ArithmeticOperatorLike,
 	expression2 ExpressionLike,
 ) ArithmeticLike {
 	if uti.IsUndefined(expression1) {
@@ -70,7 +70,7 @@ func (v *arithmetic_) GetExpression1() ExpressionLike {
 	return v.expression1_
 }
 
-func (v *arithmetic_) GetArithmeticOperator() string {
+func (v *arithmetic_) GetArithmeticOperator() ArithmeticOperatorLike {
 	return v.arithmeticOperator_
 }
 
@@ -85,7 +85,7 @@ func (v *arithmetic_) GetExpression2() ExpressionLike {
 type arithmetic_ struct {
 	// Declare the instance attributes.
 	expression1_        ExpressionLike
-	arithmeticOperator_ string
+	arithmeticOperator_ ArithmeticOperatorLike
 	expression2_        ExpressionLike
 }
 

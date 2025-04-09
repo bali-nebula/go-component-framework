@@ -19,9 +19,7 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
@@ -34,14 +32,11 @@ func CollectionClass() CollectionClassLike {
 // Constructor Methods
 
 func (c *collectionClass_) Collection(
-	items ItemsLike,
+	optionalItems ItemsLike,
 ) CollectionLike {
-	if uti.IsUndefined(items) {
-		panic("The \"items\" attribute is required by this class.")
-	}
 	var instance = &collection_{
 		// Initialize the instance attributes.
-		items_: items,
+		optionalItems_: optionalItems,
 	}
 	return instance
 }
@@ -56,8 +51,8 @@ func (v *collection_) GetClass() CollectionClassLike {
 
 // Attribute Methods
 
-func (v *collection_) GetItems() ItemsLike {
-	return v.items_
+func (v *collection_) GetOptionalItems() ItemsLike {
+	return v.optionalItems_
 }
 
 // PROTECTED INTERFACE
@@ -66,7 +61,7 @@ func (v *collection_) GetItems() ItemsLike {
 
 type collection_ struct {
 	// Declare the instance attributes.
-	items_ ItemsLike
+	optionalItems_ ItemsLike
 }
 
 // Class Structure

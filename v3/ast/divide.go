@@ -25,14 +25,14 @@ import ()
 
 // Access Function
 
-func EmptyValuesClass() EmptyValuesClassLike {
-	return emptyValuesClass()
+func DivideClass() DivideClassLike {
+	return divideClass()
 }
 
 // Constructor Methods
 
-func (c *emptyValuesClass_) EmptyValues() EmptyValuesLike {
-	var instance = &emptyValues_{
+func (c *divideClass_) Divide() DivideLike {
+	var instance = &divide_{
 		// Initialize the instance attributes.
 	}
 	return instance
@@ -42,8 +42,8 @@ func (c *emptyValuesClass_) EmptyValues() EmptyValuesLike {
 
 // Principal Methods
 
-func (v *emptyValues_) GetClass() EmptyValuesClassLike {
-	return emptyValuesClass()
+func (v *divide_) GetClass() DivideClassLike {
+	return divideClass()
 }
 
 // Attribute Methods
@@ -52,22 +52,22 @@ func (v *emptyValues_) GetClass() EmptyValuesClassLike {
 
 // Instance Structure
 
-type emptyValues_ struct {
+type divide_ struct {
 	// Declare the instance attributes.
 }
 
 // Class Structure
 
-type emptyValuesClass_ struct {
+type divideClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func emptyValuesClass() *emptyValuesClass_ {
-	return emptyValuesClassReference_
+func divideClass() *divideClass_ {
+	return divideClassReference_
 }
 
-var emptyValuesClassReference_ = &emptyValuesClass_{
+var divideClassReference_ = &divideClass_{
 	// Initialize the class constants.
 }
