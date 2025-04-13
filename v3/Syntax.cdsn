@@ -477,7 +477,7 @@ $plusEqual: "+="
 
 $plus: '+'
 
-$polar: magnitude "e^" angle 'i'
+$polar: magnitude "e^" angle? 'i'
 
 $query: ~['#' '>' CONTROL]*
 
@@ -485,7 +485,7 @@ $quote: '"' character* '"'
 
 $real: zero | float | infinity | undefined
 
-$rectangular: float ", " float 'i'
+$rectangular: float sign float? 'i'
 
 $regex: '"' character+ '"' '?'
 
@@ -543,7 +543,7 @@ $percentage: real '%'
 
 $probability: fraction | one  ! Must be after percentage.
 
-$number: polar | rectangular | imaginary  | real ! Must be after probability.
+$number: polar | rectangular | imaginary | real ! Must be after probability.
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
 
