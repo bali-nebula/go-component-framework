@@ -375,8 +375,6 @@ $and: "AND"
 
 $angle: '~' (zero | magnitude)
 
-$arrow: "<-"
-
 $authority: ~['/' CONTROL]+
 
 $bar: '|'
@@ -406,8 +404,6 @@ $colon: ":"
 $comment: "!>" ANY* "<!"
 
 $dashEqual: "-="
-
-$dash: '-'
 
 $day: (['0'..'2'] ['1'..'9']) | ('3' ['0'..'1'])
 
@@ -477,8 +473,6 @@ $path: ~['?' '#' '>' CONTROL]*
 
 $pattern: "none" | regex | "any"
 
-$percentage: real '%'
-
 $plusEqual: "+="
 
 $plus: '+'
@@ -545,13 +539,19 @@ $years: timespan 'Y'
 
 $zero: '0'
 
-$less: "<"  ! Must be after other expressions beginning with '<'.
+$percentage: real '%'
 
-$number: rectangular | polar | real | imaginary  ! Must be after percentage.
+$probability: fraction | one  ! Must be after percentage.
 
-$probability: fraction | one  ! Must be after number.
-
-$dot: '.'  ! Must be after fraction.
+$number: polar | rectangular | imaginary  | real ! Must be after probability.
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
+
+$dot: '.'  ! Must be after probability.
+
+$dash: '-'  ! Must be after number.
+
+$arrow: "<-"  ! Must be after moment.
+
+$less: "<"  ! Must be after other expressions beginning with '<'.
 

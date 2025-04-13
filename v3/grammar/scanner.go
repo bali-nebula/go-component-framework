@@ -197,7 +197,6 @@ loop:
 		case v.foundToken(AmpersandToken):
 		case v.foundToken(AndToken):
 		case v.foundToken(AngleToken):
-		case v.foundToken(ArrowToken):
 		case v.foundToken(BarToken):
 		case v.foundToken(BinaryToken):
 		case v.foundToken(BooleanToken):
@@ -207,7 +206,6 @@ loop:
 		case v.foundToken(ColonToken):
 		case v.foundToken(CommentToken):
 		case v.foundToken(DashEqualToken):
-		case v.foundToken(DashToken):
 		case v.foundToken(DefaultEqualToken):
 		case v.foundToken(DurationToken):
 		case v.foundToken(EqualToken):
@@ -221,7 +219,6 @@ loop:
 		case v.foundToken(NotToken):
 		case v.foundToken(NoteToken):
 		case v.foundToken(PatternToken):
-		case v.foundToken(PercentageToken):
 		case v.foundToken(PlusEqualToken):
 		case v.foundToken(PlusToken):
 		case v.foundToken(QuoteToken):
@@ -237,11 +234,14 @@ loop:
 		case v.foundToken(TagToken):
 		case v.foundToken(VersionToken):
 		case v.foundToken(XorToken):
-		case v.foundToken(LessToken):
-		case v.foundToken(NumberToken):
+		case v.foundToken(PercentageToken):
 		case v.foundToken(ProbabilityToken):
-		case v.foundToken(DotToken):
+		case v.foundToken(NumberToken):
 		case v.foundToken(IdentifierToken):
+		case v.foundToken(DotToken):
+		case v.foundToken(DashToken):
+		case v.foundToken(ArrowToken):
+		case v.foundToken(LessToken):
 		default:
 			v.foundError()
 			break loop
@@ -421,7 +421,6 @@ const (
 	ampersand_    = "(?:&)"
 	and_          = "(?:AND)"
 	angle_        = "(?:~((?:" + zero_ + ")|(?:" + magnitude_ + ")))"
-	arrow_        = "(?:<-)"
 	authority_    = "(?:[^/" + control_ + "]+)"
 	bar_          = "(?:\\|)"
 	base10_       = "(?:[0-9])"
@@ -437,7 +436,6 @@ const (
 	colon_        = "(?::)"
 	comment_      = "(?:!>" + any_ + "*?<!)"
 	dashEqual_    = "(?:-=)"
-	dash_         = "(?:-)"
 	day_          = "(?:([0-2][1-9])|(3[0-1]))"
 	days_         = "(?:(?:" + timespan_ + ")D)"
 	defaultEqual_ = "(?:\\?=)"
@@ -451,7 +449,7 @@ const (
 	hour_         = "(?:([0-1][0-9])|(2[0-3]))"
 	hours_        = "(?:(?:" + timespan_ + ")H)"
 	imaginary_    = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + ")?i)"
-	infinity_     = "(?:(?:" + sign_ + ")?(infinity|�))"
+	infinity_     = "(?:(?:" + sign_ + ")?(infinity|∞))"
 	instruction_  = "(?:(?:" + base16_ + "){4})"
 	ior_          = "(?:IOR)"
 	is_           = "(?:IS)"
@@ -472,7 +470,6 @@ const (
 	ordinal_      = "(?:[1-9](?:" + base10_ + ")*)"
 	path_         = "(?:[^\\?#>" + control_ + "]*)"
 	pattern_      = "(?:none|(?:" + regex_ + ")|any)"
-	percentage_   = "(?:(?:" + real_ + ")%)"
 	plusEqual_    = "(?:\\+=)"
 	plus_         = "(?:\\+)"
 	polar_        = "(?:(?:" + magnitude_ + ")e\\^(?:" + angle_ + ")i)"
@@ -505,9 +502,12 @@ const (
 	year_         = "(?:(?:" + zero_ + ")|(?:" + ordinal_ + "))"
 	years_        = "(?:(?:" + timespan_ + ")Y)"
 	zero_         = "(?:0)"
-	less_         = "(?:<)"
-	number_       = "(?:(?:" + rectangular_ + ")|(?:" + polar_ + ")|(?:" + real_ + ")|(?:" + imaginary_ + "))"
+	percentage_   = "(?:(?:" + real_ + ")%)"
 	probability_  = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
-	dot_          = "(?:\\.)"
+	number_       = "(?:(?:" + polar_ + ")|(?:" + rectangular_ + ")|(?:" + imaginary_ + ")|(?:" + real_ + "))"
 	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
+	dot_          = "(?:\\.)"
+	dash_         = "(?:-)"
+	arrow_        = "(?:<-)"
+	less_         = "(?:<)"
 )
