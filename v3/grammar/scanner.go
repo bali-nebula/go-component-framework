@@ -194,25 +194,53 @@ loop:
 		case v.foundToken(DelimiterToken):
 		case v.foundToken(NewlineToken):
 		case v.foundToken(SpaceToken):
+		case v.foundToken(AmpersandToken):
+		case v.foundToken(AndToken):
 		case v.foundToken(AngleToken):
+		case v.foundToken(ArrowToken):
+		case v.foundToken(BarToken):
 		case v.foundToken(BinaryToken):
 		case v.foundToken(BooleanToken):
 		case v.foundToken(BytecodeToken):
+		case v.foundToken(CaretToken):
+		case v.foundToken(ColonEqualToken):
+		case v.foundToken(ColonToken):
 		case v.foundToken(CommentToken):
+		case v.foundToken(DashEqualToken):
+		case v.foundToken(DashToken):
+		case v.foundToken(DefaultEqualToken):
 		case v.foundToken(DurationToken):
+		case v.foundToken(EqualToken):
+		case v.foundToken(IorToken):
+		case v.foundToken(IsToken):
+		case v.foundToken(MatchesToken):
 		case v.foundToken(MomentToken):
+		case v.foundToken(MoreToken):
 		case v.foundToken(NameToken):
 		case v.foundToken(NarrativeToken):
+		case v.foundToken(NotToken):
 		case v.foundToken(NoteToken):
 		case v.foundToken(PatternToken):
 		case v.foundToken(PercentageToken):
-		case v.foundToken(NumberToken):
-		case v.foundToken(ProbabilityToken):
+		case v.foundToken(PlusEqualToken):
+		case v.foundToken(PlusToken):
 		case v.foundToken(QuoteToken):
 		case v.foundToken(ResourceToken):
+		case v.foundToken(SanToken):
+		case v.foundToken(SlashEqualToken):
+		case v.foundToken(SlashSlashToken):
+		case v.foundToken(SlashToken):
+		case v.foundToken(SnailToken):
+		case v.foundToken(StarEqualToken):
+		case v.foundToken(StarToken):
 		case v.foundToken(SymbolToken):
 		case v.foundToken(TagToken):
 		case v.foundToken(VersionToken):
+		case v.foundToken(XorToken):
+		case v.foundToken(LessToken):
+		case v.foundToken(NumberToken):
+		case v.foundToken(ProbabilityToken):
+		case v.foundToken(DotToken):
 		case v.foundToken(IdentifierToken):
 		default:
 			v.foundError()
@@ -253,58 +281,114 @@ var scannerClassReference_ = &scannerClass_{
 	tokens_: fra.CatalogFromMap[TokenType, string](
 		map[TokenType]string{
 			// Define identifiers for each type of token.
-			ErrorToken:       "error",
-			AngleToken:       "angle",
-			BinaryToken:      "binary",
-			BooleanToken:     "boolean",
-			BytecodeToken:    "bytecode",
-			CommentToken:     "comment",
-			DelimiterToken:   "delimiter",
-			DurationToken:    "duration",
-			IdentifierToken:  "identifier",
-			MomentToken:      "moment",
-			NameToken:        "name",
-			NarrativeToken:   "narrative",
-			NewlineToken:     "newline",
-			NoteToken:        "note",
-			NumberToken:      "number",
-			PatternToken:     "pattern",
-			PercentageToken:  "percentage",
-			ProbabilityToken: "probability",
-			QuoteToken:       "quote",
-			ResourceToken:    "resource",
-			SpaceToken:       "space",
-			SymbolToken:      "symbol",
-			TagToken:         "tag",
-			VersionToken:     "version",
+			ErrorToken:        "error",
+			AmpersandToken:    "ampersand",
+			AndToken:          "and",
+			AngleToken:        "angle",
+			ArrowToken:        "arrow",
+			BarToken:          "bar",
+			BinaryToken:       "binary",
+			BooleanToken:      "boolean",
+			BytecodeToken:     "bytecode",
+			CaretToken:        "caret",
+			ColonToken:        "colon",
+			ColonEqualToken:   "colonEqual",
+			CommentToken:      "comment",
+			DashToken:         "dash",
+			DashEqualToken:    "dashEqual",
+			DefaultEqualToken: "defaultEqual",
+			DelimiterToken:    "delimiter",
+			DotToken:          "dot",
+			DurationToken:     "duration",
+			EqualToken:        "equal",
+			IdentifierToken:   "identifier",
+			IorToken:          "ior",
+			IsToken:           "is",
+			LessToken:         "less",
+			MatchesToken:      "matches",
+			MomentToken:       "moment",
+			MoreToken:         "more",
+			NameToken:         "name",
+			NarrativeToken:    "narrative",
+			NewlineToken:      "newline",
+			NotToken:          "not",
+			NoteToken:         "note",
+			NumberToken:       "number",
+			PatternToken:      "pattern",
+			PercentageToken:   "percentage",
+			PlusToken:         "plus",
+			PlusEqualToken:    "plusEqual",
+			ProbabilityToken:  "probability",
+			QuoteToken:        "quote",
+			ResourceToken:     "resource",
+			SanToken:          "san",
+			SlashToken:        "slash",
+			SlashEqualToken:   "slashEqual",
+			SlashSlashToken:   "slashSlash",
+			SnailToken:        "snail",
+			SpaceToken:        "space",
+			StarToken:         "star",
+			StarEqualToken:    "starEqual",
+			SymbolToken:       "symbol",
+			TagToken:          "tag",
+			VersionToken:      "version",
+			XorToken:          "xor",
 		},
 	),
 	matchers_: fra.CatalogFromMap[TokenType, *reg.Regexp](
 		map[TokenType]*reg.Regexp{
 			// Define pattern matchers for each type of token.
-			AngleToken:       reg.MustCompile("^" + angle_),
-			BinaryToken:      reg.MustCompile("^" + binary_),
-			BooleanToken:     reg.MustCompile("^" + boolean_),
-			BytecodeToken:    reg.MustCompile("^" + bytecode_),
-			CommentToken:     reg.MustCompile("^" + comment_),
-			DelimiterToken:   reg.MustCompile("^" + delimiter_),
-			DurationToken:    reg.MustCompile("^" + duration_),
-			IdentifierToken:  reg.MustCompile("^" + identifier_),
-			MomentToken:      reg.MustCompile("^" + moment_),
-			NameToken:        reg.MustCompile("^" + name_),
-			NarrativeToken:   reg.MustCompile("^" + narrative_),
-			NewlineToken:     reg.MustCompile("^" + newline_),
-			NoteToken:        reg.MustCompile("^" + note_),
-			NumberToken:      reg.MustCompile("^" + number_),
-			PatternToken:     reg.MustCompile("^" + pattern_),
-			PercentageToken:  reg.MustCompile("^" + percentage_),
-			ProbabilityToken: reg.MustCompile("^" + probability_),
-			QuoteToken:       reg.MustCompile("^" + quote_),
-			ResourceToken:    reg.MustCompile("^" + resource_),
-			SpaceToken:       reg.MustCompile("^" + space_),
-			SymbolToken:      reg.MustCompile("^" + symbol_),
-			TagToken:         reg.MustCompile("^" + tag_),
-			VersionToken:     reg.MustCompile("^" + version_),
+			AmpersandToken:    reg.MustCompile("^" + ampersand_),
+			AndToken:          reg.MustCompile("^" + and_),
+			AngleToken:        reg.MustCompile("^" + angle_),
+			ArrowToken:        reg.MustCompile("^" + arrow_),
+			BarToken:          reg.MustCompile("^" + bar_),
+			BinaryToken:       reg.MustCompile("^" + binary_),
+			BooleanToken:      reg.MustCompile("^" + boolean_),
+			BytecodeToken:     reg.MustCompile("^" + bytecode_),
+			CaretToken:        reg.MustCompile("^" + caret_),
+			ColonToken:        reg.MustCompile("^" + colon_),
+			ColonEqualToken:   reg.MustCompile("^" + colonEqual_),
+			CommentToken:      reg.MustCompile("^" + comment_),
+			DashToken:         reg.MustCompile("^" + dash_),
+			DashEqualToken:    reg.MustCompile("^" + dashEqual_),
+			DefaultEqualToken: reg.MustCompile("^" + defaultEqual_),
+			DelimiterToken:    reg.MustCompile("^" + delimiter_),
+			DotToken:          reg.MustCompile("^" + dot_),
+			DurationToken:     reg.MustCompile("^" + duration_),
+			EqualToken:        reg.MustCompile("^" + equal_),
+			IdentifierToken:   reg.MustCompile("^" + identifier_),
+			IorToken:          reg.MustCompile("^" + ior_),
+			IsToken:           reg.MustCompile("^" + is_),
+			LessToken:         reg.MustCompile("^" + less_),
+			MatchesToken:      reg.MustCompile("^" + matches_),
+			MomentToken:       reg.MustCompile("^" + moment_),
+			MoreToken:         reg.MustCompile("^" + more_),
+			NameToken:         reg.MustCompile("^" + name_),
+			NarrativeToken:    reg.MustCompile("^" + narrative_),
+			NewlineToken:      reg.MustCompile("^" + newline_),
+			NotToken:          reg.MustCompile("^" + not_),
+			NoteToken:         reg.MustCompile("^" + note_),
+			NumberToken:       reg.MustCompile("^" + number_),
+			PatternToken:      reg.MustCompile("^" + pattern_),
+			PercentageToken:   reg.MustCompile("^" + percentage_),
+			PlusToken:         reg.MustCompile("^" + plus_),
+			PlusEqualToken:    reg.MustCompile("^" + plusEqual_),
+			ProbabilityToken:  reg.MustCompile("^" + probability_),
+			QuoteToken:        reg.MustCompile("^" + quote_),
+			ResourceToken:     reg.MustCompile("^" + resource_),
+			SanToken:          reg.MustCompile("^" + san_),
+			SlashToken:        reg.MustCompile("^" + slash_),
+			SlashEqualToken:   reg.MustCompile("^" + slashEqual_),
+			SlashSlashToken:   reg.MustCompile("^" + slashSlash_),
+			SnailToken:        reg.MustCompile("^" + snail_),
+			SpaceToken:        reg.MustCompile("^" + space_),
+			StarToken:         reg.MustCompile("^" + star_),
+			StarEqualToken:    reg.MustCompile("^" + starEqual_),
+			SymbolToken:       reg.MustCompile("^" + symbol_),
+			TagToken:          reg.MustCompile("^" + tag_),
+			VersionToken:      reg.MustCompile("^" + version_),
+			XorToken:          reg.MustCompile("^" + xor_),
 		},
 	),
 }
@@ -329,13 +413,17 @@ const (
 	upper_   = "\\p{Lu}"
 
 	// Define the regular expression patterns for each token type.
-	delimiter_    = "(?:with|while|to|throw|select|save|return|retrieve|reject|publish|post|on|notarize|matching|loop|level|let|in|if|from|each|do|discard|continue|checkout|break|at|as|accept|\\}|\\||\\{|\\^|\\]|\\[|\\?=|\\.\\.|\\.|\\+=|\\+|\\*=|\\*|\\)|\\(|XOR|SAN|NOT|MATCHES|IS|IOR|AND|@|>|=|<-|<|;|:=|:|/=|//|/|-=|-|,|&)"
+	delimiter_    = "(?:with|while|to|throw|select|save|return|retrieve|reject|publish|post|on|notarize|matching|loop|level|let|in|if|from|each|do|discard|continue|checkout|break|at|as|accept|\\}|\\{|\\]|\\[|\\.\\.|\\)|\\(|;|,)"
 	newline_      = "(?:" + eol_ + ")"
 	space_        = "(?: )"
-	angle_        = "(?:~((?:" + zero_ + ")|(?:" + magnitude_ + ")))"
 	alpha_        = "(?:[A-Za-z])"
 	alphanumeric_ = "(?:(?:" + alpha_ + ")|(?:" + base10_ + "))"
+	ampersand_    = "(?:&)"
+	and_          = "(?:AND)"
+	angle_        = "(?:~((?:" + zero_ + ")|(?:" + magnitude_ + ")))"
+	arrow_        = "(?:<-)"
 	authority_    = "(?:[^/" + control_ + "]+)"
+	bar_          = "(?:\\|)"
 	base10_       = "(?:[0-9])"
 	base16_       = "(?:(?:" + base10_ + ")|[a-f])"
 	base32_       = "(?:(?:" + base10_ + ")|[A-DF-HJ-NP-TV-Z])"
@@ -343,60 +431,83 @@ const (
 	binary_       = "(?:'>" + eol_ + "(?:" + space_ + ")*(?:" + base64_ + ")+" + eol_ + "*(?:" + space_ + ")*<')"
 	boolean_      = "(?:false|true)"
 	bytecode_     = "(?:'((?:" + instruction_ + ")((?:" + space_ + ")(?:" + instruction_ + "))*)*')"
+	caret_        = "(?:\\^)"
 	character_    = "(?:(?:" + escape_ + ")|[^\"" + control_ + "])"
+	colonEqual_   = "(?::=)"
+	colon_        = "(?::)"
 	comment_      = "(?:!>" + any_ + "*?<!)"
-	complex_      = "(?:\\(((?:" + rectangular_ + ")|(?:" + polar_ + "))\\))"
-	day_          = "(?:[0-21-9]|[30-1])"
+	dashEqual_    = "(?:-=)"
+	dash_         = "(?:-)"
+	day_          = "(?:([0-2][1-9])|(3[0-1]))"
 	days_         = "(?:(?:" + timespan_ + ")D)"
-	duration_     = "(?:~(?:" + sign_ + ")?P((?:" + weeks_ + ")|(?:" + years_ + ")?(?:" + months_ + ")?(?:" + days_ + ")?(T(?:" + hours_ + ")?(?:" + minutes_ + ")?(?:" + seconds_ + ")?)?))"
+	defaultEqual_ = "(?:\\?=)"
+	duration_     = "(?:~(?:" + sign_ + ")?P((?:" + weeks_ + ")|((?:" + years_ + ")?(?:" + months_ + ")?(?:" + days_ + ")?(T(?:" + hours_ + ")?(?:" + minutes_ + ")?(?:" + seconds_ + ")?)?)))"
+	equal_        = "(?:=)"
 	escape_       = "(?:\\\\((?:" + unicode_ + ")|[abfnrtv\"\\\\]))"
 	exponent_     = "(?:E(?:" + sign_ + ")?(?:" + ordinal_ + "))"
 	float_        = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + "))"
-	fraction_     = "(?:\\.(?:" + base10_ + ")+)"
+	fraction_     = "(?:(?:" + dot_ + ")(?:" + base10_ + ")+)"
 	fragment_     = "(?:[^>" + control_ + "]*)"
-	hour_         = "(?:[0-10-9]|[20-3])"
+	hour_         = "(?:([0-1][0-9])|(2[0-3]))"
 	hours_        = "(?:(?:" + timespan_ + ")H)"
 	imaginary_    = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + ")?i)"
 	infinity_     = "(?:(?:" + sign_ + ")?(infinity|�))"
 	instruction_  = "(?:(?:" + base16_ + "){4})"
+	ior_          = "(?:IOR)"
+	is_           = "(?:IS)"
 	letter_       = "(?:" + lower_ + "|" + upper_ + ")"
 	magnitude_    = "(?:e|pi|π|phi|φ|tau|τ|(?:" + scalar_ + "))"
-	minute_       = "(?:[0-50-9])"
+	matches_      = "(?:MATCHES)"
+	minute_       = "(?:[0-5][0-9])"
 	minutes_      = "(?:(?:" + timespan_ + ")M)"
 	moment_       = "(?:<(?:" + sign_ + ")?(?:" + year_ + ")(-(?:" + month_ + ")(-(?:" + day_ + ")(T(?:" + hour_ + ")(:(?:" + minute_ + ")(:(?:" + second_ + ")(?:" + fraction_ + ")?)?)?)?)?)?>)"
-	month_        = "(?:[01-9]|[10-2])"
+	month_        = "(?:(0[1-9])|(1[0-2]))"
 	months_       = "(?:(?:" + timespan_ + ")M)"
-	name_         = "(?:(/(?:" + identifier_ + "))+)"
+	more_         = "(?:>)"
+	name_         = "(?:((?:" + slash_ + ")(?:" + identifier_ + "))+)"
 	narrative_    = "(?:\">" + eol_ + "" + any_ + "*?" + eol_ + "(?:" + space_ + ")*<\")"
+	not_          = "(?:NOT)"
 	note_         = "(?:! [^" + control_ + "]*)"
 	one_          = "(?:1\\.)"
 	ordinal_      = "(?:[1-9](?:" + base10_ + ")*)"
 	path_         = "(?:[^\\?#>" + control_ + "]*)"
 	pattern_      = "(?:none|(?:" + regex_ + ")|any)"
 	percentage_   = "(?:(?:" + real_ + ")%)"
-	number_       = "(?:(?:" + real_ + ")|(?:" + imaginary_ + ")|(?:" + complex_ + "))"
+	plusEqual_    = "(?:\\+=)"
+	plus_         = "(?:\\+)"
 	polar_        = "(?:(?:" + magnitude_ + ")e\\^(?:" + angle_ + ")i)"
-	probability_  = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
 	query_        = "(?:[^#>" + control_ + "]*)"
 	quote_        = "(?:\"(?:" + character_ + ")*\")"
 	real_         = "(?:(?:" + zero_ + ")|(?:" + float_ + ")|(?:" + infinity_ + ")|(?:" + undefined_ + "))"
 	rectangular_  = "(?:(?:" + float_ + "), (?:" + float_ + ")i)"
 	regex_        = "(?:\"(?:" + character_ + ")+\"\\?)"
-	resource_     = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
-	scalar_       = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)?)"
-	scheme_       = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|\\+|-|\\.)*)"
-	second_       = "(?:[0-50-9]|[60-1])"
+	resource_     = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(?:" + path_ + ")(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
+	san_          = "(?:SAN)"
+	scalar_       = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)(?:" + exponent_ + ")?)"
+	scheme_       = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|(?:" + plus_ + ")|(?:" + dash_ + ")|(?:" + dot_ + "))*)"
+	second_       = "(?:([0-5][0-9])|(6[0-1]))"
 	seconds_      = "(?:(?:" + timespan_ + ")S)"
-	sign_         = "(?:\\+|-)"
+	sign_         = "(?:(?:" + plus_ + ")|(?:" + dash_ + "))"
+	slashEqual_   = "(?:/=)"
+	slashSlash_   = "(?://)"
+	slash_        = "(?:/)"
+	snail_        = "(?:@)"
+	starEqual_    = "(?:\\*=)"
+	star_         = "(?:\\*)"
 	symbol_       = "(?:\\$(?:" + identifier_ + "))"
 	tag_          = "(?:#(?:" + base32_ + ")+)"
 	timespan_     = "(?:(?:" + zero_ + ")|((?:" + ordinal_ + ")(?:" + fraction_ + ")?))"
 	undefined_    = "(?:undefined)"
 	unicode_      = "(?:(u(?:" + base16_ + "){4})|(U(?:" + base16_ + "){8}))"
-	version_      = "(?:v(?:" + ordinal_ + ")(\\.(?:" + ordinal_ + "))*)"
+	version_      = "(?:v(?:" + ordinal_ + ")((?:" + dot_ + ")(?:" + ordinal_ + "))*)"
 	weeks_        = "(?:(?:" + timespan_ + ")W)"
+	xor_          = "(?:XOR)"
 	year_         = "(?:(?:" + zero_ + ")|(?:" + ordinal_ + "))"
 	years_        = "(?:(?:" + timespan_ + ")Y)"
 	zero_         = "(?:0)"
+	less_         = "(?:<)"
+	number_       = "(?:(?:" + rectangular_ + ")|(?:" + polar_ + ")|(?:" + real_ + ")|(?:" + imaginary_ + "))"
+	probability_  = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
+	dot_          = "(?:\\.)"
 	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
 )

@@ -22,32 +22,32 @@ For more information on CDSN see the wiki at:
 │                               RULE DEFINITIONS                               │
 └──────────────────────────────────────────────────────────────────────────────┘
 <!
-$Document: comment Component
+$Document: comment? Component
 
 $Component: Entity Context?
 
 $Entity:
   - Element
   - String
-  - Range
   - Collection
+  - Range
   - Procedure
 
 $Context: "(" Parameters ")"
 
 $Parameters:
-  - InlineParameters
   - MultilineParameters
-
-$InlineParameters: Parameter AdditionalParameter*
+  - InlineParameters
 
 $MultilineParameters: AnnotatedParameter+
 
+$AnnotatedParameter: dash Parameter note?
+
+$InlineParameters: Parameter AdditionalParameter*
+
 $AdditionalParameter: "," Parameter
 
-$AnnotatedParameter: Parameter note?
-
-$Parameter: Label ":" Component
+$Parameter: Label colon Component
 
 $Label: symbol
 
@@ -72,6 +72,43 @@ $String:
   - tag
   - version
 
+$Collection: "[" Items? "]"
+
+$Items:
+  - Associations
+  - Values
+
+$Associations:
+  - MultilineAssociations
+  - InlineAssociations
+  - NoAssociations
+
+$MultilineAssociations: AnnotatedAssociation+
+
+$AnnotatedAssociation: dash Association note?
+
+$InlineAssociations: Association AdditionalAssociation*
+
+$AdditionalAssociation: "," Association
+
+$NoAssociations: colon
+
+$Association: symbol colon Value
+
+$Value: Component
+
+$Values:
+  - MultilineValues
+  - InlineValues
+
+$MultilineValues: AnnotatedValue+
+
+$AnnotatedValue: dash Value note?
+
+$InlineValues: Value AdditionalValue*
+
+$AdditionalValue: "," Value
+
 $Range: LeftBracket Primitive ".." Primitive RightBracket
 
 $LeftBracket:
@@ -94,58 +131,19 @@ $RightSquare: "]"
 
 $RightRound: ")"
 
-$Collection: "[" Items? "]"
-
-$Items:
-  - Associations
-  - Values
-
-$Associations:
-  - InlineAssociations
-  - MultilineAssociations
-  - NoAssociations
-
-$InlineAssociations: Association AdditionalAssociation*
-
-$MultilineAssociations: AnnotatedAssociation+
-
-$NoAssociations: ":"
-
-$AdditionalAssociation: "," Association
-
-$AnnotatedAssociation: Association note?
-
-$Association: Key ":" Value
-
-$Key: Primitive
-
-$Value: Component
-
-$Values:
-  - InlineValues
-  - MultilineValues
-
-$InlineValues: Value AdditionalValue*
-
-$MultilineValues: AnnotatedValue+
-
-$AdditionalValue: "," Value
-
-$AnnotatedValue: Value note?
-
 $Procedure: "{" Statements? "}"
 
 $Statements:
-  - InlineStatements
   - MultilineStatements
-
-$InlineStatements: Statement AdditionalStatement*
+  - InlineStatements
 
 $MultilineStatements: AnnotatedStatement+
 
-$AdditionalStatement: ";" Statement
+$AnnotatedStatement: dash Statement note?
 
-$AnnotatedStatement: Statement note?
+$InlineStatements: Statement AdditionalStatement*
+
+$AdditionalStatement: ";" Statement
 
 $Statement: MainClause OnClause?
 
@@ -231,12 +229,8 @@ $Function: identifier
 $Invocation: Target InvocationOperator Method "(" Arguments? ")"
 
 $InvocationOperator:
-  - Dot
-  - Arrow
-
-$Dot: "."
-
-$Arrow: "<-"
+  - dot
+  - arrow
 
 $Method: identifier
 
@@ -249,24 +243,12 @@ $Argument: Expression
 $LetClause: "let" Recipient AssignmentOperator Expression
 
 $AssignmentOperator:
-  - ColonEquals
-  - DefaultEquals
-  - PlusEquals
-  - MinusEquals
-  - TimesEquals
-  - DivideEquals
-
-$ColonEquals: ":="
-
-$DefaultEquals: "?="
-
-$PlusEquals: "+="
-
-$MinusEquals: "-="
-
-$TimesEquals: "*="
-
-$DivideEquals: "/="
+  - colonEqual
+  - defaultEqual
+  - plusEqual
+  - dashEqual
+  - starEqual
+  - slashEqual
 
 $Recipient:
   - Label
@@ -331,93 +313,73 @@ $Expression:
 
 $Precedence: "(" Expression ")"
 
-$Dereference: "@" Expression
+$Dereference: snail Expression
 
 $Subcomponent: Composite "[" Indices "]"
 
 $Composite: Expression
 
-$Chaining: Expression "&" Expression
+$Chaining: Expression ampersand Expression
 
-$Exponential: Expression "^" Expression
+$Exponential: Expression caret Expression
 
 $Inversion: InversionOperator Expression
 
 $InversionOperator:
-  - Minus
-  - Divide
-  - Times
-
-$Minus: "-"
-
-$Divide: "/"
-
-$Times: "*"
+  - dash
+  - slash
+  - star
 
 $Arithmetic: Expression ArithmeticOperator Expression
 
 $ArithmeticOperator:
-  - Times
-  - Divide
-  - Modulo
-  - Plus
-  - Minus
+  - plus
+  - dash
+  - star
+  - slash
+  - slashSlash
 
-$Modulo: "//"
-
-$Plus: "+"
-
-$Amplitude: "|" Expression "|"
+$Amplitude: bar Expression bar
 
 $Comparison: Expression ComparisonOperator Expression
 
 $ComparisonOperator:
-  - Less
-  - Equals
-  - More
-  - Is
-  - Matches
+  - less
+  - equal
+  - more
+  - is
+  - matches
 
-$Less: "<"
-
-$Equals: "="
-
-$More: ">"
-
-$Is: "IS"
-
-$Matches: "MATCHES"
-
-$Complement: "NOT" Expression
+$Complement: not Expression
 
 $Logical: Expression LogicalOperator Expression
 
 $LogicalOperator:
-  - And
-  - SAN
-  - IOR
-  - XOR
-
-$And: "AND"
-
-$SAN: "SAN"
-
-$IOR: "IOR"
-
-$XOR: "XOR"
+  - and
+  - san
+  - ior
+  - xor
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                            EXPRESSION DEFINITIONS                            │
 └──────────────────────────────────────────────────────────────────────────────┘
 <!
-$angle: '~' (zero | magnitude)
-
 $alpha: ['A'..'Z' 'a'..'z']
 
 $alphanumeric: alpha | base10
 
+$ampersand: '&'
+
+$and: "AND"
+
+$angle: '~' (zero | magnitude)
+
+$arrow: "<-"
+
 $authority: ~['/' CONTROL]+
+
+$bar: '|'
 
 $base10: ['0'..'9']
 
@@ -433,17 +395,29 @@ $boolean: "false" | "true"
 
 $bytecode: "'" (instruction (space instruction)*)* "'"
 
+$caret: '^'
+
 $character: escape | ~['"' CONTROL]
+
+$colonEqual: ":="
+
+$colon: ":"
 
 $comment: "!>" ANY* "<!"
 
-$complex: '(' (rectangular | polar) ')'
+$dashEqual: "-="
 
-$day: ['0'..'2' '1'..'9'] | ['3' '0'..'1']
+$dash: '-'
+
+$day: (['0'..'2'] ['1'..'9']) | ('3' ['0'..'1'])
 
 $days: timespan 'D'
 
-$duration: '~' sign? 'P' (weeks | years? months? days? ('T' hours? minutes? seconds?)?)
+$defaultEqual: "?="
+
+$duration: '~' sign? 'P' (weeks | (years? months? days? ('T' hours? minutes? seconds?)?))
+
+$equal: "="
 
 $escape: '\' (unicode | ['a' 'b' 'f' 'n' 'r' 't' 'v' '"' '\'])
 
@@ -451,11 +425,11 @@ $exponent: 'E' sign? ordinal
 
 $float: sign? magnitude
 
-$fraction: '.' base10+
+$fraction: dot base10+
 
 $fragment: ~['>' CONTROL]*
 
-$hour: ['0'..'1' '0'..'9'] | ['2' '0'..'3']
+$hour: (['0'..'1'] ['0'..'9']) | ('2' ['0'..'3'])
 
 $hours: timespan 'H'
 
@@ -465,23 +439,33 @@ $infinity: sign? ("infinity" | '∞')
 
 $instruction: base16{4}
 
+$ior: "IOR"
+
+$is: "IS"
+
 $letter: LOWER | UPPER
 
-$magnitude: "e" | "pi" | "π" | "phi" | "φ"| "tau" | "τ" | scalar
+$magnitude: "e" | "pi" | "π" | "phi" | "φ" | "tau" | "τ" | scalar
 
-$minute: ['0'..'5' '0'..'9']
+$matches: "MATCHES"
+
+$minute: ['0'..'5'] ['0'..'9']
 
 $minutes: timespan 'M'
 
 $moment: '<' sign? year ('-' month ('-' day ('T' hour (':' minute (':' second fraction?)?)?)?)?)? '>'
 
-$month: ['0' '1'..'9'] | ['1' '0'..'2']
+$month: ('0' ['1'..'9']) | ('1' ['0'..'2'])
 
 $months: timespan 'M'
 
-$name: ('/' identifier)+
+$more: ">"
+
+$name: (slash identifier)+
 
 $narrative: '"' '>' EOL ANY* EOL space* '<' '"'
+
+$not: "NOT"
 
 $note: "! " ~[CONTROL]*
 
@@ -495,11 +479,11 @@ $pattern: "none" | regex | "any"
 
 $percentage: real '%'
 
-$number: real | imaginary | complex  ! Must be after percentage.
+$plusEqual: "+="
+
+$plus: '+'
 
 $polar: magnitude "e^" angle 'i'
-
-$probability: fraction | one  ! Must be after number.
 
 $query: ~['#' '>' CONTROL]*
 
@@ -513,17 +497,31 @@ $regex: '"' character+ '"' '?'
 
 $resource: '<' scheme ':' ("//" authority)? '/' path ('?' query)? ('#' fragment)? '>'
 
+$san: "SAN"
+
 $scalar: (zero fraction | ordinal fraction?) exponent?
 
-$scheme: alpha (alphanumeric | '+' | '-' | '.')*
+$scheme: alpha (alphanumeric | plus | dash | dot)*
 
-$second: ['0'..'5' '0'..'9'] | ['6' '0'..'1']
+$second: (['0'..'5'] ['0'..'9']) | ('6' ['0'..'1'])
 
 $seconds: timespan 'S'
 
-$sign: '+' | '-'
+$sign: plus | dash
+
+$slashEqual: "/="
+
+$slashSlash: "//"
+
+$slash: '/'
+
+$snail: '@'
 
 $space: ' '
+
+$starEqual: "*="
+
+$star: '*'
 
 $symbol: '$' identifier
 
@@ -535,15 +533,25 @@ $undefined: "undefined"
 
 $unicode: ('u' base16{4}) | ('U' base16{8})
 
-$version: 'v' ordinal ('.' ordinal)*
+$version: 'v' ordinal (dot ordinal)*
 
 $weeks: timespan 'W'
+
+$xor: "XOR"
 
 $year: zero | ordinal
 
 $years: timespan 'Y'
 
 $zero: '0'
+
+$less: "<"  ! Must be after other expressions beginning with '<'.
+
+$number: rectangular | polar | real | imaginary  ! Must be after percentage.
+
+$probability: fraction | one  ! Must be after number.
+
+$dot: '.'  ! Must be after fraction.
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
 

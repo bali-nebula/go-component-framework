@@ -34,19 +34,24 @@ func AssociationClass() AssociationClassLike {
 // Constructor Methods
 
 func (c *associationClass_) Association(
-	key KeyLike,
+	symbol string,
+	colon string,
 	value ValueLike,
 ) AssociationLike {
-	if uti.IsUndefined(key) {
-		panic("The \"key\" attribute is required by this class.")
+	if uti.IsUndefined(symbol) {
+		panic("The \"symbol\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(colon) {
+		panic("The \"colon\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(value) {
 		panic("The \"value\" attribute is required by this class.")
 	}
 	var instance = &association_{
 		// Initialize the instance attributes.
-		key_:   key,
-		value_: value,
+		symbol_: symbol,
+		colon_:  colon,
+		value_:  value,
 	}
 	return instance
 }
@@ -61,8 +66,12 @@ func (v *association_) GetClass() AssociationClassLike {
 
 // Attribute Methods
 
-func (v *association_) GetKey() KeyLike {
-	return v.key_
+func (v *association_) GetSymbol() string {
+	return v.symbol_
+}
+
+func (v *association_) GetColon() string {
+	return v.colon_
 }
 
 func (v *association_) GetValue() ValueLike {
@@ -75,8 +84,9 @@ func (v *association_) GetValue() ValueLike {
 
 type association_ struct {
 	// Declare the instance attributes.
-	key_   KeyLike
-	value_ ValueLike
+	symbol_ string
+	colon_  string
+	value_  ValueLike
 }
 
 // Class Structure

@@ -35,10 +35,14 @@ func ExponentialClass() ExponentialClassLike {
 
 func (c *exponentialClass_) Exponential(
 	expression1 ExpressionLike,
+	caret string,
 	expression2 ExpressionLike,
 ) ExponentialLike {
 	if uti.IsUndefined(expression1) {
 		panic("The \"expression1\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(caret) {
+		panic("The \"caret\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(expression2) {
 		panic("The \"expression2\" attribute is required by this class.")
@@ -46,6 +50,7 @@ func (c *exponentialClass_) Exponential(
 	var instance = &exponential_{
 		// Initialize the instance attributes.
 		expression1_: expression1,
+		caret_:       caret,
 		expression2_: expression2,
 	}
 	return instance
@@ -65,6 +70,10 @@ func (v *exponential_) GetExpression1() ExpressionLike {
 	return v.expression1_
 }
 
+func (v *exponential_) GetCaret() string {
+	return v.caret_
+}
+
 func (v *exponential_) GetExpression2() ExpressionLike {
 	return v.expression2_
 }
@@ -76,6 +85,7 @@ func (v *exponential_) GetExpression2() ExpressionLike {
 type exponential_ struct {
 	// Declare the instance attributes.
 	expression1_ ExpressionLike
+	caret_       string
 	expression2_ ExpressionLike
 }
 

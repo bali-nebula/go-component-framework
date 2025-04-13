@@ -60,10 +60,34 @@ func (v *formatter_) FormatDocument(document ast.DocumentLike) string {
 
 // Methodical Methods
 
+func (v *formatter_) ProcessAmpersand(
+	ampersand string,
+) {
+	v.appendString(ampersand)
+}
+
+func (v *formatter_) ProcessAnd(
+	and string,
+) {
+	v.appendString(and)
+}
+
 func (v *formatter_) ProcessAngle(
 	angle string,
 ) {
 	v.appendString(angle)
+}
+
+func (v *formatter_) ProcessArrow(
+	arrow string,
+) {
+	v.appendString(arrow)
+}
+
+func (v *formatter_) ProcessBar(
+	bar string,
+) {
+	v.appendString(bar)
 }
 
 func (v *formatter_) ProcessBinary(
@@ -84,10 +108,52 @@ func (v *formatter_) ProcessBytecode(
 	v.appendString(bytecode)
 }
 
+func (v *formatter_) ProcessCaret(
+	caret string,
+) {
+	v.appendString(caret)
+}
+
+func (v *formatter_) ProcessColon(
+	colon string,
+) {
+	v.appendString(colon)
+}
+
+func (v *formatter_) ProcessColonEqual(
+	colonEqual string,
+) {
+	v.appendString(colonEqual)
+}
+
 func (v *formatter_) ProcessComment(
 	comment string,
 ) {
 	v.appendString(comment)
+}
+
+func (v *formatter_) ProcessDash(
+	dash string,
+) {
+	v.appendString(dash)
+}
+
+func (v *formatter_) ProcessDashEqual(
+	dashEqual string,
+) {
+	v.appendString(dashEqual)
+}
+
+func (v *formatter_) ProcessDefaultEqual(
+	defaultEqual string,
+) {
+	v.appendString(defaultEqual)
+}
+
+func (v *formatter_) ProcessDot(
+	dot string,
+) {
+	v.appendString(dot)
 }
 
 func (v *formatter_) ProcessDuration(
@@ -96,16 +162,52 @@ func (v *formatter_) ProcessDuration(
 	v.appendString(duration)
 }
 
+func (v *formatter_) ProcessEqual(
+	equal string,
+) {
+	v.appendString(equal)
+}
+
 func (v *formatter_) ProcessIdentifier(
 	identifier string,
 ) {
 	v.appendString(identifier)
 }
 
+func (v *formatter_) ProcessIor(
+	ior string,
+) {
+	v.appendString(ior)
+}
+
+func (v *formatter_) ProcessIs(
+	is string,
+) {
+	v.appendString(is)
+}
+
+func (v *formatter_) ProcessLess(
+	less string,
+) {
+	v.appendString(less)
+}
+
+func (v *formatter_) ProcessMatches(
+	matches string,
+) {
+	v.appendString(matches)
+}
+
 func (v *formatter_) ProcessMoment(
 	moment string,
 ) {
 	v.appendString(moment)
+}
+
+func (v *formatter_) ProcessMore(
+	more string,
+) {
+	v.appendString(more)
 }
 
 func (v *formatter_) ProcessName(
@@ -124,6 +226,12 @@ func (v *formatter_) ProcessNewline(
 	newline string,
 ) {
 	v.appendNewline()
+}
+
+func (v *formatter_) ProcessNot(
+	not string,
+) {
+	v.appendString(not)
 }
 
 func (v *formatter_) ProcessNote(
@@ -150,6 +258,18 @@ func (v *formatter_) ProcessPercentage(
 	v.appendString(percentage)
 }
 
+func (v *formatter_) ProcessPlus(
+	plus string,
+) {
+	v.appendString(plus)
+}
+
+func (v *formatter_) ProcessPlusEqual(
+	plusEqual string,
+) {
+	v.appendString(plusEqual)
+}
+
 func (v *formatter_) ProcessProbability(
 	probability string,
 ) {
@@ -168,10 +288,52 @@ func (v *formatter_) ProcessResource(
 	v.appendString(resource)
 }
 
+func (v *formatter_) ProcessSan(
+	san string,
+) {
+	v.appendString(san)
+}
+
+func (v *formatter_) ProcessSlash(
+	slash string,
+) {
+	v.appendString(slash)
+}
+
+func (v *formatter_) ProcessSlashEqual(
+	slashEqual string,
+) {
+	v.appendString(slashEqual)
+}
+
+func (v *formatter_) ProcessSlashSlash(
+	slashSlash string,
+) {
+	v.appendString(slashSlash)
+}
+
+func (v *formatter_) ProcessSnail(
+	snail string,
+) {
+	v.appendString(snail)
+}
+
 func (v *formatter_) ProcessSpace(
 	space string,
 ) {
 	v.appendString(space)
+}
+
+func (v *formatter_) ProcessStar(
+	star string,
+) {
+	v.appendString(star)
+}
+
+func (v *formatter_) ProcessStarEqual(
+	starEqual string,
+) {
+	v.appendString(starEqual)
 }
 
 func (v *formatter_) ProcessSymbol(
@@ -190,6 +352,12 @@ func (v *formatter_) ProcessVersion(
 	version string,
 ) {
 	v.appendString(version)
+}
+
+func (v *formatter_) ProcessXor(
+	xor string,
+) {
+	v.appendString(xor)
 }
 
 func (v *formatter_) PreprocessAcceptClause(
@@ -360,24 +528,6 @@ func (v *formatter_) PostprocessAmplitude(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessAnd(
-	and ast.AndLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessAndSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessAnd(
-	and ast.AndLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessAnnotatedAssociation(
 	annotatedAssociation ast.AnnotatedAssociationLike,
 	index uint,
@@ -534,24 +684,6 @@ func (v *formatter_) ProcessArithmeticOperatorSlot(
 
 func (v *formatter_) PostprocessArithmeticOperator(
 	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessArrow(
-	arrow ast.ArrowLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessArrowSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessArrow(
-	arrow ast.ArrowLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -754,24 +886,6 @@ func (v *formatter_) PostprocessCollection(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessColonEquals(
-	colonEquals ast.ColonEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessColonEqualsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessColonEquals(
-	colonEquals ast.ColonEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessComparison(
 	comparison ast.ComparisonLike,
 ) {
@@ -916,24 +1030,6 @@ func (v *formatter_) PostprocessContinueClause(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessDefaultEquals(
-	defaultEquals ast.DefaultEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessDefaultEqualsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessDefaultEquals(
-	defaultEquals ast.DefaultEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessDereference(
 	dereference ast.DereferenceLike,
 ) {
@@ -970,42 +1066,6 @@ func (v *formatter_) PostprocessDiscardClause(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessDivide(
-	divide ast.DivideLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessDivideSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessDivide(
-	divide ast.DivideLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessDivideEquals(
-	divideEquals ast.DivideEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessDivideEqualsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessDivideEquals(
-	divideEquals ast.DivideEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessDoClause(
 	doClause ast.DoClauseLike,
 ) {
@@ -1038,24 +1098,6 @@ func (v *formatter_) ProcessDocumentSlot(
 
 func (v *formatter_) PostprocessDocument(
 	document ast.DocumentLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessDot(
-	dot ast.DotLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessDotSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessDot(
-	dot ast.DotLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1110,24 +1152,6 @@ func (v *formatter_) ProcessEntitySlot(
 
 func (v *formatter_) PostprocessEntity(
 	entity ast.EntityLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessEquals(
-	equals ast.EqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessEqualsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessEquals(
-	equals ast.EqualsLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1254,24 +1278,6 @@ func (v *formatter_) ProcessFunctionSlot(
 
 func (v *formatter_) PostprocessFunction(
 	function ast.FunctionLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessIOR(
-	iOR ast.IORLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessIORSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessIOR(
-	iOR ast.IORLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1510,24 +1516,6 @@ func (v *formatter_) PostprocessInvocationOperator(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessIs(
-	is ast.IsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessIsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessIs(
-	is ast.IsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessItem(
 	item ast.ItemLike,
 ) {
@@ -1560,24 +1548,6 @@ func (v *formatter_) ProcessItemsSlot(
 
 func (v *formatter_) PostprocessItems(
 	items ast.ItemsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessKey(
-	key ast.KeyLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessKeySlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessKey(
-	key ast.KeyLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1650,24 +1620,6 @@ func (v *formatter_) ProcessLeftSquareSlot(
 
 func (v *formatter_) PostprocessLeftSquare(
 	leftSquare ast.LeftSquareLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessLess(
-	less ast.LessLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessLessSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessLess(
-	less ast.LessLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1766,24 +1718,6 @@ func (v *formatter_) PostprocessMatchHandler(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessMatches(
-	matches ast.MatchesLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessMatchesSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessMatches(
-	matches ast.MatchesLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessMessage(
 	message ast.MessageLike,
 ) {
@@ -1834,78 +1768,6 @@ func (v *formatter_) ProcessMethodSlot(
 
 func (v *formatter_) PostprocessMethod(
 	method ast.MethodLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessMinus(
-	minus ast.MinusLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessMinusSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessMinus(
-	minus ast.MinusLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessMinusEquals(
-	minusEquals ast.MinusEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessMinusEqualsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessMinusEquals(
-	minusEquals ast.MinusEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessModulo(
-	modulo ast.ModuloLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessModuloSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessModulo(
-	modulo ast.ModuloLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessMore(
-	more ast.MoreLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessMoreSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessMore(
-	more ast.MoreLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2086,42 +1948,6 @@ func (v *formatter_) ProcessParametersSlot(
 
 func (v *formatter_) PostprocessParameters(
 	parameters ast.ParametersLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessPlus(
-	plus ast.PlusLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessPlusSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessPlus(
-	plus ast.PlusLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessPlusEquals(
-	plusEquals ast.PlusEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessPlusEqualsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessPlusEquals(
-	plusEquals ast.PlusEqualsLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2396,24 +2222,6 @@ func (v *formatter_) PostprocessRightSquare(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessSAN(
-	sAN ast.SANLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessSANSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessSAN(
-	sAN ast.SANLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -2594,42 +2402,6 @@ func (v *formatter_) PostprocessThrowClause(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessTimes(
-	times ast.TimesLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessTimesSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessTimes(
-	times ast.TimesLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessTimesEquals(
-	timesEquals ast.TimesEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessTimesEqualsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessTimesEquals(
-	timesEquals ast.TimesEqualsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessValue(
 	value ast.ValueLike,
 ) {
@@ -2716,24 +2488,6 @@ func (v *formatter_) ProcessWithClauseSlot(
 
 func (v *formatter_) PostprocessWithClause(
 	withClause ast.WithClauseLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessXOR(
-	xOR ast.XORLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessXORSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessXOR(
-	xOR ast.XORLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

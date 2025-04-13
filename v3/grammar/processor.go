@@ -50,8 +50,28 @@ func (v *processor_) GetClass() ProcessorClassLike {
 
 // Methodical Methods
 
+func (v *processor_) ProcessAmpersand(
+	ampersand string,
+) {
+}
+
+func (v *processor_) ProcessAnd(
+	and string,
+) {
+}
+
 func (v *processor_) ProcessAngle(
 	angle string,
+) {
+}
+
+func (v *processor_) ProcessArrow(
+	arrow string,
+) {
+}
+
+func (v *processor_) ProcessBar(
+	bar string,
 ) {
 }
 
@@ -70,8 +90,43 @@ func (v *processor_) ProcessBytecode(
 ) {
 }
 
+func (v *processor_) ProcessCaret(
+	caret string,
+) {
+}
+
+func (v *processor_) ProcessColon(
+	colon string,
+) {
+}
+
+func (v *processor_) ProcessColonEqual(
+	colonEqual string,
+) {
+}
+
 func (v *processor_) ProcessComment(
 	comment string,
+) {
+}
+
+func (v *processor_) ProcessDash(
+	dash string,
+) {
+}
+
+func (v *processor_) ProcessDashEqual(
+	dashEqual string,
+) {
+}
+
+func (v *processor_) ProcessDefaultEqual(
+	defaultEqual string,
+) {
+}
+
+func (v *processor_) ProcessDot(
+	dot string,
 ) {
 }
 
@@ -80,13 +135,43 @@ func (v *processor_) ProcessDuration(
 ) {
 }
 
+func (v *processor_) ProcessEqual(
+	equal string,
+) {
+}
+
 func (v *processor_) ProcessIdentifier(
 	identifier string,
 ) {
 }
 
+func (v *processor_) ProcessIor(
+	ior string,
+) {
+}
+
+func (v *processor_) ProcessIs(
+	is string,
+) {
+}
+
+func (v *processor_) ProcessLess(
+	less string,
+) {
+}
+
+func (v *processor_) ProcessMatches(
+	matches string,
+) {
+}
+
 func (v *processor_) ProcessMoment(
 	moment string,
+) {
+}
+
+func (v *processor_) ProcessMore(
+	more string,
 ) {
 }
 
@@ -102,6 +187,11 @@ func (v *processor_) ProcessNarrative(
 
 func (v *processor_) ProcessNewline(
 	newline string,
+) {
+}
+
+func (v *processor_) ProcessNot(
+	not string,
 ) {
 }
 
@@ -125,6 +215,16 @@ func (v *processor_) ProcessPercentage(
 ) {
 }
 
+func (v *processor_) ProcessPlus(
+	plus string,
+) {
+}
+
+func (v *processor_) ProcessPlusEqual(
+	plusEqual string,
+) {
+}
+
 func (v *processor_) ProcessProbability(
 	probability string,
 ) {
@@ -140,8 +240,43 @@ func (v *processor_) ProcessResource(
 ) {
 }
 
+func (v *processor_) ProcessSan(
+	san string,
+) {
+}
+
+func (v *processor_) ProcessSlash(
+	slash string,
+) {
+}
+
+func (v *processor_) ProcessSlashEqual(
+	slashEqual string,
+) {
+}
+
+func (v *processor_) ProcessSlashSlash(
+	slashSlash string,
+) {
+}
+
+func (v *processor_) ProcessSnail(
+	snail string,
+) {
+}
+
 func (v *processor_) ProcessSpace(
 	space string,
+) {
+}
+
+func (v *processor_) ProcessStar(
+	star string,
+) {
+}
+
+func (v *processor_) ProcessStarEqual(
+	starEqual string,
 ) {
 }
 
@@ -157,6 +292,11 @@ func (v *processor_) ProcessTag(
 
 func (v *processor_) ProcessVersion(
 	version string,
+) {
+}
+
+func (v *processor_) ProcessXor(
+	xor string,
 ) {
 }
 
@@ -304,21 +444,6 @@ func (v *processor_) PostprocessAmplitude(
 ) {
 }
 
-func (v *processor_) PreprocessAnd(
-	and ast.AndLike,
-) {
-}
-
-func (v *processor_) ProcessAndSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessAnd(
-	and ast.AndLike,
-) {
-}
-
 func (v *processor_) PreprocessAnnotatedAssociation(
 	annotatedAssociation ast.AnnotatedAssociationLike,
 	index uint,
@@ -452,21 +577,6 @@ func (v *processor_) ProcessArithmeticOperatorSlot(
 
 func (v *processor_) PostprocessArithmeticOperator(
 	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-}
-
-func (v *processor_) PreprocessArrow(
-	arrow ast.ArrowLike,
-) {
-}
-
-func (v *processor_) ProcessArrowSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessArrow(
-	arrow ast.ArrowLike,
 ) {
 }
 
@@ -635,21 +745,6 @@ func (v *processor_) PostprocessCollection(
 ) {
 }
 
-func (v *processor_) PreprocessColonEquals(
-	colonEquals ast.ColonEqualsLike,
-) {
-}
-
-func (v *processor_) ProcessColonEqualsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessColonEquals(
-	colonEquals ast.ColonEqualsLike,
-) {
-}
-
 func (v *processor_) PreprocessComparison(
 	comparison ast.ComparisonLike,
 ) {
@@ -770,21 +865,6 @@ func (v *processor_) PostprocessContinueClause(
 ) {
 }
 
-func (v *processor_) PreprocessDefaultEquals(
-	defaultEquals ast.DefaultEqualsLike,
-) {
-}
-
-func (v *processor_) ProcessDefaultEqualsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDefaultEquals(
-	defaultEquals ast.DefaultEqualsLike,
-) {
-}
-
 func (v *processor_) PreprocessDereference(
 	dereference ast.DereferenceLike,
 ) {
@@ -815,36 +895,6 @@ func (v *processor_) PostprocessDiscardClause(
 ) {
 }
 
-func (v *processor_) PreprocessDivide(
-	divide ast.DivideLike,
-) {
-}
-
-func (v *processor_) ProcessDivideSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDivide(
-	divide ast.DivideLike,
-) {
-}
-
-func (v *processor_) PreprocessDivideEquals(
-	divideEquals ast.DivideEqualsLike,
-) {
-}
-
-func (v *processor_) ProcessDivideEqualsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDivideEquals(
-	divideEquals ast.DivideEqualsLike,
-) {
-}
-
 func (v *processor_) PreprocessDoClause(
 	doClause ast.DoClauseLike,
 ) {
@@ -872,21 +922,6 @@ func (v *processor_) ProcessDocumentSlot(
 
 func (v *processor_) PostprocessDocument(
 	document ast.DocumentLike,
-) {
-}
-
-func (v *processor_) PreprocessDot(
-	dot ast.DotLike,
-) {
-}
-
-func (v *processor_) ProcessDotSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDot(
-	dot ast.DotLike,
 ) {
 }
 
@@ -932,21 +967,6 @@ func (v *processor_) ProcessEntitySlot(
 
 func (v *processor_) PostprocessEntity(
 	entity ast.EntityLike,
-) {
-}
-
-func (v *processor_) PreprocessEquals(
-	equals ast.EqualsLike,
-) {
-}
-
-func (v *processor_) ProcessEqualsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessEquals(
-	equals ast.EqualsLike,
 ) {
 }
 
@@ -1052,21 +1072,6 @@ func (v *processor_) ProcessFunctionSlot(
 
 func (v *processor_) PostprocessFunction(
 	function ast.FunctionLike,
-) {
-}
-
-func (v *processor_) PreprocessIOR(
-	iOR ast.IORLike,
-) {
-}
-
-func (v *processor_) ProcessIORSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessIOR(
-	iOR ast.IORLike,
 ) {
 }
 
@@ -1265,21 +1270,6 @@ func (v *processor_) PostprocessInvocationOperator(
 ) {
 }
 
-func (v *processor_) PreprocessIs(
-	is ast.IsLike,
-) {
-}
-
-func (v *processor_) ProcessIsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessIs(
-	is ast.IsLike,
-) {
-}
-
 func (v *processor_) PreprocessItem(
 	item ast.ItemLike,
 ) {
@@ -1307,21 +1297,6 @@ func (v *processor_) ProcessItemsSlot(
 
 func (v *processor_) PostprocessItems(
 	items ast.ItemsLike,
-) {
-}
-
-func (v *processor_) PreprocessKey(
-	key ast.KeyLike,
-) {
-}
-
-func (v *processor_) ProcessKeySlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessKey(
-	key ast.KeyLike,
 ) {
 }
 
@@ -1382,21 +1357,6 @@ func (v *processor_) ProcessLeftSquareSlot(
 
 func (v *processor_) PostprocessLeftSquare(
 	leftSquare ast.LeftSquareLike,
-) {
-}
-
-func (v *processor_) PreprocessLess(
-	less ast.LessLike,
-) {
-}
-
-func (v *processor_) ProcessLessSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLess(
-	less ast.LessLike,
 ) {
 }
 
@@ -1479,21 +1439,6 @@ func (v *processor_) PostprocessMatchHandler(
 ) {
 }
 
-func (v *processor_) PreprocessMatches(
-	matches ast.MatchesLike,
-) {
-}
-
-func (v *processor_) ProcessMatchesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessMatches(
-	matches ast.MatchesLike,
-) {
-}
-
 func (v *processor_) PreprocessMessage(
 	message ast.MessageLike,
 ) {
@@ -1536,66 +1481,6 @@ func (v *processor_) ProcessMethodSlot(
 
 func (v *processor_) PostprocessMethod(
 	method ast.MethodLike,
-) {
-}
-
-func (v *processor_) PreprocessMinus(
-	minus ast.MinusLike,
-) {
-}
-
-func (v *processor_) ProcessMinusSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessMinus(
-	minus ast.MinusLike,
-) {
-}
-
-func (v *processor_) PreprocessMinusEquals(
-	minusEquals ast.MinusEqualsLike,
-) {
-}
-
-func (v *processor_) ProcessMinusEqualsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessMinusEquals(
-	minusEquals ast.MinusEqualsLike,
-) {
-}
-
-func (v *processor_) PreprocessModulo(
-	modulo ast.ModuloLike,
-) {
-}
-
-func (v *processor_) ProcessModuloSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessModulo(
-	modulo ast.ModuloLike,
-) {
-}
-
-func (v *processor_) PreprocessMore(
-	more ast.MoreLike,
-) {
-}
-
-func (v *processor_) ProcessMoreSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessMore(
-	more ast.MoreLike,
 ) {
 }
 
@@ -1746,36 +1631,6 @@ func (v *processor_) ProcessParametersSlot(
 
 func (v *processor_) PostprocessParameters(
 	parameters ast.ParametersLike,
-) {
-}
-
-func (v *processor_) PreprocessPlus(
-	plus ast.PlusLike,
-) {
-}
-
-func (v *processor_) ProcessPlusSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessPlus(
-	plus ast.PlusLike,
-) {
-}
-
-func (v *processor_) PreprocessPlusEquals(
-	plusEquals ast.PlusEqualsLike,
-) {
-}
-
-func (v *processor_) ProcessPlusEqualsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessPlusEquals(
-	plusEquals ast.PlusEqualsLike,
 ) {
 }
 
@@ -2004,21 +1859,6 @@ func (v *processor_) PostprocessRightSquare(
 ) {
 }
 
-func (v *processor_) PreprocessSAN(
-	sAN ast.SANLike,
-) {
-}
-
-func (v *processor_) ProcessSANSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessSAN(
-	sAN ast.SANLike,
-) {
-}
-
 func (v *processor_) PreprocessSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -2169,36 +2009,6 @@ func (v *processor_) PostprocessThrowClause(
 ) {
 }
 
-func (v *processor_) PreprocessTimes(
-	times ast.TimesLike,
-) {
-}
-
-func (v *processor_) ProcessTimesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessTimes(
-	times ast.TimesLike,
-) {
-}
-
-func (v *processor_) PreprocessTimesEquals(
-	timesEquals ast.TimesEqualsLike,
-) {
-}
-
-func (v *processor_) ProcessTimesEqualsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessTimesEquals(
-	timesEquals ast.TimesEqualsLike,
-) {
-}
-
 func (v *processor_) PreprocessValue(
 	value ast.ValueLike,
 ) {
@@ -2271,21 +2081,6 @@ func (v *processor_) ProcessWithClauseSlot(
 
 func (v *processor_) PostprocessWithClause(
 	withClause ast.WithClauseLike,
-) {
-}
-
-func (v *processor_) PreprocessXOR(
-	xOR ast.XORLike,
-) {
-}
-
-func (v *processor_) ProcessXORSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessXOR(
-	xOR ast.XORLike,
 ) {
 }
 

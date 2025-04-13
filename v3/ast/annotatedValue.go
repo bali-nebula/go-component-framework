@@ -34,14 +34,19 @@ func AnnotatedValueClass() AnnotatedValueClassLike {
 // Constructor Methods
 
 func (c *annotatedValueClass_) AnnotatedValue(
+	dash string,
 	value ValueLike,
 	optionalNote string,
 ) AnnotatedValueLike {
+	if uti.IsUndefined(dash) {
+		panic("The \"dash\" attribute is required by this class.")
+	}
 	if uti.IsUndefined(value) {
 		panic("The \"value\" attribute is required by this class.")
 	}
 	var instance = &annotatedValue_{
 		// Initialize the instance attributes.
+		dash_:         dash,
 		value_:        value,
 		optionalNote_: optionalNote,
 	}
@@ -58,6 +63,10 @@ func (v *annotatedValue_) GetClass() AnnotatedValueClassLike {
 
 // Attribute Methods
 
+func (v *annotatedValue_) GetDash() string {
+	return v.dash_
+}
+
 func (v *annotatedValue_) GetValue() ValueLike {
 	return v.value_
 }
@@ -72,6 +81,7 @@ func (v *annotatedValue_) GetOptionalNote() string {
 
 type annotatedValue_ struct {
 	// Declare the instance attributes.
+	dash_         string
 	value_        ValueLike
 	optionalNote_ string
 }

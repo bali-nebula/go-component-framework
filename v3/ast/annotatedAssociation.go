@@ -34,14 +34,19 @@ func AnnotatedAssociationClass() AnnotatedAssociationClassLike {
 // Constructor Methods
 
 func (c *annotatedAssociationClass_) AnnotatedAssociation(
+	dash string,
 	association AssociationLike,
 	optionalNote string,
 ) AnnotatedAssociationLike {
+	if uti.IsUndefined(dash) {
+		panic("The \"dash\" attribute is required by this class.")
+	}
 	if uti.IsUndefined(association) {
 		panic("The \"association\" attribute is required by this class.")
 	}
 	var instance = &annotatedAssociation_{
 		// Initialize the instance attributes.
+		dash_:         dash,
 		association_:  association,
 		optionalNote_: optionalNote,
 	}
@@ -58,6 +63,10 @@ func (v *annotatedAssociation_) GetClass() AnnotatedAssociationClassLike {
 
 // Attribute Methods
 
+func (v *annotatedAssociation_) GetDash() string {
+	return v.dash_
+}
+
 func (v *annotatedAssociation_) GetAssociation() AssociationLike {
 	return v.association_
 }
@@ -72,6 +81,7 @@ func (v *annotatedAssociation_) GetOptionalNote() string {
 
 type annotatedAssociation_ struct {
 	// Declare the instance attributes.
+	dash_         string
 	association_  AssociationLike
 	optionalNote_ string
 }

@@ -34,13 +34,18 @@ func ComplementClass() ComplementClassLike {
 // Constructor Methods
 
 func (c *complementClass_) Complement(
+	not string,
 	expression ExpressionLike,
 ) ComplementLike {
+	if uti.IsUndefined(not) {
+		panic("The \"not\" attribute is required by this class.")
+	}
 	if uti.IsUndefined(expression) {
 		panic("The \"expression\" attribute is required by this class.")
 	}
 	var instance = &complement_{
 		// Initialize the instance attributes.
+		not_:        not,
 		expression_: expression,
 	}
 	return instance
@@ -56,6 +61,10 @@ func (v *complement_) GetClass() ComplementClassLike {
 
 // Attribute Methods
 
+func (v *complement_) GetNot() string {
+	return v.not_
+}
+
 func (v *complement_) GetExpression() ExpressionLike {
 	return v.expression_
 }
@@ -66,6 +75,7 @@ func (v *complement_) GetExpression() ExpressionLike {
 
 type complement_ struct {
 	// Declare the instance attributes.
+	not_        string
 	expression_ ExpressionLike
 }
 

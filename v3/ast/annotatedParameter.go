@@ -34,14 +34,19 @@ func AnnotatedParameterClass() AnnotatedParameterClassLike {
 // Constructor Methods
 
 func (c *annotatedParameterClass_) AnnotatedParameter(
+	dash string,
 	parameter ParameterLike,
 	optionalNote string,
 ) AnnotatedParameterLike {
+	if uti.IsUndefined(dash) {
+		panic("The \"dash\" attribute is required by this class.")
+	}
 	if uti.IsUndefined(parameter) {
 		panic("The \"parameter\" attribute is required by this class.")
 	}
 	var instance = &annotatedParameter_{
 		// Initialize the instance attributes.
+		dash_:         dash,
 		parameter_:    parameter,
 		optionalNote_: optionalNote,
 	}
@@ -58,6 +63,10 @@ func (v *annotatedParameter_) GetClass() AnnotatedParameterClassLike {
 
 // Attribute Methods
 
+func (v *annotatedParameter_) GetDash() string {
+	return v.dash_
+}
+
 func (v *annotatedParameter_) GetParameter() ParameterLike {
 	return v.parameter_
 }
@@ -72,6 +81,7 @@ func (v *annotatedParameter_) GetOptionalNote() string {
 
 type annotatedParameter_ struct {
 	// Declare the instance attributes.
+	dash_         string
 	parameter_    ParameterLike
 	optionalNote_ string
 }

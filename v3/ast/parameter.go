@@ -35,10 +35,14 @@ func ParameterClass() ParameterClassLike {
 
 func (c *parameterClass_) Parameter(
 	label LabelLike,
+	colon string,
 	component ComponentLike,
 ) ParameterLike {
 	if uti.IsUndefined(label) {
 		panic("The \"label\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(colon) {
+		panic("The \"colon\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(component) {
 		panic("The \"component\" attribute is required by this class.")
@@ -46,6 +50,7 @@ func (c *parameterClass_) Parameter(
 	var instance = &parameter_{
 		// Initialize the instance attributes.
 		label_:     label,
+		colon_:     colon,
 		component_: component,
 	}
 	return instance
@@ -65,6 +70,10 @@ func (v *parameter_) GetLabel() LabelLike {
 	return v.label_
 }
 
+func (v *parameter_) GetColon() string {
+	return v.colon_
+}
+
 func (v *parameter_) GetComponent() ComponentLike {
 	return v.component_
 }
@@ -76,6 +85,7 @@ func (v *parameter_) GetComponent() ComponentLike {
 type parameter_ struct {
 	// Declare the instance attributes.
 	label_     LabelLike
+	colon_     string
 	component_ ComponentLike
 }
 

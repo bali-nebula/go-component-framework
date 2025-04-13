@@ -19,7 +19,9 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
@@ -31,9 +33,15 @@ func NoAssociationsClass() NoAssociationsClassLike {
 
 // Constructor Methods
 
-func (c *noAssociationsClass_) NoAssociations() NoAssociationsLike {
+func (c *noAssociationsClass_) NoAssociations(
+	colon string,
+) NoAssociationsLike {
+	if uti.IsUndefined(colon) {
+		panic("The \"colon\" attribute is required by this class.")
+	}
 	var instance = &noAssociations_{
 		// Initialize the instance attributes.
+		colon_: colon,
 	}
 	return instance
 }
@@ -48,12 +56,17 @@ func (v *noAssociations_) GetClass() NoAssociationsClassLike {
 
 // Attribute Methods
 
+func (v *noAssociations_) GetColon() string {
+	return v.colon_
+}
+
 // PROTECTED INTERFACE
 
 // Instance Structure
 
 type noAssociations_ struct {
 	// Declare the instance attributes.
+	colon_ string
 }
 
 // Class Structure

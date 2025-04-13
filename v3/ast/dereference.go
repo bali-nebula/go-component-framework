@@ -34,13 +34,18 @@ func DereferenceClass() DereferenceClassLike {
 // Constructor Methods
 
 func (c *dereferenceClass_) Dereference(
+	snail string,
 	expression ExpressionLike,
 ) DereferenceLike {
+	if uti.IsUndefined(snail) {
+		panic("The \"snail\" attribute is required by this class.")
+	}
 	if uti.IsUndefined(expression) {
 		panic("The \"expression\" attribute is required by this class.")
 	}
 	var instance = &dereference_{
 		// Initialize the instance attributes.
+		snail_:      snail,
 		expression_: expression,
 	}
 	return instance
@@ -56,6 +61,10 @@ func (v *dereference_) GetClass() DereferenceClassLike {
 
 // Attribute Methods
 
+func (v *dereference_) GetSnail() string {
+	return v.snail_
+}
+
 func (v *dereference_) GetExpression() ExpressionLike {
 	return v.expression_
 }
@@ -66,6 +75,7 @@ func (v *dereference_) GetExpression() ExpressionLike {
 
 type dereference_ struct {
 	// Declare the instance attributes.
+	snail_      string
 	expression_ ExpressionLike
 }
 

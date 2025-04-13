@@ -35,10 +35,14 @@ func ChainingClass() ChainingClassLike {
 
 func (c *chainingClass_) Chaining(
 	expression1 ExpressionLike,
+	ampersand string,
 	expression2 ExpressionLike,
 ) ChainingLike {
 	if uti.IsUndefined(expression1) {
 		panic("The \"expression1\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(ampersand) {
+		panic("The \"ampersand\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(expression2) {
 		panic("The \"expression2\" attribute is required by this class.")
@@ -46,6 +50,7 @@ func (c *chainingClass_) Chaining(
 	var instance = &chaining_{
 		// Initialize the instance attributes.
 		expression1_: expression1,
+		ampersand_:   ampersand,
 		expression2_: expression2,
 	}
 	return instance
@@ -65,6 +70,10 @@ func (v *chaining_) GetExpression1() ExpressionLike {
 	return v.expression1_
 }
 
+func (v *chaining_) GetAmpersand() string {
+	return v.ampersand_
+}
+
 func (v *chaining_) GetExpression2() ExpressionLike {
 	return v.expression2_
 }
@@ -76,6 +85,7 @@ func (v *chaining_) GetExpression2() ExpressionLike {
 type chaining_ struct {
 	// Declare the instance attributes.
 	expression1_ ExpressionLike
+	ampersand_   string
 	expression2_ ExpressionLike
 }
 
