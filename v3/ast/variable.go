@@ -27,21 +27,21 @@ import (
 
 // Access Function
 
-func LabelClass() LabelClassLike {
-	return labelClass()
+func VariableClass() VariableClassLike {
+	return variableClass()
 }
 
 // Constructor Methods
 
-func (c *labelClass_) Label(
-	symbol string,
-) LabelLike {
-	if uti.IsUndefined(symbol) {
-		panic("The \"symbol\" attribute is required by this class.")
+func (c *variableClass_) Variable(
+	identifier string,
+) VariableLike {
+	if uti.IsUndefined(identifier) {
+		panic("The \"identifier\" attribute is required by this class.")
 	}
-	var instance = &label_{
+	var instance = &variable_{
 		// Initialize the instance attributes.
-		symbol_: symbol,
+		identifier_: identifier,
 	}
 	return instance
 }
@@ -50,37 +50,37 @@ func (c *labelClass_) Label(
 
 // Principal Methods
 
-func (v *label_) GetClass() LabelClassLike {
-	return labelClass()
+func (v *variable_) GetClass() VariableClassLike {
+	return variableClass()
 }
 
 // Attribute Methods
 
-func (v *label_) GetSymbol() string {
-	return v.symbol_
+func (v *variable_) GetIdentifier() string {
+	return v.identifier_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type label_ struct {
+type variable_ struct {
 	// Declare the instance attributes.
-	symbol_ string
+	identifier_ string
 }
 
 // Class Structure
 
-type labelClass_ struct {
+type variableClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func labelClass() *labelClass_ {
-	return labelClassReference_
+func variableClass() *variableClass_ {
+	return variableClassReference_
 }
 
-var labelClassReference_ = &labelClass_{
+var variableClassReference_ = &variableClass_{
 	// Initialize the class constants.
 }

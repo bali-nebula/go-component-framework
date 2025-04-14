@@ -442,13 +442,11 @@ func (v *visitor_) visitAttribute(
 	// Visit slot 1 between references.
 	v.processor_.ProcessAttributeSlot(1)
 
-	// Visit an optional subcomponent rule.
-	var optionalSubcomponent = attribute.GetOptionalSubcomponent()
-	if uti.IsDefined(optionalSubcomponent) {
-		v.processor_.PreprocessSubcomponent(optionalSubcomponent)
-		v.visitSubcomponent(optionalSubcomponent)
-		v.processor_.PostprocessSubcomponent(optionalSubcomponent)
-	}
+	// Visit a single subcomponent rule.
+	var subcomponent = attribute.GetSubcomponent()
+	v.processor_.PreprocessSubcomponent(subcomponent)
+	v.visitSubcomponent(subcomponent)
+	v.processor_.PostprocessSubcomponent(subcomponent)
 }
 
 func (v *visitor_) visitBag(
@@ -466,6 +464,14 @@ func (v *visitor_) visitBase(
 ) {
 	// Visit the possible base types.
 	switch actual := base.GetAny().(type) {
+	case ast.ComponentLike:
+		v.processor_.PreprocessComponent(actual)
+		v.visitComponent(actual)
+		v.processor_.PostprocessComponent(actual)
+	case ast.OperationLike:
+		v.processor_.PreprocessOperation(actual)
+		v.visitOperation(actual)
+		v.processor_.PostprocessOperation(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -478,10 +484,6 @@ func (v *visitor_) visitBase(
 		v.processor_.PreprocessAmplitude(actual)
 		v.visitAmplitude(actual)
 		v.processor_.PostprocessAmplitude(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -888,6 +890,10 @@ func (v *visitor_) visitExpression(
 ) {
 	// Visit the possible expression types.
 	switch actual := expression.GetAny().(type) {
+	case ast.ComponentLike:
+		v.processor_.PreprocessComponent(actual)
+		v.visitComponent(actual)
+		v.processor_.PostprocessComponent(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -908,6 +914,10 @@ func (v *visitor_) visitExpression(
 		v.processor_.PreprocessAmplitude(actual)
 		v.visitAmplitude(actual)
 		v.processor_.PostprocessAmplitude(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case ast.ArithmeticLike:
 		v.processor_.PreprocessArithmetic(actual)
 		v.visitArithmetic(actual)
@@ -928,10 +938,6 @@ func (v *visitor_) visitExpression(
 		v.processor_.PreprocessConcatenation(actual)
 		v.visitConcatenation(actual)
 		v.processor_.PostprocessConcatenation(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1106,14 +1112,18 @@ func (v *visitor_) visitIndirect(
 ) {
 	// Visit the possible indirect types.
 	switch actual := indirect.GetAny().(type) {
+	case ast.ComponentLike:
+		v.processor_.PreprocessComponent(actual)
+		v.visitComponent(actual)
+		v.processor_.PostprocessComponent(actual)
+	case ast.OperationLike:
+		v.processor_.PreprocessOperation(actual)
+		v.visitOperation(actual)
+		v.processor_.PostprocessOperation(actual)
 	case ast.DereferenceLike:
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1386,14 +1396,6 @@ func (v *visitor_) visitItems(
 	}
 }
 
-func (v *visitor_) visitLabel(
-	label ast.LabelLike,
-) {
-	// Visit a single symbol token.
-	var symbol = label.GetSymbol()
-	v.processor_.ProcessSymbol(symbol)
-}
-
 func (v *visitor_) visitLeft(
 	left ast.LeftLike,
 ) {
@@ -1456,6 +1458,14 @@ func (v *visitor_) visitLogical(
 ) {
 	// Visit the possible logical types.
 	switch actual := logical.GetAny().(type) {
+	case ast.ComponentLike:
+		v.processor_.PreprocessComponent(actual)
+		v.visitComponent(actual)
+		v.processor_.PostprocessComponent(actual)
+	case ast.OperationLike:
+		v.processor_.PreprocessOperation(actual)
+		v.visitOperation(actual)
+		v.processor_.PostprocessOperation(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1464,18 +1474,6 @@ func (v *visitor_) visitLogical(
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
-	case ast.ComplementLike:
-		v.processor_.PreprocessComplement(actual)
-		v.visitComplement(actual)
-		v.processor_.PostprocessComplement(actual)
-	case ast.ComparisonLike:
-		v.processor_.PreprocessComparison(actual)
-		v.visitComparison(actual)
-		v.processor_.PostprocessComparison(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1610,24 +1608,11 @@ func (v *visitor_) visitMethod(
 	// Visit slot 1 between references.
 	v.processor_.ProcessMethodSlot(1)
 
-	// Visit an optional subcomponent rule.
-	var optionalSubcomponent = method.GetOptionalSubcomponent()
-	if uti.IsDefined(optionalSubcomponent) {
-		v.processor_.PreprocessSubcomponent(optionalSubcomponent)
-		v.visitSubcomponent(optionalSubcomponent)
-		v.processor_.PostprocessSubcomponent(optionalSubcomponent)
-	}
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessMethodSlot(2)
-
-	// Visit an optional invocation rule.
-	var optionalInvocation = method.GetOptionalInvocation()
-	if uti.IsDefined(optionalInvocation) {
-		v.processor_.PreprocessInvocation(optionalInvocation)
-		v.visitInvocation(optionalInvocation)
-		v.processor_.PostprocessInvocation(optionalInvocation)
-	}
+	// Visit a single invocation rule.
+	var invocation = method.GetInvocation()
+	v.processor_.PreprocessInvocation(invocation)
+	v.visitInvocation(invocation)
+	v.processor_.PostprocessInvocation(invocation)
 }
 
 func (v *visitor_) visitMultilineAssociations(
@@ -1734,6 +1719,14 @@ func (v *visitor_) visitNumerical(
 ) {
 	// Visit the possible numerical types.
 	switch actual := numerical.GetAny().(type) {
+	case ast.ComponentLike:
+		v.processor_.PreprocessComponent(actual)
+		v.visitComponent(actual)
+		v.processor_.PostprocessComponent(actual)
+	case ast.OperationLike:
+		v.processor_.PreprocessOperation(actual)
+		v.visitOperation(actual)
+		v.processor_.PostprocessOperation(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1754,10 +1747,6 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessExponential(actual)
 		v.visitExponential(actual)
 		v.processor_.PostprocessExponential(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1950,16 +1939,14 @@ func (v *visitor_) visitRecipient(
 ) {
 	// Visit the possible recipient types.
 	switch actual := recipient.GetAny().(type) {
-	case ast.LabelLike:
-		v.processor_.PreprocessLabel(actual)
-		v.visitLabel(actual)
-		v.processor_.PostprocessLabel(actual)
 	case ast.AttributeLike:
 		v.processor_.PreprocessAttribute(actual)
 		v.visitAttribute(actual)
 		v.processor_.PostprocessAttribute(actual)
 	case string:
 		switch {
+		case ScannerClass().MatchesType(actual, SymbolToken):
+			v.processor_.ProcessSymbol(actual)
 		default:
 			panic(fmt.Sprintf("Invalid token: %v", actual))
 		}
@@ -2206,14 +2193,22 @@ func (v *visitor_) visitTarget(
 ) {
 	// Visit the possible target types.
 	switch actual := target.GetAny().(type) {
-	case ast.ComponentLike:
-		v.processor_.PreprocessComponent(actual)
-		v.visitComponent(actual)
-		v.processor_.PostprocessComponent(actual)
-	case ast.OperationLike:
-		v.processor_.PreprocessOperation(actual)
-		v.visitOperation(actual)
-		v.processor_.PostprocessOperation(actual)
+	case ast.FunctionLike:
+		v.processor_.PreprocessFunction(actual)
+		v.visitFunction(actual)
+		v.processor_.PostprocessFunction(actual)
+	case ast.MethodLike:
+		v.processor_.PreprocessMethod(actual)
+		v.visitMethod(actual)
+		v.processor_.PostprocessMethod(actual)
+	case ast.AttributeLike:
+		v.processor_.PreprocessAttribute(actual)
+		v.visitAttribute(actual)
+		v.processor_.PostprocessAttribute(actual)
+	case ast.VariableLike:
+		v.processor_.PreprocessVariable(actual)
+		v.visitVariable(actual)
+		v.processor_.PostprocessVariable(actual)
 	case string:
 		switch {
 		default:
@@ -2239,6 +2234,14 @@ func (v *visitor_) visitTextual(
 ) {
 	// Visit the possible textual types.
 	switch actual := textual.GetAny().(type) {
+	case ast.ComponentLike:
+		v.processor_.PreprocessComponent(actual)
+		v.visitComponent(actual)
+		v.processor_.PostprocessComponent(actual)
+	case ast.OperationLike:
+		v.processor_.PreprocessOperation(actual)
+		v.visitOperation(actual)
+		v.processor_.PostprocessOperation(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -2247,10 +2250,6 @@ func (v *visitor_) visitTextual(
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -2321,6 +2320,14 @@ func (v *visitor_) visitValues(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
+}
+
+func (v *visitor_) visitVariable(
+	variable ast.VariableLike,
+) {
+	// Visit a single identifier token.
+	var identifier = variable.GetIdentifier()
+	v.processor_.ProcessIdentifier(identifier)
 }
 
 func (v *visitor_) visitWhileClause(

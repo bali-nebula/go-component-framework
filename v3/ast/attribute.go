@@ -35,15 +35,18 @@ func AttributeClass() AttributeClassLike {
 
 func (c *attributeClass_) Attribute(
 	identifier string,
-	optionalSubcomponent SubcomponentLike,
+	subcomponent SubcomponentLike,
 ) AttributeLike {
 	if uti.IsUndefined(identifier) {
 		panic("The \"identifier\" attribute is required by this class.")
 	}
+	if uti.IsUndefined(subcomponent) {
+		panic("The \"subcomponent\" attribute is required by this class.")
+	}
 	var instance = &attribute_{
 		// Initialize the instance attributes.
-		identifier_:           identifier,
-		optionalSubcomponent_: optionalSubcomponent,
+		identifier_:   identifier,
+		subcomponent_: subcomponent,
 	}
 	return instance
 }
@@ -62,8 +65,8 @@ func (v *attribute_) GetIdentifier() string {
 	return v.identifier_
 }
 
-func (v *attribute_) GetOptionalSubcomponent() SubcomponentLike {
-	return v.optionalSubcomponent_
+func (v *attribute_) GetSubcomponent() SubcomponentLike {
+	return v.subcomponent_
 }
 
 // PROTECTED INTERFACE
@@ -72,8 +75,8 @@ func (v *attribute_) GetOptionalSubcomponent() SubcomponentLike {
 
 type attribute_ struct {
 	// Declare the instance attributes.
-	identifier_           string
-	optionalSubcomponent_ SubcomponentLike
+	identifier_   string
+	subcomponent_ SubcomponentLike
 }
 
 // Class Structure

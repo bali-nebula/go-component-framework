@@ -102,7 +102,6 @@ type (
 	InvocationClassLike             = ast.InvocationClassLike
 	ItemClassLike                   = ast.ItemClassLike
 	ItemsClassLike                  = ast.ItemsClassLike
-	LabelClassLike                  = ast.LabelClassLike
 	LeftClassLike                   = ast.LeftClassLike
 	LetClauseClassLike              = ast.LetClauseClassLike
 	LogicOperatorClassLike          = ast.LogicOperatorClassLike
@@ -149,6 +148,7 @@ type (
 	ThrowClauseClassLike            = ast.ThrowClauseClassLike
 	ValueClassLike                  = ast.ValueClassLike
 	ValuesClassLike                 = ast.ValuesClassLike
+	VariableClassLike               = ast.VariableClassLike
 	WhileClauseClassLike            = ast.WhileClauseClassLike
 	WithClauseClassLike             = ast.WithClauseClassLike
 )
@@ -217,7 +217,6 @@ type (
 	InvocationLike             = ast.InvocationLike
 	ItemLike                   = ast.ItemLike
 	ItemsLike                  = ast.ItemsLike
-	LabelLike                  = ast.LabelLike
 	LeftLike                   = ast.LeftLike
 	LetClauseLike              = ast.LetClauseLike
 	LogicOperatorLike          = ast.LogicOperatorLike
@@ -264,6 +263,7 @@ type (
 	ThrowClauseLike            = ast.ThrowClauseLike
 	ValueLike                  = ast.ValueLike
 	ValuesLike                 = ast.ValuesLike
+	VariableLike               = ast.VariableLike
 	WhileClauseLike            = ast.WhileClauseLike
 	WithClauseLike             = ast.WithClauseLike
 )
@@ -575,11 +575,11 @@ func AtLevel(
 
 func Attribute(
 	identifier string,
-	optionalSubcomponent ast.SubcomponentLike,
+	subcomponent ast.SubcomponentLike,
 ) ast.AttributeLike {
 	return ast.AttributeClass().Attribute(
 		identifier,
-		optionalSubcomponent,
+		subcomponent,
 	)
 }
 
@@ -1049,16 +1049,6 @@ func Items(
 	)
 }
 
-// Ast/Label
-
-func Label(
-	symbol string,
-) ast.LabelLike {
-	return ast.LabelClass().Label(
-		symbol,
-	)
-}
-
 // Ast/Left
 
 func Left() ast.LeftLike {
@@ -1157,13 +1147,11 @@ func Messaging(
 
 func Method(
 	identifier string,
-	optionalSubcomponent ast.SubcomponentLike,
-	optionalInvocation ast.InvocationLike,
+	invocation ast.InvocationLike,
 ) ast.MethodLike {
 	return ast.MethodClass().Method(
 		identifier,
-		optionalSubcomponent,
-		optionalInvocation,
+		invocation,
 	)
 }
 
@@ -1540,6 +1528,16 @@ func Values(
 ) ast.ValuesLike {
 	return ast.ValuesClass().Values(
 		any_,
+	)
+}
+
+// Ast/Variable
+
+func Variable(
+	identifier string,
+) ast.VariableLike {
+	return ast.VariableClass().Variable(
+		identifier,
 	)
 }
 

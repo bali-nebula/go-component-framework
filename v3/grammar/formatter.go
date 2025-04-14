@@ -1534,24 +1534,6 @@ func (v *formatter_) PostprocessItems(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessLabel(
-	label ast.LabelLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessLabelSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessLabel(
-	label ast.LabelLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessLeft(
 	left ast.LeftLike,
 ) {
@@ -2384,6 +2366,24 @@ func (v *formatter_) ProcessValuesSlot(
 
 func (v *formatter_) PostprocessValues(
 	values ast.ValuesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessVariable(
+	variable ast.VariableLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessVariableSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessVariable(
+	variable ast.VariableLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

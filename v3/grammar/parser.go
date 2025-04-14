@@ -1124,12 +1124,21 @@ func (v *parser_) parseAttribute() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse an optional Subcomponent rule.
-	var optionalSubcomponent ast.SubcomponentLike
-	optionalSubcomponent, _, ok = v.parseSubcomponent()
-	if ok {
+	// Attempt to parse a single Subcomponent rule.
+	var subcomponent ast.SubcomponentLike
+	subcomponent, token, ok = v.parseSubcomponent()
+	switch {
+	case ok:
 		// No additional put backs allowed at this point.
 		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Attribute rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Attribute", token)
+		panic(message)
 	}
 
 	// Found a single Attribute rule.
@@ -1137,7 +1146,7 @@ func (v *parser_) parseAttribute() (
 	v.remove(tokens)
 	attribute = ast.AttributeClass().Attribute(
 		identifier,
-		optionalSubcomponent,
+		subcomponent,
 	)
 	return
 }
@@ -1178,6 +1187,24 @@ func (v *parser_) parseBase() (
 	token TokenLike,
 	ok bool,
 ) {
+	// Attempt to parse a single Component Base.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Base.
+		base = ast.BaseClass().Base(component)
+		return
+	}
+
+	// Attempt to parse a single Operation Base.
+	var operation ast.OperationLike
+	operation, token, ok = v.parseOperation()
+	if ok {
+		// Found a single Operation Base.
+		base = ast.BaseClass().Base(operation)
+		return
+	}
+
 	// Attempt to parse a single Precedence Base.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -1202,15 +1229,6 @@ func (v *parser_) parseBase() (
 	if ok {
 		// Found a single Amplitude Base.
 		base = ast.BaseClass().Base(amplitude)
-		return
-	}
-
-	// Attempt to parse a single Target Base.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Base.
-		base = ast.BaseClass().Base(target)
 		return
 	}
 
@@ -2347,6 +2365,15 @@ func (v *parser_) parseExpression() (
 	token TokenLike,
 	ok bool,
 ) {
+	// Attempt to parse a single Component Expression.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Expression.
+		expression = ast.ExpressionClass().Expression(component)
+		return
+	}
+
 	// Attempt to parse a single Precedence Expression.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -2392,6 +2419,15 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
+	// Attempt to parse a single Target Expression.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Expression.
+		expression = ast.ExpressionClass().Expression(target)
+		return
+	}
+
 	// Attempt to parse a single Arithmetic Expression.
 	var arithmetic ast.ArithmeticLike
 	arithmetic, token, ok = v.parseArithmetic()
@@ -2434,15 +2470,6 @@ func (v *parser_) parseExpression() (
 	if ok {
 		// Found a single Concatenation Expression.
 		expression = ast.ExpressionClass().Expression(concatenation)
-		return
-	}
-
-	// Attempt to parse a single Target Expression.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Expression.
-		expression = ast.ExpressionClass().Expression(target)
 		return
 	}
 
@@ -2848,21 +2875,30 @@ func (v *parser_) parseIndirect() (
 	token TokenLike,
 	ok bool,
 ) {
+	// Attempt to parse a single Component Indirect.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Indirect.
+		indirect = ast.IndirectClass().Indirect(component)
+		return
+	}
+
+	// Attempt to parse a single Operation Indirect.
+	var operation ast.OperationLike
+	operation, token, ok = v.parseOperation()
+	if ok {
+		// Found a single Operation Indirect.
+		indirect = ast.IndirectClass().Indirect(operation)
+		return
+	}
+
 	// Attempt to parse a single Dereference Indirect.
 	var dereference ast.DereferenceLike
 	dereference, token, ok = v.parseDereference()
 	if ok {
 		// Found a single Dereference Indirect.
 		indirect = ast.IndirectClass().Indirect(dereference)
-		return
-	}
-
-	// Attempt to parse a single Target Indirect.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Indirect.
-		indirect = ast.IndirectClass().Indirect(target)
 		return
 	}
 
@@ -3396,38 +3432,6 @@ func (v *parser_) parseItems() (
 	return
 }
 
-func (v *parser_) parseLabel() (
-	label ast.LabelLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single symbol token.
-	var symbol string
-	symbol, token, ok = v.parseToken(SymbolToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Label rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Label", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Label rule.
-	ok = true
-	v.remove(tokens)
-	label = ast.LabelClass().Label(symbol)
-	return
-}
-
 func (v *parser_) parseLeft() (
 	left ast.LeftLike,
 	token TokenLike,
@@ -3595,6 +3599,24 @@ func (v *parser_) parseLogical() (
 	token TokenLike,
 	ok bool,
 ) {
+	// Attempt to parse a single Component Logical.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Logical.
+		logical = ast.LogicalClass().Logical(component)
+		return
+	}
+
+	// Attempt to parse a single Operation Logical.
+	var operation ast.OperationLike
+	operation, token, ok = v.parseOperation()
+	if ok {
+		// Found a single Operation Logical.
+		logical = ast.LogicalClass().Logical(operation)
+		return
+	}
+
 	// Attempt to parse a single Precedence Logical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -3610,33 +3632,6 @@ func (v *parser_) parseLogical() (
 	if ok {
 		// Found a single Dereference Logical.
 		logical = ast.LogicalClass().Logical(dereference)
-		return
-	}
-
-	// Attempt to parse a single Complement Logical.
-	var complement ast.ComplementLike
-	complement, token, ok = v.parseComplement()
-	if ok {
-		// Found a single Complement Logical.
-		logical = ast.LogicalClass().Logical(complement)
-		return
-	}
-
-	// Attempt to parse a single Comparison Logical.
-	var comparison ast.ComparisonLike
-	comparison, token, ok = v.parseComparison()
-	if ok {
-		// Found a single Comparison Logical.
-		logical = ast.LogicalClass().Logical(comparison)
-		return
-	}
-
-	// Attempt to parse a single Target Logical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Logical.
-		logical = ast.LogicalClass().Logical(target)
 		return
 	}
 
@@ -3935,20 +3930,21 @@ func (v *parser_) parseMethod() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse an optional Subcomponent rule.
-	var optionalSubcomponent ast.SubcomponentLike
-	optionalSubcomponent, _, ok = v.parseSubcomponent()
-	if ok {
+	// Attempt to parse a single Invocation rule.
+	var invocation ast.InvocationLike
+	invocation, token, ok = v.parseInvocation()
+	switch {
+	case ok:
 		// No additional put backs allowed at this point.
 		tokens = nil
-	}
-
-	// Attempt to parse an optional Invocation rule.
-	var optionalInvocation ast.InvocationLike
-	optionalInvocation, _, ok = v.parseInvocation()
-	if ok {
-		// No additional put backs allowed at this point.
-		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Method rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Method", token)
+		panic(message)
 	}
 
 	// Found a single Method rule.
@@ -3956,8 +3952,7 @@ func (v *parser_) parseMethod() (
 	v.remove(tokens)
 	method = ast.MethodClass().Method(
 		identifier,
-		optionalSubcomponent,
-		optionalInvocation,
+		invocation,
 	)
 	return
 }
@@ -4204,6 +4199,24 @@ func (v *parser_) parseNumerical() (
 	token TokenLike,
 	ok bool,
 ) {
+	// Attempt to parse a single Component Numerical.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Numerical.
+		numerical = ast.NumericalClass().Numerical(component)
+		return
+	}
+
+	// Attempt to parse a single Operation Numerical.
+	var operation ast.OperationLike
+	operation, token, ok = v.parseOperation()
+	if ok {
+		// Found a single Operation Numerical.
+		numerical = ast.NumericalClass().Numerical(operation)
+		return
+	}
+
 	// Attempt to parse a single Precedence Numerical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -4246,15 +4259,6 @@ func (v *parser_) parseNumerical() (
 	if ok {
 		// Found a single Exponential Numerical.
 		numerical = ast.NumericalClass().Numerical(exponential)
-		return
-	}
-
-	// Attempt to parse a single Target Numerical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Numerical.
-		numerical = ast.NumericalClass().Numerical(target)
 		return
 	}
 
@@ -4821,12 +4825,12 @@ func (v *parser_) parseRecipient() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Label Recipient.
-	var label ast.LabelLike
-	label, token, ok = v.parseLabel()
+	// Attempt to parse a single symbol Recipient.
+	var symbol string
+	symbol, token, ok = v.parseToken(SymbolToken)
 	if ok {
-		// Found a single Label Recipient.
-		recipient = ast.RecipientClass().Recipient(label)
+		// Found a single symbol Recipient.
+		recipient = ast.RecipientClass().Recipient(symbol)
 		return
 	}
 
@@ -5544,21 +5548,39 @@ func (v *parser_) parseTarget() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Component Target.
-	var component ast.ComponentLike
-	component, token, ok = v.parseComponent()
+	// Attempt to parse a single Function Target.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
 	if ok {
-		// Found a single Component Target.
-		target = ast.TargetClass().Target(component)
+		// Found a single Function Target.
+		target = ast.TargetClass().Target(function)
 		return
 	}
 
-	// Attempt to parse a single Operation Target.
-	var operation ast.OperationLike
-	operation, token, ok = v.parseOperation()
+	// Attempt to parse a single Method Target.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
 	if ok {
-		// Found a single Operation Target.
-		target = ast.TargetClass().Target(operation)
+		// Found a single Method Target.
+		target = ast.TargetClass().Target(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Target.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Target.
+		target = ast.TargetClass().Target(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Target.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Target.
+		target = ast.TargetClass().Target(variable)
 		return
 	}
 
@@ -5602,6 +5624,24 @@ func (v *parser_) parseTextual() (
 	token TokenLike,
 	ok bool,
 ) {
+	// Attempt to parse a single Component Textual.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Textual.
+		textual = ast.TextualClass().Textual(component)
+		return
+	}
+
+	// Attempt to parse a single Operation Textual.
+	var operation ast.OperationLike
+	operation, token, ok = v.parseOperation()
+	if ok {
+		// Found a single Operation Textual.
+		textual = ast.TextualClass().Textual(operation)
+		return
+	}
+
 	// Attempt to parse a single Precedence Textual.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -5617,15 +5657,6 @@ func (v *parser_) parseTextual() (
 	if ok {
 		// Found a single Dereference Textual.
 		textual = ast.TextualClass().Textual(dereference)
-		return
-	}
-
-	// Attempt to parse a single Target Textual.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Textual.
-		textual = ast.TextualClass().Textual(target)
 		return
 	}
 
@@ -5763,6 +5794,38 @@ func (v *parser_) parseValues() (
 	}
 
 	// This is not a single Values rule.
+	return
+}
+
+func (v *parser_) parseVariable() (
+	variable ast.VariableLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single identifier token.
+	var identifier string
+	identifier, token, ok = v.parseToken(IdentifierToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Variable rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Variable", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Variable rule.
+	ok = true
+	v.remove(tokens)
+	variable = ast.VariableClass().Variable(identifier)
 	return
 }
 
@@ -6265,36 +6328,40 @@ var parserClassReference_ = &parserClass_{
 			"$Condition":    `Expression`,
 			"$SelectClause": `"select" Target MatchHandler+`,
 			"$Target": `
-  - Component
-  - Operation`,
-			"$Operation": `
   - Function
-  - Method`,
-			"$Function":        `identifier "(" Arguments? ")"`,
-			"$Method":          `identifier Subcomponent? Invocation?`,
+  - Method
+  - Attribute
+  - Variable  ! Must be last since the others also begin with an identifier.`,
+			"$Function":           `identifier "(" Arguments? ")"`,
+			"$Arguments":          `Argument AdditionalArgument*`,
+			"$AdditionalArgument": `"," Argument`,
+			"$Argument":           `identifier`,
+			"$Method":             `identifier Invocation`,
+			"$Invocation":         `Threading identifier "(" Arguments? ")"`,
+			"$Threading": `
+  - dot
+  - arrow`,
+			"$Attribute":       `identifier Subcomponent`,
 			"$Subcomponent":    `"[" Indices "]"`,
 			"$Indices":         `Index AdditionalIndex*`,
 			"$AdditionalIndex": `"," Index`,
 			"$Index":           `Expression`,
-			"$Invocation":      `Threading identifier "(" Arguments? ")"`,
-			"$Threading": `
-  - dot
-  - arrow`,
-			"$WhileClause":        `"while" Condition "do" Procedure`,
-			"$WithClause":         `"with" "each" Item "in" Sequence "do" Procedure`,
-			"$Item":               `symbol`,
-			"$Sequence":           `Expression`,
-			"$ContinueClause":     `"continue" "loop"`,
-			"$BreakClause":        `"break" "loop"`,
-			"$ReturnClause":       `"return" Result`,
-			"$Result":             `Expression`,
-			"$ThrowClause":        `"throw" Exception`,
-			"$Exception":          `Expression`,
-			"$DoClause":           `"do" Operation`,
-			"$Arguments":          `Argument AdditionalArgument*`,
-			"$AdditionalArgument": `"," Argument`,
-			"$Argument":           `identifier`,
-			"$LetClause":          `"let" Recipient Assign Expression`,
+			"$Variable":        `identifier`,
+			"$WhileClause":     `"while" Condition "do" Procedure`,
+			"$WithClause":      `"with" "each" Item "in" Sequence "do" Procedure`,
+			"$Item":            `symbol`,
+			"$Sequence":        `Expression`,
+			"$ContinueClause":  `"continue" "loop"`,
+			"$BreakClause":     `"break" "loop"`,
+			"$ReturnClause":    `"return" Result`,
+			"$Result":          `Expression`,
+			"$ThrowClause":     `"throw" Exception`,
+			"$Exception":       `Expression`,
+			"$DoClause":        `"do" Operation`,
+			"$Operation": `
+  - Function
+  - Method`,
+			"$LetClause": `"let" Recipient Assign Expression`,
 			"$Assign": `
   - colonEqual
   - defaultEqual
@@ -6303,10 +6370,8 @@ var parserClassReference_ = &parserClass_{
   - starEqual
   - slashEqual`,
 			"$Recipient": `
-  - Label
+  - symbol
   - Attribute`,
-			"$Label":          `symbol`,
-			"$Attribute":      `identifier Subcomponent?`,
 			"$PostClause":     `"post" Message "to" Bag`,
 			"$Message":        `Expression`,
 			"$Bag":            `Expression`,
@@ -6323,41 +6388,43 @@ var parserClassReference_ = &parserClass_{
 			"$DiscardClause":  `"discard" Draft`,
 			"$NotarizeClause": `"notarize" Draft "as" Citation`,
 			"$Expression": `
+  - Component
   - Precedence
   - Dereference
   - Complement
   - Inversion
   - Amplitude
+  - Target  ! Must be last since others also begin with an identifier.
   - Arithmetic
   - Exponential
   - Comparison
   - Inference
-  - Concatenation
-  - Target`,
+  - Concatenation`,
 			"$Precedence":  `"(" Expression ")"`,
 			"$Dereference": `snail Indirect`,
 			"$Indirect": `
-  - Dereference
-  - Target`,
+  - Component
+  - Operation
+  - Dereference`,
 			"$Complement": `not Logical`,
 			"$Logical": `
+  - Component
+  - Operation
   - Precedence
-  - Dereference
-  - Complement
-  - Comparison
-  - Target`,
+  - Dereference`,
 			"$Inversion": `Inverse Numerical`,
 			"$Inverse": `
   - dash
   - slash
   - star`,
 			"$Numerical": `
+  - Component
+  - Operation
   - Precedence
   - Dereference
   - Inversion
   - Amplitude
-  - Exponential
-  - Target`,
+  - Exponential`,
 			"$Amplitude":           `bar Arithmetic bar`,
 			"$Arithmetic":          `Numerical ArithmeticOperation+`,
 			"$ArithmeticOperation": `ArithmeticOperator Numerical`,
@@ -6369,10 +6436,11 @@ var parserClassReference_ = &parserClass_{
   - slashSlash`,
 			"$Exponential": `Base caret Numerical`,
 			"$Base": `
+  - Component
+  - Operation
   - Precedence
   - Dereference
-  - Amplitude
-  - Target`,
+  - Amplitude`,
 			"$Comparison": `Arithmetic CompareOperator Arithmetic`,
 			"$CompareOperator": `
   - less
@@ -6389,9 +6457,10 @@ var parserClassReference_ = &parserClass_{
   - xor`,
 			"$Concatenation": `Textual ConcatenationOperation+`,
 			"$Textual": `
+  - Component
+  - Operation
   - Precedence
-  - Dereference
-  - Target`,
+  - Dereference`,
 			"$ConcatenationOperation": `ampersand Textual`,
 		},
 	),

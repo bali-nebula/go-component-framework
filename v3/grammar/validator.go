@@ -1535,24 +1535,6 @@ func (v *validator_) PostprocessItems(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessLabel(
-	label ast.LabelLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessLabelSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessLabel(
-	label ast.LabelLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessLeft(
 	left ast.LeftLike,
 ) {
@@ -2385,6 +2367,24 @@ func (v *validator_) ProcessValuesSlot(
 
 func (v *validator_) PostprocessValues(
 	values ast.ValuesLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessVariable(
+	variable ast.VariableLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessVariableSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessVariable(
+	variable ast.VariableLike,
 ) {
 	// TBD - Add any validation checks.
 }

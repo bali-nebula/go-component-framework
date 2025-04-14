@@ -1285,21 +1285,6 @@ func (v *processor_) PostprocessItems(
 ) {
 }
 
-func (v *processor_) PreprocessLabel(
-	label ast.LabelLike,
-) {
-}
-
-func (v *processor_) ProcessLabelSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLabel(
-	label ast.LabelLike,
-) {
-}
-
 func (v *processor_) PreprocessLeft(
 	left ast.LeftLike,
 ) {
@@ -1995,6 +1980,21 @@ func (v *processor_) ProcessValuesSlot(
 
 func (v *processor_) PostprocessValues(
 	values ast.ValuesLike,
+) {
+}
+
+func (v *processor_) PreprocessVariable(
+	variable ast.VariableLike,
+) {
+}
+
+func (v *processor_) ProcessVariableSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessVariable(
+	variable ast.VariableLike,
 ) {
 }
 

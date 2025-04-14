@@ -1073,15 +1073,6 @@ type Methodical interface {
 	PostprocessItems(
 		items ast.ItemsLike,
 	)
-	PreprocessLabel(
-		label ast.LabelLike,
-	)
-	ProcessLabelSlot(
-		slot uint,
-	)
-	PostprocessLabel(
-		label ast.LabelLike,
-	)
 	PreprocessLeft(
 		left ast.LeftLike,
 	)
@@ -1503,6 +1494,15 @@ type Methodical interface {
 	)
 	PostprocessValues(
 		values ast.ValuesLike,
+	)
+	PreprocessVariable(
+		variable ast.VariableLike,
+	)
+	ProcessVariableSlot(
+		slot uint,
+	)
+	PostprocessVariable(
+		variable ast.VariableLike,
 	)
 	PreprocessWhileClause(
 		whileClause ast.WhileClauseLike,

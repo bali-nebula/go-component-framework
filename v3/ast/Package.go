@@ -295,7 +295,7 @@ type AttributeClassLike interface {
 	// Constructor Methods
 	Attribute(
 		identifier string,
-		optionalSubcomponent SubcomponentLike,
+		subcomponent SubcomponentLike,
 	) AttributeLike
 }
 
@@ -834,18 +834,6 @@ type ItemsClassLike interface {
 }
 
 /*
-LabelClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete label-like class.
-*/
-type LabelClassLike interface {
-	// Constructor Methods
-	Label(
-		symbol string,
-	) LabelLike
-}
-
-/*
 LeftClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete left-like class.
@@ -964,8 +952,7 @@ type MethodClassLike interface {
 	// Constructor Methods
 	Method(
 		identifier string,
-		optionalSubcomponent SubcomponentLike,
-		optionalInvocation InvocationLike,
+		invocation InvocationLike,
 	) MethodLike
 }
 
@@ -1410,6 +1397,18 @@ type ValuesClassLike interface {
 }
 
 /*
+VariableClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete variable-like class.
+*/
+type VariableClassLike interface {
+	// Constructor Methods
+	Variable(
+		identifier string,
+	) VariableLike
+}
+
+/*
 WhileClauseClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete while-clause-like class.
@@ -1709,7 +1708,7 @@ type AttributeLike interface {
 
 	// Attribute Methods
 	GetIdentifier() string
-	GetOptionalSubcomponent() SubcomponentLike
+	GetSubcomponent() SubcomponentLike
 }
 
 /*
@@ -2288,19 +2287,6 @@ type ItemsLike interface {
 }
 
 /*
-LabelLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete label-like class.
-*/
-type LabelLike interface {
-	// Principal Methods
-	GetClass() LabelClassLike
-
-	// Attribute Methods
-	GetSymbol() string
-}
-
-/*
 LeftLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete left-like class.
@@ -2429,8 +2415,7 @@ type MethodLike interface {
 
 	// Attribute Methods
 	GetIdentifier() string
-	GetOptionalSubcomponent() SubcomponentLike
-	GetOptionalInvocation() InvocationLike
+	GetInvocation() InvocationLike
 }
 
 /*
@@ -2906,6 +2891,19 @@ type ValuesLike interface {
 
 	// Attribute Methods
 	GetAny() any
+}
+
+/*
+VariableLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete variable-like class.
+*/
+type VariableLike interface {
+	// Principal Methods
+	GetClass() VariableClassLike
+
+	// Attribute Methods
+	GetIdentifier() string
 }
 
 /*

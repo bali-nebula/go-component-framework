@@ -171,16 +171,28 @@ $Condition: Expression
 $SelectClause: "select" Target MatchHandler+
 
 $Target:
-  - Component
-  - Operation
-
-$Operation:
   - Function
   - Method
+  - Attribute
+  - Variable  ! Must be last since the others also begin with an identifier.
 
 $Function: identifier "(" Arguments? ")"
 
-$Method: identifier Subcomponent? Invocation?
+$Arguments: Argument AdditionalArgument*
+
+$AdditionalArgument: "," Argument
+
+$Argument: identifier
+
+$Method: identifier Invocation
+
+$Invocation: Threading identifier "(" Arguments? ")"
+
+$Threading:
+  - dot
+  - arrow
+
+$Attribute: identifier Subcomponent
 
 $Subcomponent: "[" Indices "]"
 
@@ -190,11 +202,7 @@ $AdditionalIndex: "," Index
 
 $Index: Expression
 
-$Invocation: Threading identifier "(" Arguments? ")"
-
-$Threading:
-  - dot
-  - arrow
+$Variable: identifier
 
 $WhileClause: "while" Condition "do" Procedure
 
@@ -218,11 +226,9 @@ $Exception: Expression
 
 $DoClause: "do" Operation
 
-$Arguments: Argument AdditionalArgument*
-
-$AdditionalArgument: "," Argument
-
-$Argument: identifier
+$Operation:
+  - Function
+  - Method
 
 $LetClause: "let" Recipient Assign Expression
 
@@ -235,12 +241,8 @@ $Assign:
   - slashEqual
 
 $Recipient:
-  - Label
+  - symbol
   - Attribute
-
-$Label: symbol
-
-$Attribute: identifier Subcomponent?
 
 $PostClause: "post" Message "to" Bag
 
@@ -273,34 +275,35 @@ $DiscardClause: "discard" Draft
 $NotarizeClause: "notarize" Draft "as" Citation
 
 $Expression:
+  - Component
   - Precedence
   - Dereference
   - Complement
   - Inversion
   - Amplitude
+  - Target  ! Must be last since others also begin with an identifier.
   - Arithmetic
   - Exponential
   - Comparison
   - Inference
   - Concatenation
-  - Target
 
 $Precedence: "(" Expression ")"
 
 $Dereference: snail Indirect
 
 $Indirect:
+  - Component
+  - Operation
   - Dereference
-  - Target
 
 $Complement: not Logical
 
 $Logical:
+  - Component
+  - Operation
   - Precedence
   - Dereference
-  - Complement
-  - Comparison
-  - Target
 
 $Inversion: Inverse Numerical
 
@@ -310,12 +313,13 @@ $Inverse:
   - star
 
 $Numerical:
+  - Component
+  - Operation
   - Precedence
   - Dereference
   - Inversion
   - Amplitude
   - Exponential
-  - Target
 
 $Amplitude: bar Arithmetic bar
 
@@ -333,10 +337,11 @@ $ArithmeticOperator:
 $Exponential: Base caret Numerical
 
 $Base:
+  - Component
+  - Operation
   - Precedence
   - Dereference
   - Amplitude
-  - Target
 
 $Comparison: Arithmetic CompareOperator Arithmetic
 
@@ -360,9 +365,10 @@ $LogicOperator:
 $Concatenation: Textual ConcatenationOperation+
 
 $Textual:
+  - Component
+  - Operation
   - Precedence
   - Dereference
-  - Target
 
 $ConcatenationOperation: ampersand Textual
 
