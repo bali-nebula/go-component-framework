@@ -19,29 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func RightSquareClass() RightSquareClassLike {
-	return rightSquareClass()
+func LeftClass() LeftClassLike {
+	return leftClass()
 }
 
 // Constructor Methods
 
-func (c *rightSquareClass_) RightSquare(
-	bar string,
-) RightSquareLike {
-	if uti.IsUndefined(bar) {
-		panic("The \"bar\" attribute is required by this class.")
-	}
-	var instance = &rightSquare_{
+func (c *leftClass_) Left() LeftLike {
+	var instance = &left_{
 		// Initialize the instance attributes.
-		bar_: bar,
 	}
 	return instance
 }
@@ -50,37 +42,32 @@ func (c *rightSquareClass_) RightSquare(
 
 // Principal Methods
 
-func (v *rightSquare_) GetClass() RightSquareClassLike {
-	return rightSquareClass()
+func (v *left_) GetClass() LeftClassLike {
+	return leftClass()
 }
 
 // Attribute Methods
-
-func (v *rightSquare_) GetBar() string {
-	return v.bar_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type rightSquare_ struct {
+type left_ struct {
 	// Declare the instance attributes.
-	bar_ string
 }
 
 // Class Structure
 
-type rightSquareClass_ struct {
+type leftClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func rightSquareClass() *rightSquareClass_ {
-	return rightSquareClassReference_
+func leftClass() *leftClass_ {
+	return leftClassReference_
 }
 
-var rightSquareClassReference_ = &rightSquareClass_{
+var leftClassReference_ = &leftClass_{
 	// Initialize the class constants.
 }

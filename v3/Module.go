@@ -88,6 +88,7 @@ type (
 	FlowClassLike                   = ast.FlowClassLike
 	FunctionClassLike               = ast.FunctionClassLike
 	IfClauseClassLike               = ast.IfClauseClassLike
+	InclusionClassLike              = ast.InclusionClassLike
 	IndexClassLike                  = ast.IndexClassLike
 	IndicesClassLike                = ast.IndicesClassLike
 	IndirectClassLike               = ast.IndirectClassLike
@@ -102,9 +103,7 @@ type (
 	ItemClassLike                   = ast.ItemClassLike
 	ItemsClassLike                  = ast.ItemsClassLike
 	LabelClassLike                  = ast.LabelClassLike
-	LeftBracketClassLike            = ast.LeftBracketClassLike
-	LeftRoundClassLike              = ast.LeftRoundClassLike
-	LeftSquareClassLike             = ast.LeftSquareClassLike
+	LeftClassLike                   = ast.LeftClassLike
 	LetClauseClassLike              = ast.LetClauseClassLike
 	LogicOperatorClassLike          = ast.LogicOperatorClassLike
 	LogicalClassLike                = ast.LogicalClassLike
@@ -135,9 +134,7 @@ type (
 	ResultClassLike                 = ast.ResultClassLike
 	RetrieveClauseClassLike         = ast.RetrieveClauseClassLike
 	ReturnClauseClassLike           = ast.ReturnClauseClassLike
-	RightBracketClassLike           = ast.RightBracketClassLike
-	RightRoundClassLike             = ast.RightRoundClassLike
-	RightSquareClassLike            = ast.RightSquareClassLike
+	RightClassLike                  = ast.RightClassLike
 	SaveClauseClassLike             = ast.SaveClauseClassLike
 	SelectClauseClassLike           = ast.SelectClauseClassLike
 	SequenceClassLike               = ast.SequenceClassLike
@@ -206,6 +203,7 @@ type (
 	FlowLike                   = ast.FlowLike
 	FunctionLike               = ast.FunctionLike
 	IfClauseLike               = ast.IfClauseLike
+	InclusionLike              = ast.InclusionLike
 	IndexLike                  = ast.IndexLike
 	IndicesLike                = ast.IndicesLike
 	IndirectLike               = ast.IndirectLike
@@ -220,9 +218,7 @@ type (
 	ItemLike                   = ast.ItemLike
 	ItemsLike                  = ast.ItemsLike
 	LabelLike                  = ast.LabelLike
-	LeftBracketLike            = ast.LeftBracketLike
-	LeftRoundLike              = ast.LeftRoundLike
-	LeftSquareLike             = ast.LeftSquareLike
+	LeftLike                   = ast.LeftLike
 	LetClauseLike              = ast.LetClauseLike
 	LogicOperatorLike          = ast.LogicOperatorLike
 	LogicalLike                = ast.LogicalLike
@@ -253,9 +249,7 @@ type (
 	ResultLike                 = ast.ResultLike
 	RetrieveClauseLike         = ast.RetrieveClauseLike
 	ReturnClauseLike           = ast.ReturnClauseLike
-	RightBracketLike           = ast.RightBracketLike
-	RightRoundLike             = ast.RightRoundLike
-	RightSquareLike            = ast.RightSquareLike
+	RightLike                  = ast.RightLike
 	SaveClauseLike             = ast.SaveClauseLike
 	SelectClauseLike           = ast.SelectClauseLike
 	SequenceLike               = ast.SequenceLike
@@ -899,6 +893,16 @@ func IfClause(
 	)
 }
 
+// Ast/Inclusion
+
+func Inclusion(
+	any_ any,
+) ast.InclusionLike {
+	return ast.InclusionClass().Inclusion(
+		any_,
+	)
+}
+
 // Ast/Index
 
 func Index(
@@ -1055,30 +1059,10 @@ func Label(
 	)
 }
 
-// Ast/LeftBracket
+// Ast/Left
 
-func LeftBracket(
-	any_ any,
-) ast.LeftBracketLike {
-	return ast.LeftBracketClass().LeftBracket(
-		any_,
-	)
-}
-
-// Ast/LeftRound
-
-func LeftRound() ast.LeftRoundLike {
-	return ast.LeftRoundClass().LeftRound()
-}
-
-// Ast/LeftSquare
-
-func LeftSquare(
-	bar string,
-) ast.LeftSquareLike {
-	return ast.LeftSquareClass().LeftSquare(
-		bar,
-	)
+func Left() ast.LeftLike {
+	return ast.LeftClass().Left()
 }
 
 // Ast/LetClause
@@ -1332,16 +1316,16 @@ func PublishClause(
 // Ast/Range
 
 func Range(
-	leftBracket ast.LeftBracketLike,
+	inclusion1 ast.InclusionLike,
 	primitive1 ast.PrimitiveLike,
 	primitive2 ast.PrimitiveLike,
-	rightBracket ast.RightBracketLike,
+	inclusion2 ast.InclusionLike,
 ) ast.RangeLike {
 	return ast.RangeClass().Range(
-		leftBracket,
+		inclusion1,
 		primitive1,
 		primitive2,
-		rightBracket,
+		inclusion2,
 	)
 }
 
@@ -1407,30 +1391,10 @@ func ReturnClause(
 	)
 }
 
-// Ast/RightBracket
+// Ast/Right
 
-func RightBracket(
-	any_ any,
-) ast.RightBracketLike {
-	return ast.RightBracketClass().RightBracket(
-		any_,
-	)
-}
-
-// Ast/RightRound
-
-func RightRound() ast.RightRoundLike {
-	return ast.RightRoundClass().RightRound()
-}
-
-// Ast/RightSquare
-
-func RightSquare(
-	bar string,
-) ast.RightSquareLike {
-	return ast.RightSquareClass().RightSquare(
-		bar,
-	)
+func Right() ast.RightLike {
+	return ast.RightClass().Right()
 }
 
 // Ast/SaveClause

@@ -1283,6 +1283,24 @@ func (v *validator_) PostprocessIfClause(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessInclusion(
+	inclusion ast.InclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessInclusionSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessInclusion(
+	inclusion ast.InclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessIndex(
 	index ast.IndexLike,
 ) {
@@ -1535,56 +1553,20 @@ func (v *validator_) PostprocessLabel(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessLeftBracket(
-	leftBracket ast.LeftBracketLike,
+func (v *validator_) PreprocessLeft(
+	left ast.LeftLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessLeftBracketSlot(
+func (v *validator_) ProcessLeftSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessLeftBracket(
-	leftBracket ast.LeftBracketLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessLeftRound(
-	leftRound ast.LeftRoundLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessLeftRoundSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessLeftRound(
-	leftRound ast.LeftRoundLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessLeftSquare(
-	leftSquare ast.LeftSquareLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessLeftSquareSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessLeftSquare(
-	leftSquare ast.LeftSquareLike,
+func (v *validator_) PostprocessLeft(
+	left ast.LeftLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2137,56 +2119,20 @@ func (v *validator_) PostprocessReturnClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessRightBracket(
-	rightBracket ast.RightBracketLike,
+func (v *validator_) PreprocessRight(
+	right ast.RightLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessRightBracketSlot(
+func (v *validator_) ProcessRightSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessRightBracket(
-	rightBracket ast.RightBracketLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessRightRound(
-	rightRound ast.RightRoundLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessRightRoundSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessRightRound(
-	rightRound ast.RightRoundLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessRightSquare(
-	rightSquare ast.RightSquareLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessRightSquareSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessRightSquare(
-	rightSquare ast.RightSquareLike,
+func (v *validator_) PostprocessRight(
+	right ast.RightLike,
 ) {
 	// TBD - Add any validation checks.
 }

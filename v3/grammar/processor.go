@@ -1075,6 +1075,21 @@ func (v *processor_) PostprocessIfClause(
 ) {
 }
 
+func (v *processor_) PreprocessInclusion(
+	inclusion ast.InclusionLike,
+) {
+}
+
+func (v *processor_) ProcessInclusionSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInclusion(
+	inclusion ast.InclusionLike,
+) {
+}
+
 func (v *processor_) PreprocessIndex(
 	index ast.IndexLike,
 ) {
@@ -1285,48 +1300,18 @@ func (v *processor_) PostprocessLabel(
 ) {
 }
 
-func (v *processor_) PreprocessLeftBracket(
-	leftBracket ast.LeftBracketLike,
+func (v *processor_) PreprocessLeft(
+	left ast.LeftLike,
 ) {
 }
 
-func (v *processor_) ProcessLeftBracketSlot(
+func (v *processor_) ProcessLeftSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessLeftBracket(
-	leftBracket ast.LeftBracketLike,
-) {
-}
-
-func (v *processor_) PreprocessLeftRound(
-	leftRound ast.LeftRoundLike,
-) {
-}
-
-func (v *processor_) ProcessLeftRoundSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLeftRound(
-	leftRound ast.LeftRoundLike,
-) {
-}
-
-func (v *processor_) PreprocessLeftSquare(
-	leftSquare ast.LeftSquareLike,
-) {
-}
-
-func (v *processor_) ProcessLeftSquareSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLeftSquare(
-	leftSquare ast.LeftSquareLike,
+func (v *processor_) PostprocessLeft(
+	left ast.LeftLike,
 ) {
 }
 
@@ -1788,48 +1773,18 @@ func (v *processor_) PostprocessReturnClause(
 ) {
 }
 
-func (v *processor_) PreprocessRightBracket(
-	rightBracket ast.RightBracketLike,
+func (v *processor_) PreprocessRight(
+	right ast.RightLike,
 ) {
 }
 
-func (v *processor_) ProcessRightBracketSlot(
+func (v *processor_) ProcessRightSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessRightBracket(
-	rightBracket ast.RightBracketLike,
-) {
-}
-
-func (v *processor_) PreprocessRightRound(
-	rightRound ast.RightRoundLike,
-) {
-}
-
-func (v *processor_) ProcessRightRoundSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessRightRound(
-	rightRound ast.RightRoundLike,
-) {
-}
-
-func (v *processor_) PreprocessRightSquare(
-	rightSquare ast.RightSquareLike,
-) {
-}
-
-func (v *processor_) ProcessRightSquareSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessRightSquare(
-	rightSquare ast.RightSquareLike,
+func (v *processor_) PostprocessRight(
+	right ast.RightLike,
 ) {
 }
 

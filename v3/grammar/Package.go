@@ -947,6 +947,15 @@ type Methodical interface {
 	PostprocessIfClause(
 		ifClause ast.IfClauseLike,
 	)
+	PreprocessInclusion(
+		inclusion ast.InclusionLike,
+	)
+	ProcessInclusionSlot(
+		slot uint,
+	)
+	PostprocessInclusion(
+		inclusion ast.InclusionLike,
+	)
 	PreprocessIndex(
 		index ast.IndexLike,
 	)
@@ -1073,32 +1082,14 @@ type Methodical interface {
 	PostprocessLabel(
 		label ast.LabelLike,
 	)
-	PreprocessLeftBracket(
-		leftBracket ast.LeftBracketLike,
+	PreprocessLeft(
+		left ast.LeftLike,
 	)
-	ProcessLeftBracketSlot(
+	ProcessLeftSlot(
 		slot uint,
 	)
-	PostprocessLeftBracket(
-		leftBracket ast.LeftBracketLike,
-	)
-	PreprocessLeftRound(
-		leftRound ast.LeftRoundLike,
-	)
-	ProcessLeftRoundSlot(
-		slot uint,
-	)
-	PostprocessLeftRound(
-		leftRound ast.LeftRoundLike,
-	)
-	PreprocessLeftSquare(
-		leftSquare ast.LeftSquareLike,
-	)
-	ProcessLeftSquareSlot(
-		slot uint,
-	)
-	PostprocessLeftSquare(
-		leftSquare ast.LeftSquareLike,
+	PostprocessLeft(
+		left ast.LeftLike,
 	)
 	PreprocessLetClause(
 		letClause ast.LetClauseLike,
@@ -1378,32 +1369,14 @@ type Methodical interface {
 	PostprocessReturnClause(
 		returnClause ast.ReturnClauseLike,
 	)
-	PreprocessRightBracket(
-		rightBracket ast.RightBracketLike,
+	PreprocessRight(
+		right ast.RightLike,
 	)
-	ProcessRightBracketSlot(
+	ProcessRightSlot(
 		slot uint,
 	)
-	PostprocessRightBracket(
-		rightBracket ast.RightBracketLike,
-	)
-	PreprocessRightRound(
-		rightRound ast.RightRoundLike,
-	)
-	ProcessRightRoundSlot(
-		slot uint,
-	)
-	PostprocessRightRound(
-		rightRound ast.RightRoundLike,
-	)
-	PreprocessRightSquare(
-		rightSquare ast.RightSquareLike,
-	)
-	ProcessRightSquareSlot(
-		slot uint,
-	)
-	PostprocessRightSquare(
-		rightSquare ast.RightSquareLike,
+	PostprocessRight(
+		right ast.RightLike,
 	)
 	PreprocessSaveClause(
 		saveClause ast.SaveClauseLike,

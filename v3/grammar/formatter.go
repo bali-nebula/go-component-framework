@@ -1282,6 +1282,24 @@ func (v *formatter_) PostprocessIfClause(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessInclusion(
+	inclusion ast.InclusionLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusionSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusion(
+	inclusion ast.InclusionLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessIndex(
 	index ast.IndexLike,
 ) {
@@ -1534,56 +1552,20 @@ func (v *formatter_) PostprocessLabel(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessLeftBracket(
-	leftBracket ast.LeftBracketLike,
+func (v *formatter_) PreprocessLeft(
+	left ast.LeftLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessLeftBracketSlot(
+func (v *formatter_) ProcessLeftSlot(
 	slot uint,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PostprocessLeftBracket(
-	leftBracket ast.LeftBracketLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessLeftRound(
-	leftRound ast.LeftRoundLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessLeftRoundSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessLeftRound(
-	leftRound ast.LeftRoundLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessLeftSquare(
-	leftSquare ast.LeftSquareLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessLeftSquareSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessLeftSquare(
-	leftSquare ast.LeftSquareLike,
+func (v *formatter_) PostprocessLeft(
+	left ast.LeftLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2136,56 +2118,20 @@ func (v *formatter_) PostprocessReturnClause(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessRightBracket(
-	rightBracket ast.RightBracketLike,
+func (v *formatter_) PreprocessRight(
+	right ast.RightLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessRightBracketSlot(
+func (v *formatter_) ProcessRightSlot(
 	slot uint,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PostprocessRightBracket(
-	rightBracket ast.RightBracketLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessRightRound(
-	rightRound ast.RightRoundLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessRightRoundSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessRightRound(
-	rightRound ast.RightRoundLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessRightSquare(
-	rightSquare ast.RightSquareLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessRightSquareSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessRightSquare(
-	rightSquare ast.RightSquareLike,
+func (v *formatter_) PostprocessRight(
+	right ast.RightLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

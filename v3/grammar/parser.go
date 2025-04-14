@@ -2725,6 +2725,33 @@ func (v *parser_) parseIfClause() (
 	return
 }
 
+func (v *parser_) parseInclusion() (
+	inclusion ast.InclusionLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Left Inclusion.
+	var left ast.LeftLike
+	left, token, ok = v.parseLeft()
+	if ok {
+		// Found a single Left Inclusion.
+		inclusion = ast.InclusionClass().Inclusion(left)
+		return
+	}
+
+	// Attempt to parse a single Right Inclusion.
+	var right ast.RightLike
+	right, token, ok = v.parseRight()
+	if ok {
+		// Found a single Right Inclusion.
+		inclusion = ast.InclusionClass().Inclusion(right)
+		return
+	}
+
+	// This is not a single Inclusion rule.
+	return
+}
+
 func (v *parser_) parseIndex() (
 	index ast.IndexLike,
 	token TokenLike,
@@ -3401,35 +3428,8 @@ func (v *parser_) parseLabel() (
 	return
 }
 
-func (v *parser_) parseLeftBracket() (
-	leftBracket ast.LeftBracketLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single LeftSquare LeftBracket.
-	var leftSquare ast.LeftSquareLike
-	leftSquare, token, ok = v.parseLeftSquare()
-	if ok {
-		// Found a single LeftSquare LeftBracket.
-		leftBracket = ast.LeftBracketClass().LeftBracket(leftSquare)
-		return
-	}
-
-	// Attempt to parse a single LeftRound LeftBracket.
-	var leftRound ast.LeftRoundLike
-	leftRound, token, ok = v.parseLeftRound()
-	if ok {
-		// Found a single LeftRound LeftBracket.
-		leftBracket = ast.LeftBracketClass().LeftBracket(leftRound)
-		return
-	}
-
-	// This is not a single LeftBracket rule.
-	return
-}
-
-func (v *parser_) parseLeftRound() (
-	leftRound ast.LeftRoundLike,
+func (v *parser_) parseLeft() (
+	left ast.LeftLike,
 	token TokenLike,
 	ok bool,
 ) {
@@ -3439,12 +3439,12 @@ func (v *parser_) parseLeftRound() (
 	_, token, ok = v.parseDelimiter("(")
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single LeftRound rule.
+			// This is not a single Left rule.
 			v.putBack(tokens)
 			return
 		} else {
 			// Found a syntax error.
-			var message = v.formatError("$LeftRound", token)
+			var message = v.formatError("$Left", token)
 			panic(message)
 		}
 	}
@@ -3452,42 +3452,10 @@ func (v *parser_) parseLeftRound() (
 		tokens.AppendValue(token)
 	}
 
-	// Found a single LeftRound rule.
+	// Found a single Left rule.
 	ok = true
 	v.remove(tokens)
-	leftRound = ast.LeftRoundClass().LeftRound()
-	return
-}
-
-func (v *parser_) parseLeftSquare() (
-	leftSquare ast.LeftSquareLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single bar token.
-	var bar string
-	bar, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single LeftSquare rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$LeftSquare", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single LeftSquare rule.
-	ok = true
-	v.remove(tokens)
-	leftSquare = ast.LeftSquareClass().LeftSquare(bar)
+	left = ast.LeftClass().Left()
 	return
 }
 
@@ -4751,9 +4719,9 @@ func (v *parser_) parseRange() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single LeftBracket rule.
-	var leftBracket ast.LeftBracketLike
-	leftBracket, token, ok = v.parseLeftBracket()
+	// Attempt to parse a single Inclusion rule.
+	var inclusion1 ast.InclusionLike
+	inclusion1, token, ok = v.parseInclusion()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -4819,9 +4787,9 @@ func (v *parser_) parseRange() (
 		panic(message)
 	}
 
-	// Attempt to parse a single RightBracket rule.
-	var rightBracket ast.RightBracketLike
-	rightBracket, token, ok = v.parseRightBracket()
+	// Attempt to parse a single Inclusion rule.
+	var inclusion2 ast.InclusionLike
+	inclusion2, token, ok = v.parseInclusion()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -4840,10 +4808,10 @@ func (v *parser_) parseRange() (
 	ok = true
 	v.remove(tokens)
 	range_ = ast.RangeClass().Range(
-		leftBracket,
+		inclusion1,
 		primitive1,
 		primitive2,
-		rightBracket,
+		inclusion2,
 	)
 	return
 }
@@ -5132,35 +5100,8 @@ func (v *parser_) parseReturnClause() (
 	return
 }
 
-func (v *parser_) parseRightBracket() (
-	rightBracket ast.RightBracketLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single RightSquare RightBracket.
-	var rightSquare ast.RightSquareLike
-	rightSquare, token, ok = v.parseRightSquare()
-	if ok {
-		// Found a single RightSquare RightBracket.
-		rightBracket = ast.RightBracketClass().RightBracket(rightSquare)
-		return
-	}
-
-	// Attempt to parse a single RightRound RightBracket.
-	var rightRound ast.RightRoundLike
-	rightRound, token, ok = v.parseRightRound()
-	if ok {
-		// Found a single RightRound RightBracket.
-		rightBracket = ast.RightBracketClass().RightBracket(rightRound)
-		return
-	}
-
-	// This is not a single RightBracket rule.
-	return
-}
-
-func (v *parser_) parseRightRound() (
-	rightRound ast.RightRoundLike,
+func (v *parser_) parseRight() (
+	right ast.RightLike,
 	token TokenLike,
 	ok bool,
 ) {
@@ -5170,12 +5111,12 @@ func (v *parser_) parseRightRound() (
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single RightRound rule.
+			// This is not a single Right rule.
 			v.putBack(tokens)
 			return
 		} else {
 			// Found a syntax error.
-			var message = v.formatError("$RightRound", token)
+			var message = v.formatError("$Right", token)
 			panic(message)
 		}
 	}
@@ -5183,42 +5124,10 @@ func (v *parser_) parseRightRound() (
 		tokens.AppendValue(token)
 	}
 
-	// Found a single RightRound rule.
+	// Found a single Right rule.
 	ok = true
 	v.remove(tokens)
-	rightRound = ast.RightRoundClass().RightRound()
-	return
-}
-
-func (v *parser_) parseRightSquare() (
-	rightSquare ast.RightSquareLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single bar token.
-	var bar string
-	bar, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single RightSquare rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$RightSquare", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single RightSquare rule.
-	ok = true
-	v.remove(tokens)
-	rightSquare = ast.RightSquareClass().RightSquare(bar)
+	right = ast.RightClass().Right()
 	return
 }
 
@@ -6302,21 +6211,16 @@ var parserClassReference_ = &parserClass_{
 			"$AnnotatedValue":  `dash Value note?`,
 			"$InlineValues":    `Value AdditionalValue*`,
 			"$AdditionalValue": `"," Value`,
-			"$Range":           `LeftBracket Primitive ".." Primitive RightBracket`,
-			"$LeftBracket": `
-  - LeftSquare
-  - LeftRound`,
-			"$LeftSquare": `bar`,
-			"$LeftRound":  `"("`,
+			"$Range":           `Inclusion Primitive ".." Primitive Inclusion`,
+			"$Inclusion": `
+  - Left
+  - Right`,
+			"$Left":  `"("`,
+			"$Right": `")"`,
 			"$Primitive": `
   - Element
   - String`,
-			"$RightBracket": `
-  - RightSquare
-  - RightRound`,
-			"$RightSquare": `bar`,
-			"$RightRound":  `")"`,
-			"$Procedure":   `"{" Statements? "}"`,
+			"$Procedure": `"{" Statements? "}"`,
 			"$Statements": `
   - MultilineStatements
   - InlineStatements`,

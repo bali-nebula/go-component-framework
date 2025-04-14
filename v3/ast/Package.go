@@ -658,6 +658,18 @@ type IfClauseClassLike interface {
 }
 
 /*
+InclusionClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusion-like class.
+*/
+type InclusionClassLike interface {
+	// Constructor Methods
+	Inclusion(
+		any_ any,
+	) InclusionLike
+}
+
+/*
 IndexClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete index-like class.
@@ -834,37 +846,13 @@ type LabelClassLike interface {
 }
 
 /*
-LeftBracketClassLike is a class interface that declares the
+LeftClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
-supported by each concrete left-bracket-like class.
+supported by each concrete left-like class.
 */
-type LeftBracketClassLike interface {
+type LeftClassLike interface {
 	// Constructor Methods
-	LeftBracket(
-		any_ any,
-	) LeftBracketLike
-}
-
-/*
-LeftRoundClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete left-round-like class.
-*/
-type LeftRoundClassLike interface {
-	// Constructor Methods
-	LeftRound() LeftRoundLike
-}
-
-/*
-LeftSquareClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete left-square-like class.
-*/
-type LeftSquareClassLike interface {
-	// Constructor Methods
-	LeftSquare(
-		bar string,
-	) LeftSquareLike
+	Left() LeftLike
 }
 
 /*
@@ -1160,10 +1148,10 @@ supported by each concrete range-like class.
 type RangeClassLike interface {
 	// Constructor Methods
 	Range(
-		leftBracket LeftBracketLike,
+		inclusion1 InclusionLike,
 		primitive1 PrimitiveLike,
 		primitive2 PrimitiveLike,
-		rightBracket RightBracketLike,
+		inclusion2 InclusionLike,
 	) RangeLike
 }
 
@@ -1241,37 +1229,13 @@ type ReturnClauseClassLike interface {
 }
 
 /*
-RightBracketClassLike is a class interface that declares the
+RightClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
-supported by each concrete right-bracket-like class.
+supported by each concrete right-like class.
 */
-type RightBracketClassLike interface {
+type RightClassLike interface {
 	// Constructor Methods
-	RightBracket(
-		any_ any,
-	) RightBracketLike
-}
-
-/*
-RightRoundClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete right-round-like class.
-*/
-type RightRoundClassLike interface {
-	// Constructor Methods
-	RightRound() RightRoundLike
-}
-
-/*
-RightSquareClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete right-square-like class.
-*/
-type RightSquareClassLike interface {
-	// Constructor Methods
-	RightSquare(
-		bar string,
-	) RightSquareLike
+	Right() RightLike
 }
 
 /*
@@ -2134,6 +2098,19 @@ type IfClauseLike interface {
 }
 
 /*
+InclusionLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusion-like class.
+*/
+type InclusionLike interface {
+	// Principal Methods
+	GetClass() InclusionClassLike
+
+	// Attribute Methods
+	GetAny() any
+}
+
+/*
 IndexLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete index-like class.
@@ -2324,39 +2301,13 @@ type LabelLike interface {
 }
 
 /*
-LeftBracketLike is an instance interface that declares the
+LeftLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete left-bracket-like class.
+by each instance of a concrete left-like class.
 */
-type LeftBracketLike interface {
+type LeftLike interface {
 	// Principal Methods
-	GetClass() LeftBracketClassLike
-
-	// Attribute Methods
-	GetAny() any
-}
-
-/*
-LeftRoundLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete left-round-like class.
-*/
-type LeftRoundLike interface {
-	// Principal Methods
-	GetClass() LeftRoundClassLike
-}
-
-/*
-LeftSquareLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete left-square-like class.
-*/
-type LeftSquareLike interface {
-	// Principal Methods
-	GetClass() LeftSquareClassLike
-
-	// Attribute Methods
-	GetBar() string
+	GetClass() LeftClassLike
 }
 
 /*
@@ -2677,10 +2628,10 @@ type RangeLike interface {
 	GetClass() RangeClassLike
 
 	// Attribute Methods
-	GetLeftBracket() LeftBracketLike
+	GetInclusion1() InclusionLike
 	GetPrimitive1() PrimitiveLike
 	GetPrimitive2() PrimitiveLike
-	GetRightBracket() RightBracketLike
+	GetInclusion2() InclusionLike
 }
 
 /*
@@ -2763,39 +2714,13 @@ type ReturnClauseLike interface {
 }
 
 /*
-RightBracketLike is an instance interface that declares the
+RightLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete right-bracket-like class.
+by each instance of a concrete right-like class.
 */
-type RightBracketLike interface {
+type RightLike interface {
 	// Principal Methods
-	GetClass() RightBracketClassLike
-
-	// Attribute Methods
-	GetAny() any
-}
-
-/*
-RightRoundLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete right-round-like class.
-*/
-type RightRoundLike interface {
-	// Principal Methods
-	GetClass() RightRoundClassLike
-}
-
-/*
-RightSquareLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete right-square-like class.
-*/
-type RightSquareLike interface {
-	// Principal Methods
-	GetClass() RightSquareClassLike
-
-	// Attribute Methods
-	GetBar() string
+	GetClass() RightClassLike
 }
 
 /*

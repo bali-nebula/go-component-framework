@@ -63,6 +63,20 @@ $Items:
   - Associations
   - Values
 
+$Range: Inclusion Primitive ".." Primitive Inclusion
+
+$Inclusion:
+  - Left
+  - Right
+
+$Left: "("
+
+$Right: ")"
+
+$Primitive:
+  - Element
+  - String
+
 $NoAssociations: colon
 
 $Associations:
@@ -92,28 +106,6 @@ $AnnotatedValue: dash Value note?
 $InlineValues: Value AdditionalValue*
 
 $AdditionalValue: "," Value
-
-$Range: LeftBracket Primitive ".." Primitive RightBracket
-
-$LeftBracket:
-  - LeftSquare
-  - LeftRound
-
-$LeftSquare: bar
-
-$LeftRound: "("
-
-$Primitive:
-  - Element
-  - String
-
-$RightBracket:
-  - RightSquare
-  - RightRound
-
-$RightSquare: bar
-
-$RightRound: ")"
 
 $Procedure: "{" Statements? "}"
 

@@ -1035,6 +1035,29 @@ func (v *visitor_) visitIfClause(
 	v.processor_.PostprocessProcedure(procedure)
 }
 
+func (v *visitor_) visitInclusion(
+	inclusion ast.InclusionLike,
+) {
+	// Visit the possible inclusion types.
+	switch actual := inclusion.GetAny().(type) {
+	case ast.LeftLike:
+		v.processor_.PreprocessLeft(actual)
+		v.visitLeft(actual)
+		v.processor_.PostprocessLeft(actual)
+	case ast.RightLike:
+		v.processor_.PreprocessRight(actual)
+		v.visitRight(actual)
+		v.processor_.PostprocessRight(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
 func (v *visitor_) visitIndex(
 	index ast.IndexLike,
 ) {
@@ -1371,41 +1394,10 @@ func (v *visitor_) visitLabel(
 	v.processor_.ProcessSymbol(symbol)
 }
 
-func (v *visitor_) visitLeftBracket(
-	leftBracket ast.LeftBracketLike,
-) {
-	// Visit the possible leftBracket types.
-	switch actual := leftBracket.GetAny().(type) {
-	case ast.LeftSquareLike:
-		v.processor_.PreprocessLeftSquare(actual)
-		v.visitLeftSquare(actual)
-		v.processor_.PostprocessLeftSquare(actual)
-	case ast.LeftRoundLike:
-		v.processor_.PreprocessLeftRound(actual)
-		v.visitLeftRound(actual)
-		v.processor_.PostprocessLeftRound(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
-}
-
-func (v *visitor_) visitLeftRound(
-	leftRound ast.LeftRoundLike,
+func (v *visitor_) visitLeft(
+	left ast.LeftLike,
 ) {
 	// This method does not need to process anything.
-}
-
-func (v *visitor_) visitLeftSquare(
-	leftSquare ast.LeftSquareLike,
-) {
-	// Visit a single bar token.
-	var bar = leftSquare.GetBar()
-	v.processor_.ProcessBar(bar)
 }
 
 func (v *visitor_) visitLetClause(
@@ -1919,11 +1911,11 @@ func (v *visitor_) visitPublishClause(
 func (v *visitor_) visitRange(
 	range_ ast.RangeLike,
 ) {
-	// Visit a single leftBracket rule.
-	var leftBracket = range_.GetLeftBracket()
-	v.processor_.PreprocessLeftBracket(leftBracket)
-	v.visitLeftBracket(leftBracket)
-	v.processor_.PostprocessLeftBracket(leftBracket)
+	// Visit a single inclusion rule.
+	var inclusion1 = range_.GetInclusion1()
+	v.processor_.PreprocessInclusion(inclusion1)
+	v.visitInclusion(inclusion1)
+	v.processor_.PostprocessInclusion(inclusion1)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessRangeSlot(1)
@@ -1946,11 +1938,11 @@ func (v *visitor_) visitRange(
 	// Visit slot 3 between references.
 	v.processor_.ProcessRangeSlot(3)
 
-	// Visit a single rightBracket rule.
-	var rightBracket = range_.GetRightBracket()
-	v.processor_.PreprocessRightBracket(rightBracket)
-	v.visitRightBracket(rightBracket)
-	v.processor_.PostprocessRightBracket(rightBracket)
+	// Visit a single inclusion rule.
+	var inclusion2 = range_.GetInclusion2()
+	v.processor_.PreprocessInclusion(inclusion2)
+	v.visitInclusion(inclusion2)
+	v.processor_.PostprocessInclusion(inclusion2)
 }
 
 func (v *visitor_) visitRecipient(
@@ -2056,41 +2048,10 @@ func (v *visitor_) visitReturnClause(
 	v.processor_.PostprocessResult(result)
 }
 
-func (v *visitor_) visitRightBracket(
-	rightBracket ast.RightBracketLike,
-) {
-	// Visit the possible rightBracket types.
-	switch actual := rightBracket.GetAny().(type) {
-	case ast.RightSquareLike:
-		v.processor_.PreprocessRightSquare(actual)
-		v.visitRightSquare(actual)
-		v.processor_.PostprocessRightSquare(actual)
-	case ast.RightRoundLike:
-		v.processor_.PreprocessRightRound(actual)
-		v.visitRightRound(actual)
-		v.processor_.PostprocessRightRound(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
-}
-
-func (v *visitor_) visitRightRound(
-	rightRound ast.RightRoundLike,
+func (v *visitor_) visitRight(
+	right ast.RightLike,
 ) {
 	// This method does not need to process anything.
-}
-
-func (v *visitor_) visitRightSquare(
-	rightSquare ast.RightSquareLike,
-) {
-	// Visit a single bar token.
-	var bar = rightSquare.GetBar()
-	v.processor_.ProcessBar(bar)
 }
 
 func (v *visitor_) visitSaveClause(

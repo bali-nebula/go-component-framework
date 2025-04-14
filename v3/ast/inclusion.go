@@ -19,21 +19,29 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func LeftRoundClass() LeftRoundClassLike {
-	return leftRoundClass()
+func InclusionClass() InclusionClassLike {
+	return inclusionClass()
 }
 
 // Constructor Methods
 
-func (c *leftRoundClass_) LeftRound() LeftRoundLike {
-	var instance = &leftRound_{
+func (c *inclusionClass_) Inclusion(
+	any_ any,
+) InclusionLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
+	var instance = &inclusion_{
 		// Initialize the instance attributes.
+		any_: any_,
 	}
 	return instance
 }
@@ -42,32 +50,37 @@ func (c *leftRoundClass_) LeftRound() LeftRoundLike {
 
 // Principal Methods
 
-func (v *leftRound_) GetClass() LeftRoundClassLike {
-	return leftRoundClass()
+func (v *inclusion_) GetClass() InclusionClassLike {
+	return inclusionClass()
 }
 
 // Attribute Methods
+
+func (v *inclusion_) GetAny() any {
+	return v.any_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type leftRound_ struct {
+type inclusion_ struct {
 	// Declare the instance attributes.
+	any_ any
 }
 
 // Class Structure
 
-type leftRoundClass_ struct {
+type inclusionClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func leftRoundClass() *leftRoundClass_ {
-	return leftRoundClassReference_
+func inclusionClass() *inclusionClass_ {
+	return inclusionClassReference_
 }
 
-var leftRoundClassReference_ = &leftRoundClass_{
+var inclusionClassReference_ = &inclusionClass_{
 	// Initialize the class constants.
 }

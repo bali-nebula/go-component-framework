@@ -19,29 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func RightBracketClass() RightBracketClassLike {
-	return rightBracketClass()
+func RightClass() RightClassLike {
+	return rightClass()
 }
 
 // Constructor Methods
 
-func (c *rightBracketClass_) RightBracket(
-	any_ any,
-) RightBracketLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
-	}
-	var instance = &rightBracket_{
+func (c *rightClass_) Right() RightLike {
+	var instance = &right_{
 		// Initialize the instance attributes.
-		any_: any_,
 	}
 	return instance
 }
@@ -50,37 +42,32 @@ func (c *rightBracketClass_) RightBracket(
 
 // Principal Methods
 
-func (v *rightBracket_) GetClass() RightBracketClassLike {
-	return rightBracketClass()
+func (v *right_) GetClass() RightClassLike {
+	return rightClass()
 }
 
 // Attribute Methods
-
-func (v *rightBracket_) GetAny() any {
-	return v.any_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type rightBracket_ struct {
+type right_ struct {
 	// Declare the instance attributes.
-	any_ any
 }
 
 // Class Structure
 
-type rightBracketClass_ struct {
+type rightClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func rightBracketClass() *rightBracketClass_ {
-	return rightBracketClassReference_
+func rightClass() *rightClass_ {
+	return rightClassReference_
 }
 
-var rightBracketClassReference_ = &rightBracketClass_{
+var rightClassReference_ = &rightClass_{
 	// Initialize the class constants.
 }
