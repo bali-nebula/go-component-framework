@@ -2443,24 +2443,6 @@ func (v *validator_) PostprocessValues(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessVariable(
-	variable ast.VariableLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessVariableSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessVariable(
-	variable ast.VariableLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessWhileClause(
 	whileClause ast.WhileClauseLike,
 ) {

@@ -79,8 +79,6 @@ $AdditionalAssociation: "," Association
 
 $Association: symbol colon Value
 
-$Label: symbol
-
 $Value: Component
 
 $Values:
@@ -183,7 +181,6 @@ $SelectClause: "select" Target MatchHandler+
 $Target:
   - Component
   - Operation
-  - Variable
 
 $Operation:
   - Function
@@ -192,8 +189,6 @@ $Operation:
 $Function: identifier "(" Arguments? ")"
 
 $Method: identifier Subcomponent? Invocation?
-
-$Variable: identifier Subcomponent?
 
 $Subcomponent: "[" Indices "]"
 
@@ -250,6 +245,8 @@ $Assign:
 $Recipient:
   - Label
   - Attribute
+
+$Label: symbol
 
 $Attribute: identifier Subcomponent?
 

@@ -2253,10 +2253,6 @@ func (v *visitor_) visitTarget(
 		v.processor_.PreprocessOperation(actual)
 		v.visitOperation(actual)
 		v.processor_.PostprocessOperation(actual)
-	case ast.VariableLike:
-		v.processor_.PreprocessVariable(actual)
-		v.visitVariable(actual)
-		v.processor_.PostprocessVariable(actual)
 	case string:
 		switch {
 		default:
@@ -2363,25 +2359,6 @@ func (v *visitor_) visitValues(
 		}
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
-}
-
-func (v *visitor_) visitVariable(
-	variable ast.VariableLike,
-) {
-	// Visit a single identifier token.
-	var identifier = variable.GetIdentifier()
-	v.processor_.ProcessIdentifier(identifier)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessVariableSlot(1)
-
-	// Visit an optional subcomponent rule.
-	var optionalSubcomponent = variable.GetOptionalSubcomponent()
-	if uti.IsDefined(optionalSubcomponent) {
-		v.processor_.PreprocessSubcomponent(optionalSubcomponent)
-		v.visitSubcomponent(optionalSubcomponent)
-		v.processor_.PostprocessSubcomponent(optionalSubcomponent)
 	}
 }
 

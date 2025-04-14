@@ -1531,15 +1531,6 @@ type Methodical interface {
 	PostprocessValues(
 		values ast.ValuesLike,
 	)
-	PreprocessVariable(
-		variable ast.VariableLike,
-	)
-	ProcessVariableSlot(
-		slot uint,
-	)
-	PostprocessVariable(
-		variable ast.VariableLike,
-	)
 	PreprocessWhileClause(
 		whileClause ast.WhileClauseLike,
 	)

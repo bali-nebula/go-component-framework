@@ -1446,19 +1446,6 @@ type ValuesClassLike interface {
 }
 
 /*
-VariableClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete variable-like class.
-*/
-type VariableClassLike interface {
-	// Constructor Methods
-	Variable(
-		identifier string,
-		optionalSubcomponent SubcomponentLike,
-	) VariableLike
-}
-
-/*
 WhileClauseClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete while-clause-like class.
@@ -2994,20 +2981,6 @@ type ValuesLike interface {
 
 	// Attribute Methods
 	GetAny() any
-}
-
-/*
-VariableLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete variable-like class.
-*/
-type VariableLike interface {
-	// Principal Methods
-	GetClass() VariableClassLike
-
-	// Attribute Methods
-	GetIdentifier() string
-	GetOptionalSubcomponent() SubcomponentLike
 }
 
 /*

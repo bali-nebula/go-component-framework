@@ -2043,21 +2043,6 @@ func (v *processor_) PostprocessValues(
 ) {
 }
 
-func (v *processor_) PreprocessVariable(
-	variable ast.VariableLike,
-) {
-}
-
-func (v *processor_) ProcessVariableSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessVariable(
-	variable ast.VariableLike,
-) {
-}
-
 func (v *processor_) PreprocessWhileClause(
 	whileClause ast.WhileClauseLike,
 ) {

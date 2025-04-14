@@ -5653,15 +5653,6 @@ func (v *parser_) parseTarget() (
 		return
 	}
 
-	// Attempt to parse a single Variable Target.
-	var variable ast.VariableLike
-	variable, token, ok = v.parseVariable()
-	if ok {
-		// Found a single Variable Target.
-		target = ast.TargetClass().Target(variable)
-		return
-	}
-
 	// This is not a single Target rule.
 	return
 }
@@ -5863,49 +5854,6 @@ func (v *parser_) parseValues() (
 	}
 
 	// This is not a single Values rule.
-	return
-}
-
-func (v *parser_) parseVariable() (
-	variable ast.VariableLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single identifier token.
-	var identifier string
-	identifier, token, ok = v.parseToken(IdentifierToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Variable rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Variable", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse an optional Subcomponent rule.
-	var optionalSubcomponent ast.SubcomponentLike
-	optionalSubcomponent, _, ok = v.parseSubcomponent()
-	if ok {
-		// No additional put backs allowed at this point.
-		tokens = nil
-	}
-
-	// Found a single Variable rule.
-	ok = true
-	v.remove(tokens)
-	variable = ast.VariableClass().Variable(
-		identifier,
-		optionalSubcomponent,
-	)
 	return
 }
 
@@ -6346,7 +6294,6 @@ var parserClassReference_ = &parserClass_{
 			"$InlineAssociations":    `Association AdditionalAssociation*`,
 			"$AdditionalAssociation": `"," Association`,
 			"$Association":           `symbol colon Value`,
-			"$Label":                 `symbol`,
 			"$Value":                 `Component`,
 			"$Values": `
   - MultilineValues
@@ -6415,14 +6362,12 @@ var parserClassReference_ = &parserClass_{
 			"$SelectClause": `"select" Target MatchHandler+`,
 			"$Target": `
   - Component
-  - Operation
-  - Variable`,
+  - Operation`,
 			"$Operation": `
   - Function
   - Method`,
 			"$Function":        `identifier "(" Arguments? ")"`,
 			"$Method":          `identifier Subcomponent? Invocation?`,
-			"$Variable":        `identifier Subcomponent?`,
 			"$Subcomponent":    `"[" Indices "]"`,
 			"$Indices":         `Index AdditionalIndex*`,
 			"$AdditionalIndex": `"," Index`,
@@ -6456,6 +6401,7 @@ var parserClassReference_ = &parserClass_{
 			"$Recipient": `
   - Label
   - Attribute`,
+			"$Label":          `symbol`,
 			"$Attribute":      `identifier Subcomponent?`,
 			"$PostClause":     `"post" Message "to" Bag`,
 			"$Message":        `Expression`,

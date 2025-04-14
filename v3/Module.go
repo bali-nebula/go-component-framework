@@ -152,7 +152,6 @@ type (
 	ThrowClauseClassLike            = ast.ThrowClauseClassLike
 	ValueClassLike                  = ast.ValueClassLike
 	ValuesClassLike                 = ast.ValuesClassLike
-	VariableClassLike               = ast.VariableClassLike
 	WhileClauseClassLike            = ast.WhileClauseClassLike
 	WithClauseClassLike             = ast.WithClauseClassLike
 )
@@ -271,7 +270,6 @@ type (
 	ThrowClauseLike            = ast.ThrowClauseLike
 	ValueLike                  = ast.ValueLike
 	ValuesLike                 = ast.ValuesLike
-	VariableLike               = ast.VariableLike
 	WhileClauseLike            = ast.WhileClauseLike
 	WithClauseLike             = ast.WithClauseLike
 )
@@ -1578,18 +1576,6 @@ func Values(
 ) ast.ValuesLike {
 	return ast.ValuesClass().Values(
 		any_,
-	)
-}
-
-// Ast/Variable
-
-func Variable(
-	identifier string,
-	optionalSubcomponent ast.SubcomponentLike,
-) ast.VariableLike {
-	return ast.VariableClass().Variable(
-		identifier,
-		optionalSubcomponent,
 	)
 }
 
