@@ -1178,15 +1178,6 @@ func (v *parser_) parseBase() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Target Base.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Base.
-		base = ast.BaseClass().Base(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Base.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -1211,6 +1202,15 @@ func (v *parser_) parseBase() (
 	if ok {
 		// Found a single Amplitude Base.
 		base = ast.BaseClass().Base(amplitude)
+		return
+	}
+
+	// Attempt to parse a single Target Base.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Base.
+		base = ast.BaseClass().Base(target)
 		return
 	}
 
@@ -1508,9 +1508,9 @@ func (v *parser_) parseComparison() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single Numerical rule.
-	var numerical1 ast.NumericalLike
-	numerical1, token, ok = v.parseNumerical()
+	// Attempt to parse a single Arithmetic rule.
+	var arithmetic1 ast.ArithmeticLike
+	arithmetic1, token, ok = v.parseArithmetic()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -1542,9 +1542,9 @@ func (v *parser_) parseComparison() (
 		panic(message)
 	}
 
-	// Attempt to parse a single Numerical rule.
-	var numerical2 ast.NumericalLike
-	numerical2, token, ok = v.parseNumerical()
+	// Attempt to parse a single Arithmetic rule.
+	var arithmetic2 ast.ArithmeticLike
+	arithmetic2, token, ok = v.parseArithmetic()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -1563,9 +1563,9 @@ func (v *parser_) parseComparison() (
 	ok = true
 	v.remove(tokens)
 	comparison = ast.ComparisonClass().Comparison(
-		numerical1,
+		arithmetic1,
 		compareOperator,
-		numerical2,
+		arithmetic2,
 	)
 	return
 }
@@ -2347,15 +2347,6 @@ func (v *parser_) parseExpression() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Target Expression.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Expression.
-		expression = ast.ExpressionClass().Expression(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Expression.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -2374,21 +2365,12 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
-	// Attempt to parse a single Concatenation Expression.
-	var concatenation ast.ConcatenationLike
-	concatenation, token, ok = v.parseConcatenation()
+	// Attempt to parse a single Complement Expression.
+	var complement ast.ComplementLike
+	complement, token, ok = v.parseComplement()
 	if ok {
-		// Found a single Concatenation Expression.
-		expression = ast.ExpressionClass().Expression(concatenation)
-		return
-	}
-
-	// Attempt to parse a single Exponential Expression.
-	var exponential ast.ExponentialLike
-	exponential, token, ok = v.parseExponential()
-	if ok {
-		// Found a single Exponential Expression.
-		expression = ast.ExpressionClass().Expression(exponential)
+		// Found a single Complement Expression.
+		expression = ast.ExpressionClass().Expression(complement)
 		return
 	}
 
@@ -2401,6 +2383,15 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
+	// Attempt to parse a single Amplitude Expression.
+	var amplitude ast.AmplitudeLike
+	amplitude, token, ok = v.parseAmplitude()
+	if ok {
+		// Found a single Amplitude Expression.
+		expression = ast.ExpressionClass().Expression(amplitude)
+		return
+	}
+
 	// Attempt to parse a single Arithmetic Expression.
 	var arithmetic ast.ArithmeticLike
 	arithmetic, token, ok = v.parseArithmetic()
@@ -2410,12 +2401,12 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
-	// Attempt to parse a single Amplitude Expression.
-	var amplitude ast.AmplitudeLike
-	amplitude, token, ok = v.parseAmplitude()
+	// Attempt to parse a single Exponential Expression.
+	var exponential ast.ExponentialLike
+	exponential, token, ok = v.parseExponential()
 	if ok {
-		// Found a single Amplitude Expression.
-		expression = ast.ExpressionClass().Expression(amplitude)
+		// Found a single Exponential Expression.
+		expression = ast.ExpressionClass().Expression(exponential)
 		return
 	}
 
@@ -2428,21 +2419,30 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
-	// Attempt to parse a single Complement Expression.
-	var complement ast.ComplementLike
-	complement, token, ok = v.parseComplement()
-	if ok {
-		// Found a single Complement Expression.
-		expression = ast.ExpressionClass().Expression(complement)
-		return
-	}
-
 	// Attempt to parse a single Inference Expression.
 	var inference ast.InferenceLike
 	inference, token, ok = v.parseInference()
 	if ok {
 		// Found a single Inference Expression.
 		expression = ast.ExpressionClass().Expression(inference)
+		return
+	}
+
+	// Attempt to parse a single Concatenation Expression.
+	var concatenation ast.ConcatenationLike
+	concatenation, token, ok = v.parseConcatenation()
+	if ok {
+		// Found a single Concatenation Expression.
+		expression = ast.ExpressionClass().Expression(concatenation)
+		return
+	}
+
+	// Attempt to parse a single Target Expression.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Expression.
+		expression = ast.ExpressionClass().Expression(target)
 		return
 	}
 
@@ -2848,21 +2848,21 @@ func (v *parser_) parseIndirect() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Target Indirect.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Indirect.
-		indirect = ast.IndirectClass().Indirect(target)
-		return
-	}
-
 	// Attempt to parse a single Dereference Indirect.
 	var dereference ast.DereferenceLike
 	dereference, token, ok = v.parseDereference()
 	if ok {
 		// Found a single Dereference Indirect.
 		indirect = ast.IndirectClass().Indirect(dereference)
+		return
+	}
+
+	// Attempt to parse a single Target Indirect.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Indirect.
+		indirect = ast.IndirectClass().Indirect(target)
 		return
 	}
 
@@ -3595,15 +3595,6 @@ func (v *parser_) parseLogical() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Target Logical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Logical.
-		logical = ast.LogicalClass().Logical(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Logical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -3637,6 +3628,15 @@ func (v *parser_) parseLogical() (
 	if ok {
 		// Found a single Comparison Logical.
 		logical = ast.LogicalClass().Logical(comparison)
+		return
+	}
+
+	// Attempt to parse a single Target Logical.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Logical.
+		logical = ast.LogicalClass().Logical(target)
 		return
 	}
 
@@ -4204,15 +4204,6 @@ func (v *parser_) parseNumerical() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Target Numerical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Numerical.
-		numerical = ast.NumericalClass().Numerical(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Numerical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -4228,6 +4219,15 @@ func (v *parser_) parseNumerical() (
 	if ok {
 		// Found a single Dereference Numerical.
 		numerical = ast.NumericalClass().Numerical(dereference)
+		return
+	}
+
+	// Attempt to parse a single Inversion Numerical.
+	var inversion ast.InversionLike
+	inversion, token, ok = v.parseInversion()
+	if ok {
+		// Found a single Inversion Numerical.
+		numerical = ast.NumericalClass().Numerical(inversion)
 		return
 	}
 
@@ -4249,12 +4249,12 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
-	// Attempt to parse a single Inversion Numerical.
-	var inversion ast.InversionLike
-	inversion, token, ok = v.parseInversion()
+	// Attempt to parse a single Target Numerical.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
 	if ok {
-		// Found a single Inversion Numerical.
-		numerical = ast.NumericalClass().Numerical(inversion)
+		// Found a single Target Numerical.
+		numerical = ast.NumericalClass().Numerical(target)
 		return
 	}
 
@@ -5602,15 +5602,6 @@ func (v *parser_) parseTextual() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Target Textual.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Textual.
-		textual = ast.TextualClass().Textual(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Textual.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -5626,6 +5617,15 @@ func (v *parser_) parseTextual() (
 	if ok {
 		// Found a single Dereference Textual.
 		textual = ast.TextualClass().Textual(dereference)
+		return
+	}
+
+	// Attempt to parse a single Target Textual.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Textual.
+		textual = ast.TextualClass().Textual(target)
 		return
 	}
 
@@ -6194,6 +6194,15 @@ var parserClassReference_ = &parserClass_{
   - NoAssociations
   - Associations
   - Values`,
+			"$Range": `Inclusion Primitive ".." Primitive Inclusion`,
+			"$Inclusion": `
+  - Left
+  - Right`,
+			"$Left":  `"("`,
+			"$Right": `")"`,
+			"$Primitive": `
+  - Element
+  - String`,
 			"$NoAssociations": `colon`,
 			"$Associations": `
   - MultilineAssociations
@@ -6211,16 +6220,7 @@ var parserClassReference_ = &parserClass_{
 			"$AnnotatedValue":  `dash Value note?`,
 			"$InlineValues":    `Value AdditionalValue*`,
 			"$AdditionalValue": `"," Value`,
-			"$Range":           `Inclusion Primitive ".." Primitive Inclusion`,
-			"$Inclusion": `
-  - Left
-  - Right`,
-			"$Left":  `"("`,
-			"$Right": `")"`,
-			"$Primitive": `
-  - Element
-  - String`,
-			"$Procedure": `"{" Statements? "}"`,
+			"$Procedure":       `"{" Statements? "}"`,
 			"$Statements": `
   - MultilineStatements
   - InlineStatements`,
@@ -6323,46 +6323,42 @@ var parserClassReference_ = &parserClass_{
 			"$DiscardClause":  `"discard" Draft`,
 			"$NotarizeClause": `"notarize" Draft "as" Citation`,
 			"$Expression": `
-  - Target
   - Precedence
   - Dereference
-  - Concatenation
-  - Exponential
-  - Inversion
-  - Arithmetic
-  - Amplitude
-  - Comparison
   - Complement
-  - Inference`,
+  - Inversion
+  - Amplitude
+  - Arithmetic
+  - Exponential
+  - Comparison
+  - Inference
+  - Concatenation
+  - Target`,
 			"$Precedence":  `"(" Expression ")"`,
 			"$Dereference": `snail Indirect`,
 			"$Indirect": `
-  - Target
-  - Dereference`,
-			"$Concatenation": `Textual ConcatenationOperation+`,
-			"$Textual": `
-  - Target
-  - Precedence
-  - Dereference`,
-			"$ConcatenationOperation": `ampersand Textual`,
-			"$Exponential":            `Base caret Numerical`,
-			"$Base": `
-  - Target
+  - Dereference
+  - Target`,
+			"$Complement": `not Logical`,
+			"$Logical": `
   - Precedence
   - Dereference
-  - Amplitude`,
-			"$Numerical": `
-  - Target
-  - Precedence
-  - Dereference
-  - Amplitude
-  - Exponential
-  - Inversion`,
+  - Complement
+  - Comparison
+  - Target`,
 			"$Inversion": `Inverse Numerical`,
 			"$Inverse": `
   - dash
   - slash
   - star`,
+			"$Numerical": `
+  - Precedence
+  - Dereference
+  - Inversion
+  - Amplitude
+  - Exponential
+  - Target`,
+			"$Amplitude":           `bar Arithmetic bar`,
 			"$Arithmetic":          `Numerical ArithmeticOperation+`,
 			"$ArithmeticOperation": `ArithmeticOperator Numerical`,
 			"$ArithmeticOperator": `
@@ -6371,28 +6367,32 @@ var parserClassReference_ = &parserClass_{
   - star
   - slash
   - slashSlash`,
-			"$Amplitude":  `bar Arithmetic bar`,
-			"$Comparison": `Numerical CompareOperator Numerical`,
+			"$Exponential": `Base caret Numerical`,
+			"$Base": `
+  - Precedence
+  - Dereference
+  - Amplitude
+  - Target`,
+			"$Comparison": `Arithmetic CompareOperator Arithmetic`,
 			"$CompareOperator": `
   - less
   - equal
   - more
   - is
   - matches`,
-			"$Complement": `not Logical`,
-			"$Inference":  `Logical LogicalOperation+`,
-			"$Logical": `
-  - Target
-  - Precedence
-  - Dereference
-  - Complement
-  - Comparison`,
+			"$Inference":        `Logical LogicalOperation+`,
 			"$LogicalOperation": `LogicOperator Logical`,
 			"$LogicOperator": `
   - and
   - san
   - ior
   - xor`,
+			"$Concatenation": `Textual ConcatenationOperation+`,
+			"$Textual": `
+  - Precedence
+  - Dereference
+  - Target`,
+			"$ConcatenationOperation": `ampersand Textual`,
 		},
 	),
 }

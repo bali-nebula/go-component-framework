@@ -391,9 +391,9 @@ supported by each concrete comparison-like class.
 type ComparisonClassLike interface {
 	// Constructor Methods
 	Comparison(
-		numerical1 NumericalLike,
+		arithmetic1 ArithmeticLike,
 		compareOperator CompareOperatorLike,
-		numerical2 NumericalLike,
+		arithmetic2 ArithmeticLike,
 	) ComparisonLike
 }
 
@@ -1812,9 +1812,9 @@ type ComparisonLike interface {
 	GetClass() ComparisonClassLike
 
 	// Attribute Methods
-	GetNumerical1() NumericalLike
+	GetArithmetic1() ArithmeticLike
 	GetCompareOperator() CompareOperatorLike
-	GetNumerical2() NumericalLike
+	GetArithmetic2() ArithmeticLike
 }
 
 /*

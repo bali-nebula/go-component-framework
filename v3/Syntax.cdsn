@@ -273,50 +273,34 @@ $DiscardClause: "discard" Draft
 $NotarizeClause: "notarize" Draft "as" Citation
 
 $Expression:
-  - Target
   - Precedence
   - Dereference
-  - Concatenation
-  - Exponential
-  - Inversion
-  - Arithmetic
-  - Amplitude
-  - Comparison
   - Complement
+  - Inversion
+  - Amplitude
+  - Arithmetic
+  - Exponential
+  - Comparison
   - Inference
+  - Concatenation
+  - Target
 
 $Precedence: "(" Expression ")"
 
 $Dereference: snail Indirect
 
 $Indirect:
-  - Target
   - Dereference
-
-$Concatenation: Textual ConcatenationOperation+
-
-$Textual:
   - Target
+
+$Complement: not Logical
+
+$Logical:
   - Precedence
   - Dereference
-
-$ConcatenationOperation: ampersand Textual
-
-$Exponential: Base caret Numerical
-
-$Base:
+  - Complement
+  - Comparison
   - Target
-  - Precedence
-  - Dereference
-  - Amplitude
-
-$Numerical:
-  - Target
-  - Precedence
-  - Dereference
-  - Amplitude
-  - Exponential
-  - Inversion
 
 $Inversion: Inverse Numerical
 
@@ -324,6 +308,16 @@ $Inverse:
   - dash
   - slash
   - star
+
+$Numerical:
+  - Precedence
+  - Dereference
+  - Inversion
+  - Amplitude
+  - Exponential
+  - Target
+
+$Amplitude: bar Arithmetic bar
 
 $Arithmetic: Numerical ArithmeticOperation+
 
@@ -336,9 +330,15 @@ $ArithmeticOperator:
   - slash
   - slashSlash
 
-$Amplitude: bar Arithmetic bar
+$Exponential: Base caret Numerical
 
-$Comparison: Numerical CompareOperator Numerical
+$Base:
+  - Precedence
+  - Dereference
+  - Amplitude
+  - Target
+
+$Comparison: Arithmetic CompareOperator Arithmetic
 
 $CompareOperator:
   - less
@@ -347,16 +347,7 @@ $CompareOperator:
   - is
   - matches
 
-$Complement: not Logical
-
 $Inference: Logical LogicalOperation+
-
-$Logical:
-  - Target
-  - Precedence
-  - Dereference
-  - Complement
-  - Comparison
 
 $LogicalOperation: LogicOperator Logical
 
@@ -365,6 +356,15 @@ $LogicOperator:
   - san
   - ior
   - xor
+
+$Concatenation: Textual ConcatenationOperation+
+
+$Textual:
+  - Precedence
+  - Dereference
+  - Target
+
+$ConcatenationOperation: ampersand Textual
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐

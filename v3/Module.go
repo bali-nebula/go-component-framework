@@ -656,14 +656,14 @@ func CompareOperator(
 // Ast/Comparison
 
 func Comparison(
-	numerical1 ast.NumericalLike,
+	arithmetic1 ast.ArithmeticLike,
 	compareOperator ast.CompareOperatorLike,
-	numerical2 ast.NumericalLike,
+	arithmetic2 ast.ArithmeticLike,
 ) ast.ComparisonLike {
 	return ast.ComparisonClass().Comparison(
-		numerical1,
+		arithmetic1,
 		compareOperator,
-		numerical2,
+		arithmetic2,
 	)
 }
 

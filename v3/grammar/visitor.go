@@ -466,10 +466,6 @@ func (v *visitor_) visitBase(
 ) {
 	// Visit the possible base types.
 	switch actual := base.GetAny().(type) {
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -482,6 +478,10 @@ func (v *visitor_) visitBase(
 		v.processor_.PreprocessAmplitude(actual)
 		v.visitAmplitude(actual)
 		v.processor_.PostprocessAmplitude(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -578,11 +578,11 @@ func (v *visitor_) visitCompareOperator(
 func (v *visitor_) visitComparison(
 	comparison ast.ComparisonLike,
 ) {
-	// Visit a single numerical rule.
-	var numerical1 = comparison.GetNumerical1()
-	v.processor_.PreprocessNumerical(numerical1)
-	v.visitNumerical(numerical1)
-	v.processor_.PostprocessNumerical(numerical1)
+	// Visit a single arithmetic rule.
+	var arithmetic1 = comparison.GetArithmetic1()
+	v.processor_.PreprocessArithmetic(arithmetic1)
+	v.visitArithmetic(arithmetic1)
+	v.processor_.PostprocessArithmetic(arithmetic1)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessComparisonSlot(1)
@@ -596,11 +596,11 @@ func (v *visitor_) visitComparison(
 	// Visit slot 2 between references.
 	v.processor_.ProcessComparisonSlot(2)
 
-	// Visit a single numerical rule.
-	var numerical2 = comparison.GetNumerical2()
-	v.processor_.PreprocessNumerical(numerical2)
-	v.visitNumerical(numerical2)
-	v.processor_.PostprocessNumerical(numerical2)
+	// Visit a single arithmetic rule.
+	var arithmetic2 = comparison.GetArithmetic2()
+	v.processor_.PreprocessArithmetic(arithmetic2)
+	v.visitArithmetic(arithmetic2)
+	v.processor_.PostprocessArithmetic(arithmetic2)
 }
 
 func (v *visitor_) visitComplement(
@@ -888,10 +888,6 @@ func (v *visitor_) visitExpression(
 ) {
 	// Visit the possible expression types.
 	switch actual := expression.GetAny().(type) {
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -900,38 +896,42 @@ func (v *visitor_) visitExpression(
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
-	case ast.ConcatenationLike:
-		v.processor_.PreprocessConcatenation(actual)
-		v.visitConcatenation(actual)
-		v.processor_.PostprocessConcatenation(actual)
-	case ast.ExponentialLike:
-		v.processor_.PreprocessExponential(actual)
-		v.visitExponential(actual)
-		v.processor_.PostprocessExponential(actual)
-	case ast.InversionLike:
-		v.processor_.PreprocessInversion(actual)
-		v.visitInversion(actual)
-		v.processor_.PostprocessInversion(actual)
-	case ast.ArithmeticLike:
-		v.processor_.PreprocessArithmetic(actual)
-		v.visitArithmetic(actual)
-		v.processor_.PostprocessArithmetic(actual)
-	case ast.AmplitudeLike:
-		v.processor_.PreprocessAmplitude(actual)
-		v.visitAmplitude(actual)
-		v.processor_.PostprocessAmplitude(actual)
-	case ast.ComparisonLike:
-		v.processor_.PreprocessComparison(actual)
-		v.visitComparison(actual)
-		v.processor_.PostprocessComparison(actual)
 	case ast.ComplementLike:
 		v.processor_.PreprocessComplement(actual)
 		v.visitComplement(actual)
 		v.processor_.PostprocessComplement(actual)
+	case ast.InversionLike:
+		v.processor_.PreprocessInversion(actual)
+		v.visitInversion(actual)
+		v.processor_.PostprocessInversion(actual)
+	case ast.AmplitudeLike:
+		v.processor_.PreprocessAmplitude(actual)
+		v.visitAmplitude(actual)
+		v.processor_.PostprocessAmplitude(actual)
+	case ast.ArithmeticLike:
+		v.processor_.PreprocessArithmetic(actual)
+		v.visitArithmetic(actual)
+		v.processor_.PostprocessArithmetic(actual)
+	case ast.ExponentialLike:
+		v.processor_.PreprocessExponential(actual)
+		v.visitExponential(actual)
+		v.processor_.PostprocessExponential(actual)
+	case ast.ComparisonLike:
+		v.processor_.PreprocessComparison(actual)
+		v.visitComparison(actual)
+		v.processor_.PostprocessComparison(actual)
 	case ast.InferenceLike:
 		v.processor_.PreprocessInference(actual)
 		v.visitInference(actual)
 		v.processor_.PostprocessInference(actual)
+	case ast.ConcatenationLike:
+		v.processor_.PreprocessConcatenation(actual)
+		v.visitConcatenation(actual)
+		v.processor_.PostprocessConcatenation(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1106,14 +1106,14 @@ func (v *visitor_) visitIndirect(
 ) {
 	// Visit the possible indirect types.
 	switch actual := indirect.GetAny().(type) {
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case ast.DereferenceLike:
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1456,10 +1456,6 @@ func (v *visitor_) visitLogical(
 ) {
 	// Visit the possible logical types.
 	switch actual := logical.GetAny().(type) {
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1476,6 +1472,10 @@ func (v *visitor_) visitLogical(
 		v.processor_.PreprocessComparison(actual)
 		v.visitComparison(actual)
 		v.processor_.PostprocessComparison(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1734,10 +1734,6 @@ func (v *visitor_) visitNumerical(
 ) {
 	// Visit the possible numerical types.
 	switch actual := numerical.GetAny().(type) {
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1746,6 +1742,10 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
+	case ast.InversionLike:
+		v.processor_.PreprocessInversion(actual)
+		v.visitInversion(actual)
+		v.processor_.PostprocessInversion(actual)
 	case ast.AmplitudeLike:
 		v.processor_.PreprocessAmplitude(actual)
 		v.visitAmplitude(actual)
@@ -1754,10 +1754,10 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessExponential(actual)
 		v.visitExponential(actual)
 		v.processor_.PostprocessExponential(actual)
-	case ast.InversionLike:
-		v.processor_.PreprocessInversion(actual)
-		v.visitInversion(actual)
-		v.processor_.PostprocessInversion(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -2239,10 +2239,6 @@ func (v *visitor_) visitTextual(
 ) {
 	// Visit the possible textual types.
 	switch actual := textual.GetAny().(type) {
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -2251,6 +2247,10 @@ func (v *visitor_) visitTextual(
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:

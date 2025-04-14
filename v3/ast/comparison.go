@@ -34,24 +34,24 @@ func ComparisonClass() ComparisonClassLike {
 // Constructor Methods
 
 func (c *comparisonClass_) Comparison(
-	numerical1 NumericalLike,
+	arithmetic1 ArithmeticLike,
 	compareOperator CompareOperatorLike,
-	numerical2 NumericalLike,
+	arithmetic2 ArithmeticLike,
 ) ComparisonLike {
-	if uti.IsUndefined(numerical1) {
-		panic("The \"numerical1\" attribute is required by this class.")
+	if uti.IsUndefined(arithmetic1) {
+		panic("The \"arithmetic1\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(compareOperator) {
 		panic("The \"compareOperator\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(numerical2) {
-		panic("The \"numerical2\" attribute is required by this class.")
+	if uti.IsUndefined(arithmetic2) {
+		panic("The \"arithmetic2\" attribute is required by this class.")
 	}
 	var instance = &comparison_{
 		// Initialize the instance attributes.
-		numerical1_:      numerical1,
+		arithmetic1_:     arithmetic1,
 		compareOperator_: compareOperator,
-		numerical2_:      numerical2,
+		arithmetic2_:     arithmetic2,
 	}
 	return instance
 }
@@ -66,16 +66,16 @@ func (v *comparison_) GetClass() ComparisonClassLike {
 
 // Attribute Methods
 
-func (v *comparison_) GetNumerical1() NumericalLike {
-	return v.numerical1_
+func (v *comparison_) GetArithmetic1() ArithmeticLike {
+	return v.arithmetic1_
 }
 
 func (v *comparison_) GetCompareOperator() CompareOperatorLike {
 	return v.compareOperator_
 }
 
-func (v *comparison_) GetNumerical2() NumericalLike {
-	return v.numerical2_
+func (v *comparison_) GetArithmetic2() ArithmeticLike {
+	return v.arithmetic2_
 }
 
 // PROTECTED INTERFACE
@@ -84,9 +84,9 @@ func (v *comparison_) GetNumerical2() NumericalLike {
 
 type comparison_ struct {
 	// Declare the instance attributes.
-	numerical1_      NumericalLike
+	arithmetic1_     ArithmeticLike
 	compareOperator_ CompareOperatorLike
-	numerical2_      NumericalLike
+	arithmetic2_     ArithmeticLike
 }
 
 // Class Structure
