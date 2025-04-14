@@ -20,6 +20,7 @@
 package ast
 
 import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -27,21 +28,26 @@ import (
 
 // Access Function
 
-func ContextClass() ContextClassLike {
-	return contextClass()
+func ConcatenationClass() ConcatenationClassLike {
+	return concatenationClass()
 }
 
 // Constructor Methods
 
-func (c *contextClass_) Context(
-	parameters ParametersLike,
-) ContextLike {
-	if uti.IsUndefined(parameters) {
-		panic("The \"parameters\" attribute is required by this class.")
+func (c *concatenationClass_) Concatenation(
+	textual TextualLike,
+	concatenationOperations col.Sequential[ConcatenationOperationLike],
+) ConcatenationLike {
+	if uti.IsUndefined(textual) {
+		panic("The \"textual\" attribute is required by this class.")
 	}
-	var instance = &context_{
+	if uti.IsUndefined(concatenationOperations) {
+		panic("The \"concatenationOperations\" attribute is required by this class.")
+	}
+	var instance = &concatenation_{
 		// Initialize the instance attributes.
-		parameters_: parameters,
+		textual_:                 textual,
+		concatenationOperations_: concatenationOperations,
 	}
 	return instance
 }
@@ -50,37 +56,42 @@ func (c *contextClass_) Context(
 
 // Principal Methods
 
-func (v *context_) GetClass() ContextClassLike {
-	return contextClass()
+func (v *concatenation_) GetClass() ConcatenationClassLike {
+	return concatenationClass()
 }
 
 // Attribute Methods
 
-func (v *context_) GetParameters() ParametersLike {
-	return v.parameters_
+func (v *concatenation_) GetTextual() TextualLike {
+	return v.textual_
+}
+
+func (v *concatenation_) GetConcatenationOperations() col.Sequential[ConcatenationOperationLike] {
+	return v.concatenationOperations_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type context_ struct {
+type concatenation_ struct {
 	// Declare the instance attributes.
-	parameters_ ParametersLike
+	textual_                 TextualLike
+	concatenationOperations_ col.Sequential[ConcatenationOperationLike]
 }
 
 // Class Structure
 
-type contextClass_ struct {
+type concatenationClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func contextClass() *contextClass_ {
-	return contextClassReference_
+func concatenationClass() *concatenationClass_ {
+	return concatenationClassReference_
 }
 
-var contextClassReference_ = &contextClass_{
+var concatenationClassReference_ = &concatenationClass_{
 	// Initialize the class constants.
 }

@@ -19,7 +19,9 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
@@ -31,9 +33,15 @@ func LeftSquareClass() LeftSquareClassLike {
 
 // Constructor Methods
 
-func (c *leftSquareClass_) LeftSquare() LeftSquareLike {
+func (c *leftSquareClass_) LeftSquare(
+	bar string,
+) LeftSquareLike {
+	if uti.IsUndefined(bar) {
+		panic("The \"bar\" attribute is required by this class.")
+	}
 	var instance = &leftSquare_{
 		// Initialize the instance attributes.
+		bar_: bar,
 	}
 	return instance
 }
@@ -48,12 +56,17 @@ func (v *leftSquare_) GetClass() LeftSquareClassLike {
 
 // Attribute Methods
 
+func (v *leftSquare_) GetBar() string {
+	return v.bar_
+}
+
 // PROTECTED INTERFACE
 
 // Instance Structure
 
 type leftSquare_ struct {
 	// Declare the instance attributes.
+	bar_ string
 }
 
 // Class Structure

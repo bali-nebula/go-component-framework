@@ -27,19 +27,19 @@ import (
 
 // Access Function
 
-func ComparisonOperatorClass() ComparisonOperatorClassLike {
-	return comparisonOperatorClass()
+func ThreadingClass() ThreadingClassLike {
+	return threadingClass()
 }
 
 // Constructor Methods
 
-func (c *comparisonOperatorClass_) ComparisonOperator(
+func (c *threadingClass_) Threading(
 	any_ any,
-) ComparisonOperatorLike {
+) ThreadingLike {
 	if uti.IsUndefined(any_) {
 		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &comparisonOperator_{
+	var instance = &threading_{
 		// Initialize the instance attributes.
 		any_: any_,
 	}
@@ -50,13 +50,13 @@ func (c *comparisonOperatorClass_) ComparisonOperator(
 
 // Principal Methods
 
-func (v *comparisonOperator_) GetClass() ComparisonOperatorClassLike {
-	return comparisonOperatorClass()
+func (v *threading_) GetClass() ThreadingClassLike {
+	return threadingClass()
 }
 
 // Attribute Methods
 
-func (v *comparisonOperator_) GetAny() any {
+func (v *threading_) GetAny() any {
 	return v.any_
 }
 
@@ -64,23 +64,23 @@ func (v *comparisonOperator_) GetAny() any {
 
 // Instance Structure
 
-type comparisonOperator_ struct {
+type threading_ struct {
 	// Declare the instance attributes.
 	any_ any
 }
 
 // Class Structure
 
-type comparisonOperatorClass_ struct {
+type threadingClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func comparisonOperatorClass() *comparisonOperatorClass_ {
-	return comparisonOperatorClassReference_
+func threadingClass() *threadingClass_ {
+	return threadingClassReference_
 }
 
-var comparisonOperatorClassReference_ = &comparisonOperatorClass_{
+var threadingClassReference_ = &threadingClass_{
 	// Initialize the class constants.
 }

@@ -27,19 +27,19 @@ import (
 
 // Access Function
 
-func AssignmentOperatorClass() AssignmentOperatorClassLike {
-	return assignmentOperatorClass()
+func NumericalClass() NumericalClassLike {
+	return numericalClass()
 }
 
 // Constructor Methods
 
-func (c *assignmentOperatorClass_) AssignmentOperator(
+func (c *numericalClass_) Numerical(
 	any_ any,
-) AssignmentOperatorLike {
+) NumericalLike {
 	if uti.IsUndefined(any_) {
 		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &assignmentOperator_{
+	var instance = &numerical_{
 		// Initialize the instance attributes.
 		any_: any_,
 	}
@@ -50,13 +50,13 @@ func (c *assignmentOperatorClass_) AssignmentOperator(
 
 // Principal Methods
 
-func (v *assignmentOperator_) GetClass() AssignmentOperatorClassLike {
-	return assignmentOperatorClass()
+func (v *numerical_) GetClass() NumericalClassLike {
+	return numericalClass()
 }
 
 // Attribute Methods
 
-func (v *assignmentOperator_) GetAny() any {
+func (v *numerical_) GetAny() any {
 	return v.any_
 }
 
@@ -64,23 +64,23 @@ func (v *assignmentOperator_) GetAny() any {
 
 // Instance Structure
 
-type assignmentOperator_ struct {
+type numerical_ struct {
 	// Declare the instance attributes.
 	any_ any
 }
 
 // Class Structure
 
-type assignmentOperatorClass_ struct {
+type numericalClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func assignmentOperatorClass() *assignmentOperatorClass_ {
-	return assignmentOperatorClassReference_
+func numericalClass() *numericalClass_ {
+	return numericalClassReference_
 }
 
-var assignmentOperatorClassReference_ = &assignmentOperatorClass_{
+var numericalClassReference_ = &numericalClass_{
 	// Initialize the class constants.
 }

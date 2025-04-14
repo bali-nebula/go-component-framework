@@ -34,14 +34,14 @@ func ArgumentClass() ArgumentClassLike {
 // Constructor Methods
 
 func (c *argumentClass_) Argument(
-	expression ExpressionLike,
+	identifier string,
 ) ArgumentLike {
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
+	if uti.IsUndefined(identifier) {
+		panic("The \"identifier\" attribute is required by this class.")
 	}
 	var instance = &argument_{
 		// Initialize the instance attributes.
-		expression_: expression,
+		identifier_: identifier,
 	}
 	return instance
 }
@@ -56,8 +56,8 @@ func (v *argument_) GetClass() ArgumentClassLike {
 
 // Attribute Methods
 
-func (v *argument_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *argument_) GetIdentifier() string {
+	return v.identifier_
 }
 
 // PROTECTED INTERFACE
@@ -66,7 +66,7 @@ func (v *argument_) GetExpression() ExpressionLike {
 
 type argument_ struct {
 	// Declare the instance attributes.
-	expression_ ExpressionLike
+	identifier_ string
 }
 
 // Class Structure

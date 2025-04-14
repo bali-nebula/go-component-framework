@@ -35,14 +35,14 @@ func AmplitudeClass() AmplitudeClassLike {
 
 func (c *amplitudeClass_) Amplitude(
 	bar1 string,
-	expression ExpressionLike,
+	arithmetic ArithmeticLike,
 	bar2 string,
 ) AmplitudeLike {
 	if uti.IsUndefined(bar1) {
 		panic("The \"bar1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
+	if uti.IsUndefined(arithmetic) {
+		panic("The \"arithmetic\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(bar2) {
 		panic("The \"bar2\" attribute is required by this class.")
@@ -50,7 +50,7 @@ func (c *amplitudeClass_) Amplitude(
 	var instance = &amplitude_{
 		// Initialize the instance attributes.
 		bar1_:       bar1,
-		expression_: expression,
+		arithmetic_: arithmetic,
 		bar2_:       bar2,
 	}
 	return instance
@@ -70,8 +70,8 @@ func (v *amplitude_) GetBar1() string {
 	return v.bar1_
 }
 
-func (v *amplitude_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *amplitude_) GetArithmetic() ArithmeticLike {
+	return v.arithmetic_
 }
 
 func (v *amplitude_) GetBar2() string {
@@ -85,7 +85,7 @@ func (v *amplitude_) GetBar2() string {
 type amplitude_ struct {
 	// Declare the instance attributes.
 	bar1_       string
-	expression_ ExpressionLike
+	arithmetic_ ArithmeticLike
 	bar2_       string
 }
 

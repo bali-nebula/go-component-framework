@@ -34,14 +34,14 @@ func TargetClass() TargetClassLike {
 // Constructor Methods
 
 func (c *targetClass_) Target(
-	expression ExpressionLike,
+	any_ any,
 ) TargetLike {
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
 	var instance = &target_{
 		// Initialize the instance attributes.
-		expression_: expression,
+		any_: any_,
 	}
 	return instance
 }
@@ -56,8 +56,8 @@ func (v *target_) GetClass() TargetClassLike {
 
 // Attribute Methods
 
-func (v *target_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *target_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
@@ -66,7 +66,7 @@ func (v *target_) GetExpression() ExpressionLike {
 
 type target_ struct {
 	// Declare the instance attributes.
-	expression_ ExpressionLike
+	any_ any
 }
 
 // Class Structure

@@ -27,31 +27,21 @@ import (
 
 // Access Function
 
-func ParameterClass() ParameterClassLike {
-	return parameterClass()
+func IndirectClass() IndirectClassLike {
+	return indirectClass()
 }
 
 // Constructor Methods
 
-func (c *parameterClass_) Parameter(
-	label LabelLike,
-	colon string,
-	component ComponentLike,
-) ParameterLike {
-	if uti.IsUndefined(label) {
-		panic("The \"label\" attribute is required by this class.")
+func (c *indirectClass_) Indirect(
+	any_ any,
+) IndirectLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(colon) {
-		panic("The \"colon\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
-	}
-	var instance = &parameter_{
+	var instance = &indirect_{
 		// Initialize the instance attributes.
-		label_:     label,
-		colon_:     colon,
-		component_: component,
+		any_: any_,
 	}
 	return instance
 }
@@ -60,47 +50,37 @@ func (c *parameterClass_) Parameter(
 
 // Principal Methods
 
-func (v *parameter_) GetClass() ParameterClassLike {
-	return parameterClass()
+func (v *indirect_) GetClass() IndirectClassLike {
+	return indirectClass()
 }
 
 // Attribute Methods
 
-func (v *parameter_) GetLabel() LabelLike {
-	return v.label_
-}
-
-func (v *parameter_) GetColon() string {
-	return v.colon_
-}
-
-func (v *parameter_) GetComponent() ComponentLike {
-	return v.component_
+func (v *indirect_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type parameter_ struct {
+type indirect_ struct {
 	// Declare the instance attributes.
-	label_     LabelLike
-	colon_     string
-	component_ ComponentLike
+	any_ any
 }
 
 // Class Structure
 
-type parameterClass_ struct {
+type indirectClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func parameterClass() *parameterClass_ {
-	return parameterClassReference_
+func indirectClass() *indirectClass_ {
+	return indirectClassReference_
 }
 
-var parameterClassReference_ = &parameterClass_{
+var indirectClassReference_ = &indirectClass_{
 	// Initialize the class constants.
 }

@@ -34,19 +34,14 @@ func SubcomponentClass() SubcomponentClassLike {
 // Constructor Methods
 
 func (c *subcomponentClass_) Subcomponent(
-	composite CompositeLike,
 	indices IndicesLike,
 ) SubcomponentLike {
-	if uti.IsUndefined(composite) {
-		panic("The \"composite\" attribute is required by this class.")
-	}
 	if uti.IsUndefined(indices) {
 		panic("The \"indices\" attribute is required by this class.")
 	}
 	var instance = &subcomponent_{
 		// Initialize the instance attributes.
-		composite_: composite,
-		indices_:   indices,
+		indices_: indices,
 	}
 	return instance
 }
@@ -61,10 +56,6 @@ func (v *subcomponent_) GetClass() SubcomponentClassLike {
 
 // Attribute Methods
 
-func (v *subcomponent_) GetComposite() CompositeLike {
-	return v.composite_
-}
-
 func (v *subcomponent_) GetIndices() IndicesLike {
 	return v.indices_
 }
@@ -75,8 +66,7 @@ func (v *subcomponent_) GetIndices() IndicesLike {
 
 type subcomponent_ struct {
 	// Declare the instance attributes.
-	composite_ CompositeLike
-	indices_   IndicesLike
+	indices_ IndicesLike
 }
 
 // Class Structure

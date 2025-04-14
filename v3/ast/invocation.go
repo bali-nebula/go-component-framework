@@ -34,26 +34,21 @@ func InvocationClass() InvocationClassLike {
 // Constructor Methods
 
 func (c *invocationClass_) Invocation(
-	target TargetLike,
-	invocationOperator InvocationOperatorLike,
-	method MethodLike,
+	threading ThreadingLike,
+	identifier string,
 	optionalArguments ArgumentsLike,
 ) InvocationLike {
-	if uti.IsUndefined(target) {
-		panic("The \"target\" attribute is required by this class.")
+	if uti.IsUndefined(threading) {
+		panic("The \"threading\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(invocationOperator) {
-		panic("The \"invocationOperator\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(method) {
-		panic("The \"method\" attribute is required by this class.")
+	if uti.IsUndefined(identifier) {
+		panic("The \"identifier\" attribute is required by this class.")
 	}
 	var instance = &invocation_{
 		// Initialize the instance attributes.
-		target_:             target,
-		invocationOperator_: invocationOperator,
-		method_:             method,
-		optionalArguments_:  optionalArguments,
+		threading_:         threading,
+		identifier_:        identifier,
+		optionalArguments_: optionalArguments,
 	}
 	return instance
 }
@@ -68,16 +63,12 @@ func (v *invocation_) GetClass() InvocationClassLike {
 
 // Attribute Methods
 
-func (v *invocation_) GetTarget() TargetLike {
-	return v.target_
+func (v *invocation_) GetThreading() ThreadingLike {
+	return v.threading_
 }
 
-func (v *invocation_) GetInvocationOperator() InvocationOperatorLike {
-	return v.invocationOperator_
-}
-
-func (v *invocation_) GetMethod() MethodLike {
-	return v.method_
+func (v *invocation_) GetIdentifier() string {
+	return v.identifier_
 }
 
 func (v *invocation_) GetOptionalArguments() ArgumentsLike {
@@ -90,10 +81,9 @@ func (v *invocation_) GetOptionalArguments() ArgumentsLike {
 
 type invocation_ struct {
 	// Declare the instance attributes.
-	target_             TargetLike
-	invocationOperator_ InvocationOperatorLike
-	method_             MethodLike
-	optionalArguments_  ArgumentsLike
+	threading_         ThreadingLike
+	identifier_        string
+	optionalArguments_ ArgumentsLike
 }
 
 // Class Structure

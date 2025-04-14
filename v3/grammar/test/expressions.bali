@@ -1,17 +1,18 @@
 {
-    ~π($units: $radians)
-    sum(a, b)
-    foo
-    NOT (p AND q) OR (p OR NOT q) XOR (p SANS q)
-    @reference
-    list.addValue(value)
-    remote<-notify(event)
-    customer[42, $address, $province]
-    a & b & c
-    base ^ exponent
-    -/*z
-    (x + y - z) * (x / y // z)
-    |z|
-    a < b OR b = c OR c ≠ d OR d > e OR e IS f OR f MATCHES g
-    NOT p
+  - let $foo := ~π($units: $radians)
+  - let $foo := sum(a, b)
+  - let $foo := foo
+  - let $foo := NOT p
+  - let $foo := NOT (p AND q) IOR (p IOR NOT q) XOR (p SAN q)
+  - let $foo := @reference
+  - let $foo := list.addValue(value)
+  - let $foo := remote<-notify(event)
+  - let $foo := customer[42, $address, $province]
+  - let $foo := a & b & c
+  - let $foo := base ^ exponent
+  - let $foo := -/*z
+  - let $foo := (x + y - z) * (x / y // z)
+  - let $foo := |z|
+  - let $foo := a < b IOR b = c IOR c ≠ d IOR d > e IOR e IS f IOR f MATCHES g
+  - let $foo := NOT p
 }

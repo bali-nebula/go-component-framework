@@ -24,32 +24,15 @@ For more information on CDSN see the wiki at:
 <!
 $Document: comment? Component
 
-$Component: Entity Context?
+$Component: Entity Parameters?
 
 $Entity:
   - Element
   - String
   - Collection
-  - Range
   - Procedure
 
-$Context: "(" Parameters ")"
-
-$Parameters:
-  - MultilineParameters
-  - InlineParameters
-
-$MultilineParameters: AnnotatedParameter+
-
-$AnnotatedParameter: dash Parameter note?
-
-$InlineParameters: Parameter AdditionalParameter*
-
-$AdditionalParameter: "," Parameter
-
-$Parameter: Label colon Component
-
-$Label: symbol
+$Parameters: "(" Associations ")"
 
 $Element:
   - angle
@@ -75,13 +58,16 @@ $String:
 $Collection: "[" Items? "]"
 
 $Items:
+  - Range
+  - NoAssociations
   - Associations
   - Values
+
+$NoAssociations: colon
 
 $Associations:
   - MultilineAssociations
   - InlineAssociations
-  - NoAssociations
 
 $MultilineAssociations: AnnotatedAssociation+
 
@@ -91,9 +77,9 @@ $InlineAssociations: Association AdditionalAssociation*
 
 $AdditionalAssociation: "," Association
 
-$NoAssociations: colon
-
 $Association: symbol colon Value
+
+$Label: symbol
 
 $Value: Component
 
@@ -115,7 +101,7 @@ $LeftBracket:
   - LeftSquare
   - LeftRound
 
-$LeftSquare: "["
+$LeftSquare: bar
 
 $LeftRound: "("
 
@@ -127,7 +113,7 @@ $RightBracket:
   - RightSquare
   - RightRound
 
-$RightSquare: "]"
+$RightSquare: bar
 
 $RightRound: ")"
 
@@ -194,7 +180,34 @@ $Condition: Expression
 
 $SelectClause: "select" Target MatchHandler+
 
-$Target: Expression
+$Target:
+  - Component
+  - Operation
+  - Variable
+
+$Operation:
+  - Function
+  - Method
+
+$Function: identifier "(" Arguments? ")"
+
+$Method: identifier Subcomponent? Invocation?
+
+$Variable: identifier Subcomponent?
+
+$Subcomponent: "[" Indices "]"
+
+$Indices: Index AdditionalIndex*
+
+$AdditionalIndex: "," Index
+
+$Index: Expression
+
+$Invocation: Threading identifier "(" Arguments? ")"
+
+$Threading:
+  - dot
+  - arrow
 
 $WhileClause: "while" Condition "do" Procedure
 
@@ -218,31 +231,15 @@ $Exception: Expression
 
 $DoClause: "do" Operation
 
-$Operation:
-  - Intrinsic
-  - Invocation
-
-$Intrinsic: Function "(" Arguments? ")"
-
-$Function: identifier
-
-$Invocation: Target InvocationOperator Method "(" Arguments? ")"
-
-$InvocationOperator:
-  - dot
-  - arrow
-
-$Method: identifier
-
 $Arguments: Argument AdditionalArgument*
 
 $AdditionalArgument: "," Argument
 
-$Argument: Expression
+$Argument: identifier
 
-$LetClause: "let" Recipient AssignmentOperator Expression
+$LetClause: "let" Recipient Assign Expression
 
-$AssignmentOperator:
+$Assign:
   - colonEqual
   - defaultEqual
   - plusEqual
@@ -254,15 +251,7 @@ $Recipient:
   - Label
   - Attribute
 
-$Attribute: Variable "[" Indices "]"
-
-$Variable: identifier
-
-$Indices: Index AdditionalIndex*
-
-$AdditionalIndex: "," Index
-
-$Index: Expression
+$Attribute: identifier Subcomponent?
 
 $PostClause: "post" Message "to" Bag
 
@@ -295,42 +284,61 @@ $DiscardClause: "discard" Draft
 $NotarizeClause: "notarize" Draft "as" Citation
 
 $Expression:
-  - Component
-  - Intrinsic
-  - Variable
+  - Target
   - Precedence
   - Dereference
-  - Invocation
-  - Subcomponent
-  - Chaining
+  - Concatenation
   - Exponential
   - Inversion
   - Arithmetic
   - Amplitude
   - Comparison
   - Complement
-  - Logical
+  - Inference
 
 $Precedence: "(" Expression ")"
 
-$Dereference: snail Expression
+$Dereference: snail Indirect
 
-$Subcomponent: Composite "[" Indices "]"
+$Indirect:
+  - Target
+  - Dereference
 
-$Composite: Expression
+$Concatenation: Textual ConcatenationOperation+
 
-$Chaining: Expression ampersand Expression
+$Textual:
+  - Target
+  - Precedence
+  - Dereference
 
-$Exponential: Expression caret Expression
+$ConcatenationOperation: ampersand Textual
 
-$Inversion: InversionOperator Expression
+$Exponential: Base caret Numerical
 
-$InversionOperator:
+$Base:
+  - Target
+  - Precedence
+  - Dereference
+  - Amplitude
+
+$Numerical:
+  - Target
+  - Precedence
+  - Dereference
+  - Amplitude
+  - Exponential
+  - Inversion
+
+$Inversion: Inverse Numerical
+
+$Inverse:
   - dash
   - slash
   - star
 
-$Arithmetic: Expression ArithmeticOperator Expression
+$Arithmetic: Numerical ArithmeticOperation+
+
+$ArithmeticOperation: ArithmeticOperator Numerical
 
 $ArithmeticOperator:
   - plus
@@ -339,22 +347,31 @@ $ArithmeticOperator:
   - slash
   - slashSlash
 
-$Amplitude: bar Expression bar
+$Amplitude: bar Arithmetic bar
 
-$Comparison: Expression ComparisonOperator Expression
+$Comparison: Numerical CompareOperator Numerical
 
-$ComparisonOperator:
+$CompareOperator:
   - less
   - equal
   - more
   - is
   - matches
 
-$Complement: not Expression
+$Complement: not Logical
 
-$Logical: Expression LogicalOperator Expression
+$Inference: Logical LogicalOperation+
 
-$LogicalOperator:
+$Logical:
+  - Target
+  - Precedence
+  - Dereference
+  - Complement
+  - Comparison
+
+$LogicalOperation: LogicOperator Logical
+
+$LogicOperator:
   - and
   - san
   - ior

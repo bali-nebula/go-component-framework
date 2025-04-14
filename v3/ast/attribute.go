@@ -34,19 +34,16 @@ func AttributeClass() AttributeClassLike {
 // Constructor Methods
 
 func (c *attributeClass_) Attribute(
-	variable VariableLike,
-	indices IndicesLike,
+	identifier string,
+	optionalSubcomponent SubcomponentLike,
 ) AttributeLike {
-	if uti.IsUndefined(variable) {
-		panic("The \"variable\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(indices) {
-		panic("The \"indices\" attribute is required by this class.")
+	if uti.IsUndefined(identifier) {
+		panic("The \"identifier\" attribute is required by this class.")
 	}
 	var instance = &attribute_{
 		// Initialize the instance attributes.
-		variable_: variable,
-		indices_:  indices,
+		identifier_:           identifier,
+		optionalSubcomponent_: optionalSubcomponent,
 	}
 	return instance
 }
@@ -61,12 +58,12 @@ func (v *attribute_) GetClass() AttributeClassLike {
 
 // Attribute Methods
 
-func (v *attribute_) GetVariable() VariableLike {
-	return v.variable_
+func (v *attribute_) GetIdentifier() string {
+	return v.identifier_
 }
 
-func (v *attribute_) GetIndices() IndicesLike {
-	return v.indices_
+func (v *attribute_) GetOptionalSubcomponent() SubcomponentLike {
+	return v.optionalSubcomponent_
 }
 
 // PROTECTED INTERFACE
@@ -75,8 +72,8 @@ func (v *attribute_) GetIndices() IndicesLike {
 
 type attribute_ struct {
 	// Declare the instance attributes.
-	variable_ VariableLike
-	indices_  IndicesLike
+	identifier_           string
+	optionalSubcomponent_ SubcomponentLike
 }
 
 // Class Structure

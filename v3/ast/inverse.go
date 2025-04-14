@@ -27,19 +27,19 @@ import (
 
 // Access Function
 
-func InversionOperatorClass() InversionOperatorClassLike {
-	return inversionOperatorClass()
+func InverseClass() InverseClassLike {
+	return inverseClass()
 }
 
 // Constructor Methods
 
-func (c *inversionOperatorClass_) InversionOperator(
+func (c *inverseClass_) Inverse(
 	any_ any,
-) InversionOperatorLike {
+) InverseLike {
 	if uti.IsUndefined(any_) {
 		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &inversionOperator_{
+	var instance = &inverse_{
 		// Initialize the instance attributes.
 		any_: any_,
 	}
@@ -50,13 +50,13 @@ func (c *inversionOperatorClass_) InversionOperator(
 
 // Principal Methods
 
-func (v *inversionOperator_) GetClass() InversionOperatorClassLike {
-	return inversionOperatorClass()
+func (v *inverse_) GetClass() InverseClassLike {
+	return inverseClass()
 }
 
 // Attribute Methods
 
-func (v *inversionOperator_) GetAny() any {
+func (v *inverse_) GetAny() any {
 	return v.any_
 }
 
@@ -64,23 +64,23 @@ func (v *inversionOperator_) GetAny() any {
 
 // Instance Structure
 
-type inversionOperator_ struct {
+type inverse_ struct {
 	// Declare the instance attributes.
 	any_ any
 }
 
 // Class Structure
 
-type inversionOperatorClass_ struct {
+type inverseClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inversionOperatorClass() *inversionOperatorClass_ {
-	return inversionOperatorClassReference_
+func inverseClass() *inverseClass_ {
+	return inverseClassReference_
 }
 
-var inversionOperatorClassReference_ = &inversionOperatorClass_{
+var inverseClassReference_ = &inverseClass_{
 	// Initialize the class constants.
 }

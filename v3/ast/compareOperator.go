@@ -27,23 +27,21 @@ import (
 
 // Access Function
 
-func IntrinsicClass() IntrinsicClassLike {
-	return intrinsicClass()
+func CompareOperatorClass() CompareOperatorClassLike {
+	return compareOperatorClass()
 }
 
 // Constructor Methods
 
-func (c *intrinsicClass_) Intrinsic(
-	function FunctionLike,
-	optionalArguments ArgumentsLike,
-) IntrinsicLike {
-	if uti.IsUndefined(function) {
-		panic("The \"function\" attribute is required by this class.")
+func (c *compareOperatorClass_) CompareOperator(
+	any_ any,
+) CompareOperatorLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &intrinsic_{
+	var instance = &compareOperator_{
 		// Initialize the instance attributes.
-		function_:          function,
-		optionalArguments_: optionalArguments,
+		any_: any_,
 	}
 	return instance
 }
@@ -52,42 +50,37 @@ func (c *intrinsicClass_) Intrinsic(
 
 // Principal Methods
 
-func (v *intrinsic_) GetClass() IntrinsicClassLike {
-	return intrinsicClass()
+func (v *compareOperator_) GetClass() CompareOperatorClassLike {
+	return compareOperatorClass()
 }
 
 // Attribute Methods
 
-func (v *intrinsic_) GetFunction() FunctionLike {
-	return v.function_
-}
-
-func (v *intrinsic_) GetOptionalArguments() ArgumentsLike {
-	return v.optionalArguments_
+func (v *compareOperator_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type intrinsic_ struct {
+type compareOperator_ struct {
 	// Declare the instance attributes.
-	function_          FunctionLike
-	optionalArguments_ ArgumentsLike
+	any_ any
 }
 
 // Class Structure
 
-type intrinsicClass_ struct {
+type compareOperatorClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func intrinsicClass() *intrinsicClass_ {
-	return intrinsicClassReference_
+func compareOperatorClass() *compareOperatorClass_ {
+	return compareOperatorClassReference_
 }
 
-var intrinsicClassReference_ = &intrinsicClass_{
+var compareOperatorClassReference_ = &compareOperatorClass_{
 	// Initialize the class constants.
 }

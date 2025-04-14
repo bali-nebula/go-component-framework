@@ -34,19 +34,19 @@ func InversionClass() InversionClassLike {
 // Constructor Methods
 
 func (c *inversionClass_) Inversion(
-	inversionOperator InversionOperatorLike,
-	expression ExpressionLike,
+	inverse InverseLike,
+	numerical NumericalLike,
 ) InversionLike {
-	if uti.IsUndefined(inversionOperator) {
-		panic("The \"inversionOperator\" attribute is required by this class.")
+	if uti.IsUndefined(inverse) {
+		panic("The \"inverse\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
+	if uti.IsUndefined(numerical) {
+		panic("The \"numerical\" attribute is required by this class.")
 	}
 	var instance = &inversion_{
 		// Initialize the instance attributes.
-		inversionOperator_: inversionOperator,
-		expression_:        expression,
+		inverse_:   inverse,
+		numerical_: numerical,
 	}
 	return instance
 }
@@ -61,12 +61,12 @@ func (v *inversion_) GetClass() InversionClassLike {
 
 // Attribute Methods
 
-func (v *inversion_) GetInversionOperator() InversionOperatorLike {
-	return v.inversionOperator_
+func (v *inversion_) GetInverse() InverseLike {
+	return v.inverse_
 }
 
-func (v *inversion_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *inversion_) GetNumerical() NumericalLike {
+	return v.numerical_
 }
 
 // PROTECTED INTERFACE
@@ -75,8 +75,8 @@ func (v *inversion_) GetExpression() ExpressionLike {
 
 type inversion_ struct {
 	// Declare the instance attributes.
-	inversionOperator_ InversionOperatorLike
-	expression_        ExpressionLike
+	inverse_   InverseLike
+	numerical_ NumericalLike
 }
 
 // Class Structure

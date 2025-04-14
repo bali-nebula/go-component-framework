@@ -35,13 +35,15 @@ func FunctionClass() FunctionClassLike {
 
 func (c *functionClass_) Function(
 	identifier string,
+	optionalArguments ArgumentsLike,
 ) FunctionLike {
 	if uti.IsUndefined(identifier) {
 		panic("The \"identifier\" attribute is required by this class.")
 	}
 	var instance = &function_{
 		// Initialize the instance attributes.
-		identifier_: identifier,
+		identifier_:        identifier,
+		optionalArguments_: optionalArguments,
 	}
 	return instance
 }
@@ -60,13 +62,18 @@ func (v *function_) GetIdentifier() string {
 	return v.identifier_
 }
 
+func (v *function_) GetOptionalArguments() ArgumentsLike {
+	return v.optionalArguments_
+}
+
 // PROTECTED INTERFACE
 
 // Instance Structure
 
 type function_ struct {
 	// Declare the instance attributes.
-	identifier_ string
+	identifier_        string
+	optionalArguments_ ArgumentsLike
 }
 
 // Class Structure

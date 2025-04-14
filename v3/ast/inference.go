@@ -20,6 +20,7 @@
 package ast
 
 import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -27,28 +28,26 @@ import (
 
 // Access Function
 
-func AnnotatedParameterClass() AnnotatedParameterClassLike {
-	return annotatedParameterClass()
+func InferenceClass() InferenceClassLike {
+	return inferenceClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedParameterClass_) AnnotatedParameter(
-	dash string,
-	parameter ParameterLike,
-	optionalNote string,
-) AnnotatedParameterLike {
-	if uti.IsUndefined(dash) {
-		panic("The \"dash\" attribute is required by this class.")
+func (c *inferenceClass_) Inference(
+	logical LogicalLike,
+	logicalOperations col.Sequential[LogicalOperationLike],
+) InferenceLike {
+	if uti.IsUndefined(logical) {
+		panic("The \"logical\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(parameter) {
-		panic("The \"parameter\" attribute is required by this class.")
+	if uti.IsUndefined(logicalOperations) {
+		panic("The \"logicalOperations\" attribute is required by this class.")
 	}
-	var instance = &annotatedParameter_{
+	var instance = &inference_{
 		// Initialize the instance attributes.
-		dash_:         dash,
-		parameter_:    parameter,
-		optionalNote_: optionalNote,
+		logical_:           logical,
+		logicalOperations_: logicalOperations,
 	}
 	return instance
 }
@@ -57,47 +56,42 @@ func (c *annotatedParameterClass_) AnnotatedParameter(
 
 // Principal Methods
 
-func (v *annotatedParameter_) GetClass() AnnotatedParameterClassLike {
-	return annotatedParameterClass()
+func (v *inference_) GetClass() InferenceClassLike {
+	return inferenceClass()
 }
 
 // Attribute Methods
 
-func (v *annotatedParameter_) GetDash() string {
-	return v.dash_
+func (v *inference_) GetLogical() LogicalLike {
+	return v.logical_
 }
 
-func (v *annotatedParameter_) GetParameter() ParameterLike {
-	return v.parameter_
-}
-
-func (v *annotatedParameter_) GetOptionalNote() string {
-	return v.optionalNote_
+func (v *inference_) GetLogicalOperations() col.Sequential[LogicalOperationLike] {
+	return v.logicalOperations_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotatedParameter_ struct {
+type inference_ struct {
 	// Declare the instance attributes.
-	dash_         string
-	parameter_    ParameterLike
-	optionalNote_ string
+	logical_           LogicalLike
+	logicalOperations_ col.Sequential[LogicalOperationLike]
 }
 
 // Class Structure
 
-type annotatedParameterClass_ struct {
+type inferenceClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedParameterClass() *annotatedParameterClass_ {
-	return annotatedParameterClassReference_
+func inferenceClass() *inferenceClass_ {
+	return inferenceClassReference_
 }
 
-var annotatedParameterClassReference_ = &annotatedParameterClass_{
+var inferenceClassReference_ = &inferenceClass_{
 	// Initialize the class constants.
 }

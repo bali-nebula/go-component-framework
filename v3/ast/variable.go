@@ -35,13 +35,15 @@ func VariableClass() VariableClassLike {
 
 func (c *variableClass_) Variable(
 	identifier string,
+	optionalSubcomponent SubcomponentLike,
 ) VariableLike {
 	if uti.IsUndefined(identifier) {
 		panic("The \"identifier\" attribute is required by this class.")
 	}
 	var instance = &variable_{
 		// Initialize the instance attributes.
-		identifier_: identifier,
+		identifier_:           identifier,
+		optionalSubcomponent_: optionalSubcomponent,
 	}
 	return instance
 }
@@ -60,13 +62,18 @@ func (v *variable_) GetIdentifier() string {
 	return v.identifier_
 }
 
+func (v *variable_) GetOptionalSubcomponent() SubcomponentLike {
+	return v.optionalSubcomponent_
+}
+
 // PROTECTED INTERFACE
 
 // Instance Structure
 
 type variable_ struct {
 	// Declare the instance attributes.
-	identifier_ string
+	identifier_           string
+	optionalSubcomponent_ SubcomponentLike
 }
 
 // Class Structure

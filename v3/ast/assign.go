@@ -27,31 +27,21 @@ import (
 
 // Access Function
 
-func ChainingClass() ChainingClassLike {
-	return chainingClass()
+func AssignClass() AssignClassLike {
+	return assignClass()
 }
 
 // Constructor Methods
 
-func (c *chainingClass_) Chaining(
-	expression1 ExpressionLike,
-	ampersand string,
-	expression2 ExpressionLike,
-) ChainingLike {
-	if uti.IsUndefined(expression1) {
-		panic("The \"expression1\" attribute is required by this class.")
+func (c *assignClass_) Assign(
+	any_ any,
+) AssignLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(ampersand) {
-		panic("The \"ampersand\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(expression2) {
-		panic("The \"expression2\" attribute is required by this class.")
-	}
-	var instance = &chaining_{
+	var instance = &assign_{
 		// Initialize the instance attributes.
-		expression1_: expression1,
-		ampersand_:   ampersand,
-		expression2_: expression2,
+		any_: any_,
 	}
 	return instance
 }
@@ -60,47 +50,37 @@ func (c *chainingClass_) Chaining(
 
 // Principal Methods
 
-func (v *chaining_) GetClass() ChainingClassLike {
-	return chainingClass()
+func (v *assign_) GetClass() AssignClassLike {
+	return assignClass()
 }
 
 // Attribute Methods
 
-func (v *chaining_) GetExpression1() ExpressionLike {
-	return v.expression1_
-}
-
-func (v *chaining_) GetAmpersand() string {
-	return v.ampersand_
-}
-
-func (v *chaining_) GetExpression2() ExpressionLike {
-	return v.expression2_
+func (v *assign_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type chaining_ struct {
+type assign_ struct {
 	// Declare the instance attributes.
-	expression1_ ExpressionLike
-	ampersand_   string
-	expression2_ ExpressionLike
+	any_ any
 }
 
 // Class Structure
 
-type chainingClass_ struct {
+type assignClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func chainingClass() *chainingClass_ {
-	return chainingClassReference_
+func assignClass() *assignClass_ {
+	return assignClassReference_
 }
 
-var chainingClassReference_ = &chainingClass_{
+var assignClassReference_ = &assignClass_{
 	// Initialize the class constants.
 }

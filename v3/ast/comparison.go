@@ -34,24 +34,24 @@ func ComparisonClass() ComparisonClassLike {
 // Constructor Methods
 
 func (c *comparisonClass_) Comparison(
-	expression1 ExpressionLike,
-	comparisonOperator ComparisonOperatorLike,
-	expression2 ExpressionLike,
+	numerical1 NumericalLike,
+	compareOperator CompareOperatorLike,
+	numerical2 NumericalLike,
 ) ComparisonLike {
-	if uti.IsUndefined(expression1) {
-		panic("The \"expression1\" attribute is required by this class.")
+	if uti.IsUndefined(numerical1) {
+		panic("The \"numerical1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(comparisonOperator) {
-		panic("The \"comparisonOperator\" attribute is required by this class.")
+	if uti.IsUndefined(compareOperator) {
+		panic("The \"compareOperator\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(expression2) {
-		panic("The \"expression2\" attribute is required by this class.")
+	if uti.IsUndefined(numerical2) {
+		panic("The \"numerical2\" attribute is required by this class.")
 	}
 	var instance = &comparison_{
 		// Initialize the instance attributes.
-		expression1_:        expression1,
-		comparisonOperator_: comparisonOperator,
-		expression2_:        expression2,
+		numerical1_:      numerical1,
+		compareOperator_: compareOperator,
+		numerical2_:      numerical2,
 	}
 	return instance
 }
@@ -66,16 +66,16 @@ func (v *comparison_) GetClass() ComparisonClassLike {
 
 // Attribute Methods
 
-func (v *comparison_) GetExpression1() ExpressionLike {
-	return v.expression1_
+func (v *comparison_) GetNumerical1() NumericalLike {
+	return v.numerical1_
 }
 
-func (v *comparison_) GetComparisonOperator() ComparisonOperatorLike {
-	return v.comparisonOperator_
+func (v *comparison_) GetCompareOperator() CompareOperatorLike {
+	return v.compareOperator_
 }
 
-func (v *comparison_) GetExpression2() ExpressionLike {
-	return v.expression2_
+func (v *comparison_) GetNumerical2() NumericalLike {
+	return v.numerical2_
 }
 
 // PROTECTED INTERFACE
@@ -84,9 +84,9 @@ func (v *comparison_) GetExpression2() ExpressionLike {
 
 type comparison_ struct {
 	// Declare the instance attributes.
-	expression1_        ExpressionLike
-	comparisonOperator_ ComparisonOperatorLike
-	expression2_        ExpressionLike
+	numerical1_      NumericalLike
+	compareOperator_ CompareOperatorLike
+	numerical2_      NumericalLike
 }
 
 // Class Structure

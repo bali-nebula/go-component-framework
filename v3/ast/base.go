@@ -20,7 +20,6 @@
 package ast
 
 import (
-	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -28,21 +27,21 @@ import (
 
 // Access Function
 
-func MultilineParametersClass() MultilineParametersClassLike {
-	return multilineParametersClass()
+func BaseClass() BaseClassLike {
+	return baseClass()
 }
 
 // Constructor Methods
 
-func (c *multilineParametersClass_) MultilineParameters(
-	annotatedParameters col.Sequential[AnnotatedParameterLike],
-) MultilineParametersLike {
-	if uti.IsUndefined(annotatedParameters) {
-		panic("The \"annotatedParameters\" attribute is required by this class.")
+func (c *baseClass_) Base(
+	any_ any,
+) BaseLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &multilineParameters_{
+	var instance = &base_{
 		// Initialize the instance attributes.
-		annotatedParameters_: annotatedParameters,
+		any_: any_,
 	}
 	return instance
 }
@@ -51,37 +50,37 @@ func (c *multilineParametersClass_) MultilineParameters(
 
 // Principal Methods
 
-func (v *multilineParameters_) GetClass() MultilineParametersClassLike {
-	return multilineParametersClass()
+func (v *base_) GetClass() BaseClassLike {
+	return baseClass()
 }
 
 // Attribute Methods
 
-func (v *multilineParameters_) GetAnnotatedParameters() col.Sequential[AnnotatedParameterLike] {
-	return v.annotatedParameters_
+func (v *base_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type multilineParameters_ struct {
+type base_ struct {
 	// Declare the instance attributes.
-	annotatedParameters_ col.Sequential[AnnotatedParameterLike]
+	any_ any
 }
 
 // Class Structure
 
-type multilineParametersClass_ struct {
+type baseClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func multilineParametersClass() *multilineParametersClass_ {
-	return multilineParametersClassReference_
+func baseClass() *baseClass_ {
+	return baseClassReference_
 }
 
-var multilineParametersClassReference_ = &multilineParametersClass_{
+var baseClassReference_ = &baseClass_{
 	// Initialize the class constants.
 }

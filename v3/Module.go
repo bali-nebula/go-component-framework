@@ -39,241 +39,241 @@ import (
 // Ast
 
 type (
-	AcceptClauseClassLike          = ast.AcceptClauseClassLike
-	AdditionalArgumentClassLike    = ast.AdditionalArgumentClassLike
-	AdditionalAssociationClassLike = ast.AdditionalAssociationClassLike
-	AdditionalIndexClassLike       = ast.AdditionalIndexClassLike
-	AdditionalParameterClassLike   = ast.AdditionalParameterClassLike
-	AdditionalStatementClassLike   = ast.AdditionalStatementClassLike
-	AdditionalValueClassLike       = ast.AdditionalValueClassLike
-	AmplitudeClassLike             = ast.AmplitudeClassLike
-	AnnotatedAssociationClassLike  = ast.AnnotatedAssociationClassLike
-	AnnotatedParameterClassLike    = ast.AnnotatedParameterClassLike
-	AnnotatedStatementClassLike    = ast.AnnotatedStatementClassLike
-	AnnotatedValueClassLike        = ast.AnnotatedValueClassLike
-	ArgumentClassLike              = ast.ArgumentClassLike
-	ArgumentsClassLike             = ast.ArgumentsClassLike
-	ArithmeticClassLike            = ast.ArithmeticClassLike
-	ArithmeticOperatorClassLike    = ast.ArithmeticOperatorClassLike
-	AssignmentOperatorClassLike    = ast.AssignmentOperatorClassLike
-	AssociationClassLike           = ast.AssociationClassLike
-	AssociationsClassLike          = ast.AssociationsClassLike
-	AtLevelClassLike               = ast.AtLevelClassLike
-	AttributeClassLike             = ast.AttributeClassLike
-	BagClassLike                   = ast.BagClassLike
-	BreakClauseClassLike           = ast.BreakClauseClassLike
-	ChainingClassLike              = ast.ChainingClassLike
-	CheckoutClauseClassLike        = ast.CheckoutClauseClassLike
-	CitationClassLike              = ast.CitationClassLike
-	CollectionClassLike            = ast.CollectionClassLike
-	ComparisonClassLike            = ast.ComparisonClassLike
-	ComparisonOperatorClassLike    = ast.ComparisonOperatorClassLike
-	ComplementClassLike            = ast.ComplementClassLike
-	ComponentClassLike             = ast.ComponentClassLike
-	CompositeClassLike             = ast.CompositeClassLike
-	ConditionClassLike             = ast.ConditionClassLike
-	ContextClassLike               = ast.ContextClassLike
-	ContinueClauseClassLike        = ast.ContinueClauseClassLike
-	DereferenceClassLike           = ast.DereferenceClassLike
-	DiscardClauseClassLike         = ast.DiscardClauseClassLike
-	DoClauseClassLike              = ast.DoClauseClassLike
-	DocumentClassLike              = ast.DocumentClassLike
-	DraftClassLike                 = ast.DraftClassLike
-	ElementClassLike               = ast.ElementClassLike
-	EntityClassLike                = ast.EntityClassLike
-	EventClassLike                 = ast.EventClassLike
-	ExceptionClassLike             = ast.ExceptionClassLike
-	ExponentialClassLike           = ast.ExponentialClassLike
-	ExpressionClassLike            = ast.ExpressionClassLike
-	FailureClassLike               = ast.FailureClassLike
-	FlowClassLike                  = ast.FlowClassLike
-	FunctionClassLike              = ast.FunctionClassLike
-	IfClauseClassLike              = ast.IfClauseClassLike
-	IndexClassLike                 = ast.IndexClassLike
-	IndicesClassLike               = ast.IndicesClassLike
-	InductionClassLike             = ast.InductionClassLike
-	InlineAssociationsClassLike    = ast.InlineAssociationsClassLike
-	InlineParametersClassLike      = ast.InlineParametersClassLike
-	InlineStatementsClassLike      = ast.InlineStatementsClassLike
-	InlineValuesClassLike          = ast.InlineValuesClassLike
-	IntrinsicClassLike             = ast.IntrinsicClassLike
-	InversionClassLike             = ast.InversionClassLike
-	InversionOperatorClassLike     = ast.InversionOperatorClassLike
-	InvocationClassLike            = ast.InvocationClassLike
-	InvocationOperatorClassLike    = ast.InvocationOperatorClassLike
-	ItemClassLike                  = ast.ItemClassLike
-	ItemsClassLike                 = ast.ItemsClassLike
-	LabelClassLike                 = ast.LabelClassLike
-	LeftBracketClassLike           = ast.LeftBracketClassLike
-	LeftRoundClassLike             = ast.LeftRoundClassLike
-	LeftSquareClassLike            = ast.LeftSquareClassLike
-	LetClauseClassLike             = ast.LetClauseClassLike
-	LogicalClassLike               = ast.LogicalClassLike
-	LogicalOperatorClassLike       = ast.LogicalOperatorClassLike
-	MainClauseClassLike            = ast.MainClauseClassLike
-	MatchHandlerClassLike          = ast.MatchHandlerClassLike
-	MessageClassLike               = ast.MessageClassLike
-	MessagingClassLike             = ast.MessagingClassLike
-	MethodClassLike                = ast.MethodClassLike
-	MultilineAssociationsClassLike = ast.MultilineAssociationsClassLike
-	MultilineParametersClassLike   = ast.MultilineParametersClassLike
-	MultilineStatementsClassLike   = ast.MultilineStatementsClassLike
-	MultilineValuesClassLike       = ast.MultilineValuesClassLike
-	NoAssociationsClassLike        = ast.NoAssociationsClassLike
-	NotarizeClauseClassLike        = ast.NotarizeClauseClassLike
-	OnClauseClassLike              = ast.OnClauseClassLike
-	OperationClassLike             = ast.OperationClassLike
-	ParameterClassLike             = ast.ParameterClassLike
-	ParametersClassLike            = ast.ParametersClassLike
-	PostClauseClassLike            = ast.PostClauseClassLike
-	PrecedenceClassLike            = ast.PrecedenceClassLike
-	PrimitiveClassLike             = ast.PrimitiveClassLike
-	ProcedureClassLike             = ast.ProcedureClassLike
-	PublishClauseClassLike         = ast.PublishClauseClassLike
-	RangeClassLike                 = ast.RangeClassLike
-	RecipientClassLike             = ast.RecipientClassLike
-	RejectClauseClassLike          = ast.RejectClauseClassLike
-	RepositoryClassLike            = ast.RepositoryClassLike
-	ResultClassLike                = ast.ResultClassLike
-	RetrieveClauseClassLike        = ast.RetrieveClauseClassLike
-	ReturnClauseClassLike          = ast.ReturnClauseClassLike
-	RightBracketClassLike          = ast.RightBracketClassLike
-	RightRoundClassLike            = ast.RightRoundClassLike
-	RightSquareClassLike           = ast.RightSquareClassLike
-	SaveClauseClassLike            = ast.SaveClauseClassLike
-	SelectClauseClassLike          = ast.SelectClauseClassLike
-	SequenceClassLike              = ast.SequenceClassLike
-	StatementClassLike             = ast.StatementClassLike
-	StatementsClassLike            = ast.StatementsClassLike
-	StringClassLike                = ast.StringClassLike
-	SubcomponentClassLike          = ast.SubcomponentClassLike
-	TargetClassLike                = ast.TargetClassLike
-	TemplateClassLike              = ast.TemplateClassLike
-	ThrowClauseClassLike           = ast.ThrowClauseClassLike
-	ValueClassLike                 = ast.ValueClassLike
-	ValuesClassLike                = ast.ValuesClassLike
-	VariableClassLike              = ast.VariableClassLike
-	WhileClauseClassLike           = ast.WhileClauseClassLike
-	WithClauseClassLike            = ast.WithClauseClassLike
+	AcceptClauseClassLike           = ast.AcceptClauseClassLike
+	AdditionalArgumentClassLike     = ast.AdditionalArgumentClassLike
+	AdditionalAssociationClassLike  = ast.AdditionalAssociationClassLike
+	AdditionalIndexClassLike        = ast.AdditionalIndexClassLike
+	AdditionalStatementClassLike    = ast.AdditionalStatementClassLike
+	AdditionalValueClassLike        = ast.AdditionalValueClassLike
+	AmplitudeClassLike              = ast.AmplitudeClassLike
+	AnnotatedAssociationClassLike   = ast.AnnotatedAssociationClassLike
+	AnnotatedStatementClassLike     = ast.AnnotatedStatementClassLike
+	AnnotatedValueClassLike         = ast.AnnotatedValueClassLike
+	ArgumentClassLike               = ast.ArgumentClassLike
+	ArgumentsClassLike              = ast.ArgumentsClassLike
+	ArithmeticClassLike             = ast.ArithmeticClassLike
+	ArithmeticOperationClassLike    = ast.ArithmeticOperationClassLike
+	ArithmeticOperatorClassLike     = ast.ArithmeticOperatorClassLike
+	AssignClassLike                 = ast.AssignClassLike
+	AssociationClassLike            = ast.AssociationClassLike
+	AssociationsClassLike           = ast.AssociationsClassLike
+	AtLevelClassLike                = ast.AtLevelClassLike
+	AttributeClassLike              = ast.AttributeClassLike
+	BagClassLike                    = ast.BagClassLike
+	BaseClassLike                   = ast.BaseClassLike
+	BreakClauseClassLike            = ast.BreakClauseClassLike
+	CheckoutClauseClassLike         = ast.CheckoutClauseClassLike
+	CitationClassLike               = ast.CitationClassLike
+	CollectionClassLike             = ast.CollectionClassLike
+	CompareOperatorClassLike        = ast.CompareOperatorClassLike
+	ComparisonClassLike             = ast.ComparisonClassLike
+	ComplementClassLike             = ast.ComplementClassLike
+	ComponentClassLike              = ast.ComponentClassLike
+	ConcatenationClassLike          = ast.ConcatenationClassLike
+	ConcatenationOperationClassLike = ast.ConcatenationOperationClassLike
+	ConditionClassLike              = ast.ConditionClassLike
+	ContinueClauseClassLike         = ast.ContinueClauseClassLike
+	DereferenceClassLike            = ast.DereferenceClassLike
+	DiscardClauseClassLike          = ast.DiscardClauseClassLike
+	DoClauseClassLike               = ast.DoClauseClassLike
+	DocumentClassLike               = ast.DocumentClassLike
+	DraftClassLike                  = ast.DraftClassLike
+	ElementClassLike                = ast.ElementClassLike
+	EntityClassLike                 = ast.EntityClassLike
+	EventClassLike                  = ast.EventClassLike
+	ExceptionClassLike              = ast.ExceptionClassLike
+	ExponentialClassLike            = ast.ExponentialClassLike
+	ExpressionClassLike             = ast.ExpressionClassLike
+	FailureClassLike                = ast.FailureClassLike
+	FlowClassLike                   = ast.FlowClassLike
+	FunctionClassLike               = ast.FunctionClassLike
+	IfClauseClassLike               = ast.IfClauseClassLike
+	IndexClassLike                  = ast.IndexClassLike
+	IndicesClassLike                = ast.IndicesClassLike
+	IndirectClassLike               = ast.IndirectClassLike
+	InductionClassLike              = ast.InductionClassLike
+	InferenceClassLike              = ast.InferenceClassLike
+	InlineAssociationsClassLike     = ast.InlineAssociationsClassLike
+	InlineStatementsClassLike       = ast.InlineStatementsClassLike
+	InlineValuesClassLike           = ast.InlineValuesClassLike
+	InverseClassLike                = ast.InverseClassLike
+	InversionClassLike              = ast.InversionClassLike
+	InvocationClassLike             = ast.InvocationClassLike
+	ItemClassLike                   = ast.ItemClassLike
+	ItemsClassLike                  = ast.ItemsClassLike
+	LabelClassLike                  = ast.LabelClassLike
+	LeftBracketClassLike            = ast.LeftBracketClassLike
+	LeftRoundClassLike              = ast.LeftRoundClassLike
+	LeftSquareClassLike             = ast.LeftSquareClassLike
+	LetClauseClassLike              = ast.LetClauseClassLike
+	LogicOperatorClassLike          = ast.LogicOperatorClassLike
+	LogicalClassLike                = ast.LogicalClassLike
+	LogicalOperationClassLike       = ast.LogicalOperationClassLike
+	MainClauseClassLike             = ast.MainClauseClassLike
+	MatchHandlerClassLike           = ast.MatchHandlerClassLike
+	MessageClassLike                = ast.MessageClassLike
+	MessagingClassLike              = ast.MessagingClassLike
+	MethodClassLike                 = ast.MethodClassLike
+	MultilineAssociationsClassLike  = ast.MultilineAssociationsClassLike
+	MultilineStatementsClassLike    = ast.MultilineStatementsClassLike
+	MultilineValuesClassLike        = ast.MultilineValuesClassLike
+	NoAssociationsClassLike         = ast.NoAssociationsClassLike
+	NotarizeClauseClassLike         = ast.NotarizeClauseClassLike
+	NumericalClassLike              = ast.NumericalClassLike
+	OnClauseClassLike               = ast.OnClauseClassLike
+	OperationClassLike              = ast.OperationClassLike
+	ParametersClassLike             = ast.ParametersClassLike
+	PostClauseClassLike             = ast.PostClauseClassLike
+	PrecedenceClassLike             = ast.PrecedenceClassLike
+	PrimitiveClassLike              = ast.PrimitiveClassLike
+	ProcedureClassLike              = ast.ProcedureClassLike
+	PublishClauseClassLike          = ast.PublishClauseClassLike
+	RangeClassLike                  = ast.RangeClassLike
+	RecipientClassLike              = ast.RecipientClassLike
+	RejectClauseClassLike           = ast.RejectClauseClassLike
+	RepositoryClassLike             = ast.RepositoryClassLike
+	ResultClassLike                 = ast.ResultClassLike
+	RetrieveClauseClassLike         = ast.RetrieveClauseClassLike
+	ReturnClauseClassLike           = ast.ReturnClauseClassLike
+	RightBracketClassLike           = ast.RightBracketClassLike
+	RightRoundClassLike             = ast.RightRoundClassLike
+	RightSquareClassLike            = ast.RightSquareClassLike
+	SaveClauseClassLike             = ast.SaveClauseClassLike
+	SelectClauseClassLike           = ast.SelectClauseClassLike
+	SequenceClassLike               = ast.SequenceClassLike
+	StatementClassLike              = ast.StatementClassLike
+	StatementsClassLike             = ast.StatementsClassLike
+	StringClassLike                 = ast.StringClassLike
+	SubcomponentClassLike           = ast.SubcomponentClassLike
+	TargetClassLike                 = ast.TargetClassLike
+	TemplateClassLike               = ast.TemplateClassLike
+	TextualClassLike                = ast.TextualClassLike
+	ThreadingClassLike              = ast.ThreadingClassLike
+	ThrowClauseClassLike            = ast.ThrowClauseClassLike
+	ValueClassLike                  = ast.ValueClassLike
+	ValuesClassLike                 = ast.ValuesClassLike
+	VariableClassLike               = ast.VariableClassLike
+	WhileClauseClassLike            = ast.WhileClauseClassLike
+	WithClauseClassLike             = ast.WithClauseClassLike
 )
 
 type (
-	AcceptClauseLike          = ast.AcceptClauseLike
-	AdditionalArgumentLike    = ast.AdditionalArgumentLike
-	AdditionalAssociationLike = ast.AdditionalAssociationLike
-	AdditionalIndexLike       = ast.AdditionalIndexLike
-	AdditionalParameterLike   = ast.AdditionalParameterLike
-	AdditionalStatementLike   = ast.AdditionalStatementLike
-	AdditionalValueLike       = ast.AdditionalValueLike
-	AmplitudeLike             = ast.AmplitudeLike
-	AnnotatedAssociationLike  = ast.AnnotatedAssociationLike
-	AnnotatedParameterLike    = ast.AnnotatedParameterLike
-	AnnotatedStatementLike    = ast.AnnotatedStatementLike
-	AnnotatedValueLike        = ast.AnnotatedValueLike
-	ArgumentLike              = ast.ArgumentLike
-	ArgumentsLike             = ast.ArgumentsLike
-	ArithmeticLike            = ast.ArithmeticLike
-	ArithmeticOperatorLike    = ast.ArithmeticOperatorLike
-	AssignmentOperatorLike    = ast.AssignmentOperatorLike
-	AssociationLike           = ast.AssociationLike
-	AssociationsLike          = ast.AssociationsLike
-	AtLevelLike               = ast.AtLevelLike
-	AttributeLike             = ast.AttributeLike
-	BagLike                   = ast.BagLike
-	BreakClauseLike           = ast.BreakClauseLike
-	ChainingLike              = ast.ChainingLike
-	CheckoutClauseLike        = ast.CheckoutClauseLike
-	CitationLike              = ast.CitationLike
-	CollectionLike            = ast.CollectionLike
-	ComparisonLike            = ast.ComparisonLike
-	ComparisonOperatorLike    = ast.ComparisonOperatorLike
-	ComplementLike            = ast.ComplementLike
-	ComponentLike             = ast.ComponentLike
-	CompositeLike             = ast.CompositeLike
-	ConditionLike             = ast.ConditionLike
-	ContextLike               = ast.ContextLike
-	ContinueClauseLike        = ast.ContinueClauseLike
-	DereferenceLike           = ast.DereferenceLike
-	DiscardClauseLike         = ast.DiscardClauseLike
-	DoClauseLike              = ast.DoClauseLike
-	DocumentLike              = ast.DocumentLike
-	DraftLike                 = ast.DraftLike
-	ElementLike               = ast.ElementLike
-	EntityLike                = ast.EntityLike
-	EventLike                 = ast.EventLike
-	ExceptionLike             = ast.ExceptionLike
-	ExponentialLike           = ast.ExponentialLike
-	ExpressionLike            = ast.ExpressionLike
-	FailureLike               = ast.FailureLike
-	FlowLike                  = ast.FlowLike
-	FunctionLike              = ast.FunctionLike
-	IfClauseLike              = ast.IfClauseLike
-	IndexLike                 = ast.IndexLike
-	IndicesLike               = ast.IndicesLike
-	InductionLike             = ast.InductionLike
-	InlineAssociationsLike    = ast.InlineAssociationsLike
-	InlineParametersLike      = ast.InlineParametersLike
-	InlineStatementsLike      = ast.InlineStatementsLike
-	InlineValuesLike          = ast.InlineValuesLike
-	IntrinsicLike             = ast.IntrinsicLike
-	InversionLike             = ast.InversionLike
-	InversionOperatorLike     = ast.InversionOperatorLike
-	InvocationLike            = ast.InvocationLike
-	InvocationOperatorLike    = ast.InvocationOperatorLike
-	ItemLike                  = ast.ItemLike
-	ItemsLike                 = ast.ItemsLike
-	LabelLike                 = ast.LabelLike
-	LeftBracketLike           = ast.LeftBracketLike
-	LeftRoundLike             = ast.LeftRoundLike
-	LeftSquareLike            = ast.LeftSquareLike
-	LetClauseLike             = ast.LetClauseLike
-	LogicalLike               = ast.LogicalLike
-	LogicalOperatorLike       = ast.LogicalOperatorLike
-	MainClauseLike            = ast.MainClauseLike
-	MatchHandlerLike          = ast.MatchHandlerLike
-	MessageLike               = ast.MessageLike
-	MessagingLike             = ast.MessagingLike
-	MethodLike                = ast.MethodLike
-	MultilineAssociationsLike = ast.MultilineAssociationsLike
-	MultilineParametersLike   = ast.MultilineParametersLike
-	MultilineStatementsLike   = ast.MultilineStatementsLike
-	MultilineValuesLike       = ast.MultilineValuesLike
-	NoAssociationsLike        = ast.NoAssociationsLike
-	NotarizeClauseLike        = ast.NotarizeClauseLike
-	OnClauseLike              = ast.OnClauseLike
-	OperationLike             = ast.OperationLike
-	ParameterLike             = ast.ParameterLike
-	ParametersLike            = ast.ParametersLike
-	PostClauseLike            = ast.PostClauseLike
-	PrecedenceLike            = ast.PrecedenceLike
-	PrimitiveLike             = ast.PrimitiveLike
-	ProcedureLike             = ast.ProcedureLike
-	PublishClauseLike         = ast.PublishClauseLike
-	RangeLike                 = ast.RangeLike
-	RecipientLike             = ast.RecipientLike
-	RejectClauseLike          = ast.RejectClauseLike
-	RepositoryLike            = ast.RepositoryLike
-	ResultLike                = ast.ResultLike
-	RetrieveClauseLike        = ast.RetrieveClauseLike
-	ReturnClauseLike          = ast.ReturnClauseLike
-	RightBracketLike          = ast.RightBracketLike
-	RightRoundLike            = ast.RightRoundLike
-	RightSquareLike           = ast.RightSquareLike
-	SaveClauseLike            = ast.SaveClauseLike
-	SelectClauseLike          = ast.SelectClauseLike
-	SequenceLike              = ast.SequenceLike
-	StatementLike             = ast.StatementLike
-	StatementsLike            = ast.StatementsLike
-	StringLike                = ast.StringLike
-	SubcomponentLike          = ast.SubcomponentLike
-	TargetLike                = ast.TargetLike
-	TemplateLike              = ast.TemplateLike
-	ThrowClauseLike           = ast.ThrowClauseLike
-	ValueLike                 = ast.ValueLike
-	ValuesLike                = ast.ValuesLike
-	VariableLike              = ast.VariableLike
-	WhileClauseLike           = ast.WhileClauseLike
-	WithClauseLike            = ast.WithClauseLike
+	AcceptClauseLike           = ast.AcceptClauseLike
+	AdditionalArgumentLike     = ast.AdditionalArgumentLike
+	AdditionalAssociationLike  = ast.AdditionalAssociationLike
+	AdditionalIndexLike        = ast.AdditionalIndexLike
+	AdditionalStatementLike    = ast.AdditionalStatementLike
+	AdditionalValueLike        = ast.AdditionalValueLike
+	AmplitudeLike              = ast.AmplitudeLike
+	AnnotatedAssociationLike   = ast.AnnotatedAssociationLike
+	AnnotatedStatementLike     = ast.AnnotatedStatementLike
+	AnnotatedValueLike         = ast.AnnotatedValueLike
+	ArgumentLike               = ast.ArgumentLike
+	ArgumentsLike              = ast.ArgumentsLike
+	ArithmeticLike             = ast.ArithmeticLike
+	ArithmeticOperationLike    = ast.ArithmeticOperationLike
+	ArithmeticOperatorLike     = ast.ArithmeticOperatorLike
+	AssignLike                 = ast.AssignLike
+	AssociationLike            = ast.AssociationLike
+	AssociationsLike           = ast.AssociationsLike
+	AtLevelLike                = ast.AtLevelLike
+	AttributeLike              = ast.AttributeLike
+	BagLike                    = ast.BagLike
+	BaseLike                   = ast.BaseLike
+	BreakClauseLike            = ast.BreakClauseLike
+	CheckoutClauseLike         = ast.CheckoutClauseLike
+	CitationLike               = ast.CitationLike
+	CollectionLike             = ast.CollectionLike
+	CompareOperatorLike        = ast.CompareOperatorLike
+	ComparisonLike             = ast.ComparisonLike
+	ComplementLike             = ast.ComplementLike
+	ComponentLike              = ast.ComponentLike
+	ConcatenationLike          = ast.ConcatenationLike
+	ConcatenationOperationLike = ast.ConcatenationOperationLike
+	ConditionLike              = ast.ConditionLike
+	ContinueClauseLike         = ast.ContinueClauseLike
+	DereferenceLike            = ast.DereferenceLike
+	DiscardClauseLike          = ast.DiscardClauseLike
+	DoClauseLike               = ast.DoClauseLike
+	DocumentLike               = ast.DocumentLike
+	DraftLike                  = ast.DraftLike
+	ElementLike                = ast.ElementLike
+	EntityLike                 = ast.EntityLike
+	EventLike                  = ast.EventLike
+	ExceptionLike              = ast.ExceptionLike
+	ExponentialLike            = ast.ExponentialLike
+	ExpressionLike             = ast.ExpressionLike
+	FailureLike                = ast.FailureLike
+	FlowLike                   = ast.FlowLike
+	FunctionLike               = ast.FunctionLike
+	IfClauseLike               = ast.IfClauseLike
+	IndexLike                  = ast.IndexLike
+	IndicesLike                = ast.IndicesLike
+	IndirectLike               = ast.IndirectLike
+	InductionLike              = ast.InductionLike
+	InferenceLike              = ast.InferenceLike
+	InlineAssociationsLike     = ast.InlineAssociationsLike
+	InlineStatementsLike       = ast.InlineStatementsLike
+	InlineValuesLike           = ast.InlineValuesLike
+	InverseLike                = ast.InverseLike
+	InversionLike              = ast.InversionLike
+	InvocationLike             = ast.InvocationLike
+	ItemLike                   = ast.ItemLike
+	ItemsLike                  = ast.ItemsLike
+	LabelLike                  = ast.LabelLike
+	LeftBracketLike            = ast.LeftBracketLike
+	LeftRoundLike              = ast.LeftRoundLike
+	LeftSquareLike             = ast.LeftSquareLike
+	LetClauseLike              = ast.LetClauseLike
+	LogicOperatorLike          = ast.LogicOperatorLike
+	LogicalLike                = ast.LogicalLike
+	LogicalOperationLike       = ast.LogicalOperationLike
+	MainClauseLike             = ast.MainClauseLike
+	MatchHandlerLike           = ast.MatchHandlerLike
+	MessageLike                = ast.MessageLike
+	MessagingLike              = ast.MessagingLike
+	MethodLike                 = ast.MethodLike
+	MultilineAssociationsLike  = ast.MultilineAssociationsLike
+	MultilineStatementsLike    = ast.MultilineStatementsLike
+	MultilineValuesLike        = ast.MultilineValuesLike
+	NoAssociationsLike         = ast.NoAssociationsLike
+	NotarizeClauseLike         = ast.NotarizeClauseLike
+	NumericalLike              = ast.NumericalLike
+	OnClauseLike               = ast.OnClauseLike
+	OperationLike              = ast.OperationLike
+	ParametersLike             = ast.ParametersLike
+	PostClauseLike             = ast.PostClauseLike
+	PrecedenceLike             = ast.PrecedenceLike
+	PrimitiveLike              = ast.PrimitiveLike
+	ProcedureLike              = ast.ProcedureLike
+	PublishClauseLike          = ast.PublishClauseLike
+	RangeLike                  = ast.RangeLike
+	RecipientLike              = ast.RecipientLike
+	RejectClauseLike           = ast.RejectClauseLike
+	RepositoryLike             = ast.RepositoryLike
+	ResultLike                 = ast.ResultLike
+	RetrieveClauseLike         = ast.RetrieveClauseLike
+	ReturnClauseLike           = ast.ReturnClauseLike
+	RightBracketLike           = ast.RightBracketLike
+	RightRoundLike             = ast.RightRoundLike
+	RightSquareLike            = ast.RightSquareLike
+	SaveClauseLike             = ast.SaveClauseLike
+	SelectClauseLike           = ast.SelectClauseLike
+	SequenceLike               = ast.SequenceLike
+	StatementLike              = ast.StatementLike
+	StatementsLike             = ast.StatementsLike
+	StringLike                 = ast.StringLike
+	SubcomponentLike           = ast.SubcomponentLike
+	TargetLike                 = ast.TargetLike
+	TemplateLike               = ast.TemplateLike
+	TextualLike                = ast.TextualLike
+	ThreadingLike              = ast.ThreadingLike
+	ThrowClauseLike            = ast.ThrowClauseLike
+	ValueLike                  = ast.ValueLike
+	ValuesLike                 = ast.ValuesLike
+	VariableLike               = ast.VariableLike
+	WhileClauseLike            = ast.WhileClauseLike
+	WithClauseLike             = ast.WithClauseLike
 )
 
 // Grammar
@@ -403,16 +403,6 @@ func AdditionalIndex(
 	)
 }
 
-// Ast/AdditionalParameter
-
-func AdditionalParameter(
-	parameter ast.ParameterLike,
-) ast.AdditionalParameterLike {
-	return ast.AdditionalParameterClass().AdditionalParameter(
-		parameter,
-	)
-}
-
 // Ast/AdditionalStatement
 
 func AdditionalStatement(
@@ -437,12 +427,12 @@ func AdditionalValue(
 
 func Amplitude(
 	bar1 string,
-	expression ast.ExpressionLike,
+	arithmetic ast.ArithmeticLike,
 	bar2 string,
 ) ast.AmplitudeLike {
 	return ast.AmplitudeClass().Amplitude(
 		bar1,
-		expression,
+		arithmetic,
 		bar2,
 	)
 }
@@ -457,20 +447,6 @@ func AnnotatedAssociation(
 	return ast.AnnotatedAssociationClass().AnnotatedAssociation(
 		dash,
 		association,
-		optionalNote,
-	)
-}
-
-// Ast/AnnotatedParameter
-
-func AnnotatedParameter(
-	dash string,
-	parameter ast.ParameterLike,
-	optionalNote string,
-) ast.AnnotatedParameterLike {
-	return ast.AnnotatedParameterClass().AnnotatedParameter(
-		dash,
-		parameter,
 		optionalNote,
 	)
 }
@@ -506,10 +482,10 @@ func AnnotatedValue(
 // Ast/Argument
 
 func Argument(
-	expression ast.ExpressionLike,
+	identifier string,
 ) ast.ArgumentLike {
 	return ast.ArgumentClass().Argument(
-		expression,
+		identifier,
 	)
 }
 
@@ -528,14 +504,24 @@ func Arguments(
 // Ast/Arithmetic
 
 func Arithmetic(
-	expression1 ast.ExpressionLike,
-	arithmeticOperator ast.ArithmeticOperatorLike,
-	expression2 ast.ExpressionLike,
+	numerical ast.NumericalLike,
+	arithmeticOperations col.Sequential[ast.ArithmeticOperationLike],
 ) ast.ArithmeticLike {
 	return ast.ArithmeticClass().Arithmetic(
-		expression1,
+		numerical,
+		arithmeticOperations,
+	)
+}
+
+// Ast/ArithmeticOperation
+
+func ArithmeticOperation(
+	arithmeticOperator ast.ArithmeticOperatorLike,
+	numerical ast.NumericalLike,
+) ast.ArithmeticOperationLike {
+	return ast.ArithmeticOperationClass().ArithmeticOperation(
 		arithmeticOperator,
-		expression2,
+		numerical,
 	)
 }
 
@@ -549,12 +535,12 @@ func ArithmeticOperator(
 	)
 }
 
-// Ast/AssignmentOperator
+// Ast/Assign
 
-func AssignmentOperator(
+func Assign(
 	any_ any,
-) ast.AssignmentOperatorLike {
-	return ast.AssignmentOperatorClass().AssignmentOperator(
+) ast.AssignLike {
+	return ast.AssignClass().Assign(
 		any_,
 	)
 }
@@ -596,12 +582,12 @@ func AtLevel(
 // Ast/Attribute
 
 func Attribute(
-	variable ast.VariableLike,
-	indices ast.IndicesLike,
+	identifier string,
+	optionalSubcomponent ast.SubcomponentLike,
 ) ast.AttributeLike {
 	return ast.AttributeClass().Attribute(
-		variable,
-		indices,
+		identifier,
+		optionalSubcomponent,
 	)
 }
 
@@ -615,24 +601,20 @@ func Bag(
 	)
 }
 
+// Ast/Base
+
+func Base(
+	any_ any,
+) ast.BaseLike {
+	return ast.BaseClass().Base(
+		any_,
+	)
+}
+
 // Ast/BreakClause
 
 func BreakClause() ast.BreakClauseLike {
 	return ast.BreakClauseClass().BreakClause()
-}
-
-// Ast/Chaining
-
-func Chaining(
-	expression1 ast.ExpressionLike,
-	ampersand string,
-	expression2 ast.ExpressionLike,
-) ast.ChainingLike {
-	return ast.ChainingClass().Chaining(
-		expression1,
-		ampersand,
-		expression2,
-	)
 }
 
 // Ast/CheckoutClause
@@ -669,27 +651,27 @@ func Collection(
 	)
 }
 
-// Ast/Comparison
+// Ast/CompareOperator
 
-func Comparison(
-	expression1 ast.ExpressionLike,
-	comparisonOperator ast.ComparisonOperatorLike,
-	expression2 ast.ExpressionLike,
-) ast.ComparisonLike {
-	return ast.ComparisonClass().Comparison(
-		expression1,
-		comparisonOperator,
-		expression2,
+func CompareOperator(
+	any_ any,
+) ast.CompareOperatorLike {
+	return ast.CompareOperatorClass().CompareOperator(
+		any_,
 	)
 }
 
-// Ast/ComparisonOperator
+// Ast/Comparison
 
-func ComparisonOperator(
-	any_ any,
-) ast.ComparisonOperatorLike {
-	return ast.ComparisonOperatorClass().ComparisonOperator(
-		any_,
+func Comparison(
+	numerical1 ast.NumericalLike,
+	compareOperator ast.CompareOperatorLike,
+	numerical2 ast.NumericalLike,
+) ast.ComparisonLike {
+	return ast.ComparisonClass().Comparison(
+		numerical1,
+		compareOperator,
+		numerical2,
 	)
 }
 
@@ -697,11 +679,11 @@ func ComparisonOperator(
 
 func Complement(
 	not string,
-	expression ast.ExpressionLike,
+	logical ast.LogicalLike,
 ) ast.ComplementLike {
 	return ast.ComplementClass().Complement(
 		not,
-		expression,
+		logical,
 	)
 }
 
@@ -709,21 +691,35 @@ func Complement(
 
 func Component(
 	entity ast.EntityLike,
-	optionalContext ast.ContextLike,
+	optionalParameters ast.ParametersLike,
 ) ast.ComponentLike {
 	return ast.ComponentClass().Component(
 		entity,
-		optionalContext,
+		optionalParameters,
 	)
 }
 
-// Ast/Composite
+// Ast/Concatenation
 
-func Composite(
-	expression ast.ExpressionLike,
-) ast.CompositeLike {
-	return ast.CompositeClass().Composite(
-		expression,
+func Concatenation(
+	textual ast.TextualLike,
+	concatenationOperations col.Sequential[ast.ConcatenationOperationLike],
+) ast.ConcatenationLike {
+	return ast.ConcatenationClass().Concatenation(
+		textual,
+		concatenationOperations,
+	)
+}
+
+// Ast/ConcatenationOperation
+
+func ConcatenationOperation(
+	ampersand string,
+	textual ast.TextualLike,
+) ast.ConcatenationOperationLike {
+	return ast.ConcatenationOperationClass().ConcatenationOperation(
+		ampersand,
+		textual,
 	)
 }
 
@@ -737,16 +733,6 @@ func Condition(
 	)
 }
 
-// Ast/Context
-
-func Context(
-	parameters ast.ParametersLike,
-) ast.ContextLike {
-	return ast.ContextClass().Context(
-		parameters,
-	)
-}
-
 // Ast/ContinueClause
 
 func ContinueClause() ast.ContinueClauseLike {
@@ -757,11 +743,11 @@ func ContinueClause() ast.ContinueClauseLike {
 
 func Dereference(
 	snail string,
-	expression ast.ExpressionLike,
+	indirect ast.IndirectLike,
 ) ast.DereferenceLike {
 	return ast.DereferenceClass().Dereference(
 		snail,
-		expression,
+		indirect,
 	)
 }
 
@@ -850,14 +836,14 @@ func Exception(
 // Ast/Exponential
 
 func Exponential(
-	expression1 ast.ExpressionLike,
+	base ast.BaseLike,
 	caret string,
-	expression2 ast.ExpressionLike,
+	numerical ast.NumericalLike,
 ) ast.ExponentialLike {
 	return ast.ExponentialClass().Exponential(
-		expression1,
+		base,
 		caret,
-		expression2,
+		numerical,
 	)
 }
 
@@ -895,9 +881,11 @@ func Flow(
 
 func Function(
 	identifier string,
+	optionalArguments ast.ArgumentsLike,
 ) ast.FunctionLike {
 	return ast.FunctionClass().Function(
 		identifier,
+		optionalArguments,
 	)
 }
 
@@ -935,6 +923,16 @@ func Indices(
 	)
 }
 
+// Ast/Indirect
+
+func Indirect(
+	any_ any,
+) ast.IndirectLike {
+	return ast.IndirectClass().Indirect(
+		any_,
+	)
+}
+
 // Ast/Induction
 
 func Induction(
@@ -942,6 +940,18 @@ func Induction(
 ) ast.InductionLike {
 	return ast.InductionClass().Induction(
 		any_,
+	)
+}
+
+// Ast/Inference
+
+func Inference(
+	logical ast.LogicalLike,
+	logicalOperations col.Sequential[ast.LogicalOperationLike],
+) ast.InferenceLike {
+	return ast.InferenceClass().Inference(
+		logical,
+		logicalOperations,
 	)
 }
 
@@ -954,18 +964,6 @@ func InlineAssociations(
 	return ast.InlineAssociationsClass().InlineAssociations(
 		association,
 		additionalAssociations,
-	)
-}
-
-// Ast/InlineParameters
-
-func InlineParameters(
-	parameter ast.ParameterLike,
-	additionalParameters col.Sequential[ast.AdditionalParameterLike],
-) ast.InlineParametersLike {
-	return ast.InlineParametersClass().InlineParameters(
-		parameter,
-		additionalParameters,
 	)
 }
 
@@ -993,63 +991,39 @@ func InlineValues(
 	)
 }
 
-// Ast/Intrinsic
+// Ast/Inverse
 
-func Intrinsic(
-	function ast.FunctionLike,
-	optionalArguments ast.ArgumentsLike,
-) ast.IntrinsicLike {
-	return ast.IntrinsicClass().Intrinsic(
-		function,
-		optionalArguments,
+func Inverse(
+	any_ any,
+) ast.InverseLike {
+	return ast.InverseClass().Inverse(
+		any_,
 	)
 }
 
 // Ast/Inversion
 
 func Inversion(
-	inversionOperator ast.InversionOperatorLike,
-	expression ast.ExpressionLike,
+	inverse ast.InverseLike,
+	numerical ast.NumericalLike,
 ) ast.InversionLike {
 	return ast.InversionClass().Inversion(
-		inversionOperator,
-		expression,
-	)
-}
-
-// Ast/InversionOperator
-
-func InversionOperator(
-	any_ any,
-) ast.InversionOperatorLike {
-	return ast.InversionOperatorClass().InversionOperator(
-		any_,
+		inverse,
+		numerical,
 	)
 }
 
 // Ast/Invocation
 
 func Invocation(
-	target ast.TargetLike,
-	invocationOperator ast.InvocationOperatorLike,
-	method ast.MethodLike,
+	threading ast.ThreadingLike,
+	identifier string,
 	optionalArguments ast.ArgumentsLike,
 ) ast.InvocationLike {
 	return ast.InvocationClass().Invocation(
-		target,
-		invocationOperator,
-		method,
+		threading,
+		identifier,
 		optionalArguments,
-	)
-}
-
-// Ast/InvocationOperator
-
-func InvocationOperator(
-	any_ any,
-) ast.InvocationOperatorLike {
-	return ast.InvocationOperatorClass().InvocationOperator(
-		any_,
 	)
 }
 
@@ -1101,45 +1075,57 @@ func LeftRound() ast.LeftRoundLike {
 
 // Ast/LeftSquare
 
-func LeftSquare() ast.LeftSquareLike {
-	return ast.LeftSquareClass().LeftSquare()
+func LeftSquare(
+	bar string,
+) ast.LeftSquareLike {
+	return ast.LeftSquareClass().LeftSquare(
+		bar,
+	)
 }
 
 // Ast/LetClause
 
 func LetClause(
 	recipient ast.RecipientLike,
-	assignmentOperator ast.AssignmentOperatorLike,
+	assign ast.AssignLike,
 	expression ast.ExpressionLike,
 ) ast.LetClauseLike {
 	return ast.LetClauseClass().LetClause(
 		recipient,
-		assignmentOperator,
+		assign,
 		expression,
+	)
+}
+
+// Ast/LogicOperator
+
+func LogicOperator(
+	any_ any,
+) ast.LogicOperatorLike {
+	return ast.LogicOperatorClass().LogicOperator(
+		any_,
 	)
 }
 
 // Ast/Logical
 
 func Logical(
-	expression1 ast.ExpressionLike,
-	logicalOperator ast.LogicalOperatorLike,
-	expression2 ast.ExpressionLike,
+	any_ any,
 ) ast.LogicalLike {
 	return ast.LogicalClass().Logical(
-		expression1,
-		logicalOperator,
-		expression2,
+		any_,
 	)
 }
 
-// Ast/LogicalOperator
+// Ast/LogicalOperation
 
-func LogicalOperator(
-	any_ any,
-) ast.LogicalOperatorLike {
-	return ast.LogicalOperatorClass().LogicalOperator(
-		any_,
+func LogicalOperation(
+	logicOperator ast.LogicOperatorLike,
+	logical ast.LogicalLike,
+) ast.LogicalOperationLike {
+	return ast.LogicalOperationClass().LogicalOperation(
+		logicOperator,
+		logical,
 	)
 }
 
@@ -1189,9 +1175,13 @@ func Messaging(
 
 func Method(
 	identifier string,
+	optionalSubcomponent ast.SubcomponentLike,
+	optionalInvocation ast.InvocationLike,
 ) ast.MethodLike {
 	return ast.MethodClass().Method(
 		identifier,
+		optionalSubcomponent,
+		optionalInvocation,
 	)
 }
 
@@ -1202,16 +1192,6 @@ func MultilineAssociations(
 ) ast.MultilineAssociationsLike {
 	return ast.MultilineAssociationsClass().MultilineAssociations(
 		annotatedAssociations,
-	)
-}
-
-// Ast/MultilineParameters
-
-func MultilineParameters(
-	annotatedParameters col.Sequential[ast.AnnotatedParameterLike],
-) ast.MultilineParametersLike {
-	return ast.MultilineParametersClass().MultilineParameters(
-		annotatedParameters,
 	)
 }
 
@@ -1257,6 +1237,16 @@ func NotarizeClause(
 	)
 }
 
+// Ast/Numerical
+
+func Numerical(
+	any_ any,
+) ast.NumericalLike {
+	return ast.NumericalClass().Numerical(
+		any_,
+	)
+}
+
 // Ast/OnClause
 
 func OnClause(
@@ -1279,27 +1269,13 @@ func Operation(
 	)
 }
 
-// Ast/Parameter
-
-func Parameter(
-	label ast.LabelLike,
-	colon string,
-	component ast.ComponentLike,
-) ast.ParameterLike {
-	return ast.ParameterClass().Parameter(
-		label,
-		colon,
-		component,
-	)
-}
-
 // Ast/Parameters
 
 func Parameters(
-	any_ any,
+	associations ast.AssociationsLike,
 ) ast.ParametersLike {
 	return ast.ParametersClass().Parameters(
-		any_,
+		associations,
 	)
 }
 
@@ -1451,8 +1427,12 @@ func RightRound() ast.RightRoundLike {
 
 // Ast/RightSquare
 
-func RightSquare() ast.RightSquareLike {
-	return ast.RightSquareClass().RightSquare()
+func RightSquare(
+	bar string,
+) ast.RightSquareLike {
+	return ast.RightSquareClass().RightSquare(
+		bar,
+	)
 }
 
 // Ast/SaveClause
@@ -1524,11 +1504,9 @@ func String(
 // Ast/Subcomponent
 
 func Subcomponent(
-	composite ast.CompositeLike,
 	indices ast.IndicesLike,
 ) ast.SubcomponentLike {
 	return ast.SubcomponentClass().Subcomponent(
-		composite,
 		indices,
 	)
 }
@@ -1536,10 +1514,10 @@ func Subcomponent(
 // Ast/Target
 
 func Target(
-	expression ast.ExpressionLike,
+	any_ any,
 ) ast.TargetLike {
 	return ast.TargetClass().Target(
-		expression,
+		any_,
 	)
 }
 
@@ -1550,6 +1528,26 @@ func Template(
 ) ast.TemplateLike {
 	return ast.TemplateClass().Template(
 		expression,
+	)
+}
+
+// Ast/Textual
+
+func Textual(
+	any_ any,
+) ast.TextualLike {
+	return ast.TextualClass().Textual(
+		any_,
+	)
+}
+
+// Ast/Threading
+
+func Threading(
+	any_ any,
+) ast.ThreadingLike {
+	return ast.ThreadingClass().Threading(
+		any_,
 	)
 }
 
@@ -1587,9 +1585,11 @@ func Values(
 
 func Variable(
 	identifier string,
+	optionalSubcomponent ast.SubcomponentLike,
 ) ast.VariableLike {
 	return ast.VariableClass().Variable(
 		identifier,
+		optionalSubcomponent,
 	)
 }
 

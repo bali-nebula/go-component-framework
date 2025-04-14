@@ -27,21 +27,21 @@ import (
 
 // Access Function
 
-func AdditionalParameterClass() AdditionalParameterClassLike {
-	return additionalParameterClass()
+func TextualClass() TextualClassLike {
+	return textualClass()
 }
 
 // Constructor Methods
 
-func (c *additionalParameterClass_) AdditionalParameter(
-	parameter ParameterLike,
-) AdditionalParameterLike {
-	if uti.IsUndefined(parameter) {
-		panic("The \"parameter\" attribute is required by this class.")
+func (c *textualClass_) Textual(
+	any_ any,
+) TextualLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &additionalParameter_{
+	var instance = &textual_{
 		// Initialize the instance attributes.
-		parameter_: parameter,
+		any_: any_,
 	}
 	return instance
 }
@@ -50,37 +50,37 @@ func (c *additionalParameterClass_) AdditionalParameter(
 
 // Principal Methods
 
-func (v *additionalParameter_) GetClass() AdditionalParameterClassLike {
-	return additionalParameterClass()
+func (v *textual_) GetClass() TextualClassLike {
+	return textualClass()
 }
 
 // Attribute Methods
 
-func (v *additionalParameter_) GetParameter() ParameterLike {
-	return v.parameter_
+func (v *textual_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalParameter_ struct {
+type textual_ struct {
 	// Declare the instance attributes.
-	parameter_ ParameterLike
+	any_ any
 }
 
 // Class Structure
 
-type additionalParameterClass_ struct {
+type textualClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalParameterClass() *additionalParameterClass_ {
-	return additionalParameterClassReference_
+func textualClass() *textualClass_ {
+	return textualClassReference_
 }
 
-var additionalParameterClassReference_ = &additionalParameterClass_{
+var textualClassReference_ = &textualClass_{
 	// Initialize the class constants.
 }

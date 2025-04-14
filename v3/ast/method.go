@@ -35,13 +35,17 @@ func MethodClass() MethodClassLike {
 
 func (c *methodClass_) Method(
 	identifier string,
+	optionalSubcomponent SubcomponentLike,
+	optionalInvocation InvocationLike,
 ) MethodLike {
 	if uti.IsUndefined(identifier) {
 		panic("The \"identifier\" attribute is required by this class.")
 	}
 	var instance = &method_{
 		// Initialize the instance attributes.
-		identifier_: identifier,
+		identifier_:           identifier,
+		optionalSubcomponent_: optionalSubcomponent,
+		optionalInvocation_:   optionalInvocation,
 	}
 	return instance
 }
@@ -60,13 +64,23 @@ func (v *method_) GetIdentifier() string {
 	return v.identifier_
 }
 
+func (v *method_) GetOptionalSubcomponent() SubcomponentLike {
+	return v.optionalSubcomponent_
+}
+
+func (v *method_) GetOptionalInvocation() InvocationLike {
+	return v.optionalInvocation_
+}
+
 // PROTECTED INTERFACE
 
 // Instance Structure
 
 type method_ struct {
 	// Declare the instance attributes.
-	identifier_ string
+	identifier_           string
+	optionalSubcomponent_ SubcomponentLike
+	optionalInvocation_   InvocationLike
 }
 
 // Class Structure

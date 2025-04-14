@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func LogicalOperatorClass() LogicalOperatorClassLike {
-	return logicalOperatorClass()
+func ArithmeticOperationClass() ArithmeticOperationClassLike {
+	return arithmeticOperationClass()
 }
 
 // Constructor Methods
 
-func (c *logicalOperatorClass_) LogicalOperator(
-	any_ any,
-) LogicalOperatorLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *arithmeticOperationClass_) ArithmeticOperation(
+	arithmeticOperator ArithmeticOperatorLike,
+	numerical NumericalLike,
+) ArithmeticOperationLike {
+	if uti.IsUndefined(arithmeticOperator) {
+		panic("The \"arithmeticOperator\" attribute is required by this class.")
 	}
-	var instance = &logicalOperator_{
+	if uti.IsUndefined(numerical) {
+		panic("The \"numerical\" attribute is required by this class.")
+	}
+	var instance = &arithmeticOperation_{
 		// Initialize the instance attributes.
-		any_: any_,
+		arithmeticOperator_: arithmeticOperator,
+		numerical_:          numerical,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *logicalOperatorClass_) LogicalOperator(
 
 // Principal Methods
 
-func (v *logicalOperator_) GetClass() LogicalOperatorClassLike {
-	return logicalOperatorClass()
+func (v *arithmeticOperation_) GetClass() ArithmeticOperationClassLike {
+	return arithmeticOperationClass()
 }
 
 // Attribute Methods
 
-func (v *logicalOperator_) GetAny() any {
-	return v.any_
+func (v *arithmeticOperation_) GetArithmeticOperator() ArithmeticOperatorLike {
+	return v.arithmeticOperator_
+}
+
+func (v *arithmeticOperation_) GetNumerical() NumericalLike {
+	return v.numerical_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type logicalOperator_ struct {
+type arithmeticOperation_ struct {
 	// Declare the instance attributes.
-	any_ any
+	arithmeticOperator_ ArithmeticOperatorLike
+	numerical_          NumericalLike
 }
 
 // Class Structure
 
-type logicalOperatorClass_ struct {
+type arithmeticOperationClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func logicalOperatorClass() *logicalOperatorClass_ {
-	return logicalOperatorClassReference_
+func arithmeticOperationClass() *arithmeticOperationClass_ {
+	return arithmeticOperationClassReference_
 }
 
-var logicalOperatorClassReference_ = &logicalOperatorClass_{
+var arithmeticOperationClassReference_ = &arithmeticOperationClass_{
 	// Initialize the class constants.
 }

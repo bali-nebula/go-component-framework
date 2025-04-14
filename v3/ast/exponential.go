@@ -34,24 +34,24 @@ func ExponentialClass() ExponentialClassLike {
 // Constructor Methods
 
 func (c *exponentialClass_) Exponential(
-	expression1 ExpressionLike,
+	base BaseLike,
 	caret string,
-	expression2 ExpressionLike,
+	numerical NumericalLike,
 ) ExponentialLike {
-	if uti.IsUndefined(expression1) {
-		panic("The \"expression1\" attribute is required by this class.")
+	if uti.IsUndefined(base) {
+		panic("The \"base\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(caret) {
 		panic("The \"caret\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(expression2) {
-		panic("The \"expression2\" attribute is required by this class.")
+	if uti.IsUndefined(numerical) {
+		panic("The \"numerical\" attribute is required by this class.")
 	}
 	var instance = &exponential_{
 		// Initialize the instance attributes.
-		expression1_: expression1,
-		caret_:       caret,
-		expression2_: expression2,
+		base_:      base,
+		caret_:     caret,
+		numerical_: numerical,
 	}
 	return instance
 }
@@ -66,16 +66,16 @@ func (v *exponential_) GetClass() ExponentialClassLike {
 
 // Attribute Methods
 
-func (v *exponential_) GetExpression1() ExpressionLike {
-	return v.expression1_
+func (v *exponential_) GetBase() BaseLike {
+	return v.base_
 }
 
 func (v *exponential_) GetCaret() string {
 	return v.caret_
 }
 
-func (v *exponential_) GetExpression2() ExpressionLike {
-	return v.expression2_
+func (v *exponential_) GetNumerical() NumericalLike {
+	return v.numerical_
 }
 
 // PROTECTED INTERFACE
@@ -84,9 +84,9 @@ func (v *exponential_) GetExpression2() ExpressionLike {
 
 type exponential_ struct {
 	// Declare the instance attributes.
-	expression1_ ExpressionLike
-	caret_       string
-	expression2_ ExpressionLike
+	base_      BaseLike
+	caret_     string
+	numerical_ NumericalLike
 }
 
 // Class Structure

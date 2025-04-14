@@ -20,7 +20,6 @@
 package ast
 
 import (
-	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -28,26 +27,21 @@ import (
 
 // Access Function
 
-func InlineParametersClass() InlineParametersClassLike {
-	return inlineParametersClass()
+func LogicOperatorClass() LogicOperatorClassLike {
+	return logicOperatorClass()
 }
 
 // Constructor Methods
 
-func (c *inlineParametersClass_) InlineParameters(
-	parameter ParameterLike,
-	additionalParameters col.Sequential[AdditionalParameterLike],
-) InlineParametersLike {
-	if uti.IsUndefined(parameter) {
-		panic("The \"parameter\" attribute is required by this class.")
+func (c *logicOperatorClass_) LogicOperator(
+	any_ any,
+) LogicOperatorLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(additionalParameters) {
-		panic("The \"additionalParameters\" attribute is required by this class.")
-	}
-	var instance = &inlineParameters_{
+	var instance = &logicOperator_{
 		// Initialize the instance attributes.
-		parameter_:            parameter,
-		additionalParameters_: additionalParameters,
+		any_: any_,
 	}
 	return instance
 }
@@ -56,42 +50,37 @@ func (c *inlineParametersClass_) InlineParameters(
 
 // Principal Methods
 
-func (v *inlineParameters_) GetClass() InlineParametersClassLike {
-	return inlineParametersClass()
+func (v *logicOperator_) GetClass() LogicOperatorClassLike {
+	return logicOperatorClass()
 }
 
 // Attribute Methods
 
-func (v *inlineParameters_) GetParameter() ParameterLike {
-	return v.parameter_
-}
-
-func (v *inlineParameters_) GetAdditionalParameters() col.Sequential[AdditionalParameterLike] {
-	return v.additionalParameters_
+func (v *logicOperator_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inlineParameters_ struct {
+type logicOperator_ struct {
 	// Declare the instance attributes.
-	parameter_            ParameterLike
-	additionalParameters_ col.Sequential[AdditionalParameterLike]
+	any_ any
 }
 
 // Class Structure
 
-type inlineParametersClass_ struct {
+type logicOperatorClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inlineParametersClass() *inlineParametersClass_ {
-	return inlineParametersClassReference_
+func logicOperatorClass() *logicOperatorClass_ {
+	return logicOperatorClassReference_
 }
 
-var inlineParametersClassReference_ = &inlineParametersClass_{
+var logicOperatorClassReference_ = &logicOperatorClass_{
 	// Initialize the class constants.
 }

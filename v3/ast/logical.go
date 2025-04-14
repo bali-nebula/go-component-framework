@@ -34,24 +34,14 @@ func LogicalClass() LogicalClassLike {
 // Constructor Methods
 
 func (c *logicalClass_) Logical(
-	expression1 ExpressionLike,
-	logicalOperator LogicalOperatorLike,
-	expression2 ExpressionLike,
+	any_ any,
 ) LogicalLike {
-	if uti.IsUndefined(expression1) {
-		panic("The \"expression1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(logicalOperator) {
-		panic("The \"logicalOperator\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(expression2) {
-		panic("The \"expression2\" attribute is required by this class.")
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
 	var instance = &logical_{
 		// Initialize the instance attributes.
-		expression1_:     expression1,
-		logicalOperator_: logicalOperator,
-		expression2_:     expression2,
+		any_: any_,
 	}
 	return instance
 }
@@ -66,16 +56,8 @@ func (v *logical_) GetClass() LogicalClassLike {
 
 // Attribute Methods
 
-func (v *logical_) GetExpression1() ExpressionLike {
-	return v.expression1_
-}
-
-func (v *logical_) GetLogicalOperator() LogicalOperatorLike {
-	return v.logicalOperator_
-}
-
-func (v *logical_) GetExpression2() ExpressionLike {
-	return v.expression2_
+func (v *logical_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
@@ -84,9 +66,7 @@ func (v *logical_) GetExpression2() ExpressionLike {
 
 type logical_ struct {
 	// Declare the instance attributes.
-	expression1_     ExpressionLike
-	logicalOperator_ LogicalOperatorLike
-	expression2_     ExpressionLike
+	any_ any
 }
 
 // Class Structure

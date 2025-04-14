@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func CompositeClass() CompositeClassLike {
-	return compositeClass()
+func LogicalOperationClass() LogicalOperationClassLike {
+	return logicalOperationClass()
 }
 
 // Constructor Methods
 
-func (c *compositeClass_) Composite(
-	expression ExpressionLike,
-) CompositeLike {
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
+func (c *logicalOperationClass_) LogicalOperation(
+	logicOperator LogicOperatorLike,
+	logical LogicalLike,
+) LogicalOperationLike {
+	if uti.IsUndefined(logicOperator) {
+		panic("The \"logicOperator\" attribute is required by this class.")
 	}
-	var instance = &composite_{
+	if uti.IsUndefined(logical) {
+		panic("The \"logical\" attribute is required by this class.")
+	}
+	var instance = &logicalOperation_{
 		// Initialize the instance attributes.
-		expression_: expression,
+		logicOperator_: logicOperator,
+		logical_:       logical,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *compositeClass_) Composite(
 
 // Principal Methods
 
-func (v *composite_) GetClass() CompositeClassLike {
-	return compositeClass()
+func (v *logicalOperation_) GetClass() LogicalOperationClassLike {
+	return logicalOperationClass()
 }
 
 // Attribute Methods
 
-func (v *composite_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *logicalOperation_) GetLogicOperator() LogicOperatorLike {
+	return v.logicOperator_
+}
+
+func (v *logicalOperation_) GetLogical() LogicalLike {
+	return v.logical_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type composite_ struct {
+type logicalOperation_ struct {
 	// Declare the instance attributes.
-	expression_ ExpressionLike
+	logicOperator_ LogicOperatorLike
+	logical_       LogicalLike
 }
 
 // Class Structure
 
-type compositeClass_ struct {
+type logicalOperationClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func compositeClass() *compositeClass_ {
-	return compositeClassReference_
+func logicalOperationClass() *logicalOperationClass_ {
+	return logicalOperationClassReference_
 }
 
-var compositeClassReference_ = &compositeClass_{
+var logicalOperationClassReference_ = &logicalOperationClass_{
 	// Initialize the class constants.
 }

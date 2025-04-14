@@ -34,14 +34,14 @@ func ParametersClass() ParametersClassLike {
 // Constructor Methods
 
 func (c *parametersClass_) Parameters(
-	any_ any,
+	associations AssociationsLike,
 ) ParametersLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+	if uti.IsUndefined(associations) {
+		panic("The \"associations\" attribute is required by this class.")
 	}
 	var instance = &parameters_{
 		// Initialize the instance attributes.
-		any_: any_,
+		associations_: associations,
 	}
 	return instance
 }
@@ -56,8 +56,8 @@ func (v *parameters_) GetClass() ParametersClassLike {
 
 // Attribute Methods
 
-func (v *parameters_) GetAny() any {
-	return v.any_
+func (v *parameters_) GetAssociations() AssociationsLike {
+	return v.associations_
 }
 
 // PROTECTED INTERFACE
@@ -66,7 +66,7 @@ func (v *parameters_) GetAny() any {
 
 type parameters_ struct {
 	// Declare the instance attributes.
-	any_ any
+	associations_ AssociationsLike
 }
 
 // Class Structure

@@ -20,6 +20,7 @@
 package ast
 
 import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -34,24 +35,19 @@ func ArithmeticClass() ArithmeticClassLike {
 // Constructor Methods
 
 func (c *arithmeticClass_) Arithmetic(
-	expression1 ExpressionLike,
-	arithmeticOperator ArithmeticOperatorLike,
-	expression2 ExpressionLike,
+	numerical NumericalLike,
+	arithmeticOperations col.Sequential[ArithmeticOperationLike],
 ) ArithmeticLike {
-	if uti.IsUndefined(expression1) {
-		panic("The \"expression1\" attribute is required by this class.")
+	if uti.IsUndefined(numerical) {
+		panic("The \"numerical\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(arithmeticOperator) {
-		panic("The \"arithmeticOperator\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(expression2) {
-		panic("The \"expression2\" attribute is required by this class.")
+	if uti.IsUndefined(arithmeticOperations) {
+		panic("The \"arithmeticOperations\" attribute is required by this class.")
 	}
 	var instance = &arithmetic_{
 		// Initialize the instance attributes.
-		expression1_:        expression1,
-		arithmeticOperator_: arithmeticOperator,
-		expression2_:        expression2,
+		numerical_:            numerical,
+		arithmeticOperations_: arithmeticOperations,
 	}
 	return instance
 }
@@ -66,16 +62,12 @@ func (v *arithmetic_) GetClass() ArithmeticClassLike {
 
 // Attribute Methods
 
-func (v *arithmetic_) GetExpression1() ExpressionLike {
-	return v.expression1_
+func (v *arithmetic_) GetNumerical() NumericalLike {
+	return v.numerical_
 }
 
-func (v *arithmetic_) GetArithmeticOperator() ArithmeticOperatorLike {
-	return v.arithmeticOperator_
-}
-
-func (v *arithmetic_) GetExpression2() ExpressionLike {
-	return v.expression2_
+func (v *arithmetic_) GetArithmeticOperations() col.Sequential[ArithmeticOperationLike] {
+	return v.arithmeticOperations_
 }
 
 // PROTECTED INTERFACE
@@ -84,9 +76,8 @@ func (v *arithmetic_) GetExpression2() ExpressionLike {
 
 type arithmetic_ struct {
 	// Declare the instance attributes.
-	expression1_        ExpressionLike
-	arithmeticOperator_ ArithmeticOperatorLike
-	expression2_        ExpressionLike
+	numerical_            NumericalLike
+	arithmeticOperations_ col.Sequential[ArithmeticOperationLike]
 }
 
 // Class Structure
