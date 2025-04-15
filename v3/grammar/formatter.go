@@ -156,6 +156,12 @@ func (v *formatter_) ProcessDot(
 	v.appendString(dot)
 }
 
+func (v *formatter_) ProcessDouble(
+	double string,
+) {
+	v.appendString(double)
+}
+
 func (v *formatter_) ProcessDuration(
 	duration string,
 ) {
@@ -304,12 +310,6 @@ func (v *formatter_) ProcessSlashEqual(
 	slashEqual string,
 ) {
 	v.appendString(slashEqual)
-}
-
-func (v *formatter_) ProcessSlashSlash(
-	slashSlash string,
-) {
-	v.appendString(slashSlash)
 }
 
 func (v *formatter_) ProcessSnail(
@@ -608,64 +608,6 @@ func (v *formatter_) PostprocessArguments(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessArithmetic(
-	arithmetic ast.ArithmeticLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessArithmeticSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessArithmetic(
-	arithmetic ast.ArithmeticLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessArithmeticOperation(
-	arithmeticOperation ast.ArithmeticOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessArithmeticOperationSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessArithmeticOperation(
-	arithmeticOperation ast.ArithmeticOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessArithmeticOperator(
-	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessArithmeticOperatorSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessArithmeticOperator(
-	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessAssign(
 	assign ast.AssignLike,
 ) {
@@ -774,24 +716,6 @@ func (v *formatter_) PostprocessBag(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessBase(
-	base ast.BaseLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessBaseSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessBase(
-	base ast.BaseLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessBreakClause(
 	breakClause ast.BreakClauseLike,
 ) {
@@ -864,42 +788,6 @@ func (v *formatter_) PostprocessCollection(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessCompareOperator(
-	compareOperator ast.CompareOperatorLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessCompareOperatorSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessCompareOperator(
-	compareOperator ast.CompareOperatorLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessComparison(
-	comparison ast.ComparisonLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessComparisonSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessComparison(
-	comparison ast.ComparisonLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessComplement(
 	complement ast.ComplementLike,
 ) {
@@ -932,46 +820,6 @@ func (v *formatter_) ProcessComponentSlot(
 
 func (v *formatter_) PostprocessComponent(
 	component ast.ComponentLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessConcatenation(
-	concatenation ast.ConcatenationLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessConcatenationSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessConcatenation(
-	concatenation ast.ConcatenationLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessConcatenationOperation(
-	concatenationOperation ast.ConcatenationOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessConcatenationOperationSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessConcatenationOperation(
-	concatenationOperation ast.ConcatenationOperationLike,
-	index uint,
-	size uint,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1174,24 +1022,6 @@ func (v *formatter_) PostprocessException(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessExponential(
-	exponential ast.ExponentialLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessExponentialSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessExponential(
-	exponential ast.ExponentialLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessExpression(
 	expression ast.ExpressionLike,
 ) {
@@ -1368,24 +1198,6 @@ func (v *formatter_) ProcessInductionSlot(
 
 func (v *formatter_) PostprocessInduction(
 	induction ast.InductionLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessInference(
-	inference ast.InferenceLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessInferenceSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessInference(
-	inference ast.InferenceLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1570,24 +1382,6 @@ func (v *formatter_) PostprocessLetClause(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessLogicOperator(
-	logicOperator ast.LogicOperatorLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessLogicOperatorSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessLogicOperator(
-	logicOperator ast.LogicOperatorLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessLogical(
 	logical ast.LogicalLike,
 ) {
@@ -1602,28 +1396,6 @@ func (v *formatter_) ProcessLogicalSlot(
 
 func (v *formatter_) PostprocessLogical(
 	logical ast.LogicalLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessLogicalOperation(
-	logicalOperation ast.LogicalOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessLogicalOperationSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessLogicalOperation(
-	logicalOperation ast.LogicalOperationLike,
-	index uint,
-	size uint,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1850,6 +1622,8 @@ func (v *formatter_) PostprocessOnClause(
 
 func (v *formatter_) PreprocessOperation(
 	operation ast.OperationLike,
+	index uint,
+	size uint,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1862,6 +1636,26 @@ func (v *formatter_) ProcessOperationSlot(
 
 func (v *formatter_) PostprocessOperation(
 	operation ast.OperationLike,
+	index uint,
+	size uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessOperator(
+	operator ast.OperatorLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessOperatorSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessOperator(
+	operator ast.OperatorLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2280,24 +2074,6 @@ func (v *formatter_) PostprocessTemplate(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessTextual(
-	textual ast.TextualLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessTextualSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessTextual(
-	textual ast.TextualLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) PreprocessThreading(
 	threading ast.ThreadingLike,
 ) {
@@ -2330,6 +2106,24 @@ func (v *formatter_) ProcessThrowClauseSlot(
 
 func (v *formatter_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessUnary(
+	unary ast.UnaryLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessUnarySlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessUnary(
+	unary ast.UnaryLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

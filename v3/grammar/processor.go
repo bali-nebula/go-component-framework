@@ -130,6 +130,11 @@ func (v *processor_) ProcessDot(
 ) {
 }
 
+func (v *processor_) ProcessDouble(
+	double string,
+) {
+}
+
 func (v *processor_) ProcessDuration(
 	duration string,
 ) {
@@ -252,11 +257,6 @@ func (v *processor_) ProcessSlash(
 
 func (v *processor_) ProcessSlashEqual(
 	slashEqual string,
-) {
-}
-
-func (v *processor_) ProcessSlashSlash(
-	slashSlash string,
 ) {
 }
 
@@ -512,55 +512,6 @@ func (v *processor_) PostprocessArguments(
 ) {
 }
 
-func (v *processor_) PreprocessArithmetic(
-	arithmetic ast.ArithmeticLike,
-) {
-}
-
-func (v *processor_) ProcessArithmeticSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessArithmetic(
-	arithmetic ast.ArithmeticLike,
-) {
-}
-
-func (v *processor_) PreprocessArithmeticOperation(
-	arithmeticOperation ast.ArithmeticOperationLike,
-	index uint,
-	size uint,
-) {
-}
-
-func (v *processor_) ProcessArithmeticOperationSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessArithmeticOperation(
-	arithmeticOperation ast.ArithmeticOperationLike,
-	index uint,
-	size uint,
-) {
-}
-
-func (v *processor_) PreprocessArithmeticOperator(
-	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-}
-
-func (v *processor_) ProcessArithmeticOperatorSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessArithmeticOperator(
-	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-}
-
 func (v *processor_) PreprocessAssign(
 	assign ast.AssignLike,
 ) {
@@ -651,21 +602,6 @@ func (v *processor_) PostprocessBag(
 ) {
 }
 
-func (v *processor_) PreprocessBase(
-	base ast.BaseLike,
-) {
-}
-
-func (v *processor_) ProcessBaseSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessBase(
-	base ast.BaseLike,
-) {
-}
-
 func (v *processor_) PreprocessBreakClause(
 	breakClause ast.BreakClauseLike,
 ) {
@@ -726,36 +662,6 @@ func (v *processor_) PostprocessCollection(
 ) {
 }
 
-func (v *processor_) PreprocessCompareOperator(
-	compareOperator ast.CompareOperatorLike,
-) {
-}
-
-func (v *processor_) ProcessCompareOperatorSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessCompareOperator(
-	compareOperator ast.CompareOperatorLike,
-) {
-}
-
-func (v *processor_) PreprocessComparison(
-	comparison ast.ComparisonLike,
-) {
-}
-
-func (v *processor_) ProcessComparisonSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessComparison(
-	comparison ast.ComparisonLike,
-) {
-}
-
 func (v *processor_) PreprocessComplement(
 	complement ast.ComplementLike,
 ) {
@@ -783,40 +689,6 @@ func (v *processor_) ProcessComponentSlot(
 
 func (v *processor_) PostprocessComponent(
 	component ast.ComponentLike,
-) {
-}
-
-func (v *processor_) PreprocessConcatenation(
-	concatenation ast.ConcatenationLike,
-) {
-}
-
-func (v *processor_) ProcessConcatenationSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessConcatenation(
-	concatenation ast.ConcatenationLike,
-) {
-}
-
-func (v *processor_) PreprocessConcatenationOperation(
-	concatenationOperation ast.ConcatenationOperationLike,
-	index uint,
-	size uint,
-) {
-}
-
-func (v *processor_) ProcessConcatenationOperationSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessConcatenationOperation(
-	concatenationOperation ast.ConcatenationOperationLike,
-	index uint,
-	size uint,
 ) {
 }
 
@@ -985,21 +857,6 @@ func (v *processor_) PostprocessException(
 ) {
 }
 
-func (v *processor_) PreprocessExponential(
-	exponential ast.ExponentialLike,
-) {
-}
-
-func (v *processor_) ProcessExponentialSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExponential(
-	exponential ast.ExponentialLike,
-) {
-}
-
 func (v *processor_) PreprocessExpression(
 	expression ast.ExpressionLike,
 ) {
@@ -1147,21 +1004,6 @@ func (v *processor_) ProcessInductionSlot(
 
 func (v *processor_) PostprocessInduction(
 	induction ast.InductionLike,
-) {
-}
-
-func (v *processor_) PreprocessInference(
-	inference ast.InferenceLike,
-) {
-}
-
-func (v *processor_) ProcessInferenceSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInference(
-	inference ast.InferenceLike,
 ) {
 }
 
@@ -1315,21 +1157,6 @@ func (v *processor_) PostprocessLetClause(
 ) {
 }
 
-func (v *processor_) PreprocessLogicOperator(
-	logicOperator ast.LogicOperatorLike,
-) {
-}
-
-func (v *processor_) ProcessLogicOperatorSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLogicOperator(
-	logicOperator ast.LogicOperatorLike,
-) {
-}
-
 func (v *processor_) PreprocessLogical(
 	logical ast.LogicalLike,
 ) {
@@ -1342,25 +1169,6 @@ func (v *processor_) ProcessLogicalSlot(
 
 func (v *processor_) PostprocessLogical(
 	logical ast.LogicalLike,
-) {
-}
-
-func (v *processor_) PreprocessLogicalOperation(
-	logicalOperation ast.LogicalOperationLike,
-	index uint,
-	size uint,
-) {
-}
-
-func (v *processor_) ProcessLogicalOperationSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLogicalOperation(
-	logicalOperation ast.LogicalOperationLike,
-	index uint,
-	size uint,
 ) {
 }
 
@@ -1550,6 +1358,8 @@ func (v *processor_) PostprocessOnClause(
 
 func (v *processor_) PreprocessOperation(
 	operation ast.OperationLike,
+	index uint,
+	size uint,
 ) {
 }
 
@@ -1560,6 +1370,23 @@ func (v *processor_) ProcessOperationSlot(
 
 func (v *processor_) PostprocessOperation(
 	operation ast.OperationLike,
+	index uint,
+	size uint,
+) {
+}
+
+func (v *processor_) PreprocessOperator(
+	operator ast.OperatorLike,
+) {
+}
+
+func (v *processor_) ProcessOperatorSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessOperator(
+	operator ast.OperatorLike,
 ) {
 }
 
@@ -1908,21 +1735,6 @@ func (v *processor_) PostprocessTemplate(
 ) {
 }
 
-func (v *processor_) PreprocessTextual(
-	textual ast.TextualLike,
-) {
-}
-
-func (v *processor_) ProcessTextualSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessTextual(
-	textual ast.TextualLike,
-) {
-}
-
 func (v *processor_) PreprocessThreading(
 	threading ast.ThreadingLike,
 ) {
@@ -1950,6 +1762,21 @@ func (v *processor_) ProcessThrowClauseSlot(
 
 func (v *processor_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
+) {
+}
+
+func (v *processor_) PreprocessUnary(
+	unary ast.UnaryLike,
+) {
+}
+
+func (v *processor_) ProcessUnarySlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessUnary(
+	unary ast.UnaryLike,
 ) {
 }
 

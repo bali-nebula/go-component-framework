@@ -207,6 +207,7 @@ loop:
 		case v.foundToken(CommentToken):
 		case v.foundToken(DashEqualToken):
 		case v.foundToken(DefaultEqualToken):
+		case v.foundToken(DoubleToken):
 		case v.foundToken(DurationToken):
 		case v.foundToken(EqualToken):
 		case v.foundToken(IorToken):
@@ -225,7 +226,6 @@ loop:
 		case v.foundToken(ResourceToken):
 		case v.foundToken(SanToken):
 		case v.foundToken(SlashEqualToken):
-		case v.foundToken(SlashSlashToken):
 		case v.foundToken(SlashToken):
 		case v.foundToken(SnailToken):
 		case v.foundToken(StarEqualToken):
@@ -299,6 +299,7 @@ var scannerClassReference_ = &scannerClass_{
 			DefaultEqualToken: "defaultEqual",
 			DelimiterToken:    "delimiter",
 			DotToken:          "dot",
+			DoubleToken:       "double",
 			DurationToken:     "duration",
 			EqualToken:        "equal",
 			IdentifierToken:   "identifier",
@@ -324,7 +325,6 @@ var scannerClassReference_ = &scannerClass_{
 			SanToken:          "san",
 			SlashToken:        "slash",
 			SlashEqualToken:   "slashEqual",
-			SlashSlashToken:   "slashSlash",
 			SnailToken:        "snail",
 			SpaceToken:        "space",
 			StarToken:         "star",
@@ -355,6 +355,7 @@ var scannerClassReference_ = &scannerClass_{
 			DefaultEqualToken: reg.MustCompile("^" + defaultEqual_),
 			DelimiterToken:    reg.MustCompile("^" + delimiter_),
 			DotToken:          reg.MustCompile("^" + dot_),
+			DoubleToken:       reg.MustCompile("^" + double_),
 			DurationToken:     reg.MustCompile("^" + duration_),
 			EqualToken:        reg.MustCompile("^" + equal_),
 			IdentifierToken:   reg.MustCompile("^" + identifier_),
@@ -380,7 +381,6 @@ var scannerClassReference_ = &scannerClass_{
 			SanToken:          reg.MustCompile("^" + san_),
 			SlashToken:        reg.MustCompile("^" + slash_),
 			SlashEqualToken:   reg.MustCompile("^" + slashEqual_),
-			SlashSlashToken:   reg.MustCompile("^" + slashSlash_),
 			SnailToken:        reg.MustCompile("^" + snail_),
 			SpaceToken:        reg.MustCompile("^" + space_),
 			StarToken:         reg.MustCompile("^" + star_),
@@ -439,6 +439,7 @@ const (
 	day_          = "(?:([0-2][1-9])|(3[0-1]))"
 	days_         = "(?:(?:" + timespan_ + ")D)"
 	defaultEqual_ = "(?:\\?=)"
+	double_       = "(?://)"
 	duration_     = "(?:~(?:" + sign_ + ")?P((?:" + weeks_ + ")|((?:" + years_ + ")?(?:" + months_ + ")?(?:" + days_ + ")?(T(?:" + hours_ + ")?(?:" + minutes_ + ")?(?:" + seconds_ + ")?)?)))"
 	equal_        = "(?:=)"
 	escape_       = "(?:\\\\((?:" + unicode_ + ")|[abfnrtv\"\\\\]))"
@@ -486,7 +487,6 @@ const (
 	seconds_      = "(?:(?:" + timespan_ + ")S)"
 	sign_         = "(?:(?:" + plus_ + ")|(?:" + dash_ + "))"
 	slashEqual_   = "(?:/=)"
-	slashSlash_   = "(?://)"
 	slash_        = "(?:/)"
 	snail_        = "(?:@)"
 	starEqual_    = "(?:\\*=)"

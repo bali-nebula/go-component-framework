@@ -184,9 +184,7 @@ $AdditionalArgument: "," Argument
 
 $Argument: identifier
 
-$Method: identifier Invocation
-
-$Invocation: Threading identifier "(" Arguments? ")"
+$Method: identifier Threading identifier "(" Arguments? ")"
 
 $Threading:
   - dot
@@ -224,9 +222,9 @@ $ThrowClause: "throw" Exception
 
 $Exception: Expression
 
-$DoClause: "do" Operation
+$DoClause: "do" Invocation
 
-$Operation:
+$Invocation:
   - Function
   - Method
 
@@ -274,7 +272,9 @@ $DiscardClause: "discard" Draft
 
 $NotarizeClause: "notarize" Draft "as" Citation
 
-$Expression:
+$Expression: Unary Operation*
+
+$Unary:
   - Component
   - Precedence
   - Dereference
@@ -285,11 +285,26 @@ $Expression:
   - Method
   - Attribute
   - Variable  ! Must be last since the others also begin with an identifier.
-  - Arithmetic
-  - Exponential
-  - Comparison
-  - Inference
-  - Concatenation
+
+$Operation: Operator Expression
+
+$Operator:
+  - plus
+  - dash
+  - star
+  - slash
+  - double
+  - caret
+  - less
+  - equal
+  - more
+  - is
+  - matches
+  - and
+  - san
+  - ior
+  - xor
+  - ampersand
 
 $Precedence: "(" Expression ")"
 
@@ -334,59 +349,6 @@ $Numerical:
   - Variable  ! Must be last since the others also begin with an identifier.
 
 $Amplitude: bar Numerical bar
-
-$Arithmetic: Numerical ArithmeticOperation+
-
-$ArithmeticOperation: ArithmeticOperator Numerical
-
-$ArithmeticOperator:
-  - plus
-  - dash
-  - star
-  - slash
-  - slashSlash
-
-$Exponential: Base caret Numerical
-
-$Base:
-  - Component
-  - Precedence
-  - Dereference
-  - Amplitude
-  - Attribute
-  - Variable  ! Must be last since attributes also begin with an identifier.
-
-$Comparison: Arithmetic CompareOperator Arithmetic
-
-$CompareOperator:
-  - less
-  - equal
-  - more
-  - is
-  - matches
-
-$Inference: Logical LogicalOperation+
-
-$LogicalOperation: LogicOperator Logical
-
-$LogicOperator:
-  - and
-  - san
-  - ior
-  - xor
-
-$Concatenation: Textual ConcatenationOperation+
-
-$Textual:
-  - Component
-  - Precedence
-  - Dereference
-  - Function
-  - Method
-  - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.
-
-$ConcatenationOperation: ampersand Textual
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -438,6 +400,8 @@ $day: (['0'..'2'] ['1'..'9']) | ('3' ['0'..'1'])
 $days: timespan 'D'
 
 $defaultEqual: "?="
+
+$double: "//"
 
 $duration: '~' sign? 'P' (weeks | (years? months? days? ('T' hours? minutes? seconds?)?))
 
@@ -532,8 +496,6 @@ $seconds: timespan 'S'
 $sign: plus | dash
 
 $slashEqual: "/="
-
-$slashSlash: "//"
 
 $slash: '/'
 

@@ -34,19 +34,26 @@ func MethodClass() MethodClassLike {
 // Constructor Methods
 
 func (c *methodClass_) Method(
-	identifier string,
-	invocation InvocationLike,
+	identifier1 string,
+	threading ThreadingLike,
+	identifier2 string,
+	optionalArguments ArgumentsLike,
 ) MethodLike {
-	if uti.IsUndefined(identifier) {
-		panic("The \"identifier\" attribute is required by this class.")
+	if uti.IsUndefined(identifier1) {
+		panic("The \"identifier1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(invocation) {
-		panic("The \"invocation\" attribute is required by this class.")
+	if uti.IsUndefined(threading) {
+		panic("The \"threading\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(identifier2) {
+		panic("The \"identifier2\" attribute is required by this class.")
 	}
 	var instance = &method_{
 		// Initialize the instance attributes.
-		identifier_: identifier,
-		invocation_: invocation,
+		identifier1_:       identifier1,
+		threading_:         threading,
+		identifier2_:       identifier2,
+		optionalArguments_: optionalArguments,
 	}
 	return instance
 }
@@ -61,12 +68,20 @@ func (v *method_) GetClass() MethodClassLike {
 
 // Attribute Methods
 
-func (v *method_) GetIdentifier() string {
-	return v.identifier_
+func (v *method_) GetIdentifier1() string {
+	return v.identifier1_
 }
 
-func (v *method_) GetInvocation() InvocationLike {
-	return v.invocation_
+func (v *method_) GetThreading() ThreadingLike {
+	return v.threading_
+}
+
+func (v *method_) GetIdentifier2() string {
+	return v.identifier2_
+}
+
+func (v *method_) GetOptionalArguments() ArgumentsLike {
+	return v.optionalArguments_
 }
 
 // PROTECTED INTERFACE
@@ -75,8 +90,10 @@ func (v *method_) GetInvocation() InvocationLike {
 
 type method_ struct {
 	// Declare the instance attributes.
-	identifier_ string
-	invocation_ InvocationLike
+	identifier1_       string
+	threading_         ThreadingLike
+	identifier2_       string
+	optionalArguments_ ArgumentsLike
 }
 
 // Class Structure

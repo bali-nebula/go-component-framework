@@ -27,26 +27,21 @@ import (
 
 // Access Function
 
-func ConcatenationOperationClass() ConcatenationOperationClassLike {
-	return concatenationOperationClass()
+func OperatorClass() OperatorClassLike {
+	return operatorClass()
 }
 
 // Constructor Methods
 
-func (c *concatenationOperationClass_) ConcatenationOperation(
-	ampersand string,
-	textual TextualLike,
-) ConcatenationOperationLike {
-	if uti.IsUndefined(ampersand) {
-		panic("The \"ampersand\" attribute is required by this class.")
+func (c *operatorClass_) Operator(
+	any_ any,
+) OperatorLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(textual) {
-		panic("The \"textual\" attribute is required by this class.")
-	}
-	var instance = &concatenationOperation_{
+	var instance = &operator_{
 		// Initialize the instance attributes.
-		ampersand_: ampersand,
-		textual_:   textual,
+		any_: any_,
 	}
 	return instance
 }
@@ -55,42 +50,37 @@ func (c *concatenationOperationClass_) ConcatenationOperation(
 
 // Principal Methods
 
-func (v *concatenationOperation_) GetClass() ConcatenationOperationClassLike {
-	return concatenationOperationClass()
+func (v *operator_) GetClass() OperatorClassLike {
+	return operatorClass()
 }
 
 // Attribute Methods
 
-func (v *concatenationOperation_) GetAmpersand() string {
-	return v.ampersand_
-}
-
-func (v *concatenationOperation_) GetTextual() TextualLike {
-	return v.textual_
+func (v *operator_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type concatenationOperation_ struct {
+type operator_ struct {
 	// Declare the instance attributes.
-	ampersand_ string
-	textual_   TextualLike
+	any_ any
 }
 
 // Class Structure
 
-type concatenationOperationClass_ struct {
+type operatorClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func concatenationOperationClass() *concatenationOperationClass_ {
-	return concatenationOperationClassReference_
+func operatorClass() *operatorClass_ {
+	return operatorClassReference_
 }
 
-var concatenationOperationClassReference_ = &concatenationOperationClass_{
+var operatorClassReference_ = &operatorClass_{
 	// Initialize the class constants.
 }

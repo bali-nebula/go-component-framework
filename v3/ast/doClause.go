@@ -34,14 +34,14 @@ func DoClauseClass() DoClauseClassLike {
 // Constructor Methods
 
 func (c *doClauseClass_) DoClause(
-	operation OperationLike,
+	invocation InvocationLike,
 ) DoClauseLike {
-	if uti.IsUndefined(operation) {
-		panic("The \"operation\" attribute is required by this class.")
+	if uti.IsUndefined(invocation) {
+		panic("The \"invocation\" attribute is required by this class.")
 	}
 	var instance = &doClause_{
 		// Initialize the instance attributes.
-		operation_: operation,
+		invocation_: invocation,
 	}
 	return instance
 }
@@ -56,8 +56,8 @@ func (v *doClause_) GetClass() DoClauseClassLike {
 
 // Attribute Methods
 
-func (v *doClause_) GetOperation() OperationLike {
-	return v.operation_
+func (v *doClause_) GetInvocation() InvocationLike {
+	return v.invocation_
 }
 
 // PROTECTED INTERFACE
@@ -66,7 +66,7 @@ func (v *doClause_) GetOperation() OperationLike {
 
 type doClause_ struct {
 	// Declare the instance attributes.
-	operation_ OperationLike
+	invocation_ InvocationLike
 }
 
 // Class Structure

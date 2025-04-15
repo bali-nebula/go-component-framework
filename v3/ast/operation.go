@@ -34,14 +34,19 @@ func OperationClass() OperationClassLike {
 // Constructor Methods
 
 func (c *operationClass_) Operation(
-	any_ any,
+	operator OperatorLike,
+	expression ExpressionLike,
 ) OperationLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+	if uti.IsUndefined(operator) {
+		panic("The \"operator\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(expression) {
+		panic("The \"expression\" attribute is required by this class.")
 	}
 	var instance = &operation_{
 		// Initialize the instance attributes.
-		any_: any_,
+		operator_:   operator,
+		expression_: expression,
 	}
 	return instance
 }
@@ -56,8 +61,12 @@ func (v *operation_) GetClass() OperationClassLike {
 
 // Attribute Methods
 
-func (v *operation_) GetAny() any {
-	return v.any_
+func (v *operation_) GetOperator() OperatorLike {
+	return v.operator_
+}
+
+func (v *operation_) GetExpression() ExpressionLike {
+	return v.expression_
 }
 
 // PROTECTED INTERFACE
@@ -66,7 +75,8 @@ func (v *operation_) GetAny() any {
 
 type operation_ struct {
 	// Declare the instance attributes.
-	any_ any
+	operator_   OperatorLike
+	expression_ ExpressionLike
 }
 
 // Class Structure

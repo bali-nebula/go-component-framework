@@ -708,171 +708,6 @@ additionalArgumentsLoop:
 	return
 }
 
-func (v *parser_) parseArithmetic() (
-	arithmetic ast.ArithmeticLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Numerical rule.
-	var numerical ast.NumericalLike
-	numerical, token, ok = v.parseNumerical()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Arithmetic rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Arithmetic", token)
-		panic(message)
-	}
-
-	// Attempt to parse multiple ArithmeticOperation rules.
-	var arithmeticOperations = fra.List[ast.ArithmeticOperationLike]()
-arithmeticOperationsLoop:
-	for count := 0; count < mat.MaxInt; count++ {
-		var arithmeticOperation ast.ArithmeticOperationLike
-		arithmeticOperation, token, ok = v.parseArithmeticOperation()
-		if !ok {
-			switch {
-			case count >= 1:
-				break arithmeticOperationsLoop
-			case uti.IsDefined(tokens):
-				// This is not multiple ArithmeticOperation rules.
-				v.putBack(tokens)
-				return
-			default:
-				// Found a syntax error.
-				var message = v.formatError("$Arithmetic", token)
-				message += "1 or more ArithmeticOperation rules are required."
-				panic(message)
-			}
-		}
-		// No additional put backs allowed at this point.
-		tokens = nil
-		arithmeticOperations.AppendValue(arithmeticOperation)
-	}
-
-	// Found a single Arithmetic rule.
-	ok = true
-	v.remove(tokens)
-	arithmetic = ast.ArithmeticClass().Arithmetic(
-		numerical,
-		arithmeticOperations,
-	)
-	return
-}
-
-func (v *parser_) parseArithmeticOperation() (
-	arithmeticOperation ast.ArithmeticOperationLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single ArithmeticOperator rule.
-	var arithmeticOperator ast.ArithmeticOperatorLike
-	arithmeticOperator, token, ok = v.parseArithmeticOperator()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single ArithmeticOperation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$ArithmeticOperation", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single Numerical rule.
-	var numerical ast.NumericalLike
-	numerical, token, ok = v.parseNumerical()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single ArithmeticOperation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$ArithmeticOperation", token)
-		panic(message)
-	}
-
-	// Found a single ArithmeticOperation rule.
-	ok = true
-	v.remove(tokens)
-	arithmeticOperation = ast.ArithmeticOperationClass().ArithmeticOperation(
-		arithmeticOperator,
-		numerical,
-	)
-	return
-}
-
-func (v *parser_) parseArithmeticOperator() (
-	arithmeticOperator ast.ArithmeticOperatorLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single plus ArithmeticOperator.
-	var plus string
-	plus, token, ok = v.parseToken(PlusToken)
-	if ok {
-		// Found a single plus ArithmeticOperator.
-		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(plus)
-		return
-	}
-
-	// Attempt to parse a single dash ArithmeticOperator.
-	var dash string
-	dash, token, ok = v.parseToken(DashToken)
-	if ok {
-		// Found a single dash ArithmeticOperator.
-		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(dash)
-		return
-	}
-
-	// Attempt to parse a single star ArithmeticOperator.
-	var star string
-	star, token, ok = v.parseToken(StarToken)
-	if ok {
-		// Found a single star ArithmeticOperator.
-		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(star)
-		return
-	}
-
-	// Attempt to parse a single slash ArithmeticOperator.
-	var slash string
-	slash, token, ok = v.parseToken(SlashToken)
-	if ok {
-		// Found a single slash ArithmeticOperator.
-		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(slash)
-		return
-	}
-
-	// Attempt to parse a single slashSlash ArithmeticOperator.
-	var slashSlash string
-	slashSlash, token, ok = v.parseToken(SlashSlashToken)
-	if ok {
-		// Found a single slashSlash ArithmeticOperator.
-		arithmeticOperator = ast.ArithmeticOperatorClass().ArithmeticOperator(slashSlash)
-		return
-	}
-
-	// This is not a single ArithmeticOperator rule.
-	return
-}
-
 func (v *parser_) parseAssign() (
 	assign ast.AssignLike,
 	token TokenLike,
@@ -1182,69 +1017,6 @@ func (v *parser_) parseBag() (
 	return
 }
 
-func (v *parser_) parseBase() (
-	base ast.BaseLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single Component Base.
-	var component ast.ComponentLike
-	component, token, ok = v.parseComponent()
-	if ok {
-		// Found a single Component Base.
-		base = ast.BaseClass().Base(component)
-		return
-	}
-
-	// Attempt to parse a single Precedence Base.
-	var precedence ast.PrecedenceLike
-	precedence, token, ok = v.parsePrecedence()
-	if ok {
-		// Found a single Precedence Base.
-		base = ast.BaseClass().Base(precedence)
-		return
-	}
-
-	// Attempt to parse a single Dereference Base.
-	var dereference ast.DereferenceLike
-	dereference, token, ok = v.parseDereference()
-	if ok {
-		// Found a single Dereference Base.
-		base = ast.BaseClass().Base(dereference)
-		return
-	}
-
-	// Attempt to parse a single Amplitude Base.
-	var amplitude ast.AmplitudeLike
-	amplitude, token, ok = v.parseAmplitude()
-	if ok {
-		// Found a single Amplitude Base.
-		base = ast.BaseClass().Base(amplitude)
-		return
-	}
-
-	// Attempt to parse a single Attribute Base.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Base.
-		base = ast.BaseClass().Base(attribute)
-		return
-	}
-
-	// Attempt to parse a single Variable Base.
-	var variable ast.VariableLike
-	variable, token, ok = v.parseVariable()
-	if ok {
-		// Found a single Variable Base.
-		base = ast.BaseClass().Base(variable)
-		return
-	}
-
-	// This is not a single Base rule.
-	return
-}
-
 func (v *parser_) parseBreakClause() (
 	breakClause ast.BreakClauseLike,
 	token TokenLike,
@@ -1474,129 +1246,6 @@ func (v *parser_) parseCollection() (
 	return
 }
 
-func (v *parser_) parseCompareOperator() (
-	compareOperator ast.CompareOperatorLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single less CompareOperator.
-	var less string
-	less, token, ok = v.parseToken(LessToken)
-	if ok {
-		// Found a single less CompareOperator.
-		compareOperator = ast.CompareOperatorClass().CompareOperator(less)
-		return
-	}
-
-	// Attempt to parse a single equal CompareOperator.
-	var equal string
-	equal, token, ok = v.parseToken(EqualToken)
-	if ok {
-		// Found a single equal CompareOperator.
-		compareOperator = ast.CompareOperatorClass().CompareOperator(equal)
-		return
-	}
-
-	// Attempt to parse a single more CompareOperator.
-	var more string
-	more, token, ok = v.parseToken(MoreToken)
-	if ok {
-		// Found a single more CompareOperator.
-		compareOperator = ast.CompareOperatorClass().CompareOperator(more)
-		return
-	}
-
-	// Attempt to parse a single is CompareOperator.
-	var is string
-	is, token, ok = v.parseToken(IsToken)
-	if ok {
-		// Found a single is CompareOperator.
-		compareOperator = ast.CompareOperatorClass().CompareOperator(is)
-		return
-	}
-
-	// Attempt to parse a single matches CompareOperator.
-	var matches string
-	matches, token, ok = v.parseToken(MatchesToken)
-	if ok {
-		// Found a single matches CompareOperator.
-		compareOperator = ast.CompareOperatorClass().CompareOperator(matches)
-		return
-	}
-
-	// This is not a single CompareOperator rule.
-	return
-}
-
-func (v *parser_) parseComparison() (
-	comparison ast.ComparisonLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Arithmetic rule.
-	var arithmetic1 ast.ArithmeticLike
-	arithmetic1, token, ok = v.parseArithmetic()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Comparison rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Comparison", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single CompareOperator rule.
-	var compareOperator ast.CompareOperatorLike
-	compareOperator, token, ok = v.parseCompareOperator()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Comparison rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Comparison", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single Arithmetic rule.
-	var arithmetic2 ast.ArithmeticLike
-	arithmetic2, token, ok = v.parseArithmetic()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Comparison rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Comparison", token)
-		panic(message)
-	}
-
-	// Found a single Comparison rule.
-	ok = true
-	v.remove(tokens)
-	comparison = ast.ComparisonClass().Comparison(
-		arithmetic1,
-		compareOperator,
-		arithmetic2,
-	)
-	return
-}
-
 func (v *parser_) parseComplement() (
 	complement ast.ComplementLike,
 	token TokenLike,
@@ -1687,118 +1336,6 @@ func (v *parser_) parseComponent() (
 	component = ast.ComponentClass().Component(
 		entity,
 		optionalParameters,
-	)
-	return
-}
-
-func (v *parser_) parseConcatenation() (
-	concatenation ast.ConcatenationLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Textual rule.
-	var textual ast.TextualLike
-	textual, token, ok = v.parseTextual()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Concatenation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Concatenation", token)
-		panic(message)
-	}
-
-	// Attempt to parse multiple ConcatenationOperation rules.
-	var concatenationOperations = fra.List[ast.ConcatenationOperationLike]()
-concatenationOperationsLoop:
-	for count := 0; count < mat.MaxInt; count++ {
-		var concatenationOperation ast.ConcatenationOperationLike
-		concatenationOperation, token, ok = v.parseConcatenationOperation()
-		if !ok {
-			switch {
-			case count >= 1:
-				break concatenationOperationsLoop
-			case uti.IsDefined(tokens):
-				// This is not multiple ConcatenationOperation rules.
-				v.putBack(tokens)
-				return
-			default:
-				// Found a syntax error.
-				var message = v.formatError("$Concatenation", token)
-				message += "1 or more ConcatenationOperation rules are required."
-				panic(message)
-			}
-		}
-		// No additional put backs allowed at this point.
-		tokens = nil
-		concatenationOperations.AppendValue(concatenationOperation)
-	}
-
-	// Found a single Concatenation rule.
-	ok = true
-	v.remove(tokens)
-	concatenation = ast.ConcatenationClass().Concatenation(
-		textual,
-		concatenationOperations,
-	)
-	return
-}
-
-func (v *parser_) parseConcatenationOperation() (
-	concatenationOperation ast.ConcatenationOperationLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single ampersand token.
-	var ampersand string
-	ampersand, token, ok = v.parseToken(AmpersandToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ConcatenationOperation rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ConcatenationOperation", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Textual rule.
-	var textual ast.TextualLike
-	textual, token, ok = v.parseTextual()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single ConcatenationOperation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$ConcatenationOperation", token)
-		panic(message)
-	}
-
-	// Found a single ConcatenationOperation rule.
-	ok = true
-	v.remove(tokens)
-	concatenationOperation = ast.ConcatenationOperationClass().ConcatenationOperation(
-		ampersand,
-		textual,
 	)
 	return
 }
@@ -2006,9 +1543,9 @@ func (v *parser_) parseDoClause() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Operation rule.
-	var operation ast.OperationLike
-	operation, token, ok = v.parseOperation()
+	// Attempt to parse a single Invocation rule.
+	var invocation ast.InvocationLike
+	invocation, token, ok = v.parseInvocation()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -2026,7 +1563,7 @@ func (v *parser_) parseDoClause() (
 	// Found a single DoClause rule.
 	ok = true
 	v.remove(tokens)
-	doClause = ast.DoClauseClass().DoClause(operation)
+	doClause = ast.DoClauseClass().DoClause(invocation)
 	return
 }
 
@@ -2299,217 +1836,63 @@ func (v *parser_) parseException() (
 	return
 }
 
-func (v *parser_) parseExponential() (
-	exponential ast.ExponentialLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Base rule.
-	var base ast.BaseLike
-	base, token, ok = v.parseBase()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Exponential rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Exponential", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single caret token.
-	var caret string
-	caret, token, ok = v.parseToken(CaretToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Exponential rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Exponential", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Numerical rule.
-	var numerical ast.NumericalLike
-	numerical, token, ok = v.parseNumerical()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Exponential rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Exponential", token)
-		panic(message)
-	}
-
-	// Found a single Exponential rule.
-	ok = true
-	v.remove(tokens)
-	exponential = ast.ExponentialClass().Exponential(
-		base,
-		caret,
-		numerical,
-	)
-	return
-}
-
 func (v *parser_) parseExpression() (
 	expression ast.ExpressionLike,
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Component Expression.
-	var component ast.ComponentLike
-	component, token, ok = v.parseComponent()
-	if ok {
-		// Found a single Component Expression.
-		expression = ast.ExpressionClass().Expression(component)
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single Unary rule.
+	var unary ast.UnaryLike
+	unary, token, ok = v.parseUnary()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Expression rule.
+		v.putBack(tokens)
 		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Expression", token)
+		panic(message)
 	}
 
-	// Attempt to parse a single Precedence Expression.
-	var precedence ast.PrecedenceLike
-	precedence, token, ok = v.parsePrecedence()
-	if ok {
-		// Found a single Precedence Expression.
-		expression = ast.ExpressionClass().Expression(precedence)
-		return
+	// Attempt to parse multiple Operation rules.
+	var operations = fra.List[ast.OperationLike]()
+operationsLoop:
+	for count := 0; count < mat.MaxInt; count++ {
+		var operation ast.OperationLike
+		operation, token, ok = v.parseOperation()
+		if !ok {
+			switch {
+			case count >= 0:
+				break operationsLoop
+			case uti.IsDefined(tokens):
+				// This is not multiple Operation rules.
+				v.putBack(tokens)
+				return
+			default:
+				// Found a syntax error.
+				var message = v.formatError("$Expression", token)
+				message += "0 or more Operation rules are required."
+				panic(message)
+			}
+		}
+		// No additional put backs allowed at this point.
+		tokens = nil
+		operations.AppendValue(operation)
 	}
 
-	// Attempt to parse a single Dereference Expression.
-	var dereference ast.DereferenceLike
-	dereference, token, ok = v.parseDereference()
-	if ok {
-		// Found a single Dereference Expression.
-		expression = ast.ExpressionClass().Expression(dereference)
-		return
-	}
-
-	// Attempt to parse a single Complement Expression.
-	var complement ast.ComplementLike
-	complement, token, ok = v.parseComplement()
-	if ok {
-		// Found a single Complement Expression.
-		expression = ast.ExpressionClass().Expression(complement)
-		return
-	}
-
-	// Attempt to parse a single Inversion Expression.
-	var inversion ast.InversionLike
-	inversion, token, ok = v.parseInversion()
-	if ok {
-		// Found a single Inversion Expression.
-		expression = ast.ExpressionClass().Expression(inversion)
-		return
-	}
-
-	// Attempt to parse a single Amplitude Expression.
-	var amplitude ast.AmplitudeLike
-	amplitude, token, ok = v.parseAmplitude()
-	if ok {
-		// Found a single Amplitude Expression.
-		expression = ast.ExpressionClass().Expression(amplitude)
-		return
-	}
-
-	// Attempt to parse a single Function Expression.
-	var function ast.FunctionLike
-	function, token, ok = v.parseFunction()
-	if ok {
-		// Found a single Function Expression.
-		expression = ast.ExpressionClass().Expression(function)
-		return
-	}
-
-	// Attempt to parse a single Method Expression.
-	var method ast.MethodLike
-	method, token, ok = v.parseMethod()
-	if ok {
-		// Found a single Method Expression.
-		expression = ast.ExpressionClass().Expression(method)
-		return
-	}
-
-	// Attempt to parse a single Attribute Expression.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Expression.
-		expression = ast.ExpressionClass().Expression(attribute)
-		return
-	}
-
-	// Attempt to parse a single Variable Expression.
-	var variable ast.VariableLike
-	variable, token, ok = v.parseVariable()
-	if ok {
-		// Found a single Variable Expression.
-		expression = ast.ExpressionClass().Expression(variable)
-		return
-	}
-
-	// Attempt to parse a single Arithmetic Expression.
-	var arithmetic ast.ArithmeticLike
-	arithmetic, token, ok = v.parseArithmetic()
-	if ok {
-		// Found a single Arithmetic Expression.
-		expression = ast.ExpressionClass().Expression(arithmetic)
-		return
-	}
-
-	// Attempt to parse a single Exponential Expression.
-	var exponential ast.ExponentialLike
-	exponential, token, ok = v.parseExponential()
-	if ok {
-		// Found a single Exponential Expression.
-		expression = ast.ExpressionClass().Expression(exponential)
-		return
-	}
-
-	// Attempt to parse a single Comparison Expression.
-	var comparison ast.ComparisonLike
-	comparison, token, ok = v.parseComparison()
-	if ok {
-		// Found a single Comparison Expression.
-		expression = ast.ExpressionClass().Expression(comparison)
-		return
-	}
-
-	// Attempt to parse a single Inference Expression.
-	var inference ast.InferenceLike
-	inference, token, ok = v.parseInference()
-	if ok {
-		// Found a single Inference Expression.
-		expression = ast.ExpressionClass().Expression(inference)
-		return
-	}
-
-	// Attempt to parse a single Concatenation Expression.
-	var concatenation ast.ConcatenationLike
-	concatenation, token, ok = v.parseConcatenation()
-	if ok {
-		// Found a single Concatenation Expression.
-		expression = ast.ExpressionClass().Expression(concatenation)
-		return
-	}
-
-	// This is not a single Expression rule.
+	// Found a single Expression rule.
+	ok = true
+	v.remove(tokens)
+	expression = ast.ExpressionClass().Expression(
+		unary,
+		operations,
+	)
 	return
 }
 
@@ -2996,66 +2379,6 @@ func (v *parser_) parseInduction() (
 	return
 }
 
-func (v *parser_) parseInference() (
-	inference ast.InferenceLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Logical rule.
-	var logical ast.LogicalLike
-	logical, token, ok = v.parseLogical()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Inference rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Inference", token)
-		panic(message)
-	}
-
-	// Attempt to parse multiple LogicalOperation rules.
-	var logicalOperations = fra.List[ast.LogicalOperationLike]()
-logicalOperationsLoop:
-	for count := 0; count < mat.MaxInt; count++ {
-		var logicalOperation ast.LogicalOperationLike
-		logicalOperation, token, ok = v.parseLogicalOperation()
-		if !ok {
-			switch {
-			case count >= 1:
-				break logicalOperationsLoop
-			case uti.IsDefined(tokens):
-				// This is not multiple LogicalOperation rules.
-				v.putBack(tokens)
-				return
-			default:
-				// Found a syntax error.
-				var message = v.formatError("$Inference", token)
-				message += "1 or more LogicalOperation rules are required."
-				panic(message)
-			}
-		}
-		// No additional put backs allowed at this point.
-		tokens = nil
-		logicalOperations.AppendValue(logicalOperation)
-	}
-
-	// Found a single Inference rule.
-	ok = true
-	v.remove(tokens)
-	inference = ast.InferenceClass().Inference(
-		logical,
-		logicalOperations,
-	)
-	return
-}
-
 func (v *parser_) parseInlineAssociations() (
 	inlineAssociations ast.InlineAssociationsLike,
 	token TokenLike,
@@ -3328,93 +2651,25 @@ func (v *parser_) parseInvocation() (
 	token TokenLike,
 	ok bool,
 ) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Threading rule.
-	var threading ast.ThreadingLike
-	threading, token, ok = v.parseThreading()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Invocation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Invocation", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single identifier token.
-	var identifier string
-	identifier, token, ok = v.parseToken(IdentifierToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Invocation rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Invocation", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single "(" delimiter.
-	_, token, ok = v.parseDelimiter("(")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Invocation rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Invocation", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse an optional Arguments rule.
-	var optionalArguments ast.ArgumentsLike
-	optionalArguments, _, ok = v.parseArguments()
+	// Attempt to parse a single Function Invocation.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
 	if ok {
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a single Function Invocation.
+		invocation = ast.InvocationClass().Invocation(function)
+		return
 	}
 
-	// Attempt to parse a single ")" delimiter.
-	_, token, ok = v.parseDelimiter(")")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Invocation rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Invocation", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single Method Invocation.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Invocation.
+		invocation = ast.InvocationClass().Invocation(method)
+		return
 	}
 
-	// Found a single Invocation rule.
-	ok = true
-	v.remove(tokens)
-	invocation = ast.InvocationClass().Invocation(
-		threading,
-		identifier,
-		optionalArguments,
-	)
+	// This is not a single Invocation rule.
 	return
 }
 
@@ -3612,51 +2867,6 @@ func (v *parser_) parseLetClause() (
 	return
 }
 
-func (v *parser_) parseLogicOperator() (
-	logicOperator ast.LogicOperatorLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single and LogicOperator.
-	var and string
-	and, token, ok = v.parseToken(AndToken)
-	if ok {
-		// Found a single and LogicOperator.
-		logicOperator = ast.LogicOperatorClass().LogicOperator(and)
-		return
-	}
-
-	// Attempt to parse a single san LogicOperator.
-	var san string
-	san, token, ok = v.parseToken(SanToken)
-	if ok {
-		// Found a single san LogicOperator.
-		logicOperator = ast.LogicOperatorClass().LogicOperator(san)
-		return
-	}
-
-	// Attempt to parse a single ior LogicOperator.
-	var ior string
-	ior, token, ok = v.parseToken(IorToken)
-	if ok {
-		// Found a single ior LogicOperator.
-		logicOperator = ast.LogicOperatorClass().LogicOperator(ior)
-		return
-	}
-
-	// Attempt to parse a single xor LogicOperator.
-	var xor string
-	xor, token, ok = v.parseToken(XorToken)
-	if ok {
-		// Found a single xor LogicOperator.
-		logicOperator = ast.LogicOperatorClass().LogicOperator(xor)
-		return
-	}
-
-	// This is not a single LogicOperator rule.
-	return
-}
-
 func (v *parser_) parseLogical() (
 	logical ast.LogicalLike,
 	token TokenLike,
@@ -3735,57 +2945,6 @@ func (v *parser_) parseLogical() (
 	}
 
 	// This is not a single Logical rule.
-	return
-}
-
-func (v *parser_) parseLogicalOperation() (
-	logicalOperation ast.LogicalOperationLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single LogicOperator rule.
-	var logicOperator ast.LogicOperatorLike
-	logicOperator, token, ok = v.parseLogicOperator()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single LogicalOperation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$LogicalOperation", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single Logical rule.
-	var logical ast.LogicalLike
-	logical, token, ok = v.parseLogical()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single LogicalOperation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$LogicalOperation", token)
-		panic(message)
-	}
-
-	// Found a single LogicalOperation rule.
-	ok = true
-	v.remove(tokens)
-	logicalOperation = ast.LogicalOperationClass().LogicalOperation(
-		logicOperator,
-		logical,
-	)
 	return
 }
 
@@ -4012,8 +3171,8 @@ func (v *parser_) parseMethod() (
 	var tokens = fra.List[TokenLike]()
 
 	// Attempt to parse a single identifier token.
-	var identifier string
-	identifier, token, ok = v.parseToken(IdentifierToken)
+	var identifier1 string
+	identifier1, token, ok = v.parseToken(IdentifierToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
 			// This is not a single Method rule.
@@ -4029,9 +3188,9 @@ func (v *parser_) parseMethod() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Invocation rule.
-	var invocation ast.InvocationLike
-	invocation, token, ok = v.parseInvocation()
+	// Attempt to parse a single Threading rule.
+	var threading ast.ThreadingLike
+	threading, token, ok = v.parseThreading()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -4046,12 +3205,74 @@ func (v *parser_) parseMethod() (
 		panic(message)
 	}
 
+	// Attempt to parse a single identifier token.
+	var identifier2 string
+	identifier2, token, ok = v.parseToken(IdentifierToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Method rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Method", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Method rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Method", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse an optional Arguments rule.
+	var optionalArguments ast.ArgumentsLike
+	optionalArguments, _, ok = v.parseArguments()
+	if ok {
+		// No additional put backs allowed at this point.
+		tokens = nil
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Method rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Method", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
 	// Found a single Method rule.
 	ok = true
 	v.remove(tokens)
 	method = ast.MethodClass().Method(
-		identifier,
-		invocation,
+		identifier1,
+		threading,
+		identifier2,
+		optionalArguments,
 	)
 	return
 }
@@ -4465,25 +3686,202 @@ func (v *parser_) parseOperation() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Function Operation.
-	var function ast.FunctionLike
-	function, token, ok = v.parseFunction()
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single Operator rule.
+	var operator ast.OperatorLike
+	operator, token, ok = v.parseOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Operation rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Operation", token)
+		panic(message)
+	}
+
+	// Attempt to parse a single Expression rule.
+	var expression ast.ExpressionLike
+	expression, token, ok = v.parseExpression()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Operation rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Operation", token)
+		panic(message)
+	}
+
+	// Found a single Operation rule.
+	ok = true
+	v.remove(tokens)
+	operation = ast.OperationClass().Operation(
+		operator,
+		expression,
+	)
+	return
+}
+
+func (v *parser_) parseOperator() (
+	operator ast.OperatorLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single plus Operator.
+	var plus string
+	plus, token, ok = v.parseToken(PlusToken)
 	if ok {
-		// Found a single Function Operation.
-		operation = ast.OperationClass().Operation(function)
+		// Found a single plus Operator.
+		operator = ast.OperatorClass().Operator(plus)
 		return
 	}
 
-	// Attempt to parse a single Method Operation.
-	var method ast.MethodLike
-	method, token, ok = v.parseMethod()
+	// Attempt to parse a single dash Operator.
+	var dash string
+	dash, token, ok = v.parseToken(DashToken)
 	if ok {
-		// Found a single Method Operation.
-		operation = ast.OperationClass().Operation(method)
+		// Found a single dash Operator.
+		operator = ast.OperatorClass().Operator(dash)
 		return
 	}
 
-	// This is not a single Operation rule.
+	// Attempt to parse a single star Operator.
+	var star string
+	star, token, ok = v.parseToken(StarToken)
+	if ok {
+		// Found a single star Operator.
+		operator = ast.OperatorClass().Operator(star)
+		return
+	}
+
+	// Attempt to parse a single slash Operator.
+	var slash string
+	slash, token, ok = v.parseToken(SlashToken)
+	if ok {
+		// Found a single slash Operator.
+		operator = ast.OperatorClass().Operator(slash)
+		return
+	}
+
+	// Attempt to parse a single double Operator.
+	var double string
+	double, token, ok = v.parseToken(DoubleToken)
+	if ok {
+		// Found a single double Operator.
+		operator = ast.OperatorClass().Operator(double)
+		return
+	}
+
+	// Attempt to parse a single caret Operator.
+	var caret string
+	caret, token, ok = v.parseToken(CaretToken)
+	if ok {
+		// Found a single caret Operator.
+		operator = ast.OperatorClass().Operator(caret)
+		return
+	}
+
+	// Attempt to parse a single less Operator.
+	var less string
+	less, token, ok = v.parseToken(LessToken)
+	if ok {
+		// Found a single less Operator.
+		operator = ast.OperatorClass().Operator(less)
+		return
+	}
+
+	// Attempt to parse a single equal Operator.
+	var equal string
+	equal, token, ok = v.parseToken(EqualToken)
+	if ok {
+		// Found a single equal Operator.
+		operator = ast.OperatorClass().Operator(equal)
+		return
+	}
+
+	// Attempt to parse a single more Operator.
+	var more string
+	more, token, ok = v.parseToken(MoreToken)
+	if ok {
+		// Found a single more Operator.
+		operator = ast.OperatorClass().Operator(more)
+		return
+	}
+
+	// Attempt to parse a single is Operator.
+	var is string
+	is, token, ok = v.parseToken(IsToken)
+	if ok {
+		// Found a single is Operator.
+		operator = ast.OperatorClass().Operator(is)
+		return
+	}
+
+	// Attempt to parse a single matches Operator.
+	var matches string
+	matches, token, ok = v.parseToken(MatchesToken)
+	if ok {
+		// Found a single matches Operator.
+		operator = ast.OperatorClass().Operator(matches)
+		return
+	}
+
+	// Attempt to parse a single and Operator.
+	var and string
+	and, token, ok = v.parseToken(AndToken)
+	if ok {
+		// Found a single and Operator.
+		operator = ast.OperatorClass().Operator(and)
+		return
+	}
+
+	// Attempt to parse a single san Operator.
+	var san string
+	san, token, ok = v.parseToken(SanToken)
+	if ok {
+		// Found a single san Operator.
+		operator = ast.OperatorClass().Operator(san)
+		return
+	}
+
+	// Attempt to parse a single ior Operator.
+	var ior string
+	ior, token, ok = v.parseToken(IorToken)
+	if ok {
+		// Found a single ior Operator.
+		operator = ast.OperatorClass().Operator(ior)
+		return
+	}
+
+	// Attempt to parse a single xor Operator.
+	var xor string
+	xor, token, ok = v.parseToken(XorToken)
+	if ok {
+		// Found a single xor Operator.
+		operator = ast.OperatorClass().Operator(xor)
+		return
+	}
+
+	// Attempt to parse a single ampersand Operator.
+	var ampersand string
+	ampersand, token, ok = v.parseToken(AmpersandToken)
+	if ok {
+		// Found a single ampersand Operator.
+		operator = ast.OperatorClass().Operator(ampersand)
+		return
+	}
+
+	// This is not a single Operator rule.
 	return
 }
 
@@ -5736,78 +5134,6 @@ func (v *parser_) parseTemplate() (
 	return
 }
 
-func (v *parser_) parseTextual() (
-	textual ast.TextualLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single Component Textual.
-	var component ast.ComponentLike
-	component, token, ok = v.parseComponent()
-	if ok {
-		// Found a single Component Textual.
-		textual = ast.TextualClass().Textual(component)
-		return
-	}
-
-	// Attempt to parse a single Precedence Textual.
-	var precedence ast.PrecedenceLike
-	precedence, token, ok = v.parsePrecedence()
-	if ok {
-		// Found a single Precedence Textual.
-		textual = ast.TextualClass().Textual(precedence)
-		return
-	}
-
-	// Attempt to parse a single Dereference Textual.
-	var dereference ast.DereferenceLike
-	dereference, token, ok = v.parseDereference()
-	if ok {
-		// Found a single Dereference Textual.
-		textual = ast.TextualClass().Textual(dereference)
-		return
-	}
-
-	// Attempt to parse a single Function Textual.
-	var function ast.FunctionLike
-	function, token, ok = v.parseFunction()
-	if ok {
-		// Found a single Function Textual.
-		textual = ast.TextualClass().Textual(function)
-		return
-	}
-
-	// Attempt to parse a single Method Textual.
-	var method ast.MethodLike
-	method, token, ok = v.parseMethod()
-	if ok {
-		// Found a single Method Textual.
-		textual = ast.TextualClass().Textual(method)
-		return
-	}
-
-	// Attempt to parse a single Attribute Textual.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Textual.
-		textual = ast.TextualClass().Textual(attribute)
-		return
-	}
-
-	// Attempt to parse a single Variable Textual.
-	var variable ast.VariableLike
-	variable, token, ok = v.parseVariable()
-	if ok {
-		// Found a single Variable Textual.
-		textual = ast.TextualClass().Textual(variable)
-		return
-	}
-
-	// This is not a single Textual rule.
-	return
-}
-
 func (v *parser_) parseThreading() (
 	threading ast.ThreadingLike,
 	token TokenLike,
@@ -5880,6 +5206,105 @@ func (v *parser_) parseThrowClause() (
 	ok = true
 	v.remove(tokens)
 	throwClause = ast.ThrowClauseClass().ThrowClause(exception)
+	return
+}
+
+func (v *parser_) parseUnary() (
+	unary ast.UnaryLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Component Unary.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Unary.
+		unary = ast.UnaryClass().Unary(component)
+		return
+	}
+
+	// Attempt to parse a single Precedence Unary.
+	var precedence ast.PrecedenceLike
+	precedence, token, ok = v.parsePrecedence()
+	if ok {
+		// Found a single Precedence Unary.
+		unary = ast.UnaryClass().Unary(precedence)
+		return
+	}
+
+	// Attempt to parse a single Dereference Unary.
+	var dereference ast.DereferenceLike
+	dereference, token, ok = v.parseDereference()
+	if ok {
+		// Found a single Dereference Unary.
+		unary = ast.UnaryClass().Unary(dereference)
+		return
+	}
+
+	// Attempt to parse a single Complement Unary.
+	var complement ast.ComplementLike
+	complement, token, ok = v.parseComplement()
+	if ok {
+		// Found a single Complement Unary.
+		unary = ast.UnaryClass().Unary(complement)
+		return
+	}
+
+	// Attempt to parse a single Inversion Unary.
+	var inversion ast.InversionLike
+	inversion, token, ok = v.parseInversion()
+	if ok {
+		// Found a single Inversion Unary.
+		unary = ast.UnaryClass().Unary(inversion)
+		return
+	}
+
+	// Attempt to parse a single Amplitude Unary.
+	var amplitude ast.AmplitudeLike
+	amplitude, token, ok = v.parseAmplitude()
+	if ok {
+		// Found a single Amplitude Unary.
+		unary = ast.UnaryClass().Unary(amplitude)
+		return
+	}
+
+	// Attempt to parse a single Function Unary.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
+	if ok {
+		// Found a single Function Unary.
+		unary = ast.UnaryClass().Unary(function)
+		return
+	}
+
+	// Attempt to parse a single Method Unary.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Unary.
+		unary = ast.UnaryClass().Unary(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Unary.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Unary.
+		unary = ast.UnaryClass().Unary(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Unary.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Unary.
+		unary = ast.UnaryClass().Unary(variable)
+		return
+	}
+
+	// This is not a single Unary rule.
 	return
 }
 
@@ -6480,8 +5905,7 @@ var parserClassReference_ = &parserClass_{
 			"$Arguments":          `Argument AdditionalArgument*`,
 			"$AdditionalArgument": `"," Argument`,
 			"$Argument":           `identifier`,
-			"$Method":             `identifier Invocation`,
-			"$Invocation":         `Threading identifier "(" Arguments? ")"`,
+			"$Method":             `identifier Threading identifier "(" Arguments? ")"`,
 			"$Threading": `
   - dot
   - arrow`,
@@ -6501,8 +5925,8 @@ var parserClassReference_ = &parserClass_{
 			"$Result":          `Expression`,
 			"$ThrowClause":     `"throw" Exception`,
 			"$Exception":       `Expression`,
-			"$DoClause":        `"do" Operation`,
-			"$Operation": `
+			"$DoClause":        `"do" Invocation`,
+			"$Invocation": `
   - Function
   - Method`,
 			"$LetClause": `"let" Recipient Assign Expression`,
@@ -6531,7 +5955,8 @@ var parserClassReference_ = &parserClass_{
 			"$Draft":          `Expression`,
 			"$DiscardClause":  `"discard" Draft`,
 			"$NotarizeClause": `"notarize" Draft "as" Citation`,
-			"$Expression": `
+			"$Expression":     `Unary Operation*`,
+			"$Unary": `
   - Component
   - Precedence
   - Dereference
@@ -6541,12 +5966,25 @@ var parserClassReference_ = &parserClass_{
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.
-  - Arithmetic
-  - Exponential
-  - Comparison
-  - Inference
-  - Concatenation`,
+  - Variable  ! Must be last since the others also begin with an identifier.`,
+			"$Operation": `Operator Expression`,
+			"$Operator": `
+  - plus
+  - dash
+  - star
+  - slash
+  - double
+  - caret
+  - less
+  - equal
+  - more
+  - is
+  - matches
+  - and
+  - san
+  - ior
+  - xor
+  - ampersand`,
 			"$Precedence":  `"(" Expression ")"`,
 			"$Dereference": `snail Indirect`,
 			"$Indirect": `
@@ -6581,47 +6019,7 @@ var parserClassReference_ = &parserClass_{
   - Method
   - Attribute
   - Variable  ! Must be last since the others also begin with an identifier.`,
-			"$Amplitude":           `bar Numerical bar`,
-			"$Arithmetic":          `Numerical ArithmeticOperation+`,
-			"$ArithmeticOperation": `ArithmeticOperator Numerical`,
-			"$ArithmeticOperator": `
-  - plus
-  - dash
-  - star
-  - slash
-  - slashSlash`,
-			"$Exponential": `Base caret Numerical`,
-			"$Base": `
-  - Component
-  - Precedence
-  - Dereference
-  - Amplitude
-  - Attribute
-  - Variable  ! Must be last since attributes also begin with an identifier.`,
-			"$Comparison": `Arithmetic CompareOperator Arithmetic`,
-			"$CompareOperator": `
-  - less
-  - equal
-  - more
-  - is
-  - matches`,
-			"$Inference":        `Logical LogicalOperation+`,
-			"$LogicalOperation": `LogicOperator Logical`,
-			"$LogicOperator": `
-  - and
-  - san
-  - ior
-  - xor`,
-			"$Concatenation": `Textual ConcatenationOperation+`,
-			"$Textual": `
-  - Component
-  - Precedence
-  - Dereference
-  - Function
-  - Method
-  - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.`,
-			"$ConcatenationOperation": `ampersand Textual`,
+			"$Amplitude": `bar Numerical bar`,
 		},
 	),
 }

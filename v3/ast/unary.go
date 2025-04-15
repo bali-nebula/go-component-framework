@@ -27,31 +27,21 @@ import (
 
 // Access Function
 
-func ComparisonClass() ComparisonClassLike {
-	return comparisonClass()
+func UnaryClass() UnaryClassLike {
+	return unaryClass()
 }
 
 // Constructor Methods
 
-func (c *comparisonClass_) Comparison(
-	arithmetic1 ArithmeticLike,
-	compareOperator CompareOperatorLike,
-	arithmetic2 ArithmeticLike,
-) ComparisonLike {
-	if uti.IsUndefined(arithmetic1) {
-		panic("The \"arithmetic1\" attribute is required by this class.")
+func (c *unaryClass_) Unary(
+	any_ any,
+) UnaryLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(compareOperator) {
-		panic("The \"compareOperator\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(arithmetic2) {
-		panic("The \"arithmetic2\" attribute is required by this class.")
-	}
-	var instance = &comparison_{
+	var instance = &unary_{
 		// Initialize the instance attributes.
-		arithmetic1_:     arithmetic1,
-		compareOperator_: compareOperator,
-		arithmetic2_:     arithmetic2,
+		any_: any_,
 	}
 	return instance
 }
@@ -60,47 +50,37 @@ func (c *comparisonClass_) Comparison(
 
 // Principal Methods
 
-func (v *comparison_) GetClass() ComparisonClassLike {
-	return comparisonClass()
+func (v *unary_) GetClass() UnaryClassLike {
+	return unaryClass()
 }
 
 // Attribute Methods
 
-func (v *comparison_) GetArithmetic1() ArithmeticLike {
-	return v.arithmetic1_
-}
-
-func (v *comparison_) GetCompareOperator() CompareOperatorLike {
-	return v.compareOperator_
-}
-
-func (v *comparison_) GetArithmetic2() ArithmeticLike {
-	return v.arithmetic2_
+func (v *unary_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type comparison_ struct {
+type unary_ struct {
 	// Declare the instance attributes.
-	arithmetic1_     ArithmeticLike
-	compareOperator_ CompareOperatorLike
-	arithmetic2_     ArithmeticLike
+	any_ any
 }
 
 // Class Structure
 
-type comparisonClass_ struct {
+type unaryClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func comparisonClass() *comparisonClass_ {
-	return comparisonClassReference_
+func unaryClass() *unaryClass_ {
+	return unaryClassReference_
 }
 
-var comparisonClassReference_ = &comparisonClass_{
+var unaryClassReference_ = &unaryClass_{
 	// Initialize the class constants.
 }

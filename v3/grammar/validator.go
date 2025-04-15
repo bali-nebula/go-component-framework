@@ -157,6 +157,12 @@ func (v *validator_) ProcessDot(
 	v.validateToken(dot, DotToken)
 }
 
+func (v *validator_) ProcessDouble(
+	double string,
+) {
+	v.validateToken(double, DoubleToken)
+}
+
 func (v *validator_) ProcessDuration(
 	duration string,
 ) {
@@ -305,12 +311,6 @@ func (v *validator_) ProcessSlashEqual(
 	slashEqual string,
 ) {
 	v.validateToken(slashEqual, SlashEqualToken)
-}
-
-func (v *validator_) ProcessSlashSlash(
-	slashSlash string,
-) {
-	v.validateToken(slashSlash, SlashSlashToken)
 }
 
 func (v *validator_) ProcessSnail(
@@ -609,64 +609,6 @@ func (v *validator_) PostprocessArguments(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessArithmetic(
-	arithmetic ast.ArithmeticLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessArithmeticSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessArithmetic(
-	arithmetic ast.ArithmeticLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessArithmeticOperation(
-	arithmeticOperation ast.ArithmeticOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessArithmeticOperationSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessArithmeticOperation(
-	arithmeticOperation ast.ArithmeticOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessArithmeticOperator(
-	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessArithmeticOperatorSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessArithmeticOperator(
-	arithmeticOperator ast.ArithmeticOperatorLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessAssign(
 	assign ast.AssignLike,
 ) {
@@ -775,24 +717,6 @@ func (v *validator_) PostprocessBag(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessBase(
-	base ast.BaseLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessBaseSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessBase(
-	base ast.BaseLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessBreakClause(
 	breakClause ast.BreakClauseLike,
 ) {
@@ -865,42 +789,6 @@ func (v *validator_) PostprocessCollection(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessCompareOperator(
-	compareOperator ast.CompareOperatorLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessCompareOperatorSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessCompareOperator(
-	compareOperator ast.CompareOperatorLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessComparison(
-	comparison ast.ComparisonLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessComparisonSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessComparison(
-	comparison ast.ComparisonLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessComplement(
 	complement ast.ComplementLike,
 ) {
@@ -933,46 +821,6 @@ func (v *validator_) ProcessComponentSlot(
 
 func (v *validator_) PostprocessComponent(
 	component ast.ComponentLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessConcatenation(
-	concatenation ast.ConcatenationLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessConcatenationSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessConcatenation(
-	concatenation ast.ConcatenationLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessConcatenationOperation(
-	concatenationOperation ast.ConcatenationOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessConcatenationOperationSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessConcatenationOperation(
-	concatenationOperation ast.ConcatenationOperationLike,
-	index uint,
-	size uint,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1175,24 +1023,6 @@ func (v *validator_) PostprocessException(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessExponential(
-	exponential ast.ExponentialLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExponentialSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExponential(
-	exponential ast.ExponentialLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessExpression(
 	expression ast.ExpressionLike,
 ) {
@@ -1369,24 +1199,6 @@ func (v *validator_) ProcessInductionSlot(
 
 func (v *validator_) PostprocessInduction(
 	induction ast.InductionLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInference(
-	inference ast.InferenceLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInferenceSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInference(
-	inference ast.InferenceLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1571,24 +1383,6 @@ func (v *validator_) PostprocessLetClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessLogicOperator(
-	logicOperator ast.LogicOperatorLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessLogicOperatorSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessLogicOperator(
-	logicOperator ast.LogicOperatorLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessLogical(
 	logical ast.LogicalLike,
 ) {
@@ -1603,28 +1397,6 @@ func (v *validator_) ProcessLogicalSlot(
 
 func (v *validator_) PostprocessLogical(
 	logical ast.LogicalLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessLogicalOperation(
-	logicalOperation ast.LogicalOperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessLogicalOperationSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessLogicalOperation(
-	logicalOperation ast.LogicalOperationLike,
-	index uint,
-	size uint,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1851,6 +1623,8 @@ func (v *validator_) PostprocessOnClause(
 
 func (v *validator_) PreprocessOperation(
 	operation ast.OperationLike,
+	index uint,
+	size uint,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1863,6 +1637,26 @@ func (v *validator_) ProcessOperationSlot(
 
 func (v *validator_) PostprocessOperation(
 	operation ast.OperationLike,
+	index uint,
+	size uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessOperator(
+	operator ast.OperatorLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessOperatorSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessOperator(
+	operator ast.OperatorLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2281,24 +2075,6 @@ func (v *validator_) PostprocessTemplate(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessTextual(
-	textual ast.TextualLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessTextualSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessTextual(
-	textual ast.TextualLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessThreading(
 	threading ast.ThreadingLike,
 ) {
@@ -2331,6 +2107,24 @@ func (v *validator_) ProcessThrowClauseSlot(
 
 func (v *validator_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessUnary(
+	unary ast.UnaryLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessUnarySlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessUnary(
+	unary ast.UnaryLike,
 ) {
 	// TBD - Add any validation checks.
 }

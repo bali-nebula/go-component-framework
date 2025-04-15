@@ -34,21 +34,14 @@ func InvocationClass() InvocationClassLike {
 // Constructor Methods
 
 func (c *invocationClass_) Invocation(
-	threading ThreadingLike,
-	identifier string,
-	optionalArguments ArgumentsLike,
+	any_ any,
 ) InvocationLike {
-	if uti.IsUndefined(threading) {
-		panic("The \"threading\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(identifier) {
-		panic("The \"identifier\" attribute is required by this class.")
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
 	var instance = &invocation_{
 		// Initialize the instance attributes.
-		threading_:         threading,
-		identifier_:        identifier,
-		optionalArguments_: optionalArguments,
+		any_: any_,
 	}
 	return instance
 }
@@ -63,16 +56,8 @@ func (v *invocation_) GetClass() InvocationClassLike {
 
 // Attribute Methods
 
-func (v *invocation_) GetThreading() ThreadingLike {
-	return v.threading_
-}
-
-func (v *invocation_) GetIdentifier() string {
-	return v.identifier_
-}
-
-func (v *invocation_) GetOptionalArguments() ArgumentsLike {
-	return v.optionalArguments_
+func (v *invocation_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
@@ -81,9 +66,7 @@ func (v *invocation_) GetOptionalArguments() ArgumentsLike {
 
 type invocation_ struct {
 	// Declare the instance attributes.
-	threading_         ThreadingLike
-	identifier_        string
-	optionalArguments_ ArgumentsLike
+	any_ any
 }
 
 // Class Structure

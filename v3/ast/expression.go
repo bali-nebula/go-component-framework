@@ -20,6 +20,7 @@
 package ast
 
 import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -34,14 +35,19 @@ func ExpressionClass() ExpressionClassLike {
 // Constructor Methods
 
 func (c *expressionClass_) Expression(
-	any_ any,
+	unary UnaryLike,
+	operations col.Sequential[OperationLike],
 ) ExpressionLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+	if uti.IsUndefined(unary) {
+		panic("The \"unary\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(operations) {
+		panic("The \"operations\" attribute is required by this class.")
 	}
 	var instance = &expression_{
 		// Initialize the instance attributes.
-		any_: any_,
+		unary_:      unary,
+		operations_: operations,
 	}
 	return instance
 }
@@ -56,8 +62,12 @@ func (v *expression_) GetClass() ExpressionClassLike {
 
 // Attribute Methods
 
-func (v *expression_) GetAny() any {
-	return v.any_
+func (v *expression_) GetUnary() UnaryLike {
+	return v.unary_
+}
+
+func (v *expression_) GetOperations() col.Sequential[OperationLike] {
+	return v.operations_
 }
 
 // PROTECTED INTERFACE
@@ -66,7 +76,8 @@ func (v *expression_) GetAny() any {
 
 type expression_ struct {
 	// Declare the instance attributes.
-	any_ any
+	unary_      UnaryLike
+	operations_ col.Sequential[OperationLike]
 }
 
 // Class Structure
