@@ -27,17 +27,17 @@ import (
 
 // Access Function
 
-func AmplitudeClass() AmplitudeClassLike {
-	return amplitudeClass()
+func MagnitudeClass() MagnitudeClassLike {
+	return magnitudeClass()
 }
 
 // Constructor Methods
 
-func (c *amplitudeClass_) Amplitude(
+func (c *magnitudeClass_) Magnitude(
 	bar1 string,
 	numerical NumericalLike,
 	bar2 string,
-) AmplitudeLike {
+) MagnitudeLike {
 	if uti.IsUndefined(bar1) {
 		panic("The \"bar1\" attribute is required by this class.")
 	}
@@ -47,7 +47,7 @@ func (c *amplitudeClass_) Amplitude(
 	if uti.IsUndefined(bar2) {
 		panic("The \"bar2\" attribute is required by this class.")
 	}
-	var instance = &amplitude_{
+	var instance = &magnitude_{
 		// Initialize the instance attributes.
 		bar1_:      bar1,
 		numerical_: numerical,
@@ -60,21 +60,21 @@ func (c *amplitudeClass_) Amplitude(
 
 // Principal Methods
 
-func (v *amplitude_) GetClass() AmplitudeClassLike {
-	return amplitudeClass()
+func (v *magnitude_) GetClass() MagnitudeClassLike {
+	return magnitudeClass()
 }
 
 // Attribute Methods
 
-func (v *amplitude_) GetBar1() string {
+func (v *magnitude_) GetBar1() string {
 	return v.bar1_
 }
 
-func (v *amplitude_) GetNumerical() NumericalLike {
+func (v *magnitude_) GetNumerical() NumericalLike {
 	return v.numerical_
 }
 
-func (v *amplitude_) GetBar2() string {
+func (v *magnitude_) GetBar2() string {
 	return v.bar2_
 }
 
@@ -82,7 +82,7 @@ func (v *amplitude_) GetBar2() string {
 
 // Instance Structure
 
-type amplitude_ struct {
+type magnitude_ struct {
 	// Declare the instance attributes.
 	bar1_      string
 	numerical_ NumericalLike
@@ -91,16 +91,16 @@ type amplitude_ struct {
 
 // Class Structure
 
-type amplitudeClass_ struct {
+type magnitudeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func amplitudeClass() *amplitudeClass_ {
-	return amplitudeClassReference_
+func magnitudeClass() *magnitudeClass_ {
+	return magnitudeClassReference_
 }
 
-var amplitudeClassReference_ = &amplitudeClass_{
+var magnitudeClassReference_ = &magnitudeClass_{
 	// Initialize the class constants.
 }

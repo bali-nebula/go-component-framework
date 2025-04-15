@@ -45,7 +45,6 @@ type (
 	AdditionalIndexClassLike       = ast.AdditionalIndexClassLike
 	AdditionalStatementClassLike   = ast.AdditionalStatementClassLike
 	AdditionalValueClassLike       = ast.AdditionalValueClassLike
-	AmplitudeClassLike             = ast.AmplitudeClassLike
 	AnnotatedAssociationClassLike  = ast.AnnotatedAssociationClassLike
 	AnnotatedStatementClassLike    = ast.AnnotatedStatementClassLike
 	AnnotatedValueClassLike        = ast.AnnotatedValueClassLike
@@ -95,6 +94,7 @@ type (
 	LeftClassLike                  = ast.LeftClassLike
 	LetClauseClassLike             = ast.LetClauseClassLike
 	LogicalClassLike               = ast.LogicalClassLike
+	MagnitudeClassLike             = ast.MagnitudeClassLike
 	MainClauseClassLike            = ast.MainClauseClassLike
 	MatchHandlerClassLike          = ast.MatchHandlerClassLike
 	MessageClassLike               = ast.MessageClassLike
@@ -149,7 +149,6 @@ type (
 	AdditionalIndexLike       = ast.AdditionalIndexLike
 	AdditionalStatementLike   = ast.AdditionalStatementLike
 	AdditionalValueLike       = ast.AdditionalValueLike
-	AmplitudeLike             = ast.AmplitudeLike
 	AnnotatedAssociationLike  = ast.AnnotatedAssociationLike
 	AnnotatedStatementLike    = ast.AnnotatedStatementLike
 	AnnotatedValueLike        = ast.AnnotatedValueLike
@@ -199,6 +198,7 @@ type (
 	LeftLike                  = ast.LeftLike
 	LetClauseLike             = ast.LetClauseLike
 	LogicalLike               = ast.LogicalLike
+	MagnitudeLike             = ast.MagnitudeLike
 	MainClauseLike            = ast.MainClauseLike
 	MatchHandlerLike          = ast.MatchHandlerLike
 	MessageLike               = ast.MessageLike
@@ -305,6 +305,7 @@ const (
 	TagToken          = gra.TagToken
 	VersionToken      = gra.VersionToken
 	XorToken          = gra.XorToken
+	XyzToken          = gra.XyzToken
 )
 
 type (
@@ -393,29 +394,15 @@ func AdditionalValue(
 	)
 }
 
-// Ast/Amplitude
-
-func Amplitude(
-	bar1 string,
-	numerical ast.NumericalLike,
-	bar2 string,
-) ast.AmplitudeLike {
-	return ast.AmplitudeClass().Amplitude(
-		bar1,
-		numerical,
-		bar2,
-	)
-}
-
 // Ast/AnnotatedAssociation
 
 func AnnotatedAssociation(
-	dash string,
+	xyz string,
 	association ast.AssociationLike,
 	optionalNote string,
 ) ast.AnnotatedAssociationLike {
 	return ast.AnnotatedAssociationClass().AnnotatedAssociation(
-		dash,
+		xyz,
 		association,
 		optionalNote,
 	)
@@ -424,12 +411,12 @@ func AnnotatedAssociation(
 // Ast/AnnotatedStatement
 
 func AnnotatedStatement(
-	dash string,
+	xyz string,
 	statement ast.StatementLike,
 	optionalNote string,
 ) ast.AnnotatedStatementLike {
 	return ast.AnnotatedStatementClass().AnnotatedStatement(
-		dash,
+		xyz,
 		statement,
 		optionalNote,
 	)
@@ -438,12 +425,12 @@ func AnnotatedStatement(
 // Ast/AnnotatedValue
 
 func AnnotatedValue(
-	dash string,
+	xyz string,
 	value ast.ValueLike,
 	optionalNote string,
 ) ast.AnnotatedValueLike {
 	return ast.AnnotatedValueClass().AnnotatedValue(
-		dash,
+		xyz,
 		value,
 		optionalNote,
 	)
@@ -934,6 +921,20 @@ func Logical(
 ) ast.LogicalLike {
 	return ast.LogicalClass().Logical(
 		any_,
+	)
+}
+
+// Ast/Magnitude
+
+func Magnitude(
+	bar1 string,
+	numerical ast.NumericalLike,
+	bar2 string,
+) ast.MagnitudeLike {
+	return ast.MagnitudeClass().Magnitude(
+		bar1,
+		numerical,
+		bar2,
 	)
 }
 

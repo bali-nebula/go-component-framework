@@ -106,6 +106,7 @@ const (
 	TagToken
 	VersionToken
 	XorToken
+	XyzToken
 )
 
 // FUNCTIONAL DECLARATIONS
@@ -466,6 +467,9 @@ type Methodical interface {
 	ProcessXor(
 		xor string,
 	)
+	ProcessXyz(
+		xyz string,
+	)
 	PreprocessAcceptClause(
 		acceptClause ast.AcceptClauseLike,
 	)
@@ -539,15 +543,6 @@ type Methodical interface {
 		additionalValue ast.AdditionalValueLike,
 		index uint,
 		size uint,
-	)
-	PreprocessAmplitude(
-		amplitude ast.AmplitudeLike,
-	)
-	ProcessAmplitudeSlot(
-		slot uint,
-	)
-	PostprocessAmplitude(
-		amplitude ast.AmplitudeLike,
 	)
 	PreprocessAnnotatedAssociation(
 		annotatedAssociation ast.AnnotatedAssociationLike,
@@ -1001,6 +996,15 @@ type Methodical interface {
 	)
 	PostprocessLogical(
 		logical ast.LogicalLike,
+	)
+	PreprocessMagnitude(
+		magnitude ast.MagnitudeLike,
+	)
+	ProcessMagnitudeSlot(
+		slot uint,
+	)
+	PostprocessMagnitude(
+		magnitude ast.MagnitudeLike,
 	)
 	PreprocessMainClause(
 		mainClause ast.MainClauseLike,

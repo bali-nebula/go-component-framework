@@ -118,20 +118,6 @@ type AdditionalValueClassLike interface {
 }
 
 /*
-AmplitudeClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete amplitude-like class.
-*/
-type AmplitudeClassLike interface {
-	// Constructor Methods
-	Amplitude(
-		bar1 string,
-		numerical NumericalLike,
-		bar2 string,
-	) AmplitudeLike
-}
-
-/*
 AnnotatedAssociationClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete annotated-association-like class.
@@ -139,7 +125,7 @@ supported by each concrete annotated-association-like class.
 type AnnotatedAssociationClassLike interface {
 	// Constructor Methods
 	AnnotatedAssociation(
-		dash string,
+		xyz string,
 		association AssociationLike,
 		optionalNote string,
 	) AnnotatedAssociationLike
@@ -153,7 +139,7 @@ supported by each concrete annotated-statement-like class.
 type AnnotatedStatementClassLike interface {
 	// Constructor Methods
 	AnnotatedStatement(
-		dash string,
+		xyz string,
 		statement StatementLike,
 		optionalNote string,
 	) AnnotatedStatementLike
@@ -167,7 +153,7 @@ supported by each concrete annotated-value-like class.
 type AnnotatedValueClassLike interface {
 	// Constructor Methods
 	AnnotatedValue(
-		dash string,
+		xyz string,
 		value ValueLike,
 		optionalNote string,
 	) AnnotatedValueLike
@@ -737,6 +723,20 @@ type LogicalClassLike interface {
 	Logical(
 		any_ any,
 	) LogicalLike
+}
+
+/*
+MagnitudeClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete magnitude-like class.
+*/
+type MagnitudeClassLike interface {
+	// Constructor Methods
+	Magnitude(
+		bar1 string,
+		numerical NumericalLike,
+		bar2 string,
+	) MagnitudeLike
 }
 
 /*
@@ -1376,21 +1376,6 @@ type AdditionalValueLike interface {
 }
 
 /*
-AmplitudeLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete amplitude-like class.
-*/
-type AmplitudeLike interface {
-	// Principal Methods
-	GetClass() AmplitudeClassLike
-
-	// Attribute Methods
-	GetBar1() string
-	GetNumerical() NumericalLike
-	GetBar2() string
-}
-
-/*
 AnnotatedAssociationLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete annotated-association-like class.
@@ -1400,7 +1385,7 @@ type AnnotatedAssociationLike interface {
 	GetClass() AnnotatedAssociationClassLike
 
 	// Attribute Methods
-	GetDash() string
+	GetXyz() string
 	GetAssociation() AssociationLike
 	GetOptionalNote() string
 }
@@ -1415,7 +1400,7 @@ type AnnotatedStatementLike interface {
 	GetClass() AnnotatedStatementClassLike
 
 	// Attribute Methods
-	GetDash() string
+	GetXyz() string
 	GetStatement() StatementLike
 	GetOptionalNote() string
 }
@@ -1430,7 +1415,7 @@ type AnnotatedValueLike interface {
 	GetClass() AnnotatedValueClassLike
 
 	// Attribute Methods
-	GetDash() string
+	GetXyz() string
 	GetValue() ValueLike
 	GetOptionalNote() string
 }
@@ -2042,6 +2027,21 @@ type LogicalLike interface {
 
 	// Attribute Methods
 	GetAny() any
+}
+
+/*
+MagnitudeLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete magnitude-like class.
+*/
+type MagnitudeLike interface {
+	// Principal Methods
+	GetClass() MagnitudeClassLike
+
+	// Attribute Methods
+	GetBar1() string
+	GetNumerical() NumericalLike
+	GetBar2() string
 }
 
 /*

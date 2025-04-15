@@ -365,77 +365,6 @@ func (v *parser_) parseAdditionalValue() (
 	return
 }
 
-func (v *parser_) parseAmplitude() (
-	amplitude ast.AmplitudeLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single bar token.
-	var bar1 string
-	bar1, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Amplitude rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Amplitude", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Numerical rule.
-	var numerical ast.NumericalLike
-	numerical, token, ok = v.parseNumerical()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Amplitude rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Amplitude", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar2 string
-	bar2, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Amplitude rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Amplitude", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Amplitude rule.
-	ok = true
-	v.remove(tokens)
-	amplitude = ast.AmplitudeClass().Amplitude(
-		bar1,
-		numerical,
-		bar2,
-	)
-	return
-}
-
 func (v *parser_) parseAnnotatedAssociation() (
 	annotatedAssociation ast.AnnotatedAssociationLike,
 	token TokenLike,
@@ -443,9 +372,9 @@ func (v *parser_) parseAnnotatedAssociation() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single dash token.
-	var dash string
-	dash, token, ok = v.parseToken(DashToken)
+	// Attempt to parse a single xyz token.
+	var xyz string
+	xyz, token, ok = v.parseToken(XyzToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
 			// This is not a single AnnotatedAssociation rule.
@@ -489,7 +418,7 @@ func (v *parser_) parseAnnotatedAssociation() (
 	ok = true
 	v.remove(tokens)
 	annotatedAssociation = ast.AnnotatedAssociationClass().AnnotatedAssociation(
-		dash,
+		xyz,
 		association,
 		optionalNote,
 	)
@@ -503,9 +432,9 @@ func (v *parser_) parseAnnotatedStatement() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single dash token.
-	var dash string
-	dash, token, ok = v.parseToken(DashToken)
+	// Attempt to parse a single xyz token.
+	var xyz string
+	xyz, token, ok = v.parseToken(XyzToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
 			// This is not a single AnnotatedStatement rule.
@@ -549,7 +478,7 @@ func (v *parser_) parseAnnotatedStatement() (
 	ok = true
 	v.remove(tokens)
 	annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(
-		dash,
+		xyz,
 		statement,
 		optionalNote,
 	)
@@ -563,9 +492,9 @@ func (v *parser_) parseAnnotatedValue() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single dash token.
-	var dash string
-	dash, token, ok = v.parseToken(DashToken)
+	// Attempt to parse a single xyz token.
+	var xyz string
+	xyz, token, ok = v.parseToken(XyzToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
 			// This is not a single AnnotatedValue rule.
@@ -609,7 +538,7 @@ func (v *parser_) parseAnnotatedValue() (
 	ok = true
 	v.remove(tokens)
 	annotatedValue = ast.AnnotatedValueClass().AnnotatedValue(
-		dash,
+		xyz,
 		value,
 		optionalNote,
 	)
@@ -2948,6 +2877,77 @@ func (v *parser_) parseLogical() (
 	return
 }
 
+func (v *parser_) parseMagnitude() (
+	magnitude ast.MagnitudeLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single bar token.
+	var bar1 string
+	bar1, token, ok = v.parseToken(BarToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Magnitude rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Magnitude", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single Numerical rule.
+	var numerical ast.NumericalLike
+	numerical, token, ok = v.parseNumerical()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Magnitude rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Magnitude", token)
+		panic(message)
+	}
+
+	// Attempt to parse a single bar token.
+	var bar2 string
+	bar2, token, ok = v.parseToken(BarToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Magnitude rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Magnitude", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Magnitude rule.
+	ok = true
+	v.remove(tokens)
+	magnitude = ast.MagnitudeClass().Magnitude(
+		bar1,
+		numerical,
+		bar2,
+	)
+	return
+}
+
 func (v *parser_) parseMainClause() (
 	mainClause ast.MainClauseLike,
 	token TokenLike,
@@ -3555,12 +3555,12 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
-	// Attempt to parse a single Amplitude Numerical.
-	var amplitude ast.AmplitudeLike
-	amplitude, token, ok = v.parseAmplitude()
+	// Attempt to parse a single Magnitude Numerical.
+	var magnitude ast.MagnitudeLike
+	magnitude, token, ok = v.parseMagnitude()
 	if ok {
-		// Found a single Amplitude Numerical.
-		numerical = ast.NumericalClass().Numerical(amplitude)
+		// Found a single Magnitude Numerical.
+		numerical = ast.NumericalClass().Numerical(magnitude)
 		return
 	}
 
@@ -5259,12 +5259,12 @@ func (v *parser_) parseUnary() (
 		return
 	}
 
-	// Attempt to parse a single Amplitude Unary.
-	var amplitude ast.AmplitudeLike
-	amplitude, token, ok = v.parseAmplitude()
+	// Attempt to parse a single Magnitude Unary.
+	var magnitude ast.MagnitudeLike
+	magnitude, token, ok = v.parseMagnitude()
 	if ok {
-		// Found a single Amplitude Unary.
-		unary = ast.UnaryClass().Unary(amplitude)
+		// Found a single Magnitude Unary.
+		unary = ast.UnaryClass().Unary(magnitude)
 		return
 	}
 
@@ -5840,7 +5840,7 @@ var parserClassReference_ = &parserClass_{
   - MultilineAssociations
   - InlineAssociations`,
 			"$MultilineAssociations": `AnnotatedAssociation+`,
-			"$AnnotatedAssociation":  `dash Association note?`,
+			"$AnnotatedAssociation":  `xyz Association note?`,
 			"$InlineAssociations":    `Association AdditionalAssociation*`,
 			"$AdditionalAssociation": `"," Association`,
 			"$Association":           `symbol colon Value`,
@@ -5849,7 +5849,7 @@ var parserClassReference_ = &parserClass_{
   - MultilineValues
   - InlineValues`,
 			"$MultilineValues": `AnnotatedValue+`,
-			"$AnnotatedValue":  `dash Value note?`,
+			"$AnnotatedValue":  `xyz Value note?`,
 			"$InlineValues":    `Value AdditionalValue*`,
 			"$AdditionalValue": `"," Value`,
 			"$Procedure":       `"{" Statements? "}"`,
@@ -5857,7 +5857,7 @@ var parserClassReference_ = &parserClass_{
   - MultilineStatements
   - InlineStatements`,
 			"$MultilineStatements": `AnnotatedStatement+`,
-			"$AnnotatedStatement":  `dash Statement note?`,
+			"$AnnotatedStatement":  `xyz Statement note?`,
 			"$InlineStatements":    `Statement AdditionalStatement*`,
 			"$AdditionalStatement": `";" Statement`,
 			"$Statement":           `MainClause OnClause?`,
@@ -5962,7 +5962,7 @@ var parserClassReference_ = &parserClass_{
   - Dereference
   - Complement
   - Inversion
-  - Amplitude
+  - Magnitude
   - Function
   - Method
   - Attribute
@@ -6014,12 +6014,12 @@ var parserClassReference_ = &parserClass_{
   - Precedence
   - Dereference
   - Inversion
-  - Amplitude
+  - Magnitude
   - Function
   - Method
   - Attribute
   - Variable  ! Must be last since the others also begin with an identifier.`,
-			"$Amplitude": `bar Numerical bar`,
+			"$Magnitude": `bar Numerical bar`,
 		},
 	),
 }

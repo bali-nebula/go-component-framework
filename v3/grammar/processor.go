@@ -300,6 +300,11 @@ func (v *processor_) ProcessXor(
 ) {
 }
 
+func (v *processor_) ProcessXyz(
+	xyz string,
+) {
+}
+
 func (v *processor_) PreprocessAcceptClause(
 	acceptClause ast.AcceptClauseLike,
 ) {
@@ -407,21 +412,6 @@ func (v *processor_) PostprocessAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 	index uint,
 	size uint,
-) {
-}
-
-func (v *processor_) PreprocessAmplitude(
-	amplitude ast.AmplitudeLike,
-) {
-}
-
-func (v *processor_) ProcessAmplitudeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessAmplitude(
-	amplitude ast.AmplitudeLike,
 ) {
 }
 
@@ -1169,6 +1159,21 @@ func (v *processor_) ProcessLogicalSlot(
 
 func (v *processor_) PostprocessLogical(
 	logical ast.LogicalLike,
+) {
+}
+
+func (v *processor_) PreprocessMagnitude(
+	magnitude ast.MagnitudeLike,
+) {
+}
+
+func (v *processor_) ProcessMagnitudeSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessMagnitude(
+	magnitude ast.MagnitudeLike,
 ) {
 }
 

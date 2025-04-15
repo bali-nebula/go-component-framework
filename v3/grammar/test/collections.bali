@@ -1,51 +1,51 @@
 [
-  - [ ]
-  - [:]
-  - [[:]]
-  - [42]
-  - ["abc"]
-  - [("a".."f")]
-  - [(~0..~π(]
-  - [)∞..-1.2)]
-  - [)∞..∞(]
-  - [
-       - 1
-       - 2
-       - 3
+  xyz [ ]
+  xyz [:]
+  xyz [[:]]
+  xyz [42]
+  xyz ["abc"]
+  xyz [("a".."f")]
+  xyz [(~0..~π(]
+  xyz [)∞..-1.2)]
+  xyz [)∞..∞(]
+  xyz [
+       xyz 1
+       xyz 2
+       xyz 3
     ]($type: /bali/collections/Stack/v1)
-  - [
-       - 1
-       - 2
-       - 3
+  xyz [
+       xyz 1
+       xyz 2
+       xyz 3
     ]($type: /bali/collections/Queue/v1)
-  - [
-       - $alpha: 1
-       - $beta: 2
-       - $gamma: 3
+  xyz [
+       xyz $alpha: 1
+       xyz $beta: 2
+       xyz $gamma: 3
     ]
-  - [
-       - $a: [$array]
-       - $b: [$foo: "bar"]
+  xyz [
+       xyz $a: [$array]
+       xyz $b: [$foo: "bar"]
     ]
-  - [ ]($type: /bali/collections/Set/v1)
-  - [:]($type: /bali/collections/Catalog/v1)
-  - [$foobar]($type: /bali/collections/List/v1)
-  - [
-       - $foo
-       - $bar
+  xyz [ ]($type: /bali/collections/Set/v1)
+  xyz [:]($type: /bali/collections/Catalog/v1)
+  xyz [$foobar]($type: /bali/collections/List/v1)
+  xyz [
+       xyz $foo
+       xyz $bar
     ]($type: /bali/collections/List/v1)
-  - [$foo: "bar"]($type: /bali/collections/Catalog/v1)
-  - [
-       - $foo: "bar"
-       - $bar: "foo"
+  xyz [$foo: "bar"]($type: /bali/collections/Catalog/v1)
+  xyz [
+       xyz $foo: "bar"
+       xyz $bar: "foo"
     ]($type: /bali/collections/Catalog/v1)
-  - [$key: "value"]
-  - [
-       - $foo: 5
-       - $bar: ~π
+  xyz [$key: "value"]
+  xyz [
+       xyz $foo: 5
+       xyz $bar: ~π
     ]
-  - [
-       - $foo
-       - $bar
+  xyz [
+       xyz $foo
+       xyz $bar
     ]
 ]

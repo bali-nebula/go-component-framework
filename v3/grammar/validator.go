@@ -361,6 +361,12 @@ func (v *validator_) ProcessXor(
 	v.validateToken(xor, XorToken)
 }
 
+func (v *validator_) ProcessXyz(
+	xyz string,
+) {
+	v.validateToken(xyz, XyzToken)
+}
+
 func (v *validator_) PreprocessAcceptClause(
 	acceptClause ast.AcceptClauseLike,
 ) {
@@ -485,24 +491,6 @@ func (v *validator_) PostprocessAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 	index uint,
 	size uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessAmplitude(
-	amplitude ast.AmplitudeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessAmplitudeSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessAmplitude(
-	amplitude ast.AmplitudeLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1397,6 +1385,24 @@ func (v *validator_) ProcessLogicalSlot(
 
 func (v *validator_) PostprocessLogical(
 	logical ast.LogicalLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessMagnitude(
+	magnitude ast.MagnitudeLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessMagnitudeSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessMagnitude(
+	magnitude ast.MagnitudeLike,
 ) {
 	// TBD - Add any validation checks.
 }

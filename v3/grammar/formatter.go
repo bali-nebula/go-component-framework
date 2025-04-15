@@ -360,6 +360,12 @@ func (v *formatter_) ProcessXor(
 	v.appendString(xor)
 }
 
+func (v *formatter_) ProcessXyz(
+	xyz string,
+) {
+	v.appendString(xyz)
+}
+
 func (v *formatter_) PreprocessAcceptClause(
 	acceptClause ast.AcceptClauseLike,
 ) {
@@ -484,24 +490,6 @@ func (v *formatter_) PostprocessAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 	index uint,
 	size uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessAmplitude(
-	amplitude ast.AmplitudeLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessAmplitudeSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessAmplitude(
-	amplitude ast.AmplitudeLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1396,6 +1384,24 @@ func (v *formatter_) ProcessLogicalSlot(
 
 func (v *formatter_) PostprocessLogical(
 	logical ast.LogicalLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessMagnitude(
+	magnitude ast.MagnitudeLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessMagnitudeSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessMagnitude(
+	magnitude ast.MagnitudeLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

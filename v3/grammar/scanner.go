@@ -237,6 +237,7 @@ loop:
 		case v.foundToken(PercentageToken):
 		case v.foundToken(ProbabilityToken):
 		case v.foundToken(NumberToken):
+		case v.foundToken(XyzToken):
 		case v.foundToken(IdentifierToken):
 		case v.foundToken(DotToken):
 		case v.foundToken(DashToken):
@@ -333,6 +334,7 @@ var scannerClassReference_ = &scannerClass_{
 			TagToken:          "tag",
 			VersionToken:      "version",
 			XorToken:          "xor",
+			XyzToken:          "xyz",
 		},
 	),
 	matchers_: fra.CatalogFromMap[TokenType, *reg.Regexp](
@@ -389,6 +391,7 @@ var scannerClassReference_ = &scannerClass_{
 			TagToken:          reg.MustCompile("^" + tag_),
 			VersionToken:      reg.MustCompile("^" + version_),
 			XorToken:          reg.MustCompile("^" + xor_),
+			XyzToken:          reg.MustCompile("^" + xyz_),
 		},
 	),
 }
@@ -420,7 +423,7 @@ const (
 	alphanumeric_ = "(?:(?:" + alpha_ + ")|(?:" + base10_ + "))"
 	ampersand_    = "(?:&)"
 	and_          = "(?:AND)"
-	angle_        = "(?:~((?:" + zero_ + ")|(?:" + magnitude_ + ")))"
+	angle_        = "(?:~((?:" + zero_ + ")|(?:" + amplitude_ + ")|pi|π|tau|τ))"
 	authority_    = "(?:[^/" + control_ + "]+)"
 	bar_          = "(?:\\|)"
 	base10_       = "(?:[0-9])"
@@ -444,18 +447,18 @@ const (
 	equal_        = "(?:=)"
 	escape_       = "(?:\\\\((?:" + unicode_ + ")|[abfnrtv\"\\\\]))"
 	exponent_     = "(?:E(?:" + sign_ + ")?(?:" + ordinal_ + "))"
-	float_        = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + "))"
+	float_        = "(?:(?:" + sign_ + ")?(?:" + amplitude_ + "))"
 	fraction_     = "(?:(?:" + dot_ + ")(?:" + base10_ + ")+)"
 	fragment_     = "(?:[^>" + control_ + "]*)"
 	hour_         = "(?:([0-1][0-9])|(2[0-3]))"
 	hours_        = "(?:(?:" + timespan_ + ")H)"
-	imaginary_    = "(?:(?:" + sign_ + ")?(?:" + magnitude_ + ")?i)"
+	imaginary_    = "(?:(?:" + sign_ + ")?(?:" + amplitude_ + ")?i)"
 	infinity_     = "(?:(?:" + sign_ + ")?(infinity|∞))"
 	instruction_  = "(?:(?:" + base16_ + "){4})"
 	ior_          = "(?:IOR)"
 	is_           = "(?:IS)"
 	letter_       = "(?:" + lower_ + "|" + upper_ + ")"
-	magnitude_    = "(?:e|pi|π|phi|φ|tau|τ|(?:" + scalar_ + "))"
+	amplitude_    = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)(?:" + exponent_ + ")?)"
 	matches_      = "(?:MATCHES)"
 	minute_       = "(?:[0-5][0-9])"
 	minutes_      = "(?:(?:" + timespan_ + ")M)"
@@ -473,7 +476,7 @@ const (
 	pattern_      = "(?:none|(?:" + regex_ + ")|any)"
 	plusEqual_    = "(?:\\+=)"
 	plus_         = "(?:\\+)"
-	polar_        = "(?:(?:" + magnitude_ + ")e\\^(?:" + angle_ + ")?i)"
+	polar_        = "(?:(?:" + amplitude_ + ")e\\^(?:" + angle_ + ")?i)"
 	query_        = "(?:[^#>" + control_ + "]*)"
 	quote_        = "(?:\"(?:" + character_ + ")*\")"
 	real_         = "(?:(?:" + zero_ + ")|(?:" + float_ + ")|(?:" + infinity_ + ")|(?:" + undefined_ + "))"
@@ -481,7 +484,6 @@ const (
 	regex_        = "(?:\"(?:" + character_ + ")+\"\\?)"
 	resource_     = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(?:" + path_ + ")(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
 	san_          = "(?:SAN)"
-	scalar_       = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)(?:" + exponent_ + ")?)"
 	scheme_       = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|(?:" + plus_ + ")|(?:" + dash_ + ")|(?:" + dot_ + "))*)"
 	second_       = "(?:([0-5][0-9])|(6[0-1]))"
 	seconds_      = "(?:(?:" + timespan_ + ")S)"
@@ -505,6 +507,7 @@ const (
 	percentage_   = "(?:(?:" + real_ + ")%)"
 	probability_  = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
 	number_       = "(?:(?:" + polar_ + ")|(?:" + rectangular_ + ")|(?:" + imaginary_ + ")|(?:" + real_ + "))"
+	xyz_          = "(?:xyz)"
 	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
 	dot_          = "(?:\\.)"
 	dash_         = "(?:-)"

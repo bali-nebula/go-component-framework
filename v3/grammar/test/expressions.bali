@@ -1,24 +1,24 @@
 {
-  - let $foo := ~π($units: $radians)
-  - let $foo := sum(a, b)
-  - let $foo := foo<-bar(x)
-  - let $foo := |z|
-  - let $foo := -/*z
-  - let $foo := x + 1
-  - let $foo := x + y
-  - let $foo := x + y + z
-  - let $foo := (x + y)
-  - let $foo := (x + y - z) * (x / y // z)
-  - let $foo := base ^ exponent
-  - let $foo := foo
-  - let $foo := NOT p
-  - let $foo := p AND q
-  - let $foo := NOT (p AND q) IOR (p IOR NOT q) XOR (p SAN q)
-  - let $foo := @reference
-  - let $foo := list.addValue(value)
-  - let $foo := remote<-notify(event)
-  - let $foo := customer[42, $address, $province]
-  - let $foo := a & b & c
-  - let $foo := a < b IOR b = c IOR c ≠ d IOR d > e IOR e IS f IOR f MATCHES g
-  - let $foo := NOT p
+  xyz let $foo := ~π($units: $radians)
+  xyz let $foo := sum(a, b)
+  xyz let $foo := foo<-bar(x)
+  xyz let $foo := |z|
+  xyz let $foo := -/*z
+  xyz let $foo := x + 1
+  xyz let $foo := x + y
+  xyz let $foo := x + y + z
+  xyz let $foo := (x + y)
+  xyz let $foo := (x + y - z) * (x / y // z)
+  xyz let $foo := base ^ done
+  xyz let $foo := foo
+  xyz let $foo := NOT p
+  xyz let $foo := p AND q
+  xyz let $foo := NOT (p AND q) IOR (p IOR NOT q) XOR (p SAN q)
+  xyz let $foo := @reference
+  xyz let $foo := list.addValue(value)
+  xyz let $foo := remote<-notify(event)
+  xyz let $foo := customer[42, $address, $province]
+  xyz let $foo := a & b & c
+  xyz let $foo := a < b IOR b = c IOR d > e IOR e IS f IOR f MATCHES g
+  xyz let $foo := NOT p
 }

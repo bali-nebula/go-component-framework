@@ -128,36 +128,12 @@ func (v *visitor_) visitAdditionalValue(
 	v.processor_.PostprocessValue(value)
 }
 
-func (v *visitor_) visitAmplitude(
-	amplitude ast.AmplitudeLike,
-) {
-	// Visit a single bar token.
-	var bar1 = amplitude.GetBar1()
-	v.processor_.ProcessBar(bar1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessAmplitudeSlot(1)
-
-	// Visit a single numerical rule.
-	var numerical = amplitude.GetNumerical()
-	v.processor_.PreprocessNumerical(numerical)
-	v.visitNumerical(numerical)
-	v.processor_.PostprocessNumerical(numerical)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessAmplitudeSlot(2)
-
-	// Visit a single bar token.
-	var bar2 = amplitude.GetBar2()
-	v.processor_.ProcessBar(bar2)
-}
-
 func (v *visitor_) visitAnnotatedAssociation(
 	annotatedAssociation ast.AnnotatedAssociationLike,
 ) {
-	// Visit a single dash token.
-	var dash = annotatedAssociation.GetDash()
-	v.processor_.ProcessDash(dash)
+	// Visit a single xyz token.
+	var xyz = annotatedAssociation.GetXyz()
+	v.processor_.ProcessXyz(xyz)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessAnnotatedAssociationSlot(1)
@@ -181,9 +157,9 @@ func (v *visitor_) visitAnnotatedAssociation(
 func (v *visitor_) visitAnnotatedStatement(
 	annotatedStatement ast.AnnotatedStatementLike,
 ) {
-	// Visit a single dash token.
-	var dash = annotatedStatement.GetDash()
-	v.processor_.ProcessDash(dash)
+	// Visit a single xyz token.
+	var xyz = annotatedStatement.GetXyz()
+	v.processor_.ProcessXyz(xyz)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessAnnotatedStatementSlot(1)
@@ -207,9 +183,9 @@ func (v *visitor_) visitAnnotatedStatement(
 func (v *visitor_) visitAnnotatedValue(
 	annotatedValue ast.AnnotatedValueLike,
 ) {
-	// Visit a single dash token.
-	var dash = annotatedValue.GetDash()
-	v.processor_.ProcessDash(dash)
+	// Visit a single xyz token.
+	var xyz = annotatedValue.GetXyz()
+	v.processor_.ProcessXyz(xyz)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessAnnotatedValueSlot(1)
@@ -1180,6 +1156,30 @@ func (v *visitor_) visitLogical(
 	}
 }
 
+func (v *visitor_) visitMagnitude(
+	magnitude ast.MagnitudeLike,
+) {
+	// Visit a single bar token.
+	var bar1 = magnitude.GetBar1()
+	v.processor_.ProcessBar(bar1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessMagnitudeSlot(1)
+
+	// Visit a single numerical rule.
+	var numerical = magnitude.GetNumerical()
+	v.processor_.PreprocessNumerical(numerical)
+	v.visitNumerical(numerical)
+	v.processor_.PostprocessNumerical(numerical)
+
+	// Visit slot 2 between references.
+	v.processor_.ProcessMagnitudeSlot(2)
+
+	// Visit a single bar token.
+	var bar2 = magnitude.GetBar2()
+	v.processor_.ProcessBar(bar2)
+}
+
 func (v *visitor_) visitMainClause(
 	mainClause ast.MainClauseLike,
 ) {
@@ -1430,10 +1430,10 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessInversion(actual)
 		v.visitInversion(actual)
 		v.processor_.PostprocessInversion(actual)
-	case ast.AmplitudeLike:
-		v.processor_.PreprocessAmplitude(actual)
-		v.visitAmplitude(actual)
-		v.processor_.PostprocessAmplitude(actual)
+	case ast.MagnitudeLike:
+		v.processor_.PreprocessMagnitude(actual)
+		v.visitMagnitude(actual)
+		v.processor_.PostprocessMagnitude(actual)
 	case ast.FunctionLike:
 		v.processor_.PreprocessFunction(actual)
 		v.visitFunction(actual)
@@ -2029,10 +2029,10 @@ func (v *visitor_) visitUnary(
 		v.processor_.PreprocessInversion(actual)
 		v.visitInversion(actual)
 		v.processor_.PostprocessInversion(actual)
-	case ast.AmplitudeLike:
-		v.processor_.PreprocessAmplitude(actual)
-		v.visitAmplitude(actual)
-		v.processor_.PostprocessAmplitude(actual)
+	case ast.MagnitudeLike:
+		v.processor_.PreprocessMagnitude(actual)
+		v.visitMagnitude(actual)
+		v.processor_.PostprocessMagnitude(actual)
 	case ast.FunctionLike:
 		v.processor_.PreprocessFunction(actual)
 		v.visitFunction(actual)

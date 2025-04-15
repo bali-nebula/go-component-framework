@@ -85,7 +85,7 @@ $Associations:
 
 $MultilineAssociations: AnnotatedAssociation+
 
-$AnnotatedAssociation: dash Association note?
+$AnnotatedAssociation: xyz Association note?
 
 $InlineAssociations: Association AdditionalAssociation*
 
@@ -101,7 +101,7 @@ $Values:
 
 $MultilineValues: AnnotatedValue+
 
-$AnnotatedValue: dash Value note?
+$AnnotatedValue: xyz Value note?
 
 $InlineValues: Value AdditionalValue*
 
@@ -115,7 +115,7 @@ $Statements:
 
 $MultilineStatements: AnnotatedStatement+
 
-$AnnotatedStatement: dash Statement note?
+$AnnotatedStatement: xyz Statement note?
 
 $InlineStatements: Statement AdditionalStatement*
 
@@ -280,7 +280,7 @@ $Unary:
   - Dereference
   - Complement
   - Inversion
-  - Amplitude
+  - Magnitude
   - Function
   - Method
   - Attribute
@@ -342,13 +342,13 @@ $Numerical:
   - Precedence
   - Dereference
   - Inversion
-  - Amplitude
+  - Magnitude
   - Function
   - Method
   - Attribute
   - Variable  ! Must be last since the others also begin with an identifier.
 
-$Amplitude: bar Numerical bar
+$Magnitude: bar Numerical bar
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -363,7 +363,7 @@ $ampersand: '&'
 
 $and: "AND"
 
-$angle: '~' (zero | magnitude)
+$angle: '~' (zero | amplitude | "pi" | "π" | "tau" | "τ")
 
 $authority: ~['/' CONTROL]+
 
@@ -411,7 +411,7 @@ $escape: '\' (unicode | ['a' 'b' 'f' 'n' 'r' 't' 'v' '"' '\'])
 
 $exponent: 'E' sign? ordinal
 
-$float: sign? magnitude
+$float: sign? amplitude
 
 $fraction: dot base10+
 
@@ -421,7 +421,7 @@ $hour: (['0'..'1'] ['0'..'9']) | ('2' ['0'..'3'])
 
 $hours: timespan 'H'
 
-$imaginary: sign? magnitude? 'i'
+$imaginary: sign? amplitude? 'i'
 
 $infinity: sign? ("infinity" | '∞')
 
@@ -433,7 +433,7 @@ $is: "IS"
 
 $letter: LOWER | UPPER
 
-$magnitude: "e" | "pi" | "π" | "phi" | "φ" | "tau" | "τ" | scalar
+$amplitude: (zero fraction | ordinal fraction?) exponent?
 
 $matches: "MATCHES"
 
@@ -469,7 +469,7 @@ $plusEqual: "+="
 
 $plus: '+'
 
-$polar: magnitude "e^" angle? 'i'
+$polar: amplitude "e^" angle? 'i'
 
 $query: ~['#' '>' CONTROL]*
 
@@ -484,8 +484,6 @@ $regex: '"' character+ '"' '?'
 $resource: '<' scheme ':' ("//" authority)? '/' path ('?' query)? ('#' fragment)? '>'
 
 $san: "SAN"
-
-$scalar: (zero fraction | ordinal fraction?) exponent?
 
 $scheme: alpha (alphanumeric | plus | dash | dot)*
 
@@ -534,6 +532,8 @@ $percentage: real '%'
 $probability: fraction | one  ! Must be after percentage.
 
 $number: polar | rectangular | imaginary | real ! Must be after probability.
+
+$xyz: "xyz"
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
 
