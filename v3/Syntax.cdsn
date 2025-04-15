@@ -281,12 +281,12 @@ $Expression:
   - Complement
   - Inversion
   - Amplitude
-  - Target  ! Must be last since others also begin with an identifier.
   - Arithmetic
   - Exponential
   - Comparison
   - Inference
   - Concatenation
+  - Target  ! Must be last since others also begin with an identifier.
 
 $Precedence: "(" Expression ")"
 
@@ -294,16 +294,17 @@ $Dereference: snail Indirect
 
 $Indirect:
   - Component
-  - Target
   - Dereference
+  - Target
 
 $Complement: not Logical
 
 $Logical:
   - Component
-  - Target
   - Precedence
   - Dereference
+  - Complement
+  - Target
 
 $Inversion: Inverse Numerical
 
@@ -314,12 +315,11 @@ $Inverse:
 
 $Numerical:
   - Component
-  - Target
   - Precedence
   - Dereference
   - Inversion
   - Amplitude
-  - Exponential
+  - Target
 
 $Amplitude: bar Arithmetic bar
 
@@ -338,10 +338,11 @@ $Exponential: Base caret Numerical
 
 $Base:
   - Component
-  - Operation
   - Precedence
   - Dereference
   - Amplitude
+  - Attribute
+  - Variable  ! Must be last since attributes also begin with an identifier.
 
 $Comparison: Arithmetic CompareOperator Arithmetic
 
@@ -366,9 +367,9 @@ $Concatenation: Textual ConcatenationOperation+
 
 $Textual:
   - Component
-  - Target
   - Precedence
   - Dereference
+  - Target
 
 $ConcatenationOperation: ampersand Textual
 

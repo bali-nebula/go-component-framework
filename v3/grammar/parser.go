@@ -1196,15 +1196,6 @@ func (v *parser_) parseBase() (
 		return
 	}
 
-	// Attempt to parse a single Operation Base.
-	var operation ast.OperationLike
-	operation, token, ok = v.parseOperation()
-	if ok {
-		// Found a single Operation Base.
-		base = ast.BaseClass().Base(operation)
-		return
-	}
-
 	// Attempt to parse a single Precedence Base.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -1229,6 +1220,24 @@ func (v *parser_) parseBase() (
 	if ok {
 		// Found a single Amplitude Base.
 		base = ast.BaseClass().Base(amplitude)
+		return
+	}
+
+	// Attempt to parse a single Attribute Base.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Base.
+		base = ast.BaseClass().Base(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Base.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Base.
+		base = ast.BaseClass().Base(variable)
 		return
 	}
 
@@ -2419,15 +2428,6 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
-	// Attempt to parse a single Target Expression.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Expression.
-		expression = ast.ExpressionClass().Expression(target)
-		return
-	}
-
 	// Attempt to parse a single Arithmetic Expression.
 	var arithmetic ast.ArithmeticLike
 	arithmetic, token, ok = v.parseArithmetic()
@@ -2470,6 +2470,15 @@ func (v *parser_) parseExpression() (
 	if ok {
 		// Found a single Concatenation Expression.
 		expression = ast.ExpressionClass().Expression(concatenation)
+		return
+	}
+
+	// Attempt to parse a single Target Expression.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Expression.
+		expression = ast.ExpressionClass().Expression(target)
 		return
 	}
 
@@ -2884,21 +2893,21 @@ func (v *parser_) parseIndirect() (
 		return
 	}
 
-	// Attempt to parse a single Target Indirect.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Indirect.
-		indirect = ast.IndirectClass().Indirect(target)
-		return
-	}
-
 	// Attempt to parse a single Dereference Indirect.
 	var dereference ast.DereferenceLike
 	dereference, token, ok = v.parseDereference()
 	if ok {
 		// Found a single Dereference Indirect.
 		indirect = ast.IndirectClass().Indirect(dereference)
+		return
+	}
+
+	// Attempt to parse a single Target Indirect.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Indirect.
+		indirect = ast.IndirectClass().Indirect(target)
 		return
 	}
 
@@ -3608,15 +3617,6 @@ func (v *parser_) parseLogical() (
 		return
 	}
 
-	// Attempt to parse a single Target Logical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Logical.
-		logical = ast.LogicalClass().Logical(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Logical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -3632,6 +3632,24 @@ func (v *parser_) parseLogical() (
 	if ok {
 		// Found a single Dereference Logical.
 		logical = ast.LogicalClass().Logical(dereference)
+		return
+	}
+
+	// Attempt to parse a single Complement Logical.
+	var complement ast.ComplementLike
+	complement, token, ok = v.parseComplement()
+	if ok {
+		// Found a single Complement Logical.
+		logical = ast.LogicalClass().Logical(complement)
+		return
+	}
+
+	// Attempt to parse a single Target Logical.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Logical.
+		logical = ast.LogicalClass().Logical(target)
 		return
 	}
 
@@ -4208,15 +4226,6 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
-	// Attempt to parse a single Target Numerical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Numerical.
-		numerical = ast.NumericalClass().Numerical(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Numerical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -4253,12 +4262,12 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
-	// Attempt to parse a single Exponential Numerical.
-	var exponential ast.ExponentialLike
-	exponential, token, ok = v.parseExponential()
+	// Attempt to parse a single Target Numerical.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
 	if ok {
-		// Found a single Exponential Numerical.
-		numerical = ast.NumericalClass().Numerical(exponential)
+		// Found a single Target Numerical.
+		numerical = ast.NumericalClass().Numerical(target)
 		return
 	}
 
@@ -5633,15 +5642,6 @@ func (v *parser_) parseTextual() (
 		return
 	}
 
-	// Attempt to parse a single Target Textual.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Textual.
-		textual = ast.TextualClass().Textual(target)
-		return
-	}
-
 	// Attempt to parse a single Precedence Textual.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -5657,6 +5657,15 @@ func (v *parser_) parseTextual() (
 	if ok {
 		// Found a single Dereference Textual.
 		textual = ast.TextualClass().Textual(dereference)
+		return
+	}
+
+	// Attempt to parse a single Target Textual.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
+	if ok {
+		// Found a single Target Textual.
+		textual = ast.TextualClass().Textual(target)
 		return
 	}
 
@@ -6394,24 +6403,25 @@ var parserClassReference_ = &parserClass_{
   - Complement
   - Inversion
   - Amplitude
-  - Target  ! Must be last since others also begin with an identifier.
   - Arithmetic
   - Exponential
   - Comparison
   - Inference
-  - Concatenation`,
+  - Concatenation
+  - Target  ! Must be last since others also begin with an identifier.`,
 			"$Precedence":  `"(" Expression ")"`,
 			"$Dereference": `snail Indirect`,
 			"$Indirect": `
   - Component
-  - Target
-  - Dereference`,
+  - Dereference
+  - Target`,
 			"$Complement": `not Logical`,
 			"$Logical": `
   - Component
-  - Target
   - Precedence
-  - Dereference`,
+  - Dereference
+  - Complement
+  - Target`,
 			"$Inversion": `Inverse Numerical`,
 			"$Inverse": `
   - dash
@@ -6419,12 +6429,11 @@ var parserClassReference_ = &parserClass_{
   - star`,
 			"$Numerical": `
   - Component
-  - Target
   - Precedence
   - Dereference
   - Inversion
   - Amplitude
-  - Exponential`,
+  - Target`,
 			"$Amplitude":           `bar Arithmetic bar`,
 			"$Arithmetic":          `Numerical ArithmeticOperation+`,
 			"$ArithmeticOperation": `ArithmeticOperator Numerical`,
@@ -6437,10 +6446,11 @@ var parserClassReference_ = &parserClass_{
 			"$Exponential": `Base caret Numerical`,
 			"$Base": `
   - Component
-  - Operation
   - Precedence
   - Dereference
-  - Amplitude`,
+  - Amplitude
+  - Attribute
+  - Variable  ! Must be last since attributes also begin with an identifier.`,
 			"$Comparison": `Arithmetic CompareOperator Arithmetic`,
 			"$CompareOperator": `
   - less
@@ -6458,9 +6468,9 @@ var parserClassReference_ = &parserClass_{
 			"$Concatenation": `Textual ConcatenationOperation+`,
 			"$Textual": `
   - Component
-  - Target
   - Precedence
-  - Dereference`,
+  - Dereference
+  - Target`,
 			"$ConcatenationOperation": `ampersand Textual`,
 		},
 	),

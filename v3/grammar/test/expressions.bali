@@ -1,6 +1,11 @@
 {
   - let $foo := ~π($units: $radians)
   - let $foo := sum(a, b)
+  - let $foo := x + 1
+  - let $foo := |z|
+  - let $foo := -/*z
+  - let $foo := (x + y - z) * (x / y // z)
+  - let $foo := base ^ exponent
   - let $foo := foo
   - let $foo := NOT p
   - let $foo := p AND q
@@ -10,10 +15,6 @@
   - let $foo := remote<-notify(event)
   - let $foo := customer[42, $address, $province]
   - let $foo := a & b & c
-  - let $foo := base ^ exponent
-  - let $foo := -/*z
-  - let $foo := (x + y - z) * (x / y // z)
-  - let $foo := |z|
   - let $foo := a < b IOR b = c IOR c ≠ d IOR d > e IOR e IS f IOR f MATCHES g
   - let $foo := NOT p
 }
