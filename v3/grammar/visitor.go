@@ -1116,10 +1116,10 @@ func (v *visitor_) visitIndirect(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
-	case ast.OperationLike:
-		v.processor_.PreprocessOperation(actual)
-		v.visitOperation(actual)
-		v.processor_.PostprocessOperation(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case ast.DereferenceLike:
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
@@ -1462,10 +1462,10 @@ func (v *visitor_) visitLogical(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
-	case ast.OperationLike:
-		v.processor_.PreprocessOperation(actual)
-		v.visitOperation(actual)
-		v.processor_.PostprocessOperation(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1723,10 +1723,10 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
-	case ast.OperationLike:
-		v.processor_.PreprocessOperation(actual)
-		v.visitOperation(actual)
-		v.processor_.PostprocessOperation(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -2238,10 +2238,10 @@ func (v *visitor_) visitTextual(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
-	case ast.OperationLike:
-		v.processor_.PreprocessOperation(actual)
-		v.visitOperation(actual)
-		v.processor_.PostprocessOperation(actual)
+	case ast.TargetLike:
+		v.processor_.PreprocessTarget(actual)
+		v.visitTarget(actual)
+		v.processor_.PostprocessTarget(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)

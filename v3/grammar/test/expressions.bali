@@ -3,6 +3,7 @@
   - let $foo := sum(a, b)
   - let $foo := foo
   - let $foo := NOT p
+  - let $foo := p AND q
   - let $foo := NOT (p AND q) IOR (p IOR NOT q) XOR (p SAN q)
   - let $foo := @reference
   - let $foo := list.addValue(value)

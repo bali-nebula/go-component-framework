@@ -294,14 +294,14 @@ $Dereference: snail Indirect
 
 $Indirect:
   - Component
-  - Operation
+  - Target
   - Dereference
 
 $Complement: not Logical
 
 $Logical:
   - Component
-  - Operation
+  - Target
   - Precedence
   - Dereference
 
@@ -314,7 +314,7 @@ $Inverse:
 
 $Numerical:
   - Component
-  - Operation
+  - Target
   - Precedence
   - Dereference
   - Inversion
@@ -366,7 +366,7 @@ $Concatenation: Textual ConcatenationOperation+
 
 $Textual:
   - Component
-  - Operation
+  - Target
   - Precedence
   - Dereference
 

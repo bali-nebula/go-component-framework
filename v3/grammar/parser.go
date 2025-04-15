@@ -2884,12 +2884,12 @@ func (v *parser_) parseIndirect() (
 		return
 	}
 
-	// Attempt to parse a single Operation Indirect.
-	var operation ast.OperationLike
-	operation, token, ok = v.parseOperation()
+	// Attempt to parse a single Target Indirect.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
 	if ok {
-		// Found a single Operation Indirect.
-		indirect = ast.IndirectClass().Indirect(operation)
+		// Found a single Target Indirect.
+		indirect = ast.IndirectClass().Indirect(target)
 		return
 	}
 
@@ -3608,12 +3608,12 @@ func (v *parser_) parseLogical() (
 		return
 	}
 
-	// Attempt to parse a single Operation Logical.
-	var operation ast.OperationLike
-	operation, token, ok = v.parseOperation()
+	// Attempt to parse a single Target Logical.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
 	if ok {
-		// Found a single Operation Logical.
-		logical = ast.LogicalClass().Logical(operation)
+		// Found a single Target Logical.
+		logical = ast.LogicalClass().Logical(target)
 		return
 	}
 
@@ -4208,12 +4208,12 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
-	// Attempt to parse a single Operation Numerical.
-	var operation ast.OperationLike
-	operation, token, ok = v.parseOperation()
+	// Attempt to parse a single Target Numerical.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
 	if ok {
-		// Found a single Operation Numerical.
-		numerical = ast.NumericalClass().Numerical(operation)
+		// Found a single Target Numerical.
+		numerical = ast.NumericalClass().Numerical(target)
 		return
 	}
 
@@ -5633,12 +5633,12 @@ func (v *parser_) parseTextual() (
 		return
 	}
 
-	// Attempt to parse a single Operation Textual.
-	var operation ast.OperationLike
-	operation, token, ok = v.parseOperation()
+	// Attempt to parse a single Target Textual.
+	var target ast.TargetLike
+	target, token, ok = v.parseTarget()
 	if ok {
-		// Found a single Operation Textual.
-		textual = ast.TextualClass().Textual(operation)
+		// Found a single Target Textual.
+		textual = ast.TextualClass().Textual(target)
 		return
 	}
 
@@ -6404,12 +6404,12 @@ var parserClassReference_ = &parserClass_{
 			"$Dereference": `snail Indirect`,
 			"$Indirect": `
   - Component
-  - Operation
+  - Target
   - Dereference`,
 			"$Complement": `not Logical`,
 			"$Logical": `
   - Component
-  - Operation
+  - Target
   - Precedence
   - Dereference`,
 			"$Inversion": `Inverse Numerical`,
@@ -6419,7 +6419,7 @@ var parserClassReference_ = &parserClass_{
   - star`,
 			"$Numerical": `
   - Component
-  - Operation
+  - Target
   - Precedence
   - Dereference
   - Inversion
@@ -6458,7 +6458,7 @@ var parserClassReference_ = &parserClass_{
 			"$Concatenation": `Textual ConcatenationOperation+`,
 			"$Textual": `
   - Component
-  - Operation
+  - Target
   - Precedence
   - Dereference`,
 			"$ConcatenationOperation": `ampersand Textual`,
