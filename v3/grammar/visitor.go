@@ -470,23 +470,6 @@ func (v *visitor_) visitContinueClause(
 	// This method does not need to process anything.
 }
 
-func (v *visitor_) visitDereference(
-	dereference ast.DereferenceLike,
-) {
-	// Visit a single snail token.
-	var snail = dereference.GetSnail()
-	v.processor_.ProcessSnail(snail)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessDereferenceSlot(1)
-
-	// Visit a single indirect rule.
-	var indirect = dereference.GetIndirect()
-	v.processor_.PreprocessIndirect(indirect)
-	v.visitIndirect(indirect)
-	v.processor_.PostprocessIndirect(indirect)
-}
-
 func (v *visitor_) visitDiscardClause(
 	discardClause ast.DiscardClauseLike,
 ) {
@@ -623,32 +606,32 @@ func (v *visitor_) visitException(
 func (v *visitor_) visitExpression(
 	expression ast.ExpressionLike,
 ) {
-	// Visit a single unary rule.
-	var unary = expression.GetUnary()
-	v.processor_.PreprocessUnary(unary)
-	v.visitUnary(unary)
-	v.processor_.PostprocessUnary(unary)
+	// Visit a single subject rule.
+	var subject = expression.GetSubject()
+	v.processor_.PreprocessSubject(subject)
+	v.visitSubject(subject)
+	v.processor_.PostprocessSubject(subject)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessExpressionSlot(1)
 
-	// Visit each operation rule.
-	var operationIndex uint
-	var operations = expression.GetOperations().GetIterator()
-	var operationsSize = uint(operations.GetSize())
-	for operations.HasNext() {
-		operationIndex++
-		var operation = operations.GetNext()
-		v.processor_.PreprocessOperation(
-			operation,
-			operationIndex,
-			operationsSize,
+	// Visit each predicate rule.
+	var predicateIndex uint
+	var predicates = expression.GetPredicates().GetIterator()
+	var predicatesSize = uint(predicates.GetSize())
+	for predicates.HasNext() {
+		predicateIndex++
+		var predicate = predicates.GetNext()
+		v.processor_.PreprocessPredicate(
+			predicate,
+			predicateIndex,
+			predicatesSize,
 		)
-		v.visitOperation(operation)
-		v.processor_.PostprocessOperation(
-			operation,
-			operationIndex,
-			operationsSize,
+		v.visitPredicate(predicate)
+		v.processor_.PostprocessPredicate(
+			predicate,
+			predicateIndex,
+			predicatesSize,
 		)
 	}
 }
@@ -821,10 +804,10 @@ func (v *visitor_) visitIndirect(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
-	case ast.DereferenceLike:
-		v.processor_.PreprocessDereference(actual)
-		v.visitDereference(actual)
-		v.processor_.PostprocessDereference(actual)
+	case ast.ReferentLike:
+		v.processor_.PreprocessReferent(actual)
+		v.visitReferent(actual)
+		v.processor_.PostprocessReferent(actual)
 	case ast.FunctionLike:
 		v.processor_.PreprocessFunction(actual)
 		v.visitFunction(actual)
@@ -1122,10 +1105,10 @@ func (v *visitor_) visitLogical(
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
 		v.processor_.PostprocessPrecedence(actual)
-	case ast.DereferenceLike:
-		v.processor_.PreprocessDereference(actual)
-		v.visitDereference(actual)
-		v.processor_.PostprocessDereference(actual)
+	case ast.ReferentLike:
+		v.processor_.PreprocessReferent(actual)
+		v.visitReferent(actual)
+		v.processor_.PostprocessReferent(actual)
 	case ast.ComplementLike:
 		v.processor_.PreprocessComplement(actual)
 		v.visitComplement(actual)
@@ -1422,10 +1405,10 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
 		v.processor_.PostprocessPrecedence(actual)
-	case ast.DereferenceLike:
-		v.processor_.PreprocessDereference(actual)
-		v.visitDereference(actual)
-		v.processor_.PostprocessDereference(actual)
+	case ast.ReferentLike:
+		v.processor_.PreprocessReferent(actual)
+		v.visitReferent(actual)
+		v.processor_.PostprocessReferent(actual)
 	case ast.InversionLike:
 		v.processor_.PreprocessInversion(actual)
 		v.visitInversion(actual)
@@ -1491,25 +1474,6 @@ func (v *visitor_) visitOnClause(
 			matchHandlersSize,
 		)
 	}
-}
-
-func (v *visitor_) visitOperation(
-	operation ast.OperationLike,
-) {
-	// Visit a single operator rule.
-	var operator = operation.GetOperator()
-	v.processor_.PreprocessOperator(operator)
-	v.visitOperator(operator)
-	v.processor_.PostprocessOperator(operator)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessOperationSlot(1)
-
-	// Visit a single expression rule.
-	var expression = operation.GetExpression()
-	v.processor_.PreprocessExpression(expression)
-	v.visitExpression(expression)
-	v.processor_.PostprocessExpression(expression)
 }
 
 func (v *visitor_) visitOperator(
@@ -1593,6 +1557,25 @@ func (v *visitor_) visitPrecedence(
 ) {
 	// Visit a single expression rule.
 	var expression = precedence.GetExpression()
+	v.processor_.PreprocessExpression(expression)
+	v.visitExpression(expression)
+	v.processor_.PostprocessExpression(expression)
+}
+
+func (v *visitor_) visitPredicate(
+	predicate ast.PredicateLike,
+) {
+	// Visit a single operator rule.
+	var operator = predicate.GetOperator()
+	v.processor_.PreprocessOperator(operator)
+	v.visitOperator(operator)
+	v.processor_.PostprocessOperator(operator)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessPredicateSlot(1)
+
+	// Visit a single expression rule.
+	var expression = predicate.GetExpression()
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
@@ -1699,6 +1682,23 @@ func (v *visitor_) visitRecipient(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
+}
+
+func (v *visitor_) visitReferent(
+	referent ast.ReferentLike,
+) {
+	// Visit a single snail token.
+	var snail = referent.GetSnail()
+	v.processor_.ProcessSnail(snail)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessReferentSlot(1)
+
+	// Visit a single indirect rule.
+	var indirect = referent.GetIndirect()
+	v.processor_.PreprocessIndirect(indirect)
+	v.visitIndirect(indirect)
+	v.processor_.PostprocessIndirect(indirect)
 }
 
 func (v *visitor_) visitRejectClause(
@@ -1934,6 +1934,61 @@ func (v *visitor_) visitSubcomponent(
 	v.processor_.PostprocessIndices(indices)
 }
 
+func (v *visitor_) visitSubject(
+	subject ast.SubjectLike,
+) {
+	// Visit the possible subject types.
+	switch actual := subject.GetAny().(type) {
+	case ast.ComponentLike:
+		v.processor_.PreprocessComponent(actual)
+		v.visitComponent(actual)
+		v.processor_.PostprocessComponent(actual)
+	case ast.PrecedenceLike:
+		v.processor_.PreprocessPrecedence(actual)
+		v.visitPrecedence(actual)
+		v.processor_.PostprocessPrecedence(actual)
+	case ast.ReferentLike:
+		v.processor_.PreprocessReferent(actual)
+		v.visitReferent(actual)
+		v.processor_.PostprocessReferent(actual)
+	case ast.ComplementLike:
+		v.processor_.PreprocessComplement(actual)
+		v.visitComplement(actual)
+		v.processor_.PostprocessComplement(actual)
+	case ast.InversionLike:
+		v.processor_.PreprocessInversion(actual)
+		v.visitInversion(actual)
+		v.processor_.PostprocessInversion(actual)
+	case ast.MagnitudeLike:
+		v.processor_.PreprocessMagnitude(actual)
+		v.visitMagnitude(actual)
+		v.processor_.PostprocessMagnitude(actual)
+	case ast.FunctionLike:
+		v.processor_.PreprocessFunction(actual)
+		v.visitFunction(actual)
+		v.processor_.PostprocessFunction(actual)
+	case ast.MethodLike:
+		v.processor_.PreprocessMethod(actual)
+		v.visitMethod(actual)
+		v.processor_.PostprocessMethod(actual)
+	case ast.AttributeLike:
+		v.processor_.PreprocessAttribute(actual)
+		v.visitAttribute(actual)
+		v.processor_.PostprocessAttribute(actual)
+	case ast.VariableLike:
+		v.processor_.PreprocessVariable(actual)
+		v.visitVariable(actual)
+		v.processor_.PostprocessVariable(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
 func (v *visitor_) visitTarget(
 	target ast.TargetLike,
 ) {
@@ -2002,61 +2057,6 @@ func (v *visitor_) visitThrowClause(
 	v.processor_.PreprocessException(exception)
 	v.visitException(exception)
 	v.processor_.PostprocessException(exception)
-}
-
-func (v *visitor_) visitUnary(
-	unary ast.UnaryLike,
-) {
-	// Visit the possible unary types.
-	switch actual := unary.GetAny().(type) {
-	case ast.ComponentLike:
-		v.processor_.PreprocessComponent(actual)
-		v.visitComponent(actual)
-		v.processor_.PostprocessComponent(actual)
-	case ast.PrecedenceLike:
-		v.processor_.PreprocessPrecedence(actual)
-		v.visitPrecedence(actual)
-		v.processor_.PostprocessPrecedence(actual)
-	case ast.DereferenceLike:
-		v.processor_.PreprocessDereference(actual)
-		v.visitDereference(actual)
-		v.processor_.PostprocessDereference(actual)
-	case ast.ComplementLike:
-		v.processor_.PreprocessComplement(actual)
-		v.visitComplement(actual)
-		v.processor_.PostprocessComplement(actual)
-	case ast.InversionLike:
-		v.processor_.PreprocessInversion(actual)
-		v.visitInversion(actual)
-		v.processor_.PostprocessInversion(actual)
-	case ast.MagnitudeLike:
-		v.processor_.PreprocessMagnitude(actual)
-		v.visitMagnitude(actual)
-		v.processor_.PostprocessMagnitude(actual)
-	case ast.FunctionLike:
-		v.processor_.PreprocessFunction(actual)
-		v.visitFunction(actual)
-		v.processor_.PostprocessFunction(actual)
-	case ast.MethodLike:
-		v.processor_.PreprocessMethod(actual)
-		v.visitMethod(actual)
-		v.processor_.PostprocessMethod(actual)
-	case ast.AttributeLike:
-		v.processor_.PreprocessAttribute(actual)
-		v.visitAttribute(actual)
-		v.processor_.PostprocessAttribute(actual)
-	case ast.VariableLike:
-		v.processor_.PreprocessVariable(actual)
-		v.visitVariable(actual)
-		v.processor_.PostprocessVariable(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
 }
 
 func (v *visitor_) visitValue(

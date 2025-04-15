@@ -27,26 +27,26 @@ import (
 
 // Access Function
 
-func DereferenceClass() DereferenceClassLike {
-	return dereferenceClass()
+func PredicateClass() PredicateClassLike {
+	return predicateClass()
 }
 
 // Constructor Methods
 
-func (c *dereferenceClass_) Dereference(
-	snail string,
-	indirect IndirectLike,
-) DereferenceLike {
-	if uti.IsUndefined(snail) {
-		panic("The \"snail\" attribute is required by this class.")
+func (c *predicateClass_) Predicate(
+	operator OperatorLike,
+	expression ExpressionLike,
+) PredicateLike {
+	if uti.IsUndefined(operator) {
+		panic("The \"operator\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(indirect) {
-		panic("The \"indirect\" attribute is required by this class.")
+	if uti.IsUndefined(expression) {
+		panic("The \"expression\" attribute is required by this class.")
 	}
-	var instance = &dereference_{
+	var instance = &predicate_{
 		// Initialize the instance attributes.
-		snail_:    snail,
-		indirect_: indirect,
+		operator_:   operator,
+		expression_: expression,
 	}
 	return instance
 }
@@ -55,42 +55,42 @@ func (c *dereferenceClass_) Dereference(
 
 // Principal Methods
 
-func (v *dereference_) GetClass() DereferenceClassLike {
-	return dereferenceClass()
+func (v *predicate_) GetClass() PredicateClassLike {
+	return predicateClass()
 }
 
 // Attribute Methods
 
-func (v *dereference_) GetSnail() string {
-	return v.snail_
+func (v *predicate_) GetOperator() OperatorLike {
+	return v.operator_
 }
 
-func (v *dereference_) GetIndirect() IndirectLike {
-	return v.indirect_
+func (v *predicate_) GetExpression() ExpressionLike {
+	return v.expression_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type dereference_ struct {
+type predicate_ struct {
 	// Declare the instance attributes.
-	snail_    string
-	indirect_ IndirectLike
+	operator_   OperatorLike
+	expression_ ExpressionLike
 }
 
 // Class Structure
 
-type dereferenceClass_ struct {
+type predicateClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func dereferenceClass() *dereferenceClass_ {
-	return dereferenceClassReference_
+func predicateClass() *predicateClass_ {
+	return predicateClassReference_
 }
 
-var dereferenceClassReference_ = &dereferenceClass_{
+var predicateClassReference_ = &predicateClass_{
 	// Initialize the class constants.
 }

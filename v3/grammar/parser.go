@@ -1348,58 +1348,6 @@ func (v *parser_) parseContinueClause() (
 	return
 }
 
-func (v *parser_) parseDereference() (
-	dereference ast.DereferenceLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single snail token.
-	var snail string
-	snail, token, ok = v.parseToken(SnailToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Dereference rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Dereference", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Indirect rule.
-	var indirect ast.IndirectLike
-	indirect, token, ok = v.parseIndirect()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Dereference rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Dereference", token)
-		panic(message)
-	}
-
-	// Found a single Dereference rule.
-	ok = true
-	v.remove(tokens)
-	dereference = ast.DereferenceClass().Dereference(
-		snail,
-		indirect,
-	)
-	return
-}
-
 func (v *parser_) parseDiscardClause() (
 	discardClause ast.DiscardClauseLike,
 	token TokenLike,
@@ -1772,9 +1720,9 @@ func (v *parser_) parseExpression() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single Unary rule.
-	var unary ast.UnaryLike
-	unary, token, ok = v.parseUnary()
+	// Attempt to parse a single Subject rule.
+	var subject ast.SubjectLike
+	subject, token, ok = v.parseSubject()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -1789,38 +1737,38 @@ func (v *parser_) parseExpression() (
 		panic(message)
 	}
 
-	// Attempt to parse multiple Operation rules.
-	var operations = fra.List[ast.OperationLike]()
-operationsLoop:
+	// Attempt to parse multiple Predicate rules.
+	var predicates = fra.List[ast.PredicateLike]()
+predicatesLoop:
 	for count := 0; count < mat.MaxInt; count++ {
-		var operation ast.OperationLike
-		operation, token, ok = v.parseOperation()
+		var predicate ast.PredicateLike
+		predicate, token, ok = v.parsePredicate()
 		if !ok {
 			switch {
 			case count >= 0:
-				break operationsLoop
+				break predicatesLoop
 			case uti.IsDefined(tokens):
-				// This is not multiple Operation rules.
+				// This is not multiple Predicate rules.
 				v.putBack(tokens)
 				return
 			default:
 				// Found a syntax error.
 				var message = v.formatError("$Expression", token)
-				message += "0 or more Operation rules are required."
+				message += "0 or more Predicate rules are required."
 				panic(message)
 			}
 		}
 		// No additional put backs allowed at this point.
 		tokens = nil
-		operations.AppendValue(operation)
+		predicates.AppendValue(predicate)
 	}
 
 	// Found a single Expression rule.
 	ok = true
 	v.remove(tokens)
 	expression = ast.ExpressionClass().Expression(
-		unary,
-		operations,
+		subject,
+		predicates,
 	)
 	return
 }
@@ -2232,12 +2180,12 @@ func (v *parser_) parseIndirect() (
 		return
 	}
 
-	// Attempt to parse a single Dereference Indirect.
-	var dereference ast.DereferenceLike
-	dereference, token, ok = v.parseDereference()
+	// Attempt to parse a single Referent Indirect.
+	var referent ast.ReferentLike
+	referent, token, ok = v.parseReferent()
 	if ok {
-		// Found a single Dereference Indirect.
-		indirect = ast.IndirectClass().Indirect(dereference)
+		// Found a single Referent Indirect.
+		indirect = ast.IndirectClass().Indirect(referent)
 		return
 	}
 
@@ -2819,12 +2767,12 @@ func (v *parser_) parseLogical() (
 		return
 	}
 
-	// Attempt to parse a single Dereference Logical.
-	var dereference ast.DereferenceLike
-	dereference, token, ok = v.parseDereference()
+	// Attempt to parse a single Referent Logical.
+	var referent ast.ReferentLike
+	referent, token, ok = v.parseReferent()
 	if ok {
-		// Found a single Dereference Logical.
-		logical = ast.LogicalClass().Logical(dereference)
+		// Found a single Referent Logical.
+		logical = ast.LogicalClass().Logical(referent)
 		return
 	}
 
@@ -3537,12 +3485,12 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
-	// Attempt to parse a single Dereference Numerical.
-	var dereference ast.DereferenceLike
-	dereference, token, ok = v.parseDereference()
+	// Attempt to parse a single Referent Numerical.
+	var referent ast.ReferentLike
+	referent, token, ok = v.parseReferent()
 	if ok {
-		// Found a single Dereference Numerical.
-		numerical = ast.NumericalClass().Numerical(dereference)
+		// Found a single Referent Numerical.
+		numerical = ast.NumericalClass().Numerical(referent)
 		return
 	}
 
@@ -3677,57 +3625,6 @@ matchHandlersLoop:
 	onClause = ast.OnClauseClass().OnClause(
 		failure,
 		matchHandlers,
-	)
-	return
-}
-
-func (v *parser_) parseOperation() (
-	operation ast.OperationLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Operator rule.
-	var operator ast.OperatorLike
-	operator, token, ok = v.parseOperator()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Operation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Operation", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single Expression rule.
-	var expression ast.ExpressionLike
-	expression, token, ok = v.parseExpression()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Operation rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Operation", token)
-		panic(message)
-	}
-
-	// Found a single Operation rule.
-	ok = true
-	v.remove(tokens)
-	operation = ast.OperationClass().Operation(
-		operator,
-		expression,
 	)
 	return
 }
@@ -4100,6 +3997,57 @@ func (v *parser_) parsePrecedence() (
 	return
 }
 
+func (v *parser_) parsePredicate() (
+	predicate ast.PredicateLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single Operator rule.
+	var operator ast.OperatorLike
+	operator, token, ok = v.parseOperator()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Predicate rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Predicate", token)
+		panic(message)
+	}
+
+	// Attempt to parse a single Expression rule.
+	var expression ast.ExpressionLike
+	expression, token, ok = v.parseExpression()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Predicate rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Predicate", token)
+		panic(message)
+	}
+
+	// Found a single Predicate rule.
+	ok = true
+	v.remove(tokens)
+	predicate = ast.PredicateClass().Predicate(
+		operator,
+		expression,
+	)
+	return
+}
+
 func (v *parser_) parsePrimitive() (
 	primitive ast.PrimitiveLike,
 	token TokenLike,
@@ -4359,6 +4307,58 @@ func (v *parser_) parseRecipient() (
 	}
 
 	// This is not a single Recipient rule.
+	return
+}
+
+func (v *parser_) parseReferent() (
+	referent ast.ReferentLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single snail token.
+	var snail string
+	snail, token, ok = v.parseToken(SnailToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Referent rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Referent", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single Indirect rule.
+	var indirect ast.IndirectLike
+	indirect, token, ok = v.parseIndirect()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Referent rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Referent", token)
+		panic(message)
+	}
+
+	// Found a single Referent rule.
+	ok = true
+	v.remove(tokens)
+	referent = ast.ReferentClass().Referent(
+		snail,
+		indirect,
+	)
 	return
 }
 
@@ -5058,6 +5058,105 @@ func (v *parser_) parseSubcomponent() (
 	return
 }
 
+func (v *parser_) parseSubject() (
+	subject ast.SubjectLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Component Subject.
+	var component ast.ComponentLike
+	component, token, ok = v.parseComponent()
+	if ok {
+		// Found a single Component Subject.
+		subject = ast.SubjectClass().Subject(component)
+		return
+	}
+
+	// Attempt to parse a single Precedence Subject.
+	var precedence ast.PrecedenceLike
+	precedence, token, ok = v.parsePrecedence()
+	if ok {
+		// Found a single Precedence Subject.
+		subject = ast.SubjectClass().Subject(precedence)
+		return
+	}
+
+	// Attempt to parse a single Referent Subject.
+	var referent ast.ReferentLike
+	referent, token, ok = v.parseReferent()
+	if ok {
+		// Found a single Referent Subject.
+		subject = ast.SubjectClass().Subject(referent)
+		return
+	}
+
+	// Attempt to parse a single Complement Subject.
+	var complement ast.ComplementLike
+	complement, token, ok = v.parseComplement()
+	if ok {
+		// Found a single Complement Subject.
+		subject = ast.SubjectClass().Subject(complement)
+		return
+	}
+
+	// Attempt to parse a single Inversion Subject.
+	var inversion ast.InversionLike
+	inversion, token, ok = v.parseInversion()
+	if ok {
+		// Found a single Inversion Subject.
+		subject = ast.SubjectClass().Subject(inversion)
+		return
+	}
+
+	// Attempt to parse a single Magnitude Subject.
+	var magnitude ast.MagnitudeLike
+	magnitude, token, ok = v.parseMagnitude()
+	if ok {
+		// Found a single Magnitude Subject.
+		subject = ast.SubjectClass().Subject(magnitude)
+		return
+	}
+
+	// Attempt to parse a single Function Subject.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
+	if ok {
+		// Found a single Function Subject.
+		subject = ast.SubjectClass().Subject(function)
+		return
+	}
+
+	// Attempt to parse a single Method Subject.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Subject.
+		subject = ast.SubjectClass().Subject(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Subject.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Subject.
+		subject = ast.SubjectClass().Subject(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Subject.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Subject.
+		subject = ast.SubjectClass().Subject(variable)
+		return
+	}
+
+	// This is not a single Subject rule.
+	return
+}
+
 func (v *parser_) parseTarget() (
 	target ast.TargetLike,
 	token TokenLike,
@@ -5206,105 +5305,6 @@ func (v *parser_) parseThrowClause() (
 	ok = true
 	v.remove(tokens)
 	throwClause = ast.ThrowClauseClass().ThrowClause(exception)
-	return
-}
-
-func (v *parser_) parseUnary() (
-	unary ast.UnaryLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single Component Unary.
-	var component ast.ComponentLike
-	component, token, ok = v.parseComponent()
-	if ok {
-		// Found a single Component Unary.
-		unary = ast.UnaryClass().Unary(component)
-		return
-	}
-
-	// Attempt to parse a single Precedence Unary.
-	var precedence ast.PrecedenceLike
-	precedence, token, ok = v.parsePrecedence()
-	if ok {
-		// Found a single Precedence Unary.
-		unary = ast.UnaryClass().Unary(precedence)
-		return
-	}
-
-	// Attempt to parse a single Dereference Unary.
-	var dereference ast.DereferenceLike
-	dereference, token, ok = v.parseDereference()
-	if ok {
-		// Found a single Dereference Unary.
-		unary = ast.UnaryClass().Unary(dereference)
-		return
-	}
-
-	// Attempt to parse a single Complement Unary.
-	var complement ast.ComplementLike
-	complement, token, ok = v.parseComplement()
-	if ok {
-		// Found a single Complement Unary.
-		unary = ast.UnaryClass().Unary(complement)
-		return
-	}
-
-	// Attempt to parse a single Inversion Unary.
-	var inversion ast.InversionLike
-	inversion, token, ok = v.parseInversion()
-	if ok {
-		// Found a single Inversion Unary.
-		unary = ast.UnaryClass().Unary(inversion)
-		return
-	}
-
-	// Attempt to parse a single Magnitude Unary.
-	var magnitude ast.MagnitudeLike
-	magnitude, token, ok = v.parseMagnitude()
-	if ok {
-		// Found a single Magnitude Unary.
-		unary = ast.UnaryClass().Unary(magnitude)
-		return
-	}
-
-	// Attempt to parse a single Function Unary.
-	var function ast.FunctionLike
-	function, token, ok = v.parseFunction()
-	if ok {
-		// Found a single Function Unary.
-		unary = ast.UnaryClass().Unary(function)
-		return
-	}
-
-	// Attempt to parse a single Method Unary.
-	var method ast.MethodLike
-	method, token, ok = v.parseMethod()
-	if ok {
-		// Found a single Method Unary.
-		unary = ast.UnaryClass().Unary(method)
-		return
-	}
-
-	// Attempt to parse a single Attribute Unary.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Unary.
-		unary = ast.UnaryClass().Unary(attribute)
-		return
-	}
-
-	// Attempt to parse a single Variable Unary.
-	var variable ast.VariableLike
-	variable, token, ok = v.parseVariable()
-	if ok {
-		// Found a single Variable Unary.
-		unary = ast.UnaryClass().Unary(variable)
-		return
-	}
-
-	// This is not a single Unary rule.
 	return
 }
 
@@ -5900,7 +5900,7 @@ var parserClassReference_ = &parserClass_{
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.`,
+  - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Function":           `identifier "(" Arguments? ")"`,
 			"$Arguments":          `Argument AdditionalArgument*`,
 			"$AdditionalArgument": `"," Argument`,
@@ -5955,19 +5955,19 @@ var parserClassReference_ = &parserClass_{
 			"$Draft":          `Expression`,
 			"$DiscardClause":  `"discard" Draft`,
 			"$NotarizeClause": `"notarize" Draft "as" Citation`,
-			"$Expression":     `Unary Operation*`,
-			"$Unary": `
+			"$Expression":     `Subject Predicate*`,
+			"$Subject": `
   - Component
   - Precedence
-  - Dereference
+  - Referent
   - Complement
   - Inversion
   - Magnitude
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.`,
-			"$Operation": `Operator Expression`,
+  - Variable  ! This must be last since others also begin with an identifier.`,
+			"$Predicate": `Operator Expression`,
 			"$Operator": `
   - plus
   - dash
@@ -5985,25 +5985,25 @@ var parserClassReference_ = &parserClass_{
   - ior
   - xor
   - ampersand`,
-			"$Precedence":  `"(" Expression ")"`,
-			"$Dereference": `snail Indirect`,
+			"$Precedence": `"(" Expression ")"`,
+			"$Referent":   `snail Indirect`,
 			"$Indirect": `
   - Component
-  - Dereference
+  - Referent
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.`,
+  - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Complement": `not Logical`,
 			"$Logical": `
   - Component
   - Precedence
-  - Dereference
+  - Referent
   - Complement
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.`,
+  - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Inversion": `Inverse Numerical`,
 			"$Inverse": `
   - dash
@@ -6012,13 +6012,13 @@ var parserClassReference_ = &parserClass_{
 			"$Numerical": `
   - Component
   - Precedence
-  - Dereference
+  - Referent
   - Inversion
   - Magnitude
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.`,
+  - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Magnitude": `bar Numerical bar`,
 		},
 	),

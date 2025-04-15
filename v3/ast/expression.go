@@ -35,19 +35,19 @@ func ExpressionClass() ExpressionClassLike {
 // Constructor Methods
 
 func (c *expressionClass_) Expression(
-	unary UnaryLike,
-	operations col.Sequential[OperationLike],
+	subject SubjectLike,
+	predicates col.Sequential[PredicateLike],
 ) ExpressionLike {
-	if uti.IsUndefined(unary) {
-		panic("The \"unary\" attribute is required by this class.")
+	if uti.IsUndefined(subject) {
+		panic("The \"subject\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(operations) {
-		panic("The \"operations\" attribute is required by this class.")
+	if uti.IsUndefined(predicates) {
+		panic("The \"predicates\" attribute is required by this class.")
 	}
 	var instance = &expression_{
 		// Initialize the instance attributes.
-		unary_:      unary,
-		operations_: operations,
+		subject_:    subject,
+		predicates_: predicates,
 	}
 	return instance
 }
@@ -62,12 +62,12 @@ func (v *expression_) GetClass() ExpressionClassLike {
 
 // Attribute Methods
 
-func (v *expression_) GetUnary() UnaryLike {
-	return v.unary_
+func (v *expression_) GetSubject() SubjectLike {
+	return v.subject_
 }
 
-func (v *expression_) GetOperations() col.Sequential[OperationLike] {
-	return v.operations_
+func (v *expression_) GetPredicates() col.Sequential[PredicateLike] {
+	return v.predicates_
 }
 
 // PROTECTED INTERFACE
@@ -76,8 +76,8 @@ func (v *expression_) GetOperations() col.Sequential[OperationLike] {
 
 type expression_ struct {
 	// Declare the instance attributes.
-	unary_      UnaryLike
-	operations_ col.Sequential[OperationLike]
+	subject_    SubjectLike
+	predicates_ col.Sequential[PredicateLike]
 }
 
 // Class Structure

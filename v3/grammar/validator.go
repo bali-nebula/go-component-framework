@@ -849,24 +849,6 @@ func (v *validator_) PostprocessContinueClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessDereference(
-	dereference ast.DereferenceLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessDereferenceSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessDereference(
-	dereference ast.DereferenceLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessDiscardClause(
 	discardClause ast.DiscardClauseLike,
 ) {
@@ -1627,28 +1609,6 @@ func (v *validator_) PostprocessOnClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessOperation(
-	operation ast.OperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessOperationSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessOperation(
-	operation ast.OperationLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessOperator(
 	operator ast.OperatorLike,
 ) {
@@ -1717,6 +1677,28 @@ func (v *validator_) ProcessPrecedenceSlot(
 
 func (v *validator_) PostprocessPrecedence(
 	precedence ast.PrecedenceLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessPredicate(
+	predicate ast.PredicateLike,
+	index uint,
+	size uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessPredicateSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessPredicate(
+	predicate ast.PredicateLike,
+	index uint,
+	size uint,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1807,6 +1789,24 @@ func (v *validator_) ProcessRecipientSlot(
 
 func (v *validator_) PostprocessRecipient(
 	recipient ast.RecipientLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessReferent(
+	referent ast.ReferentLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessReferentSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessReferent(
+	referent ast.ReferentLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2045,6 +2045,24 @@ func (v *validator_) PostprocessSubcomponent(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessSubject(
+	subject ast.SubjectLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessSubjectSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessSubject(
+	subject ast.SubjectLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessTarget(
 	target ast.TargetLike,
 ) {
@@ -2113,24 +2131,6 @@ func (v *validator_) ProcessThrowClauseSlot(
 
 func (v *validator_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessUnary(
-	unary ast.UnaryLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessUnarySlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessUnary(
-	unary ast.UnaryLike,
 ) {
 	// TBD - Add any validation checks.
 }

@@ -356,19 +356,6 @@ type ContinueClauseClassLike interface {
 }
 
 /*
-DereferenceClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete dereference-like class.
-*/
-type DereferenceClassLike interface {
-	// Constructor Methods
-	Dereference(
-		snail string,
-		indirect IndirectLike,
-	) DereferenceLike
-}
-
-/*
 DiscardClauseClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete discard-clause-like class.
@@ -473,8 +460,8 @@ supported by each concrete expression-like class.
 type ExpressionClassLike interface {
 	// Constructor Methods
 	Expression(
-		unary UnaryLike,
-		operations col.Sequential[OperationLike],
+		subject SubjectLike,
+		predicates col.Sequential[PredicateLike],
 	) ExpressionLike
 }
 
@@ -890,19 +877,6 @@ type OnClauseClassLike interface {
 }
 
 /*
-OperationClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete operation-like class.
-*/
-type OperationClassLike interface {
-	// Constructor Methods
-	Operation(
-		operator OperatorLike,
-		expression ExpressionLike,
-	) OperationLike
-}
-
-/*
 OperatorClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete operator-like class.
@@ -949,6 +923,19 @@ type PrecedenceClassLike interface {
 	Precedence(
 		expression ExpressionLike,
 	) PrecedenceLike
+}
+
+/*
+PredicateClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete predicate-like class.
+*/
+type PredicateClassLike interface {
+	// Constructor Methods
+	Predicate(
+		operator OperatorLike,
+		expression ExpressionLike,
+	) PredicateLike
 }
 
 /*
@@ -1012,6 +999,19 @@ type RecipientClassLike interface {
 	Recipient(
 		any_ any,
 	) RecipientLike
+}
+
+/*
+ReferentClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete referent-like class.
+*/
+type ReferentClassLike interface {
+	// Constructor Methods
+	Referent(
+		snail string,
+		indirect IndirectLike,
+	) ReferentLike
 }
 
 /*
@@ -1173,6 +1173,18 @@ type SubcomponentClassLike interface {
 }
 
 /*
+SubjectClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete subject-like class.
+*/
+type SubjectClassLike interface {
+	// Constructor Methods
+	Subject(
+		any_ any,
+	) SubjectLike
+}
+
+/*
 TargetClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete target-like class.
@@ -1218,18 +1230,6 @@ type ThrowClauseClassLike interface {
 	ThrowClause(
 		exception ExceptionLike,
 	) ThrowClauseLike
-}
-
-/*
-UnaryClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete unary-like class.
-*/
-type UnaryClassLike interface {
-	// Constructor Methods
-	Unary(
-		any_ any,
-	) UnaryLike
 }
 
 /*
@@ -1631,20 +1631,6 @@ type ContinueClauseLike interface {
 }
 
 /*
-DereferenceLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete dereference-like class.
-*/
-type DereferenceLike interface {
-	// Principal Methods
-	GetClass() DereferenceClassLike
-
-	// Attribute Methods
-	GetSnail() string
-	GetIndirect() IndirectLike
-}
-
-/*
 DiscardClauseLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete discard-clause-like class.
@@ -1759,8 +1745,8 @@ type ExpressionLike interface {
 	GetClass() ExpressionClassLike
 
 	// Attribute Methods
-	GetUnary() UnaryLike
-	GetOperations() col.Sequential[OperationLike]
+	GetSubject() SubjectLike
+	GetPredicates() col.Sequential[PredicateLike]
 }
 
 /*
@@ -2207,20 +2193,6 @@ type OnClauseLike interface {
 }
 
 /*
-OperationLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete operation-like class.
-*/
-type OperationLike interface {
-	// Principal Methods
-	GetClass() OperationClassLike
-
-	// Attribute Methods
-	GetOperator() OperatorLike
-	GetExpression() ExpressionLike
-}
-
-/*
 OperatorLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete operator-like class.
@@ -2270,6 +2242,20 @@ type PrecedenceLike interface {
 	GetClass() PrecedenceClassLike
 
 	// Attribute Methods
+	GetExpression() ExpressionLike
+}
+
+/*
+PredicateLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete predicate-like class.
+*/
+type PredicateLike interface {
+	// Principal Methods
+	GetClass() PredicateClassLike
+
+	// Attribute Methods
+	GetOperator() OperatorLike
 	GetExpression() ExpressionLike
 }
 
@@ -2339,6 +2325,20 @@ type RecipientLike interface {
 
 	// Attribute Methods
 	GetAny() any
+}
+
+/*
+ReferentLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete referent-like class.
+*/
+type ReferentLike interface {
+	// Principal Methods
+	GetClass() ReferentClassLike
+
+	// Attribute Methods
+	GetSnail() string
+	GetIndirect() IndirectLike
 }
 
 /*
@@ -2512,6 +2512,19 @@ type SubcomponentLike interface {
 }
 
 /*
+SubjectLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete subject-like class.
+*/
+type SubjectLike interface {
+	// Principal Methods
+	GetClass() SubjectClassLike
+
+	// Attribute Methods
+	GetAny() any
+}
+
+/*
 TargetLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete target-like class.
@@ -2561,19 +2574,6 @@ type ThrowClauseLike interface {
 
 	// Attribute Methods
 	GetException() ExceptionLike
-}
-
-/*
-UnaryLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete unary-like class.
-*/
-type UnaryLike interface {
-	// Principal Methods
-	GetClass() UnaryClassLike
-
-	// Attribute Methods
-	GetAny() any
 }
 
 /*

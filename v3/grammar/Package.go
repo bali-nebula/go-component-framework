@@ -727,15 +727,6 @@ type Methodical interface {
 	PostprocessContinueClause(
 		continueClause ast.ContinueClauseLike,
 	)
-	PreprocessDereference(
-		dereference ast.DereferenceLike,
-	)
-	ProcessDereferenceSlot(
-		slot uint,
-	)
-	PostprocessDereference(
-		dereference ast.DereferenceLike,
-	)
 	PreprocessDiscardClause(
 		discardClause ast.DiscardClauseLike,
 	)
@@ -1118,19 +1109,6 @@ type Methodical interface {
 	PostprocessOnClause(
 		onClause ast.OnClauseLike,
 	)
-	PreprocessOperation(
-		operation ast.OperationLike,
-		index uint,
-		size uint,
-	)
-	ProcessOperationSlot(
-		slot uint,
-	)
-	PostprocessOperation(
-		operation ast.OperationLike,
-		index uint,
-		size uint,
-	)
 	PreprocessOperator(
 		operator ast.OperatorLike,
 	)
@@ -1166,6 +1144,19 @@ type Methodical interface {
 	)
 	PostprocessPrecedence(
 		precedence ast.PrecedenceLike,
+	)
+	PreprocessPredicate(
+		predicate ast.PredicateLike,
+		index uint,
+		size uint,
+	)
+	ProcessPredicateSlot(
+		slot uint,
+	)
+	PostprocessPredicate(
+		predicate ast.PredicateLike,
+		index uint,
+		size uint,
 	)
 	PreprocessPrimitive(
 		primitive ast.PrimitiveLike,
@@ -1211,6 +1202,15 @@ type Methodical interface {
 	)
 	PostprocessRecipient(
 		recipient ast.RecipientLike,
+	)
+	PreprocessReferent(
+		referent ast.ReferentLike,
+	)
+	ProcessReferentSlot(
+		slot uint,
+	)
+	PostprocessReferent(
+		referent ast.ReferentLike,
 	)
 	PreprocessRejectClause(
 		rejectClause ast.RejectClauseLike,
@@ -1329,6 +1329,15 @@ type Methodical interface {
 	PostprocessSubcomponent(
 		subcomponent ast.SubcomponentLike,
 	)
+	PreprocessSubject(
+		subject ast.SubjectLike,
+	)
+	ProcessSubjectSlot(
+		slot uint,
+	)
+	PostprocessSubject(
+		subject ast.SubjectLike,
+	)
 	PreprocessTarget(
 		target ast.TargetLike,
 	)
@@ -1364,15 +1373,6 @@ type Methodical interface {
 	)
 	PostprocessThrowClause(
 		throwClause ast.ThrowClauseLike,
-	)
-	PreprocessUnary(
-		unary ast.UnaryLike,
-	)
-	ProcessUnarySlot(
-		slot uint,
-	)
-	PostprocessUnary(
-		unary ast.UnaryLike,
 	)
 	PreprocessValue(
 		value ast.ValueLike,

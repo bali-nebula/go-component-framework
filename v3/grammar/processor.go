@@ -712,21 +712,6 @@ func (v *processor_) PostprocessContinueClause(
 ) {
 }
 
-func (v *processor_) PreprocessDereference(
-	dereference ast.DereferenceLike,
-) {
-}
-
-func (v *processor_) ProcessDereferenceSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDereference(
-	dereference ast.DereferenceLike,
-) {
-}
-
 func (v *processor_) PreprocessDiscardClause(
 	discardClause ast.DiscardClauseLike,
 ) {
@@ -1361,25 +1346,6 @@ func (v *processor_) PostprocessOnClause(
 ) {
 }
 
-func (v *processor_) PreprocessOperation(
-	operation ast.OperationLike,
-	index uint,
-	size uint,
-) {
-}
-
-func (v *processor_) ProcessOperationSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessOperation(
-	operation ast.OperationLike,
-	index uint,
-	size uint,
-) {
-}
-
 func (v *processor_) PreprocessOperator(
 	operator ast.OperatorLike,
 ) {
@@ -1437,6 +1403,25 @@ func (v *processor_) ProcessPrecedenceSlot(
 
 func (v *processor_) PostprocessPrecedence(
 	precedence ast.PrecedenceLike,
+) {
+}
+
+func (v *processor_) PreprocessPredicate(
+	predicate ast.PredicateLike,
+	index uint,
+	size uint,
+) {
+}
+
+func (v *processor_) ProcessPredicateSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessPredicate(
+	predicate ast.PredicateLike,
+	index uint,
+	size uint,
 ) {
 }
 
@@ -1512,6 +1497,21 @@ func (v *processor_) ProcessRecipientSlot(
 
 func (v *processor_) PostprocessRecipient(
 	recipient ast.RecipientLike,
+) {
+}
+
+func (v *processor_) PreprocessReferent(
+	referent ast.ReferentLike,
+) {
+}
+
+func (v *processor_) ProcessReferentSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessReferent(
+	referent ast.ReferentLike,
 ) {
 }
 
@@ -1710,6 +1710,21 @@ func (v *processor_) PostprocessSubcomponent(
 ) {
 }
 
+func (v *processor_) PreprocessSubject(
+	subject ast.SubjectLike,
+) {
+}
+
+func (v *processor_) ProcessSubjectSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessSubject(
+	subject ast.SubjectLike,
+) {
+}
+
 func (v *processor_) PreprocessTarget(
 	target ast.TargetLike,
 ) {
@@ -1767,21 +1782,6 @@ func (v *processor_) ProcessThrowClauseSlot(
 
 func (v *processor_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
-) {
-}
-
-func (v *processor_) PreprocessUnary(
-	unary ast.UnaryLike,
-) {
-}
-
-func (v *processor_) ProcessUnarySlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessUnary(
-	unary ast.UnaryLike,
 ) {
 }
 

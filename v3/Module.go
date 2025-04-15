@@ -64,7 +64,6 @@ type (
 	ComponentClassLike             = ast.ComponentClassLike
 	ConditionClassLike             = ast.ConditionClassLike
 	ContinueClauseClassLike        = ast.ContinueClauseClassLike
-	DereferenceClassLike           = ast.DereferenceClassLike
 	DiscardClauseClassLike         = ast.DiscardClauseClassLike
 	DoClauseClassLike              = ast.DoClauseClassLike
 	DocumentClassLike              = ast.DocumentClassLike
@@ -107,16 +106,17 @@ type (
 	NotarizeClauseClassLike        = ast.NotarizeClauseClassLike
 	NumericalClassLike             = ast.NumericalClassLike
 	OnClauseClassLike              = ast.OnClauseClassLike
-	OperationClassLike             = ast.OperationClassLike
 	OperatorClassLike              = ast.OperatorClassLike
 	ParametersClassLike            = ast.ParametersClassLike
 	PostClauseClassLike            = ast.PostClauseClassLike
 	PrecedenceClassLike            = ast.PrecedenceClassLike
+	PredicateClassLike             = ast.PredicateClassLike
 	PrimitiveClassLike             = ast.PrimitiveClassLike
 	ProcedureClassLike             = ast.ProcedureClassLike
 	PublishClauseClassLike         = ast.PublishClauseClassLike
 	RangeClassLike                 = ast.RangeClassLike
 	RecipientClassLike             = ast.RecipientClassLike
+	ReferentClassLike              = ast.ReferentClassLike
 	RejectClauseClassLike          = ast.RejectClauseClassLike
 	RepositoryClassLike            = ast.RepositoryClassLike
 	ResultClassLike                = ast.ResultClassLike
@@ -130,11 +130,11 @@ type (
 	StatementsClassLike            = ast.StatementsClassLike
 	StringClassLike                = ast.StringClassLike
 	SubcomponentClassLike          = ast.SubcomponentClassLike
+	SubjectClassLike               = ast.SubjectClassLike
 	TargetClassLike                = ast.TargetClassLike
 	TemplateClassLike              = ast.TemplateClassLike
 	ThreadingClassLike             = ast.ThreadingClassLike
 	ThrowClauseClassLike           = ast.ThrowClauseClassLike
-	UnaryClassLike                 = ast.UnaryClassLike
 	ValueClassLike                 = ast.ValueClassLike
 	ValuesClassLike                = ast.ValuesClassLike
 	VariableClassLike              = ast.VariableClassLike
@@ -168,7 +168,6 @@ type (
 	ComponentLike             = ast.ComponentLike
 	ConditionLike             = ast.ConditionLike
 	ContinueClauseLike        = ast.ContinueClauseLike
-	DereferenceLike           = ast.DereferenceLike
 	DiscardClauseLike         = ast.DiscardClauseLike
 	DoClauseLike              = ast.DoClauseLike
 	DocumentLike              = ast.DocumentLike
@@ -211,16 +210,17 @@ type (
 	NotarizeClauseLike        = ast.NotarizeClauseLike
 	NumericalLike             = ast.NumericalLike
 	OnClauseLike              = ast.OnClauseLike
-	OperationLike             = ast.OperationLike
 	OperatorLike              = ast.OperatorLike
 	ParametersLike            = ast.ParametersLike
 	PostClauseLike            = ast.PostClauseLike
 	PrecedenceLike            = ast.PrecedenceLike
+	PredicateLike             = ast.PredicateLike
 	PrimitiveLike             = ast.PrimitiveLike
 	ProcedureLike             = ast.ProcedureLike
 	PublishClauseLike         = ast.PublishClauseLike
 	RangeLike                 = ast.RangeLike
 	RecipientLike             = ast.RecipientLike
+	ReferentLike              = ast.ReferentLike
 	RejectClauseLike          = ast.RejectClauseLike
 	RepositoryLike            = ast.RepositoryLike
 	ResultLike                = ast.ResultLike
@@ -234,11 +234,11 @@ type (
 	StatementsLike            = ast.StatementsLike
 	StringLike                = ast.StringLike
 	SubcomponentLike          = ast.SubcomponentLike
+	SubjectLike               = ast.SubjectLike
 	TargetLike                = ast.TargetLike
 	TemplateLike              = ast.TemplateLike
 	ThreadingLike             = ast.ThreadingLike
 	ThrowClauseLike           = ast.ThrowClauseLike
-	UnaryLike                 = ast.UnaryLike
 	ValueLike                 = ast.ValueLike
 	ValuesLike                = ast.ValuesLike
 	VariableLike              = ast.VariableLike
@@ -604,18 +604,6 @@ func ContinueClause() ast.ContinueClauseLike {
 	return ast.ContinueClauseClass().ContinueClause()
 }
 
-// Ast/Dereference
-
-func Dereference(
-	snail string,
-	indirect ast.IndirectLike,
-) ast.DereferenceLike {
-	return ast.DereferenceClass().Dereference(
-		snail,
-		indirect,
-	)
-}
-
 // Ast/DiscardClause
 
 func DiscardClause(
@@ -701,12 +689,12 @@ func Exception(
 // Ast/Expression
 
 func Expression(
-	unary ast.UnaryLike,
-	operations col.Sequential[ast.OperationLike],
+	subject ast.SubjectLike,
+	predicates col.Sequential[ast.PredicateLike],
 ) ast.ExpressionLike {
 	return ast.ExpressionClass().Expression(
-		unary,
-		operations,
+		subject,
+		predicates,
 	)
 }
 
@@ -1070,18 +1058,6 @@ func OnClause(
 	)
 }
 
-// Ast/Operation
-
-func Operation(
-	operator ast.OperatorLike,
-	expression ast.ExpressionLike,
-) ast.OperationLike {
-	return ast.OperationClass().Operation(
-		operator,
-		expression,
-	)
-}
-
 // Ast/Operator
 
 func Operator(
@@ -1120,6 +1096,18 @@ func Precedence(
 	expression ast.ExpressionLike,
 ) ast.PrecedenceLike {
 	return ast.PrecedenceClass().Precedence(
+		expression,
+	)
+}
+
+// Ast/Predicate
+
+func Predicate(
+	operator ast.OperatorLike,
+	expression ast.ExpressionLike,
+) ast.PredicateLike {
+	return ast.PredicateClass().Predicate(
+		operator,
 		expression,
 	)
 }
@@ -1177,6 +1165,18 @@ func Recipient(
 ) ast.RecipientLike {
 	return ast.RecipientClass().Recipient(
 		any_,
+	)
+}
+
+// Ast/Referent
+
+func Referent(
+	snail string,
+	indirect ast.IndirectLike,
+) ast.ReferentLike {
+	return ast.ReferentClass().Referent(
+		snail,
+		indirect,
 	)
 }
 
@@ -1314,6 +1314,16 @@ func Subcomponent(
 	)
 }
 
+// Ast/Subject
+
+func Subject(
+	any_ any,
+) ast.SubjectLike {
+	return ast.SubjectClass().Subject(
+		any_,
+	)
+}
+
 // Ast/Target
 
 func Target(
@@ -1351,16 +1361,6 @@ func ThrowClause(
 ) ast.ThrowClauseLike {
 	return ast.ThrowClauseClass().ThrowClause(
 		exception,
-	)
-}
-
-// Ast/Unary
-
-func Unary(
-	any_ any,
-) ast.UnaryLike {
-	return ast.UnaryClass().Unary(
-		any_,
 	)
 }
 

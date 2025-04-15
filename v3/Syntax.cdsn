@@ -174,7 +174,7 @@ $Target:
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.
+  - Variable  ! This must be last since others also begin with an identifier.
 
 $Function: identifier "(" Arguments? ")"
 
@@ -272,21 +272,21 @@ $DiscardClause: "discard" Draft
 
 $NotarizeClause: "notarize" Draft "as" Citation
 
-$Expression: Unary Operation*
+$Expression: Subject Predicate*
 
-$Unary:
+$Subject:
   - Component
   - Precedence
-  - Dereference
+  - Referent
   - Complement
   - Inversion
   - Magnitude
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.
+  - Variable  ! This must be last since others also begin with an identifier.
 
-$Operation: Operator Expression
+$Predicate: Operator Expression
 
 $Operator:
   - plus
@@ -308,27 +308,27 @@ $Operator:
 
 $Precedence: "(" Expression ")"
 
-$Dereference: snail Indirect
+$Referent: snail Indirect
 
 $Indirect:
   - Component
-  - Dereference
+  - Referent
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.
+  - Variable  ! This must be last since others also begin with an identifier.
 
 $Complement: not Logical
 
 $Logical:
   - Component
   - Precedence
-  - Dereference
+  - Referent
   - Complement
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.
+  - Variable  ! This must be last since others also begin with an identifier.
 
 $Inversion: Inverse Numerical
 
@@ -340,13 +340,13 @@ $Inverse:
 $Numerical:
   - Component
   - Precedence
-  - Dereference
+  - Referent
   - Inversion
   - Magnitude
   - Function
   - Method
   - Attribute
-  - Variable  ! Must be last since the others also begin with an identifier.
+  - Variable  ! This must be last since others also begin with an identifier.
 
 $Magnitude: bar Numerical bar
 

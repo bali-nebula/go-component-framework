@@ -27,26 +27,21 @@ import (
 
 // Access Function
 
-func OperationClass() OperationClassLike {
-	return operationClass()
+func SubjectClass() SubjectClassLike {
+	return subjectClass()
 }
 
 // Constructor Methods
 
-func (c *operationClass_) Operation(
-	operator OperatorLike,
-	expression ExpressionLike,
-) OperationLike {
-	if uti.IsUndefined(operator) {
-		panic("The \"operator\" attribute is required by this class.")
+func (c *subjectClass_) Subject(
+	any_ any,
+) SubjectLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(expression) {
-		panic("The \"expression\" attribute is required by this class.")
-	}
-	var instance = &operation_{
+	var instance = &subject_{
 		// Initialize the instance attributes.
-		operator_:   operator,
-		expression_: expression,
+		any_: any_,
 	}
 	return instance
 }
@@ -55,42 +50,37 @@ func (c *operationClass_) Operation(
 
 // Principal Methods
 
-func (v *operation_) GetClass() OperationClassLike {
-	return operationClass()
+func (v *subject_) GetClass() SubjectClassLike {
+	return subjectClass()
 }
 
 // Attribute Methods
 
-func (v *operation_) GetOperator() OperatorLike {
-	return v.operator_
-}
-
-func (v *operation_) GetExpression() ExpressionLike {
-	return v.expression_
+func (v *subject_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type operation_ struct {
+type subject_ struct {
 	// Declare the instance attributes.
-	operator_   OperatorLike
-	expression_ ExpressionLike
+	any_ any
 }
 
 // Class Structure
 
-type operationClass_ struct {
+type subjectClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func operationClass() *operationClass_ {
-	return operationClassReference_
+func subjectClass() *subjectClass_ {
+	return subjectClassReference_
 }
 
-var operationClassReference_ = &operationClass_{
+var subjectClassReference_ = &subjectClass_{
 	// Initialize the class constants.
 }

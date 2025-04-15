@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func UnaryClass() UnaryClassLike {
-	return unaryClass()
+func ReferentClass() ReferentClassLike {
+	return referentClass()
 }
 
 // Constructor Methods
 
-func (c *unaryClass_) Unary(
-	any_ any,
-) UnaryLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *referentClass_) Referent(
+	snail string,
+	indirect IndirectLike,
+) ReferentLike {
+	if uti.IsUndefined(snail) {
+		panic("The \"snail\" attribute is required by this class.")
 	}
-	var instance = &unary_{
+	if uti.IsUndefined(indirect) {
+		panic("The \"indirect\" attribute is required by this class.")
+	}
+	var instance = &referent_{
 		// Initialize the instance attributes.
-		any_: any_,
+		snail_:    snail,
+		indirect_: indirect,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *unaryClass_) Unary(
 
 // Principal Methods
 
-func (v *unary_) GetClass() UnaryClassLike {
-	return unaryClass()
+func (v *referent_) GetClass() ReferentClassLike {
+	return referentClass()
 }
 
 // Attribute Methods
 
-func (v *unary_) GetAny() any {
-	return v.any_
+func (v *referent_) GetSnail() string {
+	return v.snail_
+}
+
+func (v *referent_) GetIndirect() IndirectLike {
+	return v.indirect_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type unary_ struct {
+type referent_ struct {
 	// Declare the instance attributes.
-	any_ any
+	snail_    string
+	indirect_ IndirectLike
 }
 
 // Class Structure
 
-type unaryClass_ struct {
+type referentClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func unaryClass() *unaryClass_ {
-	return unaryClassReference_
+func referentClass() *referentClass_ {
+	return referentClassReference_
 }
 
-var unaryClassReference_ = &unaryClass_{
+var referentClassReference_ = &referentClass_{
 	// Initialize the class constants.
 }
