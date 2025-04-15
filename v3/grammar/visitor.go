@@ -138,11 +138,11 @@ func (v *visitor_) visitAmplitude(
 	// Visit slot 1 between references.
 	v.processor_.ProcessAmplitudeSlot(1)
 
-	// Visit a single arithmetic rule.
-	var arithmetic = amplitude.GetArithmetic()
-	v.processor_.PreprocessArithmetic(arithmetic)
-	v.visitArithmetic(arithmetic)
-	v.processor_.PostprocessArithmetic(arithmetic)
+	// Visit a single numerical rule.
+	var numerical = amplitude.GetNumerical()
+	v.processor_.PreprocessNumerical(numerical)
+	v.visitNumerical(numerical)
+	v.processor_.PostprocessNumerical(numerical)
 
 	// Visit slot 2 between references.
 	v.processor_.ProcessAmplitudeSlot(2)
@@ -918,6 +918,22 @@ func (v *visitor_) visitExpression(
 		v.processor_.PreprocessAmplitude(actual)
 		v.visitAmplitude(actual)
 		v.processor_.PostprocessAmplitude(actual)
+	case ast.FunctionLike:
+		v.processor_.PreprocessFunction(actual)
+		v.visitFunction(actual)
+		v.processor_.PostprocessFunction(actual)
+	case ast.MethodLike:
+		v.processor_.PreprocessMethod(actual)
+		v.visitMethod(actual)
+		v.processor_.PostprocessMethod(actual)
+	case ast.AttributeLike:
+		v.processor_.PreprocessAttribute(actual)
+		v.visitAttribute(actual)
+		v.processor_.PostprocessAttribute(actual)
+	case ast.VariableLike:
+		v.processor_.PreprocessVariable(actual)
+		v.visitVariable(actual)
+		v.processor_.PostprocessVariable(actual)
 	case ast.ArithmeticLike:
 		v.processor_.PreprocessArithmetic(actual)
 		v.visitArithmetic(actual)
@@ -938,10 +954,6 @@ func (v *visitor_) visitExpression(
 		v.processor_.PreprocessConcatenation(actual)
 		v.visitConcatenation(actual)
 		v.processor_.PostprocessConcatenation(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
 	case string:
 		switch {
 		default:
@@ -1124,10 +1136,22 @@ func (v *visitor_) visitIndirect(
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
+	case ast.FunctionLike:
+		v.processor_.PreprocessFunction(actual)
+		v.visitFunction(actual)
+		v.processor_.PostprocessFunction(actual)
+	case ast.MethodLike:
+		v.processor_.PreprocessMethod(actual)
+		v.visitMethod(actual)
+		v.processor_.PostprocessMethod(actual)
+	case ast.AttributeLike:
+		v.processor_.PreprocessAttribute(actual)
+		v.visitAttribute(actual)
+		v.processor_.PostprocessAttribute(actual)
+	case ast.VariableLike:
+		v.processor_.PreprocessVariable(actual)
+		v.visitVariable(actual)
+		v.processor_.PostprocessVariable(actual)
 	case string:
 		switch {
 		default:
@@ -1478,10 +1502,22 @@ func (v *visitor_) visitLogical(
 		v.processor_.PreprocessComplement(actual)
 		v.visitComplement(actual)
 		v.processor_.PostprocessComplement(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
+	case ast.FunctionLike:
+		v.processor_.PreprocessFunction(actual)
+		v.visitFunction(actual)
+		v.processor_.PostprocessFunction(actual)
+	case ast.MethodLike:
+		v.processor_.PreprocessMethod(actual)
+		v.visitMethod(actual)
+		v.processor_.PostprocessMethod(actual)
+	case ast.AttributeLike:
+		v.processor_.PreprocessAttribute(actual)
+		v.visitAttribute(actual)
+		v.processor_.PostprocessAttribute(actual)
+	case ast.VariableLike:
+		v.processor_.PreprocessVariable(actual)
+		v.visitVariable(actual)
+		v.processor_.PostprocessVariable(actual)
 	case string:
 		switch {
 		default:
@@ -1747,10 +1783,22 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessAmplitude(actual)
 		v.visitAmplitude(actual)
 		v.processor_.PostprocessAmplitude(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
+	case ast.FunctionLike:
+		v.processor_.PreprocessFunction(actual)
+		v.visitFunction(actual)
+		v.processor_.PostprocessFunction(actual)
+	case ast.MethodLike:
+		v.processor_.PreprocessMethod(actual)
+		v.visitMethod(actual)
+		v.processor_.PostprocessMethod(actual)
+	case ast.AttributeLike:
+		v.processor_.PreprocessAttribute(actual)
+		v.visitAttribute(actual)
+		v.processor_.PostprocessAttribute(actual)
+	case ast.VariableLike:
+		v.processor_.PreprocessVariable(actual)
+		v.visitVariable(actual)
+		v.processor_.PostprocessVariable(actual)
 	case string:
 		switch {
 		default:
@@ -2250,10 +2298,22 @@ func (v *visitor_) visitTextual(
 		v.processor_.PreprocessDereference(actual)
 		v.visitDereference(actual)
 		v.processor_.PostprocessDereference(actual)
-	case ast.TargetLike:
-		v.processor_.PreprocessTarget(actual)
-		v.visitTarget(actual)
-		v.processor_.PostprocessTarget(actual)
+	case ast.FunctionLike:
+		v.processor_.PreprocessFunction(actual)
+		v.visitFunction(actual)
+		v.processor_.PostprocessFunction(actual)
+	case ast.MethodLike:
+		v.processor_.PreprocessMethod(actual)
+		v.visitMethod(actual)
+		v.processor_.PostprocessMethod(actual)
+	case ast.AttributeLike:
+		v.processor_.PreprocessAttribute(actual)
+		v.visitAttribute(actual)
+		v.processor_.PostprocessAttribute(actual)
+	case ast.VariableLike:
+		v.processor_.PreprocessVariable(actual)
+		v.visitVariable(actual)
+		v.processor_.PostprocessVariable(actual)
 	case string:
 		switch {
 		default:

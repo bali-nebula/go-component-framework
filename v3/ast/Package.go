@@ -126,7 +126,7 @@ type AmplitudeClassLike interface {
 	// Constructor Methods
 	Amplitude(
 		bar1 string,
-		arithmetic ArithmeticLike,
+		numerical NumericalLike,
 		bar2 string,
 	) AmplitudeLike
 }
@@ -1526,7 +1526,7 @@ type AmplitudeLike interface {
 
 	// Attribute Methods
 	GetBar1() string
-	GetArithmetic() ArithmeticLike
+	GetNumerical() NumericalLike
 	GetBar2() string
 }
 

@@ -390,9 +390,9 @@ func (v *parser_) parseAmplitude() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Arithmetic rule.
-	var arithmetic ast.ArithmeticLike
-	arithmetic, token, ok = v.parseArithmetic()
+	// Attempt to parse a single Numerical rule.
+	var numerical ast.NumericalLike
+	numerical, token, ok = v.parseNumerical()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -430,7 +430,7 @@ func (v *parser_) parseAmplitude() (
 	v.remove(tokens)
 	amplitude = ast.AmplitudeClass().Amplitude(
 		bar1,
-		arithmetic,
+		numerical,
 		bar2,
 	)
 	return
@@ -2428,6 +2428,42 @@ func (v *parser_) parseExpression() (
 		return
 	}
 
+	// Attempt to parse a single Function Expression.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
+	if ok {
+		// Found a single Function Expression.
+		expression = ast.ExpressionClass().Expression(function)
+		return
+	}
+
+	// Attempt to parse a single Method Expression.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Expression.
+		expression = ast.ExpressionClass().Expression(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Expression.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Expression.
+		expression = ast.ExpressionClass().Expression(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Expression.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Expression.
+		expression = ast.ExpressionClass().Expression(variable)
+		return
+	}
+
 	// Attempt to parse a single Arithmetic Expression.
 	var arithmetic ast.ArithmeticLike
 	arithmetic, token, ok = v.parseArithmetic()
@@ -2470,15 +2506,6 @@ func (v *parser_) parseExpression() (
 	if ok {
 		// Found a single Concatenation Expression.
 		expression = ast.ExpressionClass().Expression(concatenation)
-		return
-	}
-
-	// Attempt to parse a single Target Expression.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
-	if ok {
-		// Found a single Target Expression.
-		expression = ast.ExpressionClass().Expression(target)
 		return
 	}
 
@@ -2902,12 +2929,39 @@ func (v *parser_) parseIndirect() (
 		return
 	}
 
-	// Attempt to parse a single Target Indirect.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
+	// Attempt to parse a single Function Indirect.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
 	if ok {
-		// Found a single Target Indirect.
-		indirect = ast.IndirectClass().Indirect(target)
+		// Found a single Function Indirect.
+		indirect = ast.IndirectClass().Indirect(function)
+		return
+	}
+
+	// Attempt to parse a single Method Indirect.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Indirect.
+		indirect = ast.IndirectClass().Indirect(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Indirect.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Indirect.
+		indirect = ast.IndirectClass().Indirect(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Indirect.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Indirect.
+		indirect = ast.IndirectClass().Indirect(variable)
 		return
 	}
 
@@ -3644,12 +3698,39 @@ func (v *parser_) parseLogical() (
 		return
 	}
 
-	// Attempt to parse a single Target Logical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
+	// Attempt to parse a single Function Logical.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
 	if ok {
-		// Found a single Target Logical.
-		logical = ast.LogicalClass().Logical(target)
+		// Found a single Function Logical.
+		logical = ast.LogicalClass().Logical(function)
+		return
+	}
+
+	// Attempt to parse a single Method Logical.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Logical.
+		logical = ast.LogicalClass().Logical(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Logical.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Logical.
+		logical = ast.LogicalClass().Logical(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Logical.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Logical.
+		logical = ast.LogicalClass().Logical(variable)
 		return
 	}
 
@@ -4262,12 +4343,39 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
-	// Attempt to parse a single Target Numerical.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
+	// Attempt to parse a single Function Numerical.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
 	if ok {
-		// Found a single Target Numerical.
-		numerical = ast.NumericalClass().Numerical(target)
+		// Found a single Function Numerical.
+		numerical = ast.NumericalClass().Numerical(function)
+		return
+	}
+
+	// Attempt to parse a single Method Numerical.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Numerical.
+		numerical = ast.NumericalClass().Numerical(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Numerical.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Numerical.
+		numerical = ast.NumericalClass().Numerical(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Numerical.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Numerical.
+		numerical = ast.NumericalClass().Numerical(variable)
 		return
 	}
 
@@ -5660,12 +5768,39 @@ func (v *parser_) parseTextual() (
 		return
 	}
 
-	// Attempt to parse a single Target Textual.
-	var target ast.TargetLike
-	target, token, ok = v.parseTarget()
+	// Attempt to parse a single Function Textual.
+	var function ast.FunctionLike
+	function, token, ok = v.parseFunction()
 	if ok {
-		// Found a single Target Textual.
-		textual = ast.TextualClass().Textual(target)
+		// Found a single Function Textual.
+		textual = ast.TextualClass().Textual(function)
+		return
+	}
+
+	// Attempt to parse a single Method Textual.
+	var method ast.MethodLike
+	method, token, ok = v.parseMethod()
+	if ok {
+		// Found a single Method Textual.
+		textual = ast.TextualClass().Textual(method)
+		return
+	}
+
+	// Attempt to parse a single Attribute Textual.
+	var attribute ast.AttributeLike
+	attribute, token, ok = v.parseAttribute()
+	if ok {
+		// Found a single Attribute Textual.
+		textual = ast.TextualClass().Textual(attribute)
+		return
+	}
+
+	// Attempt to parse a single Variable Textual.
+	var variable ast.VariableLike
+	variable, token, ok = v.parseVariable()
+	if ok {
+		// Found a single Variable Textual.
+		textual = ast.TextualClass().Textual(variable)
 		return
 	}
 
@@ -6403,25 +6538,34 @@ var parserClassReference_ = &parserClass_{
   - Complement
   - Inversion
   - Amplitude
+  - Function
+  - Method
+  - Attribute
+  - Variable  ! Must be last since the others also begin with an identifier.
   - Arithmetic
   - Exponential
   - Comparison
   - Inference
-  - Concatenation
-  - Target  ! Must be last since others also begin with an identifier.`,
+  - Concatenation`,
 			"$Precedence":  `"(" Expression ")"`,
 			"$Dereference": `snail Indirect`,
 			"$Indirect": `
   - Component
   - Dereference
-  - Target`,
+  - Function
+  - Method
+  - Attribute
+  - Variable  ! Must be last since the others also begin with an identifier.`,
 			"$Complement": `not Logical`,
 			"$Logical": `
   - Component
   - Precedence
   - Dereference
   - Complement
-  - Target`,
+  - Function
+  - Method
+  - Attribute
+  - Variable  ! Must be last since the others also begin with an identifier.`,
 			"$Inversion": `Inverse Numerical`,
 			"$Inverse": `
   - dash
@@ -6433,8 +6577,11 @@ var parserClassReference_ = &parserClass_{
   - Dereference
   - Inversion
   - Amplitude
-  - Target`,
-			"$Amplitude":           `bar Arithmetic bar`,
+  - Function
+  - Method
+  - Attribute
+  - Variable  ! Must be last since the others also begin with an identifier.`,
+			"$Amplitude":           `bar Numerical bar`,
 			"$Arithmetic":          `Numerical ArithmeticOperation+`,
 			"$ArithmeticOperation": `ArithmeticOperator Numerical`,
 			"$ArithmeticOperator": `
@@ -6470,7 +6617,10 @@ var parserClassReference_ = &parserClass_{
   - Component
   - Precedence
   - Dereference
-  - Target`,
+  - Function
+  - Method
+  - Attribute
+  - Variable  ! Must be last since the others also begin with an identifier.`,
 			"$ConcatenationOperation": `ampersand Textual`,
 		},
 	),

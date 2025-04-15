@@ -1,9 +1,10 @@
 {
   - let $foo := ~π($units: $radians)
   - let $foo := sum(a, b)
-  - let $foo := x + 1
+  - let $foo := foo<-bar(x)
   - let $foo := |z|
   - let $foo := -/*z
+  - let $foo := x + 1
   - let $foo := (x + y - z) * (x / y // z)
   - let $foo := base ^ exponent
   - let $foo := foo

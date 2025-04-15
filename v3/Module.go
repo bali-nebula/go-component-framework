@@ -419,12 +419,12 @@ func AdditionalValue(
 
 func Amplitude(
 	bar1 string,
-	arithmetic ast.ArithmeticLike,
+	numerical ast.NumericalLike,
 	bar2 string,
 ) ast.AmplitudeLike {
 	return ast.AmplitudeClass().Amplitude(
 		bar1,
-		arithmetic,
+		numerical,
 		bar2,
 	)
 }
