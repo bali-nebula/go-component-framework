@@ -514,7 +514,9 @@ $base32: base10 | ['A'..'D' 'F'..'H' 'J'..'N' 'P'..'T' 'V'..'Z']
 
 $base64: alphanumeric | ['+' '/']
 
-$binary: "'>" EOL space* base64+ EOL* space* "<'"
+$binary: "'>" (EOL block+)? space* "<'"
+
+$block: space* base64{1..60} EOL
 
 $boolean: "false" | "true"
 
@@ -586,7 +588,7 @@ $more: ">"
 
 $name: (slash identifier)+
 
-$narrative: '"' '>' EOL ANY* EOL space* '<' '"'
+$narrative: '"' '>' EOL (ANY | EOL)* EOL space* '<' '"' EOL  ! Chooses the shortest match.
 
 $note: "! " ~[CONTROL]*
 
