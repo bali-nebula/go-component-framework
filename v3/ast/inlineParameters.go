@@ -20,6 +20,7 @@
 package ast
 
 import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -27,21 +28,26 @@ import (
 
 // Access Function
 
-func NoAssociationsClass() NoAssociationsClassLike {
-	return noAssociationsClass()
+func InlineParametersClass() InlineParametersClassLike {
+	return inlineParametersClass()
 }
 
 // Constructor Methods
 
-func (c *noAssociationsClass_) NoAssociations(
-	colon string,
-) NoAssociationsLike {
-	if uti.IsUndefined(colon) {
-		panic("The \"colon\" attribute is required by this class.")
+func (c *inlineParametersClass_) InlineParameters(
+	association AssociationLike,
+	additionalAssociations col.Sequential[AdditionalAssociationLike],
+) InlineParametersLike {
+	if uti.IsUndefined(association) {
+		panic("The \"association\" attribute is required by this class.")
 	}
-	var instance = &noAssociations_{
+	if uti.IsUndefined(additionalAssociations) {
+		panic("The \"additionalAssociations\" attribute is required by this class.")
+	}
+	var instance = &inlineParameters_{
 		// Initialize the instance attributes.
-		colon_: colon,
+		association_:            association,
+		additionalAssociations_: additionalAssociations,
 	}
 	return instance
 }
@@ -50,37 +56,42 @@ func (c *noAssociationsClass_) NoAssociations(
 
 // Principal Methods
 
-func (v *noAssociations_) GetClass() NoAssociationsClassLike {
-	return noAssociationsClass()
+func (v *inlineParameters_) GetClass() InlineParametersClassLike {
+	return inlineParametersClass()
 }
 
 // Attribute Methods
 
-func (v *noAssociations_) GetColon() string {
-	return v.colon_
+func (v *inlineParameters_) GetAssociation() AssociationLike {
+	return v.association_
+}
+
+func (v *inlineParameters_) GetAdditionalAssociations() col.Sequential[AdditionalAssociationLike] {
+	return v.additionalAssociations_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type noAssociations_ struct {
+type inlineParameters_ struct {
 	// Declare the instance attributes.
-	colon_ string
+	association_            AssociationLike
+	additionalAssociations_ col.Sequential[AdditionalAssociationLike]
 }
 
 // Class Structure
 
-type noAssociationsClass_ struct {
+type inlineParametersClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func noAssociationsClass() *noAssociationsClass_ {
-	return noAssociationsClassReference_
+func inlineParametersClass() *inlineParametersClass_ {
+	return inlineParametersClassReference_
 }
 
-var noAssociationsClassReference_ = &noAssociationsClass_{
+var inlineParametersClassReference_ = &inlineParametersClass_{
 	// Initialize the class constants.
 }

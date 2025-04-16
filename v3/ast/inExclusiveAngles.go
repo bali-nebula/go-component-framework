@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func StatementsClass() StatementsClassLike {
-	return statementsClass()
+func InExclusiveAnglesClass() InExclusiveAnglesClassLike {
+	return inExclusiveAnglesClass()
 }
 
 // Constructor Methods
 
-func (c *statementsClass_) Statements(
-	any_ any,
-) StatementsLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *inExclusiveAnglesClass_) InExclusiveAngles(
+	angle1 string,
+	angle2 string,
+) InExclusiveAnglesLike {
+	if uti.IsUndefined(angle1) {
+		panic("The \"angle1\" attribute is required by this class.")
 	}
-	var instance = &statements_{
+	if uti.IsUndefined(angle2) {
+		panic("The \"angle2\" attribute is required by this class.")
+	}
+	var instance = &inExclusiveAngles_{
 		// Initialize the instance attributes.
-		any_: any_,
+		angle1_: angle1,
+		angle2_: angle2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *statementsClass_) Statements(
 
 // Principal Methods
 
-func (v *statements_) GetClass() StatementsClassLike {
-	return statementsClass()
+func (v *inExclusiveAngles_) GetClass() InExclusiveAnglesClassLike {
+	return inExclusiveAnglesClass()
 }
 
 // Attribute Methods
 
-func (v *statements_) GetAny() any {
-	return v.any_
+func (v *inExclusiveAngles_) GetAngle1() string {
+	return v.angle1_
+}
+
+func (v *inExclusiveAngles_) GetAngle2() string {
+	return v.angle2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type statements_ struct {
+type inExclusiveAngles_ struct {
 	// Declare the instance attributes.
-	any_ any
+	angle1_ string
+	angle2_ string
 }
 
 // Class Structure
 
-type statementsClass_ struct {
+type inExclusiveAnglesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func statementsClass() *statementsClass_ {
-	return statementsClassReference_
+func inExclusiveAnglesClass() *inExclusiveAnglesClass_ {
+	return inExclusiveAnglesClassReference_
 }
 
-var statementsClassReference_ = &statementsClass_{
+var inExclusiveAnglesClassReference_ = &inExclusiveAnglesClass_{
 	// Initialize the class constants.
 }

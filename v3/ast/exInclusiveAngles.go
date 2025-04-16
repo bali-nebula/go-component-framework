@@ -27,23 +27,26 @@ import (
 
 // Access Function
 
-func AnnotatedAssociationClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func ExInclusiveAnglesClass() ExInclusiveAnglesClassLike {
+	return exInclusiveAnglesClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedAssociationClass_) AnnotatedAssociation(
-	association AssociationLike,
-	optionalNote string,
-) AnnotatedAssociationLike {
-	if uti.IsUndefined(association) {
-		panic("The \"association\" attribute is required by this class.")
+func (c *exInclusiveAnglesClass_) ExInclusiveAngles(
+	angle1 string,
+	angle2 string,
+) ExInclusiveAnglesLike {
+	if uti.IsUndefined(angle1) {
+		panic("The \"angle1\" attribute is required by this class.")
 	}
-	var instance = &annotatedAssociation_{
+	if uti.IsUndefined(angle2) {
+		panic("The \"angle2\" attribute is required by this class.")
+	}
+	var instance = &exInclusiveAngles_{
 		// Initialize the instance attributes.
-		association_:  association,
-		optionalNote_: optionalNote,
+		angle1_: angle1,
+		angle2_: angle2,
 	}
 	return instance
 }
@@ -52,42 +55,42 @@ func (c *annotatedAssociationClass_) AnnotatedAssociation(
 
 // Principal Methods
 
-func (v *annotatedAssociation_) GetClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func (v *exInclusiveAngles_) GetClass() ExInclusiveAnglesClassLike {
+	return exInclusiveAnglesClass()
 }
 
 // Attribute Methods
 
-func (v *annotatedAssociation_) GetAssociation() AssociationLike {
-	return v.association_
+func (v *exInclusiveAngles_) GetAngle1() string {
+	return v.angle1_
 }
 
-func (v *annotatedAssociation_) GetOptionalNote() string {
-	return v.optionalNote_
+func (v *exInclusiveAngles_) GetAngle2() string {
+	return v.angle2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotatedAssociation_ struct {
+type exInclusiveAngles_ struct {
 	// Declare the instance attributes.
-	association_  AssociationLike
-	optionalNote_ string
+	angle1_ string
+	angle2_ string
 }
 
 // Class Structure
 
-type annotatedAssociationClass_ struct {
+type exInclusiveAnglesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedAssociationClass() *annotatedAssociationClass_ {
-	return annotatedAssociationClassReference_
+func exInclusiveAnglesClass() *exInclusiveAnglesClass_ {
+	return exInclusiveAnglesClassReference_
 }
 
-var annotatedAssociationClassReference_ = &annotatedAssociationClass_{
+var exInclusiveAnglesClassReference_ = &exInclusiveAnglesClass_{
 	// Initialize the class constants.
 }

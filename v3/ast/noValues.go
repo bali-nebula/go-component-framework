@@ -19,29 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func ValuesClass() ValuesClassLike {
-	return valuesClass()
+func NoValuesClass() NoValuesClassLike {
+	return noValuesClass()
 }
 
 // Constructor Methods
 
-func (c *valuesClass_) Values(
-	any_ any,
-) ValuesLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
-	}
-	var instance = &values_{
+func (c *noValuesClass_) NoValues() NoValuesLike {
+	var instance = &noValues_{
 		// Initialize the instance attributes.
-		any_: any_,
 	}
 	return instance
 }
@@ -50,37 +42,32 @@ func (c *valuesClass_) Values(
 
 // Principal Methods
 
-func (v *values_) GetClass() ValuesClassLike {
-	return valuesClass()
+func (v *noValues_) GetClass() NoValuesClassLike {
+	return noValuesClass()
 }
 
 // Attribute Methods
-
-func (v *values_) GetAny() any {
-	return v.any_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type values_ struct {
+type noValues_ struct {
 	// Declare the instance attributes.
-	any_ any
 }
 
 // Class Structure
 
-type valuesClass_ struct {
+type noValuesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func valuesClass() *valuesClass_ {
-	return valuesClassReference_
+func noValuesClass() *noValuesClass_ {
+	return noValuesClassReference_
 }
 
-var valuesClassReference_ = &valuesClass_{
+var noValuesClassReference_ = &noValuesClass_{
 	// Initialize the class constants.
 }

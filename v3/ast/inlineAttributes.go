@@ -20,6 +20,7 @@
 package ast
 
 import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -27,21 +28,26 @@ import (
 
 // Access Function
 
-func PrimitiveClass() PrimitiveClassLike {
-	return primitiveClass()
+func InlineAttributesClass() InlineAttributesClassLike {
+	return inlineAttributesClass()
 }
 
 // Constructor Methods
 
-func (c *primitiveClass_) Primitive(
-	any_ any,
-) PrimitiveLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *inlineAttributesClass_) InlineAttributes(
+	association AssociationLike,
+	additionalAssociations col.Sequential[AdditionalAssociationLike],
+) InlineAttributesLike {
+	if uti.IsUndefined(association) {
+		panic("The \"association\" attribute is required by this class.")
 	}
-	var instance = &primitive_{
+	if uti.IsUndefined(additionalAssociations) {
+		panic("The \"additionalAssociations\" attribute is required by this class.")
+	}
+	var instance = &inlineAttributes_{
 		// Initialize the instance attributes.
-		any_: any_,
+		association_:            association,
+		additionalAssociations_: additionalAssociations,
 	}
 	return instance
 }
@@ -50,37 +56,42 @@ func (c *primitiveClass_) Primitive(
 
 // Principal Methods
 
-func (v *primitive_) GetClass() PrimitiveClassLike {
-	return primitiveClass()
+func (v *inlineAttributes_) GetClass() InlineAttributesClassLike {
+	return inlineAttributesClass()
 }
 
 // Attribute Methods
 
-func (v *primitive_) GetAny() any {
-	return v.any_
+func (v *inlineAttributes_) GetAssociation() AssociationLike {
+	return v.association_
+}
+
+func (v *inlineAttributes_) GetAdditionalAssociations() col.Sequential[AdditionalAssociationLike] {
+	return v.additionalAssociations_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type primitive_ struct {
+type inlineAttributes_ struct {
 	// Declare the instance attributes.
-	any_ any
+	association_            AssociationLike
+	additionalAssociations_ col.Sequential[AdditionalAssociationLike]
 }
 
 // Class Structure
 
-type primitiveClass_ struct {
+type inlineAttributesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func primitiveClass() *primitiveClass_ {
-	return primitiveClassReference_
+func inlineAttributesClass() *inlineAttributesClass_ {
+	return inlineAttributesClassReference_
 }
 
-var primitiveClassReference_ = &primitiveClass_{
+var inlineAttributesClassReference_ = &inlineAttributesClass_{
 	// Initialize the class constants.
 }

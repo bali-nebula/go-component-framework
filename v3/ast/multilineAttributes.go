@@ -20,6 +20,7 @@
 package ast
 
 import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -27,26 +28,26 @@ import (
 
 // Access Function
 
-func AttributeClass() AttributeClassLike {
-	return attributeClass()
+func MultilineAttributesClass() MultilineAttributesClassLike {
+	return multilineAttributesClass()
 }
 
 // Constructor Methods
 
-func (c *attributeClass_) Attribute(
-	identifier string,
-	subcomponent SubcomponentLike,
-) AttributeLike {
-	if uti.IsUndefined(identifier) {
-		panic("The \"identifier\" attribute is required by this class.")
+func (c *multilineAttributesClass_) MultilineAttributes(
+	newline string,
+	annotatedAssociations col.Sequential[AnnotatedAssociationLike],
+) MultilineAttributesLike {
+	if uti.IsUndefined(newline) {
+		panic("The \"newline\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(subcomponent) {
-		panic("The \"subcomponent\" attribute is required by this class.")
+	if uti.IsUndefined(annotatedAssociations) {
+		panic("The \"annotatedAssociations\" attribute is required by this class.")
 	}
-	var instance = &attribute_{
+	var instance = &multilineAttributes_{
 		// Initialize the instance attributes.
-		identifier_:   identifier,
-		subcomponent_: subcomponent,
+		newline_:               newline,
+		annotatedAssociations_: annotatedAssociations,
 	}
 	return instance
 }
@@ -55,42 +56,42 @@ func (c *attributeClass_) Attribute(
 
 // Principal Methods
 
-func (v *attribute_) GetClass() AttributeClassLike {
-	return attributeClass()
+func (v *multilineAttributes_) GetClass() MultilineAttributesClassLike {
+	return multilineAttributesClass()
 }
 
 // Attribute Methods
 
-func (v *attribute_) GetIdentifier() string {
-	return v.identifier_
+func (v *multilineAttributes_) GetNewline() string {
+	return v.newline_
 }
 
-func (v *attribute_) GetSubcomponent() SubcomponentLike {
-	return v.subcomponent_
+func (v *multilineAttributes_) GetAnnotatedAssociations() col.Sequential[AnnotatedAssociationLike] {
+	return v.annotatedAssociations_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type attribute_ struct {
+type multilineAttributes_ struct {
 	// Declare the instance attributes.
-	identifier_   string
-	subcomponent_ SubcomponentLike
+	newline_               string
+	annotatedAssociations_ col.Sequential[AnnotatedAssociationLike]
 }
 
 // Class Structure
 
-type attributeClass_ struct {
+type multilineAttributesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func attributeClass() *attributeClass_ {
-	return attributeClassReference_
+func multilineAttributesClass() *multilineAttributesClass_ {
+	return multilineAttributesClassReference_
 }
 
-var attributeClassReference_ = &attributeClass_{
+var multilineAttributesClassReference_ = &multilineAttributesClass_{
 	// Initialize the class constants.
 }

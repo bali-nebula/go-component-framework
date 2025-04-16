@@ -20,7 +20,6 @@
 package ast
 
 import (
-	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -28,26 +27,26 @@ import (
 
 // Access Function
 
-func InlineAssociationsClass() InlineAssociationsClassLike {
-	return inlineAssociationsClass()
+func ExclusiveNumbersClass() ExclusiveNumbersClassLike {
+	return exclusiveNumbersClass()
 }
 
 // Constructor Methods
 
-func (c *inlineAssociationsClass_) InlineAssociations(
-	association AssociationLike,
-	additionalAssociations col.Sequential[AdditionalAssociationLike],
-) InlineAssociationsLike {
-	if uti.IsUndefined(association) {
-		panic("The \"association\" attribute is required by this class.")
+func (c *exclusiveNumbersClass_) ExclusiveNumbers(
+	number1 string,
+	number2 string,
+) ExclusiveNumbersLike {
+	if uti.IsUndefined(number1) {
+		panic("The \"number1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(additionalAssociations) {
-		panic("The \"additionalAssociations\" attribute is required by this class.")
+	if uti.IsUndefined(number2) {
+		panic("The \"number2\" attribute is required by this class.")
 	}
-	var instance = &inlineAssociations_{
+	var instance = &exclusiveNumbers_{
 		// Initialize the instance attributes.
-		association_:            association,
-		additionalAssociations_: additionalAssociations,
+		number1_: number1,
+		number2_: number2,
 	}
 	return instance
 }
@@ -56,42 +55,42 @@ func (c *inlineAssociationsClass_) InlineAssociations(
 
 // Principal Methods
 
-func (v *inlineAssociations_) GetClass() InlineAssociationsClassLike {
-	return inlineAssociationsClass()
+func (v *exclusiveNumbers_) GetClass() ExclusiveNumbersClassLike {
+	return exclusiveNumbersClass()
 }
 
 // Attribute Methods
 
-func (v *inlineAssociations_) GetAssociation() AssociationLike {
-	return v.association_
+func (v *exclusiveNumbers_) GetNumber1() string {
+	return v.number1_
 }
 
-func (v *inlineAssociations_) GetAdditionalAssociations() col.Sequential[AdditionalAssociationLike] {
-	return v.additionalAssociations_
+func (v *exclusiveNumbers_) GetNumber2() string {
+	return v.number2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inlineAssociations_ struct {
+type exclusiveNumbers_ struct {
 	// Declare the instance attributes.
-	association_            AssociationLike
-	additionalAssociations_ col.Sequential[AdditionalAssociationLike]
+	number1_ string
+	number2_ string
 }
 
 // Class Structure
 
-type inlineAssociationsClass_ struct {
+type exclusiveNumbersClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inlineAssociationsClass() *inlineAssociationsClass_ {
-	return inlineAssociationsClassReference_
+func exclusiveNumbersClass() *exclusiveNumbersClass_ {
+	return exclusiveNumbersClassReference_
 }
 
-var inlineAssociationsClassReference_ = &inlineAssociationsClass_{
+var exclusiveNumbersClassReference_ = &exclusiveNumbersClass_{
 	// Initialize the class constants.
 }

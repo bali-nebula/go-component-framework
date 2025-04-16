@@ -237,7 +237,6 @@ loop:
 		case v.foundToken(PercentageToken):
 		case v.foundToken(ProbabilityToken):
 		case v.foundToken(NumberToken):
-		case v.foundToken(XyzToken):
 		case v.foundToken(IdentifierToken):
 		case v.foundToken(DotToken):
 		case v.foundToken(DashToken):
@@ -334,7 +333,6 @@ var scannerClassReference_ = &scannerClass_{
 			TagToken:          "tag",
 			VersionToken:      "version",
 			XorToken:          "xor",
-			XyzToken:          "xyz",
 		},
 	),
 	matchers_: fra.CatalogFromMap[TokenType, *reg.Regexp](
@@ -391,7 +389,6 @@ var scannerClassReference_ = &scannerClass_{
 			TagToken:          reg.MustCompile("^" + tag_),
 			VersionToken:      reg.MustCompile("^" + version_),
 			XorToken:          reg.MustCompile("^" + xor_),
-			XyzToken:          reg.MustCompile("^" + xyz_),
 		},
 	),
 }
@@ -507,7 +504,6 @@ const (
 	percentage_   = "(?:(?:" + real_ + ")%)"
 	probability_  = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
 	number_       = "(?:(?:" + polar_ + ")|(?:" + rectangular_ + ")|(?:" + imaginary_ + ")|(?:" + real_ + "))"
-	xyz_          = "(?:xyz)"
 	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
 	dot_          = "(?:\\.)"
 	dash_         = "(?:-)"

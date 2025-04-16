@@ -131,21 +131,14 @@ func (v *visitor_) visitAdditionalValue(
 func (v *visitor_) visitAnnotatedAssociation(
 	annotatedAssociation ast.AnnotatedAssociationLike,
 ) {
-	// Visit a single xyz token.
-	var xyz = annotatedAssociation.GetXyz()
-	v.processor_.ProcessXyz(xyz)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessAnnotatedAssociationSlot(1)
-
 	// Visit a single association rule.
 	var association = annotatedAssociation.GetAssociation()
 	v.processor_.PreprocessAssociation(association)
 	v.visitAssociation(association)
 	v.processor_.PostprocessAssociation(association)
 
-	// Visit slot 2 between references.
-	v.processor_.ProcessAnnotatedAssociationSlot(2)
+	// Visit slot 1 between references.
+	v.processor_.ProcessAnnotatedAssociationSlot(1)
 
 	// Visit an optional note token.
 	var optionalNote = annotatedAssociation.GetOptionalNote()
@@ -157,21 +150,14 @@ func (v *visitor_) visitAnnotatedAssociation(
 func (v *visitor_) visitAnnotatedStatement(
 	annotatedStatement ast.AnnotatedStatementLike,
 ) {
-	// Visit a single xyz token.
-	var xyz = annotatedStatement.GetXyz()
-	v.processor_.ProcessXyz(xyz)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessAnnotatedStatementSlot(1)
-
 	// Visit a single statement rule.
 	var statement = annotatedStatement.GetStatement()
 	v.processor_.PreprocessStatement(statement)
 	v.visitStatement(statement)
 	v.processor_.PostprocessStatement(statement)
 
-	// Visit slot 2 between references.
-	v.processor_.ProcessAnnotatedStatementSlot(2)
+	// Visit slot 1 between references.
+	v.processor_.ProcessAnnotatedStatementSlot(1)
 
 	// Visit an optional note token.
 	var optionalNote = annotatedStatement.GetOptionalNote()
@@ -183,21 +169,14 @@ func (v *visitor_) visitAnnotatedStatement(
 func (v *visitor_) visitAnnotatedValue(
 	annotatedValue ast.AnnotatedValueLike,
 ) {
-	// Visit a single xyz token.
-	var xyz = annotatedValue.GetXyz()
-	v.processor_.ProcessXyz(xyz)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessAnnotatedValueSlot(1)
-
 	// Visit a single value rule.
 	var value = annotatedValue.GetValue()
 	v.processor_.PreprocessValue(value)
 	v.visitValue(value)
 	v.processor_.PostprocessValue(value)
 
-	// Visit slot 2 between references.
-	v.processor_.ProcessAnnotatedValueSlot(2)
+	// Visit slot 1 between references.
+	v.processor_.ProcessAnnotatedValueSlot(1)
 
 	// Visit an optional note token.
 	var optionalNote = annotatedValue.GetOptionalNote()
@@ -298,29 +277,6 @@ func (v *visitor_) visitAssociation(
 	v.processor_.PostprocessValue(value)
 }
 
-func (v *visitor_) visitAssociations(
-	associations ast.AssociationsLike,
-) {
-	// Visit the possible associations types.
-	switch actual := associations.GetAny().(type) {
-	case ast.MultilineAssociationsLike:
-		v.processor_.PreprocessMultilineAssociations(actual)
-		v.visitMultilineAssociations(actual)
-		v.processor_.PostprocessMultilineAssociations(actual)
-	case ast.InlineAssociationsLike:
-		v.processor_.PreprocessInlineAssociations(actual)
-		v.visitInlineAssociations(actual)
-		v.processor_.PostprocessInlineAssociations(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
-}
-
 func (v *visitor_) visitAtLevel(
 	atLevel ast.AtLevelLike,
 ) {
@@ -329,23 +285,6 @@ func (v *visitor_) visitAtLevel(
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
-}
-
-func (v *visitor_) visitAttribute(
-	attribute ast.AttributeLike,
-) {
-	// Visit a single identifier token.
-	var identifier = attribute.GetIdentifier()
-	v.processor_.ProcessIdentifier(identifier)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessAttributeSlot(1)
-
-	// Visit a single subcomponent rule.
-	var subcomponent = attribute.GetSubcomponent()
-	v.processor_.PreprocessSubcomponent(subcomponent)
-	v.visitSubcomponent(subcomponent)
-	v.processor_.PostprocessSubcomponent(subcomponent)
 }
 
 func (v *visitor_) visitBag(
@@ -407,12 +346,87 @@ func (v *visitor_) visitCitation(
 func (v *visitor_) visitCollection(
 	collection ast.CollectionLike,
 ) {
-	// Visit an optional items rule.
-	var optionalItems = collection.GetOptionalItems()
-	if uti.IsDefined(optionalItems) {
-		v.processor_.PreprocessItems(optionalItems)
-		v.visitItems(optionalItems)
-		v.processor_.PostprocessItems(optionalItems)
+	// Visit the possible collection types.
+	switch actual := collection.GetAny().(type) {
+	case ast.MultilineAttributesLike:
+		v.processor_.PreprocessMultilineAttributes(actual)
+		v.visitMultilineAttributes(actual)
+		v.processor_.PostprocessMultilineAttributes(actual)
+	case ast.MultilineValuesLike:
+		v.processor_.PreprocessMultilineValues(actual)
+		v.visitMultilineValues(actual)
+		v.processor_.PostprocessMultilineValues(actual)
+	case ast.NoAttributesLike:
+		v.processor_.PreprocessNoAttributes(actual)
+		v.visitNoAttributes(actual)
+		v.processor_.PostprocessNoAttributes(actual)
+	case ast.NoValuesLike:
+		v.processor_.PreprocessNoValues(actual)
+		v.visitNoValues(actual)
+		v.processor_.PostprocessNoValues(actual)
+	case ast.InclusiveAnglesLike:
+		v.processor_.PreprocessInclusiveAngles(actual)
+		v.visitInclusiveAngles(actual)
+		v.processor_.PostprocessInclusiveAngles(actual)
+	case ast.InExclusiveAnglesLike:
+		v.processor_.PreprocessInExclusiveAngles(actual)
+		v.visitInExclusiveAngles(actual)
+		v.processor_.PostprocessInExclusiveAngles(actual)
+	case ast.ExInclusiveAnglesLike:
+		v.processor_.PreprocessExInclusiveAngles(actual)
+		v.visitExInclusiveAngles(actual)
+		v.processor_.PostprocessExInclusiveAngles(actual)
+	case ast.ExclusiveAnglesLike:
+		v.processor_.PreprocessExclusiveAngles(actual)
+		v.visitExclusiveAngles(actual)
+		v.processor_.PostprocessExclusiveAngles(actual)
+	case ast.InclusiveNumbersLike:
+		v.processor_.PreprocessInclusiveNumbers(actual)
+		v.visitInclusiveNumbers(actual)
+		v.processor_.PostprocessInclusiveNumbers(actual)
+	case ast.InExclusiveNumbersLike:
+		v.processor_.PreprocessInExclusiveNumbers(actual)
+		v.visitInExclusiveNumbers(actual)
+		v.processor_.PostprocessInExclusiveNumbers(actual)
+	case ast.ExInclusiveNumbersLike:
+		v.processor_.PreprocessExInclusiveNumbers(actual)
+		v.visitExInclusiveNumbers(actual)
+		v.processor_.PostprocessExInclusiveNumbers(actual)
+	case ast.ExclusiveNumbersLike:
+		v.processor_.PreprocessExclusiveNumbers(actual)
+		v.visitExclusiveNumbers(actual)
+		v.processor_.PostprocessExclusiveNumbers(actual)
+	case ast.InclusiveQuotesLike:
+		v.processor_.PreprocessInclusiveQuotes(actual)
+		v.visitInclusiveQuotes(actual)
+		v.processor_.PostprocessInclusiveQuotes(actual)
+	case ast.InExclusiveQuotesLike:
+		v.processor_.PreprocessInExclusiveQuotes(actual)
+		v.visitInExclusiveQuotes(actual)
+		v.processor_.PostprocessInExclusiveQuotes(actual)
+	case ast.ExInclusiveQuotesLike:
+		v.processor_.PreprocessExInclusiveQuotes(actual)
+		v.visitExInclusiveQuotes(actual)
+		v.processor_.PostprocessExInclusiveQuotes(actual)
+	case ast.ExclusiveQuotesLike:
+		v.processor_.PreprocessExclusiveQuotes(actual)
+		v.visitExclusiveQuotes(actual)
+		v.processor_.PostprocessExclusiveQuotes(actual)
+	case ast.InlineAttributesLike:
+		v.processor_.PreprocessInlineAttributes(actual)
+		v.visitInlineAttributes(actual)
+		v.processor_.PostprocessInlineAttributes(actual)
+	case ast.InlineValuesLike:
+		v.processor_.PreprocessInlineValues(actual)
+		v.visitInlineValues(actual)
+		v.processor_.PostprocessInlineValues(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
 }
 
@@ -593,6 +607,51 @@ func (v *visitor_) visitEvent(
 	v.processor_.PostprocessExpression(expression)
 }
 
+func (v *visitor_) visitExInclusiveAngles(
+	exInclusiveAngles ast.ExInclusiveAnglesLike,
+) {
+	// Visit a single angle token.
+	var angle1 = exInclusiveAngles.GetAngle1()
+	v.processor_.ProcessAngle(angle1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveAnglesSlot(1)
+
+	// Visit a single angle token.
+	var angle2 = exInclusiveAngles.GetAngle2()
+	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitExInclusiveNumbers(
+	exInclusiveNumbers ast.ExInclusiveNumbersLike,
+) {
+	// Visit a single number token.
+	var number1 = exInclusiveNumbers.GetNumber1()
+	v.processor_.ProcessNumber(number1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveNumbersSlot(1)
+
+	// Visit a single number token.
+	var number2 = exInclusiveNumbers.GetNumber2()
+	v.processor_.ProcessNumber(number2)
+}
+
+func (v *visitor_) visitExInclusiveQuotes(
+	exInclusiveQuotes ast.ExInclusiveQuotesLike,
+) {
+	// Visit a single quote token.
+	var quote1 = exInclusiveQuotes.GetQuote1()
+	v.processor_.ProcessQuote(quote1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveQuotesSlot(1)
+
+	// Visit a single quote token.
+	var quote2 = exInclusiveQuotes.GetQuote2()
+	v.processor_.ProcessQuote(quote2)
+}
+
 func (v *visitor_) visitException(
 	exception ast.ExceptionLike,
 ) {
@@ -601,6 +660,51 @@ func (v *visitor_) visitException(
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
+}
+
+func (v *visitor_) visitExclusiveAngles(
+	exclusiveAngles ast.ExclusiveAnglesLike,
+) {
+	// Visit a single angle token.
+	var angle1 = exclusiveAngles.GetAngle1()
+	v.processor_.ProcessAngle(angle1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveAnglesSlot(1)
+
+	// Visit a single angle token.
+	var angle2 = exclusiveAngles.GetAngle2()
+	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitExclusiveNumbers(
+	exclusiveNumbers ast.ExclusiveNumbersLike,
+) {
+	// Visit a single number token.
+	var number1 = exclusiveNumbers.GetNumber1()
+	v.processor_.ProcessNumber(number1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveNumbersSlot(1)
+
+	// Visit a single number token.
+	var number2 = exclusiveNumbers.GetNumber2()
+	v.processor_.ProcessNumber(number2)
+}
+
+func (v *visitor_) visitExclusiveQuotes(
+	exclusiveQuotes ast.ExclusiveQuotesLike,
+) {
+	// Visit a single quote token.
+	var quote1 = exclusiveQuotes.GetQuote1()
+	v.processor_.ProcessQuote(quote1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveQuotesSlot(1)
+
+	// Visit a single quote token.
+	var quote2 = exclusiveQuotes.GetQuote2()
+	v.processor_.ProcessQuote(quote2)
 }
 
 func (v *visitor_) visitExpression(
@@ -729,27 +833,94 @@ func (v *visitor_) visitIfClause(
 	v.processor_.PostprocessProcedure(procedure)
 }
 
-func (v *visitor_) visitInclusion(
-	inclusion ast.InclusionLike,
+func (v *visitor_) visitInExclusiveAngles(
+	inExclusiveAngles ast.InExclusiveAnglesLike,
 ) {
-	// Visit the possible inclusion types.
-	switch actual := inclusion.GetAny().(type) {
-	case ast.LeftLike:
-		v.processor_.PreprocessLeft(actual)
-		v.visitLeft(actual)
-		v.processor_.PostprocessLeft(actual)
-	case ast.RightLike:
-		v.processor_.PreprocessRight(actual)
-		v.visitRight(actual)
-		v.processor_.PostprocessRight(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
+	// Visit a single angle token.
+	var angle1 = inExclusiveAngles.GetAngle1()
+	v.processor_.ProcessAngle(angle1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveAnglesSlot(1)
+
+	// Visit a single angle token.
+	var angle2 = inExclusiveAngles.GetAngle2()
+	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitInExclusiveNumbers(
+	inExclusiveNumbers ast.InExclusiveNumbersLike,
+) {
+	// Visit a single number token.
+	var number1 = inExclusiveNumbers.GetNumber1()
+	v.processor_.ProcessNumber(number1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveNumbersSlot(1)
+
+	// Visit a single number token.
+	var number2 = inExclusiveNumbers.GetNumber2()
+	v.processor_.ProcessNumber(number2)
+}
+
+func (v *visitor_) visitInExclusiveQuotes(
+	inExclusiveQuotes ast.InExclusiveQuotesLike,
+) {
+	// Visit a single quote token.
+	var quote1 = inExclusiveQuotes.GetQuote1()
+	v.processor_.ProcessQuote(quote1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveQuotesSlot(1)
+
+	// Visit a single quote token.
+	var quote2 = inExclusiveQuotes.GetQuote2()
+	v.processor_.ProcessQuote(quote2)
+}
+
+func (v *visitor_) visitInclusiveAngles(
+	inclusiveAngles ast.InclusiveAnglesLike,
+) {
+	// Visit a single angle token.
+	var angle1 = inclusiveAngles.GetAngle1()
+	v.processor_.ProcessAngle(angle1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveAnglesSlot(1)
+
+	// Visit a single angle token.
+	var angle2 = inclusiveAngles.GetAngle2()
+	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitInclusiveNumbers(
+	inclusiveNumbers ast.InclusiveNumbersLike,
+) {
+	// Visit a single number token.
+	var number1 = inclusiveNumbers.GetNumber1()
+	v.processor_.ProcessNumber(number1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveNumbersSlot(1)
+
+	// Visit a single number token.
+	var number2 = inclusiveNumbers.GetNumber2()
+	v.processor_.ProcessNumber(number2)
+}
+
+func (v *visitor_) visitInclusiveQuotes(
+	inclusiveQuotes ast.InclusiveQuotesLike,
+) {
+	// Visit a single quote token.
+	var quote1 = inclusiveQuotes.GetQuote1()
+	v.processor_.ProcessQuote(quote1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveQuotesSlot(1)
+
+	// Visit a single quote token.
+	var quote2 = inclusiveQuotes.GetQuote2()
+	v.processor_.ProcessQuote(quote2)
 }
 
 func (v *visitor_) visitIndex(
@@ -804,6 +975,10 @@ func (v *visitor_) visitIndirect(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
+	case ast.SubcomponentLike:
+		v.processor_.PreprocessSubcomponent(actual)
+		v.visitSubcomponent(actual)
+		v.processor_.PostprocessSubcomponent(actual)
 	case ast.ReferentLike:
 		v.processor_.PreprocessReferent(actual)
 		v.visitReferent(actual)
@@ -816,10 +991,6 @@ func (v *visitor_) visitIndirect(
 		v.processor_.PreprocessMethod(actual)
 		v.visitMethod(actual)
 		v.processor_.PostprocessMethod(actual)
-	case ast.AttributeLike:
-		v.processor_.PreprocessAttribute(actual)
-		v.visitAttribute(actual)
-		v.processor_.PostprocessAttribute(actual)
 	case ast.VariableLike:
 		v.processor_.PreprocessVariable(actual)
 		v.visitVariable(actual)
@@ -857,21 +1028,54 @@ func (v *visitor_) visitInduction(
 	}
 }
 
-func (v *visitor_) visitInlineAssociations(
-	inlineAssociations ast.InlineAssociationsLike,
+func (v *visitor_) visitInlineAttributes(
+	inlineAttributes ast.InlineAttributesLike,
 ) {
 	// Visit a single association rule.
-	var association = inlineAssociations.GetAssociation()
+	var association = inlineAttributes.GetAssociation()
 	v.processor_.PreprocessAssociation(association)
 	v.visitAssociation(association)
 	v.processor_.PostprocessAssociation(association)
 
 	// Visit slot 1 between references.
-	v.processor_.ProcessInlineAssociationsSlot(1)
+	v.processor_.ProcessInlineAttributesSlot(1)
 
 	// Visit each additionalAssociation rule.
 	var additionalAssociationIndex uint
-	var additionalAssociations = inlineAssociations.GetAdditionalAssociations().GetIterator()
+	var additionalAssociations = inlineAttributes.GetAdditionalAssociations().GetIterator()
+	var additionalAssociationsSize = uint(additionalAssociations.GetSize())
+	for additionalAssociations.HasNext() {
+		additionalAssociationIndex++
+		var additionalAssociation = additionalAssociations.GetNext()
+		v.processor_.PreprocessAdditionalAssociation(
+			additionalAssociation,
+			additionalAssociationIndex,
+			additionalAssociationsSize,
+		)
+		v.visitAdditionalAssociation(additionalAssociation)
+		v.processor_.PostprocessAdditionalAssociation(
+			additionalAssociation,
+			additionalAssociationIndex,
+			additionalAssociationsSize,
+		)
+	}
+}
+
+func (v *visitor_) visitInlineParameters(
+	inlineParameters ast.InlineParametersLike,
+) {
+	// Visit a single association rule.
+	var association = inlineParameters.GetAssociation()
+	v.processor_.PreprocessAssociation(association)
+	v.visitAssociation(association)
+	v.processor_.PostprocessAssociation(association)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInlineParametersSlot(1)
+
+	// Visit each additionalAssociation rule.
+	var additionalAssociationIndex uint
+	var additionalAssociations = inlineParameters.GetAdditionalAssociations().GetIterator()
 	var additionalAssociationsSize = uint(additionalAssociations.GetSize())
 	for additionalAssociations.HasNext() {
 		additionalAssociationIndex++
@@ -1027,43 +1231,6 @@ func (v *visitor_) visitItem(
 	v.processor_.ProcessSymbol(symbol)
 }
 
-func (v *visitor_) visitItems(
-	items ast.ItemsLike,
-) {
-	// Visit the possible items types.
-	switch actual := items.GetAny().(type) {
-	case ast.RangeLike:
-		v.processor_.PreprocessRange(actual)
-		v.visitRange(actual)
-		v.processor_.PostprocessRange(actual)
-	case ast.NoAssociationsLike:
-		v.processor_.PreprocessNoAssociations(actual)
-		v.visitNoAssociations(actual)
-		v.processor_.PostprocessNoAssociations(actual)
-	case ast.AssociationsLike:
-		v.processor_.PreprocessAssociations(actual)
-		v.visitAssociations(actual)
-		v.processor_.PostprocessAssociations(actual)
-	case ast.ValuesLike:
-		v.processor_.PreprocessValues(actual)
-		v.visitValues(actual)
-		v.processor_.PostprocessValues(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
-}
-
-func (v *visitor_) visitLeft(
-	left ast.LeftLike,
-) {
-	// This method does not need to process anything.
-}
-
 func (v *visitor_) visitLetClause(
 	letClause ast.LetClauseLike,
 ) {
@@ -1101,6 +1268,10 @@ func (v *visitor_) visitLogical(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
+	case ast.SubcomponentLike:
+		v.processor_.PreprocessSubcomponent(actual)
+		v.visitSubcomponent(actual)
+		v.processor_.PostprocessSubcomponent(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1121,10 +1292,6 @@ func (v *visitor_) visitLogical(
 		v.processor_.PreprocessMethod(actual)
 		v.visitMethod(actual)
 		v.processor_.PostprocessMethod(actual)
-	case ast.AttributeLike:
-		v.processor_.PreprocessAttribute(actual)
-		v.visitAttribute(actual)
-		v.processor_.PostprocessAttribute(actual)
 	case ast.VariableLike:
 		v.processor_.PreprocessVariable(actual)
 		v.visitVariable(actual)
@@ -1293,12 +1460,50 @@ func (v *visitor_) visitMethod(
 	}
 }
 
-func (v *visitor_) visitMultilineAssociations(
-	multilineAssociations ast.MultilineAssociationsLike,
+func (v *visitor_) visitMultilineAttributes(
+	multilineAttributes ast.MultilineAttributesLike,
 ) {
+	// Visit a single newline token.
+	var newline = multilineAttributes.GetNewline()
+	v.processor_.ProcessNewline(newline)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessMultilineAttributesSlot(1)
+
 	// Visit each annotatedAssociation rule.
 	var annotatedAssociationIndex uint
-	var annotatedAssociations = multilineAssociations.GetAnnotatedAssociations().GetIterator()
+	var annotatedAssociations = multilineAttributes.GetAnnotatedAssociations().GetIterator()
+	var annotatedAssociationsSize = uint(annotatedAssociations.GetSize())
+	for annotatedAssociations.HasNext() {
+		annotatedAssociationIndex++
+		var annotatedAssociation = annotatedAssociations.GetNext()
+		v.processor_.PreprocessAnnotatedAssociation(
+			annotatedAssociation,
+			annotatedAssociationIndex,
+			annotatedAssociationsSize,
+		)
+		v.visitAnnotatedAssociation(annotatedAssociation)
+		v.processor_.PostprocessAnnotatedAssociation(
+			annotatedAssociation,
+			annotatedAssociationIndex,
+			annotatedAssociationsSize,
+		)
+	}
+}
+
+func (v *visitor_) visitMultilineParameters(
+	multilineParameters ast.MultilineParametersLike,
+) {
+	// Visit a single newline token.
+	var newline = multilineParameters.GetNewline()
+	v.processor_.ProcessNewline(newline)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessMultilineParametersSlot(1)
+
+	// Visit each annotatedAssociation rule.
+	var annotatedAssociationIndex uint
+	var annotatedAssociations = multilineParameters.GetAnnotatedAssociations().GetIterator()
 	var annotatedAssociationsSize = uint(annotatedAssociations.GetSize())
 	for annotatedAssociations.HasNext() {
 		annotatedAssociationIndex++
@@ -1320,6 +1525,13 @@ func (v *visitor_) visitMultilineAssociations(
 func (v *visitor_) visitMultilineStatements(
 	multilineStatements ast.MultilineStatementsLike,
 ) {
+	// Visit a single newline token.
+	var newline = multilineStatements.GetNewline()
+	v.processor_.ProcessNewline(newline)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessMultilineStatementsSlot(1)
+
 	// Visit each annotatedStatement rule.
 	var annotatedStatementIndex uint
 	var annotatedStatements = multilineStatements.GetAnnotatedStatements().GetIterator()
@@ -1344,6 +1556,13 @@ func (v *visitor_) visitMultilineStatements(
 func (v *visitor_) visitMultilineValues(
 	multilineValues ast.MultilineValuesLike,
 ) {
+	// Visit a single newline token.
+	var newline = multilineValues.GetNewline()
+	v.processor_.ProcessNewline(newline)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessMultilineValuesSlot(1)
+
 	// Visit each annotatedValue rule.
 	var annotatedValueIndex uint
 	var annotatedValues = multilineValues.GetAnnotatedValues().GetIterator()
@@ -1365,12 +1584,24 @@ func (v *visitor_) visitMultilineValues(
 	}
 }
 
-func (v *visitor_) visitNoAssociations(
-	noAssociations ast.NoAssociationsLike,
+func (v *visitor_) visitNoAttributes(
+	noAttributes ast.NoAttributesLike,
 ) {
 	// Visit a single colon token.
-	var colon = noAssociations.GetColon()
+	var colon = noAttributes.GetColon()
 	v.processor_.ProcessColon(colon)
+}
+
+func (v *visitor_) visitNoStatements(
+	noStatements ast.NoStatementsLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitNoValues(
+	noValues ast.NoValuesLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitNotarizeClause(
@@ -1401,6 +1632,10 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
+	case ast.SubcomponentLike:
+		v.processor_.PreprocessSubcomponent(actual)
+		v.visitSubcomponent(actual)
+		v.processor_.PostprocessSubcomponent(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1425,10 +1660,6 @@ func (v *visitor_) visitNumerical(
 		v.processor_.PreprocessMethod(actual)
 		v.visitMethod(actual)
 		v.processor_.PostprocessMethod(actual)
-	case ast.AttributeLike:
-		v.processor_.PreprocessAttribute(actual)
-		v.visitAttribute(actual)
-		v.processor_.PostprocessAttribute(actual)
 	case ast.VariableLike:
 		v.processor_.PreprocessVariable(actual)
 		v.visitVariable(actual)
@@ -1526,11 +1757,24 @@ func (v *visitor_) visitOperator(
 func (v *visitor_) visitParameters(
 	parameters ast.ParametersLike,
 ) {
-	// Visit a single associations rule.
-	var associations = parameters.GetAssociations()
-	v.processor_.PreprocessAssociations(associations)
-	v.visitAssociations(associations)
-	v.processor_.PostprocessAssociations(associations)
+	// Visit the possible parameters types.
+	switch actual := parameters.GetAny().(type) {
+	case ast.MultilineParametersLike:
+		v.processor_.PreprocessMultilineParameters(actual)
+		v.visitMultilineParameters(actual)
+		v.processor_.PostprocessMultilineParameters(actual)
+	case ast.InlineParametersLike:
+		v.processor_.PreprocessInlineParameters(actual)
+		v.visitInlineParameters(actual)
+		v.processor_.PostprocessInlineParameters(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
 }
 
 func (v *visitor_) visitPostClause(
@@ -1581,19 +1825,23 @@ func (v *visitor_) visitPredicate(
 	v.processor_.PostprocessExpression(expression)
 }
 
-func (v *visitor_) visitPrimitive(
-	primitive ast.PrimitiveLike,
+func (v *visitor_) visitProcedure(
+	procedure ast.ProcedureLike,
 ) {
-	// Visit the possible primitive types.
-	switch actual := primitive.GetAny().(type) {
-	case ast.ElementLike:
-		v.processor_.PreprocessElement(actual)
-		v.visitElement(actual)
-		v.processor_.PostprocessElement(actual)
-	case ast.StringLike:
-		v.processor_.PreprocessString(actual)
-		v.visitString(actual)
-		v.processor_.PostprocessString(actual)
+	// Visit the possible procedure types.
+	switch actual := procedure.GetAny().(type) {
+	case ast.MultilineStatementsLike:
+		v.processor_.PreprocessMultilineStatements(actual)
+		v.visitMultilineStatements(actual)
+		v.processor_.PostprocessMultilineStatements(actual)
+	case ast.InlineStatementsLike:
+		v.processor_.PreprocessInlineStatements(actual)
+		v.visitInlineStatements(actual)
+		v.processor_.PostprocessInlineStatements(actual)
+	case ast.NoStatementsLike:
+		v.processor_.PreprocessNoStatements(actual)
+		v.visitNoStatements(actual)
+		v.processor_.PostprocessNoStatements(actual)
 	case string:
 		switch {
 		default:
@@ -1601,18 +1849,6 @@ func (v *visitor_) visitPrimitive(
 		}
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
-}
-
-func (v *visitor_) visitProcedure(
-	procedure ast.ProcedureLike,
-) {
-	// Visit an optional statements rule.
-	var optionalStatements = procedure.GetOptionalStatements()
-	if uti.IsDefined(optionalStatements) {
-		v.processor_.PreprocessStatements(optionalStatements)
-		v.visitStatements(optionalStatements)
-		v.processor_.PostprocessStatements(optionalStatements)
 	}
 }
 
@@ -1626,52 +1862,15 @@ func (v *visitor_) visitPublishClause(
 	v.processor_.PostprocessEvent(event)
 }
 
-func (v *visitor_) visitRange(
-	range_ ast.RangeLike,
-) {
-	// Visit a single inclusion rule.
-	var inclusion1 = range_.GetInclusion1()
-	v.processor_.PreprocessInclusion(inclusion1)
-	v.visitInclusion(inclusion1)
-	v.processor_.PostprocessInclusion(inclusion1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessRangeSlot(1)
-
-	// Visit a single primitive rule.
-	var primitive1 = range_.GetPrimitive1()
-	v.processor_.PreprocessPrimitive(primitive1)
-	v.visitPrimitive(primitive1)
-	v.processor_.PostprocessPrimitive(primitive1)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessRangeSlot(2)
-
-	// Visit a single primitive rule.
-	var primitive2 = range_.GetPrimitive2()
-	v.processor_.PreprocessPrimitive(primitive2)
-	v.visitPrimitive(primitive2)
-	v.processor_.PostprocessPrimitive(primitive2)
-
-	// Visit slot 3 between references.
-	v.processor_.ProcessRangeSlot(3)
-
-	// Visit a single inclusion rule.
-	var inclusion2 = range_.GetInclusion2()
-	v.processor_.PreprocessInclusion(inclusion2)
-	v.visitInclusion(inclusion2)
-	v.processor_.PostprocessInclusion(inclusion2)
-}
-
 func (v *visitor_) visitRecipient(
 	recipient ast.RecipientLike,
 ) {
 	// Visit the possible recipient types.
 	switch actual := recipient.GetAny().(type) {
-	case ast.AttributeLike:
-		v.processor_.PreprocessAttribute(actual)
-		v.visitAttribute(actual)
-		v.processor_.PostprocessAttribute(actual)
+	case ast.SubcomponentLike:
+		v.processor_.PreprocessSubcomponent(actual)
+		v.visitSubcomponent(actual)
+		v.processor_.PostprocessSubcomponent(actual)
 	case string:
 		switch {
 		case ScannerClass().MatchesType(actual, SymbolToken):
@@ -1781,12 +1980,6 @@ func (v *visitor_) visitReturnClause(
 	v.processor_.PostprocessResult(result)
 }
 
-func (v *visitor_) visitRight(
-	right ast.RightLike,
-) {
-	// This method does not need to process anything.
-}
-
 func (v *visitor_) visitSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -1870,29 +2063,6 @@ func (v *visitor_) visitStatement(
 	}
 }
 
-func (v *visitor_) visitStatements(
-	statements ast.StatementsLike,
-) {
-	// Visit the possible statements types.
-	switch actual := statements.GetAny().(type) {
-	case ast.MultilineStatementsLike:
-		v.processor_.PreprocessMultilineStatements(actual)
-		v.visitMultilineStatements(actual)
-		v.processor_.PostprocessMultilineStatements(actual)
-	case ast.InlineStatementsLike:
-		v.processor_.PreprocessInlineStatements(actual)
-		v.visitInlineStatements(actual)
-		v.processor_.PostprocessInlineStatements(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
-}
-
 func (v *visitor_) visitString(
 	string_ ast.StringLike,
 ) {
@@ -1927,6 +2097,13 @@ func (v *visitor_) visitString(
 func (v *visitor_) visitSubcomponent(
 	subcomponent ast.SubcomponentLike,
 ) {
+	// Visit a single identifier token.
+	var identifier = subcomponent.GetIdentifier()
+	v.processor_.ProcessIdentifier(identifier)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessSubcomponentSlot(1)
+
 	// Visit a single indices rule.
 	var indices = subcomponent.GetIndices()
 	v.processor_.PreprocessIndices(indices)
@@ -1943,6 +2120,10 @@ func (v *visitor_) visitSubject(
 		v.processor_.PreprocessComponent(actual)
 		v.visitComponent(actual)
 		v.processor_.PostprocessComponent(actual)
+	case ast.SubcomponentLike:
+		v.processor_.PreprocessSubcomponent(actual)
+		v.visitSubcomponent(actual)
+		v.processor_.PostprocessSubcomponent(actual)
 	case ast.PrecedenceLike:
 		v.processor_.PreprocessPrecedence(actual)
 		v.visitPrecedence(actual)
@@ -1971,10 +2152,6 @@ func (v *visitor_) visitSubject(
 		v.processor_.PreprocessMethod(actual)
 		v.visitMethod(actual)
 		v.processor_.PostprocessMethod(actual)
-	case ast.AttributeLike:
-		v.processor_.PreprocessAttribute(actual)
-		v.visitAttribute(actual)
-		v.processor_.PostprocessAttribute(actual)
 	case ast.VariableLike:
 		v.processor_.PreprocessVariable(actual)
 		v.visitVariable(actual)
@@ -2002,10 +2179,10 @@ func (v *visitor_) visitTarget(
 		v.processor_.PreprocessMethod(actual)
 		v.visitMethod(actual)
 		v.processor_.PostprocessMethod(actual)
-	case ast.AttributeLike:
-		v.processor_.PreprocessAttribute(actual)
-		v.visitAttribute(actual)
-		v.processor_.PostprocessAttribute(actual)
+	case ast.SubcomponentLike:
+		v.processor_.PreprocessSubcomponent(actual)
+		v.visitSubcomponent(actual)
+		v.processor_.PostprocessSubcomponent(actual)
 	case ast.VariableLike:
 		v.processor_.PreprocessVariable(actual)
 		v.visitVariable(actual)
@@ -2067,29 +2244,6 @@ func (v *visitor_) visitValue(
 	v.processor_.PreprocessComponent(component)
 	v.visitComponent(component)
 	v.processor_.PostprocessComponent(component)
-}
-
-func (v *visitor_) visitValues(
-	values ast.ValuesLike,
-) {
-	// Visit the possible values types.
-	switch actual := values.GetAny().(type) {
-	case ast.MultilineValuesLike:
-		v.processor_.PreprocessMultilineValues(actual)
-		v.visitMultilineValues(actual)
-		v.processor_.PostprocessMultilineValues(actual)
-	case ast.InlineValuesLike:
-		v.processor_.PreprocessInlineValues(actual)
-		v.visitInlineValues(actual)
-		v.processor_.PostprocessInlineValues(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
 }
 
 func (v *visitor_) visitVariable(

@@ -372,24 +372,6 @@ func (v *parser_) parseAnnotatedAssociation() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single xyz token.
-	var xyz string
-	xyz, token, ok = v.parseToken(XyzToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single AnnotatedAssociation rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$AnnotatedAssociation", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
 	// Attempt to parse a single Association rule.
 	var association ast.AssociationLike
 	association, token, ok = v.parseAssociation()
@@ -418,7 +400,6 @@ func (v *parser_) parseAnnotatedAssociation() (
 	ok = true
 	v.remove(tokens)
 	annotatedAssociation = ast.AnnotatedAssociationClass().AnnotatedAssociation(
-		xyz,
 		association,
 		optionalNote,
 	)
@@ -431,24 +412,6 @@ func (v *parser_) parseAnnotatedStatement() (
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single xyz token.
-	var xyz string
-	xyz, token, ok = v.parseToken(XyzToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single AnnotatedStatement rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$AnnotatedStatement", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
 
 	// Attempt to parse a single Statement rule.
 	var statement ast.StatementLike
@@ -478,7 +441,6 @@ func (v *parser_) parseAnnotatedStatement() (
 	ok = true
 	v.remove(tokens)
 	annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(
-		xyz,
 		statement,
 		optionalNote,
 	)
@@ -491,24 +453,6 @@ func (v *parser_) parseAnnotatedValue() (
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single xyz token.
-	var xyz string
-	xyz, token, ok = v.parseToken(XyzToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single AnnotatedValue rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$AnnotatedValue", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
 
 	// Attempt to parse a single Value rule.
 	var value ast.ValueLike
@@ -538,7 +482,6 @@ func (v *parser_) parseAnnotatedValue() (
 	ok = true
 	v.remove(tokens)
 	annotatedValue = ast.AnnotatedValueClass().AnnotatedValue(
-		xyz,
 		value,
 		optionalNote,
 	)
@@ -771,33 +714,6 @@ func (v *parser_) parseAssociation() (
 	return
 }
 
-func (v *parser_) parseAssociations() (
-	associations ast.AssociationsLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single MultilineAssociations Associations.
-	var multilineAssociations ast.MultilineAssociationsLike
-	multilineAssociations, token, ok = v.parseMultilineAssociations()
-	if ok {
-		// Found a single MultilineAssociations Associations.
-		associations = ast.AssociationsClass().Associations(multilineAssociations)
-		return
-	}
-
-	// Attempt to parse a single InlineAssociations Associations.
-	var inlineAssociations ast.InlineAssociationsLike
-	inlineAssociations, token, ok = v.parseInlineAssociations()
-	if ok {
-		// Found a single InlineAssociations Associations.
-		associations = ast.AssociationsClass().Associations(inlineAssociations)
-		return
-	}
-
-	// This is not a single Associations rule.
-	return
-}
-
 func (v *parser_) parseAtLevel() (
 	atLevel ast.AtLevelLike,
 	token TokenLike,
@@ -860,58 +776,6 @@ func (v *parser_) parseAtLevel() (
 	ok = true
 	v.remove(tokens)
 	atLevel = ast.AtLevelClass().AtLevel(expression)
-	return
-}
-
-func (v *parser_) parseAttribute() (
-	attribute ast.AttributeLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single identifier token.
-	var identifier string
-	identifier, token, ok = v.parseToken(IdentifierToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Attribute rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Attribute", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Subcomponent rule.
-	var subcomponent ast.SubcomponentLike
-	subcomponent, token, ok = v.parseSubcomponent()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Attribute rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Attribute", token)
-		panic(message)
-	}
-
-	// Found a single Attribute rule.
-	ok = true
-	v.remove(tokens)
-	attribute = ast.AttributeClass().Attribute(
-		identifier,
-		subcomponent,
-	)
 	return
 }
 
@@ -1124,54 +988,169 @@ func (v *parser_) parseCollection() (
 	token TokenLike,
 	ok bool,
 ) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "[" delimiter.
-	_, token, ok = v.parseDelimiter("[")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Collection rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Collection", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse an optional Items rule.
-	var optionalItems ast.ItemsLike
-	optionalItems, _, ok = v.parseItems()
+	// Attempt to parse a single MultilineAttributes Collection.
+	var multilineAttributes ast.MultilineAttributesLike
+	multilineAttributes, token, ok = v.parseMultilineAttributes()
 	if ok {
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a single MultilineAttributes Collection.
+		collection = ast.CollectionClass().Collection(multilineAttributes)
+		return
 	}
 
-	// Attempt to parse a single "]" delimiter.
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Collection rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Collection", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single MultilineValues Collection.
+	var multilineValues ast.MultilineValuesLike
+	multilineValues, token, ok = v.parseMultilineValues()
+	if ok {
+		// Found a single MultilineValues Collection.
+		collection = ast.CollectionClass().Collection(multilineValues)
+		return
 	}
 
-	// Found a single Collection rule.
-	ok = true
-	v.remove(tokens)
-	collection = ast.CollectionClass().Collection(optionalItems)
+	// Attempt to parse a single NoAttributes Collection.
+	var noAttributes ast.NoAttributesLike
+	noAttributes, token, ok = v.parseNoAttributes()
+	if ok {
+		// Found a single NoAttributes Collection.
+		collection = ast.CollectionClass().Collection(noAttributes)
+		return
+	}
+
+	// Attempt to parse a single NoValues Collection.
+	var noValues ast.NoValuesLike
+	noValues, token, ok = v.parseNoValues()
+	if ok {
+		// Found a single NoValues Collection.
+		collection = ast.CollectionClass().Collection(noValues)
+		return
+	}
+
+	// Attempt to parse a single InclusiveAngles Collection.
+	var inclusiveAngles ast.InclusiveAnglesLike
+	inclusiveAngles, token, ok = v.parseInclusiveAngles()
+	if ok {
+		// Found a single InclusiveAngles Collection.
+		collection = ast.CollectionClass().Collection(inclusiveAngles)
+		return
+	}
+
+	// Attempt to parse a single InExclusiveAngles Collection.
+	var inExclusiveAngles ast.InExclusiveAnglesLike
+	inExclusiveAngles, token, ok = v.parseInExclusiveAngles()
+	if ok {
+		// Found a single InExclusiveAngles Collection.
+		collection = ast.CollectionClass().Collection(inExclusiveAngles)
+		return
+	}
+
+	// Attempt to parse a single ExInclusiveAngles Collection.
+	var exInclusiveAngles ast.ExInclusiveAnglesLike
+	exInclusiveAngles, token, ok = v.parseExInclusiveAngles()
+	if ok {
+		// Found a single ExInclusiveAngles Collection.
+		collection = ast.CollectionClass().Collection(exInclusiveAngles)
+		return
+	}
+
+	// Attempt to parse a single ExclusiveAngles Collection.
+	var exclusiveAngles ast.ExclusiveAnglesLike
+	exclusiveAngles, token, ok = v.parseExclusiveAngles()
+	if ok {
+		// Found a single ExclusiveAngles Collection.
+		collection = ast.CollectionClass().Collection(exclusiveAngles)
+		return
+	}
+
+	// Attempt to parse a single InclusiveNumbers Collection.
+	var inclusiveNumbers ast.InclusiveNumbersLike
+	inclusiveNumbers, token, ok = v.parseInclusiveNumbers()
+	if ok {
+		// Found a single InclusiveNumbers Collection.
+		collection = ast.CollectionClass().Collection(inclusiveNumbers)
+		return
+	}
+
+	// Attempt to parse a single InExclusiveNumbers Collection.
+	var inExclusiveNumbers ast.InExclusiveNumbersLike
+	inExclusiveNumbers, token, ok = v.parseInExclusiveNumbers()
+	if ok {
+		// Found a single InExclusiveNumbers Collection.
+		collection = ast.CollectionClass().Collection(inExclusiveNumbers)
+		return
+	}
+
+	// Attempt to parse a single ExInclusiveNumbers Collection.
+	var exInclusiveNumbers ast.ExInclusiveNumbersLike
+	exInclusiveNumbers, token, ok = v.parseExInclusiveNumbers()
+	if ok {
+		// Found a single ExInclusiveNumbers Collection.
+		collection = ast.CollectionClass().Collection(exInclusiveNumbers)
+		return
+	}
+
+	// Attempt to parse a single ExclusiveNumbers Collection.
+	var exclusiveNumbers ast.ExclusiveNumbersLike
+	exclusiveNumbers, token, ok = v.parseExclusiveNumbers()
+	if ok {
+		// Found a single ExclusiveNumbers Collection.
+		collection = ast.CollectionClass().Collection(exclusiveNumbers)
+		return
+	}
+
+	// Attempt to parse a single InclusiveQuotes Collection.
+	var inclusiveQuotes ast.InclusiveQuotesLike
+	inclusiveQuotes, token, ok = v.parseInclusiveQuotes()
+	if ok {
+		// Found a single InclusiveQuotes Collection.
+		collection = ast.CollectionClass().Collection(inclusiveQuotes)
+		return
+	}
+
+	// Attempt to parse a single InExclusiveQuotes Collection.
+	var inExclusiveQuotes ast.InExclusiveQuotesLike
+	inExclusiveQuotes, token, ok = v.parseInExclusiveQuotes()
+	if ok {
+		// Found a single InExclusiveQuotes Collection.
+		collection = ast.CollectionClass().Collection(inExclusiveQuotes)
+		return
+	}
+
+	// Attempt to parse a single ExInclusiveQuotes Collection.
+	var exInclusiveQuotes ast.ExInclusiveQuotesLike
+	exInclusiveQuotes, token, ok = v.parseExInclusiveQuotes()
+	if ok {
+		// Found a single ExInclusiveQuotes Collection.
+		collection = ast.CollectionClass().Collection(exInclusiveQuotes)
+		return
+	}
+
+	// Attempt to parse a single ExclusiveQuotes Collection.
+	var exclusiveQuotes ast.ExclusiveQuotesLike
+	exclusiveQuotes, token, ok = v.parseExclusiveQuotes()
+	if ok {
+		// Found a single ExclusiveQuotes Collection.
+		collection = ast.CollectionClass().Collection(exclusiveQuotes)
+		return
+	}
+
+	// Attempt to parse a single InlineAttributes Collection.
+	var inlineAttributes ast.InlineAttributesLike
+	inlineAttributes, token, ok = v.parseInlineAttributes()
+	if ok {
+		// Found a single InlineAttributes Collection.
+		collection = ast.CollectionClass().Collection(inlineAttributes)
+		return
+	}
+
+	// Attempt to parse a single InlineValues Collection.
+	var inlineValues ast.InlineValuesLike
+	inlineValues, token, ok = v.parseInlineValues()
+	if ok {
+		// Found a single InlineValues Collection.
+		collection = ast.CollectionClass().Collection(inlineValues)
+		return
+	}
+
+	// This is not a single Collection rule.
 	return
 }
 
@@ -1682,6 +1661,318 @@ func (v *parser_) parseEvent() (
 	return
 }
 
+func (v *parser_) parseExInclusiveAngles() (
+	exInclusiveAngles ast.ExInclusiveAnglesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single angle token.
+	var angle1 string
+	angle1, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single angle token.
+	var angle2 string
+	angle2, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExInclusiveAngles rule.
+	ok = true
+	v.remove(tokens)
+	exInclusiveAngles = ast.ExInclusiveAnglesClass().ExInclusiveAngles(
+		angle1,
+		angle2,
+	)
+	return
+}
+
+func (v *parser_) parseExInclusiveNumbers() (
+	exInclusiveNumbers ast.ExInclusiveNumbersLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number1 string
+	number1, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number2 string
+	number2, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExInclusiveNumbers rule.
+	ok = true
+	v.remove(tokens)
+	exInclusiveNumbers = ast.ExInclusiveNumbersClass().ExInclusiveNumbers(
+		number1,
+		number2,
+	)
+	return
+}
+
+func (v *parser_) parseExInclusiveQuotes() (
+	exInclusiveQuotes ast.ExInclusiveQuotesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote1 string
+	quote1, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote2 string
+	quote2, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExInclusiveQuotes rule.
+	ok = true
+	v.remove(tokens)
+	exInclusiveQuotes = ast.ExInclusiveQuotesClass().ExInclusiveQuotes(
+		quote1,
+		quote2,
+	)
+	return
+}
+
 func (v *parser_) parseException() (
 	exception ast.ExceptionLike,
 	token TokenLike,
@@ -1710,6 +2001,318 @@ func (v *parser_) parseException() (
 	ok = true
 	v.remove(tokens)
 	exception = ast.ExceptionClass().Exception(expression)
+	return
+}
+
+func (v *parser_) parseExclusiveAngles() (
+	exclusiveAngles ast.ExclusiveAnglesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single angle token.
+	var angle1 string
+	angle1, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single angle token.
+	var angle2 string
+	angle2, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExclusiveAngles rule.
+	ok = true
+	v.remove(tokens)
+	exclusiveAngles = ast.ExclusiveAnglesClass().ExclusiveAngles(
+		angle1,
+		angle2,
+	)
+	return
+}
+
+func (v *parser_) parseExclusiveNumbers() (
+	exclusiveNumbers ast.ExclusiveNumbersLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number1 string
+	number1, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number2 string
+	number2, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExclusiveNumbers rule.
+	ok = true
+	v.remove(tokens)
+	exclusiveNumbers = ast.ExclusiveNumbersClass().ExclusiveNumbers(
+		number1,
+		number2,
+	)
+	return
+}
+
+func (v *parser_) parseExclusiveQuotes() (
+	exclusiveQuotes ast.ExclusiveQuotesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote1 string
+	quote1, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote2 string
+	quote2, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExclusiveQuotes rule.
+	ok = true
+	v.remove(tokens)
+	exclusiveQuotes = ast.ExclusiveQuotesClass().ExclusiveQuotes(
+		quote1,
+		quote2,
+	)
 	return
 }
 
@@ -2048,30 +2651,627 @@ func (v *parser_) parseIfClause() (
 	return
 }
 
-func (v *parser_) parseInclusion() (
-	inclusion ast.InclusionLike,
+func (v *parser_) parseInExclusiveAngles() (
+	inExclusiveAngles ast.InExclusiveAnglesLike,
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Left Inclusion.
-	var left ast.LeftLike
-	left, token, ok = v.parseLeft()
-	if ok {
-		// Found a single Left Inclusion.
-		inclusion = ast.InclusionClass().Inclusion(left)
-		return
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Right Inclusion.
-	var right ast.RightLike
-	right, token, ok = v.parseRight()
-	if ok {
-		// Found a single Right Inclusion.
-		inclusion = ast.InclusionClass().Inclusion(right)
-		return
+	// Attempt to parse a single angle token.
+	var angle1 string
+	angle1, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
 	}
 
-	// This is not a single Inclusion rule.
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single angle token.
+	var angle2 string
+	angle2, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InExclusiveAngles rule.
+	ok = true
+	v.remove(tokens)
+	inExclusiveAngles = ast.InExclusiveAnglesClass().InExclusiveAngles(
+		angle1,
+		angle2,
+	)
+	return
+}
+
+func (v *parser_) parseInExclusiveNumbers() (
+	inExclusiveNumbers ast.InExclusiveNumbersLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number1 string
+	number1, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number2 string
+	number2, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InExclusiveNumbers rule.
+	ok = true
+	v.remove(tokens)
+	inExclusiveNumbers = ast.InExclusiveNumbersClass().InExclusiveNumbers(
+		number1,
+		number2,
+	)
+	return
+}
+
+func (v *parser_) parseInExclusiveQuotes() (
+	inExclusiveQuotes ast.InExclusiveQuotesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote1 string
+	quote1, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote2 string
+	quote2, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InExclusiveQuotes rule.
+	ok = true
+	v.remove(tokens)
+	inExclusiveQuotes = ast.InExclusiveQuotesClass().InExclusiveQuotes(
+		quote1,
+		quote2,
+	)
+	return
+}
+
+func (v *parser_) parseInclusiveAngles() (
+	inclusiveAngles ast.InclusiveAnglesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single angle token.
+	var angle1 string
+	angle1, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single angle token.
+	var angle2 string
+	angle2, token, ok = v.parseToken(AngleToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveAngles rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveAngles", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InclusiveAngles rule.
+	ok = true
+	v.remove(tokens)
+	inclusiveAngles = ast.InclusiveAnglesClass().InclusiveAngles(
+		angle1,
+		angle2,
+	)
+	return
+}
+
+func (v *parser_) parseInclusiveNumbers() (
+	inclusiveNumbers ast.InclusiveNumbersLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number1 string
+	number1, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single number token.
+	var number2 string
+	number2, token, ok = v.parseToken(NumberToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveNumbers rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveNumbers", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InclusiveNumbers rule.
+	ok = true
+	v.remove(tokens)
+	inclusiveNumbers = ast.InclusiveNumbersClass().InclusiveNumbers(
+		number1,
+		number2,
+	)
+	return
+}
+
+func (v *parser_) parseInclusiveQuotes() (
+	inclusiveQuotes ast.InclusiveQuotesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote1 string
+	quote1, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single quote token.
+	var quote2 string
+	quote2, token, ok = v.parseToken(QuoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveQuotes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveQuotes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InclusiveQuotes rule.
+	ok = true
+	v.remove(tokens)
+	inclusiveQuotes = ast.InclusiveQuotesClass().InclusiveQuotes(
+		quote1,
+		quote2,
+	)
 	return
 }
 
@@ -2180,6 +3380,15 @@ func (v *parser_) parseIndirect() (
 		return
 	}
 
+	// Attempt to parse a single Subcomponent Indirect.
+	var subcomponent ast.SubcomponentLike
+	subcomponent, token, ok = v.parseSubcomponent()
+	if ok {
+		// Found a single Subcomponent Indirect.
+		indirect = ast.IndirectClass().Indirect(subcomponent)
+		return
+	}
+
 	// Attempt to parse a single Referent Indirect.
 	var referent ast.ReferentLike
 	referent, token, ok = v.parseReferent()
@@ -2204,15 +3413,6 @@ func (v *parser_) parseIndirect() (
 	if ok {
 		// Found a single Method Indirect.
 		indirect = ast.IndirectClass().Indirect(method)
-		return
-	}
-
-	// Attempt to parse a single Attribute Indirect.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Indirect.
-		indirect = ast.IndirectClass().Indirect(attribute)
 		return
 	}
 
@@ -2256,12 +3456,29 @@ func (v *parser_) parseInduction() (
 	return
 }
 
-func (v *parser_) parseInlineAssociations() (
-	inlineAssociations ast.InlineAssociationsLike,
+func (v *parser_) parseInlineAttributes() (
+	inlineAttributes ast.InlineAttributesLike,
 	token TokenLike,
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
 
 	// Attempt to parse a single Association rule.
 	var association ast.AssociationLike
@@ -2271,12 +3488,12 @@ func (v *parser_) parseInlineAssociations() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single InlineAssociations rule.
+		// This is not a single InlineAttributes rule.
 		v.putBack(tokens)
 		return
 	default:
 		// Found a syntax error.
-		var message = v.formatError("$InlineAssociations", token)
+		var message = v.formatError("$InlineAttributes", token)
 		panic(message)
 	}
 
@@ -2296,7 +3513,7 @@ additionalAssociationsLoop:
 				return
 			default:
 				// Found a syntax error.
-				var message = v.formatError("$InlineAssociations", token)
+				var message = v.formatError("$InlineAttributes", token)
 				message += "0 or more AdditionalAssociation rules are required."
 				panic(message)
 			}
@@ -2306,10 +3523,121 @@ additionalAssociationsLoop:
 		additionalAssociations.AppendValue(additionalAssociation)
 	}
 
-	// Found a single InlineAssociations rule.
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InlineAttributes rule.
 	ok = true
 	v.remove(tokens)
-	inlineAssociations = ast.InlineAssociationsClass().InlineAssociations(
+	inlineAttributes = ast.InlineAttributesClass().InlineAttributes(
+		association,
+		additionalAssociations,
+	)
+	return
+}
+
+func (v *parser_) parseInlineParameters() (
+	inlineParameters ast.InlineParametersLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineParameters rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineParameters", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single Association rule.
+	var association ast.AssociationLike
+	association, token, ok = v.parseAssociation()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single InlineParameters rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$InlineParameters", token)
+		panic(message)
+	}
+
+	// Attempt to parse multiple AdditionalAssociation rules.
+	var additionalAssociations = fra.List[ast.AdditionalAssociationLike]()
+additionalAssociationsLoop:
+	for count := 0; count < mat.MaxInt; count++ {
+		var additionalAssociation ast.AdditionalAssociationLike
+		additionalAssociation, token, ok = v.parseAdditionalAssociation()
+		if !ok {
+			switch {
+			case count >= 0:
+				break additionalAssociationsLoop
+			case uti.IsDefined(tokens):
+				// This is not multiple AdditionalAssociation rules.
+				v.putBack(tokens)
+				return
+			default:
+				// Found a syntax error.
+				var message = v.formatError("$InlineParameters", token)
+				message += "0 or more AdditionalAssociation rules are required."
+				panic(message)
+			}
+		}
+		// No additional put backs allowed at this point.
+		tokens = nil
+		additionalAssociations.AppendValue(additionalAssociation)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineParameters rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineParameters", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InlineParameters rule.
+	ok = true
+	v.remove(tokens)
+	inlineParameters = ast.InlineParametersClass().InlineParameters(
 		association,
 		additionalAssociations,
 	)
@@ -2322,6 +3650,23 @@ func (v *parser_) parseInlineStatements() (
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "{" delimiter.
+	_, token, ok = v.parseDelimiter("{")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineStatements rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineStatements", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
 
 	// Attempt to parse a single Statement rule.
 	var statement ast.StatementLike
@@ -2366,6 +3711,23 @@ additionalStatementsLoop:
 		additionalStatements.AppendValue(additionalStatement)
 	}
 
+	// Attempt to parse a single "}" delimiter.
+	_, token, ok = v.parseDelimiter("}")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineStatements rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineStatements", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
 	// Found a single InlineStatements rule.
 	ok = true
 	v.remove(tokens)
@@ -2382,6 +3744,23 @@ func (v *parser_) parseInlineValues() (
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineValues rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineValues", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
 
 	// Attempt to parse a single Value rule.
 	var value ast.ValueLike
@@ -2424,6 +3803,23 @@ additionalValuesLoop:
 		// No additional put backs allowed at this point.
 		tokens = nil
 		additionalValues.AppendValue(additionalValue)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InlineValues rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InlineValues", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
 	}
 
 	// Found a single InlineValues rule.
@@ -2582,82 +3978,6 @@ func (v *parser_) parseItem() (
 	return
 }
 
-func (v *parser_) parseItems() (
-	items ast.ItemsLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single Range Items.
-	var range_ ast.RangeLike
-	range_, token, ok = v.parseRange()
-	if ok {
-		// Found a single Range Items.
-		items = ast.ItemsClass().Items(range_)
-		return
-	}
-
-	// Attempt to parse a single NoAssociations Items.
-	var noAssociations ast.NoAssociationsLike
-	noAssociations, token, ok = v.parseNoAssociations()
-	if ok {
-		// Found a single NoAssociations Items.
-		items = ast.ItemsClass().Items(noAssociations)
-		return
-	}
-
-	// Attempt to parse a single Associations Items.
-	var associations ast.AssociationsLike
-	associations, token, ok = v.parseAssociations()
-	if ok {
-		// Found a single Associations Items.
-		items = ast.ItemsClass().Items(associations)
-		return
-	}
-
-	// Attempt to parse a single Values Items.
-	var values ast.ValuesLike
-	values, token, ok = v.parseValues()
-	if ok {
-		// Found a single Values Items.
-		items = ast.ItemsClass().Items(values)
-		return
-	}
-
-	// This is not a single Items rule.
-	return
-}
-
-func (v *parser_) parseLeft() (
-	left ast.LeftLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "(" delimiter.
-	_, token, ok = v.parseDelimiter("(")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Left rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Left", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Left rule.
-	ok = true
-	v.remove(tokens)
-	left = ast.LeftClass().Left()
-	return
-}
-
 func (v *parser_) parseLetClause() (
 	letClause ast.LetClauseLike,
 	token TokenLike,
@@ -2758,6 +4078,15 @@ func (v *parser_) parseLogical() (
 		return
 	}
 
+	// Attempt to parse a single Subcomponent Logical.
+	var subcomponent ast.SubcomponentLike
+	subcomponent, token, ok = v.parseSubcomponent()
+	if ok {
+		// Found a single Subcomponent Logical.
+		logical = ast.LogicalClass().Logical(subcomponent)
+		return
+	}
+
 	// Attempt to parse a single Precedence Logical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -2800,15 +4129,6 @@ func (v *parser_) parseLogical() (
 	if ok {
 		// Found a single Method Logical.
 		logical = ast.LogicalClass().Logical(method)
-		return
-	}
-
-	// Attempt to parse a single Attribute Logical.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Logical.
-		logical = ast.LogicalClass().Logical(attribute)
 		return
 	}
 
@@ -3225,12 +4545,47 @@ func (v *parser_) parseMethod() (
 	return
 }
 
-func (v *parser_) parseMultilineAssociations() (
-	multilineAssociations ast.MultilineAssociationsLike,
+func (v *parser_) parseMultilineAttributes() (
+	multilineAttributes ast.MultilineAttributesLike,
 	token TokenLike,
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single newline token.
+	var newline string
+	newline, token, ok = v.parseToken(NewlineToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
 
 	// Attempt to parse multiple AnnotatedAssociation rules.
 	var annotatedAssociations = fra.List[ast.AnnotatedAssociationLike]()
@@ -3248,7 +4603,7 @@ annotatedAssociationsLoop:
 				return
 			default:
 				// Found a syntax error.
-				var message = v.formatError("$MultilineAssociations", token)
+				var message = v.formatError("$MultilineAttributes", token)
 				message += "1 or more AnnotatedAssociation rules are required."
 				panic(message)
 			}
@@ -3258,10 +4613,125 @@ annotatedAssociationsLoop:
 		annotatedAssociations.AppendValue(annotatedAssociation)
 	}
 
-	// Found a single MultilineAssociations rule.
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single MultilineAttributes rule.
 	ok = true
 	v.remove(tokens)
-	multilineAssociations = ast.MultilineAssociationsClass().MultilineAssociations(annotatedAssociations)
+	multilineAttributes = ast.MultilineAttributesClass().MultilineAttributes(
+		newline,
+		annotatedAssociations,
+	)
+	return
+}
+
+func (v *parser_) parseMultilineParameters() (
+	multilineParameters ast.MultilineParametersLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineParameters rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineParameters", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single newline token.
+	var newline string
+	newline, token, ok = v.parseToken(NewlineToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineParameters rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineParameters", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse multiple AnnotatedAssociation rules.
+	var annotatedAssociations = fra.List[ast.AnnotatedAssociationLike]()
+annotatedAssociationsLoop:
+	for count := 0; count < mat.MaxInt; count++ {
+		var annotatedAssociation ast.AnnotatedAssociationLike
+		annotatedAssociation, token, ok = v.parseAnnotatedAssociation()
+		if !ok {
+			switch {
+			case count >= 1:
+				break annotatedAssociationsLoop
+			case uti.IsDefined(tokens):
+				// This is not multiple AnnotatedAssociation rules.
+				v.putBack(tokens)
+				return
+			default:
+				// Found a syntax error.
+				var message = v.formatError("$MultilineParameters", token)
+				message += "1 or more AnnotatedAssociation rules are required."
+				panic(message)
+			}
+		}
+		// No additional put backs allowed at this point.
+		tokens = nil
+		annotatedAssociations.AppendValue(annotatedAssociation)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineParameters rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineParameters", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single MultilineParameters rule.
+	ok = true
+	v.remove(tokens)
+	multilineParameters = ast.MultilineParametersClass().MultilineParameters(
+		newline,
+		annotatedAssociations,
+	)
 	return
 }
 
@@ -3271,6 +4741,41 @@ func (v *parser_) parseMultilineStatements() (
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "{" delimiter.
+	_, token, ok = v.parseDelimiter("{")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineStatements rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineStatements", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single newline token.
+	var newline string
+	newline, token, ok = v.parseToken(NewlineToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineStatements rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineStatements", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
 
 	// Attempt to parse multiple AnnotatedStatement rules.
 	var annotatedStatements = fra.List[ast.AnnotatedStatementLike]()
@@ -3298,10 +4803,30 @@ annotatedStatementsLoop:
 		annotatedStatements.AppendValue(annotatedStatement)
 	}
 
+	// Attempt to parse a single "}" delimiter.
+	_, token, ok = v.parseDelimiter("}")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineStatements rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineStatements", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
 	// Found a single MultilineStatements rule.
 	ok = true
 	v.remove(tokens)
-	multilineStatements = ast.MultilineStatementsClass().MultilineStatements(annotatedStatements)
+	multilineStatements = ast.MultilineStatementsClass().MultilineStatements(
+		newline,
+		annotatedStatements,
+	)
 	return
 }
 
@@ -3311,6 +4836,41 @@ func (v *parser_) parseMultilineValues() (
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineValues rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineValues", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single newline token.
+	var newline string
+	newline, token, ok = v.parseToken(NewlineToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single MultilineValues rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$MultilineValues", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
 
 	// Attempt to parse multiple AnnotatedValue rules.
 	var annotatedValues = fra.List[ast.AnnotatedValueLike]()
@@ -3338,31 +4898,16 @@ annotatedValuesLoop:
 		annotatedValues.AppendValue(annotatedValue)
 	}
 
-	// Found a single MultilineValues rule.
-	ok = true
-	v.remove(tokens)
-	multilineValues = ast.MultilineValuesClass().MultilineValues(annotatedValues)
-	return
-}
-
-func (v *parser_) parseNoAssociations() (
-	noAssociations ast.NoAssociationsLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single colon token.
-	var colon string
-	colon, token, ok = v.parseToken(ColonToken)
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single NoAssociations rule.
+			// This is not a single MultilineValues rule.
 			v.putBack(tokens)
 			return
 		} else {
 			// Found a syntax error.
-			var message = v.formatError("$NoAssociations", token)
+			var message = v.formatError("$MultilineValues", token)
 			panic(message)
 		}
 	}
@@ -3370,10 +4915,175 @@ func (v *parser_) parseNoAssociations() (
 		tokens.AppendValue(token)
 	}
 
-	// Found a single NoAssociations rule.
+	// Found a single MultilineValues rule.
 	ok = true
 	v.remove(tokens)
-	noAssociations = ast.NoAssociationsClass().NoAssociations(colon)
+	multilineValues = ast.MultilineValuesClass().MultilineValues(
+		newline,
+		annotatedValues,
+	)
+	return
+}
+
+func (v *parser_) parseNoAttributes() (
+	noAttributes ast.NoAttributesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single colon token.
+	var colon string
+	colon, token, ok = v.parseToken(ColonToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoAttributes rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoAttributes", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single NoAttributes rule.
+	ok = true
+	v.remove(tokens)
+	noAttributes = ast.NoAttributesClass().NoAttributes(colon)
+	return
+}
+
+func (v *parser_) parseNoStatements() (
+	noStatements ast.NoStatementsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "{" delimiter.
+	_, token, ok = v.parseDelimiter("{")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoStatements rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoStatements", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "}" delimiter.
+	_, token, ok = v.parseDelimiter("}")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoStatements rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoStatements", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single NoStatements rule.
+	ok = true
+	v.remove(tokens)
+	noStatements = ast.NoStatementsClass().NoStatements()
+	return
+}
+
+func (v *parser_) parseNoValues() (
+	noValues ast.NoValuesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoValues rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoValues", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoValues rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoValues", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single NoValues rule.
+	ok = true
+	v.remove(tokens)
+	noValues = ast.NoValuesClass().NoValues()
 	return
 }
 
@@ -3476,6 +5186,15 @@ func (v *parser_) parseNumerical() (
 		return
 	}
 
+	// Attempt to parse a single Subcomponent Numerical.
+	var subcomponent ast.SubcomponentLike
+	subcomponent, token, ok = v.parseSubcomponent()
+	if ok {
+		// Found a single Subcomponent Numerical.
+		numerical = ast.NumericalClass().Numerical(subcomponent)
+		return
+	}
+
 	// Attempt to parse a single Precedence Numerical.
 	var precedence ast.PrecedenceLike
 	precedence, token, ok = v.parsePrecedence()
@@ -3527,15 +5246,6 @@ func (v *parser_) parseNumerical() (
 	if ok {
 		// Found a single Method Numerical.
 		numerical = ast.NumericalClass().Numerical(method)
-		return
-	}
-
-	// Attempt to parse a single Attribute Numerical.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Numerical.
-		numerical = ast.NumericalClass().Numerical(attribute)
 		return
 	}
 
@@ -3787,63 +5497,25 @@ func (v *parser_) parseParameters() (
 	token TokenLike,
 	ok bool,
 ) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "(" delimiter.
-	_, token, ok = v.parseDelimiter("(")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Parameters rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Parameters", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Associations rule.
-	var associations ast.AssociationsLike
-	associations, token, ok = v.parseAssociations()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Parameters rule.
-		v.putBack(tokens)
+	// Attempt to parse a single MultilineParameters Parameters.
+	var multilineParameters ast.MultilineParametersLike
+	multilineParameters, token, ok = v.parseMultilineParameters()
+	if ok {
+		// Found a single MultilineParameters Parameters.
+		parameters = ast.ParametersClass().Parameters(multilineParameters)
 		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Parameters", token)
-		panic(message)
 	}
 
-	// Attempt to parse a single ")" delimiter.
-	_, token, ok = v.parseDelimiter(")")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Parameters rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Parameters", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single InlineParameters Parameters.
+	var inlineParameters ast.InlineParametersLike
+	inlineParameters, token, ok = v.parseInlineParameters()
+	if ok {
+		// Found a single InlineParameters Parameters.
+		parameters = ast.ParametersClass().Parameters(inlineParameters)
+		return
 	}
 
-	// Found a single Parameters rule.
-	ok = true
-	v.remove(tokens)
-	parameters = ast.ParametersClass().Parameters(associations)
+	// This is not a single Parameters rule.
 	return
 }
 
@@ -4048,86 +5720,39 @@ func (v *parser_) parsePredicate() (
 	return
 }
 
-func (v *parser_) parsePrimitive() (
-	primitive ast.PrimitiveLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single Element Primitive.
-	var element ast.ElementLike
-	element, token, ok = v.parseElement()
-	if ok {
-		// Found a single Element Primitive.
-		primitive = ast.PrimitiveClass().Primitive(element)
-		return
-	}
-
-	// Attempt to parse a single String Primitive.
-	var string_ ast.StringLike
-	string_, token, ok = v.parseString()
-	if ok {
-		// Found a single String Primitive.
-		primitive = ast.PrimitiveClass().Primitive(string_)
-		return
-	}
-
-	// This is not a single Primitive rule.
-	return
-}
-
 func (v *parser_) parseProcedure() (
 	procedure ast.ProcedureLike,
 	token TokenLike,
 	ok bool,
 ) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "{" delimiter.
-	_, token, ok = v.parseDelimiter("{")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Procedure rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Procedure", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse an optional Statements rule.
-	var optionalStatements ast.StatementsLike
-	optionalStatements, _, ok = v.parseStatements()
+	// Attempt to parse a single MultilineStatements Procedure.
+	var multilineStatements ast.MultilineStatementsLike
+	multilineStatements, token, ok = v.parseMultilineStatements()
 	if ok {
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a single MultilineStatements Procedure.
+		procedure = ast.ProcedureClass().Procedure(multilineStatements)
+		return
 	}
 
-	// Attempt to parse a single "}" delimiter.
-	_, token, ok = v.parseDelimiter("}")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Procedure rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Procedure", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single InlineStatements Procedure.
+	var inlineStatements ast.InlineStatementsLike
+	inlineStatements, token, ok = v.parseInlineStatements()
+	if ok {
+		// Found a single InlineStatements Procedure.
+		procedure = ast.ProcedureClass().Procedure(inlineStatements)
+		return
 	}
 
-	// Found a single Procedure rule.
-	ok = true
-	v.remove(tokens)
-	procedure = ast.ProcedureClass().Procedure(optionalStatements)
+	// Attempt to parse a single NoStatements Procedure.
+	var noStatements ast.NoStatementsLike
+	noStatements, token, ok = v.parseNoStatements()
+	if ok {
+		// Found a single NoStatements Procedure.
+		procedure = ast.ProcedureClass().Procedure(noStatements)
+		return
+	}
+
+	// This is not a single Procedure rule.
 	return
 }
 
@@ -4179,110 +5804,6 @@ func (v *parser_) parsePublishClause() (
 	return
 }
 
-func (v *parser_) parseRange() (
-	range_ ast.RangeLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Inclusion rule.
-	var inclusion1 ast.InclusionLike
-	inclusion1, token, ok = v.parseInclusion()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Range rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Range", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive1 ast.PrimitiveLike
-	primitive1, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Range rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Range", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single ".." delimiter.
-	_, token, ok = v.parseDelimiter("..")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Range rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Range", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive2 ast.PrimitiveLike
-	primitive2, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Range rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Range", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single Inclusion rule.
-	var inclusion2 ast.InclusionLike
-	inclusion2, token, ok = v.parseInclusion()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single Range rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$Range", token)
-		panic(message)
-	}
-
-	// Found a single Range rule.
-	ok = true
-	v.remove(tokens)
-	range_ = ast.RangeClass().Range(
-		inclusion1,
-		primitive1,
-		primitive2,
-		inclusion2,
-	)
-	return
-}
-
 func (v *parser_) parseRecipient() (
 	recipient ast.RecipientLike,
 	token TokenLike,
@@ -4297,12 +5818,12 @@ func (v *parser_) parseRecipient() (
 		return
 	}
 
-	// Attempt to parse a single Attribute Recipient.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
+	// Attempt to parse a single Subcomponent Recipient.
+	var subcomponent ast.SubcomponentLike
+	subcomponent, token, ok = v.parseSubcomponent()
 	if ok {
-		// Found a single Attribute Recipient.
-		recipient = ast.RecipientClass().Recipient(attribute)
+		// Found a single Subcomponent Recipient.
+		recipient = ast.RecipientClass().Recipient(subcomponent)
 		return
 	}
 
@@ -4619,37 +6140,6 @@ func (v *parser_) parseReturnClause() (
 	return
 }
 
-func (v *parser_) parseRight() (
-	right ast.RightLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single ")" delimiter.
-	_, token, ok = v.parseDelimiter(")")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Right rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Right", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Right rule.
-	ok = true
-	v.remove(tokens)
-	right = ast.RightClass().Right()
-	return
-}
-
 func (v *parser_) parseSaveClause() (
 	saveClause ast.SaveClauseLike,
 	token TokenLike,
@@ -4885,33 +6375,6 @@ func (v *parser_) parseStatement() (
 	return
 }
 
-func (v *parser_) parseStatements() (
-	statements ast.StatementsLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single MultilineStatements Statements.
-	var multilineStatements ast.MultilineStatementsLike
-	multilineStatements, token, ok = v.parseMultilineStatements()
-	if ok {
-		// Found a single MultilineStatements Statements.
-		statements = ast.StatementsClass().Statements(multilineStatements)
-		return
-	}
-
-	// Attempt to parse a single InlineStatements Statements.
-	var inlineStatements ast.InlineStatementsLike
-	inlineStatements, token, ok = v.parseInlineStatements()
-	if ok {
-		// Found a single InlineStatements Statements.
-		statements = ast.StatementsClass().Statements(inlineStatements)
-		return
-	}
-
-	// This is not a single Statements rule.
-	return
-}
-
 func (v *parser_) parseString() (
 	string_ ast.StringLike,
 	token TokenLike,
@@ -5000,6 +6463,24 @@ func (v *parser_) parseSubcomponent() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
+	// Attempt to parse a single identifier token.
+	var identifier string
+	identifier, token, ok = v.parseToken(IdentifierToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Subcomponent rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Subcomponent", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
 	// Attempt to parse a single "[" delimiter.
 	_, token, ok = v.parseDelimiter("[")
 	if !ok {
@@ -5054,7 +6535,10 @@ func (v *parser_) parseSubcomponent() (
 	// Found a single Subcomponent rule.
 	ok = true
 	v.remove(tokens)
-	subcomponent = ast.SubcomponentClass().Subcomponent(indices)
+	subcomponent = ast.SubcomponentClass().Subcomponent(
+		identifier,
+		indices,
+	)
 	return
 }
 
@@ -5069,6 +6553,15 @@ func (v *parser_) parseSubject() (
 	if ok {
 		// Found a single Component Subject.
 		subject = ast.SubjectClass().Subject(component)
+		return
+	}
+
+	// Attempt to parse a single Subcomponent Subject.
+	var subcomponent ast.SubcomponentLike
+	subcomponent, token, ok = v.parseSubcomponent()
+	if ok {
+		// Found a single Subcomponent Subject.
+		subject = ast.SubjectClass().Subject(subcomponent)
 		return
 	}
 
@@ -5135,15 +6628,6 @@ func (v *parser_) parseSubject() (
 		return
 	}
 
-	// Attempt to parse a single Attribute Subject.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
-	if ok {
-		// Found a single Attribute Subject.
-		subject = ast.SubjectClass().Subject(attribute)
-		return
-	}
-
 	// Attempt to parse a single Variable Subject.
 	var variable ast.VariableLike
 	variable, token, ok = v.parseVariable()
@@ -5180,12 +6664,12 @@ func (v *parser_) parseTarget() (
 		return
 	}
 
-	// Attempt to parse a single Attribute Target.
-	var attribute ast.AttributeLike
-	attribute, token, ok = v.parseAttribute()
+	// Attempt to parse a single Subcomponent Target.
+	var subcomponent ast.SubcomponentLike
+	subcomponent, token, ok = v.parseSubcomponent()
 	if ok {
-		// Found a single Attribute Target.
-		target = ast.TargetClass().Target(attribute)
+		// Found a single Subcomponent Target.
+		target = ast.TargetClass().Target(subcomponent)
 		return
 	}
 
@@ -5336,33 +6820,6 @@ func (v *parser_) parseValue() (
 	ok = true
 	v.remove(tokens)
 	value = ast.ValueClass().Value(component)
-	return
-}
-
-func (v *parser_) parseValues() (
-	values ast.ValuesLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single MultilineValues Values.
-	var multilineValues ast.MultilineValuesLike
-	multilineValues, token, ok = v.parseMultilineValues()
-	if ok {
-		// Found a single MultilineValues Values.
-		values = ast.ValuesClass().Values(multilineValues)
-		return
-	}
-
-	// Attempt to parse a single InlineValues Values.
-	var inlineValues ast.InlineValuesLike
-	inlineValues, token, ok = v.parseInlineValues()
-	if ok {
-		// Found a single InlineValues Values.
-		values = ast.ValuesClass().Values(inlineValues)
-		return
-	}
-
-	// This is not a single Values rule.
 	return
 }
 
@@ -5800,7 +7257,15 @@ var parserClassReference_ = &parserClass_{
   - String
   - Collection
   - Procedure`,
-			"$Parameters": `"(" Associations ")"`,
+			"$Parameters": `
+  - MultilineParameters
+  - InlineParameters`,
+			"$MultilineParameters":   `"(" newline AnnotatedAssociation+ ")"`,
+			"$AnnotatedAssociation":  `Association note?`,
+			"$InlineParameters":      `"(" Association AdditionalAssociation* ")"`,
+			"$AdditionalAssociation": `"," Association`,
+			"$Association":           `symbol colon Value`,
+			"$Value":                 `Component`,
 			"$Element": `
   - angle
   - boolean
@@ -5820,46 +7285,54 @@ var parserClassReference_ = &parserClass_{
   - symbol
   - tag
   - version`,
-			"$Collection": `"[" Items? "]"`,
-			"$Items": `
-  - Range
-  - NoAssociations
-  - Associations
-  - Values`,
-			"$Range": `Inclusion Primitive ".." Primitive Inclusion`,
-			"$Inclusion": `
-  - Left
-  - Right`,
-			"$Left":  `"("`,
-			"$Right": `")"`,
-			"$Primitive": `
-  - Element
-  - String`,
-			"$NoAssociations": `colon`,
-			"$Associations": `
-  - MultilineAssociations
-  - InlineAssociations`,
-			"$MultilineAssociations": `AnnotatedAssociation+`,
-			"$AnnotatedAssociation":  `xyz Association note?`,
-			"$InlineAssociations":    `Association AdditionalAssociation*`,
-			"$AdditionalAssociation": `"," Association`,
-			"$Association":           `symbol colon Value`,
-			"$Value":                 `Component`,
-			"$Values": `
+			"$Collection": `
+  - MultilineAttributes
   - MultilineValues
+  - NoAttributes
+  - NoValues
+  - InclusiveAngles
+  - InExclusiveAngles
+  - ExInclusiveAngles
+  - ExclusiveAngles
+  - InclusiveNumbers
+  - InExclusiveNumbers
+  - ExInclusiveNumbers
+  - ExclusiveNumbers
+  - InclusiveQuotes
+  - InExclusiveQuotes
+  - ExInclusiveQuotes
+  - ExclusiveQuotes
+  - InlineAttributes
   - InlineValues`,
-			"$MultilineValues": `AnnotatedValue+`,
-			"$AnnotatedValue":  `xyz Value note?`,
-			"$InlineValues":    `Value AdditionalValue*`,
-			"$AdditionalValue": `"," Value`,
-			"$Procedure":       `"{" Statements? "}"`,
-			"$Statements": `
+			"$MultilineAttributes": `"[" newline AnnotatedAssociation+ "]"`,
+			"$InlineAttributes":    `"[" Association AdditionalAssociation* "]"`,
+			"$NoAttributes":        `"[" colon "]"`,
+			"$MultilineValues":     `"[" newline AnnotatedValue+ "]"`,
+			"$AnnotatedValue":      `Value note?`,
+			"$InlineValues":        `"[" Value AdditionalValue* "]"`,
+			"$AdditionalValue":     `"," Value`,
+			"$NoValues":            `"[" "]"`,
+			"$InclusiveAngles":     `"[" angle ".." angle "]"`,
+			"$InExclusiveAngles":   `"[" angle ".." angle ")"`,
+			"$ExInclusiveAngles":   `"(" angle ".." angle "]"`,
+			"$ExclusiveAngles":     `"(" angle ".." angle ")"`,
+			"$InclusiveNumbers":    `"[" number ".." number "]"`,
+			"$InExclusiveNumbers":  `"[" number ".." number ")"`,
+			"$ExInclusiveNumbers":  `"(" number ".." number "]"`,
+			"$ExclusiveNumbers":    `"(" number ".." number ")"`,
+			"$InclusiveQuotes":     `"[" quote ".." quote "]"`,
+			"$InExclusiveQuotes":   `"[" quote ".." quote ")"`,
+			"$ExInclusiveQuotes":   `"(" quote ".." quote "]"`,
+			"$ExclusiveQuotes":     `"(" quote ".." quote ")"`,
+			"$Procedure": `
   - MultilineStatements
-  - InlineStatements`,
-			"$MultilineStatements": `AnnotatedStatement+`,
-			"$AnnotatedStatement":  `xyz Statement note?`,
-			"$InlineStatements":    `Statement AdditionalStatement*`,
+  - InlineStatements
+  - NoStatements`,
+			"$MultilineStatements": `"{" newline AnnotatedStatement+ "}"`,
+			"$AnnotatedStatement":  `Statement note?`,
+			"$InlineStatements":    `"{" Statement AdditionalStatement* "}"`,
 			"$AdditionalStatement": `";" Statement`,
+			"$NoStatements":        `"{" "}"`,
 			"$Statement":           `MainClause OnClause?`,
 			"$MainClause": `
   - Flow
@@ -5899,7 +7372,7 @@ var parserClassReference_ = &parserClass_{
 			"$Target": `
   - Function
   - Method
-  - Attribute
+  - Subcomponent
   - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Function":           `identifier "(" Arguments? ")"`,
 			"$Arguments":          `Argument AdditionalArgument*`,
@@ -5909,23 +7382,18 @@ var parserClassReference_ = &parserClass_{
 			"$Threading": `
   - dot
   - arrow`,
-			"$Attribute":       `identifier Subcomponent`,
-			"$Subcomponent":    `"[" Indices "]"`,
-			"$Indices":         `Index AdditionalIndex*`,
-			"$AdditionalIndex": `"," Index`,
-			"$Index":           `Expression`,
-			"$Variable":        `identifier`,
-			"$WhileClause":     `"while" Condition "do" Procedure`,
-			"$WithClause":      `"with" "each" Item "in" Sequence "do" Procedure`,
-			"$Item":            `symbol`,
-			"$Sequence":        `Expression`,
-			"$ContinueClause":  `"continue" "loop"`,
-			"$BreakClause":     `"break" "loop"`,
-			"$ReturnClause":    `"return" Result`,
-			"$Result":          `Expression`,
-			"$ThrowClause":     `"throw" Exception`,
-			"$Exception":       `Expression`,
-			"$DoClause":        `"do" Invocation`,
+			"$Variable":       `identifier`,
+			"$WhileClause":    `"while" Condition "do" Procedure`,
+			"$WithClause":     `"with" "each" Item "in" Sequence "do" Procedure`,
+			"$Item":           `symbol`,
+			"$Sequence":       `Expression`,
+			"$ContinueClause": `"continue" "loop"`,
+			"$BreakClause":    `"break" "loop"`,
+			"$ReturnClause":   `"return" Result`,
+			"$Result":         `Expression`,
+			"$ThrowClause":    `"throw" Exception`,
+			"$Exception":      `Expression`,
+			"$DoClause":       `"do" Invocation`,
 			"$Invocation": `
   - Function
   - Method`,
@@ -5939,7 +7407,7 @@ var parserClassReference_ = &parserClass_{
   - slashEqual`,
 			"$Recipient": `
   - symbol
-  - Attribute`,
+  - Subcomponent`,
 			"$PostClause":     `"post" Message "to" Bag`,
 			"$Message":        `Expression`,
 			"$Bag":            `Expression`,
@@ -5958,6 +7426,7 @@ var parserClassReference_ = &parserClass_{
 			"$Expression":     `Subject Predicate*`,
 			"$Subject": `
   - Component
+  - Subcomponent
   - Precedence
   - Referent
   - Complement
@@ -5965,9 +7434,12 @@ var parserClassReference_ = &parserClass_{
   - Magnitude
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.`,
-			"$Predicate": `Operator Expression`,
+			"$Subcomponent":    `identifier "[" Indices "]"`,
+			"$Indices":         `Index AdditionalIndex*`,
+			"$AdditionalIndex": `"," Index`,
+			"$Index":           `Expression`,
+			"$Predicate":       `Operator Expression`,
 			"$Operator": `
   - plus
   - dash
@@ -5989,20 +7461,20 @@ var parserClassReference_ = &parserClass_{
 			"$Referent":   `snail Indirect`,
 			"$Indirect": `
   - Component
+  - Subcomponent
   - Referent
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Complement": `not Logical`,
 			"$Logical": `
   - Component
+  - Subcomponent
   - Precedence
   - Referent
   - Complement
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Inversion": `Inverse Numerical`,
 			"$Inverse": `
@@ -6011,13 +7483,13 @@ var parserClassReference_ = &parserClass_{
   - star`,
 			"$Numerical": `
   - Component
+  - Subcomponent
   - Precedence
   - Referent
   - Inversion
   - Magnitude
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Magnitude": `bar Numerical bar`,
 		},

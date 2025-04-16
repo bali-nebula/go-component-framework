@@ -106,7 +106,6 @@ const (
 	TagToken
 	VersionToken
 	XorToken
-	XyzToken
 )
 
 // FUNCTIONAL DECLARATIONS
@@ -467,9 +466,6 @@ type Methodical interface {
 	ProcessXor(
 		xor string,
 	)
-	ProcessXyz(
-		xyz string,
-	)
 	PreprocessAcceptClause(
 		acceptClause ast.AcceptClauseLike,
 	)
@@ -619,15 +615,6 @@ type Methodical interface {
 	PostprocessAssociation(
 		association ast.AssociationLike,
 	)
-	PreprocessAssociations(
-		associations ast.AssociationsLike,
-	)
-	ProcessAssociationsSlot(
-		slot uint,
-	)
-	PostprocessAssociations(
-		associations ast.AssociationsLike,
-	)
 	PreprocessAtLevel(
 		atLevel ast.AtLevelLike,
 	)
@@ -636,15 +623,6 @@ type Methodical interface {
 	)
 	PostprocessAtLevel(
 		atLevel ast.AtLevelLike,
-	)
-	PreprocessAttribute(
-		attribute ast.AttributeLike,
-	)
-	ProcessAttributeSlot(
-		slot uint,
-	)
-	PostprocessAttribute(
-		attribute ast.AttributeLike,
 	)
 	PreprocessBag(
 		bag ast.BagLike,
@@ -790,6 +768,33 @@ type Methodical interface {
 	PostprocessEvent(
 		event ast.EventLike,
 	)
+	PreprocessExInclusiveAngles(
+		exInclusiveAngles ast.ExInclusiveAnglesLike,
+	)
+	ProcessExInclusiveAnglesSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveAngles(
+		exInclusiveAngles ast.ExInclusiveAnglesLike,
+	)
+	PreprocessExInclusiveNumbers(
+		exInclusiveNumbers ast.ExInclusiveNumbersLike,
+	)
+	ProcessExInclusiveNumbersSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveNumbers(
+		exInclusiveNumbers ast.ExInclusiveNumbersLike,
+	)
+	PreprocessExInclusiveQuotes(
+		exInclusiveQuotes ast.ExInclusiveQuotesLike,
+	)
+	ProcessExInclusiveQuotesSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveQuotes(
+		exInclusiveQuotes ast.ExInclusiveQuotesLike,
+	)
 	PreprocessException(
 		exception ast.ExceptionLike,
 	)
@@ -798,6 +803,33 @@ type Methodical interface {
 	)
 	PostprocessException(
 		exception ast.ExceptionLike,
+	)
+	PreprocessExclusiveAngles(
+		exclusiveAngles ast.ExclusiveAnglesLike,
+	)
+	ProcessExclusiveAnglesSlot(
+		slot uint,
+	)
+	PostprocessExclusiveAngles(
+		exclusiveAngles ast.ExclusiveAnglesLike,
+	)
+	PreprocessExclusiveNumbers(
+		exclusiveNumbers ast.ExclusiveNumbersLike,
+	)
+	ProcessExclusiveNumbersSlot(
+		slot uint,
+	)
+	PostprocessExclusiveNumbers(
+		exclusiveNumbers ast.ExclusiveNumbersLike,
+	)
+	PreprocessExclusiveQuotes(
+		exclusiveQuotes ast.ExclusiveQuotesLike,
+	)
+	ProcessExclusiveQuotesSlot(
+		slot uint,
+	)
+	PostprocessExclusiveQuotes(
+		exclusiveQuotes ast.ExclusiveQuotesLike,
 	)
 	PreprocessExpression(
 		expression ast.ExpressionLike,
@@ -844,14 +876,59 @@ type Methodical interface {
 	PostprocessIfClause(
 		ifClause ast.IfClauseLike,
 	)
-	PreprocessInclusion(
-		inclusion ast.InclusionLike,
+	PreprocessInExclusiveAngles(
+		inExclusiveAngles ast.InExclusiveAnglesLike,
 	)
-	ProcessInclusionSlot(
+	ProcessInExclusiveAnglesSlot(
 		slot uint,
 	)
-	PostprocessInclusion(
-		inclusion ast.InclusionLike,
+	PostprocessInExclusiveAngles(
+		inExclusiveAngles ast.InExclusiveAnglesLike,
+	)
+	PreprocessInExclusiveNumbers(
+		inExclusiveNumbers ast.InExclusiveNumbersLike,
+	)
+	ProcessInExclusiveNumbersSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveNumbers(
+		inExclusiveNumbers ast.InExclusiveNumbersLike,
+	)
+	PreprocessInExclusiveQuotes(
+		inExclusiveQuotes ast.InExclusiveQuotesLike,
+	)
+	ProcessInExclusiveQuotesSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveQuotes(
+		inExclusiveQuotes ast.InExclusiveQuotesLike,
+	)
+	PreprocessInclusiveAngles(
+		inclusiveAngles ast.InclusiveAnglesLike,
+	)
+	ProcessInclusiveAnglesSlot(
+		slot uint,
+	)
+	PostprocessInclusiveAngles(
+		inclusiveAngles ast.InclusiveAnglesLike,
+	)
+	PreprocessInclusiveNumbers(
+		inclusiveNumbers ast.InclusiveNumbersLike,
+	)
+	ProcessInclusiveNumbersSlot(
+		slot uint,
+	)
+	PostprocessInclusiveNumbers(
+		inclusiveNumbers ast.InclusiveNumbersLike,
+	)
+	PreprocessInclusiveQuotes(
+		inclusiveQuotes ast.InclusiveQuotesLike,
+	)
+	ProcessInclusiveQuotesSlot(
+		slot uint,
+	)
+	PostprocessInclusiveQuotes(
+		inclusiveQuotes ast.InclusiveQuotesLike,
 	)
 	PreprocessIndex(
 		index ast.IndexLike,
@@ -889,14 +966,23 @@ type Methodical interface {
 	PostprocessInduction(
 		induction ast.InductionLike,
 	)
-	PreprocessInlineAssociations(
-		inlineAssociations ast.InlineAssociationsLike,
+	PreprocessInlineAttributes(
+		inlineAttributes ast.InlineAttributesLike,
 	)
-	ProcessInlineAssociationsSlot(
+	ProcessInlineAttributesSlot(
 		slot uint,
 	)
-	PostprocessInlineAssociations(
-		inlineAssociations ast.InlineAssociationsLike,
+	PostprocessInlineAttributes(
+		inlineAttributes ast.InlineAttributesLike,
+	)
+	PreprocessInlineParameters(
+		inlineParameters ast.InlineParametersLike,
+	)
+	ProcessInlineParametersSlot(
+		slot uint,
+	)
+	PostprocessInlineParameters(
+		inlineParameters ast.InlineParametersLike,
 	)
 	PreprocessInlineStatements(
 		inlineStatements ast.InlineStatementsLike,
@@ -951,24 +1037,6 @@ type Methodical interface {
 	)
 	PostprocessItem(
 		item ast.ItemLike,
-	)
-	PreprocessItems(
-		items ast.ItemsLike,
-	)
-	ProcessItemsSlot(
-		slot uint,
-	)
-	PostprocessItems(
-		items ast.ItemsLike,
-	)
-	PreprocessLeft(
-		left ast.LeftLike,
-	)
-	ProcessLeftSlot(
-		slot uint,
-	)
-	PostprocessLeft(
-		left ast.LeftLike,
 	)
 	PreprocessLetClause(
 		letClause ast.LetClauseLike,
@@ -1046,14 +1114,23 @@ type Methodical interface {
 	PostprocessMethod(
 		method ast.MethodLike,
 	)
-	PreprocessMultilineAssociations(
-		multilineAssociations ast.MultilineAssociationsLike,
+	PreprocessMultilineAttributes(
+		multilineAttributes ast.MultilineAttributesLike,
 	)
-	ProcessMultilineAssociationsSlot(
+	ProcessMultilineAttributesSlot(
 		slot uint,
 	)
-	PostprocessMultilineAssociations(
-		multilineAssociations ast.MultilineAssociationsLike,
+	PostprocessMultilineAttributes(
+		multilineAttributes ast.MultilineAttributesLike,
+	)
+	PreprocessMultilineParameters(
+		multilineParameters ast.MultilineParametersLike,
+	)
+	ProcessMultilineParametersSlot(
+		slot uint,
+	)
+	PostprocessMultilineParameters(
+		multilineParameters ast.MultilineParametersLike,
 	)
 	PreprocessMultilineStatements(
 		multilineStatements ast.MultilineStatementsLike,
@@ -1073,14 +1150,32 @@ type Methodical interface {
 	PostprocessMultilineValues(
 		multilineValues ast.MultilineValuesLike,
 	)
-	PreprocessNoAssociations(
-		noAssociations ast.NoAssociationsLike,
+	PreprocessNoAttributes(
+		noAttributes ast.NoAttributesLike,
 	)
-	ProcessNoAssociationsSlot(
+	ProcessNoAttributesSlot(
 		slot uint,
 	)
-	PostprocessNoAssociations(
-		noAssociations ast.NoAssociationsLike,
+	PostprocessNoAttributes(
+		noAttributes ast.NoAttributesLike,
+	)
+	PreprocessNoStatements(
+		noStatements ast.NoStatementsLike,
+	)
+	ProcessNoStatementsSlot(
+		slot uint,
+	)
+	PostprocessNoStatements(
+		noStatements ast.NoStatementsLike,
+	)
+	PreprocessNoValues(
+		noValues ast.NoValuesLike,
+	)
+	ProcessNoValuesSlot(
+		slot uint,
+	)
+	PostprocessNoValues(
+		noValues ast.NoValuesLike,
 	)
 	PreprocessNotarizeClause(
 		notarizeClause ast.NotarizeClauseLike,
@@ -1158,15 +1253,6 @@ type Methodical interface {
 		index uint,
 		size uint,
 	)
-	PreprocessPrimitive(
-		primitive ast.PrimitiveLike,
-	)
-	ProcessPrimitiveSlot(
-		slot uint,
-	)
-	PostprocessPrimitive(
-		primitive ast.PrimitiveLike,
-	)
 	PreprocessProcedure(
 		procedure ast.ProcedureLike,
 	)
@@ -1184,15 +1270,6 @@ type Methodical interface {
 	)
 	PostprocessPublishClause(
 		publishClause ast.PublishClauseLike,
-	)
-	PreprocessRange(
-		range_ ast.RangeLike,
-	)
-	ProcessRangeSlot(
-		slot uint,
-	)
-	PostprocessRange(
-		range_ ast.RangeLike,
 	)
 	PreprocessRecipient(
 		recipient ast.RecipientLike,
@@ -1257,15 +1334,6 @@ type Methodical interface {
 	PostprocessReturnClause(
 		returnClause ast.ReturnClauseLike,
 	)
-	PreprocessRight(
-		right ast.RightLike,
-	)
-	ProcessRightSlot(
-		slot uint,
-	)
-	PostprocessRight(
-		right ast.RightLike,
-	)
 	PreprocessSaveClause(
 		saveClause ast.SaveClauseLike,
 	)
@@ -1301,15 +1369,6 @@ type Methodical interface {
 	)
 	PostprocessStatement(
 		statement ast.StatementLike,
-	)
-	PreprocessStatements(
-		statements ast.StatementsLike,
-	)
-	ProcessStatementsSlot(
-		slot uint,
-	)
-	PostprocessStatements(
-		statements ast.StatementsLike,
 	)
 	PreprocessString(
 		string_ ast.StringLike,
@@ -1382,15 +1441,6 @@ type Methodical interface {
 	)
 	PostprocessValue(
 		value ast.ValueLike,
-	)
-	PreprocessValues(
-		values ast.ValuesLike,
-	)
-	ProcessValuesSlot(
-		slot uint,
-	)
-	PostprocessValues(
-		values ast.ValuesLike,
 	)
 	PreprocessVariable(
 		variable ast.VariableLike,

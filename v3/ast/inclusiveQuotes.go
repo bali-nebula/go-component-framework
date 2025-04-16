@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func ItemsClass() ItemsClassLike {
-	return itemsClass()
+func InclusiveQuotesClass() InclusiveQuotesClassLike {
+	return inclusiveQuotesClass()
 }
 
 // Constructor Methods
 
-func (c *itemsClass_) Items(
-	any_ any,
-) ItemsLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *inclusiveQuotesClass_) InclusiveQuotes(
+	quote1 string,
+	quote2 string,
+) InclusiveQuotesLike {
+	if uti.IsUndefined(quote1) {
+		panic("The \"quote1\" attribute is required by this class.")
 	}
-	var instance = &items_{
+	if uti.IsUndefined(quote2) {
+		panic("The \"quote2\" attribute is required by this class.")
+	}
+	var instance = &inclusiveQuotes_{
 		// Initialize the instance attributes.
-		any_: any_,
+		quote1_: quote1,
+		quote2_: quote2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *itemsClass_) Items(
 
 // Principal Methods
 
-func (v *items_) GetClass() ItemsClassLike {
-	return itemsClass()
+func (v *inclusiveQuotes_) GetClass() InclusiveQuotesClassLike {
+	return inclusiveQuotesClass()
 }
 
 // Attribute Methods
 
-func (v *items_) GetAny() any {
-	return v.any_
+func (v *inclusiveQuotes_) GetQuote1() string {
+	return v.quote1_
+}
+
+func (v *inclusiveQuotes_) GetQuote2() string {
+	return v.quote2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type items_ struct {
+type inclusiveQuotes_ struct {
 	// Declare the instance attributes.
-	any_ any
+	quote1_ string
+	quote2_ string
 }
 
 // Class Structure
 
-type itemsClass_ struct {
+type inclusiveQuotesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func itemsClass() *itemsClass_ {
-	return itemsClassReference_
+func inclusiveQuotesClass() *inclusiveQuotesClass_ {
+	return inclusiveQuotesClassReference_
 }
 
-var itemsClassReference_ = &itemsClass_{
+var inclusiveQuotesClassReference_ = &inclusiveQuotesClass_{
 	// Initialize the class constants.
 }

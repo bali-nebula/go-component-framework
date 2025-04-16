@@ -19,21 +19,35 @@
 
 package ast
 
-import ()
+import (
+	col "github.com/craterdog/go-collection-framework/v5/collection"
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func LeftClass() LeftClassLike {
-	return leftClass()
+func MultilineParametersClass() MultilineParametersClassLike {
+	return multilineParametersClass()
 }
 
 // Constructor Methods
 
-func (c *leftClass_) Left() LeftLike {
-	var instance = &left_{
+func (c *multilineParametersClass_) MultilineParameters(
+	newline string,
+	annotatedAssociations col.Sequential[AnnotatedAssociationLike],
+) MultilineParametersLike {
+	if uti.IsUndefined(newline) {
+		panic("The \"newline\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(annotatedAssociations) {
+		panic("The \"annotatedAssociations\" attribute is required by this class.")
+	}
+	var instance = &multilineParameters_{
 		// Initialize the instance attributes.
+		newline_:               newline,
+		annotatedAssociations_: annotatedAssociations,
 	}
 	return instance
 }
@@ -42,32 +56,42 @@ func (c *leftClass_) Left() LeftLike {
 
 // Principal Methods
 
-func (v *left_) GetClass() LeftClassLike {
-	return leftClass()
+func (v *multilineParameters_) GetClass() MultilineParametersClassLike {
+	return multilineParametersClass()
 }
 
 // Attribute Methods
+
+func (v *multilineParameters_) GetNewline() string {
+	return v.newline_
+}
+
+func (v *multilineParameters_) GetAnnotatedAssociations() col.Sequential[AnnotatedAssociationLike] {
+	return v.annotatedAssociations_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type left_ struct {
+type multilineParameters_ struct {
 	// Declare the instance attributes.
+	newline_               string
+	annotatedAssociations_ col.Sequential[AnnotatedAssociationLike]
 }
 
 // Class Structure
 
-type leftClass_ struct {
+type multilineParametersClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func leftClass() *leftClass_ {
-	return leftClassReference_
+func multilineParametersClass() *multilineParametersClass_ {
+	return multilineParametersClassReference_
 }
 
-var leftClassReference_ = &leftClass_{
+var multilineParametersClassReference_ = &multilineParametersClass_{
 	// Initialize the class constants.
 }

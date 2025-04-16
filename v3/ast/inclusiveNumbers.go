@@ -27,36 +27,26 @@ import (
 
 // Access Function
 
-func RangeClass() RangeClassLike {
-	return rangeClass()
+func InclusiveNumbersClass() InclusiveNumbersClassLike {
+	return inclusiveNumbersClass()
 }
 
 // Constructor Methods
 
-func (c *rangeClass_) Range(
-	inclusion1 InclusionLike,
-	primitive1 PrimitiveLike,
-	primitive2 PrimitiveLike,
-	inclusion2 InclusionLike,
-) RangeLike {
-	if uti.IsUndefined(inclusion1) {
-		panic("The \"inclusion1\" attribute is required by this class.")
+func (c *inclusiveNumbersClass_) InclusiveNumbers(
+	number1 string,
+	number2 string,
+) InclusiveNumbersLike {
+	if uti.IsUndefined(number1) {
+		panic("The \"number1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(primitive1) {
-		panic("The \"primitive1\" attribute is required by this class.")
+	if uti.IsUndefined(number2) {
+		panic("The \"number2\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(primitive2) {
-		panic("The \"primitive2\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(inclusion2) {
-		panic("The \"inclusion2\" attribute is required by this class.")
-	}
-	var instance = &range_{
+	var instance = &inclusiveNumbers_{
 		// Initialize the instance attributes.
-		inclusion1_: inclusion1,
-		primitive1_: primitive1,
-		primitive2_: primitive2,
-		inclusion2_: inclusion2,
+		number1_: number1,
+		number2_: number2,
 	}
 	return instance
 }
@@ -65,52 +55,42 @@ func (c *rangeClass_) Range(
 
 // Principal Methods
 
-func (v *range_) GetClass() RangeClassLike {
-	return rangeClass()
+func (v *inclusiveNumbers_) GetClass() InclusiveNumbersClassLike {
+	return inclusiveNumbersClass()
 }
 
 // Attribute Methods
 
-func (v *range_) GetInclusion1() InclusionLike {
-	return v.inclusion1_
+func (v *inclusiveNumbers_) GetNumber1() string {
+	return v.number1_
 }
 
-func (v *range_) GetPrimitive1() PrimitiveLike {
-	return v.primitive1_
-}
-
-func (v *range_) GetPrimitive2() PrimitiveLike {
-	return v.primitive2_
-}
-
-func (v *range_) GetInclusion2() InclusionLike {
-	return v.inclusion2_
+func (v *inclusiveNumbers_) GetNumber2() string {
+	return v.number2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type range_ struct {
+type inclusiveNumbers_ struct {
 	// Declare the instance attributes.
-	inclusion1_ InclusionLike
-	primitive1_ PrimitiveLike
-	primitive2_ PrimitiveLike
-	inclusion2_ InclusionLike
+	number1_ string
+	number2_ string
 }
 
 // Class Structure
 
-type rangeClass_ struct {
+type inclusiveNumbersClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func rangeClass() *rangeClass_ {
-	return rangeClassReference_
+func inclusiveNumbersClass() *inclusiveNumbersClass_ {
+	return inclusiveNumbersClassReference_
 }
 
-var rangeClassReference_ = &rangeClass_{
+var inclusiveNumbersClassReference_ = &inclusiveNumbersClass_{
 	// Initialize the class constants.
 }

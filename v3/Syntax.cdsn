@@ -32,7 +32,21 @@ $Entity:
   - Collection
   - Procedure
 
-$Parameters: "(" Associations ")"
+$Parameters:
+  - MultilineParameters
+  - InlineParameters
+
+$MultilineParameters: "(" newline AnnotatedAssociation+ ")"
+
+$AnnotatedAssociation: Association note?
+
+$InlineParameters: "(" Association AdditionalAssociation* ")"
+
+$AdditionalAssociation: "," Association
+
+$Association: symbol colon Value
+
+$Value: Component
 
 $Element:
   - angle
@@ -55,71 +69,80 @@ $String:
   - tag
   - version
 
-$Collection: "[" Items? "]"
-
-$Items:
-  - Range
-  - NoAssociations
-  - Associations
-  - Values
-
-$Range: Inclusion Primitive ".." Primitive Inclusion
-
-$Inclusion:
-  - Left
-  - Right
-
-$Left: "("
-
-$Right: ")"
-
-$Primitive:
-  - Element
-  - String
-
-$NoAssociations: colon
-
-$Associations:
-  - MultilineAssociations
-  - InlineAssociations
-
-$MultilineAssociations: AnnotatedAssociation+
-
-$AnnotatedAssociation: xyz Association note?
-
-$InlineAssociations: Association AdditionalAssociation*
-
-$AdditionalAssociation: "," Association
-
-$Association: symbol colon Value
-
-$Value: Component
-
-$Values:
+$Collection:
+  - MultilineAttributes
   - MultilineValues
+  - NoAttributes
+  - NoValues
+  - InclusiveAngles
+  - InExclusiveAngles
+  - ExInclusiveAngles
+  - ExclusiveAngles
+  - InclusiveNumbers
+  - InExclusiveNumbers
+  - ExInclusiveNumbers
+  - ExclusiveNumbers
+  - InclusiveQuotes
+  - InExclusiveQuotes
+  - ExInclusiveQuotes
+  - ExclusiveQuotes
+  - InlineAttributes
   - InlineValues
 
-$MultilineValues: AnnotatedValue+
+$MultilineAttributes: "[" newline AnnotatedAssociation+ "]"
 
-$AnnotatedValue: xyz Value note?
+$InlineAttributes: "[" Association AdditionalAssociation* "]"
 
-$InlineValues: Value AdditionalValue*
+$NoAttributes: "[" colon "]"
+
+$MultilineValues: "[" newline AnnotatedValue+ "]"
+
+$AnnotatedValue: Value note?
+
+$InlineValues: "[" Value AdditionalValue* "]"
 
 $AdditionalValue: "," Value
 
-$Procedure: "{" Statements? "}"
+$NoValues: "[" "]"
 
-$Statements:
+$InclusiveAngles: "[" angle ".." angle "]"
+
+$InExclusiveAngles: "[" angle ".." angle ")"
+
+$ExInclusiveAngles: "(" angle ".." angle "]"
+
+$ExclusiveAngles: "(" angle ".." angle ")"
+
+$InclusiveNumbers: "[" number ".." number "]"
+
+$InExclusiveNumbers: "[" number ".." number ")"
+
+$ExInclusiveNumbers: "(" number ".." number "]"
+
+$ExclusiveNumbers: "(" number ".." number ")"
+
+$InclusiveQuotes: "[" quote ".." quote "]"
+
+$InExclusiveQuotes: "[" quote ".." quote ")"
+
+$ExInclusiveQuotes: "(" quote ".." quote "]"
+
+$ExclusiveQuotes: "(" quote ".." quote ")"
+
+$Procedure:
   - MultilineStatements
   - InlineStatements
+  - NoStatements
 
-$MultilineStatements: AnnotatedStatement+
+$MultilineStatements: "{" newline AnnotatedStatement+ "}"
 
-$AnnotatedStatement: xyz Statement note?
+$AnnotatedStatement: Statement note?
 
-$InlineStatements: Statement AdditionalStatement*
+$InlineStatements: "{" Statement AdditionalStatement* "}"
 
 $AdditionalStatement: ";" Statement
+
+$NoStatements: "{" "}"
 
 $Statement: MainClause OnClause?
 
@@ -173,7 +196,7 @@ $SelectClause: "select" Target MatchHandler+
 $Target:
   - Function
   - Method
-  - Attribute
+  - Subcomponent
   - Variable  ! This must be last since others also begin with an identifier.
 
 $Function: identifier "(" Arguments? ")"
@@ -189,16 +212,6 @@ $Method: identifier Threading identifier "(" Arguments? ")"
 $Threading:
   - dot
   - arrow
-
-$Attribute: identifier Subcomponent
-
-$Subcomponent: "[" Indices "]"
-
-$Indices: Index AdditionalIndex*
-
-$AdditionalIndex: "," Index
-
-$Index: Expression
 
 $Variable: identifier
 
@@ -240,7 +253,7 @@ $Assign:
 
 $Recipient:
   - symbol
-  - Attribute
+  - Subcomponent
 
 $PostClause: "post" Message "to" Bag
 
@@ -276,6 +289,7 @@ $Expression: Subject Predicate*
 
 $Subject:
   - Component
+  - Subcomponent
   - Precedence
   - Referent
   - Complement
@@ -283,8 +297,15 @@ $Subject:
   - Magnitude
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.
+
+$Subcomponent: identifier "[" Indices "]"
+
+$Indices: Index AdditionalIndex*
+
+$AdditionalIndex: "," Index
+
+$Index: Expression
 
 $Predicate: Operator Expression
 
@@ -312,22 +333,22 @@ $Referent: snail Indirect
 
 $Indirect:
   - Component
+  - Subcomponent
   - Referent
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.
 
 $Complement: not Logical
 
 $Logical:
   - Component
+  - Subcomponent
   - Precedence
   - Referent
   - Complement
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.
 
 $Inversion: Inverse Numerical
@@ -339,13 +360,13 @@ $Inverse:
 
 $Numerical:
   - Component
+  - Subcomponent
   - Precedence
   - Referent
   - Inversion
   - Magnitude
   - Function
   - Method
-  - Attribute
   - Variable  ! This must be last since others also begin with an identifier.
 
 $Magnitude: bar Numerical bar
@@ -532,8 +553,6 @@ $percentage: real '%'
 $probability: fraction | one  ! Must be after percentage.
 
 $number: polar | rectangular | imaginary | real ! Must be after probability.
-
-$xyz: "xyz"
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
 

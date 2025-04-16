@@ -27,21 +27,21 @@ import (
 
 // Access Function
 
-func InclusionClass() InclusionClassLike {
-	return inclusionClass()
+func NoAttributesClass() NoAttributesClassLike {
+	return noAttributesClass()
 }
 
 // Constructor Methods
 
-func (c *inclusionClass_) Inclusion(
-	any_ any,
-) InclusionLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *noAttributesClass_) NoAttributes(
+	colon string,
+) NoAttributesLike {
+	if uti.IsUndefined(colon) {
+		panic("The \"colon\" attribute is required by this class.")
 	}
-	var instance = &inclusion_{
+	var instance = &noAttributes_{
 		// Initialize the instance attributes.
-		any_: any_,
+		colon_: colon,
 	}
 	return instance
 }
@@ -50,37 +50,37 @@ func (c *inclusionClass_) Inclusion(
 
 // Principal Methods
 
-func (v *inclusion_) GetClass() InclusionClassLike {
-	return inclusionClass()
+func (v *noAttributes_) GetClass() NoAttributesClassLike {
+	return noAttributesClass()
 }
 
 // Attribute Methods
 
-func (v *inclusion_) GetAny() any {
-	return v.any_
+func (v *noAttributes_) GetColon() string {
+	return v.colon_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inclusion_ struct {
+type noAttributes_ struct {
 	// Declare the instance attributes.
-	any_ any
+	colon_ string
 }
 
 // Class Structure
 
-type inclusionClass_ struct {
+type noAttributesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inclusionClass() *inclusionClass_ {
-	return inclusionClassReference_
+func noAttributesClass() *noAttributesClass_ {
+	return noAttributesClassReference_
 }
 
-var inclusionClassReference_ = &inclusionClass_{
+var noAttributesClassReference_ = &noAttributesClass_{
 	// Initialize the class constants.
 }

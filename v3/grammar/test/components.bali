@@ -1,13 +1,13 @@
 [
-  xyz ~π($units: $radians)
-  xyz true($granularity: $boolean)  ! This is a note.
-  xyz '>
+    ~π($units: $radians)
+    true($granularity: $boolean)  ! This is a note.
+    '>
         1234abcd
     <'  ! This is base 64 encoded.
-  xyz ~P13W
-  xyz [
-      xyz 1
-      xyz 2
-      xyz 3
+    ~P13W
+    [
+        1
+        2
+        3
     ]($type: /bali/collections/List/v1)
 ]

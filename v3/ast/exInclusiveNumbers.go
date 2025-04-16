@@ -20,7 +20,6 @@
 package ast
 
 import (
-	col "github.com/craterdog/go-collection-framework/v5/collection"
 	uti "github.com/craterdog/go-missing-utilities/v2"
 )
 
@@ -28,21 +27,26 @@ import (
 
 // Access Function
 
-func MultilineAssociationsClass() MultilineAssociationsClassLike {
-	return multilineAssociationsClass()
+func ExInclusiveNumbersClass() ExInclusiveNumbersClassLike {
+	return exInclusiveNumbersClass()
 }
 
 // Constructor Methods
 
-func (c *multilineAssociationsClass_) MultilineAssociations(
-	annotatedAssociations col.Sequential[AnnotatedAssociationLike],
-) MultilineAssociationsLike {
-	if uti.IsUndefined(annotatedAssociations) {
-		panic("The \"annotatedAssociations\" attribute is required by this class.")
+func (c *exInclusiveNumbersClass_) ExInclusiveNumbers(
+	number1 string,
+	number2 string,
+) ExInclusiveNumbersLike {
+	if uti.IsUndefined(number1) {
+		panic("The \"number1\" attribute is required by this class.")
 	}
-	var instance = &multilineAssociations_{
+	if uti.IsUndefined(number2) {
+		panic("The \"number2\" attribute is required by this class.")
+	}
+	var instance = &exInclusiveNumbers_{
 		// Initialize the instance attributes.
-		annotatedAssociations_: annotatedAssociations,
+		number1_: number1,
+		number2_: number2,
 	}
 	return instance
 }
@@ -51,37 +55,42 @@ func (c *multilineAssociationsClass_) MultilineAssociations(
 
 // Principal Methods
 
-func (v *multilineAssociations_) GetClass() MultilineAssociationsClassLike {
-	return multilineAssociationsClass()
+func (v *exInclusiveNumbers_) GetClass() ExInclusiveNumbersClassLike {
+	return exInclusiveNumbersClass()
 }
 
 // Attribute Methods
 
-func (v *multilineAssociations_) GetAnnotatedAssociations() col.Sequential[AnnotatedAssociationLike] {
-	return v.annotatedAssociations_
+func (v *exInclusiveNumbers_) GetNumber1() string {
+	return v.number1_
+}
+
+func (v *exInclusiveNumbers_) GetNumber2() string {
+	return v.number2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type multilineAssociations_ struct {
+type exInclusiveNumbers_ struct {
 	// Declare the instance attributes.
-	annotatedAssociations_ col.Sequential[AnnotatedAssociationLike]
+	number1_ string
+	number2_ string
 }
 
 // Class Structure
 
-type multilineAssociationsClass_ struct {
+type exInclusiveNumbersClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func multilineAssociationsClass() *multilineAssociationsClass_ {
-	return multilineAssociationsClassReference_
+func exInclusiveNumbersClass() *exInclusiveNumbersClass_ {
+	return exInclusiveNumbersClassReference_
 }
 
-var multilineAssociationsClassReference_ = &multilineAssociationsClass_{
+var exInclusiveNumbersClassReference_ = &exInclusiveNumbersClass_{
 	// Initialize the class constants.
 }

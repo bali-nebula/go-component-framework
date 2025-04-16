@@ -27,23 +27,26 @@ import (
 
 // Access Function
 
-func AnnotatedAssociationClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func InExclusiveNumbersClass() InExclusiveNumbersClassLike {
+	return inExclusiveNumbersClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedAssociationClass_) AnnotatedAssociation(
-	association AssociationLike,
-	optionalNote string,
-) AnnotatedAssociationLike {
-	if uti.IsUndefined(association) {
-		panic("The \"association\" attribute is required by this class.")
+func (c *inExclusiveNumbersClass_) InExclusiveNumbers(
+	number1 string,
+	number2 string,
+) InExclusiveNumbersLike {
+	if uti.IsUndefined(number1) {
+		panic("The \"number1\" attribute is required by this class.")
 	}
-	var instance = &annotatedAssociation_{
+	if uti.IsUndefined(number2) {
+		panic("The \"number2\" attribute is required by this class.")
+	}
+	var instance = &inExclusiveNumbers_{
 		// Initialize the instance attributes.
-		association_:  association,
-		optionalNote_: optionalNote,
+		number1_: number1,
+		number2_: number2,
 	}
 	return instance
 }
@@ -52,42 +55,42 @@ func (c *annotatedAssociationClass_) AnnotatedAssociation(
 
 // Principal Methods
 
-func (v *annotatedAssociation_) GetClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func (v *inExclusiveNumbers_) GetClass() InExclusiveNumbersClassLike {
+	return inExclusiveNumbersClass()
 }
 
 // Attribute Methods
 
-func (v *annotatedAssociation_) GetAssociation() AssociationLike {
-	return v.association_
+func (v *inExclusiveNumbers_) GetNumber1() string {
+	return v.number1_
 }
 
-func (v *annotatedAssociation_) GetOptionalNote() string {
-	return v.optionalNote_
+func (v *inExclusiveNumbers_) GetNumber2() string {
+	return v.number2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotatedAssociation_ struct {
+type inExclusiveNumbers_ struct {
 	// Declare the instance attributes.
-	association_  AssociationLike
-	optionalNote_ string
+	number1_ string
+	number2_ string
 }
 
 // Class Structure
 
-type annotatedAssociationClass_ struct {
+type inExclusiveNumbersClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedAssociationClass() *annotatedAssociationClass_ {
-	return annotatedAssociationClassReference_
+func inExclusiveNumbersClass() *inExclusiveNumbersClass_ {
+	return inExclusiveNumbersClassReference_
 }
 
-var annotatedAssociationClassReference_ = &annotatedAssociationClass_{
+var inExclusiveNumbersClassReference_ = &inExclusiveNumbersClass_{
 	// Initialize the class constants.
 }

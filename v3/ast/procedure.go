@@ -19,7 +19,9 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
@@ -32,11 +34,14 @@ func ProcedureClass() ProcedureClassLike {
 // Constructor Methods
 
 func (c *procedureClass_) Procedure(
-	optionalStatements StatementsLike,
+	any_ any,
 ) ProcedureLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
 	var instance = &procedure_{
 		// Initialize the instance attributes.
-		optionalStatements_: optionalStatements,
+		any_: any_,
 	}
 	return instance
 }
@@ -51,8 +56,8 @@ func (v *procedure_) GetClass() ProcedureClassLike {
 
 // Attribute Methods
 
-func (v *procedure_) GetOptionalStatements() StatementsLike {
-	return v.optionalStatements_
+func (v *procedure_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
@@ -61,7 +66,7 @@ func (v *procedure_) GetOptionalStatements() StatementsLike {
 
 type procedure_ struct {
 	// Declare the instance attributes.
-	optionalStatements_ StatementsLike
+	any_ any
 }
 
 // Class Structure

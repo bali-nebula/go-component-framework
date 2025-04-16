@@ -27,23 +27,26 @@ import (
 
 // Access Function
 
-func AnnotatedAssociationClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func InExclusiveQuotesClass() InExclusiveQuotesClassLike {
+	return inExclusiveQuotesClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedAssociationClass_) AnnotatedAssociation(
-	association AssociationLike,
-	optionalNote string,
-) AnnotatedAssociationLike {
-	if uti.IsUndefined(association) {
-		panic("The \"association\" attribute is required by this class.")
+func (c *inExclusiveQuotesClass_) InExclusiveQuotes(
+	quote1 string,
+	quote2 string,
+) InExclusiveQuotesLike {
+	if uti.IsUndefined(quote1) {
+		panic("The \"quote1\" attribute is required by this class.")
 	}
-	var instance = &annotatedAssociation_{
+	if uti.IsUndefined(quote2) {
+		panic("The \"quote2\" attribute is required by this class.")
+	}
+	var instance = &inExclusiveQuotes_{
 		// Initialize the instance attributes.
-		association_:  association,
-		optionalNote_: optionalNote,
+		quote1_: quote1,
+		quote2_: quote2,
 	}
 	return instance
 }
@@ -52,42 +55,42 @@ func (c *annotatedAssociationClass_) AnnotatedAssociation(
 
 // Principal Methods
 
-func (v *annotatedAssociation_) GetClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func (v *inExclusiveQuotes_) GetClass() InExclusiveQuotesClassLike {
+	return inExclusiveQuotesClass()
 }
 
 // Attribute Methods
 
-func (v *annotatedAssociation_) GetAssociation() AssociationLike {
-	return v.association_
+func (v *inExclusiveQuotes_) GetQuote1() string {
+	return v.quote1_
 }
 
-func (v *annotatedAssociation_) GetOptionalNote() string {
-	return v.optionalNote_
+func (v *inExclusiveQuotes_) GetQuote2() string {
+	return v.quote2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotatedAssociation_ struct {
+type inExclusiveQuotes_ struct {
 	// Declare the instance attributes.
-	association_  AssociationLike
-	optionalNote_ string
+	quote1_ string
+	quote2_ string
 }
 
 // Class Structure
 
-type annotatedAssociationClass_ struct {
+type inExclusiveQuotesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedAssociationClass() *annotatedAssociationClass_ {
-	return annotatedAssociationClassReference_
+func inExclusiveQuotesClass() *inExclusiveQuotesClass_ {
+	return inExclusiveQuotesClassReference_
 }
 
-var annotatedAssociationClassReference_ = &annotatedAssociationClass_{
+var inExclusiveQuotesClassReference_ = &inExclusiveQuotesClass_{
 	// Initialize the class constants.
 }

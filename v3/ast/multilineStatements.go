@@ -35,13 +35,18 @@ func MultilineStatementsClass() MultilineStatementsClassLike {
 // Constructor Methods
 
 func (c *multilineStatementsClass_) MultilineStatements(
+	newline string,
 	annotatedStatements col.Sequential[AnnotatedStatementLike],
 ) MultilineStatementsLike {
+	if uti.IsUndefined(newline) {
+		panic("The \"newline\" attribute is required by this class.")
+	}
 	if uti.IsUndefined(annotatedStatements) {
 		panic("The \"annotatedStatements\" attribute is required by this class.")
 	}
 	var instance = &multilineStatements_{
 		// Initialize the instance attributes.
+		newline_:             newline,
 		annotatedStatements_: annotatedStatements,
 	}
 	return instance
@@ -57,6 +62,10 @@ func (v *multilineStatements_) GetClass() MultilineStatementsClassLike {
 
 // Attribute Methods
 
+func (v *multilineStatements_) GetNewline() string {
+	return v.newline_
+}
+
 func (v *multilineStatements_) GetAnnotatedStatements() col.Sequential[AnnotatedStatementLike] {
 	return v.annotatedStatements_
 }
@@ -67,6 +76,7 @@ func (v *multilineStatements_) GetAnnotatedStatements() col.Sequential[Annotated
 
 type multilineStatements_ struct {
 	// Declare the instance attributes.
+	newline_             string
 	annotatedStatements_ col.Sequential[AnnotatedStatementLike]
 }
 

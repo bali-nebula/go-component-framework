@@ -35,13 +35,18 @@ func MultilineValuesClass() MultilineValuesClassLike {
 // Constructor Methods
 
 func (c *multilineValuesClass_) MultilineValues(
+	newline string,
 	annotatedValues col.Sequential[AnnotatedValueLike],
 ) MultilineValuesLike {
+	if uti.IsUndefined(newline) {
+		panic("The \"newline\" attribute is required by this class.")
+	}
 	if uti.IsUndefined(annotatedValues) {
 		panic("The \"annotatedValues\" attribute is required by this class.")
 	}
 	var instance = &multilineValues_{
 		// Initialize the instance attributes.
+		newline_:         newline,
 		annotatedValues_: annotatedValues,
 	}
 	return instance
@@ -57,6 +62,10 @@ func (v *multilineValues_) GetClass() MultilineValuesClassLike {
 
 // Attribute Methods
 
+func (v *multilineValues_) GetNewline() string {
+	return v.newline_
+}
+
 func (v *multilineValues_) GetAnnotatedValues() col.Sequential[AnnotatedValueLike] {
 	return v.annotatedValues_
 }
@@ -67,6 +76,7 @@ func (v *multilineValues_) GetAnnotatedValues() col.Sequential[AnnotatedValueLik
 
 type multilineValues_ struct {
 	// Declare the instance attributes.
+	newline_         string
 	annotatedValues_ col.Sequential[AnnotatedValueLike]
 }
 

@@ -300,11 +300,6 @@ func (v *processor_) ProcessXor(
 ) {
 }
 
-func (v *processor_) ProcessXyz(
-	xyz string,
-) {
-}
-
 func (v *processor_) PreprocessAcceptClause(
 	acceptClause ast.AcceptClauseLike,
 ) {
@@ -532,21 +527,6 @@ func (v *processor_) PostprocessAssociation(
 ) {
 }
 
-func (v *processor_) PreprocessAssociations(
-	associations ast.AssociationsLike,
-) {
-}
-
-func (v *processor_) ProcessAssociationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessAssociations(
-	associations ast.AssociationsLike,
-) {
-}
-
 func (v *processor_) PreprocessAtLevel(
 	atLevel ast.AtLevelLike,
 ) {
@@ -559,21 +539,6 @@ func (v *processor_) ProcessAtLevelSlot(
 
 func (v *processor_) PostprocessAtLevel(
 	atLevel ast.AtLevelLike,
-) {
-}
-
-func (v *processor_) PreprocessAttribute(
-	attribute ast.AttributeLike,
-) {
-}
-
-func (v *processor_) ProcessAttributeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessAttribute(
-	attribute ast.AttributeLike,
 ) {
 }
 
@@ -817,6 +782,51 @@ func (v *processor_) PostprocessEvent(
 ) {
 }
 
+func (v *processor_) PreprocessExInclusiveAngles(
+	exInclusiveAngles ast.ExInclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) ProcessExInclusiveAnglesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExInclusiveAngles(
+	exInclusiveAngles ast.ExInclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) PreprocessExInclusiveNumbers(
+	exInclusiveNumbers ast.ExInclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) ProcessExInclusiveNumbersSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExInclusiveNumbers(
+	exInclusiveNumbers ast.ExInclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) PreprocessExInclusiveQuotes(
+	exInclusiveQuotes ast.ExInclusiveQuotesLike,
+) {
+}
+
+func (v *processor_) ProcessExInclusiveQuotesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExInclusiveQuotes(
+	exInclusiveQuotes ast.ExInclusiveQuotesLike,
+) {
+}
+
 func (v *processor_) PreprocessException(
 	exception ast.ExceptionLike,
 ) {
@@ -829,6 +839,51 @@ func (v *processor_) ProcessExceptionSlot(
 
 func (v *processor_) PostprocessException(
 	exception ast.ExceptionLike,
+) {
+}
+
+func (v *processor_) PreprocessExclusiveAngles(
+	exclusiveAngles ast.ExclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) ProcessExclusiveAnglesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExclusiveAngles(
+	exclusiveAngles ast.ExclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) PreprocessExclusiveNumbers(
+	exclusiveNumbers ast.ExclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) ProcessExclusiveNumbersSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExclusiveNumbers(
+	exclusiveNumbers ast.ExclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) PreprocessExclusiveQuotes(
+	exclusiveQuotes ast.ExclusiveQuotesLike,
+) {
+}
+
+func (v *processor_) ProcessExclusiveQuotesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExclusiveQuotes(
+	exclusiveQuotes ast.ExclusiveQuotesLike,
 ) {
 }
 
@@ -907,18 +962,93 @@ func (v *processor_) PostprocessIfClause(
 ) {
 }
 
-func (v *processor_) PreprocessInclusion(
-	inclusion ast.InclusionLike,
+func (v *processor_) PreprocessInExclusiveAngles(
+	inExclusiveAngles ast.InExclusiveAnglesLike,
 ) {
 }
 
-func (v *processor_) ProcessInclusionSlot(
+func (v *processor_) ProcessInExclusiveAnglesSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessInclusion(
-	inclusion ast.InclusionLike,
+func (v *processor_) PostprocessInExclusiveAngles(
+	inExclusiveAngles ast.InExclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) PreprocessInExclusiveNumbers(
+	inExclusiveNumbers ast.InExclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) ProcessInExclusiveNumbersSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInExclusiveNumbers(
+	inExclusiveNumbers ast.InExclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) PreprocessInExclusiveQuotes(
+	inExclusiveQuotes ast.InExclusiveQuotesLike,
+) {
+}
+
+func (v *processor_) ProcessInExclusiveQuotesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInExclusiveQuotes(
+	inExclusiveQuotes ast.InExclusiveQuotesLike,
+) {
+}
+
+func (v *processor_) PreprocessInclusiveAngles(
+	inclusiveAngles ast.InclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) ProcessInclusiveAnglesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInclusiveAngles(
+	inclusiveAngles ast.InclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) PreprocessInclusiveNumbers(
+	inclusiveNumbers ast.InclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) ProcessInclusiveNumbersSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInclusiveNumbers(
+	inclusiveNumbers ast.InclusiveNumbersLike,
+) {
+}
+
+func (v *processor_) PreprocessInclusiveQuotes(
+	inclusiveQuotes ast.InclusiveQuotesLike,
+) {
+}
+
+func (v *processor_) ProcessInclusiveQuotesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInclusiveQuotes(
+	inclusiveQuotes ast.InclusiveQuotesLike,
 ) {
 }
 
@@ -982,18 +1112,33 @@ func (v *processor_) PostprocessInduction(
 ) {
 }
 
-func (v *processor_) PreprocessInlineAssociations(
-	inlineAssociations ast.InlineAssociationsLike,
+func (v *processor_) PreprocessInlineAttributes(
+	inlineAttributes ast.InlineAttributesLike,
 ) {
 }
 
-func (v *processor_) ProcessInlineAssociationsSlot(
+func (v *processor_) ProcessInlineAttributesSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessInlineAssociations(
-	inlineAssociations ast.InlineAssociationsLike,
+func (v *processor_) PostprocessInlineAttributes(
+	inlineAttributes ast.InlineAttributesLike,
+) {
+}
+
+func (v *processor_) PreprocessInlineParameters(
+	inlineParameters ast.InlineParametersLike,
+) {
+}
+
+func (v *processor_) ProcessInlineParametersSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInlineParameters(
+	inlineParameters ast.InlineParametersLike,
 ) {
 }
 
@@ -1084,36 +1229,6 @@ func (v *processor_) ProcessItemSlot(
 
 func (v *processor_) PostprocessItem(
 	item ast.ItemLike,
-) {
-}
-
-func (v *processor_) PreprocessItems(
-	items ast.ItemsLike,
-) {
-}
-
-func (v *processor_) ProcessItemsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessItems(
-	items ast.ItemsLike,
-) {
-}
-
-func (v *processor_) PreprocessLeft(
-	left ast.LeftLike,
-) {
-}
-
-func (v *processor_) ProcessLeftSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLeft(
-	left ast.LeftLike,
 ) {
 }
 
@@ -1241,18 +1356,33 @@ func (v *processor_) PostprocessMethod(
 ) {
 }
 
-func (v *processor_) PreprocessMultilineAssociations(
-	multilineAssociations ast.MultilineAssociationsLike,
+func (v *processor_) PreprocessMultilineAttributes(
+	multilineAttributes ast.MultilineAttributesLike,
 ) {
 }
 
-func (v *processor_) ProcessMultilineAssociationsSlot(
+func (v *processor_) ProcessMultilineAttributesSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessMultilineAssociations(
-	multilineAssociations ast.MultilineAssociationsLike,
+func (v *processor_) PostprocessMultilineAttributes(
+	multilineAttributes ast.MultilineAttributesLike,
+) {
+}
+
+func (v *processor_) PreprocessMultilineParameters(
+	multilineParameters ast.MultilineParametersLike,
+) {
+}
+
+func (v *processor_) ProcessMultilineParametersSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessMultilineParameters(
+	multilineParameters ast.MultilineParametersLike,
 ) {
 }
 
@@ -1286,18 +1416,48 @@ func (v *processor_) PostprocessMultilineValues(
 ) {
 }
 
-func (v *processor_) PreprocessNoAssociations(
-	noAssociations ast.NoAssociationsLike,
+func (v *processor_) PreprocessNoAttributes(
+	noAttributes ast.NoAttributesLike,
 ) {
 }
 
-func (v *processor_) ProcessNoAssociationsSlot(
+func (v *processor_) ProcessNoAttributesSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessNoAssociations(
-	noAssociations ast.NoAssociationsLike,
+func (v *processor_) PostprocessNoAttributes(
+	noAttributes ast.NoAttributesLike,
+) {
+}
+
+func (v *processor_) PreprocessNoStatements(
+	noStatements ast.NoStatementsLike,
+) {
+}
+
+func (v *processor_) ProcessNoStatementsSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessNoStatements(
+	noStatements ast.NoStatementsLike,
+) {
+}
+
+func (v *processor_) PreprocessNoValues(
+	noValues ast.NoValuesLike,
+) {
+}
+
+func (v *processor_) ProcessNoValuesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessNoValues(
+	noValues ast.NoValuesLike,
 ) {
 }
 
@@ -1425,21 +1585,6 @@ func (v *processor_) PostprocessPredicate(
 ) {
 }
 
-func (v *processor_) PreprocessPrimitive(
-	primitive ast.PrimitiveLike,
-) {
-}
-
-func (v *processor_) ProcessPrimitiveSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessPrimitive(
-	primitive ast.PrimitiveLike,
-) {
-}
-
 func (v *processor_) PreprocessProcedure(
 	procedure ast.ProcedureLike,
 ) {
@@ -1467,21 +1612,6 @@ func (v *processor_) ProcessPublishClauseSlot(
 
 func (v *processor_) PostprocessPublishClause(
 	publishClause ast.PublishClauseLike,
-) {
-}
-
-func (v *processor_) PreprocessRange(
-	range_ ast.RangeLike,
-) {
-}
-
-func (v *processor_) ProcessRangeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessRange(
-	range_ ast.RangeLike,
 ) {
 }
 
@@ -1590,21 +1720,6 @@ func (v *processor_) PostprocessReturnClause(
 ) {
 }
 
-func (v *processor_) PreprocessRight(
-	right ast.RightLike,
-) {
-}
-
-func (v *processor_) ProcessRightSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessRight(
-	right ast.RightLike,
-) {
-}
-
 func (v *processor_) PreprocessSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -1662,21 +1777,6 @@ func (v *processor_) ProcessStatementSlot(
 
 func (v *processor_) PostprocessStatement(
 	statement ast.StatementLike,
-) {
-}
-
-func (v *processor_) PreprocessStatements(
-	statements ast.StatementsLike,
-) {
-}
-
-func (v *processor_) ProcessStatementsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessStatements(
-	statements ast.StatementsLike,
 ) {
 }
 
@@ -1797,21 +1897,6 @@ func (v *processor_) ProcessValueSlot(
 
 func (v *processor_) PostprocessValue(
 	value ast.ValueLike,
-) {
-}
-
-func (v *processor_) PreprocessValues(
-	values ast.ValuesLike,
-) {
-}
-
-func (v *processor_) ProcessValuesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessValues(
-	values ast.ValuesLike,
 ) {
 }
 

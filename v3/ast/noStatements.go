@@ -19,31 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func AnnotatedAssociationClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func NoStatementsClass() NoStatementsClassLike {
+	return noStatementsClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedAssociationClass_) AnnotatedAssociation(
-	association AssociationLike,
-	optionalNote string,
-) AnnotatedAssociationLike {
-	if uti.IsUndefined(association) {
-		panic("The \"association\" attribute is required by this class.")
-	}
-	var instance = &annotatedAssociation_{
+func (c *noStatementsClass_) NoStatements() NoStatementsLike {
+	var instance = &noStatements_{
 		// Initialize the instance attributes.
-		association_:  association,
-		optionalNote_: optionalNote,
 	}
 	return instance
 }
@@ -52,42 +42,32 @@ func (c *annotatedAssociationClass_) AnnotatedAssociation(
 
 // Principal Methods
 
-func (v *annotatedAssociation_) GetClass() AnnotatedAssociationClassLike {
-	return annotatedAssociationClass()
+func (v *noStatements_) GetClass() NoStatementsClassLike {
+	return noStatementsClass()
 }
 
 // Attribute Methods
-
-func (v *annotatedAssociation_) GetAssociation() AssociationLike {
-	return v.association_
-}
-
-func (v *annotatedAssociation_) GetOptionalNote() string {
-	return v.optionalNote_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotatedAssociation_ struct {
+type noStatements_ struct {
 	// Declare the instance attributes.
-	association_  AssociationLike
-	optionalNote_ string
 }
 
 // Class Structure
 
-type annotatedAssociationClass_ struct {
+type noStatementsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedAssociationClass() *annotatedAssociationClass_ {
-	return annotatedAssociationClassReference_
+func noStatementsClass() *noStatementsClass_ {
+	return noStatementsClassReference_
 }
 
-var annotatedAssociationClassReference_ = &annotatedAssociationClass_{
+var noStatementsClassReference_ = &noStatementsClass_{
 	// Initialize the class constants.
 }

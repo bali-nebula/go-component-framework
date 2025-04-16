@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AssociationsClass() AssociationsClassLike {
-	return associationsClass()
+func InclusiveAnglesClass() InclusiveAnglesClassLike {
+	return inclusiveAnglesClass()
 }
 
 // Constructor Methods
 
-func (c *associationsClass_) Associations(
-	any_ any,
-) AssociationsLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *inclusiveAnglesClass_) InclusiveAngles(
+	angle1 string,
+	angle2 string,
+) InclusiveAnglesLike {
+	if uti.IsUndefined(angle1) {
+		panic("The \"angle1\" attribute is required by this class.")
 	}
-	var instance = &associations_{
+	if uti.IsUndefined(angle2) {
+		panic("The \"angle2\" attribute is required by this class.")
+	}
+	var instance = &inclusiveAngles_{
 		// Initialize the instance attributes.
-		any_: any_,
+		angle1_: angle1,
+		angle2_: angle2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *associationsClass_) Associations(
 
 // Principal Methods
 
-func (v *associations_) GetClass() AssociationsClassLike {
-	return associationsClass()
+func (v *inclusiveAngles_) GetClass() InclusiveAnglesClassLike {
+	return inclusiveAnglesClass()
 }
 
 // Attribute Methods
 
-func (v *associations_) GetAny() any {
-	return v.any_
+func (v *inclusiveAngles_) GetAngle1() string {
+	return v.angle1_
+}
+
+func (v *inclusiveAngles_) GetAngle2() string {
+	return v.angle2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type associations_ struct {
+type inclusiveAngles_ struct {
 	// Declare the instance attributes.
-	any_ any
+	angle1_ string
+	angle2_ string
 }
 
 // Class Structure
 
-type associationsClass_ struct {
+type inclusiveAnglesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func associationsClass() *associationsClass_ {
-	return associationsClassReference_
+func inclusiveAnglesClass() *inclusiveAnglesClass_ {
+	return inclusiveAnglesClassReference_
 }
 
-var associationsClassReference_ = &associationsClass_{
+var inclusiveAnglesClassReference_ = &inclusiveAnglesClass_{
 	// Initialize the class constants.
 }

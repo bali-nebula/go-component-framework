@@ -19,21 +19,34 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func RightClass() RightClassLike {
-	return rightClass()
+func ExclusiveQuotesClass() ExclusiveQuotesClassLike {
+	return exclusiveQuotesClass()
 }
 
 // Constructor Methods
 
-func (c *rightClass_) Right() RightLike {
-	var instance = &right_{
+func (c *exclusiveQuotesClass_) ExclusiveQuotes(
+	quote1 string,
+	quote2 string,
+) ExclusiveQuotesLike {
+	if uti.IsUndefined(quote1) {
+		panic("The \"quote1\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(quote2) {
+		panic("The \"quote2\" attribute is required by this class.")
+	}
+	var instance = &exclusiveQuotes_{
 		// Initialize the instance attributes.
+		quote1_: quote1,
+		quote2_: quote2,
 	}
 	return instance
 }
@@ -42,32 +55,42 @@ func (c *rightClass_) Right() RightLike {
 
 // Principal Methods
 
-func (v *right_) GetClass() RightClassLike {
-	return rightClass()
+func (v *exclusiveQuotes_) GetClass() ExclusiveQuotesClassLike {
+	return exclusiveQuotesClass()
 }
 
 // Attribute Methods
+
+func (v *exclusiveQuotes_) GetQuote1() string {
+	return v.quote1_
+}
+
+func (v *exclusiveQuotes_) GetQuote2() string {
+	return v.quote2_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type right_ struct {
+type exclusiveQuotes_ struct {
 	// Declare the instance attributes.
+	quote1_ string
+	quote2_ string
 }
 
 // Class Structure
 
-type rightClass_ struct {
+type exclusiveQuotesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func rightClass() *rightClass_ {
-	return rightClassReference_
+func exclusiveQuotesClass() *exclusiveQuotesClass_ {
+	return exclusiveQuotesClassReference_
 }
 
-var rightClassReference_ = &rightClass_{
+var exclusiveQuotesClassReference_ = &exclusiveQuotesClass_{
 	// Initialize the class constants.
 }

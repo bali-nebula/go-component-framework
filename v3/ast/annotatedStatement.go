@@ -34,19 +34,14 @@ func AnnotatedStatementClass() AnnotatedStatementClassLike {
 // Constructor Methods
 
 func (c *annotatedStatementClass_) AnnotatedStatement(
-	xyz string,
 	statement StatementLike,
 	optionalNote string,
 ) AnnotatedStatementLike {
-	if uti.IsUndefined(xyz) {
-		panic("The \"xyz\" attribute is required by this class.")
-	}
 	if uti.IsUndefined(statement) {
 		panic("The \"statement\" attribute is required by this class.")
 	}
 	var instance = &annotatedStatement_{
 		// Initialize the instance attributes.
-		xyz_:          xyz,
 		statement_:    statement,
 		optionalNote_: optionalNote,
 	}
@@ -63,10 +58,6 @@ func (v *annotatedStatement_) GetClass() AnnotatedStatementClassLike {
 
 // Attribute Methods
 
-func (v *annotatedStatement_) GetXyz() string {
-	return v.xyz_
-}
-
 func (v *annotatedStatement_) GetStatement() StatementLike {
 	return v.statement_
 }
@@ -81,7 +72,6 @@ func (v *annotatedStatement_) GetOptionalNote() string {
 
 type annotatedStatement_ struct {
 	// Declare the instance attributes.
-	xyz_          string
 	statement_    StatementLike
 	optionalNote_ string
 }
