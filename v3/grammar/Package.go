@@ -579,6 +579,15 @@ type Methodical interface {
 		index uint,
 		size uint,
 	)
+	PreprocessAnnotationLine(
+		annotationLine ast.AnnotationLineLike,
+	)
+	ProcessAnnotationLineSlot(
+		slot uint,
+	)
+	PostprocessAnnotationLine(
+		annotationLine ast.AnnotationLineLike,
+	)
 	PreprocessArgument(
 		argument ast.ArgumentLike,
 	)
@@ -749,6 +758,15 @@ type Methodical interface {
 	)
 	PostprocessElement(
 		element ast.ElementLike,
+	)
+	PreprocessEmptyLine(
+		emptyLine ast.EmptyLineLike,
+	)
+	ProcessEmptyLineSlot(
+		slot uint,
+	)
+	PostprocessEmptyLine(
+		emptyLine ast.EmptyLineLike,
 	)
 	PreprocessEntity(
 		entity ast.EntityLike,
@@ -1369,6 +1387,15 @@ type Methodical interface {
 	)
 	PostprocessStatement(
 		statement ast.StatementLike,
+	)
+	PreprocessStatementLine(
+		statementLine ast.StatementLineLike,
+	)
+	ProcessStatementLineSlot(
+		slot uint,
+	)
+	PostprocessStatementLine(
+		statementLine ast.StatementLineLike,
 	)
 	PreprocessString(
 		string_ ast.StringLike,

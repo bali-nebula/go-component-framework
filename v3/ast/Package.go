@@ -138,8 +138,7 @@ supported by each concrete annotated-statement-like class.
 type AnnotatedStatementClassLike interface {
 	// Constructor Methods
 	AnnotatedStatement(
-		statement StatementLike,
-		optionalNote string,
+		any_ any,
 	) AnnotatedStatementLike
 }
 
@@ -154,6 +153,18 @@ type AnnotatedValueClassLike interface {
 		value ValueLike,
 		optionalNote string,
 	) AnnotatedValueLike
+}
+
+/*
+AnnotationLineClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete annotation-line-like class.
+*/
+type AnnotationLineClassLike interface {
+	// Constructor Methods
+	AnnotationLine(
+		any_ any,
+	) AnnotationLineLike
 }
 
 /*
@@ -386,6 +397,18 @@ type ElementClassLike interface {
 	Element(
 		any_ any,
 	) ElementLike
+}
+
+/*
+EmptyLineClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete empty-line-like class.
+*/
+type EmptyLineClassLike interface {
+	// Constructor Methods
+	EmptyLine(
+		newline string,
+	) EmptyLineLike
 }
 
 /*
@@ -1243,6 +1266,19 @@ type StatementClassLike interface {
 }
 
 /*
+StatementLineClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete statement-line-like class.
+*/
+type StatementLineClassLike interface {
+	// Constructor Methods
+	StatementLine(
+		statement StatementLike,
+		optionalNote string,
+	) StatementLineLike
+}
+
+/*
 StringClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete string-like class.
@@ -1482,8 +1518,7 @@ type AnnotatedStatementLike interface {
 	GetClass() AnnotatedStatementClassLike
 
 	// Attribute Methods
-	GetStatement() StatementLike
-	GetOptionalNote() string
+	GetAny() any
 }
 
 /*
@@ -1498,6 +1533,19 @@ type AnnotatedValueLike interface {
 	// Attribute Methods
 	GetValue() ValueLike
 	GetOptionalNote() string
+}
+
+/*
+AnnotationLineLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete annotation-line-like class.
+*/
+type AnnotationLineLike interface {
+	// Principal Methods
+	GetClass() AnnotationLineClassLike
+
+	// Attribute Methods
+	GetAny() any
 }
 
 /*
@@ -1747,6 +1795,19 @@ type ElementLike interface {
 
 	// Attribute Methods
 	GetAny() any
+}
+
+/*
+EmptyLineLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete empty-line-like class.
+*/
+type EmptyLineLike interface {
+	// Principal Methods
+	GetClass() EmptyLineClassLike
+
+	// Attribute Methods
+	GetNewline() string
 }
 
 /*
@@ -2667,6 +2728,20 @@ type StatementLike interface {
 	// Attribute Methods
 	GetMainClause() MainClauseLike
 	GetOptionalOnClause() OnClauseLike
+}
+
+/*
+StatementLineLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete statement-line-like class.
+*/
+type StatementLineLike interface {
+	// Principal Methods
+	GetClass() StatementLineClassLike
+
+	// Attribute Methods
+	GetStatement() StatementLike
+	GetOptionalNote() string
 }
 
 /*

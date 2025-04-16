@@ -150,19 +150,27 @@ func (v *visitor_) visitAnnotatedAssociation(
 func (v *visitor_) visitAnnotatedStatement(
 	annotatedStatement ast.AnnotatedStatementLike,
 ) {
-	// Visit a single statement rule.
-	var statement = annotatedStatement.GetStatement()
-	v.processor_.PreprocessStatement(statement)
-	v.visitStatement(statement)
-	v.processor_.PostprocessStatement(statement)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessAnnotatedStatementSlot(1)
-
-	// Visit an optional note token.
-	var optionalNote = annotatedStatement.GetOptionalNote()
-	if uti.IsDefined(optionalNote) {
-		v.processor_.ProcessNote(optionalNote)
+	// Visit the possible annotatedStatement types.
+	switch actual := annotatedStatement.GetAny().(type) {
+	case ast.EmptyLineLike:
+		v.processor_.PreprocessEmptyLine(actual)
+		v.visitEmptyLine(actual)
+		v.processor_.PostprocessEmptyLine(actual)
+	case ast.AnnotationLineLike:
+		v.processor_.PreprocessAnnotationLine(actual)
+		v.visitAnnotationLine(actual)
+		v.processor_.PostprocessAnnotationLine(actual)
+	case ast.StatementLineLike:
+		v.processor_.PreprocessStatementLine(actual)
+		v.visitStatementLine(actual)
+		v.processor_.PostprocessStatementLine(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
 }
 
@@ -182,6 +190,25 @@ func (v *visitor_) visitAnnotatedValue(
 	var optionalNote = annotatedValue.GetOptionalNote()
 	if uti.IsDefined(optionalNote) {
 		v.processor_.ProcessNote(optionalNote)
+	}
+}
+
+func (v *visitor_) visitAnnotationLine(
+	annotationLine ast.AnnotationLineLike,
+) {
+	// Visit the possible annotationLine types.
+	switch actual := annotationLine.GetAny().(type) {
+	case string:
+		switch {
+		case ScannerClass().MatchesType(actual, NoteToken):
+			v.processor_.ProcessNote(actual)
+		case ScannerClass().MatchesType(actual, CommentToken):
+			v.processor_.ProcessComment(actual)
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
 }
 
@@ -564,6 +591,14 @@ func (v *visitor_) visitElement(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
+}
+
+func (v *visitor_) visitEmptyLine(
+	emptyLine ast.EmptyLineLike,
+) {
+	// Visit a single newline token.
+	var newline = emptyLine.GetNewline()
+	v.processor_.ProcessNewline(newline)
 }
 
 func (v *visitor_) visitEntity(
@@ -2060,6 +2095,25 @@ func (v *visitor_) visitStatement(
 		v.processor_.PreprocessOnClause(optionalOnClause)
 		v.visitOnClause(optionalOnClause)
 		v.processor_.PostprocessOnClause(optionalOnClause)
+	}
+}
+
+func (v *visitor_) visitStatementLine(
+	statementLine ast.StatementLineLike,
+) {
+	// Visit a single statement rule.
+	var statement = statementLine.GetStatement()
+	v.processor_.PreprocessStatement(statement)
+	v.visitStatement(statement)
+	v.processor_.PostprocessStatement(statement)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessStatementLineSlot(1)
+
+	// Visit an optional note token.
+	var optionalNote = statementLine.GetOptionalNote()
+	if uti.IsDefined(optionalNote) {
+		v.processor_.ProcessNote(optionalNote)
 	}
 }
 

@@ -27,21 +27,23 @@ import (
 
 // Access Function
 
-func AnnotatedStatementClass() AnnotatedStatementClassLike {
-	return annotatedStatementClass()
+func StatementLineClass() StatementLineClassLike {
+	return statementLineClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedStatementClass_) AnnotatedStatement(
-	any_ any,
-) AnnotatedStatementLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *statementLineClass_) StatementLine(
+	statement StatementLike,
+	optionalNote string,
+) StatementLineLike {
+	if uti.IsUndefined(statement) {
+		panic("The \"statement\" attribute is required by this class.")
 	}
-	var instance = &annotatedStatement_{
+	var instance = &statementLine_{
 		// Initialize the instance attributes.
-		any_: any_,
+		statement_:    statement,
+		optionalNote_: optionalNote,
 	}
 	return instance
 }
@@ -50,37 +52,42 @@ func (c *annotatedStatementClass_) AnnotatedStatement(
 
 // Principal Methods
 
-func (v *annotatedStatement_) GetClass() AnnotatedStatementClassLike {
-	return annotatedStatementClass()
+func (v *statementLine_) GetClass() StatementLineClassLike {
+	return statementLineClass()
 }
 
 // Attribute Methods
 
-func (v *annotatedStatement_) GetAny() any {
-	return v.any_
+func (v *statementLine_) GetStatement() StatementLike {
+	return v.statement_
+}
+
+func (v *statementLine_) GetOptionalNote() string {
+	return v.optionalNote_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotatedStatement_ struct {
+type statementLine_ struct {
 	// Declare the instance attributes.
-	any_ any
+	statement_    StatementLike
+	optionalNote_ string
 }
 
 // Class Structure
 
-type annotatedStatementClass_ struct {
+type statementLineClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedStatementClass() *annotatedStatementClass_ {
-	return annotatedStatementClassReference_
+func statementLineClass() *statementLineClass_ {
+	return statementLineClassReference_
 }
 
-var annotatedStatementClassReference_ = &annotatedStatementClass_{
+var statementLineClassReference_ = &statementLineClass_{
 	// Initialize the class constants.
 }

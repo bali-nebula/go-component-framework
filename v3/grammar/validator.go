@@ -555,6 +555,24 @@ func (v *validator_) PostprocessAnnotatedValue(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessAnnotationLine(
+	annotationLine ast.AnnotationLineLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessAnnotationLineSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessAnnotationLine(
+	annotationLine ast.AnnotationLineLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessArgument(
 	argument ast.ArgumentLike,
 ) {
@@ -893,6 +911,24 @@ func (v *validator_) ProcessElementSlot(
 
 func (v *validator_) PostprocessElement(
 	element ast.ElementLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessEmptyLine(
+	emptyLine ast.EmptyLineLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessEmptyLineSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessEmptyLine(
+	emptyLine ast.EmptyLineLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2125,6 +2161,24 @@ func (v *validator_) ProcessStatementSlot(
 
 func (v *validator_) PostprocessStatement(
 	statement ast.StatementLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessStatementLine(
+	statementLine ast.StatementLineLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessStatementLineSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessStatementLine(
+	statementLine ast.StatementLineLike,
 ) {
 	// TBD - Add any validation checks.
 }

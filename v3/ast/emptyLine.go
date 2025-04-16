@@ -27,21 +27,21 @@ import (
 
 // Access Function
 
-func AnnotatedStatementClass() AnnotatedStatementClassLike {
-	return annotatedStatementClass()
+func EmptyLineClass() EmptyLineClassLike {
+	return emptyLineClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedStatementClass_) AnnotatedStatement(
-	any_ any,
-) AnnotatedStatementLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *emptyLineClass_) EmptyLine(
+	newline string,
+) EmptyLineLike {
+	if uti.IsUndefined(newline) {
+		panic("The \"newline\" attribute is required by this class.")
 	}
-	var instance = &annotatedStatement_{
+	var instance = &emptyLine_{
 		// Initialize the instance attributes.
-		any_: any_,
+		newline_: newline,
 	}
 	return instance
 }
@@ -50,37 +50,37 @@ func (c *annotatedStatementClass_) AnnotatedStatement(
 
 // Principal Methods
 
-func (v *annotatedStatement_) GetClass() AnnotatedStatementClassLike {
-	return annotatedStatementClass()
+func (v *emptyLine_) GetClass() EmptyLineClassLike {
+	return emptyLineClass()
 }
 
 // Attribute Methods
 
-func (v *annotatedStatement_) GetAny() any {
-	return v.any_
+func (v *emptyLine_) GetNewline() string {
+	return v.newline_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotatedStatement_ struct {
+type emptyLine_ struct {
 	// Declare the instance attributes.
-	any_ any
+	newline_ string
 }
 
 // Class Structure
 
-type annotatedStatementClass_ struct {
+type emptyLineClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedStatementClass() *annotatedStatementClass_ {
-	return annotatedStatementClassReference_
+func emptyLineClass() *emptyLineClass_ {
+	return emptyLineClassReference_
 }
 
-var annotatedStatementClassReference_ = &annotatedStatementClass_{
+var emptyLineClassReference_ = &emptyLineClass_{
 	// Initialize the class constants.
 }

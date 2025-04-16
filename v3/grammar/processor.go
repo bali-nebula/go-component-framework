@@ -467,6 +467,21 @@ func (v *processor_) PostprocessAnnotatedValue(
 ) {
 }
 
+func (v *processor_) PreprocessAnnotationLine(
+	annotationLine ast.AnnotationLineLike,
+) {
+}
+
+func (v *processor_) ProcessAnnotationLineSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessAnnotationLine(
+	annotationLine ast.AnnotationLineLike,
+) {
+}
+
 func (v *processor_) PreprocessArgument(
 	argument ast.ArgumentLike,
 ) {
@@ -749,6 +764,21 @@ func (v *processor_) ProcessElementSlot(
 
 func (v *processor_) PostprocessElement(
 	element ast.ElementLike,
+) {
+}
+
+func (v *processor_) PreprocessEmptyLine(
+	emptyLine ast.EmptyLineLike,
+) {
+}
+
+func (v *processor_) ProcessEmptyLineSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessEmptyLine(
+	emptyLine ast.EmptyLineLike,
 ) {
 }
 
@@ -1777,6 +1807,21 @@ func (v *processor_) ProcessStatementSlot(
 
 func (v *processor_) PostprocessStatement(
 	statement ast.StatementLike,
+) {
+}
+
+func (v *processor_) PreprocessStatementLine(
+	statementLine ast.StatementLineLike,
+) {
+}
+
+func (v *processor_) ProcessStatementLineSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessStatementLine(
+	statementLine ast.StatementLineLike,
 ) {
 }
 

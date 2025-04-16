@@ -554,6 +554,24 @@ func (v *formatter_) PostprocessAnnotatedValue(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessAnnotationLine(
+	annotationLine ast.AnnotationLineLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessAnnotationLineSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessAnnotationLine(
+	annotationLine ast.AnnotationLineLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessArgument(
 	argument ast.ArgumentLike,
 ) {
@@ -892,6 +910,24 @@ func (v *formatter_) ProcessElementSlot(
 
 func (v *formatter_) PostprocessElement(
 	element ast.ElementLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessEmptyLine(
+	emptyLine ast.EmptyLineLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessEmptyLineSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessEmptyLine(
+	emptyLine ast.EmptyLineLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2124,6 +2160,24 @@ func (v *formatter_) ProcessStatementSlot(
 
 func (v *formatter_) PostprocessStatement(
 	statement ast.StatementLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessStatementLine(
+	statementLine ast.StatementLineLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessStatementLineSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessStatementLine(
+	statementLine ast.StatementLineLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

@@ -48,6 +48,7 @@ type (
 	AnnotatedAssociationClassLike  = ast.AnnotatedAssociationClassLike
 	AnnotatedStatementClassLike    = ast.AnnotatedStatementClassLike
 	AnnotatedValueClassLike        = ast.AnnotatedValueClassLike
+	AnnotationLineClassLike        = ast.AnnotationLineClassLike
 	ArgumentClassLike              = ast.ArgumentClassLike
 	ArgumentsClassLike             = ast.ArgumentsClassLike
 	AssignClassLike                = ast.AssignClassLike
@@ -67,6 +68,7 @@ type (
 	DocumentClassLike              = ast.DocumentClassLike
 	DraftClassLike                 = ast.DraftClassLike
 	ElementClassLike               = ast.ElementClassLike
+	EmptyLineClassLike             = ast.EmptyLineClassLike
 	EntityClassLike                = ast.EntityClassLike
 	EventClassLike                 = ast.EventClassLike
 	ExInclusiveAnglesClassLike     = ast.ExInclusiveAnglesClassLike
@@ -135,6 +137,7 @@ type (
 	SelectClauseClassLike          = ast.SelectClauseClassLike
 	SequenceClassLike              = ast.SequenceClassLike
 	StatementClassLike             = ast.StatementClassLike
+	StatementLineClassLike         = ast.StatementLineClassLike
 	StringClassLike                = ast.StringClassLike
 	SubcomponentClassLike          = ast.SubcomponentClassLike
 	SubjectClassLike               = ast.SubjectClassLike
@@ -158,6 +161,7 @@ type (
 	AnnotatedAssociationLike  = ast.AnnotatedAssociationLike
 	AnnotatedStatementLike    = ast.AnnotatedStatementLike
 	AnnotatedValueLike        = ast.AnnotatedValueLike
+	AnnotationLineLike        = ast.AnnotationLineLike
 	ArgumentLike              = ast.ArgumentLike
 	ArgumentsLike             = ast.ArgumentsLike
 	AssignLike                = ast.AssignLike
@@ -177,6 +181,7 @@ type (
 	DocumentLike              = ast.DocumentLike
 	DraftLike                 = ast.DraftLike
 	ElementLike               = ast.ElementLike
+	EmptyLineLike             = ast.EmptyLineLike
 	EntityLike                = ast.EntityLike
 	EventLike                 = ast.EventLike
 	ExInclusiveAnglesLike     = ast.ExInclusiveAnglesLike
@@ -245,6 +250,7 @@ type (
 	SelectClauseLike          = ast.SelectClauseLike
 	SequenceLike              = ast.SequenceLike
 	StatementLike             = ast.StatementLike
+	StatementLineLike         = ast.StatementLineLike
 	StringLike                = ast.StringLike
 	SubcomponentLike          = ast.SubcomponentLike
 	SubjectLike               = ast.SubjectLike
@@ -420,12 +426,10 @@ func AnnotatedAssociation(
 // Ast/AnnotatedStatement
 
 func AnnotatedStatement(
-	statement ast.StatementLike,
-	optionalNote string,
+	any_ any,
 ) ast.AnnotatedStatementLike {
 	return ast.AnnotatedStatementClass().AnnotatedStatement(
-		statement,
-		optionalNote,
+		any_,
 	)
 }
 
@@ -438,6 +442,16 @@ func AnnotatedValue(
 	return ast.AnnotatedValueClass().AnnotatedValue(
 		value,
 		optionalNote,
+	)
+}
+
+// Ast/AnnotationLine
+
+func AnnotationLine(
+	any_ any,
+) ast.AnnotationLineLike {
+	return ast.AnnotationLineClass().AnnotationLine(
+		any_,
 	)
 }
 
@@ -636,6 +650,16 @@ func Element(
 ) ast.ElementLike {
 	return ast.ElementClass().Element(
 		any_,
+	)
+}
+
+// Ast/EmptyLine
+
+func EmptyLine(
+	newline string,
+) ast.EmptyLineLike {
+	return ast.EmptyLineClass().EmptyLine(
+		newline,
 	)
 }
 
@@ -1392,6 +1416,18 @@ func Statement(
 	return ast.StatementClass().Statement(
 		mainClause,
 		optionalOnClause,
+	)
+}
+
+// Ast/StatementLine
+
+func StatementLine(
+	statement ast.StatementLike,
+	optionalNote string,
+) ast.StatementLineLike {
+	return ast.StatementLineClass().StatementLine(
+		statement,
+		optionalNote,
 	)
 }
 

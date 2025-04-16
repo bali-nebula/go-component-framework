@@ -136,7 +136,18 @@ $Procedure:
 
 $MultilineStatements: "{" newline AnnotatedStatement+ "}"
 
-$AnnotatedStatement: Statement note?
+$AnnotatedStatement:
+  - EmptyLine
+  - AnnotationLine
+  - StatementLine
+
+$EmptyLine: newline
+
+$AnnotationLine:
+  - note
+  - comment
+
+$StatementLine: Statement note?
 
 $InlineStatements: "{" Statement AdditionalStatement* "}"
 
@@ -412,7 +423,7 @@ $colonEqual: ":="
 
 $colon: ":"
 
-$comment: "!>" ANY* "<!"
+$comment: "!>" EOL (ANY | EOL)* EOL space* "<!" EOL  ! Chooses the shortest match.
 
 $dashEqual: "-="
 
@@ -442,7 +453,7 @@ $hour: (['0'..'1'] ['0'..'9']) | ('2' ['0'..'3'])
 
 $hours: timespan 'H'
 
-$imaginary: sign? amplitude? 'i'
+$imaginary: sign? amplitude 'i'
 
 $infinity: sign? ("infinity" | '∞')
 

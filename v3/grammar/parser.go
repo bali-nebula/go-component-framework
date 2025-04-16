@@ -411,39 +411,34 @@ func (v *parser_) parseAnnotatedStatement() (
 	token TokenLike,
 	ok bool,
 ) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single Statement rule.
-	var statement ast.StatementLike
-	statement, token, ok = v.parseStatement()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single AnnotatedStatement rule.
-		v.putBack(tokens)
+	// Attempt to parse a single EmptyLine AnnotatedStatement.
+	var emptyLine ast.EmptyLineLike
+	emptyLine, token, ok = v.parseEmptyLine()
+	if ok {
+		// Found a single EmptyLine AnnotatedStatement.
+		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(emptyLine)
 		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$AnnotatedStatement", token)
-		panic(message)
 	}
 
-	// Attempt to parse an optional note token.
-	var optionalNote string
-	optionalNote, token, ok = v.parseToken(NoteToken)
-	if ok && uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse a single AnnotationLine AnnotatedStatement.
+	var annotationLine ast.AnnotationLineLike
+	annotationLine, token, ok = v.parseAnnotationLine()
+	if ok {
+		// Found a single AnnotationLine AnnotatedStatement.
+		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(annotationLine)
+		return
 	}
 
-	// Found a single AnnotatedStatement rule.
-	ok = true
-	v.remove(tokens)
-	annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(
-		statement,
-		optionalNote,
-	)
+	// Attempt to parse a single StatementLine AnnotatedStatement.
+	var statementLine ast.StatementLineLike
+	statementLine, token, ok = v.parseStatementLine()
+	if ok {
+		// Found a single StatementLine AnnotatedStatement.
+		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(statementLine)
+		return
+	}
+
+	// This is not a single AnnotatedStatement rule.
 	return
 }
 
@@ -485,6 +480,33 @@ func (v *parser_) parseAnnotatedValue() (
 		value,
 		optionalNote,
 	)
+	return
+}
+
+func (v *parser_) parseAnnotationLine() (
+	annotationLine ast.AnnotationLineLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single note AnnotationLine.
+	var note string
+	note, token, ok = v.parseToken(NoteToken)
+	if ok {
+		// Found a single note AnnotationLine.
+		annotationLine = ast.AnnotationLineClass().AnnotationLine(note)
+		return
+	}
+
+	// Attempt to parse a single comment AnnotationLine.
+	var comment string
+	comment, token, ok = v.parseToken(CommentToken)
+	if ok {
+		// Found a single comment AnnotationLine.
+		annotationLine = ast.AnnotationLineClass().AnnotationLine(comment)
+		return
+	}
+
+	// This is not a single AnnotationLine rule.
 	return
 }
 
@@ -1582,6 +1604,38 @@ func (v *parser_) parseElement() (
 	}
 
 	// This is not a single Element rule.
+	return
+}
+
+func (v *parser_) parseEmptyLine() (
+	emptyLine ast.EmptyLineLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single newline token.
+	var newline string
+	newline, token, ok = v.parseToken(NewlineToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single EmptyLine rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$EmptyLine", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single EmptyLine rule.
+	ok = true
+	v.remove(tokens)
+	emptyLine = ast.EmptyLineClass().EmptyLine(newline)
 	return
 }
 
@@ -6375,6 +6429,47 @@ func (v *parser_) parseStatement() (
 	return
 }
 
+func (v *parser_) parseStatementLine() (
+	statementLine ast.StatementLineLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single Statement rule.
+	var statement ast.StatementLike
+	statement, token, ok = v.parseStatement()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single StatementLine rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$StatementLine", token)
+		panic(message)
+	}
+
+	// Attempt to parse an optional note token.
+	var optionalNote string
+	optionalNote, token, ok = v.parseToken(NoteToken)
+	if ok && uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single StatementLine rule.
+	ok = true
+	v.remove(tokens)
+	statementLine = ast.StatementLineClass().StatementLine(
+		statement,
+		optionalNote,
+	)
+	return
+}
+
 func (v *parser_) parseString() (
 	string_ ast.StringLike,
 	token TokenLike,
@@ -7329,7 +7424,15 @@ var parserClassReference_ = &parserClass_{
   - InlineStatements
   - NoStatements`,
 			"$MultilineStatements": `"{" newline AnnotatedStatement+ "}"`,
-			"$AnnotatedStatement":  `Statement note?`,
+			"$AnnotatedStatement": `
+  - EmptyLine
+  - AnnotationLine
+  - StatementLine`,
+			"$EmptyLine": `newline`,
+			"$AnnotationLine": `
+  - note
+  - comment`,
+			"$StatementLine":       `Statement note?`,
 			"$InlineStatements":    `"{" Statement AdditionalStatement* "}"`,
 			"$AdditionalStatement": `";" Statement`,
 			"$NoStatements":        `"{" "}"`,

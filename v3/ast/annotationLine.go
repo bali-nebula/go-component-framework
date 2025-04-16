@@ -27,19 +27,19 @@ import (
 
 // Access Function
 
-func AnnotatedStatementClass() AnnotatedStatementClassLike {
-	return annotatedStatementClass()
+func AnnotationLineClass() AnnotationLineClassLike {
+	return annotationLineClass()
 }
 
 // Constructor Methods
 
-func (c *annotatedStatementClass_) AnnotatedStatement(
+func (c *annotationLineClass_) AnnotationLine(
 	any_ any,
-) AnnotatedStatementLike {
+) AnnotationLineLike {
 	if uti.IsUndefined(any_) {
 		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &annotatedStatement_{
+	var instance = &annotationLine_{
 		// Initialize the instance attributes.
 		any_: any_,
 	}
@@ -50,13 +50,13 @@ func (c *annotatedStatementClass_) AnnotatedStatement(
 
 // Principal Methods
 
-func (v *annotatedStatement_) GetClass() AnnotatedStatementClassLike {
-	return annotatedStatementClass()
+func (v *annotationLine_) GetClass() AnnotationLineClassLike {
+	return annotationLineClass()
 }
 
 // Attribute Methods
 
-func (v *annotatedStatement_) GetAny() any {
+func (v *annotationLine_) GetAny() any {
 	return v.any_
 }
 
@@ -64,23 +64,23 @@ func (v *annotatedStatement_) GetAny() any {
 
 // Instance Structure
 
-type annotatedStatement_ struct {
+type annotationLine_ struct {
 	// Declare the instance attributes.
 	any_ any
 }
 
 // Class Structure
 
-type annotatedStatementClass_ struct {
+type annotationLineClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotatedStatementClass() *annotatedStatementClass_ {
-	return annotatedStatementClassReference_
+func annotationLineClass() *annotationLineClass_ {
+	return annotationLineClassReference_
 }
 
-var annotatedStatementClassReference_ = &annotatedStatementClass_{
+var annotationLineClassReference_ = &annotationLineClass_{
 	// Initialize the class constants.
 }
