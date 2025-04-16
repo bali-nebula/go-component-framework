@@ -67,12 +67,6 @@ func (v *validator_) ProcessAmpersand(
 	v.validateToken(ampersand, AmpersandToken)
 }
 
-func (v *validator_) ProcessAnd(
-	and string,
-) {
-	v.validateToken(and, AndToken)
-}
-
 func (v *validator_) ProcessAngle(
 	angle string,
 ) {
@@ -187,28 +181,10 @@ func (v *validator_) ProcessIdentifier(
 	v.validateToken(identifier, IdentifierToken)
 }
 
-func (v *validator_) ProcessIor(
-	ior string,
-) {
-	v.validateToken(ior, IorToken)
-}
-
-func (v *validator_) ProcessIs(
-	is string,
-) {
-	v.validateToken(is, IsToken)
-}
-
 func (v *validator_) ProcessLess(
 	less string,
 ) {
 	v.validateToken(less, LessToken)
-}
-
-func (v *validator_) ProcessMatches(
-	matches string,
-) {
-	v.validateToken(matches, MatchesToken)
 }
 
 func (v *validator_) ProcessMoment(
@@ -295,12 +271,6 @@ func (v *validator_) ProcessResource(
 	v.validateToken(resource, ResourceToken)
 }
 
-func (v *validator_) ProcessSan(
-	san string,
-) {
-	v.validateToken(san, SanToken)
-}
-
 func (v *validator_) ProcessSlash(
 	slash string,
 ) {
@@ -353,12 +323,6 @@ func (v *validator_) ProcessVersion(
 	version string,
 ) {
 	v.validateToken(version, VersionToken)
-}
-
-func (v *validator_) ProcessXor(
-	xor string,
-) {
-	v.validateToken(xor, XorToken)
 }
 
 func (v *validator_) PreprocessAcceptClause(
@@ -485,6 +449,24 @@ func (v *validator_) PostprocessAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 	index uint,
 	size uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessAnd(
+	and ast.AndLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessAndSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessAnd(
+	and ast.AndLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2067,6 +2049,42 @@ func (v *validator_) PostprocessInvocation(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessIor(
+	ior ast.IorLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessIorSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessIor(
+	ior ast.IorLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessIs(
+	is ast.IsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessIsSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessIs(
+	is ast.IsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessItem(
 	item ast.ItemLike,
 ) {
@@ -2175,6 +2193,24 @@ func (v *validator_) PostprocessMatchHandler(
 	matchHandler ast.MatchHandlerLike,
 	index uint,
 	size uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessMatches(
+	matches ast.MatchesLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessMatchesSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessMatches(
+	matches ast.MatchesLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2669,6 +2705,24 @@ func (v *validator_) PostprocessReturnClause(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessSan(
+	san ast.SanLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessSanSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessSan(
+	san ast.SanLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -2935,6 +2989,24 @@ func (v *validator_) ProcessWithClauseSlot(
 
 func (v *validator_) PostprocessWithClause(
 	withClause ast.WithClauseLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessXor(
+	xor ast.XorLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessXorSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessXor(
+	xor ast.XorLike,
 ) {
 	// TBD - Add any validation checks.
 }

@@ -66,12 +66,6 @@ func (v *formatter_) ProcessAmpersand(
 	v.appendString(ampersand)
 }
 
-func (v *formatter_) ProcessAnd(
-	and string,
-) {
-	v.appendString(and)
-}
-
 func (v *formatter_) ProcessAngle(
 	angle string,
 ) {
@@ -186,28 +180,10 @@ func (v *formatter_) ProcessIdentifier(
 	v.appendString(identifier)
 }
 
-func (v *formatter_) ProcessIor(
-	ior string,
-) {
-	v.appendString(ior)
-}
-
-func (v *formatter_) ProcessIs(
-	is string,
-) {
-	v.appendString(is)
-}
-
 func (v *formatter_) ProcessLess(
 	less string,
 ) {
 	v.appendString(less)
-}
-
-func (v *formatter_) ProcessMatches(
-	matches string,
-) {
-	v.appendString(matches)
 }
 
 func (v *formatter_) ProcessMoment(
@@ -294,12 +270,6 @@ func (v *formatter_) ProcessResource(
 	v.appendString(resource)
 }
 
-func (v *formatter_) ProcessSan(
-	san string,
-) {
-	v.appendString(san)
-}
-
 func (v *formatter_) ProcessSlash(
 	slash string,
 ) {
@@ -352,12 +322,6 @@ func (v *formatter_) ProcessVersion(
 	version string,
 ) {
 	v.appendString(version)
-}
-
-func (v *formatter_) ProcessXor(
-	xor string,
-) {
-	v.appendString(xor)
 }
 
 func (v *formatter_) PreprocessAcceptClause(
@@ -484,6 +448,24 @@ func (v *formatter_) PostprocessAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 	index uint,
 	size uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessAnd(
+	and ast.AndLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessAndSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessAnd(
+	and ast.AndLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2066,6 +2048,42 @@ func (v *formatter_) PostprocessInvocation(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessIor(
+	ior ast.IorLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessIorSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessIor(
+	ior ast.IorLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessIs(
+	is ast.IsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessIsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessIs(
+	is ast.IsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessItem(
 	item ast.ItemLike,
 ) {
@@ -2174,6 +2192,24 @@ func (v *formatter_) PostprocessMatchHandler(
 	matchHandler ast.MatchHandlerLike,
 	index uint,
 	size uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessMatches(
+	matches ast.MatchesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessMatchesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessMatches(
+	matches ast.MatchesLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2668,6 +2704,24 @@ func (v *formatter_) PostprocessReturnClause(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessSan(
+	san ast.SanLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessSanSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessSan(
+	san ast.SanLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -2934,6 +2988,24 @@ func (v *formatter_) ProcessWithClauseSlot(
 
 func (v *formatter_) PostprocessWithClause(
 	withClause ast.WithClauseLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessXor(
+	xor ast.XorLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessXorSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessXor(
+	xor ast.XorLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

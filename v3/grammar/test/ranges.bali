@@ -2,23 +2,20 @@
     [~0..~τ]
     [~P0W..~P3Y)
     [<2000>..<2023>]
-    [1..+∞)
-    (-∞..0]
-    (-∞..+∞)
+    [1..∞)
+    (∞..0]
+    (∞..∞)
     ["a".."z"]
     ["Aa".."Fe"]
     [1..42]
     (0%..75%)
-    (.25..1.)
+    (.25..one)
     (.25...75)
-    ["ca+t"?.."do+g"?]
-    [/bali/abstractions/Continuous/v1../bali/abstractions/Spectral/v1]
-    [<https://craterdog.com/About.html>..<https://craterdog.com/Marketplace.html>]
+    [/bali/abstractions/Continuous/v1../bali/abstractions/Spectral/v1.2]
     [$bar..$foo]
-    [#ABCD..#FGHJ)
-    [v1.2..v1.6)
-    [1..+∞]
-    [-∞..0)
+    [v1.2..v1.6.3)
+    [1..∞]
+    [∞..0)
     [~0..~π)
     [~π..~τ)
     [1..100]

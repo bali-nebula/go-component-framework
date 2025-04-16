@@ -365,6 +365,37 @@ func (v *parser_) parseAdditionalValue() (
 	return
 }
 
+func (v *parser_) parseAnd() (
+	and ast.AndLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "and" delimiter.
+	_, token, ok = v.parseDelimiter("and")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single And rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$And", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single And rule.
+	ok = true
+	v.remove(tokens)
+	and = ast.AndClass().And()
+	return
+}
+
 func (v *parser_) parseAnnotatedAssociation() (
 	annotatedAssociation ast.AnnotatedAssociationLike,
 	token TokenLike,
@@ -7621,6 +7652,68 @@ func (v *parser_) parseInvocation() (
 	return
 }
 
+func (v *parser_) parseIor() (
+	ior ast.IorLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "ior" delimiter.
+	_, token, ok = v.parseDelimiter("ior")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Ior rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Ior", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Ior rule.
+	ok = true
+	v.remove(tokens)
+	ior = ast.IorClass().Ior()
+	return
+}
+
+func (v *parser_) parseIs() (
+	is ast.IsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "is" delimiter.
+	_, token, ok = v.parseDelimiter("is")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Is rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Is", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Is rule.
+	ok = true
+	v.remove(tokens)
+	is = ast.IsClass().Is()
+	return
+}
+
 func (v *parser_) parseItem() (
 	item ast.ItemLike,
 	token TokenLike,
@@ -8018,6 +8111,37 @@ func (v *parser_) parseMatchHandler() (
 		template,
 		procedure,
 	)
+	return
+}
+
+func (v *parser_) parseMatches() (
+	matches ast.MatchesLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "matches" delimiter.
+	_, token, ok = v.parseDelimiter("matches")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Matches rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Matches", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Matches rule.
+	ok = true
+	v.remove(tokens)
+	matches = ast.MatchesClass().Matches()
 	return
 }
 
@@ -9100,66 +9224,66 @@ func (v *parser_) parseOperator() (
 		return
 	}
 
-	// Attempt to parse a single is Operator.
-	var is string
-	is, token, ok = v.parseToken(IsToken)
-	if ok {
-		// Found a single is Operator.
-		operator = ast.OperatorClass().Operator(is)
-		return
-	}
-
-	// Attempt to parse a single matches Operator.
-	var matches string
-	matches, token, ok = v.parseToken(MatchesToken)
-	if ok {
-		// Found a single matches Operator.
-		operator = ast.OperatorClass().Operator(matches)
-		return
-	}
-
-	// Attempt to parse a single and Operator.
-	var and string
-	and, token, ok = v.parseToken(AndToken)
-	if ok {
-		// Found a single and Operator.
-		operator = ast.OperatorClass().Operator(and)
-		return
-	}
-
-	// Attempt to parse a single san Operator.
-	var san string
-	san, token, ok = v.parseToken(SanToken)
-	if ok {
-		// Found a single san Operator.
-		operator = ast.OperatorClass().Operator(san)
-		return
-	}
-
-	// Attempt to parse a single ior Operator.
-	var ior string
-	ior, token, ok = v.parseToken(IorToken)
-	if ok {
-		// Found a single ior Operator.
-		operator = ast.OperatorClass().Operator(ior)
-		return
-	}
-
-	// Attempt to parse a single xor Operator.
-	var xor string
-	xor, token, ok = v.parseToken(XorToken)
-	if ok {
-		// Found a single xor Operator.
-		operator = ast.OperatorClass().Operator(xor)
-		return
-	}
-
 	// Attempt to parse a single ampersand Operator.
 	var ampersand string
 	ampersand, token, ok = v.parseToken(AmpersandToken)
 	if ok {
 		// Found a single ampersand Operator.
 		operator = ast.OperatorClass().Operator(ampersand)
+		return
+	}
+
+	// Attempt to parse a single Is Operator.
+	var is ast.IsLike
+	is, token, ok = v.parseIs()
+	if ok {
+		// Found a single Is Operator.
+		operator = ast.OperatorClass().Operator(is)
+		return
+	}
+
+	// Attempt to parse a single Matches Operator.
+	var matches ast.MatchesLike
+	matches, token, ok = v.parseMatches()
+	if ok {
+		// Found a single Matches Operator.
+		operator = ast.OperatorClass().Operator(matches)
+		return
+	}
+
+	// Attempt to parse a single And Operator.
+	var and ast.AndLike
+	and, token, ok = v.parseAnd()
+	if ok {
+		// Found a single And Operator.
+		operator = ast.OperatorClass().Operator(and)
+		return
+	}
+
+	// Attempt to parse a single San Operator.
+	var san ast.SanLike
+	san, token, ok = v.parseSan()
+	if ok {
+		// Found a single San Operator.
+		operator = ast.OperatorClass().Operator(san)
+		return
+	}
+
+	// Attempt to parse a single Ior Operator.
+	var ior ast.IorLike
+	ior, token, ok = v.parseIor()
+	if ok {
+		// Found a single Ior Operator.
+		operator = ast.OperatorClass().Operator(ior)
+		return
+	}
+
+	// Attempt to parse a single Xor Operator.
+	var xor ast.XorLike
+	xor, token, ok = v.parseXor()
+	if ok {
+		// Found a single Xor Operator.
+		operator = ast.OperatorClass().Operator(xor)
 		return
 	}
 
@@ -9812,6 +9936,37 @@ func (v *parser_) parseReturnClause() (
 	ok = true
 	v.remove(tokens)
 	returnClause = ast.ReturnClauseClass().ReturnClause(result)
+	return
+}
+
+func (v *parser_) parseSan() (
+	san ast.SanLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "san" delimiter.
+	_, token, ok = v.parseDelimiter("san")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single San rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$San", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single San rule.
+	ok = true
+	v.remove(tokens)
+	san = ast.SanClass().San()
 	return
 }
 
@@ -10762,6 +10917,37 @@ func (v *parser_) parseWithClause() (
 	return
 }
 
+func (v *parser_) parseXor() (
+	xor ast.XorLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "xor" delimiter.
+	_, token, ok = v.parseDelimiter("xor")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Xor rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Xor", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Xor rule.
+	ok = true
+	v.remove(tokens)
+	xor = ast.XorClass().Xor()
+	return
+}
+
 func (v *parser_) parseDelimiter(
 	expectedValue string,
 ) (
@@ -11207,13 +11393,19 @@ var parserClassReference_ = &parserClass_{
   - less
   - equal
   - more
-  - is
-  - matches
-  - and
-  - san
-  - ior
-  - xor
-  - ampersand`,
+  - ampersand
+  - Is
+  - Matches
+  - And
+  - San
+  - Ior
+  - Xor`,
+			"$Is":         `"is"`,
+			"$Matches":    `"matches"`,
+			"$And":        `"and"`,
+			"$San":        `"san"`,
+			"$Ior":        `"ior"`,
+			"$Xor":        `"xor"`,
 			"$Precedence": `"(" Expression ")"`,
 			"$Referent":   `snail Indirect`,
 			"$Indirect": `

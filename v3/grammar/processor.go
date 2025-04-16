@@ -55,11 +55,6 @@ func (v *processor_) ProcessAmpersand(
 ) {
 }
 
-func (v *processor_) ProcessAnd(
-	and string,
-) {
-}
-
 func (v *processor_) ProcessAngle(
 	angle string,
 ) {
@@ -155,23 +150,8 @@ func (v *processor_) ProcessIdentifier(
 ) {
 }
 
-func (v *processor_) ProcessIor(
-	ior string,
-) {
-}
-
-func (v *processor_) ProcessIs(
-	is string,
-) {
-}
-
 func (v *processor_) ProcessLess(
 	less string,
-) {
-}
-
-func (v *processor_) ProcessMatches(
-	matches string,
 ) {
 }
 
@@ -245,11 +225,6 @@ func (v *processor_) ProcessResource(
 ) {
 }
 
-func (v *processor_) ProcessSan(
-	san string,
-) {
-}
-
 func (v *processor_) ProcessSlash(
 	slash string,
 ) {
@@ -292,11 +267,6 @@ func (v *processor_) ProcessTag(
 
 func (v *processor_) ProcessVersion(
 	version string,
-) {
-}
-
-func (v *processor_) ProcessXor(
-	xor string,
 ) {
 }
 
@@ -407,6 +377,21 @@ func (v *processor_) PostprocessAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 	index uint,
 	size uint,
+) {
+}
+
+func (v *processor_) PreprocessAnd(
+	and ast.AndLike,
+) {
+}
+
+func (v *processor_) ProcessAndSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessAnd(
+	and ast.AndLike,
 ) {
 }
 
@@ -1727,6 +1712,36 @@ func (v *processor_) PostprocessInvocation(
 ) {
 }
 
+func (v *processor_) PreprocessIor(
+	ior ast.IorLike,
+) {
+}
+
+func (v *processor_) ProcessIorSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessIor(
+	ior ast.IorLike,
+) {
+}
+
+func (v *processor_) PreprocessIs(
+	is ast.IsLike,
+) {
+}
+
+func (v *processor_) ProcessIsSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessIs(
+	is ast.IsLike,
+) {
+}
+
 func (v *processor_) PreprocessItem(
 	item ast.ItemLike,
 ) {
@@ -1818,6 +1833,21 @@ func (v *processor_) PostprocessMatchHandler(
 	matchHandler ast.MatchHandlerLike,
 	index uint,
 	size uint,
+) {
+}
+
+func (v *processor_) PreprocessMatches(
+	matches ast.MatchesLike,
+) {
+}
+
+func (v *processor_) ProcessMatchesSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessMatches(
+	matches ast.MatchesLike,
 ) {
 }
 
@@ -2230,6 +2260,21 @@ func (v *processor_) PostprocessReturnClause(
 ) {
 }
 
+func (v *processor_) PreprocessSan(
+	san ast.SanLike,
+) {
+}
+
+func (v *processor_) ProcessSanSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessSan(
+	san ast.SanLike,
+) {
+}
+
 func (v *processor_) PreprocessSaveClause(
 	saveClause ast.SaveClauseLike,
 ) {
@@ -2452,6 +2497,21 @@ func (v *processor_) ProcessWithClauseSlot(
 
 func (v *processor_) PostprocessWithClause(
 	withClause ast.WithClauseLike,
+) {
+}
+
+func (v *processor_) PreprocessXor(
+	xor ast.XorLike,
+) {
+}
+
+func (v *processor_) ProcessXorSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessXor(
+	xor ast.XorLike,
 ) {
 }
 

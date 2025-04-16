@@ -425,13 +425,25 @@ $Operator:
   - less
   - equal
   - more
-  - is
-  - matches
-  - and
-  - san
-  - ior
-  - xor
   - ampersand
+  - Is
+  - Matches
+  - And
+  - San
+  - Ior
+  - Xor
+
+$Is: "is"
+
+$Matches: "matches"
+
+$And: "and"
+
+$San: "san"
+
+$Ior: "ior"
+
+$Xor: "xor"
 
 $Precedence: "(" Expression ")"
 
@@ -487,8 +499,6 @@ $alpha: ['A'..'Z' 'a'..'z']
 $alphanumeric: alpha | base10
 
 $ampersand: '&'
-
-$and: "and"
 
 $angle: '~' (zero | amplitude | "pi" | "π" | "tau" | "τ")
 
@@ -556,10 +566,6 @@ $infinity: sign? ("infinity" | '∞')
 
 $instruction: base16{4}
 
-$ior: "ior"
-
-$is: "is"
-
 $letter: LOWER | UPPER
 
 $amplitude: (zero fraction | ordinal fraction?) exponent?
@@ -612,8 +618,6 @@ $regex: '"' character+ '"' '?'
 
 $resource: '<' scheme ':' ("//" authority)? '/' path ('?' query)? ('#' fragment)? '>'
 
-$san: "san"
-
 $scheme: alpha (alphanumeric | plus | dash | dot)*
 
 $second: (['0'..'5'] ['0'..'9']) | ('6' ['0'..'1'])
@@ -647,8 +651,6 @@ $unicode: ('u' base16{4}) | ('U' base16{8})
 $version: 'v' ordinal (dot ordinal)*
 
 $weeks: timespan 'W'
-
-$xor: "xor"
 
 $year: zero | ordinal
 

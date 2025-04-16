@@ -118,6 +118,16 @@ type AdditionalValueClassLike interface {
 }
 
 /*
+AndClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete and-like class.
+*/
+type AndClassLike interface {
+	// Constructor Methods
+	And() AndLike
+}
+
+/*
 AnnotatedAssociationClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete annotated-association-like class.
@@ -1220,6 +1230,26 @@ type InvocationClassLike interface {
 }
 
 /*
+IorClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ior-like class.
+*/
+type IorClassLike interface {
+	// Constructor Methods
+	Ior() IorLike
+}
+
+/*
+IsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete is-like class.
+*/
+type IsClassLike interface {
+	// Constructor Methods
+	Is() IsLike
+}
+
+/*
 ItemClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete item-like class.
@@ -1294,6 +1324,16 @@ type MatchHandlerClassLike interface {
 		template TemplateLike,
 		procedure ProcedureLike,
 	) MatchHandlerLike
+}
+
+/*
+MatchesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete matches-like class.
+*/
+type MatchesClassLike interface {
+	// Constructor Methods
+	Matches() MatchesLike
 }
 
 /*
@@ -1630,6 +1670,16 @@ type ReturnClauseClassLike interface {
 }
 
 /*
+SanClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete san-like class.
+*/
+type SanClassLike interface {
+	// Constructor Methods
+	San() SanLike
+}
+
+/*
 SaveClauseClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete save-clause-like class.
@@ -1817,6 +1867,16 @@ type WithClauseClassLike interface {
 	) WithClauseLike
 }
 
+/*
+XorClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete xor-like class.
+*/
+type XorClassLike interface {
+	// Constructor Methods
+	Xor() XorLike
+}
+
 // INSTANCE DECLARATIONS
 
 /*
@@ -1895,6 +1955,16 @@ type AdditionalValueLike interface {
 
 	// Attribute Methods
 	GetComponent() ComponentLike
+}
+
+/*
+AndLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete and-like class.
+*/
+type AndLike interface {
+	// Principal Methods
+	GetClass() AndClassLike
 }
 
 /*
@@ -3085,6 +3155,26 @@ type InvocationLike interface {
 }
 
 /*
+IorLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ior-like class.
+*/
+type IorLike interface {
+	// Principal Methods
+	GetClass() IorClassLike
+}
+
+/*
+IsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete is-like class.
+*/
+type IsLike interface {
+	// Principal Methods
+	GetClass() IsClassLike
+}
+
+/*
 ItemLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete item-like class.
@@ -3165,6 +3255,16 @@ type MatchHandlerLike interface {
 	// Attribute Methods
 	GetTemplate() TemplateLike
 	GetProcedure() ProcedureLike
+}
+
+/*
+MatchesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete matches-like class.
+*/
+type MatchesLike interface {
+	// Principal Methods
+	GetClass() MatchesClassLike
 }
 
 /*
@@ -3526,6 +3626,16 @@ type ReturnClauseLike interface {
 }
 
 /*
+SanLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete san-like class.
+*/
+type SanLike interface {
+	// Principal Methods
+	GetClass() SanClassLike
+}
+
+/*
 SaveClauseLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete save-clause-like class.
@@ -3726,6 +3836,16 @@ type WithClauseLike interface {
 	GetItem() ItemLike
 	GetSequence() SequenceLike
 	GetProcedure() ProcedureLike
+}
+
+/*
+XorLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete xor-like class.
+*/
+type XorLike interface {
+	// Principal Methods
+	GetClass() XorClassLike
 }
 
 // ASPECT DECLARATIONS

@@ -50,10 +50,10 @@
         let attribute[$first, 3] ?= undefined
     }
     do list.addValue(value)
-    if list.isEmpty() AND value ≠ none do {
+    if list.isEmpty() and not (value = none) do {
         do list.addValue(value)
     }
-    if NOT successful do {
+    if not successful do {
         throw [
             $type: $bad
             $kind: "worse"
@@ -61,7 +61,7 @@
     }
     if foo do {
         if bar do {
-            foobar()
+            do foobar()
         }
     } on $failure matching $bad do {
 

@@ -128,6 +128,12 @@ func (v *visitor_) visitAdditionalValue(
 	v.processor_.PostprocessComponent(component)
 }
 
+func (v *visitor_) visitAnd(
+	and ast.AndLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitAnnotatedAssociation(
 	annotatedAssociation ast.AnnotatedAssociationLike,
 ) {
@@ -1861,6 +1867,18 @@ func (v *visitor_) visitInvocation(
 	}
 }
 
+func (v *visitor_) visitIor(
+	ior ast.IorLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitIs(
+	is ast.IsLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitItem(
 	item ast.ItemLike,
 ) {
@@ -2016,6 +2034,12 @@ func (v *visitor_) visitMatchHandler(
 	v.processor_.PreprocessProcedure(procedure)
 	v.visitProcedure(procedure)
 	v.processor_.PostprocessProcedure(procedure)
+}
+
+func (v *visitor_) visitMatches(
+	matches ast.MatchesLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitMessage(
@@ -2350,6 +2374,30 @@ func (v *visitor_) visitOperator(
 ) {
 	// Visit the possible operator types.
 	switch actual := operator.GetAny().(type) {
+	case ast.IsLike:
+		v.processor_.PreprocessIs(actual)
+		v.visitIs(actual)
+		v.processor_.PostprocessIs(actual)
+	case ast.MatchesLike:
+		v.processor_.PreprocessMatches(actual)
+		v.visitMatches(actual)
+		v.processor_.PostprocessMatches(actual)
+	case ast.AndLike:
+		v.processor_.PreprocessAnd(actual)
+		v.visitAnd(actual)
+		v.processor_.PostprocessAnd(actual)
+	case ast.SanLike:
+		v.processor_.PreprocessSan(actual)
+		v.visitSan(actual)
+		v.processor_.PostprocessSan(actual)
+	case ast.IorLike:
+		v.processor_.PreprocessIor(actual)
+		v.visitIor(actual)
+		v.processor_.PostprocessIor(actual)
+	case ast.XorLike:
+		v.processor_.PreprocessXor(actual)
+		v.visitXor(actual)
+		v.processor_.PostprocessXor(actual)
 	case string:
 		switch {
 		case ScannerClass().MatchesType(actual, PlusToken):
@@ -2370,18 +2418,6 @@ func (v *visitor_) visitOperator(
 			v.processor_.ProcessEqual(actual)
 		case ScannerClass().MatchesType(actual, MoreToken):
 			v.processor_.ProcessMore(actual)
-		case ScannerClass().MatchesType(actual, IsToken):
-			v.processor_.ProcessIs(actual)
-		case ScannerClass().MatchesType(actual, MatchesToken):
-			v.processor_.ProcessMatches(actual)
-		case ScannerClass().MatchesType(actual, AndToken):
-			v.processor_.ProcessAnd(actual)
-		case ScannerClass().MatchesType(actual, SanToken):
-			v.processor_.ProcessSan(actual)
-		case ScannerClass().MatchesType(actual, IorToken):
-			v.processor_.ProcessIor(actual)
-		case ScannerClass().MatchesType(actual, XorToken):
-			v.processor_.ProcessXor(actual)
 		case ScannerClass().MatchesType(actual, AmpersandToken):
 			v.processor_.ProcessAmpersand(actual)
 		default:
@@ -2616,6 +2652,12 @@ func (v *visitor_) visitReturnClause(
 	v.processor_.PreprocessResult(result)
 	v.visitResult(result)
 	v.processor_.PostprocessResult(result)
+}
+
+func (v *visitor_) visitSan(
+	san ast.SanLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitSaveClause(
@@ -2946,6 +2988,12 @@ func (v *visitor_) visitWithClause(
 	v.processor_.PreprocessProcedure(procedure)
 	v.visitProcedure(procedure)
 	v.processor_.PostprocessProcedure(procedure)
+}
+
+func (v *visitor_) visitXor(
+	xor ast.XorLike,
+) {
+	// This method does not need to process anything.
 }
 
 // Instance Structure

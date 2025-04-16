@@ -195,7 +195,6 @@ loop:
 		case v.foundToken(NewlineToken):
 		case v.foundToken(SpaceToken):
 		case v.foundToken(AmpersandToken):
-		case v.foundToken(AndToken):
 		case v.foundToken(AngleToken):
 		case v.foundToken(BarToken):
 		case v.foundToken(BinaryToken):
@@ -211,9 +210,6 @@ loop:
 		case v.foundToken(DoubleToken):
 		case v.foundToken(DurationToken):
 		case v.foundToken(EqualToken):
-		case v.foundToken(IorToken):
-		case v.foundToken(IsToken):
-		case v.foundToken(MatchesToken):
 		case v.foundToken(MomentToken):
 		case v.foundToken(MoreToken):
 		case v.foundToken(NameToken):
@@ -226,7 +222,6 @@ loop:
 		case v.foundToken(PlusToken):
 		case v.foundToken(QuoteToken):
 		case v.foundToken(ResourceToken):
-		case v.foundToken(SanToken):
 		case v.foundToken(SlashEqualToken):
 		case v.foundToken(SlashToken):
 		case v.foundToken(SnailToken):
@@ -235,7 +230,6 @@ loop:
 		case v.foundToken(SymbolToken):
 		case v.foundToken(TagToken):
 		case v.foundToken(VersionToken):
-		case v.foundToken(XorToken):
 		case v.foundToken(NumberToken):
 		case v.foundToken(IdentifierToken):
 		case v.foundToken(DotToken):
@@ -283,7 +277,6 @@ var scannerClassReference_ = &scannerClass_{
 			// Define identifiers for each type of token.
 			ErrorToken:        "error",
 			AmpersandToken:    "ampersand",
-			AndToken:          "and",
 			AngleToken:        "angle",
 			ArrowToken:        "arrow",
 			BarToken:          "bar",
@@ -304,10 +297,7 @@ var scannerClassReference_ = &scannerClass_{
 			DurationToken:     "duration",
 			EqualToken:        "equal",
 			IdentifierToken:   "identifier",
-			IorToken:          "ior",
-			IsToken:           "is",
 			LessToken:         "less",
-			MatchesToken:      "matches",
 			MomentToken:       "moment",
 			MoreToken:         "more",
 			NameToken:         "name",
@@ -322,7 +312,6 @@ var scannerClassReference_ = &scannerClass_{
 			ProbabilityToken:  "probability",
 			QuoteToken:        "quote",
 			ResourceToken:     "resource",
-			SanToken:          "san",
 			SlashToken:        "slash",
 			SlashEqualToken:   "slashEqual",
 			SnailToken:        "snail",
@@ -332,14 +321,12 @@ var scannerClassReference_ = &scannerClass_{
 			SymbolToken:       "symbol",
 			TagToken:          "tag",
 			VersionToken:      "version",
-			XorToken:          "xor",
 		},
 	),
 	matchers_: fra.CatalogFromMap[TokenType, *reg.Regexp](
 		map[TokenType]*reg.Regexp{
 			// Define pattern matchers for each type of token.
 			AmpersandToken:    reg.MustCompile("^" + ampersand_),
-			AndToken:          reg.MustCompile("^" + and_),
 			AngleToken:        reg.MustCompile("^" + angle_),
 			ArrowToken:        reg.MustCompile("^" + arrow_),
 			BarToken:          reg.MustCompile("^" + bar_),
@@ -360,10 +347,7 @@ var scannerClassReference_ = &scannerClass_{
 			DurationToken:     reg.MustCompile("^" + duration_),
 			EqualToken:        reg.MustCompile("^" + equal_),
 			IdentifierToken:   reg.MustCompile("^" + identifier_),
-			IorToken:          reg.MustCompile("^" + ior_),
-			IsToken:           reg.MustCompile("^" + is_),
 			LessToken:         reg.MustCompile("^" + less_),
-			MatchesToken:      reg.MustCompile("^" + matches_),
 			MomentToken:       reg.MustCompile("^" + moment_),
 			MoreToken:         reg.MustCompile("^" + more_),
 			NameToken:         reg.MustCompile("^" + name_),
@@ -378,7 +362,6 @@ var scannerClassReference_ = &scannerClass_{
 			ProbabilityToken:  reg.MustCompile("^" + probability_),
 			QuoteToken:        reg.MustCompile("^" + quote_),
 			ResourceToken:     reg.MustCompile("^" + resource_),
-			SanToken:          reg.MustCompile("^" + san_),
 			SlashToken:        reg.MustCompile("^" + slash_),
 			SlashEqualToken:   reg.MustCompile("^" + slashEqual_),
 			SnailToken:        reg.MustCompile("^" + snail_),
@@ -388,7 +371,6 @@ var scannerClassReference_ = &scannerClass_{
 			SymbolToken:       reg.MustCompile("^" + symbol_),
 			TagToken:          reg.MustCompile("^" + tag_),
 			VersionToken:      reg.MustCompile("^" + version_),
-			XorToken:          reg.MustCompile("^" + xor_),
 		},
 	),
 }
@@ -413,13 +395,12 @@ const (
 	upper_   = "\\p{Lu}"
 
 	// Define the regular expression patterns for each token type.
-	delimiter_    = "(?:with|while|to|throw|select|save|return|retrieve|reject|publish|post|on|notarize|not|matching|loop|level|let|in|if|from|each|do|discard|continue|checkout|break|at|as|accept|\\}|\\{|\\]|\\[|\\.\\.|\\)|\\(|;|,)"
+	delimiter_    = "(?:xor|with|while|to|throw|select|save|san|return|retrieve|reject|publish|post|on|notarize|not|matching|matches|loop|level|let|is|ior|in|if|from|each|do|discard|continue|checkout|break|at|as|and|accept|\\}|\\{|\\]|\\[|\\.\\.|\\)|\\(|;|,)"
 	newline_      = "(?:" + eol_ + ")"
 	space_        = "(?: )"
 	alpha_        = "(?:[A-Za-z])"
 	alphanumeric_ = "(?:(?:" + alpha_ + ")|(?:" + base10_ + "))"
 	ampersand_    = "(?:&)"
-	and_          = "(?:and)"
 	angle_        = "(?:~((?:" + zero_ + ")|(?:" + amplitude_ + ")|pi|π|tau|τ))"
 	authority_    = "(?:[^/" + control_ + "]+)"
 	bar_          = "(?:\\|)"
@@ -453,8 +434,6 @@ const (
 	imaginary_    = "(?:(?:" + sign_ + ")?(?:" + amplitude_ + ")i)"
 	infinity_     = "(?:(?:" + sign_ + ")?(infinity|∞))"
 	instruction_  = "(?:(?:" + base16_ + "){4})"
-	ior_          = "(?:ior)"
-	is_           = "(?:is)"
 	letter_       = "(?:" + lower_ + "|" + upper_ + ")"
 	amplitude_    = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)(?:" + exponent_ + ")?)"
 	matches_      = "(?:matches)"
@@ -481,7 +460,6 @@ const (
 	rectangular_  = "(?:(?:" + float_ + ")(?:" + sign_ + ")(?:" + float_ + ")?i)"
 	regex_        = "(?:\"(?:" + character_ + ")+\"\\?)"
 	resource_     = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(?:" + path_ + ")(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
-	san_          = "(?:san)"
 	scheme_       = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|(?:" + plus_ + ")|(?:" + dash_ + ")|(?:" + dot_ + "))*)"
 	second_       = "(?:([0-5][0-9])|(6[0-1]))"
 	seconds_      = "(?:(?:" + timespan_ + ")S)"
@@ -498,7 +476,6 @@ const (
 	unicode_      = "(?:(u(?:" + base16_ + "){4})|(U(?:" + base16_ + "){8}))"
 	version_      = "(?:v(?:" + ordinal_ + ")((?:" + dot_ + ")(?:" + ordinal_ + "))*)"
 	weeks_        = "(?:(?:" + timespan_ + ")W)"
-	xor_          = "(?:xor)"
 	year_         = "(?:(?:" + zero_ + ")|(?:" + ordinal_ + "))"
 	years_        = "(?:(?:" + timespan_ + ")Y)"
 	zero_         = "(?:0)"
