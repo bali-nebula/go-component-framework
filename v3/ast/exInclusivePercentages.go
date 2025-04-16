@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func ExInclusivePercentagesClass() ExInclusivePercentagesClassLike {
+	return exInclusivePercentagesClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *exInclusivePercentagesClass_) ExInclusivePercentages(
+	percentage1 string,
+	percentage2 string,
+) ExInclusivePercentagesLike {
+	if uti.IsUndefined(percentage1) {
+		panic("The \"percentage1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(percentage2) {
+		panic("The \"percentage2\" attribute is required by this class.")
+	}
+	var instance = &exInclusivePercentages_{
 		// Initialize the instance attributes.
-		component_: component,
+		percentage1_: percentage1,
+		percentage2_: percentage2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *exInclusivePercentages_) GetClass() ExInclusivePercentagesClassLike {
+	return exInclusivePercentagesClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *exInclusivePercentages_) GetPercentage1() string {
+	return v.percentage1_
+}
+
+func (v *exInclusivePercentages_) GetPercentage2() string {
+	return v.percentage2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type exInclusivePercentages_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	percentage1_ string
+	percentage2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type exInclusivePercentagesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func exInclusivePercentagesClass() *exInclusivePercentagesClass_ {
+	return exInclusivePercentagesClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var exInclusivePercentagesClassReference_ = &exInclusivePercentagesClass_{
 	// Initialize the class constants.
 }

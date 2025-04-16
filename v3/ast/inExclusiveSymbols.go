@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func InExclusiveSymbolsClass() InExclusiveSymbolsClassLike {
+	return inExclusiveSymbolsClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *inExclusiveSymbolsClass_) InExclusiveSymbols(
+	symbol1 string,
+	symbol2 string,
+) InExclusiveSymbolsLike {
+	if uti.IsUndefined(symbol1) {
+		panic("The \"symbol1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(symbol2) {
+		panic("The \"symbol2\" attribute is required by this class.")
+	}
+	var instance = &inExclusiveSymbols_{
 		// Initialize the instance attributes.
-		component_: component,
+		symbol1_: symbol1,
+		symbol2_: symbol2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *inExclusiveSymbols_) GetClass() InExclusiveSymbolsClassLike {
+	return inExclusiveSymbolsClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *inExclusiveSymbols_) GetSymbol1() string {
+	return v.symbol1_
+}
+
+func (v *inExclusiveSymbols_) GetSymbol2() string {
+	return v.symbol2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type inExclusiveSymbols_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	symbol1_ string
+	symbol2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type inExclusiveSymbolsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func inExclusiveSymbolsClass() *inExclusiveSymbolsClass_ {
+	return inExclusiveSymbolsClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var inExclusiveSymbolsClassReference_ = &inExclusiveSymbolsClass_{
 	// Initialize the class constants.
 }

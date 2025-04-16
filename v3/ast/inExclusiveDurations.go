@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func InExclusiveDurationsClass() InExclusiveDurationsClassLike {
+	return inExclusiveDurationsClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *inExclusiveDurationsClass_) InExclusiveDurations(
+	duration1 string,
+	duration2 string,
+) InExclusiveDurationsLike {
+	if uti.IsUndefined(duration1) {
+		panic("The \"duration1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(duration2) {
+		panic("The \"duration2\" attribute is required by this class.")
+	}
+	var instance = &inExclusiveDurations_{
 		// Initialize the instance attributes.
-		component_: component,
+		duration1_: duration1,
+		duration2_: duration2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *inExclusiveDurations_) GetClass() InExclusiveDurationsClassLike {
+	return inExclusiveDurationsClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *inExclusiveDurations_) GetDuration1() string {
+	return v.duration1_
+}
+
+func (v *inExclusiveDurations_) GetDuration2() string {
+	return v.duration2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type inExclusiveDurations_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	duration1_ string
+	duration2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type inExclusiveDurationsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func inExclusiveDurationsClass() *inExclusiveDurationsClass_ {
+	return inExclusiveDurationsClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var inExclusiveDurationsClassReference_ = &inExclusiveDurationsClass_{
 	// Initialize the class constants.
 }

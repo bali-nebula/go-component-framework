@@ -36,7 +36,7 @@ func AssociationClass() AssociationClassLike {
 func (c *associationClass_) Association(
 	symbol string,
 	colon string,
-	value ValueLike,
+	component ComponentLike,
 ) AssociationLike {
 	if uti.IsUndefined(symbol) {
 		panic("The \"symbol\" attribute is required by this class.")
@@ -44,14 +44,14 @@ func (c *associationClass_) Association(
 	if uti.IsUndefined(colon) {
 		panic("The \"colon\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(value) {
-		panic("The \"value\" attribute is required by this class.")
+	if uti.IsUndefined(component) {
+		panic("The \"component\" attribute is required by this class.")
 	}
 	var instance = &association_{
 		// Initialize the instance attributes.
-		symbol_: symbol,
-		colon_:  colon,
-		value_:  value,
+		symbol_:    symbol,
+		colon_:     colon,
+		component_: component,
 	}
 	return instance
 }
@@ -74,8 +74,8 @@ func (v *association_) GetColon() string {
 	return v.colon_
 }
 
-func (v *association_) GetValue() ValueLike {
-	return v.value_
+func (v *association_) GetComponent() ComponentLike {
+	return v.component_
 }
 
 // PROTECTED INTERFACE
@@ -84,9 +84,9 @@ func (v *association_) GetValue() ValueLike {
 
 type association_ struct {
 	// Declare the instance attributes.
-	symbol_ string
-	colon_  string
-	value_  ValueLike
+	symbol_    string
+	colon_     string
+	component_ ComponentLike
 }
 
 // Class Structure

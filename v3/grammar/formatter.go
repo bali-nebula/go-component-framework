@@ -986,6 +986,60 @@ func (v *formatter_) PostprocessExInclusiveAngles(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessExInclusiveDurations(
+	exInclusiveDurations ast.ExInclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusiveDurationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusiveDurations(
+	exInclusiveDurations ast.ExInclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExInclusiveMoments(
+	exInclusiveMoments ast.ExInclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusiveMomentsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusiveMoments(
+	exInclusiveMoments ast.ExInclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExInclusiveNames(
+	exInclusiveNames ast.ExInclusiveNamesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusiveNamesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusiveNames(
+	exInclusiveNames ast.ExInclusiveNamesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessExInclusiveNumbers(
 	exInclusiveNumbers ast.ExInclusiveNumbersLike,
 ) {
@@ -1004,6 +1058,42 @@ func (v *formatter_) PostprocessExInclusiveNumbers(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessExInclusivePercentages(
+	exInclusivePercentages ast.ExInclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusivePercentagesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusivePercentages(
+	exInclusivePercentages ast.ExInclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExInclusiveProbabilities(
+	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusiveProbabilitiesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusiveProbabilities(
+	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessExInclusiveQuotes(
 	exInclusiveQuotes ast.ExInclusiveQuotesLike,
 ) {
@@ -1018,6 +1108,42 @@ func (v *formatter_) ProcessExInclusiveQuotesSlot(
 
 func (v *formatter_) PostprocessExInclusiveQuotes(
 	exInclusiveQuotes ast.ExInclusiveQuotesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExInclusiveSymbols(
+	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusiveSymbolsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusiveSymbols(
+	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExInclusiveVersions(
+	exInclusiveVersions ast.ExInclusiveVersionsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusiveVersionsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusiveVersions(
+	exInclusiveVersions ast.ExInclusiveVersionsLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1058,6 +1184,60 @@ func (v *formatter_) PostprocessExclusiveAngles(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessExclusiveDurations(
+	exclusiveDurations ast.ExclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusiveDurationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusiveDurations(
+	exclusiveDurations ast.ExclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExclusiveMoments(
+	exclusiveMoments ast.ExclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusiveMomentsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusiveMoments(
+	exclusiveMoments ast.ExclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExclusiveNames(
+	exclusiveNames ast.ExclusiveNamesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusiveNamesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusiveNames(
+	exclusiveNames ast.ExclusiveNamesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessExclusiveNumbers(
 	exclusiveNumbers ast.ExclusiveNumbersLike,
 ) {
@@ -1076,6 +1256,42 @@ func (v *formatter_) PostprocessExclusiveNumbers(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessExclusivePercentages(
+	exclusivePercentages ast.ExclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusivePercentagesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusivePercentages(
+	exclusivePercentages ast.ExclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExclusiveProbabilities(
+	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusiveProbabilitiesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusiveProbabilities(
+	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessExclusiveQuotes(
 	exclusiveQuotes ast.ExclusiveQuotesLike,
 ) {
@@ -1090,6 +1306,42 @@ func (v *formatter_) ProcessExclusiveQuotesSlot(
 
 func (v *formatter_) PostprocessExclusiveQuotes(
 	exclusiveQuotes ast.ExclusiveQuotesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExclusiveSymbols(
+	exclusiveSymbols ast.ExclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusiveSymbolsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusiveSymbols(
+	exclusiveSymbols ast.ExclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExclusiveVersions(
+	exclusiveVersions ast.ExclusiveVersionsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusiveVersionsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusiveVersions(
+	exclusiveVersions ast.ExclusiveVersionsLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1202,6 +1454,60 @@ func (v *formatter_) PostprocessInExclusiveAngles(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessInExclusiveDurations(
+	inExclusiveDurations ast.InExclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusiveDurationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusiveDurations(
+	inExclusiveDurations ast.InExclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInExclusiveMoments(
+	inExclusiveMoments ast.InExclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusiveMomentsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusiveMoments(
+	inExclusiveMoments ast.InExclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInExclusiveNames(
+	inExclusiveNames ast.InExclusiveNamesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusiveNamesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusiveNames(
+	inExclusiveNames ast.InExclusiveNamesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessInExclusiveNumbers(
 	inExclusiveNumbers ast.InExclusiveNumbersLike,
 ) {
@@ -1216,6 +1522,42 @@ func (v *formatter_) ProcessInExclusiveNumbersSlot(
 
 func (v *formatter_) PostprocessInExclusiveNumbers(
 	inExclusiveNumbers ast.InExclusiveNumbersLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInExclusivePercentages(
+	inExclusivePercentages ast.InExclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusivePercentagesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusivePercentages(
+	inExclusivePercentages ast.InExclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInExclusiveProbabilities(
+	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusiveProbabilitiesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusiveProbabilities(
+	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1238,6 +1580,42 @@ func (v *formatter_) PostprocessInExclusiveQuotes(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessInExclusiveSymbols(
+	inExclusiveSymbols ast.InExclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusiveSymbolsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusiveSymbols(
+	inExclusiveSymbols ast.InExclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInExclusiveVersions(
+	inExclusiveVersions ast.InExclusiveVersionsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusiveVersionsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusiveVersions(
+	inExclusiveVersions ast.InExclusiveVersionsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
 ) {
@@ -1252,6 +1630,60 @@ func (v *formatter_) ProcessInclusiveAnglesSlot(
 
 func (v *formatter_) PostprocessInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInclusiveDurations(
+	inclusiveDurations ast.InclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusiveDurationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusiveDurations(
+	inclusiveDurations ast.InclusiveDurationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInclusiveMoments(
+	inclusiveMoments ast.InclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusiveMomentsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusiveMoments(
+	inclusiveMoments ast.InclusiveMomentsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInclusiveNames(
+	inclusiveNames ast.InclusiveNamesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusiveNamesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusiveNames(
+	inclusiveNames ast.InclusiveNamesLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1274,6 +1706,42 @@ func (v *formatter_) PostprocessInclusiveNumbers(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessInclusivePercentages(
+	inclusivePercentages ast.InclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusivePercentagesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusivePercentages(
+	inclusivePercentages ast.InclusivePercentagesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInclusiveProbabilities(
+	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusiveProbabilitiesSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusiveProbabilities(
+	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessInclusiveQuotes(
 	inclusiveQuotes ast.InclusiveQuotesLike,
 ) {
@@ -1288,6 +1756,42 @@ func (v *formatter_) ProcessInclusiveQuotesSlot(
 
 func (v *formatter_) PostprocessInclusiveQuotes(
 	inclusiveQuotes ast.InclusiveQuotesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInclusiveSymbols(
+	inclusiveSymbols ast.InclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusiveSymbolsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusiveSymbols(
+	inclusiveSymbols ast.InclusiveSymbolsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInclusiveVersions(
+	inclusiveVersions ast.InclusiveVersionsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusiveVersionsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusiveVersions(
+	inclusiveVersions ast.InclusiveVersionsLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -2304,24 +2808,6 @@ func (v *formatter_) ProcessThrowClauseSlot(
 
 func (v *formatter_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessValue(
-	value ast.ValueLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessValueSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessValue(
-	value ast.ValueLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

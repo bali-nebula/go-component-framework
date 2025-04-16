@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func ExInclusiveNamesClass() ExInclusiveNamesClassLike {
+	return exInclusiveNamesClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *exInclusiveNamesClass_) ExInclusiveNames(
+	name1 string,
+	name2 string,
+) ExInclusiveNamesLike {
+	if uti.IsUndefined(name1) {
+		panic("The \"name1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(name2) {
+		panic("The \"name2\" attribute is required by this class.")
+	}
+	var instance = &exInclusiveNames_{
 		// Initialize the instance attributes.
-		component_: component,
+		name1_: name1,
+		name2_: name2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *exInclusiveNames_) GetClass() ExInclusiveNamesClassLike {
+	return exInclusiveNamesClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *exInclusiveNames_) GetName1() string {
+	return v.name1_
+}
+
+func (v *exInclusiveNames_) GetName2() string {
+	return v.name2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type exInclusiveNames_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	name1_ string
+	name2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type exInclusiveNamesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func exInclusiveNamesClass() *exInclusiveNamesClass_ {
+	return exInclusiveNamesClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var exInclusiveNamesClassReference_ = &exInclusiveNamesClass_{
 	// Initialize the class constants.
 }

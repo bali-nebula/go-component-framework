@@ -121,11 +121,11 @@ func (v *visitor_) visitAdditionalStatement(
 func (v *visitor_) visitAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 ) {
-	// Visit a single value rule.
-	var value = additionalValue.GetValue()
-	v.processor_.PreprocessValue(value)
-	v.visitValue(value)
-	v.processor_.PostprocessValue(value)
+	// Visit a single component rule.
+	var component = additionalValue.GetComponent()
+	v.processor_.PreprocessComponent(component)
+	v.visitComponent(component)
+	v.processor_.PostprocessComponent(component)
 }
 
 func (v *visitor_) visitAnnotatedAssociation(
@@ -177,11 +177,11 @@ func (v *visitor_) visitAnnotatedStatement(
 func (v *visitor_) visitAnnotatedValue(
 	annotatedValue ast.AnnotatedValueLike,
 ) {
-	// Visit a single value rule.
-	var value = annotatedValue.GetValue()
-	v.processor_.PreprocessValue(value)
-	v.visitValue(value)
-	v.processor_.PostprocessValue(value)
+	// Visit a single component rule.
+	var component = annotatedValue.GetComponent()
+	v.processor_.PreprocessComponent(component)
+	v.visitComponent(component)
+	v.processor_.PostprocessComponent(component)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessAnnotatedValueSlot(1)
@@ -297,11 +297,11 @@ func (v *visitor_) visitAssociation(
 	// Visit slot 2 between references.
 	v.processor_.ProcessAssociationSlot(2)
 
-	// Visit a single value rule.
-	var value = association.GetValue()
-	v.processor_.PreprocessValue(value)
-	v.visitValue(value)
-	v.processor_.PostprocessValue(value)
+	// Visit a single component rule.
+	var component = association.GetComponent()
+	v.processor_.PreprocessComponent(component)
+	v.visitComponent(component)
+	v.processor_.PostprocessComponent(component)
 }
 
 func (v *visitor_) visitAtLevel(
@@ -407,6 +407,54 @@ func (v *visitor_) visitCollection(
 		v.processor_.PreprocessExclusiveAngles(actual)
 		v.visitExclusiveAngles(actual)
 		v.processor_.PostprocessExclusiveAngles(actual)
+	case ast.InclusiveDurationsLike:
+		v.processor_.PreprocessInclusiveDurations(actual)
+		v.visitInclusiveDurations(actual)
+		v.processor_.PostprocessInclusiveDurations(actual)
+	case ast.InExclusiveDurationsLike:
+		v.processor_.PreprocessInExclusiveDurations(actual)
+		v.visitInExclusiveDurations(actual)
+		v.processor_.PostprocessInExclusiveDurations(actual)
+	case ast.ExInclusiveDurationsLike:
+		v.processor_.PreprocessExInclusiveDurations(actual)
+		v.visitExInclusiveDurations(actual)
+		v.processor_.PostprocessExInclusiveDurations(actual)
+	case ast.ExclusiveDurationsLike:
+		v.processor_.PreprocessExclusiveDurations(actual)
+		v.visitExclusiveDurations(actual)
+		v.processor_.PostprocessExclusiveDurations(actual)
+	case ast.InclusiveMomentsLike:
+		v.processor_.PreprocessInclusiveMoments(actual)
+		v.visitInclusiveMoments(actual)
+		v.processor_.PostprocessInclusiveMoments(actual)
+	case ast.InExclusiveMomentsLike:
+		v.processor_.PreprocessInExclusiveMoments(actual)
+		v.visitInExclusiveMoments(actual)
+		v.processor_.PostprocessInExclusiveMoments(actual)
+	case ast.ExInclusiveMomentsLike:
+		v.processor_.PreprocessExInclusiveMoments(actual)
+		v.visitExInclusiveMoments(actual)
+		v.processor_.PostprocessExInclusiveMoments(actual)
+	case ast.ExclusiveMomentsLike:
+		v.processor_.PreprocessExclusiveMoments(actual)
+		v.visitExclusiveMoments(actual)
+		v.processor_.PostprocessExclusiveMoments(actual)
+	case ast.InclusiveNamesLike:
+		v.processor_.PreprocessInclusiveNames(actual)
+		v.visitInclusiveNames(actual)
+		v.processor_.PostprocessInclusiveNames(actual)
+	case ast.InExclusiveNamesLike:
+		v.processor_.PreprocessInExclusiveNames(actual)
+		v.visitInExclusiveNames(actual)
+		v.processor_.PostprocessInExclusiveNames(actual)
+	case ast.ExInclusiveNamesLike:
+		v.processor_.PreprocessExInclusiveNames(actual)
+		v.visitExInclusiveNames(actual)
+		v.processor_.PostprocessExInclusiveNames(actual)
+	case ast.ExclusiveNamesLike:
+		v.processor_.PreprocessExclusiveNames(actual)
+		v.visitExclusiveNames(actual)
+		v.processor_.PostprocessExclusiveNames(actual)
 	case ast.InclusiveNumbersLike:
 		v.processor_.PreprocessInclusiveNumbers(actual)
 		v.visitInclusiveNumbers(actual)
@@ -423,6 +471,38 @@ func (v *visitor_) visitCollection(
 		v.processor_.PreprocessExclusiveNumbers(actual)
 		v.visitExclusiveNumbers(actual)
 		v.processor_.PostprocessExclusiveNumbers(actual)
+	case ast.InclusivePercentagesLike:
+		v.processor_.PreprocessInclusivePercentages(actual)
+		v.visitInclusivePercentages(actual)
+		v.processor_.PostprocessInclusivePercentages(actual)
+	case ast.InExclusivePercentagesLike:
+		v.processor_.PreprocessInExclusivePercentages(actual)
+		v.visitInExclusivePercentages(actual)
+		v.processor_.PostprocessInExclusivePercentages(actual)
+	case ast.ExInclusivePercentagesLike:
+		v.processor_.PreprocessExInclusivePercentages(actual)
+		v.visitExInclusivePercentages(actual)
+		v.processor_.PostprocessExInclusivePercentages(actual)
+	case ast.ExclusivePercentagesLike:
+		v.processor_.PreprocessExclusivePercentages(actual)
+		v.visitExclusivePercentages(actual)
+		v.processor_.PostprocessExclusivePercentages(actual)
+	case ast.InclusiveProbabilitiesLike:
+		v.processor_.PreprocessInclusiveProbabilities(actual)
+		v.visitInclusiveProbabilities(actual)
+		v.processor_.PostprocessInclusiveProbabilities(actual)
+	case ast.InExclusiveProbabilitiesLike:
+		v.processor_.PreprocessInExclusiveProbabilities(actual)
+		v.visitInExclusiveProbabilities(actual)
+		v.processor_.PostprocessInExclusiveProbabilities(actual)
+	case ast.ExInclusiveProbabilitiesLike:
+		v.processor_.PreprocessExInclusiveProbabilities(actual)
+		v.visitExInclusiveProbabilities(actual)
+		v.processor_.PostprocessExInclusiveProbabilities(actual)
+	case ast.ExclusiveProbabilitiesLike:
+		v.processor_.PreprocessExclusiveProbabilities(actual)
+		v.visitExclusiveProbabilities(actual)
+		v.processor_.PostprocessExclusiveProbabilities(actual)
 	case ast.InclusiveQuotesLike:
 		v.processor_.PreprocessInclusiveQuotes(actual)
 		v.visitInclusiveQuotes(actual)
@@ -439,6 +519,38 @@ func (v *visitor_) visitCollection(
 		v.processor_.PreprocessExclusiveQuotes(actual)
 		v.visitExclusiveQuotes(actual)
 		v.processor_.PostprocessExclusiveQuotes(actual)
+	case ast.InclusiveSymbolsLike:
+		v.processor_.PreprocessInclusiveSymbols(actual)
+		v.visitInclusiveSymbols(actual)
+		v.processor_.PostprocessInclusiveSymbols(actual)
+	case ast.InExclusiveSymbolsLike:
+		v.processor_.PreprocessInExclusiveSymbols(actual)
+		v.visitInExclusiveSymbols(actual)
+		v.processor_.PostprocessInExclusiveSymbols(actual)
+	case ast.ExInclusiveSymbolsLike:
+		v.processor_.PreprocessExInclusiveSymbols(actual)
+		v.visitExInclusiveSymbols(actual)
+		v.processor_.PostprocessExInclusiveSymbols(actual)
+	case ast.ExclusiveSymbolsLike:
+		v.processor_.PreprocessExclusiveSymbols(actual)
+		v.visitExclusiveSymbols(actual)
+		v.processor_.PostprocessExclusiveSymbols(actual)
+	case ast.InclusiveVersionsLike:
+		v.processor_.PreprocessInclusiveVersions(actual)
+		v.visitInclusiveVersions(actual)
+		v.processor_.PostprocessInclusiveVersions(actual)
+	case ast.InExclusiveVersionsLike:
+		v.processor_.PreprocessInExclusiveVersions(actual)
+		v.visitInExclusiveVersions(actual)
+		v.processor_.PostprocessInExclusiveVersions(actual)
+	case ast.ExInclusiveVersionsLike:
+		v.processor_.PreprocessExInclusiveVersions(actual)
+		v.visitExInclusiveVersions(actual)
+		v.processor_.PostprocessExInclusiveVersions(actual)
+	case ast.ExclusiveVersionsLike:
+		v.processor_.PreprocessExclusiveVersions(actual)
+		v.visitExclusiveVersions(actual)
+		v.processor_.PostprocessExclusiveVersions(actual)
 	case ast.InlineAttributesLike:
 		v.processor_.PreprocessInlineAttributes(actual)
 		v.visitInlineAttributes(actual)
@@ -657,6 +769,51 @@ func (v *visitor_) visitExInclusiveAngles(
 	v.processor_.ProcessAngle(angle2)
 }
 
+func (v *visitor_) visitExInclusiveDurations(
+	exInclusiveDurations ast.ExInclusiveDurationsLike,
+) {
+	// Visit a single duration token.
+	var duration1 = exInclusiveDurations.GetDuration1()
+	v.processor_.ProcessDuration(duration1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveDurationsSlot(1)
+
+	// Visit a single duration token.
+	var duration2 = exInclusiveDurations.GetDuration2()
+	v.processor_.ProcessDuration(duration2)
+}
+
+func (v *visitor_) visitExInclusiveMoments(
+	exInclusiveMoments ast.ExInclusiveMomentsLike,
+) {
+	// Visit a single moment token.
+	var moment1 = exInclusiveMoments.GetMoment1()
+	v.processor_.ProcessMoment(moment1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveMomentsSlot(1)
+
+	// Visit a single moment token.
+	var moment2 = exInclusiveMoments.GetMoment2()
+	v.processor_.ProcessMoment(moment2)
+}
+
+func (v *visitor_) visitExInclusiveNames(
+	exInclusiveNames ast.ExInclusiveNamesLike,
+) {
+	// Visit a single name token.
+	var name1 = exInclusiveNames.GetName1()
+	v.processor_.ProcessName(name1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveNamesSlot(1)
+
+	// Visit a single name token.
+	var name2 = exInclusiveNames.GetName2()
+	v.processor_.ProcessName(name2)
+}
+
 func (v *visitor_) visitExInclusiveNumbers(
 	exInclusiveNumbers ast.ExInclusiveNumbersLike,
 ) {
@@ -672,6 +829,36 @@ func (v *visitor_) visitExInclusiveNumbers(
 	v.processor_.ProcessNumber(number2)
 }
 
+func (v *visitor_) visitExInclusivePercentages(
+	exInclusivePercentages ast.ExInclusivePercentagesLike,
+) {
+	// Visit a single percentage token.
+	var percentage1 = exInclusivePercentages.GetPercentage1()
+	v.processor_.ProcessPercentage(percentage1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusivePercentagesSlot(1)
+
+	// Visit a single percentage token.
+	var percentage2 = exInclusivePercentages.GetPercentage2()
+	v.processor_.ProcessPercentage(percentage2)
+}
+
+func (v *visitor_) visitExInclusiveProbabilities(
+	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
+) {
+	// Visit a single probability token.
+	var probability1 = exInclusiveProbabilities.GetProbability1()
+	v.processor_.ProcessProbability(probability1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveProbabilitiesSlot(1)
+
+	// Visit a single probability token.
+	var probability2 = exInclusiveProbabilities.GetProbability2()
+	v.processor_.ProcessProbability(probability2)
+}
+
 func (v *visitor_) visitExInclusiveQuotes(
 	exInclusiveQuotes ast.ExInclusiveQuotesLike,
 ) {
@@ -685,6 +872,36 @@ func (v *visitor_) visitExInclusiveQuotes(
 	// Visit a single quote token.
 	var quote2 = exInclusiveQuotes.GetQuote2()
 	v.processor_.ProcessQuote(quote2)
+}
+
+func (v *visitor_) visitExInclusiveSymbols(
+	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
+) {
+	// Visit a single symbol token.
+	var symbol1 = exInclusiveSymbols.GetSymbol1()
+	v.processor_.ProcessSymbol(symbol1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveSymbolsSlot(1)
+
+	// Visit a single symbol token.
+	var symbol2 = exInclusiveSymbols.GetSymbol2()
+	v.processor_.ProcessSymbol(symbol2)
+}
+
+func (v *visitor_) visitExInclusiveVersions(
+	exInclusiveVersions ast.ExInclusiveVersionsLike,
+) {
+	// Visit a single version token.
+	var version1 = exInclusiveVersions.GetVersion1()
+	v.processor_.ProcessVersion(version1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveVersionsSlot(1)
+
+	// Visit a single version token.
+	var version2 = exInclusiveVersions.GetVersion2()
+	v.processor_.ProcessVersion(version2)
 }
 
 func (v *visitor_) visitException(
@@ -712,6 +929,51 @@ func (v *visitor_) visitExclusiveAngles(
 	v.processor_.ProcessAngle(angle2)
 }
 
+func (v *visitor_) visitExclusiveDurations(
+	exclusiveDurations ast.ExclusiveDurationsLike,
+) {
+	// Visit a single duration token.
+	var duration1 = exclusiveDurations.GetDuration1()
+	v.processor_.ProcessDuration(duration1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveDurationsSlot(1)
+
+	// Visit a single duration token.
+	var duration2 = exclusiveDurations.GetDuration2()
+	v.processor_.ProcessDuration(duration2)
+}
+
+func (v *visitor_) visitExclusiveMoments(
+	exclusiveMoments ast.ExclusiveMomentsLike,
+) {
+	// Visit a single moment token.
+	var moment1 = exclusiveMoments.GetMoment1()
+	v.processor_.ProcessMoment(moment1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveMomentsSlot(1)
+
+	// Visit a single moment token.
+	var moment2 = exclusiveMoments.GetMoment2()
+	v.processor_.ProcessMoment(moment2)
+}
+
+func (v *visitor_) visitExclusiveNames(
+	exclusiveNames ast.ExclusiveNamesLike,
+) {
+	// Visit a single name token.
+	var name1 = exclusiveNames.GetName1()
+	v.processor_.ProcessName(name1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveNamesSlot(1)
+
+	// Visit a single name token.
+	var name2 = exclusiveNames.GetName2()
+	v.processor_.ProcessName(name2)
+}
+
 func (v *visitor_) visitExclusiveNumbers(
 	exclusiveNumbers ast.ExclusiveNumbersLike,
 ) {
@@ -727,6 +989,36 @@ func (v *visitor_) visitExclusiveNumbers(
 	v.processor_.ProcessNumber(number2)
 }
 
+func (v *visitor_) visitExclusivePercentages(
+	exclusivePercentages ast.ExclusivePercentagesLike,
+) {
+	// Visit a single percentage token.
+	var percentage1 = exclusivePercentages.GetPercentage1()
+	v.processor_.ProcessPercentage(percentage1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusivePercentagesSlot(1)
+
+	// Visit a single percentage token.
+	var percentage2 = exclusivePercentages.GetPercentage2()
+	v.processor_.ProcessPercentage(percentage2)
+}
+
+func (v *visitor_) visitExclusiveProbabilities(
+	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
+) {
+	// Visit a single probability token.
+	var probability1 = exclusiveProbabilities.GetProbability1()
+	v.processor_.ProcessProbability(probability1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveProbabilitiesSlot(1)
+
+	// Visit a single probability token.
+	var probability2 = exclusiveProbabilities.GetProbability2()
+	v.processor_.ProcessProbability(probability2)
+}
+
 func (v *visitor_) visitExclusiveQuotes(
 	exclusiveQuotes ast.ExclusiveQuotesLike,
 ) {
@@ -740,6 +1032,36 @@ func (v *visitor_) visitExclusiveQuotes(
 	// Visit a single quote token.
 	var quote2 = exclusiveQuotes.GetQuote2()
 	v.processor_.ProcessQuote(quote2)
+}
+
+func (v *visitor_) visitExclusiveSymbols(
+	exclusiveSymbols ast.ExclusiveSymbolsLike,
+) {
+	// Visit a single symbol token.
+	var symbol1 = exclusiveSymbols.GetSymbol1()
+	v.processor_.ProcessSymbol(symbol1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveSymbolsSlot(1)
+
+	// Visit a single symbol token.
+	var symbol2 = exclusiveSymbols.GetSymbol2()
+	v.processor_.ProcessSymbol(symbol2)
+}
+
+func (v *visitor_) visitExclusiveVersions(
+	exclusiveVersions ast.ExclusiveVersionsLike,
+) {
+	// Visit a single version token.
+	var version1 = exclusiveVersions.GetVersion1()
+	v.processor_.ProcessVersion(version1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveVersionsSlot(1)
+
+	// Visit a single version token.
+	var version2 = exclusiveVersions.GetVersion2()
+	v.processor_.ProcessVersion(version2)
 }
 
 func (v *visitor_) visitExpression(
@@ -883,6 +1205,51 @@ func (v *visitor_) visitInExclusiveAngles(
 	v.processor_.ProcessAngle(angle2)
 }
 
+func (v *visitor_) visitInExclusiveDurations(
+	inExclusiveDurations ast.InExclusiveDurationsLike,
+) {
+	// Visit a single duration token.
+	var duration1 = inExclusiveDurations.GetDuration1()
+	v.processor_.ProcessDuration(duration1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveDurationsSlot(1)
+
+	// Visit a single duration token.
+	var duration2 = inExclusiveDurations.GetDuration2()
+	v.processor_.ProcessDuration(duration2)
+}
+
+func (v *visitor_) visitInExclusiveMoments(
+	inExclusiveMoments ast.InExclusiveMomentsLike,
+) {
+	// Visit a single moment token.
+	var moment1 = inExclusiveMoments.GetMoment1()
+	v.processor_.ProcessMoment(moment1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveMomentsSlot(1)
+
+	// Visit a single moment token.
+	var moment2 = inExclusiveMoments.GetMoment2()
+	v.processor_.ProcessMoment(moment2)
+}
+
+func (v *visitor_) visitInExclusiveNames(
+	inExclusiveNames ast.InExclusiveNamesLike,
+) {
+	// Visit a single name token.
+	var name1 = inExclusiveNames.GetName1()
+	v.processor_.ProcessName(name1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveNamesSlot(1)
+
+	// Visit a single name token.
+	var name2 = inExclusiveNames.GetName2()
+	v.processor_.ProcessName(name2)
+}
+
 func (v *visitor_) visitInExclusiveNumbers(
 	inExclusiveNumbers ast.InExclusiveNumbersLike,
 ) {
@@ -896,6 +1263,36 @@ func (v *visitor_) visitInExclusiveNumbers(
 	// Visit a single number token.
 	var number2 = inExclusiveNumbers.GetNumber2()
 	v.processor_.ProcessNumber(number2)
+}
+
+func (v *visitor_) visitInExclusivePercentages(
+	inExclusivePercentages ast.InExclusivePercentagesLike,
+) {
+	// Visit a single percentage token.
+	var percentage1 = inExclusivePercentages.GetPercentage1()
+	v.processor_.ProcessPercentage(percentage1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusivePercentagesSlot(1)
+
+	// Visit a single percentage token.
+	var percentage2 = inExclusivePercentages.GetPercentage2()
+	v.processor_.ProcessPercentage(percentage2)
+}
+
+func (v *visitor_) visitInExclusiveProbabilities(
+	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
+) {
+	// Visit a single probability token.
+	var probability1 = inExclusiveProbabilities.GetProbability1()
+	v.processor_.ProcessProbability(probability1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveProbabilitiesSlot(1)
+
+	// Visit a single probability token.
+	var probability2 = inExclusiveProbabilities.GetProbability2()
+	v.processor_.ProcessProbability(probability2)
 }
 
 func (v *visitor_) visitInExclusiveQuotes(
@@ -913,6 +1310,36 @@ func (v *visitor_) visitInExclusiveQuotes(
 	v.processor_.ProcessQuote(quote2)
 }
 
+func (v *visitor_) visitInExclusiveSymbols(
+	inExclusiveSymbols ast.InExclusiveSymbolsLike,
+) {
+	// Visit a single symbol token.
+	var symbol1 = inExclusiveSymbols.GetSymbol1()
+	v.processor_.ProcessSymbol(symbol1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveSymbolsSlot(1)
+
+	// Visit a single symbol token.
+	var symbol2 = inExclusiveSymbols.GetSymbol2()
+	v.processor_.ProcessSymbol(symbol2)
+}
+
+func (v *visitor_) visitInExclusiveVersions(
+	inExclusiveVersions ast.InExclusiveVersionsLike,
+) {
+	// Visit a single version token.
+	var version1 = inExclusiveVersions.GetVersion1()
+	v.processor_.ProcessVersion(version1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveVersionsSlot(1)
+
+	// Visit a single version token.
+	var version2 = inExclusiveVersions.GetVersion2()
+	v.processor_.ProcessVersion(version2)
+}
+
 func (v *visitor_) visitInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
 ) {
@@ -926,6 +1353,51 @@ func (v *visitor_) visitInclusiveAngles(
 	// Visit a single angle token.
 	var angle2 = inclusiveAngles.GetAngle2()
 	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitInclusiveDurations(
+	inclusiveDurations ast.InclusiveDurationsLike,
+) {
+	// Visit a single duration token.
+	var duration1 = inclusiveDurations.GetDuration1()
+	v.processor_.ProcessDuration(duration1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveDurationsSlot(1)
+
+	// Visit a single duration token.
+	var duration2 = inclusiveDurations.GetDuration2()
+	v.processor_.ProcessDuration(duration2)
+}
+
+func (v *visitor_) visitInclusiveMoments(
+	inclusiveMoments ast.InclusiveMomentsLike,
+) {
+	// Visit a single moment token.
+	var moment1 = inclusiveMoments.GetMoment1()
+	v.processor_.ProcessMoment(moment1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveMomentsSlot(1)
+
+	// Visit a single moment token.
+	var moment2 = inclusiveMoments.GetMoment2()
+	v.processor_.ProcessMoment(moment2)
+}
+
+func (v *visitor_) visitInclusiveNames(
+	inclusiveNames ast.InclusiveNamesLike,
+) {
+	// Visit a single name token.
+	var name1 = inclusiveNames.GetName1()
+	v.processor_.ProcessName(name1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveNamesSlot(1)
+
+	// Visit a single name token.
+	var name2 = inclusiveNames.GetName2()
+	v.processor_.ProcessName(name2)
 }
 
 func (v *visitor_) visitInclusiveNumbers(
@@ -943,6 +1415,36 @@ func (v *visitor_) visitInclusiveNumbers(
 	v.processor_.ProcessNumber(number2)
 }
 
+func (v *visitor_) visitInclusivePercentages(
+	inclusivePercentages ast.InclusivePercentagesLike,
+) {
+	// Visit a single percentage token.
+	var percentage1 = inclusivePercentages.GetPercentage1()
+	v.processor_.ProcessPercentage(percentage1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusivePercentagesSlot(1)
+
+	// Visit a single percentage token.
+	var percentage2 = inclusivePercentages.GetPercentage2()
+	v.processor_.ProcessPercentage(percentage2)
+}
+
+func (v *visitor_) visitInclusiveProbabilities(
+	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
+) {
+	// Visit a single probability token.
+	var probability1 = inclusiveProbabilities.GetProbability1()
+	v.processor_.ProcessProbability(probability1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveProbabilitiesSlot(1)
+
+	// Visit a single probability token.
+	var probability2 = inclusiveProbabilities.GetProbability2()
+	v.processor_.ProcessProbability(probability2)
+}
+
 func (v *visitor_) visitInclusiveQuotes(
 	inclusiveQuotes ast.InclusiveQuotesLike,
 ) {
@@ -956,6 +1458,36 @@ func (v *visitor_) visitInclusiveQuotes(
 	// Visit a single quote token.
 	var quote2 = inclusiveQuotes.GetQuote2()
 	v.processor_.ProcessQuote(quote2)
+}
+
+func (v *visitor_) visitInclusiveSymbols(
+	inclusiveSymbols ast.InclusiveSymbolsLike,
+) {
+	// Visit a single symbol token.
+	var symbol1 = inclusiveSymbols.GetSymbol1()
+	v.processor_.ProcessSymbol(symbol1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveSymbolsSlot(1)
+
+	// Visit a single symbol token.
+	var symbol2 = inclusiveSymbols.GetSymbol2()
+	v.processor_.ProcessSymbol(symbol2)
+}
+
+func (v *visitor_) visitInclusiveVersions(
+	inclusiveVersions ast.InclusiveVersionsLike,
+) {
+	// Visit a single version token.
+	var version1 = inclusiveVersions.GetVersion1()
+	v.processor_.ProcessVersion(version1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveVersionsSlot(1)
+
+	// Visit a single version token.
+	var version2 = inclusiveVersions.GetVersion2()
+	v.processor_.ProcessVersion(version2)
 }
 
 func (v *visitor_) visitIndex(
@@ -1165,11 +1697,11 @@ func (v *visitor_) visitInlineStatements(
 func (v *visitor_) visitInlineValues(
 	inlineValues ast.InlineValuesLike,
 ) {
-	// Visit a single value rule.
-	var value = inlineValues.GetValue()
-	v.processor_.PreprocessValue(value)
-	v.visitValue(value)
-	v.processor_.PostprocessValue(value)
+	// Visit a single component rule.
+	var component = inlineValues.GetComponent()
+	v.processor_.PreprocessComponent(component)
+	v.visitComponent(component)
+	v.processor_.PostprocessComponent(component)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessInlineValuesSlot(1)
@@ -2288,16 +2820,6 @@ func (v *visitor_) visitThrowClause(
 	v.processor_.PreprocessException(exception)
 	v.visitException(exception)
 	v.processor_.PostprocessException(exception)
-}
-
-func (v *visitor_) visitValue(
-	value ast.ValueLike,
-) {
-	// Visit a single component rule.
-	var component = value.GetComponent()
-	v.processor_.PreprocessComponent(component)
-	v.visitComponent(component)
-	v.processor_.PostprocessComponent(component)
 }
 
 func (v *visitor_) visitVariable(

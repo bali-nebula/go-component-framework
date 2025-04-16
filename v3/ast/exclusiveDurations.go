@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func ValueClass() ValueClassLike {
-	return valueClass()
+func ExclusiveDurationsClass() ExclusiveDurationsClassLike {
+	return exclusiveDurationsClass()
 }
 
 // Constructor Methods
 
-func (c *valueClass_) Value(
-	component ComponentLike,
-) ValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *exclusiveDurationsClass_) ExclusiveDurations(
+	duration1 string,
+	duration2 string,
+) ExclusiveDurationsLike {
+	if uti.IsUndefined(duration1) {
+		panic("The \"duration1\" attribute is required by this class.")
 	}
-	var instance = &value_{
+	if uti.IsUndefined(duration2) {
+		panic("The \"duration2\" attribute is required by this class.")
+	}
+	var instance = &exclusiveDurations_{
 		// Initialize the instance attributes.
-		component_: component,
+		duration1_: duration1,
+		duration2_: duration2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *valueClass_) Value(
 
 // Principal Methods
 
-func (v *value_) GetClass() ValueClassLike {
-	return valueClass()
+func (v *exclusiveDurations_) GetClass() ExclusiveDurationsClassLike {
+	return exclusiveDurationsClass()
 }
 
 // Attribute Methods
 
-func (v *value_) GetComponent() ComponentLike {
-	return v.component_
+func (v *exclusiveDurations_) GetDuration1() string {
+	return v.duration1_
+}
+
+func (v *exclusiveDurations_) GetDuration2() string {
+	return v.duration2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type value_ struct {
+type exclusiveDurations_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	duration1_ string
+	duration2_ string
 }
 
 // Class Structure
 
-type valueClass_ struct {
+type exclusiveDurationsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func valueClass() *valueClass_ {
-	return valueClassReference_
+func exclusiveDurationsClass() *exclusiveDurationsClass_ {
+	return exclusiveDurationsClassReference_
 }
 
-var valueClassReference_ = &valueClass_{
+var exclusiveDurationsClassReference_ = &exclusiveDurationsClass_{
 	// Initialize the class constants.
 }

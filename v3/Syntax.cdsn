@@ -44,9 +44,7 @@ $InlineParameters: "(" Association AdditionalAssociation* ")"
 
 $AdditionalAssociation: "," Association
 
-$Association: symbol colon Value
-
-$Value: Component
+$Association: symbol colon Component
 
 $Element:
   - angle
@@ -78,14 +76,42 @@ $Collection:
   - InExclusiveAngles
   - ExInclusiveAngles
   - ExclusiveAngles
+  - InclusiveDurations
+  - InExclusiveDurations
+  - ExInclusiveDurations
+  - ExclusiveDurations
+  - InclusiveMoments
+  - InExclusiveMoments
+  - ExInclusiveMoments
+  - ExclusiveMoments
+  - InclusiveNames
+  - InExclusiveNames
+  - ExInclusiveNames
+  - ExclusiveNames
   - InclusiveNumbers
   - InExclusiveNumbers
   - ExInclusiveNumbers
   - ExclusiveNumbers
+  - InclusivePercentages
+  - InExclusivePercentages
+  - ExInclusivePercentages
+  - ExclusivePercentages
+  - InclusiveProbabilities
+  - InExclusiveProbabilities
+  - ExInclusiveProbabilities
+  - ExclusiveProbabilities
   - InclusiveQuotes
   - InExclusiveQuotes
   - ExInclusiveQuotes
   - ExclusiveQuotes
+  - InclusiveSymbols
+  - InExclusiveSymbols
+  - ExInclusiveSymbols
+  - ExclusiveSymbols
+  - InclusiveVersions
+  - InExclusiveVersions
+  - ExInclusiveVersions
+  - ExclusiveVersions
   - InlineAttributes
   - InlineValues
 
@@ -97,11 +123,11 @@ $NoAttributes: "[" colon "]"
 
 $MultilineValues: "[" newline AnnotatedValue+ "]"
 
-$AnnotatedValue: Value note?
+$AnnotatedValue: Component note?
 
-$InlineValues: "[" Value AdditionalValue* "]"
+$InlineValues: "[" Component AdditionalValue* "]"
 
-$AdditionalValue: "," Value
+$AdditionalValue: "," Component
 
 $NoValues: "[" "]"
 
@@ -113,6 +139,30 @@ $ExInclusiveAngles: "(" angle ".." angle "]"
 
 $ExclusiveAngles: "(" angle ".." angle ")"
 
+$InclusiveDurations: "[" duration ".." duration "]"
+
+$InExclusiveDurations: "[" duration ".." duration ")"
+
+$ExInclusiveDurations: "(" duration ".." duration "]"
+
+$ExclusiveDurations: "(" duration ".." duration ")"
+
+$InclusiveMoments: "[" moment ".." moment "]"
+
+$InExclusiveMoments: "[" moment ".." moment ")"
+
+$ExInclusiveMoments: "(" moment ".." moment "]"
+
+$ExclusiveMoments: "(" moment ".." moment ")"
+
+$InclusiveNames: "[" name ".." name "]"
+
+$InExclusiveNames: "[" name ".." name ")"
+
+$ExInclusiveNames: "(" name ".." name "]"
+
+$ExclusiveNames: "(" name ".." name ")"
+
 $InclusiveNumbers: "[" number ".." number "]"
 
 $InExclusiveNumbers: "[" number ".." number ")"
@@ -121,6 +171,22 @@ $ExInclusiveNumbers: "(" number ".." number "]"
 
 $ExclusiveNumbers: "(" number ".." number ")"
 
+$InclusivePercentages: "[" percentage ".." percentage "]"
+
+$InExclusivePercentages: "[" percentage ".." percentage ")"
+
+$ExInclusivePercentages: "(" percentage ".." percentage "]"
+
+$ExclusivePercentages: "(" percentage ".." percentage ")"
+
+$InclusiveProbabilities: "[" probability ".." probability "]"
+
+$InExclusiveProbabilities: "[" probability ".." probability ")"
+
+$ExInclusiveProbabilities: "(" probability ".." probability "]"
+
+$ExclusiveProbabilities: "(" probability ".." probability ")"
+
 $InclusiveQuotes: "[" quote ".." quote "]"
 
 $InExclusiveQuotes: "[" quote ".." quote ")"
@@ -128,6 +194,22 @@ $InExclusiveQuotes: "[" quote ".." quote ")"
 $ExInclusiveQuotes: "(" quote ".." quote "]"
 
 $ExclusiveQuotes: "(" quote ".." quote ")"
+
+$InclusiveSymbols: "[" symbol ".." symbol "]"
+
+$InExclusiveSymbols: "[" symbol ".." symbol ")"
+
+$ExInclusiveSymbols: "(" symbol ".." symbol "]"
+
+$ExclusiveSymbols: "(" symbol ".." symbol ")"
+
+$InclusiveVersions: "[" version ".." version "]"
+
+$InExclusiveVersions: "[" version ".." version ")"
+
+$ExInclusiveVersions: "(" version ".." version "]"
+
+$ExclusiveVersions: "(" version ".." version ")"
 
 $Procedure:
   - MultilineStatements

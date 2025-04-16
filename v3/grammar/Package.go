@@ -795,6 +795,33 @@ type Methodical interface {
 	PostprocessExInclusiveAngles(
 		exInclusiveAngles ast.ExInclusiveAnglesLike,
 	)
+	PreprocessExInclusiveDurations(
+		exInclusiveDurations ast.ExInclusiveDurationsLike,
+	)
+	ProcessExInclusiveDurationsSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveDurations(
+		exInclusiveDurations ast.ExInclusiveDurationsLike,
+	)
+	PreprocessExInclusiveMoments(
+		exInclusiveMoments ast.ExInclusiveMomentsLike,
+	)
+	ProcessExInclusiveMomentsSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveMoments(
+		exInclusiveMoments ast.ExInclusiveMomentsLike,
+	)
+	PreprocessExInclusiveNames(
+		exInclusiveNames ast.ExInclusiveNamesLike,
+	)
+	ProcessExInclusiveNamesSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveNames(
+		exInclusiveNames ast.ExInclusiveNamesLike,
+	)
 	PreprocessExInclusiveNumbers(
 		exInclusiveNumbers ast.ExInclusiveNumbersLike,
 	)
@@ -804,6 +831,24 @@ type Methodical interface {
 	PostprocessExInclusiveNumbers(
 		exInclusiveNumbers ast.ExInclusiveNumbersLike,
 	)
+	PreprocessExInclusivePercentages(
+		exInclusivePercentages ast.ExInclusivePercentagesLike,
+	)
+	ProcessExInclusivePercentagesSlot(
+		slot uint,
+	)
+	PostprocessExInclusivePercentages(
+		exInclusivePercentages ast.ExInclusivePercentagesLike,
+	)
+	PreprocessExInclusiveProbabilities(
+		exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
+	)
+	ProcessExInclusiveProbabilitiesSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveProbabilities(
+		exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
+	)
 	PreprocessExInclusiveQuotes(
 		exInclusiveQuotes ast.ExInclusiveQuotesLike,
 	)
@@ -812,6 +857,24 @@ type Methodical interface {
 	)
 	PostprocessExInclusiveQuotes(
 		exInclusiveQuotes ast.ExInclusiveQuotesLike,
+	)
+	PreprocessExInclusiveSymbols(
+		exInclusiveSymbols ast.ExInclusiveSymbolsLike,
+	)
+	ProcessExInclusiveSymbolsSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveSymbols(
+		exInclusiveSymbols ast.ExInclusiveSymbolsLike,
+	)
+	PreprocessExInclusiveVersions(
+		exInclusiveVersions ast.ExInclusiveVersionsLike,
+	)
+	ProcessExInclusiveVersionsSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveVersions(
+		exInclusiveVersions ast.ExInclusiveVersionsLike,
 	)
 	PreprocessException(
 		exception ast.ExceptionLike,
@@ -831,6 +894,33 @@ type Methodical interface {
 	PostprocessExclusiveAngles(
 		exclusiveAngles ast.ExclusiveAnglesLike,
 	)
+	PreprocessExclusiveDurations(
+		exclusiveDurations ast.ExclusiveDurationsLike,
+	)
+	ProcessExclusiveDurationsSlot(
+		slot uint,
+	)
+	PostprocessExclusiveDurations(
+		exclusiveDurations ast.ExclusiveDurationsLike,
+	)
+	PreprocessExclusiveMoments(
+		exclusiveMoments ast.ExclusiveMomentsLike,
+	)
+	ProcessExclusiveMomentsSlot(
+		slot uint,
+	)
+	PostprocessExclusiveMoments(
+		exclusiveMoments ast.ExclusiveMomentsLike,
+	)
+	PreprocessExclusiveNames(
+		exclusiveNames ast.ExclusiveNamesLike,
+	)
+	ProcessExclusiveNamesSlot(
+		slot uint,
+	)
+	PostprocessExclusiveNames(
+		exclusiveNames ast.ExclusiveNamesLike,
+	)
 	PreprocessExclusiveNumbers(
 		exclusiveNumbers ast.ExclusiveNumbersLike,
 	)
@@ -840,6 +930,24 @@ type Methodical interface {
 	PostprocessExclusiveNumbers(
 		exclusiveNumbers ast.ExclusiveNumbersLike,
 	)
+	PreprocessExclusivePercentages(
+		exclusivePercentages ast.ExclusivePercentagesLike,
+	)
+	ProcessExclusivePercentagesSlot(
+		slot uint,
+	)
+	PostprocessExclusivePercentages(
+		exclusivePercentages ast.ExclusivePercentagesLike,
+	)
+	PreprocessExclusiveProbabilities(
+		exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
+	)
+	ProcessExclusiveProbabilitiesSlot(
+		slot uint,
+	)
+	PostprocessExclusiveProbabilities(
+		exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
+	)
 	PreprocessExclusiveQuotes(
 		exclusiveQuotes ast.ExclusiveQuotesLike,
 	)
@@ -848,6 +956,24 @@ type Methodical interface {
 	)
 	PostprocessExclusiveQuotes(
 		exclusiveQuotes ast.ExclusiveQuotesLike,
+	)
+	PreprocessExclusiveSymbols(
+		exclusiveSymbols ast.ExclusiveSymbolsLike,
+	)
+	ProcessExclusiveSymbolsSlot(
+		slot uint,
+	)
+	PostprocessExclusiveSymbols(
+		exclusiveSymbols ast.ExclusiveSymbolsLike,
+	)
+	PreprocessExclusiveVersions(
+		exclusiveVersions ast.ExclusiveVersionsLike,
+	)
+	ProcessExclusiveVersionsSlot(
+		slot uint,
+	)
+	PostprocessExclusiveVersions(
+		exclusiveVersions ast.ExclusiveVersionsLike,
 	)
 	PreprocessExpression(
 		expression ast.ExpressionLike,
@@ -903,6 +1029,33 @@ type Methodical interface {
 	PostprocessInExclusiveAngles(
 		inExclusiveAngles ast.InExclusiveAnglesLike,
 	)
+	PreprocessInExclusiveDurations(
+		inExclusiveDurations ast.InExclusiveDurationsLike,
+	)
+	ProcessInExclusiveDurationsSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveDurations(
+		inExclusiveDurations ast.InExclusiveDurationsLike,
+	)
+	PreprocessInExclusiveMoments(
+		inExclusiveMoments ast.InExclusiveMomentsLike,
+	)
+	ProcessInExclusiveMomentsSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveMoments(
+		inExclusiveMoments ast.InExclusiveMomentsLike,
+	)
+	PreprocessInExclusiveNames(
+		inExclusiveNames ast.InExclusiveNamesLike,
+	)
+	ProcessInExclusiveNamesSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveNames(
+		inExclusiveNames ast.InExclusiveNamesLike,
+	)
 	PreprocessInExclusiveNumbers(
 		inExclusiveNumbers ast.InExclusiveNumbersLike,
 	)
@@ -911,6 +1064,24 @@ type Methodical interface {
 	)
 	PostprocessInExclusiveNumbers(
 		inExclusiveNumbers ast.InExclusiveNumbersLike,
+	)
+	PreprocessInExclusivePercentages(
+		inExclusivePercentages ast.InExclusivePercentagesLike,
+	)
+	ProcessInExclusivePercentagesSlot(
+		slot uint,
+	)
+	PostprocessInExclusivePercentages(
+		inExclusivePercentages ast.InExclusivePercentagesLike,
+	)
+	PreprocessInExclusiveProbabilities(
+		inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
+	)
+	ProcessInExclusiveProbabilitiesSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveProbabilities(
+		inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
 	)
 	PreprocessInExclusiveQuotes(
 		inExclusiveQuotes ast.InExclusiveQuotesLike,
@@ -921,6 +1092,24 @@ type Methodical interface {
 	PostprocessInExclusiveQuotes(
 		inExclusiveQuotes ast.InExclusiveQuotesLike,
 	)
+	PreprocessInExclusiveSymbols(
+		inExclusiveSymbols ast.InExclusiveSymbolsLike,
+	)
+	ProcessInExclusiveSymbolsSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveSymbols(
+		inExclusiveSymbols ast.InExclusiveSymbolsLike,
+	)
+	PreprocessInExclusiveVersions(
+		inExclusiveVersions ast.InExclusiveVersionsLike,
+	)
+	ProcessInExclusiveVersionsSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveVersions(
+		inExclusiveVersions ast.InExclusiveVersionsLike,
+	)
 	PreprocessInclusiveAngles(
 		inclusiveAngles ast.InclusiveAnglesLike,
 	)
@@ -929,6 +1118,33 @@ type Methodical interface {
 	)
 	PostprocessInclusiveAngles(
 		inclusiveAngles ast.InclusiveAnglesLike,
+	)
+	PreprocessInclusiveDurations(
+		inclusiveDurations ast.InclusiveDurationsLike,
+	)
+	ProcessInclusiveDurationsSlot(
+		slot uint,
+	)
+	PostprocessInclusiveDurations(
+		inclusiveDurations ast.InclusiveDurationsLike,
+	)
+	PreprocessInclusiveMoments(
+		inclusiveMoments ast.InclusiveMomentsLike,
+	)
+	ProcessInclusiveMomentsSlot(
+		slot uint,
+	)
+	PostprocessInclusiveMoments(
+		inclusiveMoments ast.InclusiveMomentsLike,
+	)
+	PreprocessInclusiveNames(
+		inclusiveNames ast.InclusiveNamesLike,
+	)
+	ProcessInclusiveNamesSlot(
+		slot uint,
+	)
+	PostprocessInclusiveNames(
+		inclusiveNames ast.InclusiveNamesLike,
 	)
 	PreprocessInclusiveNumbers(
 		inclusiveNumbers ast.InclusiveNumbersLike,
@@ -939,6 +1155,24 @@ type Methodical interface {
 	PostprocessInclusiveNumbers(
 		inclusiveNumbers ast.InclusiveNumbersLike,
 	)
+	PreprocessInclusivePercentages(
+		inclusivePercentages ast.InclusivePercentagesLike,
+	)
+	ProcessInclusivePercentagesSlot(
+		slot uint,
+	)
+	PostprocessInclusivePercentages(
+		inclusivePercentages ast.InclusivePercentagesLike,
+	)
+	PreprocessInclusiveProbabilities(
+		inclusiveProbabilities ast.InclusiveProbabilitiesLike,
+	)
+	ProcessInclusiveProbabilitiesSlot(
+		slot uint,
+	)
+	PostprocessInclusiveProbabilities(
+		inclusiveProbabilities ast.InclusiveProbabilitiesLike,
+	)
 	PreprocessInclusiveQuotes(
 		inclusiveQuotes ast.InclusiveQuotesLike,
 	)
@@ -947,6 +1181,24 @@ type Methodical interface {
 	)
 	PostprocessInclusiveQuotes(
 		inclusiveQuotes ast.InclusiveQuotesLike,
+	)
+	PreprocessInclusiveSymbols(
+		inclusiveSymbols ast.InclusiveSymbolsLike,
+	)
+	ProcessInclusiveSymbolsSlot(
+		slot uint,
+	)
+	PostprocessInclusiveSymbols(
+		inclusiveSymbols ast.InclusiveSymbolsLike,
+	)
+	PreprocessInclusiveVersions(
+		inclusiveVersions ast.InclusiveVersionsLike,
+	)
+	ProcessInclusiveVersionsSlot(
+		slot uint,
+	)
+	PostprocessInclusiveVersions(
+		inclusiveVersions ast.InclusiveVersionsLike,
 	)
 	PreprocessIndex(
 		index ast.IndexLike,
@@ -1459,15 +1711,6 @@ type Methodical interface {
 	)
 	PostprocessThrowClause(
 		throwClause ast.ThrowClauseLike,
-	)
-	PreprocessValue(
-		value ast.ValueLike,
-	)
-	ProcessValueSlot(
-		slot uint,
-	)
-	PostprocessValue(
-		value ast.ValueLike,
 	)
 	PreprocessVariable(
 		variable ast.VariableLike,

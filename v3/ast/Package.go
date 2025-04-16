@@ -113,7 +113,7 @@ supported by each concrete additional-value-like class.
 type AdditionalValueClassLike interface {
 	// Constructor Methods
 	AdditionalValue(
-		value ValueLike,
+		component ComponentLike,
 	) AdditionalValueLike
 }
 
@@ -150,7 +150,7 @@ supported by each concrete annotated-value-like class.
 type AnnotatedValueClassLike interface {
 	// Constructor Methods
 	AnnotatedValue(
-		value ValueLike,
+		component ComponentLike,
 		optionalNote string,
 	) AnnotatedValueLike
 }
@@ -214,7 +214,7 @@ type AssociationClassLike interface {
 	Association(
 		symbol string,
 		colon string,
-		value ValueLike,
+		component ComponentLike,
 	) AssociationLike
 }
 
@@ -449,6 +449,45 @@ type ExInclusiveAnglesClassLike interface {
 }
 
 /*
+ExInclusiveDurationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-durations-like class.
+*/
+type ExInclusiveDurationsClassLike interface {
+	// Constructor Methods
+	ExInclusiveDurations(
+		duration1 string,
+		duration2 string,
+	) ExInclusiveDurationsLike
+}
+
+/*
+ExInclusiveMomentsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-moments-like class.
+*/
+type ExInclusiveMomentsClassLike interface {
+	// Constructor Methods
+	ExInclusiveMoments(
+		moment1 string,
+		moment2 string,
+	) ExInclusiveMomentsLike
+}
+
+/*
+ExInclusiveNamesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-names-like class.
+*/
+type ExInclusiveNamesClassLike interface {
+	// Constructor Methods
+	ExInclusiveNames(
+		name1 string,
+		name2 string,
+	) ExInclusiveNamesLike
+}
+
+/*
 ExInclusiveNumbersClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete ex-inclusive-numbers-like class.
@@ -462,6 +501,32 @@ type ExInclusiveNumbersClassLike interface {
 }
 
 /*
+ExInclusivePercentagesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-percentages-like class.
+*/
+type ExInclusivePercentagesClassLike interface {
+	// Constructor Methods
+	ExInclusivePercentages(
+		percentage1 string,
+		percentage2 string,
+	) ExInclusivePercentagesLike
+}
+
+/*
+ExInclusiveProbabilitiesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-probabilities-like class.
+*/
+type ExInclusiveProbabilitiesClassLike interface {
+	// Constructor Methods
+	ExInclusiveProbabilities(
+		probability1 string,
+		probability2 string,
+	) ExInclusiveProbabilitiesLike
+}
+
+/*
 ExInclusiveQuotesClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete ex-inclusive-quotes-like class.
@@ -472,6 +537,32 @@ type ExInclusiveQuotesClassLike interface {
 		quote1 string,
 		quote2 string,
 	) ExInclusiveQuotesLike
+}
+
+/*
+ExInclusiveSymbolsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-symbols-like class.
+*/
+type ExInclusiveSymbolsClassLike interface {
+	// Constructor Methods
+	ExInclusiveSymbols(
+		symbol1 string,
+		symbol2 string,
+	) ExInclusiveSymbolsLike
+}
+
+/*
+ExInclusiveVersionsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-versions-like class.
+*/
+type ExInclusiveVersionsClassLike interface {
+	// Constructor Methods
+	ExInclusiveVersions(
+		version1 string,
+		version2 string,
+	) ExInclusiveVersionsLike
 }
 
 /*
@@ -500,6 +591,45 @@ type ExclusiveAnglesClassLike interface {
 }
 
 /*
+ExclusiveDurationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-durations-like class.
+*/
+type ExclusiveDurationsClassLike interface {
+	// Constructor Methods
+	ExclusiveDurations(
+		duration1 string,
+		duration2 string,
+	) ExclusiveDurationsLike
+}
+
+/*
+ExclusiveMomentsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-moments-like class.
+*/
+type ExclusiveMomentsClassLike interface {
+	// Constructor Methods
+	ExclusiveMoments(
+		moment1 string,
+		moment2 string,
+	) ExclusiveMomentsLike
+}
+
+/*
+ExclusiveNamesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-names-like class.
+*/
+type ExclusiveNamesClassLike interface {
+	// Constructor Methods
+	ExclusiveNames(
+		name1 string,
+		name2 string,
+	) ExclusiveNamesLike
+}
+
+/*
 ExclusiveNumbersClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete exclusive-numbers-like class.
@@ -513,6 +643,32 @@ type ExclusiveNumbersClassLike interface {
 }
 
 /*
+ExclusivePercentagesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-percentages-like class.
+*/
+type ExclusivePercentagesClassLike interface {
+	// Constructor Methods
+	ExclusivePercentages(
+		percentage1 string,
+		percentage2 string,
+	) ExclusivePercentagesLike
+}
+
+/*
+ExclusiveProbabilitiesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-probabilities-like class.
+*/
+type ExclusiveProbabilitiesClassLike interface {
+	// Constructor Methods
+	ExclusiveProbabilities(
+		probability1 string,
+		probability2 string,
+	) ExclusiveProbabilitiesLike
+}
+
+/*
 ExclusiveQuotesClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete exclusive-quotes-like class.
@@ -523,6 +679,32 @@ type ExclusiveQuotesClassLike interface {
 		quote1 string,
 		quote2 string,
 	) ExclusiveQuotesLike
+}
+
+/*
+ExclusiveSymbolsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-symbols-like class.
+*/
+type ExclusiveSymbolsClassLike interface {
+	// Constructor Methods
+	ExclusiveSymbols(
+		symbol1 string,
+		symbol2 string,
+	) ExclusiveSymbolsLike
+}
+
+/*
+ExclusiveVersionsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-versions-like class.
+*/
+type ExclusiveVersionsClassLike interface {
+	// Constructor Methods
+	ExclusiveVersions(
+		version1 string,
+		version2 string,
+	) ExclusiveVersionsLike
 }
 
 /*
@@ -602,6 +784,45 @@ type InExclusiveAnglesClassLike interface {
 }
 
 /*
+InExclusiveDurationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-durations-like class.
+*/
+type InExclusiveDurationsClassLike interface {
+	// Constructor Methods
+	InExclusiveDurations(
+		duration1 string,
+		duration2 string,
+	) InExclusiveDurationsLike
+}
+
+/*
+InExclusiveMomentsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-moments-like class.
+*/
+type InExclusiveMomentsClassLike interface {
+	// Constructor Methods
+	InExclusiveMoments(
+		moment1 string,
+		moment2 string,
+	) InExclusiveMomentsLike
+}
+
+/*
+InExclusiveNamesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-names-like class.
+*/
+type InExclusiveNamesClassLike interface {
+	// Constructor Methods
+	InExclusiveNames(
+		name1 string,
+		name2 string,
+	) InExclusiveNamesLike
+}
+
+/*
 InExclusiveNumbersClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete in-exclusive-numbers-like class.
@@ -612,6 +833,32 @@ type InExclusiveNumbersClassLike interface {
 		number1 string,
 		number2 string,
 	) InExclusiveNumbersLike
+}
+
+/*
+InExclusivePercentagesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-percentages-like class.
+*/
+type InExclusivePercentagesClassLike interface {
+	// Constructor Methods
+	InExclusivePercentages(
+		percentage1 string,
+		percentage2 string,
+	) InExclusivePercentagesLike
+}
+
+/*
+InExclusiveProbabilitiesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-probabilities-like class.
+*/
+type InExclusiveProbabilitiesClassLike interface {
+	// Constructor Methods
+	InExclusiveProbabilities(
+		probability1 string,
+		probability2 string,
+	) InExclusiveProbabilitiesLike
 }
 
 /*
@@ -628,6 +875,32 @@ type InExclusiveQuotesClassLike interface {
 }
 
 /*
+InExclusiveSymbolsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-symbols-like class.
+*/
+type InExclusiveSymbolsClassLike interface {
+	// Constructor Methods
+	InExclusiveSymbols(
+		symbol1 string,
+		symbol2 string,
+	) InExclusiveSymbolsLike
+}
+
+/*
+InExclusiveVersionsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-versions-like class.
+*/
+type InExclusiveVersionsClassLike interface {
+	// Constructor Methods
+	InExclusiveVersions(
+		version1 string,
+		version2 string,
+	) InExclusiveVersionsLike
+}
+
+/*
 InclusiveAnglesClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete inclusive-angles-like class.
@@ -638,6 +911,45 @@ type InclusiveAnglesClassLike interface {
 		angle1 string,
 		angle2 string,
 	) InclusiveAnglesLike
+}
+
+/*
+InclusiveDurationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-durations-like class.
+*/
+type InclusiveDurationsClassLike interface {
+	// Constructor Methods
+	InclusiveDurations(
+		duration1 string,
+		duration2 string,
+	) InclusiveDurationsLike
+}
+
+/*
+InclusiveMomentsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-moments-like class.
+*/
+type InclusiveMomentsClassLike interface {
+	// Constructor Methods
+	InclusiveMoments(
+		moment1 string,
+		moment2 string,
+	) InclusiveMomentsLike
+}
+
+/*
+InclusiveNamesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-names-like class.
+*/
+type InclusiveNamesClassLike interface {
+	// Constructor Methods
+	InclusiveNames(
+		name1 string,
+		name2 string,
+	) InclusiveNamesLike
 }
 
 /*
@@ -654,6 +966,32 @@ type InclusiveNumbersClassLike interface {
 }
 
 /*
+InclusivePercentagesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-percentages-like class.
+*/
+type InclusivePercentagesClassLike interface {
+	// Constructor Methods
+	InclusivePercentages(
+		percentage1 string,
+		percentage2 string,
+	) InclusivePercentagesLike
+}
+
+/*
+InclusiveProbabilitiesClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-probabilities-like class.
+*/
+type InclusiveProbabilitiesClassLike interface {
+	// Constructor Methods
+	InclusiveProbabilities(
+		probability1 string,
+		probability2 string,
+	) InclusiveProbabilitiesLike
+}
+
+/*
 InclusiveQuotesClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete inclusive-quotes-like class.
@@ -664,6 +1002,32 @@ type InclusiveQuotesClassLike interface {
 		quote1 string,
 		quote2 string,
 	) InclusiveQuotesLike
+}
+
+/*
+InclusiveSymbolsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-symbols-like class.
+*/
+type InclusiveSymbolsClassLike interface {
+	// Constructor Methods
+	InclusiveSymbols(
+		symbol1 string,
+		symbol2 string,
+	) InclusiveSymbolsLike
+}
+
+/*
+InclusiveVersionsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-versions-like class.
+*/
+type InclusiveVersionsClassLike interface {
+	// Constructor Methods
+	InclusiveVersions(
+		version1 string,
+		version2 string,
+	) InclusiveVersionsLike
 }
 
 /*
@@ -762,7 +1126,7 @@ supported by each concrete inline-values-like class.
 type InlineValuesClassLike interface {
 	// Constructor Methods
 	InlineValues(
-		value ValueLike,
+		component ComponentLike,
 		additionalValues col.Sequential[AdditionalValueLike],
 	) InlineValuesLike
 }
@@ -1364,18 +1728,6 @@ type ThrowClauseClassLike interface {
 }
 
 /*
-ValueClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete value-like class.
-*/
-type ValueClassLike interface {
-	// Constructor Methods
-	Value(
-		component ComponentLike,
-	) ValueLike
-}
-
-/*
 VariableClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete variable-like class.
@@ -1491,7 +1843,7 @@ type AdditionalValueLike interface {
 	GetClass() AdditionalValueClassLike
 
 	// Attribute Methods
-	GetValue() ValueLike
+	GetComponent() ComponentLike
 }
 
 /*
@@ -1531,7 +1883,7 @@ type AnnotatedValueLike interface {
 	GetClass() AnnotatedValueClassLike
 
 	// Attribute Methods
-	GetValue() ValueLike
+	GetComponent() ComponentLike
 	GetOptionalNote() string
 }
 
@@ -1600,7 +1952,7 @@ type AssociationLike interface {
 	// Attribute Methods
 	GetSymbol() string
 	GetColon() string
-	GetValue() ValueLike
+	GetComponent() ComponentLike
 }
 
 /*
@@ -1851,6 +2203,48 @@ type ExInclusiveAnglesLike interface {
 }
 
 /*
+ExInclusiveDurationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-durations-like class.
+*/
+type ExInclusiveDurationsLike interface {
+	// Principal Methods
+	GetClass() ExInclusiveDurationsClassLike
+
+	// Attribute Methods
+	GetDuration1() string
+	GetDuration2() string
+}
+
+/*
+ExInclusiveMomentsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-moments-like class.
+*/
+type ExInclusiveMomentsLike interface {
+	// Principal Methods
+	GetClass() ExInclusiveMomentsClassLike
+
+	// Attribute Methods
+	GetMoment1() string
+	GetMoment2() string
+}
+
+/*
+ExInclusiveNamesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-names-like class.
+*/
+type ExInclusiveNamesLike interface {
+	// Principal Methods
+	GetClass() ExInclusiveNamesClassLike
+
+	// Attribute Methods
+	GetName1() string
+	GetName2() string
+}
+
+/*
 ExInclusiveNumbersLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete ex-inclusive-numbers-like class.
@@ -1865,6 +2259,34 @@ type ExInclusiveNumbersLike interface {
 }
 
 /*
+ExInclusivePercentagesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-percentages-like class.
+*/
+type ExInclusivePercentagesLike interface {
+	// Principal Methods
+	GetClass() ExInclusivePercentagesClassLike
+
+	// Attribute Methods
+	GetPercentage1() string
+	GetPercentage2() string
+}
+
+/*
+ExInclusiveProbabilitiesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-probabilities-like class.
+*/
+type ExInclusiveProbabilitiesLike interface {
+	// Principal Methods
+	GetClass() ExInclusiveProbabilitiesClassLike
+
+	// Attribute Methods
+	GetProbability1() string
+	GetProbability2() string
+}
+
+/*
 ExInclusiveQuotesLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete ex-inclusive-quotes-like class.
@@ -1876,6 +2298,34 @@ type ExInclusiveQuotesLike interface {
 	// Attribute Methods
 	GetQuote1() string
 	GetQuote2() string
+}
+
+/*
+ExInclusiveSymbolsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-symbols-like class.
+*/
+type ExInclusiveSymbolsLike interface {
+	// Principal Methods
+	GetClass() ExInclusiveSymbolsClassLike
+
+	// Attribute Methods
+	GetSymbol1() string
+	GetSymbol2() string
+}
+
+/*
+ExInclusiveVersionsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-versions-like class.
+*/
+type ExInclusiveVersionsLike interface {
+	// Principal Methods
+	GetClass() ExInclusiveVersionsClassLike
+
+	// Attribute Methods
+	GetVersion1() string
+	GetVersion2() string
 }
 
 /*
@@ -1906,6 +2356,48 @@ type ExclusiveAnglesLike interface {
 }
 
 /*
+ExclusiveDurationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-durations-like class.
+*/
+type ExclusiveDurationsLike interface {
+	// Principal Methods
+	GetClass() ExclusiveDurationsClassLike
+
+	// Attribute Methods
+	GetDuration1() string
+	GetDuration2() string
+}
+
+/*
+ExclusiveMomentsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-moments-like class.
+*/
+type ExclusiveMomentsLike interface {
+	// Principal Methods
+	GetClass() ExclusiveMomentsClassLike
+
+	// Attribute Methods
+	GetMoment1() string
+	GetMoment2() string
+}
+
+/*
+ExclusiveNamesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-names-like class.
+*/
+type ExclusiveNamesLike interface {
+	// Principal Methods
+	GetClass() ExclusiveNamesClassLike
+
+	// Attribute Methods
+	GetName1() string
+	GetName2() string
+}
+
+/*
 ExclusiveNumbersLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete exclusive-numbers-like class.
@@ -1920,6 +2412,34 @@ type ExclusiveNumbersLike interface {
 }
 
 /*
+ExclusivePercentagesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-percentages-like class.
+*/
+type ExclusivePercentagesLike interface {
+	// Principal Methods
+	GetClass() ExclusivePercentagesClassLike
+
+	// Attribute Methods
+	GetPercentage1() string
+	GetPercentage2() string
+}
+
+/*
+ExclusiveProbabilitiesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-probabilities-like class.
+*/
+type ExclusiveProbabilitiesLike interface {
+	// Principal Methods
+	GetClass() ExclusiveProbabilitiesClassLike
+
+	// Attribute Methods
+	GetProbability1() string
+	GetProbability2() string
+}
+
+/*
 ExclusiveQuotesLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete exclusive-quotes-like class.
@@ -1931,6 +2451,34 @@ type ExclusiveQuotesLike interface {
 	// Attribute Methods
 	GetQuote1() string
 	GetQuote2() string
+}
+
+/*
+ExclusiveSymbolsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-symbols-like class.
+*/
+type ExclusiveSymbolsLike interface {
+	// Principal Methods
+	GetClass() ExclusiveSymbolsClassLike
+
+	// Attribute Methods
+	GetSymbol1() string
+	GetSymbol2() string
+}
+
+/*
+ExclusiveVersionsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-versions-like class.
+*/
+type ExclusiveVersionsLike interface {
+	// Principal Methods
+	GetClass() ExclusiveVersionsClassLike
+
+	// Attribute Methods
+	GetVersion1() string
+	GetVersion2() string
 }
 
 /*
@@ -2016,6 +2564,48 @@ type InExclusiveAnglesLike interface {
 }
 
 /*
+InExclusiveDurationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-durations-like class.
+*/
+type InExclusiveDurationsLike interface {
+	// Principal Methods
+	GetClass() InExclusiveDurationsClassLike
+
+	// Attribute Methods
+	GetDuration1() string
+	GetDuration2() string
+}
+
+/*
+InExclusiveMomentsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-moments-like class.
+*/
+type InExclusiveMomentsLike interface {
+	// Principal Methods
+	GetClass() InExclusiveMomentsClassLike
+
+	// Attribute Methods
+	GetMoment1() string
+	GetMoment2() string
+}
+
+/*
+InExclusiveNamesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-names-like class.
+*/
+type InExclusiveNamesLike interface {
+	// Principal Methods
+	GetClass() InExclusiveNamesClassLike
+
+	// Attribute Methods
+	GetName1() string
+	GetName2() string
+}
+
+/*
 InExclusiveNumbersLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete in-exclusive-numbers-like class.
@@ -2027,6 +2617,34 @@ type InExclusiveNumbersLike interface {
 	// Attribute Methods
 	GetNumber1() string
 	GetNumber2() string
+}
+
+/*
+InExclusivePercentagesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-percentages-like class.
+*/
+type InExclusivePercentagesLike interface {
+	// Principal Methods
+	GetClass() InExclusivePercentagesClassLike
+
+	// Attribute Methods
+	GetPercentage1() string
+	GetPercentage2() string
+}
+
+/*
+InExclusiveProbabilitiesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-probabilities-like class.
+*/
+type InExclusiveProbabilitiesLike interface {
+	// Principal Methods
+	GetClass() InExclusiveProbabilitiesClassLike
+
+	// Attribute Methods
+	GetProbability1() string
+	GetProbability2() string
 }
 
 /*
@@ -2044,6 +2662,34 @@ type InExclusiveQuotesLike interface {
 }
 
 /*
+InExclusiveSymbolsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-symbols-like class.
+*/
+type InExclusiveSymbolsLike interface {
+	// Principal Methods
+	GetClass() InExclusiveSymbolsClassLike
+
+	// Attribute Methods
+	GetSymbol1() string
+	GetSymbol2() string
+}
+
+/*
+InExclusiveVersionsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-versions-like class.
+*/
+type InExclusiveVersionsLike interface {
+	// Principal Methods
+	GetClass() InExclusiveVersionsClassLike
+
+	// Attribute Methods
+	GetVersion1() string
+	GetVersion2() string
+}
+
+/*
 InclusiveAnglesLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete inclusive-angles-like class.
@@ -2055,6 +2701,48 @@ type InclusiveAnglesLike interface {
 	// Attribute Methods
 	GetAngle1() string
 	GetAngle2() string
+}
+
+/*
+InclusiveDurationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-durations-like class.
+*/
+type InclusiveDurationsLike interface {
+	// Principal Methods
+	GetClass() InclusiveDurationsClassLike
+
+	// Attribute Methods
+	GetDuration1() string
+	GetDuration2() string
+}
+
+/*
+InclusiveMomentsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-moments-like class.
+*/
+type InclusiveMomentsLike interface {
+	// Principal Methods
+	GetClass() InclusiveMomentsClassLike
+
+	// Attribute Methods
+	GetMoment1() string
+	GetMoment2() string
+}
+
+/*
+InclusiveNamesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-names-like class.
+*/
+type InclusiveNamesLike interface {
+	// Principal Methods
+	GetClass() InclusiveNamesClassLike
+
+	// Attribute Methods
+	GetName1() string
+	GetName2() string
 }
 
 /*
@@ -2072,6 +2760,34 @@ type InclusiveNumbersLike interface {
 }
 
 /*
+InclusivePercentagesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-percentages-like class.
+*/
+type InclusivePercentagesLike interface {
+	// Principal Methods
+	GetClass() InclusivePercentagesClassLike
+
+	// Attribute Methods
+	GetPercentage1() string
+	GetPercentage2() string
+}
+
+/*
+InclusiveProbabilitiesLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-probabilities-like class.
+*/
+type InclusiveProbabilitiesLike interface {
+	// Principal Methods
+	GetClass() InclusiveProbabilitiesClassLike
+
+	// Attribute Methods
+	GetProbability1() string
+	GetProbability2() string
+}
+
+/*
 InclusiveQuotesLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete inclusive-quotes-like class.
@@ -2083,6 +2799,34 @@ type InclusiveQuotesLike interface {
 	// Attribute Methods
 	GetQuote1() string
 	GetQuote2() string
+}
+
+/*
+InclusiveSymbolsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-symbols-like class.
+*/
+type InclusiveSymbolsLike interface {
+	// Principal Methods
+	GetClass() InclusiveSymbolsClassLike
+
+	// Attribute Methods
+	GetSymbol1() string
+	GetSymbol2() string
+}
+
+/*
+InclusiveVersionsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-versions-like class.
+*/
+type InclusiveVersionsLike interface {
+	// Principal Methods
+	GetClass() InclusiveVersionsClassLike
+
+	// Attribute Methods
+	GetVersion1() string
+	GetVersion2() string
 }
 
 /*
@@ -2190,7 +2934,7 @@ type InlineValuesLike interface {
 	GetClass() InlineValuesClassLike
 
 	// Attribute Methods
-	GetValue() ValueLike
+	GetComponent() ComponentLike
 	GetAdditionalValues() col.Sequential[AdditionalValueLike]
 }
 
@@ -2834,19 +3578,6 @@ type ThrowClauseLike interface {
 
 	// Attribute Methods
 	GetException() ExceptionLike
-}
-
-/*
-ValueLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete value-like class.
-*/
-type ValueLike interface {
-	// Principal Methods
-	GetClass() ValueClassLike
-
-	// Attribute Methods
-	GetComponent() ComponentLike
 }
 
 /*

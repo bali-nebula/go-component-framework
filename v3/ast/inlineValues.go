@@ -35,18 +35,18 @@ func InlineValuesClass() InlineValuesClassLike {
 // Constructor Methods
 
 func (c *inlineValuesClass_) InlineValues(
-	value ValueLike,
+	component ComponentLike,
 	additionalValues col.Sequential[AdditionalValueLike],
 ) InlineValuesLike {
-	if uti.IsUndefined(value) {
-		panic("The \"value\" attribute is required by this class.")
+	if uti.IsUndefined(component) {
+		panic("The \"component\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(additionalValues) {
 		panic("The \"additionalValues\" attribute is required by this class.")
 	}
 	var instance = &inlineValues_{
 		// Initialize the instance attributes.
-		value_:            value,
+		component_:        component,
 		additionalValues_: additionalValues,
 	}
 	return instance
@@ -62,8 +62,8 @@ func (v *inlineValues_) GetClass() InlineValuesClassLike {
 
 // Attribute Methods
 
-func (v *inlineValues_) GetValue() ValueLike {
-	return v.value_
+func (v *inlineValues_) GetComponent() ComponentLike {
+	return v.component_
 }
 
 func (v *inlineValues_) GetAdditionalValues() col.Sequential[AdditionalValueLike] {
@@ -76,7 +76,7 @@ func (v *inlineValues_) GetAdditionalValues() col.Sequential[AdditionalValueLike
 
 type inlineValues_ struct {
 	// Declare the instance attributes.
-	value_            ValueLike
+	component_        ComponentLike
 	additionalValues_ col.Sequential[AdditionalValueLike]
 }
 

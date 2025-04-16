@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func ExclusiveMomentsClass() ExclusiveMomentsClassLike {
+	return exclusiveMomentsClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *exclusiveMomentsClass_) ExclusiveMoments(
+	moment1 string,
+	moment2 string,
+) ExclusiveMomentsLike {
+	if uti.IsUndefined(moment1) {
+		panic("The \"moment1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(moment2) {
+		panic("The \"moment2\" attribute is required by this class.")
+	}
+	var instance = &exclusiveMoments_{
 		// Initialize the instance attributes.
-		component_: component,
+		moment1_: moment1,
+		moment2_: moment2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *exclusiveMoments_) GetClass() ExclusiveMomentsClassLike {
+	return exclusiveMomentsClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *exclusiveMoments_) GetMoment1() string {
+	return v.moment1_
+}
+
+func (v *exclusiveMoments_) GetMoment2() string {
+	return v.moment2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type exclusiveMoments_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	moment1_ string
+	moment2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type exclusiveMomentsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func exclusiveMomentsClass() *exclusiveMomentsClass_ {
+	return exclusiveMomentsClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var exclusiveMomentsClassReference_ = &exclusiveMomentsClass_{
 	// Initialize the class constants.
 }

@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func ExInclusiveVersionsClass() ExInclusiveVersionsClassLike {
+	return exInclusiveVersionsClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *exInclusiveVersionsClass_) ExInclusiveVersions(
+	version1 string,
+	version2 string,
+) ExInclusiveVersionsLike {
+	if uti.IsUndefined(version1) {
+		panic("The \"version1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(version2) {
+		panic("The \"version2\" attribute is required by this class.")
+	}
+	var instance = &exInclusiveVersions_{
 		// Initialize the instance attributes.
-		component_: component,
+		version1_: version1,
+		version2_: version2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *exInclusiveVersions_) GetClass() ExInclusiveVersionsClassLike {
+	return exInclusiveVersionsClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *exInclusiveVersions_) GetVersion1() string {
+	return v.version1_
+}
+
+func (v *exInclusiveVersions_) GetVersion2() string {
+	return v.version2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type exInclusiveVersions_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	version1_ string
+	version2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type exInclusiveVersionsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func exInclusiveVersionsClass() *exInclusiveVersionsClass_ {
+	return exInclusiveVersionsClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var exInclusiveVersionsClassReference_ = &exInclusiveVersionsClass_{
 	// Initialize the class constants.
 }

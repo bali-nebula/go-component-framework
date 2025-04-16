@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func ExclusiveVersionsClass() ExclusiveVersionsClassLike {
+	return exclusiveVersionsClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *exclusiveVersionsClass_) ExclusiveVersions(
+	version1 string,
+	version2 string,
+) ExclusiveVersionsLike {
+	if uti.IsUndefined(version1) {
+		panic("The \"version1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(version2) {
+		panic("The \"version2\" attribute is required by this class.")
+	}
+	var instance = &exclusiveVersions_{
 		// Initialize the instance attributes.
-		component_: component,
+		version1_: version1,
+		version2_: version2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *exclusiveVersions_) GetClass() ExclusiveVersionsClassLike {
+	return exclusiveVersionsClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *exclusiveVersions_) GetVersion1() string {
+	return v.version1_
+}
+
+func (v *exclusiveVersions_) GetVersion2() string {
+	return v.version2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type exclusiveVersions_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	version1_ string
+	version2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type exclusiveVersionsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func exclusiveVersionsClass() *exclusiveVersionsClass_ {
+	return exclusiveVersionsClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var exclusiveVersionsClassReference_ = &exclusiveVersionsClass_{
 	// Initialize the class constants.
 }

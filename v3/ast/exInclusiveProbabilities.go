@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func AdditionalValueClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func ExInclusiveProbabilitiesClass() ExInclusiveProbabilitiesClassLike {
+	return exInclusiveProbabilitiesClass()
 }
 
 // Constructor Methods
 
-func (c *additionalValueClass_) AdditionalValue(
-	component ComponentLike,
-) AdditionalValueLike {
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
+func (c *exInclusiveProbabilitiesClass_) ExInclusiveProbabilities(
+	probability1 string,
+	probability2 string,
+) ExInclusiveProbabilitiesLike {
+	if uti.IsUndefined(probability1) {
+		panic("The \"probability1\" attribute is required by this class.")
 	}
-	var instance = &additionalValue_{
+	if uti.IsUndefined(probability2) {
+		panic("The \"probability2\" attribute is required by this class.")
+	}
+	var instance = &exInclusiveProbabilities_{
 		// Initialize the instance attributes.
-		component_: component,
+		probability1_: probability1,
+		probability2_: probability2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *additionalValueClass_) AdditionalValue(
 
 // Principal Methods
 
-func (v *additionalValue_) GetClass() AdditionalValueClassLike {
-	return additionalValueClass()
+func (v *exInclusiveProbabilities_) GetClass() ExInclusiveProbabilitiesClassLike {
+	return exInclusiveProbabilitiesClass()
 }
 
 // Attribute Methods
 
-func (v *additionalValue_) GetComponent() ComponentLike {
-	return v.component_
+func (v *exInclusiveProbabilities_) GetProbability1() string {
+	return v.probability1_
+}
+
+func (v *exInclusiveProbabilities_) GetProbability2() string {
+	return v.probability2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type additionalValue_ struct {
+type exInclusiveProbabilities_ struct {
 	// Declare the instance attributes.
-	component_ ComponentLike
+	probability1_ string
+	probability2_ string
 }
 
 // Class Structure
 
-type additionalValueClass_ struct {
+type exInclusiveProbabilitiesClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func additionalValueClass() *additionalValueClass_ {
-	return additionalValueClassReference_
+func exInclusiveProbabilitiesClass() *exInclusiveProbabilitiesClass_ {
+	return exInclusiveProbabilitiesClassReference_
 }
 
-var additionalValueClassReference_ = &additionalValueClass_{
+var exInclusiveProbabilitiesClassReference_ = &exInclusiveProbabilitiesClass_{
 	// Initialize the class constants.
 }
