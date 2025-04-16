@@ -45,13 +45,13 @@
     } matching ~π do {
         let attribute[$first, 3] *= .5
     } matching ~π do {
-        let attribute[$first, 3] /= 1.
+        let attribute[$first, 3] /= one
     } matching none do {
         let attribute[$first, 3] ?= undefined
     }
-    list.addValue(value)
+    do list.addValue(value)
     if list.isEmpty() AND value ≠ none do {
-        list.addValue(value)
+        do list.addValue(value)
     }
     if NOT successful do {
         throw [

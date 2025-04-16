@@ -11,14 +11,13 @@
     let $foo := (x + y - z) * (x / y // z)
     let $foo := base ^ done
     let $foo := foo
-    let $foo := NOT p
-    let $foo := p AND q
-    let $foo := NOT (p AND q) IOR (p IOR NOT q) XOR (p SAN q)
+    let $foo := not p
+    let $foo := p and q
+    let $foo := not (p and q) ior (p ior not q) xor (p san q)
     let $foo := @reference
     let $foo := list.addValue(value)
     let $foo := remote<-notify(event)
     let $foo := customer[42, $address, $province]
     let $foo := a & b & c
-    let $foo := a < b IOR b = c IOR d > e IOR e IS f IOR f MATCHES g
-    let $foo := NOT p
+    let $foo := a < b ior b = c ior d > e ior e is f ior f matches g
 }

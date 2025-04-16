@@ -64,6 +64,7 @@ const (
 	BooleanToken
 	BytecodeToken
 	CaretToken
+	CitationToken
 	ColonToken
 	ColonEqualToken
 	CommentToken
@@ -85,7 +86,6 @@ const (
 	NameToken
 	NarrativeToken
 	NewlineToken
-	NotToken
 	NoteToken
 	NumberToken
 	PatternToken
@@ -343,6 +343,9 @@ type Methodical interface {
 	ProcessCaret(
 		caret string,
 	)
+	ProcessCitation(
+		citation string,
+	)
 	ProcessColon(
 		colon string,
 	)
@@ -402,9 +405,6 @@ type Methodical interface {
 	)
 	ProcessNewline(
 		newline string,
-	)
-	ProcessNot(
-		not string,
 	)
 	ProcessNote(
 		note string,
@@ -795,6 +795,15 @@ type Methodical interface {
 	PostprocessExInclusiveAngles(
 		exInclusiveAngles ast.ExInclusiveAnglesLike,
 	)
+	PreprocessExInclusiveCitations(
+		exInclusiveCitations ast.ExInclusiveCitationsLike,
+	)
+	ProcessExInclusiveCitationsSlot(
+		slot uint,
+	)
+	PostprocessExInclusiveCitations(
+		exInclusiveCitations ast.ExInclusiveCitationsLike,
+	)
 	PreprocessExInclusiveDurations(
 		exInclusiveDurations ast.ExInclusiveDurationsLike,
 	)
@@ -893,6 +902,15 @@ type Methodical interface {
 	)
 	PostprocessExclusiveAngles(
 		exclusiveAngles ast.ExclusiveAnglesLike,
+	)
+	PreprocessExclusiveCitations(
+		exclusiveCitations ast.ExclusiveCitationsLike,
+	)
+	ProcessExclusiveCitationsSlot(
+		slot uint,
+	)
+	PostprocessExclusiveCitations(
+		exclusiveCitations ast.ExclusiveCitationsLike,
 	)
 	PreprocessExclusiveDurations(
 		exclusiveDurations ast.ExclusiveDurationsLike,
@@ -1029,6 +1047,15 @@ type Methodical interface {
 	PostprocessInExclusiveAngles(
 		inExclusiveAngles ast.InExclusiveAnglesLike,
 	)
+	PreprocessInExclusiveCitations(
+		inExclusiveCitations ast.InExclusiveCitationsLike,
+	)
+	ProcessInExclusiveCitationsSlot(
+		slot uint,
+	)
+	PostprocessInExclusiveCitations(
+		inExclusiveCitations ast.InExclusiveCitationsLike,
+	)
 	PreprocessInExclusiveDurations(
 		inExclusiveDurations ast.InExclusiveDurationsLike,
 	)
@@ -1118,6 +1145,15 @@ type Methodical interface {
 	)
 	PostprocessInclusiveAngles(
 		inclusiveAngles ast.InclusiveAnglesLike,
+	)
+	PreprocessInclusiveCitations(
+		inclusiveCitations ast.InclusiveCitationsLike,
+	)
+	ProcessInclusiveCitationsSlot(
+		slot uint,
+	)
+	PostprocessInclusiveCitations(
+		inclusiveCitations ast.InclusiveCitationsLike,
 	)
 	PreprocessInclusiveDurations(
 		inclusiveDurations ast.InclusiveDurationsLike,

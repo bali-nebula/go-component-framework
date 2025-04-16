@@ -49,6 +49,7 @@ $Association: symbol colon Component
 $Element:
   - angle
   - boolean
+  - citation
   - duration
   - moment
   - number
@@ -76,6 +77,10 @@ $Collection:
   - InExclusiveAngles
   - ExInclusiveAngles
   - ExclusiveAngles
+  - InclusiveCitations
+  - InExclusiveCitations
+  - ExInclusiveCitations
+  - ExclusiveCitations
   - InclusiveDurations
   - InExclusiveDurations
   - ExInclusiveDurations
@@ -138,6 +143,14 @@ $InExclusiveAngles: "[" angle ".." angle ")"
 $ExInclusiveAngles: "(" angle ".." angle "]"
 
 $ExclusiveAngles: "(" angle ".." angle ")"
+
+$InclusiveCitations: "[" citation ".." citation "]"
+
+$InExclusiveCitations: "[" citation ".." citation ")"
+
+$ExInclusiveCitations: "(" citation ".." citation "]"
+
+$ExclusiveCitations: "(" citation ".." citation ")"
 
 $InclusiveDurations: "[" duration ".." duration "]"
 
@@ -432,7 +445,7 @@ $Indirect:
   - Method
   - Variable  ! This must be last since others also begin with an identifier.
 
-$Complement: not Logical
+$Complement: "not" Logical
 
 $Logical:
   - Component
@@ -475,7 +488,7 @@ $alphanumeric: alpha | base10
 
 $ampersand: '&'
 
-$and: "AND"
+$and: "and"
 
 $angle: '~' (zero | amplitude | "pi" | "π" | "tau" | "τ")
 
@@ -500,6 +513,8 @@ $bytecode: "'" (instruction (space instruction)*)* "'"
 $caret: '^'
 
 $character: escape | ~['"' CONTROL]
+
+$citation: name slash version
 
 $colonEqual: ":="
 
@@ -541,15 +556,15 @@ $infinity: sign? ("infinity" | '∞')
 
 $instruction: base16{4}
 
-$ior: "IOR"
+$ior: "ior"
 
-$is: "IS"
+$is: "is"
 
 $letter: LOWER | UPPER
 
 $amplitude: (zero fraction | ordinal fraction?) exponent?
 
-$matches: "MATCHES"
+$matches: "matches"
 
 $minute: ['0'..'5'] ['0'..'9']
 
@@ -567,17 +582,17 @@ $name: (slash identifier)+
 
 $narrative: '"' '>' EOL ANY* EOL space* '<' '"'
 
-$not: "NOT"
-
 $note: "! " ~[CONTROL]*
-
-$one: "1."
 
 $ordinal: ['1'..'9'] base10*
 
 $path: ~['?' '#' '>' CONTROL]*
 
 $pattern: "none" | regex | "any"
+
+$percentage: real '%'
+
+$probability: fraction | "one"
 
 $plusEqual: "+="
 
@@ -597,7 +612,7 @@ $regex: '"' character+ '"' '?'
 
 $resource: '<' scheme ':' ("//" authority)? '/' path ('?' query)? ('#' fragment)? '>'
 
-$san: "SAN"
+$san: "san"
 
 $scheme: alpha (alphanumeric | plus | dash | dot)*
 
@@ -633,7 +648,7 @@ $version: 'v' ordinal (dot ordinal)*
 
 $weeks: timespan 'W'
 
-$xor: "XOR"
+$xor: "xor"
 
 $year: zero | ordinal
 
@@ -641,11 +656,7 @@ $years: timespan 'Y'
 
 $zero: '0'
 
-$percentage: real '%'
-
-$probability: fraction | one  ! Must be after percentage.
-
-$number: polar | rectangular | imaginary | real ! Must be after probability.
+$number: polar | rectangular | imaginary | real ! Must be after percentage.
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
 

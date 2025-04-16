@@ -202,6 +202,7 @@ loop:
 		case v.foundToken(BooleanToken):
 		case v.foundToken(BytecodeToken):
 		case v.foundToken(CaretToken):
+		case v.foundToken(CitationToken):
 		case v.foundToken(ColonEqualToken):
 		case v.foundToken(ColonToken):
 		case v.foundToken(CommentToken):
@@ -217,9 +218,10 @@ loop:
 		case v.foundToken(MoreToken):
 		case v.foundToken(NameToken):
 		case v.foundToken(NarrativeToken):
-		case v.foundToken(NotToken):
 		case v.foundToken(NoteToken):
 		case v.foundToken(PatternToken):
+		case v.foundToken(PercentageToken):
+		case v.foundToken(ProbabilityToken):
 		case v.foundToken(PlusEqualToken):
 		case v.foundToken(PlusToken):
 		case v.foundToken(QuoteToken):
@@ -234,8 +236,6 @@ loop:
 		case v.foundToken(TagToken):
 		case v.foundToken(VersionToken):
 		case v.foundToken(XorToken):
-		case v.foundToken(PercentageToken):
-		case v.foundToken(ProbabilityToken):
 		case v.foundToken(NumberToken):
 		case v.foundToken(IdentifierToken):
 		case v.foundToken(DotToken):
@@ -291,6 +291,7 @@ var scannerClassReference_ = &scannerClass_{
 			BooleanToken:      "boolean",
 			BytecodeToken:     "bytecode",
 			CaretToken:        "caret",
+			CitationToken:     "citation",
 			ColonToken:        "colon",
 			ColonEqualToken:   "colonEqual",
 			CommentToken:      "comment",
@@ -312,7 +313,6 @@ var scannerClassReference_ = &scannerClass_{
 			NameToken:         "name",
 			NarrativeToken:    "narrative",
 			NewlineToken:      "newline",
-			NotToken:          "not",
 			NoteToken:         "note",
 			NumberToken:       "number",
 			PatternToken:      "pattern",
@@ -347,6 +347,7 @@ var scannerClassReference_ = &scannerClass_{
 			BooleanToken:      reg.MustCompile("^" + boolean_),
 			BytecodeToken:     reg.MustCompile("^" + bytecode_),
 			CaretToken:        reg.MustCompile("^" + caret_),
+			CitationToken:     reg.MustCompile("^" + citation_),
 			ColonToken:        reg.MustCompile("^" + colon_),
 			ColonEqualToken:   reg.MustCompile("^" + colonEqual_),
 			CommentToken:      reg.MustCompile("^" + comment_),
@@ -368,7 +369,6 @@ var scannerClassReference_ = &scannerClass_{
 			NameToken:         reg.MustCompile("^" + name_),
 			NarrativeToken:    reg.MustCompile("^" + narrative_),
 			NewlineToken:      reg.MustCompile("^" + newline_),
-			NotToken:          reg.MustCompile("^" + not_),
 			NoteToken:         reg.MustCompile("^" + note_),
 			NumberToken:       reg.MustCompile("^" + number_),
 			PatternToken:      reg.MustCompile("^" + pattern_),
@@ -413,13 +413,13 @@ const (
 	upper_   = "\\p{Lu}"
 
 	// Define the regular expression patterns for each token type.
-	delimiter_    = "(?:with|while|to|throw|select|save|return|retrieve|reject|publish|post|on|notarize|matching|loop|level|let|in|if|from|each|do|discard|continue|checkout|break|at|as|accept|\\}|\\{|\\]|\\[|\\.\\.|\\)|\\(|;|,)"
+	delimiter_    = "(?:with|while|to|throw|select|save|return|retrieve|reject|publish|post|on|notarize|not|matching|loop|level|let|in|if|from|each|do|discard|continue|checkout|break|at|as|accept|\\}|\\{|\\]|\\[|\\.\\.|\\)|\\(|;|,)"
 	newline_      = "(?:" + eol_ + ")"
 	space_        = "(?: )"
 	alpha_        = "(?:[A-Za-z])"
 	alphanumeric_ = "(?:(?:" + alpha_ + ")|(?:" + base10_ + "))"
 	ampersand_    = "(?:&)"
-	and_          = "(?:AND)"
+	and_          = "(?:and)"
 	angle_        = "(?:~((?:" + zero_ + ")|(?:" + amplitude_ + ")|pi|π|tau|τ))"
 	authority_    = "(?:[^/" + control_ + "]+)"
 	bar_          = "(?:\\|)"
@@ -432,6 +432,7 @@ const (
 	bytecode_     = "(?:'((?:" + instruction_ + ")((?:" + space_ + ")(?:" + instruction_ + "))*)*')"
 	caret_        = "(?:\\^)"
 	character_    = "(?:(?:" + escape_ + ")|[^\"" + control_ + "])"
+	citation_     = "(?:(?:" + name_ + ")(?:" + slash_ + ")(?:" + version_ + "))"
 	colonEqual_   = "(?::=)"
 	colon_        = "(?::)"
 	comment_      = "(?:!>" + eol_ + "(" + any_ + "|" + eol_ + ")*?" + eol_ + "(?:" + space_ + ")*<!" + eol_ + ")"
@@ -452,11 +453,11 @@ const (
 	imaginary_    = "(?:(?:" + sign_ + ")?(?:" + amplitude_ + ")i)"
 	infinity_     = "(?:(?:" + sign_ + ")?(infinity|∞))"
 	instruction_  = "(?:(?:" + base16_ + "){4})"
-	ior_          = "(?:IOR)"
-	is_           = "(?:IS)"
+	ior_          = "(?:ior)"
+	is_           = "(?:is)"
 	letter_       = "(?:" + lower_ + "|" + upper_ + ")"
 	amplitude_    = "(?:((?:" + zero_ + ")(?:" + fraction_ + ")|(?:" + ordinal_ + ")(?:" + fraction_ + ")?)(?:" + exponent_ + ")?)"
-	matches_      = "(?:MATCHES)"
+	matches_      = "(?:matches)"
 	minute_       = "(?:[0-5][0-9])"
 	minutes_      = "(?:(?:" + timespan_ + ")M)"
 	moment_       = "(?:<(?:" + sign_ + ")?(?:" + year_ + ")(-(?:" + month_ + ")(-(?:" + day_ + ")(T(?:" + hour_ + ")(:(?:" + minute_ + ")(:(?:" + second_ + ")(?:" + fraction_ + ")?)?)?)?)?)?>)"
@@ -465,12 +466,12 @@ const (
 	more_         = "(?:>)"
 	name_         = "(?:((?:" + slash_ + ")(?:" + identifier_ + "))+)"
 	narrative_    = "(?:\">" + eol_ + "" + any_ + "*?" + eol_ + "(?:" + space_ + ")*<\")"
-	not_          = "(?:NOT)"
 	note_         = "(?:! [^" + control_ + "]*)"
-	one_          = "(?:1\\.)"
 	ordinal_      = "(?:[1-9](?:" + base10_ + ")*)"
 	path_         = "(?:[^\\?#>" + control_ + "]*)"
 	pattern_      = "(?:none|(?:" + regex_ + ")|any)"
+	percentage_   = "(?:(?:" + real_ + ")%)"
+	probability_  = "(?:(?:" + fraction_ + ")|one)"
 	plusEqual_    = "(?:\\+=)"
 	plus_         = "(?:\\+)"
 	polar_        = "(?:(?:" + amplitude_ + ")e\\^(?:" + angle_ + ")?i)"
@@ -480,7 +481,7 @@ const (
 	rectangular_  = "(?:(?:" + float_ + ")(?:" + sign_ + ")(?:" + float_ + ")?i)"
 	regex_        = "(?:\"(?:" + character_ + ")+\"\\?)"
 	resource_     = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(?:" + path_ + ")(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
-	san_          = "(?:SAN)"
+	san_          = "(?:san)"
 	scheme_       = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|(?:" + plus_ + ")|(?:" + dash_ + ")|(?:" + dot_ + "))*)"
 	second_       = "(?:([0-5][0-9])|(6[0-1]))"
 	seconds_      = "(?:(?:" + timespan_ + ")S)"
@@ -497,12 +498,10 @@ const (
 	unicode_      = "(?:(u(?:" + base16_ + "){4})|(U(?:" + base16_ + "){8}))"
 	version_      = "(?:v(?:" + ordinal_ + ")((?:" + dot_ + ")(?:" + ordinal_ + "))*)"
 	weeks_        = "(?:(?:" + timespan_ + ")W)"
-	xor_          = "(?:XOR)"
+	xor_          = "(?:xor)"
 	year_         = "(?:(?:" + zero_ + ")|(?:" + ordinal_ + "))"
 	years_        = "(?:(?:" + timespan_ + ")Y)"
 	zero_         = "(?:0)"
-	percentage_   = "(?:(?:" + real_ + ")%)"
-	probability_  = "(?:(?:" + fraction_ + ")|(?:" + one_ + "))"
 	number_       = "(?:(?:" + polar_ + ")|(?:" + rectangular_ + ")|(?:" + imaginary_ + ")|(?:" + real_ + "))"
 	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
 	dot_          = "(?:\\.)"

@@ -95,6 +95,11 @@ func (v *processor_) ProcessCaret(
 ) {
 }
 
+func (v *processor_) ProcessCitation(
+	citation string,
+) {
+}
+
 func (v *processor_) ProcessColon(
 	colon string,
 ) {
@@ -192,11 +197,6 @@ func (v *processor_) ProcessNarrative(
 
 func (v *processor_) ProcessNewline(
 	newline string,
-) {
-}
-
-func (v *processor_) ProcessNot(
-	not string,
 ) {
 }
 
@@ -827,6 +827,21 @@ func (v *processor_) PostprocessExInclusiveAngles(
 ) {
 }
 
+func (v *processor_) PreprocessExInclusiveCitations(
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+) {
+}
+
+func (v *processor_) ProcessExInclusiveCitationsSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExInclusiveCitations(
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+) {
+}
+
 func (v *processor_) PreprocessExInclusiveDurations(
 	exInclusiveDurations ast.ExInclusiveDurationsLike,
 ) {
@@ -989,6 +1004,21 @@ func (v *processor_) ProcessExclusiveAnglesSlot(
 
 func (v *processor_) PostprocessExclusiveAngles(
 	exclusiveAngles ast.ExclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) PreprocessExclusiveCitations(
+	exclusiveCitations ast.ExclusiveCitationsLike,
+) {
+}
+
+func (v *processor_) ProcessExclusiveCitationsSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessExclusiveCitations(
+	exclusiveCitations ast.ExclusiveCitationsLike,
 ) {
 }
 
@@ -1217,6 +1247,21 @@ func (v *processor_) PostprocessInExclusiveAngles(
 ) {
 }
 
+func (v *processor_) PreprocessInExclusiveCitations(
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+) {
+}
+
+func (v *processor_) ProcessInExclusiveCitationsSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInExclusiveCitations(
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+) {
+}
+
 func (v *processor_) PreprocessInExclusiveDurations(
 	inExclusiveDurations ast.InExclusiveDurationsLike,
 ) {
@@ -1364,6 +1409,21 @@ func (v *processor_) ProcessInclusiveAnglesSlot(
 
 func (v *processor_) PostprocessInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
+) {
+}
+
+func (v *processor_) PreprocessInclusiveCitations(
+	inclusiveCitations ast.InclusiveCitationsLike,
+) {
+}
+
+func (v *processor_) ProcessInclusiveCitationsSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessInclusiveCitations(
+	inclusiveCitations ast.InclusiveCitationsLike,
 ) {
 }
 

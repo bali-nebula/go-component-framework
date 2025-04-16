@@ -72,6 +72,7 @@ type (
 	EntityClassLike                   = ast.EntityClassLike
 	EventClassLike                    = ast.EventClassLike
 	ExInclusiveAnglesClassLike        = ast.ExInclusiveAnglesClassLike
+	ExInclusiveCitationsClassLike     = ast.ExInclusiveCitationsClassLike
 	ExInclusiveDurationsClassLike     = ast.ExInclusiveDurationsClassLike
 	ExInclusiveMomentsClassLike       = ast.ExInclusiveMomentsClassLike
 	ExInclusiveNamesClassLike         = ast.ExInclusiveNamesClassLike
@@ -83,6 +84,7 @@ type (
 	ExInclusiveVersionsClassLike      = ast.ExInclusiveVersionsClassLike
 	ExceptionClassLike                = ast.ExceptionClassLike
 	ExclusiveAnglesClassLike          = ast.ExclusiveAnglesClassLike
+	ExclusiveCitationsClassLike       = ast.ExclusiveCitationsClassLike
 	ExclusiveDurationsClassLike       = ast.ExclusiveDurationsClassLike
 	ExclusiveMomentsClassLike         = ast.ExclusiveMomentsClassLike
 	ExclusiveNamesClassLike           = ast.ExclusiveNamesClassLike
@@ -98,6 +100,7 @@ type (
 	FunctionClassLike                 = ast.FunctionClassLike
 	IfClauseClassLike                 = ast.IfClauseClassLike
 	InExclusiveAnglesClassLike        = ast.InExclusiveAnglesClassLike
+	InExclusiveCitationsClassLike     = ast.InExclusiveCitationsClassLike
 	InExclusiveDurationsClassLike     = ast.InExclusiveDurationsClassLike
 	InExclusiveMomentsClassLike       = ast.InExclusiveMomentsClassLike
 	InExclusiveNamesClassLike         = ast.InExclusiveNamesClassLike
@@ -108,6 +111,7 @@ type (
 	InExclusiveSymbolsClassLike       = ast.InExclusiveSymbolsClassLike
 	InExclusiveVersionsClassLike      = ast.InExclusiveVersionsClassLike
 	InclusiveAnglesClassLike          = ast.InclusiveAnglesClassLike
+	InclusiveCitationsClassLike       = ast.InclusiveCitationsClassLike
 	InclusiveDurationsClassLike       = ast.InclusiveDurationsClassLike
 	InclusiveMomentsClassLike         = ast.InclusiveMomentsClassLike
 	InclusiveNamesClassLike           = ast.InclusiveNamesClassLike
@@ -212,6 +216,7 @@ type (
 	EntityLike                   = ast.EntityLike
 	EventLike                    = ast.EventLike
 	ExInclusiveAnglesLike        = ast.ExInclusiveAnglesLike
+	ExInclusiveCitationsLike     = ast.ExInclusiveCitationsLike
 	ExInclusiveDurationsLike     = ast.ExInclusiveDurationsLike
 	ExInclusiveMomentsLike       = ast.ExInclusiveMomentsLike
 	ExInclusiveNamesLike         = ast.ExInclusiveNamesLike
@@ -223,6 +228,7 @@ type (
 	ExInclusiveVersionsLike      = ast.ExInclusiveVersionsLike
 	ExceptionLike                = ast.ExceptionLike
 	ExclusiveAnglesLike          = ast.ExclusiveAnglesLike
+	ExclusiveCitationsLike       = ast.ExclusiveCitationsLike
 	ExclusiveDurationsLike       = ast.ExclusiveDurationsLike
 	ExclusiveMomentsLike         = ast.ExclusiveMomentsLike
 	ExclusiveNamesLike           = ast.ExclusiveNamesLike
@@ -238,6 +244,7 @@ type (
 	FunctionLike                 = ast.FunctionLike
 	IfClauseLike                 = ast.IfClauseLike
 	InExclusiveAnglesLike        = ast.InExclusiveAnglesLike
+	InExclusiveCitationsLike     = ast.InExclusiveCitationsLike
 	InExclusiveDurationsLike     = ast.InExclusiveDurationsLike
 	InExclusiveMomentsLike       = ast.InExclusiveMomentsLike
 	InExclusiveNamesLike         = ast.InExclusiveNamesLike
@@ -248,6 +255,7 @@ type (
 	InExclusiveSymbolsLike       = ast.InExclusiveSymbolsLike
 	InExclusiveVersionsLike      = ast.InExclusiveVersionsLike
 	InclusiveAnglesLike          = ast.InclusiveAnglesLike
+	InclusiveCitationsLike       = ast.InclusiveCitationsLike
 	InclusiveDurationsLike       = ast.InclusiveDurationsLike
 	InclusiveMomentsLike         = ast.InclusiveMomentsLike
 	InclusiveNamesLike           = ast.InclusiveNamesLike
@@ -335,6 +343,7 @@ const (
 	BooleanToken      = gra.BooleanToken
 	BytecodeToken     = gra.BytecodeToken
 	CaretToken        = gra.CaretToken
+	CitationToken     = gra.CitationToken
 	ColonToken        = gra.ColonToken
 	ColonEqualToken   = gra.ColonEqualToken
 	CommentToken      = gra.CommentToken
@@ -356,7 +365,6 @@ const (
 	NameToken         = gra.NameToken
 	NarrativeToken    = gra.NarrativeToken
 	NewlineToken      = gra.NewlineToken
-	NotToken          = gra.NotToken
 	NoteToken         = gra.NoteToken
 	NumberToken       = gra.NumberToken
 	PatternToken      = gra.PatternToken
@@ -618,11 +626,9 @@ func Collection(
 // Ast/Complement
 
 func Complement(
-	not string,
 	logical ast.LogicalLike,
 ) ast.ComplementLike {
 	return ast.ComplementClass().Complement(
-		not,
 		logical,
 	)
 }
@@ -746,6 +752,18 @@ func ExInclusiveAngles(
 	return ast.ExInclusiveAnglesClass().ExInclusiveAngles(
 		angle1,
 		angle2,
+	)
+}
+
+// Ast/ExInclusiveCitations
+
+func ExInclusiveCitations(
+	citation1 string,
+	citation2 string,
+) ast.ExInclusiveCitationsLike {
+	return ast.ExInclusiveCitationsClass().ExInclusiveCitations(
+		citation1,
+		citation2,
 	)
 }
 
@@ -876,6 +894,18 @@ func ExclusiveAngles(
 	return ast.ExclusiveAnglesClass().ExclusiveAngles(
 		angle1,
 		angle2,
+	)
+}
+
+// Ast/ExclusiveCitations
+
+func ExclusiveCitations(
+	citation1 string,
+	citation2 string,
+) ast.ExclusiveCitationsLike {
+	return ast.ExclusiveCitationsClass().ExclusiveCitations(
+		citation1,
+		citation2,
 	)
 }
 
@@ -1055,6 +1085,18 @@ func InExclusiveAngles(
 	)
 }
 
+// Ast/InExclusiveCitations
+
+func InExclusiveCitations(
+	citation1 string,
+	citation2 string,
+) ast.InExclusiveCitationsLike {
+	return ast.InExclusiveCitationsClass().InExclusiveCitations(
+		citation1,
+		citation2,
+	)
+}
+
 // Ast/InExclusiveDurations
 
 func InExclusiveDurations(
@@ -1172,6 +1214,18 @@ func InclusiveAngles(
 	return ast.InclusiveAnglesClass().InclusiveAngles(
 		angle1,
 		angle2,
+	)
+}
+
+// Ast/InclusiveCitations
+
+func InclusiveCitations(
+	citation1 string,
+	citation2 string,
+) ast.InclusiveCitationsLike {
+	return ast.InclusiveCitationsClass().InclusiveCitations(
+		citation1,
+		citation2,
 	)
 }
 

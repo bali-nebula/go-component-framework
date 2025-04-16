@@ -114,6 +114,12 @@ func (v *formatter_) ProcessCaret(
 	v.appendString(caret)
 }
 
+func (v *formatter_) ProcessCitation(
+	citation string,
+) {
+	v.appendString(citation)
+}
+
 func (v *formatter_) ProcessColon(
 	colon string,
 ) {
@@ -232,12 +238,6 @@ func (v *formatter_) ProcessNewline(
 	newline string,
 ) {
 	v.appendNewline()
-}
-
-func (v *formatter_) ProcessNot(
-	not string,
-) {
-	v.appendString(not)
 }
 
 func (v *formatter_) ProcessNote(
@@ -986,6 +986,24 @@ func (v *formatter_) PostprocessExInclusiveAngles(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessExInclusiveCitations(
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExInclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExInclusiveCitations(
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessExInclusiveDurations(
 	exInclusiveDurations ast.ExInclusiveDurationsLike,
 ) {
@@ -1180,6 +1198,24 @@ func (v *formatter_) ProcessExclusiveAnglesSlot(
 
 func (v *formatter_) PostprocessExclusiveAngles(
 	exclusiveAngles ast.ExclusiveAnglesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessExclusiveCitations(
+	exclusiveCitations ast.ExclusiveCitationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessExclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessExclusiveCitations(
+	exclusiveCitations ast.ExclusiveCitationsLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }
@@ -1454,6 +1490,24 @@ func (v *formatter_) PostprocessInExclusiveAngles(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessInExclusiveCitations(
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInExclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInExclusiveCitations(
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessInExclusiveDurations(
 	inExclusiveDurations ast.InExclusiveDurationsLike,
 ) {
@@ -1630,6 +1684,24 @@ func (v *formatter_) ProcessInclusiveAnglesSlot(
 
 func (v *formatter_) PostprocessInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessInclusiveCitations(
+	inclusiveCitations ast.InclusiveCitationsLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessInclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessInclusiveCitations(
+	inclusiveCitations ast.InclusiveCitationsLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

@@ -115,6 +115,12 @@ func (v *validator_) ProcessCaret(
 	v.validateToken(caret, CaretToken)
 }
 
+func (v *validator_) ProcessCitation(
+	citation string,
+) {
+	v.validateToken(citation, CitationToken)
+}
+
 func (v *validator_) ProcessColon(
 	colon string,
 ) {
@@ -233,12 +239,6 @@ func (v *validator_) ProcessNewline(
 	newline string,
 ) {
 	v.validateToken(newline, NewlineToken)
-}
-
-func (v *validator_) ProcessNot(
-	not string,
-) {
-	v.validateToken(not, NotToken)
 }
 
 func (v *validator_) ProcessNote(
@@ -987,6 +987,24 @@ func (v *validator_) PostprocessExInclusiveAngles(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessExInclusiveCitations(
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessExInclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessExInclusiveCitations(
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessExInclusiveDurations(
 	exInclusiveDurations ast.ExInclusiveDurationsLike,
 ) {
@@ -1181,6 +1199,24 @@ func (v *validator_) ProcessExclusiveAnglesSlot(
 
 func (v *validator_) PostprocessExclusiveAngles(
 	exclusiveAngles ast.ExclusiveAnglesLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessExclusiveCitations(
+	exclusiveCitations ast.ExclusiveCitationsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessExclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessExclusiveCitations(
+	exclusiveCitations ast.ExclusiveCitationsLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1455,6 +1491,24 @@ func (v *validator_) PostprocessInExclusiveAngles(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessInExclusiveCitations(
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessInExclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessInExclusiveCitations(
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessInExclusiveDurations(
 	inExclusiveDurations ast.InExclusiveDurationsLike,
 ) {
@@ -1631,6 +1685,24 @@ func (v *validator_) ProcessInclusiveAnglesSlot(
 
 func (v *validator_) PostprocessInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessInclusiveCitations(
+	inclusiveCitations ast.InclusiveCitationsLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessInclusiveCitationsSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessInclusiveCitations(
+	inclusiveCitations ast.InclusiveCitationsLike,
 ) {
 	// TBD - Add any validation checks.
 }

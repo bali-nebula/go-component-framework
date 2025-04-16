@@ -298,7 +298,6 @@ supported by each concrete complement-like class.
 type ComplementClassLike interface {
 	// Constructor Methods
 	Complement(
-		not string,
 		logical LogicalLike,
 	) ComplementLike
 }
@@ -449,6 +448,19 @@ type ExInclusiveAnglesClassLike interface {
 }
 
 /*
+ExInclusiveCitationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete ex-inclusive-citations-like class.
+*/
+type ExInclusiveCitationsClassLike interface {
+	// Constructor Methods
+	ExInclusiveCitations(
+		citation1 string,
+		citation2 string,
+	) ExInclusiveCitationsLike
+}
+
+/*
 ExInclusiveDurationsClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete ex-inclusive-durations-like class.
@@ -588,6 +600,19 @@ type ExclusiveAnglesClassLike interface {
 		angle1 string,
 		angle2 string,
 	) ExclusiveAnglesLike
+}
+
+/*
+ExclusiveCitationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete exclusive-citations-like class.
+*/
+type ExclusiveCitationsClassLike interface {
+	// Constructor Methods
+	ExclusiveCitations(
+		citation1 string,
+		citation2 string,
+	) ExclusiveCitationsLike
 }
 
 /*
@@ -784,6 +809,19 @@ type InExclusiveAnglesClassLike interface {
 }
 
 /*
+InExclusiveCitationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete in-exclusive-citations-like class.
+*/
+type InExclusiveCitationsClassLike interface {
+	// Constructor Methods
+	InExclusiveCitations(
+		citation1 string,
+		citation2 string,
+	) InExclusiveCitationsLike
+}
+
+/*
 InExclusiveDurationsClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete in-exclusive-durations-like class.
@@ -911,6 +949,19 @@ type InclusiveAnglesClassLike interface {
 		angle1 string,
 		angle2 string,
 	) InclusiveAnglesLike
+}
+
+/*
+InclusiveCitationsClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete inclusive-citations-like class.
+*/
+type InclusiveCitationsClassLike interface {
+	// Constructor Methods
+	InclusiveCitations(
+		citation1 string,
+		citation2 string,
+	) InclusiveCitationsLike
 }
 
 /*
@@ -2042,7 +2093,6 @@ type ComplementLike interface {
 	GetClass() ComplementClassLike
 
 	// Attribute Methods
-	GetNot() string
 	GetLogical() LogicalLike
 }
 
@@ -2203,6 +2253,20 @@ type ExInclusiveAnglesLike interface {
 }
 
 /*
+ExInclusiveCitationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete ex-inclusive-citations-like class.
+*/
+type ExInclusiveCitationsLike interface {
+	// Principal Methods
+	GetClass() ExInclusiveCitationsClassLike
+
+	// Attribute Methods
+	GetCitation1() string
+	GetCitation2() string
+}
+
+/*
 ExInclusiveDurationsLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete ex-inclusive-durations-like class.
@@ -2353,6 +2417,20 @@ type ExclusiveAnglesLike interface {
 	// Attribute Methods
 	GetAngle1() string
 	GetAngle2() string
+}
+
+/*
+ExclusiveCitationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete exclusive-citations-like class.
+*/
+type ExclusiveCitationsLike interface {
+	// Principal Methods
+	GetClass() ExclusiveCitationsClassLike
+
+	// Attribute Methods
+	GetCitation1() string
+	GetCitation2() string
 }
 
 /*
@@ -2564,6 +2642,20 @@ type InExclusiveAnglesLike interface {
 }
 
 /*
+InExclusiveCitationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete in-exclusive-citations-like class.
+*/
+type InExclusiveCitationsLike interface {
+	// Principal Methods
+	GetClass() InExclusiveCitationsClassLike
+
+	// Attribute Methods
+	GetCitation1() string
+	GetCitation2() string
+}
+
+/*
 InExclusiveDurationsLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete in-exclusive-durations-like class.
@@ -2701,6 +2793,20 @@ type InclusiveAnglesLike interface {
 	// Attribute Methods
 	GetAngle1() string
 	GetAngle2() string
+}
+
+/*
+InclusiveCitationsLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete inclusive-citations-like class.
+*/
+type InclusiveCitationsLike interface {
+	// Principal Methods
+	GetClass() InclusiveCitationsClassLike
+
+	// Attribute Methods
+	GetCitation1() string
+	GetCitation2() string
 }
 
 /*

@@ -407,6 +407,22 @@ func (v *visitor_) visitCollection(
 		v.processor_.PreprocessExclusiveAngles(actual)
 		v.visitExclusiveAngles(actual)
 		v.processor_.PostprocessExclusiveAngles(actual)
+	case ast.InclusiveCitationsLike:
+		v.processor_.PreprocessInclusiveCitations(actual)
+		v.visitInclusiveCitations(actual)
+		v.processor_.PostprocessInclusiveCitations(actual)
+	case ast.InExclusiveCitationsLike:
+		v.processor_.PreprocessInExclusiveCitations(actual)
+		v.visitInExclusiveCitations(actual)
+		v.processor_.PostprocessInExclusiveCitations(actual)
+	case ast.ExInclusiveCitationsLike:
+		v.processor_.PreprocessExInclusiveCitations(actual)
+		v.visitExInclusiveCitations(actual)
+		v.processor_.PostprocessExInclusiveCitations(actual)
+	case ast.ExclusiveCitationsLike:
+		v.processor_.PreprocessExclusiveCitations(actual)
+		v.visitExclusiveCitations(actual)
+		v.processor_.PostprocessExclusiveCitations(actual)
 	case ast.InclusiveDurationsLike:
 		v.processor_.PreprocessInclusiveDurations(actual)
 		v.visitInclusiveDurations(actual)
@@ -572,13 +588,6 @@ func (v *visitor_) visitCollection(
 func (v *visitor_) visitComplement(
 	complement ast.ComplementLike,
 ) {
-	// Visit a single not token.
-	var not = complement.GetNot()
-	v.processor_.ProcessNot(not)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessComplementSlot(1)
-
 	// Visit a single logical rule.
 	var logical = complement.GetLogical()
 	v.processor_.PreprocessLogical(logical)
@@ -683,6 +692,8 @@ func (v *visitor_) visitElement(
 			v.processor_.ProcessAngle(actual)
 		case ScannerClass().MatchesType(actual, BooleanToken):
 			v.processor_.ProcessBoolean(actual)
+		case ScannerClass().MatchesType(actual, CitationToken):
+			v.processor_.ProcessCitation(actual)
 		case ScannerClass().MatchesType(actual, DurationToken):
 			v.processor_.ProcessDuration(actual)
 		case ScannerClass().MatchesType(actual, MomentToken):
@@ -767,6 +778,21 @@ func (v *visitor_) visitExInclusiveAngles(
 	// Visit a single angle token.
 	var angle2 = exInclusiveAngles.GetAngle2()
 	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitExInclusiveCitations(
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+) {
+	// Visit a single citation token.
+	var citation1 = exInclusiveCitations.GetCitation1()
+	v.processor_.ProcessCitation(citation1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExInclusiveCitationsSlot(1)
+
+	// Visit a single citation token.
+	var citation2 = exInclusiveCitations.GetCitation2()
+	v.processor_.ProcessCitation(citation2)
 }
 
 func (v *visitor_) visitExInclusiveDurations(
@@ -927,6 +953,21 @@ func (v *visitor_) visitExclusiveAngles(
 	// Visit a single angle token.
 	var angle2 = exclusiveAngles.GetAngle2()
 	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitExclusiveCitations(
+	exclusiveCitations ast.ExclusiveCitationsLike,
+) {
+	// Visit a single citation token.
+	var citation1 = exclusiveCitations.GetCitation1()
+	v.processor_.ProcessCitation(citation1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessExclusiveCitationsSlot(1)
+
+	// Visit a single citation token.
+	var citation2 = exclusiveCitations.GetCitation2()
+	v.processor_.ProcessCitation(citation2)
 }
 
 func (v *visitor_) visitExclusiveDurations(
@@ -1205,6 +1246,21 @@ func (v *visitor_) visitInExclusiveAngles(
 	v.processor_.ProcessAngle(angle2)
 }
 
+func (v *visitor_) visitInExclusiveCitations(
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+) {
+	// Visit a single citation token.
+	var citation1 = inExclusiveCitations.GetCitation1()
+	v.processor_.ProcessCitation(citation1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInExclusiveCitationsSlot(1)
+
+	// Visit a single citation token.
+	var citation2 = inExclusiveCitations.GetCitation2()
+	v.processor_.ProcessCitation(citation2)
+}
+
 func (v *visitor_) visitInExclusiveDurations(
 	inExclusiveDurations ast.InExclusiveDurationsLike,
 ) {
@@ -1353,6 +1409,21 @@ func (v *visitor_) visitInclusiveAngles(
 	// Visit a single angle token.
 	var angle2 = inclusiveAngles.GetAngle2()
 	v.processor_.ProcessAngle(angle2)
+}
+
+func (v *visitor_) visitInclusiveCitations(
+	inclusiveCitations ast.InclusiveCitationsLike,
+) {
+	// Visit a single citation token.
+	var citation1 = inclusiveCitations.GetCitation1()
+	v.processor_.ProcessCitation(citation1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessInclusiveCitationsSlot(1)
+
+	// Visit a single citation token.
+	var citation2 = inclusiveCitations.GetCitation2()
+	v.processor_.ProcessCitation(citation2)
 }
 
 func (v *visitor_) visitInclusiveDurations(

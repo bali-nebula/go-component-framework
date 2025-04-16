@@ -1082,6 +1082,42 @@ func (v *parser_) parseCollection() (
 		return
 	}
 
+	// Attempt to parse a single InclusiveCitations Collection.
+	var inclusiveCitations ast.InclusiveCitationsLike
+	inclusiveCitations, token, ok = v.parseInclusiveCitations()
+	if ok {
+		// Found a single InclusiveCitations Collection.
+		collection = ast.CollectionClass().Collection(inclusiveCitations)
+		return
+	}
+
+	// Attempt to parse a single InExclusiveCitations Collection.
+	var inExclusiveCitations ast.InExclusiveCitationsLike
+	inExclusiveCitations, token, ok = v.parseInExclusiveCitations()
+	if ok {
+		// Found a single InExclusiveCitations Collection.
+		collection = ast.CollectionClass().Collection(inExclusiveCitations)
+		return
+	}
+
+	// Attempt to parse a single ExInclusiveCitations Collection.
+	var exInclusiveCitations ast.ExInclusiveCitationsLike
+	exInclusiveCitations, token, ok = v.parseExInclusiveCitations()
+	if ok {
+		// Found a single ExInclusiveCitations Collection.
+		collection = ast.CollectionClass().Collection(exInclusiveCitations)
+		return
+	}
+
+	// Attempt to parse a single ExclusiveCitations Collection.
+	var exclusiveCitations ast.ExclusiveCitationsLike
+	exclusiveCitations, token, ok = v.parseExclusiveCitations()
+	if ok {
+		// Found a single ExclusiveCitations Collection.
+		collection = ast.CollectionClass().Collection(exclusiveCitations)
+		return
+	}
+
 	// Attempt to parse a single InclusiveDurations Collection.
 	var inclusiveDurations ast.InclusiveDurationsLike
 	inclusiveDurations, token, ok = v.parseInclusiveDurations()
@@ -1435,9 +1471,8 @@ func (v *parser_) parseComplement() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single not token.
-	var not string
-	not, token, ok = v.parseToken(NotToken)
+	// Attempt to parse a single "not" delimiter.
+	_, token, ok = v.parseDelimiter("not")
 	if !ok {
 		if uti.IsDefined(tokens) {
 			// This is not a single Complement rule.
@@ -1473,10 +1508,7 @@ func (v *parser_) parseComplement() (
 	// Found a single Complement rule.
 	ok = true
 	v.remove(tokens)
-	complement = ast.ComplementClass().Complement(
-		not,
-		logical,
-	)
+	complement = ast.ComplementClass().Complement(logical)
 	return
 }
 
@@ -1792,6 +1824,15 @@ func (v *parser_) parseElement() (
 		return
 	}
 
+	// Attempt to parse a single citation Element.
+	var citation string
+	citation, token, ok = v.parseToken(CitationToken)
+	if ok {
+		// Found a single citation Element.
+		element = ast.ElementClass().Element(citation)
+		return
+	}
+
 	// Attempt to parse a single duration Element.
 	var duration string
 	duration, token, ok = v.parseToken(DurationToken)
@@ -2067,6 +2108,110 @@ func (v *parser_) parseExInclusiveAngles() (
 	exInclusiveAngles = ast.ExInclusiveAnglesClass().ExInclusiveAngles(
 		angle1,
 		angle2,
+	)
+	return
+}
+
+func (v *parser_) parseExInclusiveCitations() (
+	exInclusiveCitations ast.ExInclusiveCitationsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation1 string
+	citation1, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation2 string
+	citation2, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExInclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExInclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExInclusiveCitations rule.
+	ok = true
+	v.remove(tokens)
+	exInclusiveCitations = ast.ExInclusiveCitationsClass().ExInclusiveCitations(
+		citation1,
+		citation2,
 	)
 	return
 }
@@ -3138,6 +3283,110 @@ func (v *parser_) parseExclusiveAngles() (
 	exclusiveAngles = ast.ExclusiveAnglesClass().ExclusiveAngles(
 		angle1,
 		angle2,
+	)
+	return
+}
+
+func (v *parser_) parseExclusiveCitations() (
+	exclusiveCitations ast.ExclusiveCitationsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(" delimiter.
+	_, token, ok = v.parseDelimiter("(")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation1 string
+	citation1, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation2 string
+	citation2, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single ExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$ExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single ExclusiveCitations rule.
+	ok = true
+	v.remove(tokens)
+	exclusiveCitations = ast.ExclusiveCitationsClass().ExclusiveCitations(
+		citation1,
+		citation2,
 	)
 	return
 }
@@ -4517,6 +4766,110 @@ func (v *parser_) parseInExclusiveAngles() (
 	return
 }
 
+func (v *parser_) parseInExclusiveCitations() (
+	inExclusiveCitations ast.InExclusiveCitationsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation1 string
+	citation1, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation2 string
+	citation2, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ")" delimiter.
+	_, token, ok = v.parseDelimiter(")")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InExclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InExclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InExclusiveCitations rule.
+	ok = true
+	v.remove(tokens)
+	inExclusiveCitations = ast.InExclusiveCitationsClass().InExclusiveCitations(
+		citation1,
+		citation2,
+	)
+	return
+}
+
 func (v *parser_) parseInExclusiveDurations() (
 	inExclusiveDurations ast.InExclusiveDurationsLike,
 	token TokenLike,
@@ -5553,6 +5906,110 @@ func (v *parser_) parseInclusiveAngles() (
 	inclusiveAngles = ast.InclusiveAnglesClass().InclusiveAngles(
 		angle1,
 		angle2,
+	)
+	return
+}
+
+func (v *parser_) parseInclusiveCitations() (
+	inclusiveCitations ast.InclusiveCitationsLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[" delimiter.
+	_, token, ok = v.parseDelimiter("[")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation1 string
+	citation1, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single citation token.
+	var citation2 string
+	citation2, token, ok = v.parseToken(CitationToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single "]" delimiter.
+	_, token, ok = v.parseDelimiter("]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single InclusiveCitations rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$InclusiveCitations", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single InclusiveCitations rule.
+	ok = true
+	v.remove(tokens)
+	inclusiveCitations = ast.InclusiveCitationsClass().InclusiveCitations(
+		citation1,
+		citation2,
 	)
 	return
 }
@@ -10496,6 +10953,7 @@ var parserClassReference_ = &parserClass_{
 			"$Element": `
   - angle
   - boolean
+  - citation
   - duration
   - moment
   - number
@@ -10521,6 +10979,10 @@ var parserClassReference_ = &parserClass_{
   - InExclusiveAngles
   - ExInclusiveAngles
   - ExclusiveAngles
+  - InclusiveCitations
+  - InExclusiveCitations
+  - ExInclusiveCitations
+  - ExclusiveCitations
   - InclusiveDurations
   - InExclusiveDurations
   - ExInclusiveDurations
@@ -10571,6 +11033,10 @@ var parserClassReference_ = &parserClass_{
 			"$InExclusiveAngles":        `"[" angle ".." angle ")"`,
 			"$ExInclusiveAngles":        `"(" angle ".." angle "]"`,
 			"$ExclusiveAngles":          `"(" angle ".." angle ")"`,
+			"$InclusiveCitations":       `"[" citation ".." citation "]"`,
+			"$InExclusiveCitations":     `"[" citation ".." citation ")"`,
+			"$ExInclusiveCitations":     `"(" citation ".." citation "]"`,
+			"$ExclusiveCitations":       `"(" citation ".." citation ")"`,
 			"$InclusiveDurations":       `"[" duration ".." duration "]"`,
 			"$InExclusiveDurations":     `"[" duration ".." duration ")"`,
 			"$ExInclusiveDurations":     `"(" duration ".." duration "]"`,
@@ -10757,7 +11223,7 @@ var parserClassReference_ = &parserClass_{
   - Function
   - Method
   - Variable  ! This must be last since others also begin with an identifier.`,
-			"$Complement": `not Logical`,
+			"$Complement": `"not" Logical`,
 			"$Logical": `
   - Component
   - Subcomponent

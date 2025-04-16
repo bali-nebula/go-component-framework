@@ -27,21 +27,26 @@ import (
 
 // Access Function
 
-func ComplementClass() ComplementClassLike {
-	return complementClass()
+func InExclusiveCitationsClass() InExclusiveCitationsClassLike {
+	return inExclusiveCitationsClass()
 }
 
 // Constructor Methods
 
-func (c *complementClass_) Complement(
-	logical LogicalLike,
-) ComplementLike {
-	if uti.IsUndefined(logical) {
-		panic("The \"logical\" attribute is required by this class.")
+func (c *inExclusiveCitationsClass_) InExclusiveCitations(
+	citation1 string,
+	citation2 string,
+) InExclusiveCitationsLike {
+	if uti.IsUndefined(citation1) {
+		panic("The \"citation1\" attribute is required by this class.")
 	}
-	var instance = &complement_{
+	if uti.IsUndefined(citation2) {
+		panic("The \"citation2\" attribute is required by this class.")
+	}
+	var instance = &inExclusiveCitations_{
 		// Initialize the instance attributes.
-		logical_: logical,
+		citation1_: citation1,
+		citation2_: citation2,
 	}
 	return instance
 }
@@ -50,37 +55,42 @@ func (c *complementClass_) Complement(
 
 // Principal Methods
 
-func (v *complement_) GetClass() ComplementClassLike {
-	return complementClass()
+func (v *inExclusiveCitations_) GetClass() InExclusiveCitationsClassLike {
+	return inExclusiveCitationsClass()
 }
 
 // Attribute Methods
 
-func (v *complement_) GetLogical() LogicalLike {
-	return v.logical_
+func (v *inExclusiveCitations_) GetCitation1() string {
+	return v.citation1_
+}
+
+func (v *inExclusiveCitations_) GetCitation2() string {
+	return v.citation2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type complement_ struct {
+type inExclusiveCitations_ struct {
 	// Declare the instance attributes.
-	logical_ LogicalLike
+	citation1_ string
+	citation2_ string
 }
 
 // Class Structure
 
-type complementClass_ struct {
+type inExclusiveCitationsClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func complementClass() *complementClass_ {
-	return complementClassReference_
+func inExclusiveCitationsClass() *inExclusiveCitationsClass_ {
+	return inExclusiveCitationsClassReference_
 }
 
-var complementClassReference_ = &complementClass_{
+var inExclusiveCitationsClassReference_ = &inExclusiveCitationsClass_{
 	// Initialize the class constants.
 }
