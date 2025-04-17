@@ -423,7 +423,7 @@ $colonEqual: ":="
 
 $colon: ":"
 
-$comment: "!>" EOL (ANY | EOL)* EOL space* "<!" EOL  ! Chooses the shortest match.
+$comment: "!>" EOL (ANY | EOL)* EOL space* "<!"  ! Chooses the shortest match.
 
 $dashEqual: "-="
 
@@ -479,7 +479,7 @@ $more: ">"
 
 $name: (slash identifier)+
 
-$narrative: '"' '>' EOL (ANY | EOL)* EOL space* '<' '"' EOL  ! Chooses the shortest match.
+$narrative: '"' '>' EOL (ANY | EOL)* EOL space* '<' '"'  ! Chooses the shortest match.
 
 $note: "! " ~[CONTROL]*
 

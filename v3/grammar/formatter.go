@@ -319,68 +319,50 @@ func (v *formatter_) ProcessVersion(
 	v.appendString(version)
 }
 
-func (v *formatter_) ProcessAcceptClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessAcceptClause(
+	acceptClause ast.AcceptClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("accept ")
 }
 
-func (v *formatter_) ProcessAdditionalArgumentSlot(
-	slot uint,
+func (v *formatter_) PreprocessAdditionalArgument(
+	additionalArgument ast.AdditionalArgumentLike,
+	index uint,
+	size uint,
 ) {
-	switch slot {
-	case 1:
-		v.appendString(", ")
-	default:
-		v.appendString(" ")
-	}
+	v.appendString(", ")
 }
 
-func (v *formatter_) ProcessAdditionalAssociationSlot(
-	slot uint,
+func (v *formatter_) PreprocessAdditionalAssociation(
+	additionalAssociation ast.AdditionalAssociationLike,
+	index uint,
+	size uint,
 ) {
-	switch slot {
-	case 1:
-		v.appendString(", ")
-	default:
-		v.appendString(" ")
-	}
+	v.appendString(", ")
 }
 
-func (v *formatter_) ProcessAdditionalIndexSlot(
-	slot uint,
+func (v *formatter_) PreprocessAdditionalIndex(
+	additionalIndex ast.AdditionalIndexLike,
+	index uint,
+	size uint,
 ) {
-	switch slot {
-	case 1:
-		v.appendString(", ")
-	default:
-		v.appendString(" ")
-	}
+	v.appendString(", ")
 }
 
-func (v *formatter_) ProcessAdditionalStatementSlot(
-	slot uint,
+func (v *formatter_) PreprocessAdditionalStatement(
+	additionalStatement ast.AdditionalStatementLike,
+	index uint,
+	size uint,
 ) {
-	switch slot {
-	case 1:
-		v.appendString("; ")
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("; ")
 }
 
-func (v *formatter_) ProcessAdditionalValueSlot(
-	slot uint,
+func (v *formatter_) PreprocessAdditionalValue(
+	additionalValue ast.AdditionalValueLike,
+	index uint,
+	size uint,
 ) {
-	switch slot {
-	case 1:
-		v.appendString(", ")
-	default:
-		v.appendString(" ")
-	}
+	v.appendString(", ")
 }
 
 func (v *formatter_) PreprocessAnd(
@@ -468,25 +450,27 @@ func (v *formatter_) PostprocessBag(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessBreakClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessBreakClause(
+	breakClause ast.BreakClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("break loop")
 }
 
 func (v *formatter_) PreprocessCheckoutClause(
 	checkoutClause ast.CheckoutClauseLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("checkout ")
 }
 
-func (v *formatter_) PostprocessCheckoutClause(
-	checkoutClause ast.CheckoutClauseLike,
+func (v *formatter_) ProcessCheckoutClauseSlot(
+	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+		case 2:
+		v.appendString("from ")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessCitationSlot(
@@ -522,19 +506,7 @@ func (v *formatter_) PostprocessCollection(
 func (v *formatter_) PreprocessComplement(
 	complement ast.ComplementLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessComplementSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessComplement(
-	complement ast.ComplementLike,
-) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("not ")
 }
 
 func (v *formatter_) PreprocessComponent(
@@ -573,31 +545,22 @@ func (v *formatter_) PostprocessCondition(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessContinueClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessContinueClause(
+	continueClause ast.ContinueClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("continue loop")
 }
 
-func (v *formatter_) ProcessDiscardClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessDiscardClause(
+	discardClause ast.DiscardClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("discard ")
 }
 
-func (v *formatter_) ProcessDoClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessDoClause(
+	doClause ast.DoClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("do ")
 }
 
 func (v *formatter_) PreprocessDocument(
@@ -615,7 +578,7 @@ func (v *formatter_) ProcessDocumentSlot(
 func (v *formatter_) PostprocessDocument(
 	document ast.DocumentLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendNewline()
 }
 
 func (v *formatter_) PreprocessDraft(
@@ -657,7 +620,7 @@ func (v *formatter_) PostprocessElement(
 func (v *formatter_) PreprocessEmptyLine(
 	emptyLine ast.EmptyLineLike,
 ) {
-	v.appendNewline()
+	v.appendString("\n") // No indentation.
 }
 
 func (v *formatter_) PreprocessEntity(
@@ -768,28 +731,35 @@ func (v *formatter_) PostprocessFlow(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessFunction(
-	function ast.FunctionLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) ProcessFunctionSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	switch slot {
+		case 1:
+		v.appendString("(")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PostprocessFunction(
 	function ast.FunctionLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
+}
+
+func (v *formatter_) PreprocessIfClause(
+	ifClause ast.IfClauseLike,
+) {
+	v.appendString("if ")
 }
 
 func (v *formatter_) ProcessIfClauseSlot(
 	slot uint,
 ) {
 	switch slot {
+		case 1:
+		v.appendString(" do ")
 	default:
 		v.appendString(" ")
 	}
@@ -999,6 +969,12 @@ func (v *formatter_) PostprocessItem(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessLetClause(
+	letClause ast.LetClauseLike,
+) {
+	v.appendString("let ")
+}
+
 func (v *formatter_) ProcessLetClauseSlot(
 	slot uint,
 ) {
@@ -1061,21 +1037,18 @@ func (v *formatter_) PreprocessMatchHandler(
 	index uint,
 	size uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(" matching ")
 }
 
 func (v *formatter_) ProcessMatchHandlerSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessMatchHandler(
-	matchHandler ast.MatchHandlerLike,
-	index uint,
-	size uint,
-) {
-	// TBD - Add formatting of the delimited rule.
+	switch slot {
+	case 1:
+		v.appendString(" do ")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessMatches(
@@ -1120,22 +1093,19 @@ func (v *formatter_) PostprocessMessaging(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessMethod(
-	method ast.MethodLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) ProcessMethodSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	switch slot {
+		case 3:
+		v.appendString("(")
+	}
 }
 
 func (v *formatter_) PostprocessMethod(
 	method ast.MethodLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessMultilineAttributes(
@@ -1226,10 +1196,18 @@ func (v *formatter_) PreprocessNoValues(
 	v.appendString("[ ]")
 }
 
+func (v *formatter_) PreprocessNotarizeClause(
+	notarizeClause ast.NotarizeClauseLike,
+) {
+	v.appendString("notarize ")
+}
+
 func (v *formatter_) ProcessNotarizeClauseSlot(
 	slot uint,
 ) {
 	switch slot {
+	case 1:
+		v.appendString(" as ")
 	default:
 		v.appendString(" ")
 	}
@@ -1253,19 +1231,24 @@ func (v *formatter_) PostprocessNumerical(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessOnClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessOnClause(
+	onClause ast.OnClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString(" on ")
+}
+
+func (v *formatter_) PreprocessPostClause(
+	postClause ast.PostClauseLike,
+) {
+	v.appendString("post ")
 }
 
 func (v *formatter_) ProcessPostClauseSlot(
 	slot uint,
 ) {
 	switch slot {
+	case 1:
+		v.appendString(" to ")
 	default:
 		v.appendString(" ")
 	}
@@ -1274,19 +1257,13 @@ func (v *formatter_) ProcessPostClauseSlot(
 func (v *formatter_) PreprocessPrecedence(
 	precedence ast.PrecedenceLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessPrecedenceSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("(")
 }
 
 func (v *formatter_) PostprocessPrecedence(
 	precedence ast.PrecedenceLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessPredicate(
@@ -1294,13 +1271,16 @@ func (v *formatter_) PreprocessPredicate(
 	index uint,
 	size uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(" ")
 }
 
 func (v *formatter_) ProcessPredicateSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PostprocessPredicate(
@@ -1347,13 +1327,10 @@ func (v *formatter_) PostprocessProcedure(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessPublishClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessPublishClause(
+	publishClause ast.PublishClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("publish ")
 }
 
 func (v *formatter_) ProcessRangeSlot(
@@ -1401,13 +1378,10 @@ func (v *formatter_) PostprocessReferent(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessRejectClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessRejectClause(
+	rejectClause ast.RejectClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("reject ")
 }
 
 func (v *formatter_) PreprocessRepository(
@@ -1446,22 +1420,27 @@ func (v *formatter_) PostprocessResult(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessRetrieveClause(
+	retrieveClause ast.RetrieveClauseLike,
+) {
+	v.appendString("retrieve ")
+}
+
 func (v *formatter_) ProcessRetrieveClauseSlot(
 	slot uint,
 ) {
 	switch slot {
+	case 1:
+		v.appendString(" from ")
 	default:
 		v.appendString(" ")
 	}
 }
 
-func (v *formatter_) ProcessReturnClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessReturnClause(
+	returnClause ast.ReturnClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("return ")
 }
 
 func (v *formatter_) PreprocessSan(
@@ -1470,22 +1449,27 @@ func (v *formatter_) PreprocessSan(
 	v.appendString("san")
 }
 
+func (v *formatter_) PreprocessSaveClause(
+	saveClause ast.SaveClauseLike,
+) {
+	v.appendString("save ")
+}
+
 func (v *formatter_) ProcessSaveClauseSlot(
 	slot uint,
 ) {
 	switch slot {
+	case 1:
+		v.appendString(" as ")
 	default:
 		v.appendString(" ")
 	}
 }
 
-func (v *formatter_) ProcessSelectClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessSelectClause(
+	selectClause ast.SelectClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("select ")
 }
 
 func (v *formatter_) PreprocessSequence(
@@ -1548,22 +1532,21 @@ func (v *formatter_) PostprocessString(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessSubcomponent(
-	subcomponent ast.SubcomponentLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) ProcessSubcomponentSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	switch slot {
+	case 1:
+		v.appendString("[")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PostprocessSubcomponent(
 	subcomponent ast.SubcomponentLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessSubject(
@@ -1638,13 +1621,10 @@ func (v *formatter_) PostprocessThreading(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) ProcessThrowClauseSlot(
-	slot uint,
+func (v *formatter_) PreprocessThrowClause(
+	throwClause ast.ThrowClauseLike,
 ) {
-	switch slot {
-	default:
-		v.appendString(" ")
-	}
+	v.appendString("throw ")
 }
 
 func (v *formatter_) PreprocessUpperExclusion(
@@ -1678,19 +1658,37 @@ func (v *formatter_) PostprocessVariable(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessWhileClause(
+	whileClause ast.WhileClauseLike,
+) {
+	v.appendString("while ")
+}
+
 func (v *formatter_) ProcessWhileClauseSlot(
 	slot uint,
 ) {
 	switch slot {
+	case 1:
+		v.appendString(" do ")
 	default:
 		v.appendString(" ")
 	}
+}
+
+func (v *formatter_) PreprocessWithClause(
+	withClause ast.WithClauseLike,
+) {
+	v.appendString("with each ")
 }
 
 func (v *formatter_) ProcessWithClauseSlot(
 	slot uint,
 ) {
 	switch slot {
+	case 1:
+		v.appendString(" in ")
+	case 2:
+		v.appendString(" do ")
 	default:
 		v.appendString(" ")
 	}
