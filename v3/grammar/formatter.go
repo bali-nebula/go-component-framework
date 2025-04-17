@@ -420,7 +420,10 @@ func (v *formatter_) PreprocessAssociation(
 func (v *formatter_) ProcessAssociationSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	switch slot {
+	case 2:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PostprocessAssociation(
@@ -1146,6 +1149,7 @@ func (v *formatter_) PostprocessMultilineAttributes(
 	multilineAttributes ast.MultilineAttributesLike,
 ) {
 	v.depth_--
+	v.appendNewline()
 	v.appendString("]")
 }
 
@@ -1160,6 +1164,7 @@ func (v *formatter_) PostprocessMultilineParameters(
 	multilineParameters ast.MultilineParametersLike,
 ) {
 	v.depth_--
+	v.appendNewline()
 	v.appendString(")")
 }
 
@@ -1174,6 +1179,7 @@ func (v *formatter_) PostprocessMultilineStatements(
 	multilineStatements ast.MultilineStatementsLike,
 ) {
 	v.depth_--
+	v.appendNewline()
 	v.appendString("}")
 }
 
@@ -1188,6 +1194,7 @@ func (v *formatter_) PostprocessMultilineValues(
 	multilineValues ast.MultilineValuesLike,
 ) {
 	v.depth_--
+	v.appendNewline()
 	v.appendString("]")
 }
 
