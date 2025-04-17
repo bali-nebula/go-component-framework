@@ -1059,24 +1059,6 @@ func (v *parser_) parseCollection() (
 		return
 	}
 
-	// Attempt to parse a single NoAttributes Collection.
-	var noAttributes ast.NoAttributesLike
-	noAttributes, token, ok = v.parseNoAttributes()
-	if ok {
-		// Found a single NoAttributes Collection.
-		collection = ast.CollectionClass().Collection(noAttributes)
-		return
-	}
-
-	// Attempt to parse a single NoValues Collection.
-	var noValues ast.NoValuesLike
-	noValues, token, ok = v.parseNoValues()
-	if ok {
-		// Found a single NoValues Collection.
-		collection = ast.CollectionClass().Collection(noValues)
-		return
-	}
-
 	// Attempt to parse a single InlineAttributes Collection.
 	var inlineAttributes ast.InlineAttributesLike
 	inlineAttributes, token, ok = v.parseInlineAttributes()
@@ -1092,6 +1074,24 @@ func (v *parser_) parseCollection() (
 	if ok {
 		// Found a single InlineValues Collection.
 		collection = ast.CollectionClass().Collection(inlineValues)
+		return
+	}
+
+	// Attempt to parse a single NoAttributes Collection.
+	var noAttributes ast.NoAttributesLike
+	noAttributes, token, ok = v.parseNoAttributes()
+	if ok {
+		// Found a single NoAttributes Collection.
+		collection = ast.CollectionClass().Collection(noAttributes)
+		return
+	}
+
+	// Attempt to parse a single NoValues Collection.
+	var noValues ast.NoValuesLike
+	noValues, token, ok = v.parseNoValues()
+	if ok {
+		// Found a single NoValues Collection.
+		collection = ast.CollectionClass().Collection(noValues)
 		return
 	}
 
@@ -6520,10 +6520,10 @@ var parserClassReference_ = &parserClass_{
 			"$Collection": `
   - MultilineAttributes
   - MultilineValues  ! Must be after the multiline attributes.
-  - NoAttributes
-  - NoValues
   - InlineAttributes
-  - InlineValues  ! Must be after the inline attributes.`,
+  - InlineValues  ! Must be after the inline attributes.
+  - NoAttributes
+  - NoValues`,
 			"$MultilineAttributes": `"[" newline AnnotatedAssociation+ "]"`,
 			"$InlineAttributes":    `"[" Association AdditionalAssociation* "]"`,
 			"$NoAttributes":        `"[" colon "]"`,

@@ -389,14 +389,6 @@ func (v *visitor_) visitCollection(
 		v.processor_.PreprocessMultilineValues(actual)
 		v.visitMultilineValues(actual)
 		v.processor_.PostprocessMultilineValues(actual)
-	case ast.NoAttributesLike:
-		v.processor_.PreprocessNoAttributes(actual)
-		v.visitNoAttributes(actual)
-		v.processor_.PostprocessNoAttributes(actual)
-	case ast.NoValuesLike:
-		v.processor_.PreprocessNoValues(actual)
-		v.visitNoValues(actual)
-		v.processor_.PostprocessNoValues(actual)
 	case ast.InlineAttributesLike:
 		v.processor_.PreprocessInlineAttributes(actual)
 		v.visitInlineAttributes(actual)
@@ -405,6 +397,14 @@ func (v *visitor_) visitCollection(
 		v.processor_.PreprocessInlineValues(actual)
 		v.visitInlineValues(actual)
 		v.processor_.PostprocessInlineValues(actual)
+	case ast.NoAttributesLike:
+		v.processor_.PreprocessNoAttributes(actual)
+		v.visitNoAttributes(actual)
+		v.processor_.PostprocessNoAttributes(actual)
+	case ast.NoValuesLike:
+		v.processor_.PreprocessNoValues(actual)
+		v.visitNoValues(actual)
+		v.processor_.PostprocessNoValues(actual)
 	case string:
 		switch {
 		default:

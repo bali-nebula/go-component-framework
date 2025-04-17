@@ -94,10 +94,10 @@ $UpperExclusion: "|)"
 $Collection:
   - MultilineAttributes
   - MultilineValues  ! Must be after the multiline attributes.
-  - NoAttributes
-  - NoValues
   - InlineAttributes
   - InlineValues  ! Must be after the inline attributes.
+  - NoAttributes
+  - NoValues
 
 $MultilineAttributes: "[" newline AnnotatedAssociation+ "]"
 
