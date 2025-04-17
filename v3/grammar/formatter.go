@@ -417,19 +417,7 @@ func (v *formatter_) PostprocessAssociation(
 func (v *formatter_) PreprocessAtLevel(
 	atLevel ast.AtLevelLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessAtLevelSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessAtLevel(
-	atLevel ast.AtLevelLike,
-) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(" at level ")
 }
 
 func (v *formatter_) PreprocessBag(
@@ -467,9 +455,7 @@ func (v *formatter_) ProcessCheckoutClauseSlot(
 ) {
 	switch slot {
 	case 2:
-		v.appendString("from ")
-	default:
-		v.appendString(" ")
+		v.appendString(" from ")
 	}
 }
 

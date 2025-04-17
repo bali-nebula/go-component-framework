@@ -158,10 +158,6 @@ func (v *visitor_) visitAnnotatedStatement(
 ) {
 	// Visit the possible annotatedStatement types.
 	switch actual := annotatedStatement.GetAny().(type) {
-	case ast.EmptyLineLike:
-		v.processor_.PreprocessEmptyLine(actual)
-		v.visitEmptyLine(actual)
-		v.processor_.PostprocessEmptyLine(actual)
 	case ast.AnnotationLineLike:
 		v.processor_.PreprocessAnnotationLine(actual)
 		v.visitAnnotationLine(actual)
@@ -170,6 +166,10 @@ func (v *visitor_) visitAnnotatedStatement(
 		v.processor_.PreprocessStatementLine(actual)
 		v.visitStatementLine(actual)
 		v.processor_.PostprocessStatementLine(actual)
+	case ast.EmptyLineLike:
+		v.processor_.PreprocessEmptyLine(actual)
+		v.visitEmptyLine(actual)
+		v.processor_.PostprocessEmptyLine(actual)
 	case string:
 		switch {
 		default:

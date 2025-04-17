@@ -442,15 +442,6 @@ func (v *parser_) parseAnnotatedStatement() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single EmptyLine AnnotatedStatement.
-	var emptyLine ast.EmptyLineLike
-	emptyLine, token, ok = v.parseEmptyLine()
-	if ok {
-		// Found a single EmptyLine AnnotatedStatement.
-		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(emptyLine)
-		return
-	}
-
 	// Attempt to parse a single AnnotationLine AnnotatedStatement.
 	var annotationLine ast.AnnotationLineLike
 	annotationLine, token, ok = v.parseAnnotationLine()
@@ -466,6 +457,15 @@ func (v *parser_) parseAnnotatedStatement() (
 	if ok {
 		// Found a single StatementLine AnnotatedStatement.
 		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(statementLine)
+		return
+	}
+
+	// Attempt to parse a single EmptyLine AnnotatedStatement.
+	var emptyLine ast.EmptyLineLike
+	emptyLine, token, ok = v.parseEmptyLine()
+	if ok {
+		// Found a single EmptyLine AnnotatedStatement.
+		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(emptyLine)
 		return
 	}
 
@@ -6538,14 +6538,14 @@ var parserClassReference_ = &parserClass_{
   - NoStatements`,
 			"$MultilineStatements": `"{" newline AnnotatedStatement* "}"`,
 			"$AnnotatedStatement": `
-  - EmptyLine
   - AnnotationLine
-  - StatementLine`,
-			"$EmptyLine": `newline`,
+  - StatementLine
+  - EmptyLine`,
 			"$AnnotationLine": `
   - note
   - comment`,
 			"$StatementLine":       `Statement note?`,
+			"$EmptyLine":           `newline`,
 			"$InlineStatements":    `"{" Statement AdditionalStatement* "}"`,
 			"$AdditionalStatement": `";" Statement`,
 			"$NoStatements":        `"{" "}"`,
