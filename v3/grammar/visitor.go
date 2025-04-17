@@ -743,14 +743,14 @@ func (v *visitor_) visitEntity(
 		v.processor_.PreprocessString(actual)
 		v.visitString(actual)
 		v.processor_.PostprocessString(actual)
-	case ast.CollectionLike:
-		v.processor_.PreprocessCollection(actual)
-		v.visitCollection(actual)
-		v.processor_.PostprocessCollection(actual)
 	case ast.ProcedureLike:
 		v.processor_.PreprocessProcedure(actual)
 		v.visitProcedure(actual)
 		v.processor_.PostprocessProcedure(actual)
+	case ast.CollectionLike:
+		v.processor_.PreprocessCollection(actual)
+		v.visitCollection(actual)
+		v.processor_.PostprocessCollection(actual)
 	case string:
 		switch {
 		default:

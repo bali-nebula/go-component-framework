@@ -1986,21 +1986,21 @@ func (v *parser_) parseEntity() (
 		return
 	}
 
-	// Attempt to parse a single Collection Entity.
-	var collection ast.CollectionLike
-	collection, token, ok = v.parseCollection()
-	if ok {
-		// Found a single Collection Entity.
-		entity = ast.EntityClass().Entity(collection)
-		return
-	}
-
 	// Attempt to parse a single Procedure Entity.
 	var procedure ast.ProcedureLike
 	procedure, token, ok = v.parseProcedure()
 	if ok {
 		// Found a single Procedure Entity.
 		entity = ast.EntityClass().Entity(procedure)
+		return
+	}
+
+	// Attempt to parse a single Collection Entity.
+	var collection ast.CollectionLike
+	collection, token, ok = v.parseCollection()
+	if ok {
+		// Found a single Collection Entity.
+		entity = ast.EntityClass().Entity(collection)
 		return
 	}
 
@@ -11126,8 +11126,8 @@ var parserClassReference_ = &parserClass_{
 			"$Entity": `
   - Element
   - String
-  - Collection
-  - Procedure`,
+  - Procedure
+  - Collection`,
 			"$Parameters": `
   - MultilineParameters
   - InlineParameters`,
@@ -11156,109 +11156,6 @@ var parserClassReference_ = &parserClass_{
   - symbol
   - tag
   - version`,
-			"$Collection": `
-  - MultilineAttributes
-  - MultilineValues
-  - NoAttributes
-  - NoValues
-  - InclusiveAngles
-  - InExclusiveAngles
-  - ExInclusiveAngles
-  - ExclusiveAngles
-  - InclusiveCitations
-  - InExclusiveCitations
-  - ExInclusiveCitations
-  - ExclusiveCitations
-  - InclusiveDurations
-  - InExclusiveDurations
-  - ExInclusiveDurations
-  - ExclusiveDurations
-  - InclusiveMoments
-  - InExclusiveMoments
-  - ExInclusiveMoments
-  - ExclusiveMoments
-  - InclusiveNames
-  - InExclusiveNames
-  - ExInclusiveNames
-  - ExclusiveNames
-  - InclusiveNumbers
-  - InExclusiveNumbers
-  - ExInclusiveNumbers
-  - ExclusiveNumbers
-  - InclusivePercentages
-  - InExclusivePercentages
-  - ExInclusivePercentages
-  - ExclusivePercentages
-  - InclusiveProbabilities
-  - InExclusiveProbabilities
-  - ExInclusiveProbabilities
-  - ExclusiveProbabilities
-  - InclusiveQuotes
-  - InExclusiveQuotes
-  - ExInclusiveQuotes
-  - ExclusiveQuotes
-  - InclusiveSymbols
-  - InExclusiveSymbols
-  - ExInclusiveSymbols
-  - ExclusiveSymbols
-  - InclusiveVersions
-  - InExclusiveVersions
-  - ExInclusiveVersions
-  - ExclusiveVersions
-  - InlineAttributes
-  - InlineValues`,
-			"$MultilineAttributes":      `"[" newline AnnotatedAssociation+ "]"`,
-			"$InlineAttributes":         `"[" Association AdditionalAssociation* "]"`,
-			"$NoAttributes":             `"[" colon "]"`,
-			"$MultilineValues":          `"[" newline AnnotatedValue+ "]"`,
-			"$AnnotatedValue":           `Component note?`,
-			"$InlineValues":             `"[" Component AdditionalValue* "]"`,
-			"$AdditionalValue":          `"," Component`,
-			"$NoValues":                 `"[" "]"`,
-			"$InclusiveAngles":          `"[" angle ".." angle "]"`,
-			"$InExclusiveAngles":        `"[" angle ".." angle ")"`,
-			"$ExInclusiveAngles":        `"(" angle ".." angle "]"`,
-			"$ExclusiveAngles":          `"(" angle ".." angle ")"`,
-			"$InclusiveCitations":       `"[" citation ".." citation "]"`,
-			"$InExclusiveCitations":     `"[" citation ".." citation ")"`,
-			"$ExInclusiveCitations":     `"(" citation ".." citation "]"`,
-			"$ExclusiveCitations":       `"(" citation ".." citation ")"`,
-			"$InclusiveDurations":       `"[" duration ".." duration "]"`,
-			"$InExclusiveDurations":     `"[" duration ".." duration ")"`,
-			"$ExInclusiveDurations":     `"(" duration ".." duration "]"`,
-			"$ExclusiveDurations":       `"(" duration ".." duration ")"`,
-			"$InclusiveMoments":         `"[" moment ".." moment "]"`,
-			"$InExclusiveMoments":       `"[" moment ".." moment ")"`,
-			"$ExInclusiveMoments":       `"(" moment ".." moment "]"`,
-			"$ExclusiveMoments":         `"(" moment ".." moment ")"`,
-			"$InclusiveNames":           `"[" name ".." name "]"`,
-			"$InExclusiveNames":         `"[" name ".." name ")"`,
-			"$ExInclusiveNames":         `"(" name ".." name "]"`,
-			"$ExclusiveNames":           `"(" name ".." name ")"`,
-			"$InclusiveNumbers":         `"[" number ".." number "]"`,
-			"$InExclusiveNumbers":       `"[" number ".." number ")"`,
-			"$ExInclusiveNumbers":       `"(" number ".." number "]"`,
-			"$ExclusiveNumbers":         `"(" number ".." number ")"`,
-			"$InclusivePercentages":     `"[" percentage ".." percentage "]"`,
-			"$InExclusivePercentages":   `"[" percentage ".." percentage ")"`,
-			"$ExInclusivePercentages":   `"(" percentage ".." percentage "]"`,
-			"$ExclusivePercentages":     `"(" percentage ".." percentage ")"`,
-			"$InclusiveProbabilities":   `"[" probability ".." probability "]"`,
-			"$InExclusiveProbabilities": `"[" probability ".." probability ")"`,
-			"$ExInclusiveProbabilities": `"(" probability ".." probability "]"`,
-			"$ExclusiveProbabilities":   `"(" probability ".." probability ")"`,
-			"$InclusiveQuotes":          `"[" quote ".." quote "]"`,
-			"$InExclusiveQuotes":        `"[" quote ".." quote ")"`,
-			"$ExInclusiveQuotes":        `"(" quote ".." quote "]"`,
-			"$ExclusiveQuotes":          `"(" quote ".." quote ")"`,
-			"$InclusiveSymbols":         `"[" symbol ".." symbol "]"`,
-			"$InExclusiveSymbols":       `"[" symbol ".." symbol ")"`,
-			"$ExInclusiveSymbols":       `"(" symbol ".." symbol "]"`,
-			"$ExclusiveSymbols":         `"(" symbol ".." symbol ")"`,
-			"$InclusiveVersions":        `"[" version ".." version "]"`,
-			"$InExclusiveVersions":      `"[" version ".." version ")"`,
-			"$ExInclusiveVersions":      `"(" version ".." version "]"`,
-			"$ExclusiveVersions":        `"(" version ".." version ")"`,
 			"$Procedure": `
   - MultilineStatements
   - InlineStatements
@@ -11441,6 +11338,109 @@ var parserClassReference_ = &parserClass_{
   - Method
   - Variable  ! This must be last since others also begin with an identifier.`,
 			"$Magnitude": `bar Numerical bar`,
+			"$Collection": `
+  - MultilineAttributes
+  - MultilineValues  ! Must be after the multiline attributes.
+  - NoAttributes
+  - NoValues
+  - InclusiveAngles
+  - InExclusiveAngles
+  - ExInclusiveAngles
+  - ExclusiveAngles
+  - InclusiveCitations
+  - InExclusiveCitations
+  - ExInclusiveCitations
+  - ExclusiveCitations
+  - InclusiveDurations
+  - InExclusiveDurations
+  - ExInclusiveDurations
+  - ExclusiveDurations
+  - InclusiveMoments
+  - InExclusiveMoments
+  - ExInclusiveMoments
+  - ExclusiveMoments
+  - InclusiveNames
+  - InExclusiveNames
+  - ExInclusiveNames
+  - ExclusiveNames
+  - InclusiveNumbers
+  - InExclusiveNumbers
+  - ExInclusiveNumbers
+  - ExclusiveNumbers
+  - InclusivePercentages
+  - InExclusivePercentages
+  - ExInclusivePercentages
+  - ExclusivePercentages
+  - InclusiveProbabilities
+  - InExclusiveProbabilities
+  - ExInclusiveProbabilities
+  - ExclusiveProbabilities
+  - InclusiveQuotes
+  - InExclusiveQuotes
+  - ExInclusiveQuotes
+  - ExclusiveQuotes
+  - InclusiveSymbols
+  - InExclusiveSymbols
+  - ExInclusiveSymbols
+  - ExclusiveSymbols
+  - InclusiveVersions
+  - InExclusiveVersions
+  - ExInclusiveVersions
+  - ExclusiveVersions
+  - InlineAttributes  ! Must be after the various ranges.
+  - InlineValues  ! Must be after the inline attributes.`,
+			"$MultilineAttributes":      `"[" newline AnnotatedAssociation+ "]"`,
+			"$InlineAttributes":         `"[" Association AdditionalAssociation* "]"`,
+			"$NoAttributes":             `"[" colon "]"`,
+			"$MultilineValues":          `"[" newline AnnotatedValue+ "]"`,
+			"$AnnotatedValue":           `Component note?`,
+			"$InlineValues":             `"[" Component AdditionalValue* "]"`,
+			"$AdditionalValue":          `"," Component`,
+			"$NoValues":                 `"[" "]"`,
+			"$InclusiveAngles":          `"[" angle ".." angle "]"`,
+			"$InExclusiveAngles":        `"[" angle ".." angle ")"`,
+			"$ExInclusiveAngles":        `"(" angle ".." angle "]"`,
+			"$ExclusiveAngles":          `"(" angle ".." angle ")"`,
+			"$InclusiveCitations":       `"[" citation ".." citation "]"`,
+			"$InExclusiveCitations":     `"[" citation ".." citation ")"`,
+			"$ExInclusiveCitations":     `"(" citation ".." citation "]"`,
+			"$ExclusiveCitations":       `"(" citation ".." citation ")"`,
+			"$InclusiveDurations":       `"[" duration ".." duration "]"`,
+			"$InExclusiveDurations":     `"[" duration ".." duration ")"`,
+			"$ExInclusiveDurations":     `"(" duration ".." duration "]"`,
+			"$ExclusiveDurations":       `"(" duration ".." duration ")"`,
+			"$InclusiveMoments":         `"[" moment ".." moment "]"`,
+			"$InExclusiveMoments":       `"[" moment ".." moment ")"`,
+			"$ExInclusiveMoments":       `"(" moment ".." moment "]"`,
+			"$ExclusiveMoments":         `"(" moment ".." moment ")"`,
+			"$InclusiveNames":           `"[" name ".." name "]"`,
+			"$InExclusiveNames":         `"[" name ".." name ")"`,
+			"$ExInclusiveNames":         `"(" name ".." name "]"`,
+			"$ExclusiveNames":           `"(" name ".." name ")"`,
+			"$InclusiveNumbers":         `"[" number ".." number "]"`,
+			"$InExclusiveNumbers":       `"[" number ".." number ")"`,
+			"$ExInclusiveNumbers":       `"(" number ".." number "]"`,
+			"$ExclusiveNumbers":         `"(" number ".." number ")"`,
+			"$InclusivePercentages":     `"[" percentage ".." percentage "]"`,
+			"$InExclusivePercentages":   `"[" percentage ".." percentage ")"`,
+			"$ExInclusivePercentages":   `"(" percentage ".." percentage "]"`,
+			"$ExclusivePercentages":     `"(" percentage ".." percentage ")"`,
+			"$InclusiveProbabilities":   `"[" probability ".." probability "]"`,
+			"$InExclusiveProbabilities": `"[" probability ".." probability ")"`,
+			"$ExInclusiveProbabilities": `"(" probability ".." probability "]"`,
+			"$ExclusiveProbabilities":   `"(" probability ".." probability ")"`,
+			"$InclusiveQuotes":          `"[" quote ".." quote "]"`,
+			"$InExclusiveQuotes":        `"[" quote ".." quote ")"`,
+			"$ExInclusiveQuotes":        `"(" quote ".." quote "]"`,
+			"$ExclusiveQuotes":          `"(" quote ".." quote ")"`,
+			"$InclusiveSymbols":         `"[" symbol ".." symbol "]"`,
+			"$InExclusiveSymbols":       `"[" symbol ".." symbol ")"`,
+			"$ExInclusiveSymbols":       `"(" symbol ".." symbol "]"`,
+			"$ExclusiveSymbols":         `"(" symbol ".." symbol ")"`,
+			"$InclusiveVersions":        `"[" version ".." version "]"`,
+			"$InExclusiveVersions":      `"[" version ".." version ")"`,
+			"$ExInclusiveVersions":      `"(" version ".." version "]"`,
+			"$ExclusiveVersions":        `"(" version ".." version ")"`,
 		},
 	),
 }

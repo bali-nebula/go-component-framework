@@ -5,6 +5,10 @@
     '>
         1234abcd
     <'
+    '>
+        1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef
+        1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef
+    <'
     /bali
     /bali/abstractions/Sequential/v1
     ">
