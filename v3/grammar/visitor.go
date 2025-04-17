@@ -158,18 +158,22 @@ func (v *visitor_) visitAnnotatedStatement(
 ) {
 	// Visit the possible annotatedStatement types.
 	switch actual := annotatedStatement.GetAny().(type) {
-	case ast.AnnotationLineLike:
-		v.processor_.PreprocessAnnotationLine(actual)
-		v.visitAnnotationLine(actual)
-		v.processor_.PostprocessAnnotationLine(actual)
-	case ast.StatementLineLike:
-		v.processor_.PreprocessStatementLine(actual)
-		v.visitStatementLine(actual)
-		v.processor_.PostprocessStatementLine(actual)
 	case ast.EmptyLineLike:
 		v.processor_.PreprocessEmptyLine(actual)
 		v.visitEmptyLine(actual)
 		v.processor_.PostprocessEmptyLine(actual)
+	case ast.NoteLineLike:
+		v.processor_.PreprocessNoteLine(actual)
+		v.visitNoteLine(actual)
+		v.processor_.PostprocessNoteLine(actual)
+	case ast.CommentLineLike:
+		v.processor_.PreprocessCommentLine(actual)
+		v.visitCommentLine(actual)
+		v.processor_.PostprocessCommentLine(actual)
+	case ast.StatementLineLike:
+		v.processor_.PreprocessStatementLine(actual)
+		v.visitStatementLine(actual)
+		v.processor_.PostprocessStatementLine(actual)
 	case string:
 		switch {
 		default:
@@ -196,25 +200,6 @@ func (v *visitor_) visitAnnotatedValue(
 	var optionalNote = annotatedValue.GetOptionalNote()
 	if uti.IsDefined(optionalNote) {
 		v.processor_.ProcessNote(optionalNote)
-	}
-}
-
-func (v *visitor_) visitAnnotationLine(
-	annotationLine ast.AnnotationLineLike,
-) {
-	// Visit the possible annotationLine types.
-	switch actual := annotationLine.GetAny().(type) {
-	case string:
-		switch {
-		case ScannerClass().MatchesType(actual, NoteToken):
-			v.processor_.ProcessNote(actual)
-		case ScannerClass().MatchesType(actual, CommentToken):
-			v.processor_.ProcessComment(actual)
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
 }
 
@@ -415,6 +400,14 @@ func (v *visitor_) visitCollection(
 	}
 }
 
+func (v *visitor_) visitCommentLine(
+	commentLine ast.CommentLineLike,
+) {
+	// Visit a single comment token.
+	var comment = commentLine.GetComment()
+	v.processor_.ProcessComment(comment)
+}
+
 func (v *visitor_) visitComplement(
 	complement ast.ComplementLike,
 ) {
@@ -550,8 +543,15 @@ func (v *visitor_) visitEmptyLine(
 	emptyLine ast.EmptyLineLike,
 ) {
 	// Visit a single newline token.
-	var newline = emptyLine.GetNewline()
-	v.processor_.ProcessNewline(newline)
+	var newline1 = emptyLine.GetNewline1()
+	v.processor_.ProcessNewline(newline1)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessEmptyLineSlot(1)
+
+	// Visit a single newline token.
+	var newline2 = emptyLine.GetNewline2()
+	v.processor_.ProcessNewline(newline2)
 }
 
 func (v *visitor_) visitEntity(
@@ -1486,6 +1486,14 @@ func (v *visitor_) visitNotarizeClause(
 	v.processor_.PreprocessCitation(citation)
 	v.visitCitation(citation)
 	v.processor_.PostprocessCitation(citation)
+}
+
+func (v *visitor_) visitNoteLine(
+	noteLine ast.NoteLineLike,
+) {
+	// Visit a single note token.
+	var note = noteLine.GetNote()
+	v.processor_.ProcessNote(note)
 }
 
 func (v *visitor_) visitNumerical(

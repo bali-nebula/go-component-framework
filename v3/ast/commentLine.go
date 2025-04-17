@@ -27,21 +27,21 @@ import (
 
 // Access Function
 
-func AnnotationLineClass() AnnotationLineClassLike {
-	return annotationLineClass()
+func CommentLineClass() CommentLineClassLike {
+	return commentLineClass()
 }
 
 // Constructor Methods
 
-func (c *annotationLineClass_) AnnotationLine(
-	any_ any,
-) AnnotationLineLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *commentLineClass_) CommentLine(
+	comment string,
+) CommentLineLike {
+	if uti.IsUndefined(comment) {
+		panic("The \"comment\" attribute is required by this class.")
 	}
-	var instance = &annotationLine_{
+	var instance = &commentLine_{
 		// Initialize the instance attributes.
-		any_: any_,
+		comment_: comment,
 	}
 	return instance
 }
@@ -50,37 +50,37 @@ func (c *annotationLineClass_) AnnotationLine(
 
 // Principal Methods
 
-func (v *annotationLine_) GetClass() AnnotationLineClassLike {
-	return annotationLineClass()
+func (v *commentLine_) GetClass() CommentLineClassLike {
+	return commentLineClass()
 }
 
 // Attribute Methods
 
-func (v *annotationLine_) GetAny() any {
-	return v.any_
+func (v *commentLine_) GetComment() string {
+	return v.comment_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type annotationLine_ struct {
+type commentLine_ struct {
 	// Declare the instance attributes.
-	any_ any
+	comment_ string
 }
 
 // Class Structure
 
-type annotationLineClass_ struct {
+type commentLineClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func annotationLineClass() *annotationLineClass_ {
-	return annotationLineClassReference_
+func commentLineClass() *commentLineClass_ {
+	return commentLineClassReference_
 }
 
-var annotationLineClassReference_ = &annotationLineClass_{
+var commentLineClassReference_ = &commentLineClass_{
 	// Initialize the class constants.
 }

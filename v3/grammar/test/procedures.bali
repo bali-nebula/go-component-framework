@@ -13,8 +13,6 @@
         <!
         continue loop
     }
-
-
     !>
         This is an annotation.
     <!
@@ -65,11 +63,8 @@
             do foobar()
         }
     } on $failure matching $bad do {
-
     } matching $worse do {
-
     } matching $worst do {
-
     }
     post messages[last] to bag
     publish [

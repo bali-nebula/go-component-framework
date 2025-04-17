@@ -452,21 +452,6 @@ func (v *processor_) PostprocessAnnotatedValue(
 ) {
 }
 
-func (v *processor_) PreprocessAnnotationLine(
-	annotationLine ast.AnnotationLineLike,
-) {
-}
-
-func (v *processor_) ProcessAnnotationLineSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessAnnotationLine(
-	annotationLine ast.AnnotationLineLike,
-) {
-}
-
 func (v *processor_) PreprocessArgument(
 	argument ast.ArgumentLike,
 ) {
@@ -614,6 +599,21 @@ func (v *processor_) ProcessCollectionSlot(
 
 func (v *processor_) PostprocessCollection(
 	collection ast.CollectionLike,
+) {
+}
+
+func (v *processor_) PreprocessCommentLine(
+	commentLine ast.CommentLineLike,
+) {
+}
+
+func (v *processor_) ProcessCommentLineSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessCommentLine(
+	commentLine ast.CommentLineLike,
 ) {
 }
 
@@ -1398,6 +1398,21 @@ func (v *processor_) ProcessNotarizeClauseSlot(
 
 func (v *processor_) PostprocessNotarizeClause(
 	notarizeClause ast.NotarizeClauseLike,
+) {
+}
+
+func (v *processor_) PreprocessNoteLine(
+	noteLine ast.NoteLineLike,
+) {
+}
+
+func (v *processor_) ProcessNoteLineSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessNoteLine(
+	noteLine ast.NoteLineLike,
 ) {
 }
 

@@ -49,7 +49,6 @@ type (
 	AnnotatedAssociationClassLike  = ast.AnnotatedAssociationClassLike
 	AnnotatedStatementClassLike    = ast.AnnotatedStatementClassLike
 	AnnotatedValueClassLike        = ast.AnnotatedValueClassLike
-	AnnotationLineClassLike        = ast.AnnotationLineClassLike
 	ArgumentClassLike              = ast.ArgumentClassLike
 	ArgumentsClassLike             = ast.ArgumentsClassLike
 	AssignClassLike                = ast.AssignClassLike
@@ -60,6 +59,7 @@ type (
 	CheckoutClauseClassLike        = ast.CheckoutClauseClassLike
 	CitationClassLike              = ast.CitationClassLike
 	CollectionClassLike            = ast.CollectionClassLike
+	CommentLineClassLike           = ast.CommentLineClassLike
 	ComplementClassLike            = ast.ComplementClassLike
 	ComponentClassLike             = ast.ComponentClassLike
 	ConditionClassLike             = ast.ConditionClassLike
@@ -112,6 +112,7 @@ type (
 	NoStatementsClassLike          = ast.NoStatementsClassLike
 	NoValuesClassLike              = ast.NoValuesClassLike
 	NotarizeClauseClassLike        = ast.NotarizeClauseClassLike
+	NoteLineClassLike              = ast.NoteLineClassLike
 	NumericalClassLike             = ast.NumericalClassLike
 	OnClauseClassLike              = ast.OnClauseClassLike
 	OperatorClassLike              = ast.OperatorClassLike
@@ -163,7 +164,6 @@ type (
 	AnnotatedAssociationLike  = ast.AnnotatedAssociationLike
 	AnnotatedStatementLike    = ast.AnnotatedStatementLike
 	AnnotatedValueLike        = ast.AnnotatedValueLike
-	AnnotationLineLike        = ast.AnnotationLineLike
 	ArgumentLike              = ast.ArgumentLike
 	ArgumentsLike             = ast.ArgumentsLike
 	AssignLike                = ast.AssignLike
@@ -174,6 +174,7 @@ type (
 	CheckoutClauseLike        = ast.CheckoutClauseLike
 	CitationLike              = ast.CitationLike
 	CollectionLike            = ast.CollectionLike
+	CommentLineLike           = ast.CommentLineLike
 	ComplementLike            = ast.ComplementLike
 	ComponentLike             = ast.ComponentLike
 	ConditionLike             = ast.ConditionLike
@@ -226,6 +227,7 @@ type (
 	NoStatementsLike          = ast.NoStatementsLike
 	NoValuesLike              = ast.NoValuesLike
 	NotarizeClauseLike        = ast.NotarizeClauseLike
+	NoteLineLike              = ast.NoteLineLike
 	NumericalLike             = ast.NumericalLike
 	OnClauseLike              = ast.OnClauseLike
 	OperatorLike              = ast.OperatorLike
@@ -447,16 +449,6 @@ func AnnotatedValue(
 	)
 }
 
-// Ast/AnnotationLine
-
-func AnnotationLine(
-	any_ any,
-) ast.AnnotationLineLike {
-	return ast.AnnotationLineClass().AnnotationLine(
-		any_,
-	)
-}
-
 // Ast/Argument
 
 func Argument(
@@ -563,6 +555,16 @@ func Collection(
 	)
 }
 
+// Ast/CommentLine
+
+func CommentLine(
+	comment string,
+) ast.CommentLineLike {
+	return ast.CommentLineClass().CommentLine(
+		comment,
+	)
+}
+
 // Ast/Complement
 
 func Complement(
@@ -656,10 +658,12 @@ func Element(
 // Ast/EmptyLine
 
 func EmptyLine(
-	newline string,
+	newline1 string,
+	newline2 string,
 ) ast.EmptyLineLike {
 	return ast.EmptyLineClass().EmptyLine(
-		newline,
+		newline1,
+		newline2,
 	)
 }
 
@@ -1096,6 +1100,16 @@ func NotarizeClause(
 	return ast.NotarizeClauseClass().NotarizeClause(
 		draft,
 		citation,
+	)
+}
+
+// Ast/NoteLine
+
+func NoteLine(
+	note string,
+) ast.NoteLineLike {
+	return ast.NoteLineClass().NoteLine(
+		note,
 	)
 }
 

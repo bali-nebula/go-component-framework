@@ -123,17 +123,18 @@ $Procedure:
 $MultilineStatements: "{" newline AnnotatedStatement* "}"
 
 $AnnotatedStatement:
-  - AnnotationLine
+  - EmptyLine  ! This must be first.
+  - NoteLine
+  - CommentLine
   - StatementLine
-  - EmptyLine
 
-$AnnotationLine:
-  - note
-  - comment
+$EmptyLine: newline newline
+
+$NoteLine: note
+
+$CommentLine: comment
 
 $StatementLine: Statement note?
-
-$EmptyLine: newline
 
 $InlineStatements: "{" Statement AdditionalStatement* "}"
 

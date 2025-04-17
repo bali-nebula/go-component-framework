@@ -564,15 +564,6 @@ type Methodical interface {
 		index uint,
 		size uint,
 	)
-	PreprocessAnnotationLine(
-		annotationLine ast.AnnotationLineLike,
-	)
-	ProcessAnnotationLineSlot(
-		slot uint,
-	)
-	PostprocessAnnotationLine(
-		annotationLine ast.AnnotationLineLike,
-	)
 	PreprocessArgument(
 		argument ast.ArgumentLike,
 	)
@@ -662,6 +653,15 @@ type Methodical interface {
 	)
 	PostprocessCollection(
 		collection ast.CollectionLike,
+	)
+	PreprocessCommentLine(
+		commentLine ast.CommentLineLike,
+	)
+	ProcessCommentLineSlot(
+		slot uint,
+	)
+	PostprocessCommentLine(
+		commentLine ast.CommentLineLike,
 	)
 	PreprocessComplement(
 		complement ast.ComplementLike,
@@ -1134,6 +1134,15 @@ type Methodical interface {
 	)
 	PostprocessNotarizeClause(
 		notarizeClause ast.NotarizeClauseLike,
+	)
+	PreprocessNoteLine(
+		noteLine ast.NoteLineLike,
+	)
+	ProcessNoteLineSlot(
+		slot uint,
+	)
+	PostprocessNoteLine(
+		noteLine ast.NoteLineLike,
 	)
 	PreprocessNumerical(
 		numerical ast.NumericalLike,

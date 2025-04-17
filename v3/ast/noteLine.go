@@ -27,26 +27,21 @@ import (
 
 // Access Function
 
-func EmptyLineClass() EmptyLineClassLike {
-	return emptyLineClass()
+func NoteLineClass() NoteLineClassLike {
+	return noteLineClass()
 }
 
 // Constructor Methods
 
-func (c *emptyLineClass_) EmptyLine(
-	newline1 string,
-	newline2 string,
-) EmptyLineLike {
-	if uti.IsUndefined(newline1) {
-		panic("The \"newline1\" attribute is required by this class.")
+func (c *noteLineClass_) NoteLine(
+	note string,
+) NoteLineLike {
+	if uti.IsUndefined(note) {
+		panic("The \"note\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(newline2) {
-		panic("The \"newline2\" attribute is required by this class.")
-	}
-	var instance = &emptyLine_{
+	var instance = &noteLine_{
 		// Initialize the instance attributes.
-		newline1_: newline1,
-		newline2_: newline2,
+		note_: note,
 	}
 	return instance
 }
@@ -55,42 +50,37 @@ func (c *emptyLineClass_) EmptyLine(
 
 // Principal Methods
 
-func (v *emptyLine_) GetClass() EmptyLineClassLike {
-	return emptyLineClass()
+func (v *noteLine_) GetClass() NoteLineClassLike {
+	return noteLineClass()
 }
 
 // Attribute Methods
 
-func (v *emptyLine_) GetNewline1() string {
-	return v.newline1_
-}
-
-func (v *emptyLine_) GetNewline2() string {
-	return v.newline2_
+func (v *noteLine_) GetNote() string {
+	return v.note_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type emptyLine_ struct {
+type noteLine_ struct {
 	// Declare the instance attributes.
-	newline1_ string
-	newline2_ string
+	note_ string
 }
 
 // Class Structure
 
-type emptyLineClass_ struct {
+type noteLineClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func emptyLineClass() *emptyLineClass_ {
-	return emptyLineClassReference_
+func noteLineClass() *noteLineClass_ {
+	return noteLineClassReference_
 }
 
-var emptyLineClassReference_ = &emptyLineClass_{
+var noteLineClassReference_ = &noteLineClass_{
 	// Initialize the class constants.
 }

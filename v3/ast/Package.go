@@ -166,18 +166,6 @@ type AnnotatedValueClassLike interface {
 }
 
 /*
-AnnotationLineClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete annotation-line-like class.
-*/
-type AnnotationLineClassLike interface {
-	// Constructor Methods
-	AnnotationLine(
-		any_ any,
-	) AnnotationLineLike
-}
-
-/*
 ArgumentClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete argument-like class.
@@ -301,6 +289,18 @@ type CollectionClassLike interface {
 }
 
 /*
+CommentLineClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete comment-line-like class.
+*/
+type CommentLineClassLike interface {
+	// Constructor Methods
+	CommentLine(
+		comment string,
+	) CommentLineLike
+}
+
+/*
 ComplementClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete complement-like class.
@@ -416,7 +416,8 @@ supported by each concrete empty-line-like class.
 type EmptyLineClassLike interface {
 	// Constructor Methods
 	EmptyLine(
-		newline string,
+		newline1 string,
+		newline2 string,
 	) EmptyLineLike
 }
 
@@ -930,6 +931,18 @@ type NotarizeClauseClassLike interface {
 		draft DraftLike,
 		citation CitationLike,
 	) NotarizeClauseLike
+}
+
+/*
+NoteLineClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete note-line-like class.
+*/
+type NoteLineClassLike interface {
+	// Constructor Methods
+	NoteLine(
+		note string,
+	) NoteLineLike
 }
 
 /*
@@ -1528,19 +1541,6 @@ type AnnotatedValueLike interface {
 }
 
 /*
-AnnotationLineLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete annotation-line-like class.
-*/
-type AnnotationLineLike interface {
-	// Principal Methods
-	GetClass() AnnotationLineClassLike
-
-	// Attribute Methods
-	GetAny() any
-}
-
-/*
 ArgumentLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete argument-like class.
@@ -1673,6 +1673,19 @@ type CollectionLike interface {
 }
 
 /*
+CommentLineLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete comment-line-like class.
+*/
+type CommentLineLike interface {
+	// Principal Methods
+	GetClass() CommentLineClassLike
+
+	// Attribute Methods
+	GetComment() string
+}
+
+/*
 ComplementLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete complement-like class.
@@ -1798,7 +1811,8 @@ type EmptyLineLike interface {
 	GetClass() EmptyLineClassLike
 
 	// Attribute Methods
-	GetNewline() string
+	GetNewline1() string
+	GetNewline2() string
 }
 
 /*
@@ -2346,6 +2360,19 @@ type NotarizeClauseLike interface {
 	// Attribute Methods
 	GetDraft() DraftLike
 	GetCitation() CitationLike
+}
+
+/*
+NoteLineLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete note-line-like class.
+*/
+type NoteLineLike interface {
+	// Principal Methods
+	GetClass() NoteLineClassLike
+
+	// Attribute Methods
+	GetNote() string
 }
 
 /*

@@ -537,24 +537,6 @@ func (v *validator_) PostprocessAnnotatedValue(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessAnnotationLine(
-	annotationLine ast.AnnotationLineLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessAnnotationLineSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessAnnotationLine(
-	annotationLine ast.AnnotationLineLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessArgument(
 	argument ast.ArgumentLike,
 ) {
@@ -731,6 +713,24 @@ func (v *validator_) ProcessCollectionSlot(
 
 func (v *validator_) PostprocessCollection(
 	collection ast.CollectionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessCommentLine(
+	commentLine ast.CommentLineLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessCommentLineSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessCommentLine(
+	commentLine ast.CommentLineLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1671,6 +1671,24 @@ func (v *validator_) ProcessNotarizeClauseSlot(
 
 func (v *validator_) PostprocessNotarizeClause(
 	notarizeClause ast.NotarizeClauseLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessNoteLine(
+	noteLine ast.NoteLineLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessNoteLineSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessNoteLine(
+	noteLine ast.NoteLineLike,
 ) {
 	// TBD - Add any validation checks.
 }

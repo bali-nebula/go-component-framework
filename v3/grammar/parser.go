@@ -442,12 +442,30 @@ func (v *parser_) parseAnnotatedStatement() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single AnnotationLine AnnotatedStatement.
-	var annotationLine ast.AnnotationLineLike
-	annotationLine, token, ok = v.parseAnnotationLine()
+	// Attempt to parse a single EmptyLine AnnotatedStatement.
+	var emptyLine ast.EmptyLineLike
+	emptyLine, token, ok = v.parseEmptyLine()
 	if ok {
-		// Found a single AnnotationLine AnnotatedStatement.
-		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(annotationLine)
+		// Found a single EmptyLine AnnotatedStatement.
+		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(emptyLine)
+		return
+	}
+
+	// Attempt to parse a single NoteLine AnnotatedStatement.
+	var noteLine ast.NoteLineLike
+	noteLine, token, ok = v.parseNoteLine()
+	if ok {
+		// Found a single NoteLine AnnotatedStatement.
+		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(noteLine)
+		return
+	}
+
+	// Attempt to parse a single CommentLine AnnotatedStatement.
+	var commentLine ast.CommentLineLike
+	commentLine, token, ok = v.parseCommentLine()
+	if ok {
+		// Found a single CommentLine AnnotatedStatement.
+		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(commentLine)
 		return
 	}
 
@@ -457,15 +475,6 @@ func (v *parser_) parseAnnotatedStatement() (
 	if ok {
 		// Found a single StatementLine AnnotatedStatement.
 		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(statementLine)
-		return
-	}
-
-	// Attempt to parse a single EmptyLine AnnotatedStatement.
-	var emptyLine ast.EmptyLineLike
-	emptyLine, token, ok = v.parseEmptyLine()
-	if ok {
-		// Found a single EmptyLine AnnotatedStatement.
-		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(emptyLine)
 		return
 	}
 
@@ -511,33 +520,6 @@ func (v *parser_) parseAnnotatedValue() (
 		component,
 		optionalNote,
 	)
-	return
-}
-
-func (v *parser_) parseAnnotationLine() (
-	annotationLine ast.AnnotationLineLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single note AnnotationLine.
-	var note string
-	note, token, ok = v.parseToken(NoteToken)
-	if ok {
-		// Found a single note AnnotationLine.
-		annotationLine = ast.AnnotationLineClass().AnnotationLine(note)
-		return
-	}
-
-	// Attempt to parse a single comment AnnotationLine.
-	var comment string
-	comment, token, ok = v.parseToken(CommentToken)
-	if ok {
-		// Found a single comment AnnotationLine.
-		annotationLine = ast.AnnotationLineClass().AnnotationLine(comment)
-		return
-	}
-
-	// This is not a single AnnotationLine rule.
 	return
 }
 
@@ -1099,6 +1081,38 @@ func (v *parser_) parseCollection() (
 	return
 }
 
+func (v *parser_) parseCommentLine() (
+	commentLine ast.CommentLineLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single comment token.
+	var comment string
+	comment, token, ok = v.parseToken(CommentToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single CommentLine rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$CommentLine", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single CommentLine rule.
+	ok = true
+	v.remove(tokens)
+	commentLine = ast.CommentLineClass().CommentLine(comment)
+	return
+}
+
 func (v *parser_) parseComplement() (
 	complement ast.ComplementLike,
 	token TokenLike,
@@ -1543,8 +1557,26 @@ func (v *parser_) parseEmptyLine() (
 	var tokens = fra.List[TokenLike]()
 
 	// Attempt to parse a single newline token.
-	var newline string
-	newline, token, ok = v.parseToken(NewlineToken)
+	var newline1 string
+	newline1, token, ok = v.parseToken(NewlineToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single EmptyLine rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$EmptyLine", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Attempt to parse a single newline token.
+	var newline2 string
+	newline2, token, ok = v.parseToken(NewlineToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
 			// This is not a single EmptyLine rule.
@@ -1563,7 +1595,10 @@ func (v *parser_) parseEmptyLine() (
 	// Found a single EmptyLine rule.
 	ok = true
 	v.remove(tokens)
-	emptyLine = ast.EmptyLineClass().EmptyLine(newline)
+	emptyLine = ast.EmptyLineClass().EmptyLine(
+		newline1,
+		newline2,
+	)
 	return
 }
 
@@ -4097,6 +4132,38 @@ func (v *parser_) parseNotarizeClause() (
 	return
 }
 
+func (v *parser_) parseNoteLine() (
+	noteLine ast.NoteLineLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single note token.
+	var note string
+	note, token, ok = v.parseToken(NoteToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single NoteLine rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$NoteLine", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single NoteLine rule.
+	ok = true
+	v.remove(tokens)
+	noteLine = ast.NoteLineClass().NoteLine(note)
+	return
+}
+
 func (v *parser_) parseNumerical() (
 	numerical ast.NumericalLike,
 	token TokenLike,
@@ -6538,14 +6605,14 @@ var parserClassReference_ = &parserClass_{
   - NoStatements`,
 			"$MultilineStatements": `"{" newline AnnotatedStatement* "}"`,
 			"$AnnotatedStatement": `
-  - AnnotationLine
-  - StatementLine
-  - EmptyLine`,
-			"$AnnotationLine": `
-  - note
-  - comment`,
+  - EmptyLine  ! This must be first.
+  - NoteLine
+  - CommentLine
+  - StatementLine`,
+			"$EmptyLine":           `newline newline`,
+			"$NoteLine":            `note`,
+			"$CommentLine":         `comment`,
 			"$StatementLine":       `Statement note?`,
-			"$EmptyLine":           `newline`,
 			"$InlineStatements":    `"{" Statement AdditionalStatement* "}"`,
 			"$AdditionalStatement": `";" Statement`,
 			"$NoStatements":        `"{" "}"`,
