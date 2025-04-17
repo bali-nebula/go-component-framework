@@ -17,7 +17,7 @@
     !>
         This is an annotation.
     <!
-    with each $index in [1..5] do {
+    with each $index in [|1..5|] do {
         let array[index] += index
     }
     !>

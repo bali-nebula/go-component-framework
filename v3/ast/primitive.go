@@ -27,26 +27,21 @@ import (
 
 // Access Function
 
-func ExInclusiveVersionsClass() ExInclusiveVersionsClassLike {
-	return exInclusiveVersionsClass()
+func PrimitiveClass() PrimitiveClassLike {
+	return primitiveClass()
 }
 
 // Constructor Methods
 
-func (c *exInclusiveVersionsClass_) ExInclusiveVersions(
-	version1 string,
-	version2 string,
-) ExInclusiveVersionsLike {
-	if uti.IsUndefined(version1) {
-		panic("The \"version1\" attribute is required by this class.")
+func (c *primitiveClass_) Primitive(
+	any_ any,
+) PrimitiveLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(version2) {
-		panic("The \"version2\" attribute is required by this class.")
-	}
-	var instance = &exInclusiveVersions_{
+	var instance = &primitive_{
 		// Initialize the instance attributes.
-		version1_: version1,
-		version2_: version2,
+		any_: any_,
 	}
 	return instance
 }
@@ -55,42 +50,37 @@ func (c *exInclusiveVersionsClass_) ExInclusiveVersions(
 
 // Principal Methods
 
-func (v *exInclusiveVersions_) GetClass() ExInclusiveVersionsClassLike {
-	return exInclusiveVersionsClass()
+func (v *primitive_) GetClass() PrimitiveClassLike {
+	return primitiveClass()
 }
 
 // Attribute Methods
 
-func (v *exInclusiveVersions_) GetVersion1() string {
-	return v.version1_
-}
-
-func (v *exInclusiveVersions_) GetVersion2() string {
-	return v.version2_
+func (v *primitive_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type exInclusiveVersions_ struct {
+type primitive_ struct {
 	// Declare the instance attributes.
-	version1_ string
-	version2_ string
+	any_ any
 }
 
 // Class Structure
 
-type exInclusiveVersionsClass_ struct {
+type primitiveClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func exInclusiveVersionsClass() *exInclusiveVersionsClass_ {
-	return exInclusiveVersionsClassReference_
+func primitiveClass() *primitiveClass_ {
+	return primitiveClassReference_
 }
 
-var exInclusiveVersionsClassReference_ = &exInclusiveVersionsClass_{
+var primitiveClassReference_ = &primitiveClass_{
 	// Initialize the class constants.
 }

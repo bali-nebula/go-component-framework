@@ -27,26 +27,21 @@ import (
 
 // Access Function
 
-func InclusiveProbabilitiesClass() InclusiveProbabilitiesClassLike {
-	return inclusiveProbabilitiesClass()
+func RangeClass() RangeClassLike {
+	return rangeClass()
 }
 
 // Constructor Methods
 
-func (c *inclusiveProbabilitiesClass_) InclusiveProbabilities(
-	probability1 string,
-	probability2 string,
-) InclusiveProbabilitiesLike {
-	if uti.IsUndefined(probability1) {
-		panic("The \"probability1\" attribute is required by this class.")
+func (c *rangeClass_) Range(
+	any_ any,
+) RangeLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(probability2) {
-		panic("The \"probability2\" attribute is required by this class.")
-	}
-	var instance = &inclusiveProbabilities_{
+	var instance = &range_{
 		// Initialize the instance attributes.
-		probability1_: probability1,
-		probability2_: probability2,
+		any_: any_,
 	}
 	return instance
 }
@@ -55,42 +50,37 @@ func (c *inclusiveProbabilitiesClass_) InclusiveProbabilities(
 
 // Principal Methods
 
-func (v *inclusiveProbabilities_) GetClass() InclusiveProbabilitiesClassLike {
-	return inclusiveProbabilitiesClass()
+func (v *range_) GetClass() RangeClassLike {
+	return rangeClass()
 }
 
 // Attribute Methods
 
-func (v *inclusiveProbabilities_) GetProbability1() string {
-	return v.probability1_
-}
-
-func (v *inclusiveProbabilities_) GetProbability2() string {
-	return v.probability2_
+func (v *range_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inclusiveProbabilities_ struct {
+type range_ struct {
 	// Declare the instance attributes.
-	probability1_ string
-	probability2_ string
+	any_ any
 }
 
 // Class Structure
 
-type inclusiveProbabilitiesClass_ struct {
+type rangeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inclusiveProbabilitiesClass() *inclusiveProbabilitiesClass_ {
-	return inclusiveProbabilitiesClassReference_
+func rangeClass() *rangeClass_ {
+	return rangeClassReference_
 }
 
-var inclusiveProbabilitiesClassReference_ = &inclusiveProbabilitiesClass_{
+var rangeClassReference_ = &rangeClass_{
 	// Initialize the class constants.
 }

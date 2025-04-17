@@ -951,200 +951,20 @@ func (v *validator_) PostprocessEvent(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessExInclusiveAngles(
-	exInclusiveAngles ast.ExInclusiveAnglesLike,
+func (v *validator_) PreprocessExInclusiveRange(
+	exInclusiveRange ast.ExInclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessExInclusiveAnglesSlot(
+func (v *validator_) ProcessExInclusiveRangeSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessExInclusiveAngles(
-	exInclusiveAngles ast.ExInclusiveAnglesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveCitations(
-	exInclusiveCitations ast.ExInclusiveCitationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveCitationsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveCitations(
-	exInclusiveCitations ast.ExInclusiveCitationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveDurations(
-	exInclusiveDurations ast.ExInclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveDurationsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveDurations(
-	exInclusiveDurations ast.ExInclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveMoments(
-	exInclusiveMoments ast.ExInclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveMomentsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveMoments(
-	exInclusiveMoments ast.ExInclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveNames(
-	exInclusiveNames ast.ExInclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveNamesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveNames(
-	exInclusiveNames ast.ExInclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveNumbers(
-	exInclusiveNumbers ast.ExInclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveNumbersSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveNumbers(
-	exInclusiveNumbers ast.ExInclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusivePercentages(
-	exInclusivePercentages ast.ExInclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusivePercentagesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusivePercentages(
-	exInclusivePercentages ast.ExInclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveProbabilities(
-	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveProbabilities(
-	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveQuotes(
-	exInclusiveQuotes ast.ExInclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveQuotesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveQuotes(
-	exInclusiveQuotes ast.ExInclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveSymbols(
-	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveSymbolsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveSymbols(
-	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExInclusiveVersions(
-	exInclusiveVersions ast.ExInclusiveVersionsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveVersionsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveVersions(
-	exInclusiveVersions ast.ExInclusiveVersionsLike,
+func (v *validator_) PostprocessExInclusiveRange(
+	exInclusiveRange ast.ExInclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1167,200 +987,20 @@ func (v *validator_) PostprocessException(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessExclusiveAngles(
-	exclusiveAngles ast.ExclusiveAnglesLike,
+func (v *validator_) PreprocessExclusiveRange(
+	exclusiveRange ast.ExclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessExclusiveAnglesSlot(
+func (v *validator_) ProcessExclusiveRangeSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessExclusiveAngles(
-	exclusiveAngles ast.ExclusiveAnglesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveCitations(
-	exclusiveCitations ast.ExclusiveCitationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveCitationsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveCitations(
-	exclusiveCitations ast.ExclusiveCitationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveDurations(
-	exclusiveDurations ast.ExclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveDurationsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveDurations(
-	exclusiveDurations ast.ExclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveMoments(
-	exclusiveMoments ast.ExclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveMomentsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveMoments(
-	exclusiveMoments ast.ExclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveNames(
-	exclusiveNames ast.ExclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveNamesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveNames(
-	exclusiveNames ast.ExclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveNumbers(
-	exclusiveNumbers ast.ExclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveNumbersSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveNumbers(
-	exclusiveNumbers ast.ExclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusivePercentages(
-	exclusivePercentages ast.ExclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusivePercentagesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusivePercentages(
-	exclusivePercentages ast.ExclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveProbabilities(
-	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveProbabilities(
-	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveQuotes(
-	exclusiveQuotes ast.ExclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveQuotesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveQuotes(
-	exclusiveQuotes ast.ExclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveSymbols(
-	exclusiveSymbols ast.ExclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveSymbolsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveSymbols(
-	exclusiveSymbols ast.ExclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveVersions(
-	exclusiveVersions ast.ExclusiveVersionsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveVersionsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveVersions(
-	exclusiveVersions ast.ExclusiveVersionsLike,
+func (v *validator_) PostprocessExclusiveRange(
+	exclusiveRange ast.ExclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1455,398 +1095,38 @@ func (v *validator_) PostprocessIfClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessInExclusiveAngles(
-	inExclusiveAngles ast.InExclusiveAnglesLike,
+func (v *validator_) PreprocessInExclusiveRange(
+	inExclusiveRange ast.InExclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessInExclusiveAnglesSlot(
+func (v *validator_) ProcessInExclusiveRangeSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessInExclusiveAngles(
-	inExclusiveAngles ast.InExclusiveAnglesLike,
+func (v *validator_) PostprocessInExclusiveRange(
+	inExclusiveRange ast.InExclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessInExclusiveCitations(
-	inExclusiveCitations ast.InExclusiveCitationsLike,
+func (v *validator_) PreprocessInclusiveRange(
+	inclusiveRange ast.InclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessInExclusiveCitationsSlot(
+func (v *validator_) ProcessInclusiveRangeSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessInExclusiveCitations(
-	inExclusiveCitations ast.InExclusiveCitationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveDurations(
-	inExclusiveDurations ast.InExclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveDurationsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveDurations(
-	inExclusiveDurations ast.InExclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveMoments(
-	inExclusiveMoments ast.InExclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveMomentsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveMoments(
-	inExclusiveMoments ast.InExclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveNames(
-	inExclusiveNames ast.InExclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveNamesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveNames(
-	inExclusiveNames ast.InExclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveNumbers(
-	inExclusiveNumbers ast.InExclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveNumbersSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveNumbers(
-	inExclusiveNumbers ast.InExclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusivePercentages(
-	inExclusivePercentages ast.InExclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusivePercentagesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusivePercentages(
-	inExclusivePercentages ast.InExclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveProbabilities(
-	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveProbabilities(
-	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveQuotes(
-	inExclusiveQuotes ast.InExclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveQuotesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveQuotes(
-	inExclusiveQuotes ast.InExclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveSymbols(
-	inExclusiveSymbols ast.InExclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveSymbolsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveSymbols(
-	inExclusiveSymbols ast.InExclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveVersions(
-	inExclusiveVersions ast.InExclusiveVersionsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveVersionsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveVersions(
-	inExclusiveVersions ast.InExclusiveVersionsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveAngles(
-	inclusiveAngles ast.InclusiveAnglesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveAnglesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveAngles(
-	inclusiveAngles ast.InclusiveAnglesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveCitations(
-	inclusiveCitations ast.InclusiveCitationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveCitationsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveCitations(
-	inclusiveCitations ast.InclusiveCitationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveDurations(
-	inclusiveDurations ast.InclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveDurationsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveDurations(
-	inclusiveDurations ast.InclusiveDurationsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveMoments(
-	inclusiveMoments ast.InclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveMomentsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveMoments(
-	inclusiveMoments ast.InclusiveMomentsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveNames(
-	inclusiveNames ast.InclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveNamesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveNames(
-	inclusiveNames ast.InclusiveNamesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveNumbers(
-	inclusiveNumbers ast.InclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveNumbersSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveNumbers(
-	inclusiveNumbers ast.InclusiveNumbersLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusivePercentages(
-	inclusivePercentages ast.InclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusivePercentagesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusivePercentages(
-	inclusivePercentages ast.InclusivePercentagesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveProbabilities(
-	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveProbabilities(
-	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveQuotes(
-	inclusiveQuotes ast.InclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveQuotesSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveQuotes(
-	inclusiveQuotes ast.InclusiveQuotesLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveSymbols(
-	inclusiveSymbols ast.InclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveSymbolsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveSymbols(
-	inclusiveSymbols ast.InclusiveSymbolsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveVersions(
-	inclusiveVersions ast.InclusiveVersionsLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveVersionsSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveVersions(
-	inclusiveVersions ast.InclusiveVersionsLike,
+func (v *validator_) PostprocessInclusiveRange(
+	inclusiveRange ast.InclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2543,6 +1823,24 @@ func (v *validator_) PostprocessPredicate(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessPrimitive(
+	primitive ast.PrimitiveLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessPrimitiveSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessPrimitive(
+	primitive ast.PrimitiveLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessProcedure(
 	procedure ast.ProcedureLike,
 ) {
@@ -2575,6 +1873,24 @@ func (v *validator_) ProcessPublishClauseSlot(
 
 func (v *validator_) PostprocessPublishClause(
 	publishClause ast.PublishClauseLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessRange(
+	range_ ast.RangeLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessRangeSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessRange(
+	range_ ast.RangeLike,
 ) {
 	// TBD - Add any validation checks.
 }

@@ -693,222 +693,40 @@ func (v *formatter_) PostprocessEvent(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessInclusiveRange() {
-	v.appendString("[")
+func (v *formatter_) PreprocessExInclusiveRange(
+	exInclusiveRange ast.ExInclusiveRangeLike,
+) {
+	v.appendString("(|")
 }
 
-func (v *formatter_) PostprocessInclusiveRange() {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExclusiveRange() {
-	v.appendString("(")
-}
-
-func (v *formatter_) PostprocessExclusiveRange() {
-	v.appendString(")")
-}
-
-func (v *formatter_) ProcessRangeSlot() {
+func (v *formatter_) ProcessExInclusiveRangeSlot(
+	slot uint,
+) {
 	v.appendString("..")
 }
 
-func (v *formatter_) PreprocessExInclusiveAngles(
-	exInclusiveAngles ast.ExInclusiveAnglesLike,
+func (v *formatter_) PostprocessExInclusiveRange(
+	exInclusiveRange ast.ExInclusiveRangeLike,
 ) {
-	v.PreprocessExclusiveRange()
+	v.appendString("|]")
 }
 
-func (v *formatter_) ProcessExInclusiveAnglesSlot(
+func (v *formatter_) PreprocessExclusiveRange(
+	exclusiveRange ast.ExclusiveRangeLike,
+) {
+	v.appendString("(|")
+}
+
+func (v *formatter_) ProcessExclusiveRangeSlot(
 	slot uint,
 ) {
-	v.ProcessRangeSlot()
+	v.appendString("..")
 }
 
-func (v *formatter_) PostprocessExInclusiveAngles(
-	exInclusiveAngles ast.ExInclusiveAnglesLike,
+func (v *formatter_) PostprocessExclusiveRange(
+	exclusiveRange ast.ExclusiveRangeLike,
 ) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveCitations(
-	exInclusiveCitations ast.ExInclusiveCitationsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveCitationsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveCitations(
-	exInclusiveCitations ast.ExInclusiveCitationsLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveDurations(
-	exInclusiveDurations ast.ExInclusiveDurationsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveDurationsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveDurations(
-	exInclusiveDurations ast.ExInclusiveDurationsLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveMoments(
-	exInclusiveMoments ast.ExInclusiveMomentsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveMomentsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveMoments(
-	exInclusiveMoments ast.ExInclusiveMomentsLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveNames(
-	exInclusiveNames ast.ExInclusiveNamesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveNamesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveNames(
-	exInclusiveNames ast.ExInclusiveNamesLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveNumbers(
-	exInclusiveNumbers ast.ExInclusiveNumbersLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveNumbersSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveNumbers(
-	exInclusiveNumbers ast.ExInclusiveNumbersLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusivePercentages(
-	exInclusivePercentages ast.ExInclusivePercentagesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusivePercentagesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusivePercentages(
-	exInclusivePercentages ast.ExInclusivePercentagesLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveProbabilities(
-	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveProbabilities(
-	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveQuotes(
-	exInclusiveQuotes ast.ExInclusiveQuotesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveQuotesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveQuotes(
-	exInclusiveQuotes ast.ExInclusiveQuotesLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveSymbols(
-	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveSymbolsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveSymbols(
-	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
-) {
-	v.appendString("]")
-}
-
-func (v *formatter_) PreprocessExInclusiveVersions(
-	exInclusiveVersions ast.ExInclusiveVersionsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExInclusiveVersionsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExInclusiveVersions(
-	exInclusiveVersions ast.ExInclusiveVersionsLike,
-) {
-	v.appendString("]")
+	v.appendString("|)")
 }
 
 func (v *formatter_) PreprocessException(
@@ -927,204 +745,6 @@ func (v *formatter_) PostprocessException(
 	exception ast.ExceptionLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessExclusiveAngles(
-	exclusiveAngles ast.ExclusiveAnglesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveAnglesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveAngles(
-	exclusiveAngles ast.ExclusiveAnglesLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveCitations(
-	exclusiveCitations ast.ExclusiveCitationsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveCitationsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveCitations(
-	exclusiveCitations ast.ExclusiveCitationsLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveDurations(
-	exclusiveDurations ast.ExclusiveDurationsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveDurationsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveDurations(
-	exclusiveDurations ast.ExclusiveDurationsLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveMoments(
-	exclusiveMoments ast.ExclusiveMomentsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveMomentsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveMoments(
-	exclusiveMoments ast.ExclusiveMomentsLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveNames(
-	exclusiveNames ast.ExclusiveNamesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveNamesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveNames(
-	exclusiveNames ast.ExclusiveNamesLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveNumbers(
-	exclusiveNumbers ast.ExclusiveNumbersLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveNumbersSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveNumbers(
-	exclusiveNumbers ast.ExclusiveNumbersLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusivePercentages(
-	exclusivePercentages ast.ExclusivePercentagesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusivePercentagesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusivePercentages(
-	exclusivePercentages ast.ExclusivePercentagesLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveProbabilities(
-	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveProbabilities(
-	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveQuotes(
-	exclusiveQuotes ast.ExclusiveQuotesLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveQuotesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveQuotes(
-	exclusiveQuotes ast.ExclusiveQuotesLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveSymbols(
-	exclusiveSymbols ast.ExclusiveSymbolsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveSymbolsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveSymbols(
-	exclusiveSymbols ast.ExclusiveSymbolsLike,
-) {
-	v.PostprocessExclusiveRange()
-}
-
-func (v *formatter_) PreprocessExclusiveVersions(
-	exclusiveVersions ast.ExclusiveVersionsLike,
-) {
-	v.PreprocessExclusiveRange()
-}
-
-func (v *formatter_) ProcessExclusiveVersionsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessExclusiveVersions(
-	exclusiveVersions ast.ExclusiveVersionsLike,
-) {
-	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExpression(
@@ -1208,400 +828,40 @@ func (v *formatter_) ProcessIfClauseSlot(
 	}
 }
 
-func (v *formatter_) PreprocessInExclusiveAngles(
-	inExclusiveAngles ast.InExclusiveAnglesLike,
+func (v *formatter_) PreprocessInExclusiveRange(
+	inExclusiveRange ast.InExclusiveRangeLike,
 ) {
-	v.PreprocessInclusiveRange()
+	v.appendString("[|")
 }
 
-func (v *formatter_) ProcessInExclusiveAnglesSlot(
+func (v *formatter_) ProcessInExclusiveRangeSlot(
 	slot uint,
 ) {
-	v.ProcessRangeSlot()
+	v.appendString("..")
 }
 
-func (v *formatter_) PostprocessInExclusiveAngles(
-	inExclusiveAngles ast.InExclusiveAnglesLike,
+func (v *formatter_) PostprocessInExclusiveRange(
+	inExclusiveRange ast.InExclusiveRangeLike,
 ) {
-	v.appendString(")")
+	v.appendString("|)")
 }
 
-func (v *formatter_) PreprocessInExclusiveCitations(
-	inExclusiveCitations ast.InExclusiveCitationsLike,
+func (v *formatter_) PreprocessInclusiveRange(
+	inclusiveRange ast.InclusiveRangeLike,
 ) {
-	v.PreprocessInclusiveRange()
+	v.appendString("[|")
 }
 
-func (v *formatter_) ProcessInExclusiveCitationsSlot(
+func (v *formatter_) ProcessInclusiveRangeSlot(
 	slot uint,
 ) {
-	v.ProcessRangeSlot()
+	v.appendString("..")
 }
 
-func (v *formatter_) PostprocessInExclusiveCitations(
-	inExclusiveCitations ast.InExclusiveCitationsLike,
+func (v *formatter_) PostprocessInclusiveRange(
+	inclusiveRange ast.InclusiveRangeLike,
 ) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveDurations(
-	inExclusiveDurations ast.InExclusiveDurationsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveDurationsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveDurations(
-	inExclusiveDurations ast.InExclusiveDurationsLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveMoments(
-	inExclusiveMoments ast.InExclusiveMomentsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveMomentsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveMoments(
-	inExclusiveMoments ast.InExclusiveMomentsLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveNames(
-	inExclusiveNames ast.InExclusiveNamesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveNamesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveNames(
-	inExclusiveNames ast.InExclusiveNamesLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveNumbers(
-	inExclusiveNumbers ast.InExclusiveNumbersLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveNumbersSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveNumbers(
-	inExclusiveNumbers ast.InExclusiveNumbersLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusivePercentages(
-	inExclusivePercentages ast.InExclusivePercentagesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusivePercentagesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusivePercentages(
-	inExclusivePercentages ast.InExclusivePercentagesLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveProbabilities(
-	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveProbabilities(
-	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveQuotes(
-	inExclusiveQuotes ast.InExclusiveQuotesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveQuotesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveQuotes(
-	inExclusiveQuotes ast.InExclusiveQuotesLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveSymbols(
-	inExclusiveSymbols ast.InExclusiveSymbolsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveSymbolsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveSymbols(
-	inExclusiveSymbols ast.InExclusiveSymbolsLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInExclusiveVersions(
-	inExclusiveVersions ast.InExclusiveVersionsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInExclusiveVersionsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInExclusiveVersions(
-	inExclusiveVersions ast.InExclusiveVersionsLike,
-) {
-	v.appendString(")")
-}
-
-func (v *formatter_) PreprocessInclusiveAngles(
-	inclusiveAngles ast.InclusiveAnglesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveAnglesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveAngles(
-	inclusiveAngles ast.InclusiveAnglesLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveCitations(
-	inclusiveCitations ast.InclusiveCitationsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveCitationsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveCitations(
-	inclusiveCitations ast.InclusiveCitationsLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveDurations(
-	inclusiveDurations ast.InclusiveDurationsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveDurationsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveDurations(
-	inclusiveDurations ast.InclusiveDurationsLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveMoments(
-	inclusiveMoments ast.InclusiveMomentsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveMomentsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveMoments(
-	inclusiveMoments ast.InclusiveMomentsLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveNames(
-	inclusiveNames ast.InclusiveNamesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveNamesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveNames(
-	inclusiveNames ast.InclusiveNamesLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveNumbers(
-	inclusiveNumbers ast.InclusiveNumbersLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveNumbersSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveNumbers(
-	inclusiveNumbers ast.InclusiveNumbersLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusivePercentages(
-	inclusivePercentages ast.InclusivePercentagesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusivePercentagesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusivePercentages(
-	inclusivePercentages ast.InclusivePercentagesLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveProbabilities(
-	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveProbabilitiesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveProbabilities(
-	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveQuotes(
-	inclusiveQuotes ast.InclusiveQuotesLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveQuotesSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveQuotes(
-	inclusiveQuotes ast.InclusiveQuotesLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveSymbols(
-	inclusiveSymbols ast.InclusiveSymbolsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveSymbolsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveSymbols(
-	inclusiveSymbols ast.InclusiveSymbolsLike,
-) {
-	v.PostprocessInclusiveRange()
-}
-
-func (v *formatter_) PreprocessInclusiveVersions(
-	inclusiveVersions ast.InclusiveVersionsLike,
-) {
-	v.PreprocessInclusiveRange()
-}
-
-func (v *formatter_) ProcessInclusiveVersionsSlot(
-	slot uint,
-) {
-	v.ProcessRangeSlot()
-}
-
-func (v *formatter_) PostprocessInclusiveVersions(
-	inclusiveVersions ast.InclusiveVersionsLike,
-) {
-	v.PostprocessInclusiveRange()
+	v.appendString("|]")
 }
 
 func (v *formatter_) PreprocessIndex(

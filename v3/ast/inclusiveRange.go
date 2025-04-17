@@ -27,26 +27,36 @@ import (
 
 // Access Function
 
-func InclusivePercentagesClass() InclusivePercentagesClassLike {
-	return inclusivePercentagesClass()
+func InclusiveRangeClass() InclusiveRangeClassLike {
+	return inclusiveRangeClass()
 }
 
 // Constructor Methods
 
-func (c *inclusivePercentagesClass_) InclusivePercentages(
-	percentage1 string,
-	percentage2 string,
-) InclusivePercentagesLike {
-	if uti.IsUndefined(percentage1) {
-		panic("The \"percentage1\" attribute is required by this class.")
+func (c *inclusiveRangeClass_) InclusiveRange(
+	bar1 string,
+	primitive1 PrimitiveLike,
+	primitive2 PrimitiveLike,
+	bar2 string,
+) InclusiveRangeLike {
+	if uti.IsUndefined(bar1) {
+		panic("The \"bar1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(percentage2) {
-		panic("The \"percentage2\" attribute is required by this class.")
+	if uti.IsUndefined(primitive1) {
+		panic("The \"primitive1\" attribute is required by this class.")
 	}
-	var instance = &inclusivePercentages_{
+	if uti.IsUndefined(primitive2) {
+		panic("The \"primitive2\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(bar2) {
+		panic("The \"bar2\" attribute is required by this class.")
+	}
+	var instance = &inclusiveRange_{
 		// Initialize the instance attributes.
-		percentage1_: percentage1,
-		percentage2_: percentage2,
+		bar1_:       bar1,
+		primitive1_: primitive1,
+		primitive2_: primitive2,
+		bar2_:       bar2,
 	}
 	return instance
 }
@@ -55,42 +65,52 @@ func (c *inclusivePercentagesClass_) InclusivePercentages(
 
 // Principal Methods
 
-func (v *inclusivePercentages_) GetClass() InclusivePercentagesClassLike {
-	return inclusivePercentagesClass()
+func (v *inclusiveRange_) GetClass() InclusiveRangeClassLike {
+	return inclusiveRangeClass()
 }
 
 // Attribute Methods
 
-func (v *inclusivePercentages_) GetPercentage1() string {
-	return v.percentage1_
+func (v *inclusiveRange_) GetBar1() string {
+	return v.bar1_
 }
 
-func (v *inclusivePercentages_) GetPercentage2() string {
-	return v.percentage2_
+func (v *inclusiveRange_) GetPrimitive1() PrimitiveLike {
+	return v.primitive1_
+}
+
+func (v *inclusiveRange_) GetPrimitive2() PrimitiveLike {
+	return v.primitive2_
+}
+
+func (v *inclusiveRange_) GetBar2() string {
+	return v.bar2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inclusivePercentages_ struct {
+type inclusiveRange_ struct {
 	// Declare the instance attributes.
-	percentage1_ string
-	percentage2_ string
+	bar1_       string
+	primitive1_ PrimitiveLike
+	primitive2_ PrimitiveLike
+	bar2_       string
 }
 
 // Class Structure
 
-type inclusivePercentagesClass_ struct {
+type inclusiveRangeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inclusivePercentagesClass() *inclusivePercentagesClass_ {
-	return inclusivePercentagesClassReference_
+func inclusiveRangeClass() *inclusiveRangeClass_ {
+	return inclusiveRangeClassReference_
 }
 
-var inclusivePercentagesClassReference_ = &inclusivePercentagesClass_{
+var inclusiveRangeClassReference_ = &inclusiveRangeClass_{
 	// Initialize the class constants.
 }

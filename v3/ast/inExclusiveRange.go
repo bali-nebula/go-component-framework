@@ -27,26 +27,36 @@ import (
 
 // Access Function
 
-func InclusiveNamesClass() InclusiveNamesClassLike {
-	return inclusiveNamesClass()
+func InExclusiveRangeClass() InExclusiveRangeClassLike {
+	return inExclusiveRangeClass()
 }
 
 // Constructor Methods
 
-func (c *inclusiveNamesClass_) InclusiveNames(
-	name1 string,
-	name2 string,
-) InclusiveNamesLike {
-	if uti.IsUndefined(name1) {
-		panic("The \"name1\" attribute is required by this class.")
+func (c *inExclusiveRangeClass_) InExclusiveRange(
+	bar1 string,
+	primitive1 PrimitiveLike,
+	primitive2 PrimitiveLike,
+	bar2 string,
+) InExclusiveRangeLike {
+	if uti.IsUndefined(bar1) {
+		panic("The \"bar1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(name2) {
-		panic("The \"name2\" attribute is required by this class.")
+	if uti.IsUndefined(primitive1) {
+		panic("The \"primitive1\" attribute is required by this class.")
 	}
-	var instance = &inclusiveNames_{
+	if uti.IsUndefined(primitive2) {
+		panic("The \"primitive2\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(bar2) {
+		panic("The \"bar2\" attribute is required by this class.")
+	}
+	var instance = &inExclusiveRange_{
 		// Initialize the instance attributes.
-		name1_: name1,
-		name2_: name2,
+		bar1_:       bar1,
+		primitive1_: primitive1,
+		primitive2_: primitive2,
+		bar2_:       bar2,
 	}
 	return instance
 }
@@ -55,42 +65,52 @@ func (c *inclusiveNamesClass_) InclusiveNames(
 
 // Principal Methods
 
-func (v *inclusiveNames_) GetClass() InclusiveNamesClassLike {
-	return inclusiveNamesClass()
+func (v *inExclusiveRange_) GetClass() InExclusiveRangeClassLike {
+	return inExclusiveRangeClass()
 }
 
 // Attribute Methods
 
-func (v *inclusiveNames_) GetName1() string {
-	return v.name1_
+func (v *inExclusiveRange_) GetBar1() string {
+	return v.bar1_
 }
 
-func (v *inclusiveNames_) GetName2() string {
-	return v.name2_
+func (v *inExclusiveRange_) GetPrimitive1() PrimitiveLike {
+	return v.primitive1_
+}
+
+func (v *inExclusiveRange_) GetPrimitive2() PrimitiveLike {
+	return v.primitive2_
+}
+
+func (v *inExclusiveRange_) GetBar2() string {
+	return v.bar2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inclusiveNames_ struct {
+type inExclusiveRange_ struct {
 	// Declare the instance attributes.
-	name1_ string
-	name2_ string
+	bar1_       string
+	primitive1_ PrimitiveLike
+	primitive2_ PrimitiveLike
+	bar2_       string
 }
 
 // Class Structure
 
-type inclusiveNamesClass_ struct {
+type inExclusiveRangeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inclusiveNamesClass() *inclusiveNamesClass_ {
-	return inclusiveNamesClassReference_
+func inExclusiveRangeClass() *inExclusiveRangeClass_ {
+	return inExclusiveRangeClassReference_
 }
 
-var inclusiveNamesClassReference_ = &inclusiveNamesClass_{
+var inExclusiveRangeClassReference_ = &inExclusiveRangeClass_{
 	// Initialize the class constants.
 }

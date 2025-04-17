@@ -27,26 +27,36 @@ import (
 
 // Access Function
 
-func ExclusiveDurationsClass() ExclusiveDurationsClassLike {
-	return exclusiveDurationsClass()
+func ExInclusiveRangeClass() ExInclusiveRangeClassLike {
+	return exInclusiveRangeClass()
 }
 
 // Constructor Methods
 
-func (c *exclusiveDurationsClass_) ExclusiveDurations(
-	duration1 string,
-	duration2 string,
-) ExclusiveDurationsLike {
-	if uti.IsUndefined(duration1) {
-		panic("The \"duration1\" attribute is required by this class.")
+func (c *exInclusiveRangeClass_) ExInclusiveRange(
+	bar1 string,
+	primitive1 PrimitiveLike,
+	primitive2 PrimitiveLike,
+	bar2 string,
+) ExInclusiveRangeLike {
+	if uti.IsUndefined(bar1) {
+		panic("The \"bar1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(duration2) {
-		panic("The \"duration2\" attribute is required by this class.")
+	if uti.IsUndefined(primitive1) {
+		panic("The \"primitive1\" attribute is required by this class.")
 	}
-	var instance = &exclusiveDurations_{
+	if uti.IsUndefined(primitive2) {
+		panic("The \"primitive2\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(bar2) {
+		panic("The \"bar2\" attribute is required by this class.")
+	}
+	var instance = &exInclusiveRange_{
 		// Initialize the instance attributes.
-		duration1_: duration1,
-		duration2_: duration2,
+		bar1_:       bar1,
+		primitive1_: primitive1,
+		primitive2_: primitive2,
+		bar2_:       bar2,
 	}
 	return instance
 }
@@ -55,42 +65,52 @@ func (c *exclusiveDurationsClass_) ExclusiveDurations(
 
 // Principal Methods
 
-func (v *exclusiveDurations_) GetClass() ExclusiveDurationsClassLike {
-	return exclusiveDurationsClass()
+func (v *exInclusiveRange_) GetClass() ExInclusiveRangeClassLike {
+	return exInclusiveRangeClass()
 }
 
 // Attribute Methods
 
-func (v *exclusiveDurations_) GetDuration1() string {
-	return v.duration1_
+func (v *exInclusiveRange_) GetBar1() string {
+	return v.bar1_
 }
 
-func (v *exclusiveDurations_) GetDuration2() string {
-	return v.duration2_
+func (v *exInclusiveRange_) GetPrimitive1() PrimitiveLike {
+	return v.primitive1_
+}
+
+func (v *exInclusiveRange_) GetPrimitive2() PrimitiveLike {
+	return v.primitive2_
+}
+
+func (v *exInclusiveRange_) GetBar2() string {
+	return v.bar2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type exclusiveDurations_ struct {
+type exInclusiveRange_ struct {
 	// Declare the instance attributes.
-	duration1_ string
-	duration2_ string
+	bar1_       string
+	primitive1_ PrimitiveLike
+	primitive2_ PrimitiveLike
+	bar2_       string
 }
 
 // Class Structure
 
-type exclusiveDurationsClass_ struct {
+type exInclusiveRangeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func exclusiveDurationsClass() *exclusiveDurationsClass_ {
-	return exclusiveDurationsClassReference_
+func exInclusiveRangeClass() *exInclusiveRangeClass_ {
+	return exInclusiveRangeClassReference_
 }
 
-var exclusiveDurationsClassReference_ = &exclusiveDurationsClass_{
+var exInclusiveRangeClassReference_ = &exInclusiveRangeClass_{
 	// Initialize the class constants.
 }

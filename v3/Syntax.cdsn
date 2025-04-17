@@ -29,8 +29,9 @@ $Component: Entity Parameters?
 $Entity:
   - Element
   - String
-  - Procedure
+  - Range
   - Collection
+  - Procedure
 
 $Parameters:
   - MultilineParameters
@@ -67,6 +68,48 @@ $String:
   - symbol
   - tag
   - version
+
+$Range:
+  - InclusiveRange
+  - InExclusiveRange
+  - ExInclusiveRange
+  - ExclusiveRange
+
+$InclusiveRange: "[" bar Primitive ".." Primitive bar "]"
+
+$InExclusiveRange: "[" bar Primitive ".." Primitive bar ")"
+
+$ExInclusiveRange: "(" bar Primitive ".." Primitive bar "]"
+
+$ExclusiveRange: "(" bar Primitive ".." Primitive bar ")"
+
+$Primitive:
+  - Element
+  - String
+
+$Collection:
+  - MultilineAttributes
+  - MultilineValues  ! Must be after the multiline attributes.
+  - NoAttributes
+  - NoValues
+  - InlineAttributes
+  - InlineValues  ! Must be after the inline attributes.
+
+$MultilineAttributes: "[" newline AnnotatedAssociation+ "]"
+
+$InlineAttributes: "[" Association AdditionalAssociation* "]"
+
+$NoAttributes: "[" colon "]"
+
+$MultilineValues: "[" newline AnnotatedValue+ "]"
+
+$AnnotatedValue: Component note?
+
+$InlineValues: "[" Component AdditionalValue* "]"
+
+$AdditionalValue: "," Component
+
+$NoValues: "[" "]"
 
 $Procedure:
   - MultilineStatements
@@ -332,162 +375,6 @@ $Numerical:
   - Variable  ! This must be last since others also begin with an identifier.
 
 $Magnitude: bar Numerical bar
-
-$Collection:
-  - MultilineAttributes
-  - MultilineValues  ! Must be after the multiline attributes.
-  - NoAttributes
-  - NoValues
-  - InclusiveAngles
-  - InExclusiveAngles
-  - ExInclusiveAngles
-  - ExclusiveAngles
-  - InclusiveCitations
-  - InExclusiveCitations
-  - ExInclusiveCitations
-  - ExclusiveCitations
-  - InclusiveDurations
-  - InExclusiveDurations
-  - ExInclusiveDurations
-  - ExclusiveDurations
-  - InclusiveMoments
-  - InExclusiveMoments
-  - ExInclusiveMoments
-  - ExclusiveMoments
-  - InclusiveNames
-  - InExclusiveNames
-  - ExInclusiveNames
-  - ExclusiveNames
-  - InclusiveNumbers
-  - InExclusiveNumbers
-  - ExInclusiveNumbers
-  - ExclusiveNumbers
-  - InclusivePercentages
-  - InExclusivePercentages
-  - ExInclusivePercentages
-  - ExclusivePercentages
-  - InclusiveProbabilities
-  - InExclusiveProbabilities
-  - ExInclusiveProbabilities
-  - ExclusiveProbabilities
-  - InclusiveQuotes
-  - InExclusiveQuotes
-  - ExInclusiveQuotes
-  - ExclusiveQuotes
-  - InclusiveSymbols
-  - InExclusiveSymbols
-  - ExInclusiveSymbols
-  - ExclusiveSymbols
-  - InclusiveVersions
-  - InExclusiveVersions
-  - ExInclusiveVersions
-  - ExclusiveVersions
-  - InlineAttributes  ! Must be after the various ranges.
-  - InlineValues  ! Must be after the inline attributes.
-
-$MultilineAttributes: "[" newline AnnotatedAssociation+ "]"
-
-$InlineAttributes: "[" Association AdditionalAssociation* "]"
-
-$NoAttributes: "[" colon "]"
-
-$MultilineValues: "[" newline AnnotatedValue+ "]"
-
-$AnnotatedValue: Component note?
-
-$InlineValues: "[" Component AdditionalValue* "]"
-
-$AdditionalValue: "," Component
-
-$NoValues: "[" "]"
-
-$InclusiveAngles: "[" angle ".." angle "]"
-
-$InExclusiveAngles: "[" angle ".." angle ")"
-
-$ExInclusiveAngles: "(" angle ".." angle "]"
-
-$ExclusiveAngles: "(" angle ".." angle ")"
-
-$InclusiveCitations: "[" citation ".." citation "]"
-
-$InExclusiveCitations: "[" citation ".." citation ")"
-
-$ExInclusiveCitations: "(" citation ".." citation "]"
-
-$ExclusiveCitations: "(" citation ".." citation ")"
-
-$InclusiveDurations: "[" duration ".." duration "]"
-
-$InExclusiveDurations: "[" duration ".." duration ")"
-
-$ExInclusiveDurations: "(" duration ".." duration "]"
-
-$ExclusiveDurations: "(" duration ".." duration ")"
-
-$InclusiveMoments: "[" moment ".." moment "]"
-
-$InExclusiveMoments: "[" moment ".." moment ")"
-
-$ExInclusiveMoments: "(" moment ".." moment "]"
-
-$ExclusiveMoments: "(" moment ".." moment ")"
-
-$InclusiveNames: "[" name ".." name "]"
-
-$InExclusiveNames: "[" name ".." name ")"
-
-$ExInclusiveNames: "(" name ".." name "]"
-
-$ExclusiveNames: "(" name ".." name ")"
-
-$InclusiveNumbers: "[" number ".." number "]"
-
-$InExclusiveNumbers: "[" number ".." number ")"
-
-$ExInclusiveNumbers: "(" number ".." number "]"
-
-$ExclusiveNumbers: "(" number ".." number ")"
-
-$InclusivePercentages: "[" percentage ".." percentage "]"
-
-$InExclusivePercentages: "[" percentage ".." percentage ")"
-
-$ExInclusivePercentages: "(" percentage ".." percentage "]"
-
-$ExclusivePercentages: "(" percentage ".." percentage ")"
-
-$InclusiveProbabilities: "[" probability ".." probability "]"
-
-$InExclusiveProbabilities: "[" probability ".." probability ")"
-
-$ExInclusiveProbabilities: "(" probability ".." probability "]"
-
-$ExclusiveProbabilities: "(" probability ".." probability ")"
-
-$InclusiveQuotes: "[" quote ".." quote "]"
-
-$InExclusiveQuotes: "[" quote ".." quote ")"
-
-$ExInclusiveQuotes: "(" quote ".." quote "]"
-
-$ExclusiveQuotes: "(" quote ".." quote ")"
-
-$InclusiveSymbols: "[" symbol ".." symbol "]"
-
-$InExclusiveSymbols: "[" symbol ".." symbol ")"
-
-$ExInclusiveSymbols: "(" symbol ".." symbol "]"
-
-$ExclusiveSymbols: "(" symbol ".." symbol ")"
-
-$InclusiveVersions: "[" version ".." version "]"
-
-$InExclusiveVersions: "[" version ".." version ")"
-
-$ExInclusiveVersions: "(" version ".." version "]"
-
-$ExclusiveVersions: "(" version ".." version ")"
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐

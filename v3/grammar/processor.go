@@ -797,168 +797,18 @@ func (v *processor_) PostprocessEvent(
 ) {
 }
 
-func (v *processor_) PreprocessExInclusiveAngles(
-	exInclusiveAngles ast.ExInclusiveAnglesLike,
+func (v *processor_) PreprocessExInclusiveRange(
+	exInclusiveRange ast.ExInclusiveRangeLike,
 ) {
 }
 
-func (v *processor_) ProcessExInclusiveAnglesSlot(
+func (v *processor_) ProcessExInclusiveRangeSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessExInclusiveAngles(
-	exInclusiveAngles ast.ExInclusiveAnglesLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveCitations(
-	exInclusiveCitations ast.ExInclusiveCitationsLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveCitationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveCitations(
-	exInclusiveCitations ast.ExInclusiveCitationsLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveDurations(
-	exInclusiveDurations ast.ExInclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveDurationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveDurations(
-	exInclusiveDurations ast.ExInclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveMoments(
-	exInclusiveMoments ast.ExInclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveMomentsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveMoments(
-	exInclusiveMoments ast.ExInclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveNames(
-	exInclusiveNames ast.ExInclusiveNamesLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveNamesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveNames(
-	exInclusiveNames ast.ExInclusiveNamesLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveNumbers(
-	exInclusiveNumbers ast.ExInclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveNumbersSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveNumbers(
-	exInclusiveNumbers ast.ExInclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusivePercentages(
-	exInclusivePercentages ast.ExInclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusivePercentagesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusivePercentages(
-	exInclusivePercentages ast.ExInclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveProbabilities(
-	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveProbabilitiesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveProbabilities(
-	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveQuotes(
-	exInclusiveQuotes ast.ExInclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveQuotesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveQuotes(
-	exInclusiveQuotes ast.ExInclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveSymbols(
-	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveSymbolsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveSymbols(
-	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) PreprocessExInclusiveVersions(
-	exInclusiveVersions ast.ExInclusiveVersionsLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveVersionsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveVersions(
-	exInclusiveVersions ast.ExInclusiveVersionsLike,
+func (v *processor_) PostprocessExInclusiveRange(
+	exInclusiveRange ast.ExInclusiveRangeLike,
 ) {
 }
 
@@ -977,168 +827,18 @@ func (v *processor_) PostprocessException(
 ) {
 }
 
-func (v *processor_) PreprocessExclusiveAngles(
-	exclusiveAngles ast.ExclusiveAnglesLike,
+func (v *processor_) PreprocessExclusiveRange(
+	exclusiveRange ast.ExclusiveRangeLike,
 ) {
 }
 
-func (v *processor_) ProcessExclusiveAnglesSlot(
+func (v *processor_) ProcessExclusiveRangeSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessExclusiveAngles(
-	exclusiveAngles ast.ExclusiveAnglesLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveCitations(
-	exclusiveCitations ast.ExclusiveCitationsLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveCitationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveCitations(
-	exclusiveCitations ast.ExclusiveCitationsLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveDurations(
-	exclusiveDurations ast.ExclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveDurationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveDurations(
-	exclusiveDurations ast.ExclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveMoments(
-	exclusiveMoments ast.ExclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveMomentsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveMoments(
-	exclusiveMoments ast.ExclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveNames(
-	exclusiveNames ast.ExclusiveNamesLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveNamesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveNames(
-	exclusiveNames ast.ExclusiveNamesLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveNumbers(
-	exclusiveNumbers ast.ExclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveNumbersSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveNumbers(
-	exclusiveNumbers ast.ExclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusivePercentages(
-	exclusivePercentages ast.ExclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) ProcessExclusivePercentagesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusivePercentages(
-	exclusivePercentages ast.ExclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveProbabilities(
-	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveProbabilitiesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveProbabilities(
-	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveQuotes(
-	exclusiveQuotes ast.ExclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveQuotesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveQuotes(
-	exclusiveQuotes ast.ExclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveSymbols(
-	exclusiveSymbols ast.ExclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveSymbolsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveSymbols(
-	exclusiveSymbols ast.ExclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveVersions(
-	exclusiveVersions ast.ExclusiveVersionsLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveVersionsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveVersions(
-	exclusiveVersions ast.ExclusiveVersionsLike,
+func (v *processor_) PostprocessExclusiveRange(
+	exclusiveRange ast.ExclusiveRangeLike,
 ) {
 }
 
@@ -1217,333 +917,33 @@ func (v *processor_) PostprocessIfClause(
 ) {
 }
 
-func (v *processor_) PreprocessInExclusiveAngles(
-	inExclusiveAngles ast.InExclusiveAnglesLike,
+func (v *processor_) PreprocessInExclusiveRange(
+	inExclusiveRange ast.InExclusiveRangeLike,
 ) {
 }
 
-func (v *processor_) ProcessInExclusiveAnglesSlot(
+func (v *processor_) ProcessInExclusiveRangeSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessInExclusiveAngles(
-	inExclusiveAngles ast.InExclusiveAnglesLike,
+func (v *processor_) PostprocessInExclusiveRange(
+	inExclusiveRange ast.InExclusiveRangeLike,
 ) {
 }
 
-func (v *processor_) PreprocessInExclusiveCitations(
-	inExclusiveCitations ast.InExclusiveCitationsLike,
+func (v *processor_) PreprocessInclusiveRange(
+	inclusiveRange ast.InclusiveRangeLike,
 ) {
 }
 
-func (v *processor_) ProcessInExclusiveCitationsSlot(
+func (v *processor_) ProcessInclusiveRangeSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessInExclusiveCitations(
-	inExclusiveCitations ast.InExclusiveCitationsLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveDurations(
-	inExclusiveDurations ast.InExclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveDurationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveDurations(
-	inExclusiveDurations ast.InExclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveMoments(
-	inExclusiveMoments ast.InExclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveMomentsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveMoments(
-	inExclusiveMoments ast.InExclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveNames(
-	inExclusiveNames ast.InExclusiveNamesLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveNamesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveNames(
-	inExclusiveNames ast.InExclusiveNamesLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveNumbers(
-	inExclusiveNumbers ast.InExclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveNumbersSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveNumbers(
-	inExclusiveNumbers ast.InExclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusivePercentages(
-	inExclusivePercentages ast.InExclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusivePercentagesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusivePercentages(
-	inExclusivePercentages ast.InExclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveProbabilities(
-	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveProbabilitiesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveProbabilities(
-	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveQuotes(
-	inExclusiveQuotes ast.InExclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveQuotesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveQuotes(
-	inExclusiveQuotes ast.InExclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveSymbols(
-	inExclusiveSymbols ast.InExclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveSymbolsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveSymbols(
-	inExclusiveSymbols ast.InExclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveVersions(
-	inExclusiveVersions ast.InExclusiveVersionsLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveVersionsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveVersions(
-	inExclusiveVersions ast.InExclusiveVersionsLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveAngles(
-	inclusiveAngles ast.InclusiveAnglesLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveAnglesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveAngles(
-	inclusiveAngles ast.InclusiveAnglesLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveCitations(
-	inclusiveCitations ast.InclusiveCitationsLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveCitationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveCitations(
-	inclusiveCitations ast.InclusiveCitationsLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveDurations(
-	inclusiveDurations ast.InclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveDurationsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveDurations(
-	inclusiveDurations ast.InclusiveDurationsLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveMoments(
-	inclusiveMoments ast.InclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveMomentsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveMoments(
-	inclusiveMoments ast.InclusiveMomentsLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveNames(
-	inclusiveNames ast.InclusiveNamesLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveNamesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveNames(
-	inclusiveNames ast.InclusiveNamesLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveNumbers(
-	inclusiveNumbers ast.InclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveNumbersSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveNumbers(
-	inclusiveNumbers ast.InclusiveNumbersLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusivePercentages(
-	inclusivePercentages ast.InclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) ProcessInclusivePercentagesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusivePercentages(
-	inclusivePercentages ast.InclusivePercentagesLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveProbabilities(
-	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveProbabilitiesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveProbabilities(
-	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveQuotes(
-	inclusiveQuotes ast.InclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveQuotesSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveQuotes(
-	inclusiveQuotes ast.InclusiveQuotesLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveSymbols(
-	inclusiveSymbols ast.InclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveSymbolsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveSymbols(
-	inclusiveSymbols ast.InclusiveSymbolsLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveVersions(
-	inclusiveVersions ast.InclusiveVersionsLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveVersionsSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveVersions(
-	inclusiveVersions ast.InclusiveVersionsLike,
+func (v *processor_) PostprocessInclusiveRange(
+	inclusiveRange ast.InclusiveRangeLike,
 ) {
 }
 
@@ -2125,6 +1525,21 @@ func (v *processor_) PostprocessPredicate(
 ) {
 }
 
+func (v *processor_) PreprocessPrimitive(
+	primitive ast.PrimitiveLike,
+) {
+}
+
+func (v *processor_) ProcessPrimitiveSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessPrimitive(
+	primitive ast.PrimitiveLike,
+) {
+}
+
 func (v *processor_) PreprocessProcedure(
 	procedure ast.ProcedureLike,
 ) {
@@ -2152,6 +1567,21 @@ func (v *processor_) ProcessPublishClauseSlot(
 
 func (v *processor_) PostprocessPublishClause(
 	publishClause ast.PublishClauseLike,
+) {
+}
+
+func (v *processor_) PreprocessRange(
+	range_ ast.RangeLike,
+) {
+}
+
+func (v *processor_) ProcessRangeSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessRange(
+	range_ ast.RangeLike,
 ) {
 }
 

@@ -27,26 +27,36 @@ import (
 
 // Access Function
 
-func InExclusiveProbabilitiesClass() InExclusiveProbabilitiesClassLike {
-	return inExclusiveProbabilitiesClass()
+func ExclusiveRangeClass() ExclusiveRangeClassLike {
+	return exclusiveRangeClass()
 }
 
 // Constructor Methods
 
-func (c *inExclusiveProbabilitiesClass_) InExclusiveProbabilities(
-	probability1 string,
-	probability2 string,
-) InExclusiveProbabilitiesLike {
-	if uti.IsUndefined(probability1) {
-		panic("The \"probability1\" attribute is required by this class.")
+func (c *exclusiveRangeClass_) ExclusiveRange(
+	bar1 string,
+	primitive1 PrimitiveLike,
+	primitive2 PrimitiveLike,
+	bar2 string,
+) ExclusiveRangeLike {
+	if uti.IsUndefined(bar1) {
+		panic("The \"bar1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(probability2) {
-		panic("The \"probability2\" attribute is required by this class.")
+	if uti.IsUndefined(primitive1) {
+		panic("The \"primitive1\" attribute is required by this class.")
 	}
-	var instance = &inExclusiveProbabilities_{
+	if uti.IsUndefined(primitive2) {
+		panic("The \"primitive2\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(bar2) {
+		panic("The \"bar2\" attribute is required by this class.")
+	}
+	var instance = &exclusiveRange_{
 		// Initialize the instance attributes.
-		probability1_: probability1,
-		probability2_: probability2,
+		bar1_:       bar1,
+		primitive1_: primitive1,
+		primitive2_: primitive2,
+		bar2_:       bar2,
 	}
 	return instance
 }
@@ -55,42 +65,52 @@ func (c *inExclusiveProbabilitiesClass_) InExclusiveProbabilities(
 
 // Principal Methods
 
-func (v *inExclusiveProbabilities_) GetClass() InExclusiveProbabilitiesClassLike {
-	return inExclusiveProbabilitiesClass()
+func (v *exclusiveRange_) GetClass() ExclusiveRangeClassLike {
+	return exclusiveRangeClass()
 }
 
 // Attribute Methods
 
-func (v *inExclusiveProbabilities_) GetProbability1() string {
-	return v.probability1_
+func (v *exclusiveRange_) GetBar1() string {
+	return v.bar1_
 }
 
-func (v *inExclusiveProbabilities_) GetProbability2() string {
-	return v.probability2_
+func (v *exclusiveRange_) GetPrimitive1() PrimitiveLike {
+	return v.primitive1_
+}
+
+func (v *exclusiveRange_) GetPrimitive2() PrimitiveLike {
+	return v.primitive2_
+}
+
+func (v *exclusiveRange_) GetBar2() string {
+	return v.bar2_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inExclusiveProbabilities_ struct {
+type exclusiveRange_ struct {
 	// Declare the instance attributes.
-	probability1_ string
-	probability2_ string
+	bar1_       string
+	primitive1_ PrimitiveLike
+	primitive2_ PrimitiveLike
+	bar2_       string
 }
 
 // Class Structure
 
-type inExclusiveProbabilitiesClass_ struct {
+type exclusiveRangeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inExclusiveProbabilitiesClass() *inExclusiveProbabilitiesClass_ {
-	return inExclusiveProbabilitiesClassReference_
+func exclusiveRangeClass() *exclusiveRangeClass_ {
+	return exclusiveRangeClassReference_
 }
 
-var inExclusiveProbabilitiesClassReference_ = &inExclusiveProbabilitiesClass_{
+var exclusiveRangeClassReference_ = &exclusiveRangeClass_{
 	// Initialize the class constants.
 }
