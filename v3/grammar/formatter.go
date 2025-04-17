@@ -322,37 +322,65 @@ func (v *formatter_) ProcessVersion(
 func (v *formatter_) ProcessAcceptClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessAdditionalArgumentSlot(
 	slot uint,
 ) {
-	v.appendString(", ")
+	switch slot {
+	case 1:
+		v.appendString(", ")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessAdditionalAssociationSlot(
 	slot uint,
 ) {
-	v.appendString(", ")
+	switch slot {
+	case 1:
+		v.appendString(", ")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessAdditionalIndexSlot(
 	slot uint,
 ) {
-	v.appendString(", ")
+	switch slot {
+	case 1:
+		v.appendString(", ")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessAdditionalStatementSlot(
 	slot uint,
 ) {
-	v.appendString("; ")
+	switch slot {
+	case 1:
+		v.appendString("; ")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessAdditionalValueSlot(
 	slot uint,
 ) {
-	v.appendString(", ")
+	switch slot {
+	case 1:
+		v.appendString(", ")
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessAnd(
@@ -381,60 +409,6 @@ func (v *formatter_) PreprocessAnnotationLine(
 	annotationLine ast.AnnotationLineLike,
 ) {
 	v.appendNewline()
-}
-
-func (v *formatter_) PreprocessArgument(
-	argument ast.ArgumentLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessArgumentSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessArgument(
-	argument ast.ArgumentLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessArguments(
-	arguments ast.ArgumentsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessArgumentsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessArguments(
-	arguments ast.ArgumentsLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessAssign(
-	assign ast.AssignLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessAssignSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessAssign(
-	assign ast.AssignLike,
-) {
-	// TBD - Add formatting of the delimited rule.
 }
 
 func (v *formatter_) PreprocessAssociation(
@@ -494,7 +468,10 @@ func (v *formatter_) PostprocessBag(
 func (v *formatter_) ProcessBreakClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessCheckoutClause(
@@ -596,19 +573,28 @@ func (v *formatter_) PostprocessCondition(
 func (v *formatter_) ProcessContinueClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessDiscardClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessDoClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessDocument(
@@ -707,202 +693,222 @@ func (v *formatter_) PostprocessEvent(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessInclusiveRange() {
+	v.appendString("[")
+}
+
+func (v *formatter_) PostprocessInclusiveRange() {
+	v.appendString("]")
+}
+
+func (v *formatter_) PreprocessExclusiveRange() {
+	v.appendString("(")
+}
+
+func (v *formatter_) PostprocessExclusiveRange() {
+	v.appendString(")")
+}
+
+func (v *formatter_) ProcessRangeSlot() {
+	v.appendString("..")
+}
+
 func (v *formatter_) PreprocessExInclusiveAngles(
 	exInclusiveAngles ast.ExInclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveAnglesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveAngles(
 	exInclusiveAngles ast.ExInclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveCitations(
 	exInclusiveCitations ast.ExInclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveCitationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveCitations(
 	exInclusiveCitations ast.ExInclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveDurations(
 	exInclusiveDurations ast.ExInclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveDurationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveDurations(
 	exInclusiveDurations ast.ExInclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveMoments(
 	exInclusiveMoments ast.ExInclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveMomentsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveMoments(
 	exInclusiveMoments ast.ExInclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveNames(
 	exInclusiveNames ast.ExInclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveNamesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveNames(
 	exInclusiveNames ast.ExInclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveNumbers(
 	exInclusiveNumbers ast.ExInclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveNumbersSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveNumbers(
 	exInclusiveNumbers ast.ExInclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusivePercentages(
 	exInclusivePercentages ast.ExInclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusivePercentagesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusivePercentages(
 	exInclusivePercentages ast.ExInclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveProbabilities(
 	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveProbabilitiesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveProbabilities(
 	exInclusiveProbabilities ast.ExInclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveQuotes(
 	exInclusiveQuotes ast.ExInclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveQuotesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveQuotes(
 	exInclusiveQuotes ast.ExInclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveSymbols(
 	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveSymbolsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveSymbols(
 	exInclusiveSymbols ast.ExInclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessExInclusiveVersions(
 	exInclusiveVersions ast.ExInclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExInclusiveVersionsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExInclusiveVersions(
 	exInclusiveVersions ast.ExInclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessException(
@@ -926,199 +932,199 @@ func (v *formatter_) PostprocessException(
 func (v *formatter_) PreprocessExclusiveAngles(
 	exclusiveAngles ast.ExclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveAnglesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveAngles(
 	exclusiveAngles ast.ExclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveCitations(
 	exclusiveCitations ast.ExclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveCitationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveCitations(
 	exclusiveCitations ast.ExclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveDurations(
 	exclusiveDurations ast.ExclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveDurationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveDurations(
 	exclusiveDurations ast.ExclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveMoments(
 	exclusiveMoments ast.ExclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveMomentsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveMoments(
 	exclusiveMoments ast.ExclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveNames(
 	exclusiveNames ast.ExclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveNamesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveNames(
 	exclusiveNames ast.ExclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveNumbers(
 	exclusiveNumbers ast.ExclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveNumbersSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveNumbers(
 	exclusiveNumbers ast.ExclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusivePercentages(
 	exclusivePercentages ast.ExclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusivePercentagesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusivePercentages(
 	exclusivePercentages ast.ExclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveProbabilities(
 	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveProbabilitiesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveProbabilities(
 	exclusiveProbabilities ast.ExclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveQuotes(
 	exclusiveQuotes ast.ExclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveQuotesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveQuotes(
 	exclusiveQuotes ast.ExclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveSymbols(
 	exclusiveSymbols ast.ExclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveSymbolsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveSymbols(
 	exclusiveSymbols ast.ExclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExclusiveVersions(
 	exclusiveVersions ast.ExclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessExclusiveRange()
 }
 
 func (v *formatter_) ProcessExclusiveVersionsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessExclusiveVersions(
 	exclusiveVersions ast.ExclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessExclusiveRange()
 }
 
 func (v *formatter_) PreprocessExpression(
@@ -1196,403 +1202,406 @@ func (v *formatter_) PostprocessFunction(
 func (v *formatter_) ProcessIfClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessInExclusiveAngles(
 	inExclusiveAngles ast.InExclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveAnglesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveAngles(
 	inExclusiveAngles ast.InExclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveCitations(
 	inExclusiveCitations ast.InExclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveCitationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveCitations(
 	inExclusiveCitations ast.InExclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveDurations(
 	inExclusiveDurations ast.InExclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveDurationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveDurations(
 	inExclusiveDurations ast.InExclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveMoments(
 	inExclusiveMoments ast.InExclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveMomentsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveMoments(
 	inExclusiveMoments ast.InExclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveNames(
 	inExclusiveNames ast.InExclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveNamesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveNames(
 	inExclusiveNames ast.InExclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveNumbers(
 	inExclusiveNumbers ast.InExclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveNumbersSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveNumbers(
 	inExclusiveNumbers ast.InExclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusivePercentages(
 	inExclusivePercentages ast.InExclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusivePercentagesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusivePercentages(
 	inExclusivePercentages ast.InExclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveProbabilities(
 	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveProbabilitiesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveProbabilities(
 	inExclusiveProbabilities ast.InExclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveQuotes(
 	inExclusiveQuotes ast.InExclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveQuotesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveQuotes(
 	inExclusiveQuotes ast.InExclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveSymbols(
 	inExclusiveSymbols ast.InExclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveSymbolsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveSymbols(
 	inExclusiveSymbols ast.InExclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInExclusiveVersions(
 	inExclusiveVersions ast.InExclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInExclusiveVersionsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInExclusiveVersions(
 	inExclusiveVersions ast.InExclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveAnglesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveAngles(
 	inclusiveAngles ast.InclusiveAnglesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveCitations(
 	inclusiveCitations ast.InclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveCitationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveCitations(
 	inclusiveCitations ast.InclusiveCitationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveDurations(
 	inclusiveDurations ast.InclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveDurationsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveDurations(
 	inclusiveDurations ast.InclusiveDurationsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveMoments(
 	inclusiveMoments ast.InclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveMomentsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveMoments(
 	inclusiveMoments ast.InclusiveMomentsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveNames(
 	inclusiveNames ast.InclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveNamesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveNames(
 	inclusiveNames ast.InclusiveNamesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveNumbers(
 	inclusiveNumbers ast.InclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveNumbersSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveNumbers(
 	inclusiveNumbers ast.InclusiveNumbersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusivePercentages(
 	inclusivePercentages ast.InclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusivePercentagesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusivePercentages(
 	inclusivePercentages ast.InclusivePercentagesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveProbabilities(
 	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveProbabilitiesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveProbabilities(
 	inclusiveProbabilities ast.InclusiveProbabilitiesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveQuotes(
 	inclusiveQuotes ast.InclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveQuotesSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveQuotes(
 	inclusiveQuotes ast.InclusiveQuotesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveSymbols(
 	inclusiveSymbols ast.InclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveSymbolsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveSymbols(
 	inclusiveSymbols ast.InclusiveSymbolsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessInclusiveVersions(
 	inclusiveVersions ast.InclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PreprocessInclusiveRange()
 }
 
 func (v *formatter_) ProcessInclusiveVersionsSlot(
 	slot uint,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.ProcessRangeSlot()
 }
 
 func (v *formatter_) PostprocessInclusiveVersions(
 	inclusiveVersions ast.InclusiveVersionsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.PostprocessInclusiveRange()
 }
 
 func (v *formatter_) PreprocessIndex(
@@ -1670,73 +1679,49 @@ func (v *formatter_) PostprocessInduction(
 func (v *formatter_) PreprocessInlineAttributes(
 	inlineAttributes ast.InlineAttributesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessInlineAttributesSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("[")
 }
 
 func (v *formatter_) PostprocessInlineAttributes(
 	inlineAttributes ast.InlineAttributesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessInlineParameters(
 	inlineParameters ast.InlineParametersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessInlineParametersSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("(")
 }
 
 func (v *formatter_) PostprocessInlineParameters(
 	inlineParameters ast.InlineParametersLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString(")")
 }
 
 func (v *formatter_) PreprocessInlineStatements(
 	inlineStatements ast.InlineStatementsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessInlineStatementsSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("{")
 }
 
 func (v *formatter_) PostprocessInlineStatements(
 	inlineStatements ast.InlineStatementsLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("}")
 }
 
 func (v *formatter_) PreprocessInlineValues(
 	inlineValues ast.InlineValuesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessInlineValuesSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("[")
 }
 
 func (v *formatter_) PostprocessInlineValues(
 	inlineValues ast.InlineValuesLike,
 ) {
-	// TBD - Add formatting of the delimited rule.
+	v.appendString("]")
 }
 
 func (v *formatter_) PreprocessInverse(
@@ -1826,7 +1811,10 @@ func (v *formatter_) PostprocessItem(
 func (v *formatter_) ProcessLetClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessLogical(
@@ -2034,7 +2022,10 @@ func (v *formatter_) PreprocessNoValues(
 func (v *formatter_) ProcessNotarizeClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessNumerical(
@@ -2058,13 +2049,19 @@ func (v *formatter_) PostprocessNumerical(
 func (v *formatter_) ProcessOnClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessPostClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessPrecedence(
@@ -2128,7 +2125,10 @@ func (v *formatter_) PostprocessProcedure(
 func (v *formatter_) ProcessPublishClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessRecipient(
@@ -2170,7 +2170,10 @@ func (v *formatter_) PostprocessReferent(
 func (v *formatter_) ProcessRejectClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessRepository(
@@ -2212,13 +2215,19 @@ func (v *formatter_) PostprocessResult(
 func (v *formatter_) ProcessRetrieveClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessReturnClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessSan(
@@ -2230,13 +2239,19 @@ func (v *formatter_) PreprocessSan(
 func (v *formatter_) ProcessSaveClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessSelectClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessSequence(
@@ -2392,7 +2407,10 @@ func (v *formatter_) PostprocessThreading(
 func (v *formatter_) ProcessThrowClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessVariable(
@@ -2416,13 +2434,19 @@ func (v *formatter_) PostprocessVariable(
 func (v *formatter_) ProcessWhileClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) ProcessWithClauseSlot(
 	slot uint,
 ) {
-	v.appendString(" ")
+	switch slot {
+	default:
+		v.appendString(" ")
+	}
 }
 
 func (v *formatter_) PreprocessXor(
