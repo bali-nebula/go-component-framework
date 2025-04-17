@@ -120,7 +120,7 @@ $Procedure:
   - InlineStatements
   - NoStatements
 
-$MultilineStatements: "{" newline AnnotatedStatement+ "}"
+$MultilineStatements: "{" newline AnnotatedStatement* "}"
 
 $AnnotatedStatement:
   - EmptyLine

@@ -466,7 +466,7 @@ func (v *formatter_) ProcessCheckoutClauseSlot(
 	slot uint,
 ) {
 	switch slot {
-		case 2:
+	case 2:
 		v.appendString("from ")
 	default:
 		v.appendString(" ")
@@ -735,7 +735,7 @@ func (v *formatter_) ProcessFunctionSlot(
 	slot uint,
 ) {
 	switch slot {
-		case 1:
+	case 1:
 		v.appendString("(")
 	default:
 		v.appendString(" ")
@@ -758,7 +758,7 @@ func (v *formatter_) ProcessIfClauseSlot(
 	slot uint,
 ) {
 	switch slot {
-		case 1:
+	case 1:
 		v.appendString(" do ")
 	default:
 		v.appendString(" ")
@@ -1097,7 +1097,7 @@ func (v *formatter_) ProcessMethodSlot(
 	slot uint,
 ) {
 	switch slot {
-		case 3:
+	case 3:
 		v.appendString("(")
 	}
 }

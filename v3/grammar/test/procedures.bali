@@ -1,6 +1,7 @@
 {
     ! This is a note.
-    if true do { }
+    if true do {
+    }
 
     while ok do {
         accept messages[index]

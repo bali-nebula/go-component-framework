@@ -3710,7 +3710,7 @@ annotatedStatementsLoop:
 		annotatedStatement, token, ok = v.parseAnnotatedStatement()
 		if !ok {
 			switch {
-			case count >= 1:
+			case count >= 0:
 				break annotatedStatementsLoop
 			case uti.IsDefined(tokens):
 				// This is not multiple AnnotatedStatement rules.
@@ -3719,7 +3719,7 @@ annotatedStatementsLoop:
 			default:
 				// Found a syntax error.
 				var message = v.formatError("$MultilineStatements", token)
-				message += "1 or more AnnotatedStatement rules are required."
+				message += "0 or more AnnotatedStatement rules are required."
 				panic(message)
 			}
 		}
@@ -6536,7 +6536,7 @@ var parserClassReference_ = &parserClass_{
   - MultilineStatements
   - InlineStatements
   - NoStatements`,
-			"$MultilineStatements": `"{" newline AnnotatedStatement+ "}"`,
+			"$MultilineStatements": `"{" newline AnnotatedStatement* "}"`,
 			"$AnnotatedStatement": `
   - EmptyLine
   - AnnotationLine
