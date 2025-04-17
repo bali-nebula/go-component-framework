@@ -771,15 +771,6 @@ type Methodical interface {
 	PostprocessEvent(
 		event ast.EventLike,
 	)
-	PreprocessExInclusiveRange(
-		exInclusiveRange ast.ExInclusiveRangeLike,
-	)
-	ProcessExInclusiveRangeSlot(
-		slot uint,
-	)
-	PostprocessExInclusiveRange(
-		exInclusiveRange ast.ExInclusiveRangeLike,
-	)
 	PreprocessException(
 		exception ast.ExceptionLike,
 	)
@@ -788,15 +779,6 @@ type Methodical interface {
 	)
 	PostprocessException(
 		exception ast.ExceptionLike,
-	)
-	PreprocessExclusiveRange(
-		exclusiveRange ast.ExclusiveRangeLike,
-	)
-	ProcessExclusiveRangeSlot(
-		slot uint,
-	)
-	PostprocessExclusiveRange(
-		exclusiveRange ast.ExclusiveRangeLike,
 	)
 	PreprocessExpression(
 		expression ast.ExpressionLike,
@@ -842,24 +824,6 @@ type Methodical interface {
 	)
 	PostprocessIfClause(
 		ifClause ast.IfClauseLike,
-	)
-	PreprocessInExclusiveRange(
-		inExclusiveRange ast.InExclusiveRangeLike,
-	)
-	ProcessInExclusiveRangeSlot(
-		slot uint,
-	)
-	PostprocessInExclusiveRange(
-		inExclusiveRange ast.InExclusiveRangeLike,
-	)
-	PreprocessInclusiveRange(
-		inclusiveRange ast.InclusiveRangeLike,
-	)
-	ProcessInclusiveRangeSlot(
-		slot uint,
-	)
-	PostprocessInclusiveRange(
-		inclusiveRange ast.InclusiveRangeLike,
 	)
 	PreprocessIndex(
 		index ast.IndexLike,
@@ -1004,6 +968,33 @@ type Methodical interface {
 	)
 	PostprocessLogical(
 		logical ast.LogicalLike,
+	)
+	PreprocessLowerBound(
+		lowerBound ast.LowerBoundLike,
+	)
+	ProcessLowerBoundSlot(
+		slot uint,
+	)
+	PostprocessLowerBound(
+		lowerBound ast.LowerBoundLike,
+	)
+	PreprocessLowerExclusion(
+		lowerExclusion ast.LowerExclusionLike,
+	)
+	ProcessLowerExclusionSlot(
+		slot uint,
+	)
+	PostprocessLowerExclusion(
+		lowerExclusion ast.LowerExclusionLike,
+	)
+	PreprocessLowerInclusion(
+		lowerInclusion ast.LowerInclusionLike,
+	)
+	ProcessLowerInclusionSlot(
+		slot uint,
+	)
+	PostprocessLowerInclusion(
+		lowerInclusion ast.LowerInclusionLike,
 	)
 	PreprocessMagnitude(
 		magnitude ast.MagnitudeLike,
@@ -1426,6 +1417,33 @@ type Methodical interface {
 	)
 	PostprocessThrowClause(
 		throwClause ast.ThrowClauseLike,
+	)
+	PreprocessUpperBound(
+		upperBound ast.UpperBoundLike,
+	)
+	ProcessUpperBoundSlot(
+		slot uint,
+	)
+	PostprocessUpperBound(
+		upperBound ast.UpperBoundLike,
+	)
+	PreprocessUpperExclusion(
+		upperExclusion ast.UpperExclusionLike,
+	)
+	ProcessUpperExclusionSlot(
+		slot uint,
+	)
+	PostprocessUpperExclusion(
+		upperExclusion ast.UpperExclusionLike,
+	)
+	PreprocessUpperInclusion(
+		upperInclusion ast.UpperInclusionLike,
+	)
+	ProcessUpperInclusionSlot(
+		slot uint,
+	)
+	PostprocessUpperInclusion(
+		upperInclusion ast.UpperInclusionLike,
 	)
 	PreprocessVariable(
 		variable ast.VariableLike,

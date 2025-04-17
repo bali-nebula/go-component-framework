@@ -693,42 +693,6 @@ func (v *formatter_) PostprocessEvent(
 	// TBD - Add formatting of the delimited rule.
 }
 
-func (v *formatter_) PreprocessExInclusiveRange(
-	exInclusiveRange ast.ExInclusiveRangeLike,
-) {
-	v.appendString("(|")
-}
-
-func (v *formatter_) ProcessExInclusiveRangeSlot(
-	slot uint,
-) {
-	v.appendString("..")
-}
-
-func (v *formatter_) PostprocessExInclusiveRange(
-	exInclusiveRange ast.ExInclusiveRangeLike,
-) {
-	v.appendString("|]")
-}
-
-func (v *formatter_) PreprocessExclusiveRange(
-	exclusiveRange ast.ExclusiveRangeLike,
-) {
-	v.appendString("(|")
-}
-
-func (v *formatter_) ProcessExclusiveRangeSlot(
-	slot uint,
-) {
-	v.appendString("..")
-}
-
-func (v *formatter_) PostprocessExclusiveRange(
-	exclusiveRange ast.ExclusiveRangeLike,
-) {
-	v.appendString("|)")
-}
-
 func (v *formatter_) PreprocessException(
 	exception ast.ExceptionLike,
 ) {
@@ -826,42 +790,6 @@ func (v *formatter_) ProcessIfClauseSlot(
 	default:
 		v.appendString(" ")
 	}
-}
-
-func (v *formatter_) PreprocessInExclusiveRange(
-	inExclusiveRange ast.InExclusiveRangeLike,
-) {
-	v.appendString("[|")
-}
-
-func (v *formatter_) ProcessInExclusiveRangeSlot(
-	slot uint,
-) {
-	v.appendString("..")
-}
-
-func (v *formatter_) PostprocessInExclusiveRange(
-	inExclusiveRange ast.InExclusiveRangeLike,
-) {
-	v.appendString("|)")
-}
-
-func (v *formatter_) PreprocessInclusiveRange(
-	inclusiveRange ast.InclusiveRangeLike,
-) {
-	v.appendString("[|")
-}
-
-func (v *formatter_) ProcessInclusiveRangeSlot(
-	slot uint,
-) {
-	v.appendString("..")
-}
-
-func (v *formatter_) PostprocessInclusiveRange(
-	inclusiveRange ast.InclusiveRangeLike,
-) {
-	v.appendString("|]")
 }
 
 func (v *formatter_) PreprocessIndex(
@@ -1093,6 +1021,18 @@ func (v *formatter_) PostprocessLogical(
 	logical ast.LogicalLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PreprocessLowerExclusion(
+	lowerExclusion ast.LowerExclusionLike,
+) {
+	v.appendString("(|")
+}
+
+func (v *formatter_) PreprocessLowerInclusion(
+	lowerInclusion ast.LowerInclusionLike,
+) {
+	v.appendString("[|")
 }
 
 func (v *formatter_) PreprocessMagnitude(
@@ -1364,6 +1304,24 @@ func (v *formatter_) PostprocessPredicate(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessPrimitive(
+	primitive ast.PrimitiveLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessPrimitiveSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessPrimitive(
+	primitive ast.PrimitiveLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessProcedure(
 	procedure ast.ProcedureLike,
 ) {
@@ -1388,6 +1346,15 @@ func (v *formatter_) ProcessPublishClauseSlot(
 	switch slot {
 	default:
 		v.appendString(" ")
+	}
+}
+
+func (v *formatter_) ProcessRangeSlot(
+	slot uint,
+) {
+	switch slot {
+	case 2:
+		v.appendString("..")
 	}
 }
 
@@ -1671,6 +1638,19 @@ func (v *formatter_) ProcessThrowClauseSlot(
 	default:
 		v.appendString(" ")
 	}
+}
+
+func (v *formatter_) PreprocessUpperExclusion(
+	upperExclusion ast.UpperExclusionLike,
+) {
+	v.appendString("|)")
+}
+
+func (v *formatter_) PreprocessUpperInclusion(
+	upperInclusion ast.UpperInclusionLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+	v.appendString("|]")
 }
 
 func (v *formatter_) PreprocessVariable(

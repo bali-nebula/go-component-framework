@@ -951,24 +951,6 @@ func (v *validator_) PostprocessEvent(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessExInclusiveRange(
-	exInclusiveRange ast.ExInclusiveRangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExInclusiveRangeSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExInclusiveRange(
-	exInclusiveRange ast.ExInclusiveRangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessException(
 	exception ast.ExceptionLike,
 ) {
@@ -983,24 +965,6 @@ func (v *validator_) ProcessExceptionSlot(
 
 func (v *validator_) PostprocessException(
 	exception ast.ExceptionLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessExclusiveRange(
-	exclusiveRange ast.ExclusiveRangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessExclusiveRangeSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessExclusiveRange(
-	exclusiveRange ast.ExclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1091,42 +1055,6 @@ func (v *validator_) ProcessIfClauseSlot(
 
 func (v *validator_) PostprocessIfClause(
 	ifClause ast.IfClauseLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInExclusiveRange(
-	inExclusiveRange ast.InExclusiveRangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInExclusiveRangeSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInExclusiveRange(
-	inExclusiveRange ast.InExclusiveRangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessInclusiveRange(
-	inclusiveRange ast.InclusiveRangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessInclusiveRangeSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessInclusiveRange(
-	inclusiveRange ast.InclusiveRangeLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1415,6 +1343,60 @@ func (v *validator_) ProcessLogicalSlot(
 
 func (v *validator_) PostprocessLogical(
 	logical ast.LogicalLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessLowerBound(
+	lowerBound ast.LowerBoundLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessLowerBoundSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessLowerBound(
+	lowerBound ast.LowerBoundLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessLowerExclusion(
+	lowerExclusion ast.LowerExclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessLowerExclusionSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessLowerExclusion(
+	lowerExclusion ast.LowerExclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessLowerInclusion(
+	lowerInclusion ast.LowerInclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessLowerInclusionSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessLowerInclusion(
+	lowerInclusion ast.LowerInclusionLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2251,6 +2233,60 @@ func (v *validator_) ProcessThrowClauseSlot(
 
 func (v *validator_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessUpperBound(
+	upperBound ast.UpperBoundLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessUpperBoundSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessUpperBound(
+	upperBound ast.UpperBoundLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessUpperExclusion(
+	upperExclusion ast.UpperExclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessUpperExclusionSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessUpperExclusion(
+	upperExclusion ast.UpperExclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessUpperInclusion(
+	upperInclusion ast.UpperInclusionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessUpperInclusionSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessUpperInclusion(
+	upperInclusion ast.UpperInclusionLike,
 ) {
 	// TBD - Add any validation checks.
 }

@@ -27,36 +27,21 @@ import (
 
 // Access Function
 
-func ExInclusiveRangeClass() ExInclusiveRangeClassLike {
-	return exInclusiveRangeClass()
+func UpperBoundClass() UpperBoundClassLike {
+	return upperBoundClass()
 }
 
 // Constructor Methods
 
-func (c *exInclusiveRangeClass_) ExInclusiveRange(
-	bar1 string,
-	primitive1 PrimitiveLike,
-	primitive2 PrimitiveLike,
-	bar2 string,
-) ExInclusiveRangeLike {
-	if uti.IsUndefined(bar1) {
-		panic("The \"bar1\" attribute is required by this class.")
+func (c *upperBoundClass_) UpperBound(
+	any_ any,
+) UpperBoundLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(primitive1) {
-		panic("The \"primitive1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive2) {
-		panic("The \"primitive2\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(bar2) {
-		panic("The \"bar2\" attribute is required by this class.")
-	}
-	var instance = &exInclusiveRange_{
+	var instance = &upperBound_{
 		// Initialize the instance attributes.
-		bar1_:       bar1,
-		primitive1_: primitive1,
-		primitive2_: primitive2,
-		bar2_:       bar2,
+		any_: any_,
 	}
 	return instance
 }
@@ -65,52 +50,37 @@ func (c *exInclusiveRangeClass_) ExInclusiveRange(
 
 // Principal Methods
 
-func (v *exInclusiveRange_) GetClass() ExInclusiveRangeClassLike {
-	return exInclusiveRangeClass()
+func (v *upperBound_) GetClass() UpperBoundClassLike {
+	return upperBoundClass()
 }
 
 // Attribute Methods
 
-func (v *exInclusiveRange_) GetBar1() string {
-	return v.bar1_
-}
-
-func (v *exInclusiveRange_) GetPrimitive1() PrimitiveLike {
-	return v.primitive1_
-}
-
-func (v *exInclusiveRange_) GetPrimitive2() PrimitiveLike {
-	return v.primitive2_
-}
-
-func (v *exInclusiveRange_) GetBar2() string {
-	return v.bar2_
+func (v *upperBound_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type exInclusiveRange_ struct {
+type upperBound_ struct {
 	// Declare the instance attributes.
-	bar1_       string
-	primitive1_ PrimitiveLike
-	primitive2_ PrimitiveLike
-	bar2_       string
+	any_ any
 }
 
 // Class Structure
 
-type exInclusiveRangeClass_ struct {
+type upperBoundClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func exInclusiveRangeClass() *exInclusiveRangeClass_ {
-	return exInclusiveRangeClassReference_
+func upperBoundClass() *upperBoundClass_ {
+	return upperBoundClassReference_
 }
 
-var exInclusiveRangeClassReference_ = &exInclusiveRangeClass_{
+var upperBoundClassReference_ = &upperBoundClass_{
 	// Initialize the class constants.
 }

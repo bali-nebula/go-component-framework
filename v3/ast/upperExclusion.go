@@ -19,44 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func InclusiveRangeClass() InclusiveRangeClassLike {
-	return inclusiveRangeClass()
+func UpperExclusionClass() UpperExclusionClassLike {
+	return upperExclusionClass()
 }
 
 // Constructor Methods
 
-func (c *inclusiveRangeClass_) InclusiveRange(
-	bar1 string,
-	primitive1 PrimitiveLike,
-	primitive2 PrimitiveLike,
-	bar2 string,
-) InclusiveRangeLike {
-	if uti.IsUndefined(bar1) {
-		panic("The \"bar1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive1) {
-		panic("The \"primitive1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive2) {
-		panic("The \"primitive2\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(bar2) {
-		panic("The \"bar2\" attribute is required by this class.")
-	}
-	var instance = &inclusiveRange_{
+func (c *upperExclusionClass_) UpperExclusion() UpperExclusionLike {
+	var instance = &upperExclusion_{
 		// Initialize the instance attributes.
-		bar1_:       bar1,
-		primitive1_: primitive1,
-		primitive2_: primitive2,
-		bar2_:       bar2,
 	}
 	return instance
 }
@@ -65,52 +42,32 @@ func (c *inclusiveRangeClass_) InclusiveRange(
 
 // Principal Methods
 
-func (v *inclusiveRange_) GetClass() InclusiveRangeClassLike {
-	return inclusiveRangeClass()
+func (v *upperExclusion_) GetClass() UpperExclusionClassLike {
+	return upperExclusionClass()
 }
 
 // Attribute Methods
-
-func (v *inclusiveRange_) GetBar1() string {
-	return v.bar1_
-}
-
-func (v *inclusiveRange_) GetPrimitive1() PrimitiveLike {
-	return v.primitive1_
-}
-
-func (v *inclusiveRange_) GetPrimitive2() PrimitiveLike {
-	return v.primitive2_
-}
-
-func (v *inclusiveRange_) GetBar2() string {
-	return v.bar2_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inclusiveRange_ struct {
+type upperExclusion_ struct {
 	// Declare the instance attributes.
-	bar1_       string
-	primitive1_ PrimitiveLike
-	primitive2_ PrimitiveLike
-	bar2_       string
 }
 
 // Class Structure
 
-type inclusiveRangeClass_ struct {
+type upperExclusionClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inclusiveRangeClass() *inclusiveRangeClass_ {
-	return inclusiveRangeClassReference_
+func upperExclusionClass() *upperExclusionClass_ {
+	return upperExclusionClassReference_
 }
 
-var inclusiveRangeClassReference_ = &inclusiveRangeClass_{
+var upperExclusionClassReference_ = &upperExclusionClass_{
 	// Initialize the class constants.
 }

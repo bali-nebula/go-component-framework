@@ -19,44 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func RangeClass() RangeClassLike {
-	return rangeClass()
+func LowerInclusionClass() LowerInclusionClassLike {
+	return lowerInclusionClass()
 }
 
 // Constructor Methods
 
-func (c *rangeClass_) Range(
-	lowerBound LowerBoundLike,
-	primitive1 PrimitiveLike,
-	primitive2 PrimitiveLike,
-	upperBound UpperBoundLike,
-) RangeLike {
-	if uti.IsUndefined(lowerBound) {
-		panic("The \"lowerBound\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive1) {
-		panic("The \"primitive1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive2) {
-		panic("The \"primitive2\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(upperBound) {
-		panic("The \"upperBound\" attribute is required by this class.")
-	}
-	var instance = &range_{
+func (c *lowerInclusionClass_) LowerInclusion() LowerInclusionLike {
+	var instance = &lowerInclusion_{
 		// Initialize the instance attributes.
-		lowerBound_: lowerBound,
-		primitive1_: primitive1,
-		primitive2_: primitive2,
-		upperBound_: upperBound,
 	}
 	return instance
 }
@@ -65,52 +42,32 @@ func (c *rangeClass_) Range(
 
 // Principal Methods
 
-func (v *range_) GetClass() RangeClassLike {
-	return rangeClass()
+func (v *lowerInclusion_) GetClass() LowerInclusionClassLike {
+	return lowerInclusionClass()
 }
 
 // Attribute Methods
-
-func (v *range_) GetLowerBound() LowerBoundLike {
-	return v.lowerBound_
-}
-
-func (v *range_) GetPrimitive1() PrimitiveLike {
-	return v.primitive1_
-}
-
-func (v *range_) GetPrimitive2() PrimitiveLike {
-	return v.primitive2_
-}
-
-func (v *range_) GetUpperBound() UpperBoundLike {
-	return v.upperBound_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type range_ struct {
+type lowerInclusion_ struct {
 	// Declare the instance attributes.
-	lowerBound_ LowerBoundLike
-	primitive1_ PrimitiveLike
-	primitive2_ PrimitiveLike
-	upperBound_ UpperBoundLike
 }
 
 // Class Structure
 
-type rangeClass_ struct {
+type lowerInclusionClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func rangeClass() *rangeClass_ {
-	return rangeClassReference_
+func lowerInclusionClass() *lowerInclusionClass_ {
+	return lowerInclusionClassReference_
 }
 
-var rangeClassReference_ = &rangeClass_{
+var lowerInclusionClassReference_ = &lowerInclusionClass_{
 	// Initialize the class constants.
 }

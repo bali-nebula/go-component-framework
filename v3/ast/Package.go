@@ -445,21 +445,6 @@ type EventClassLike interface {
 }
 
 /*
-ExInclusiveRangeClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete ex-inclusive-range-like class.
-*/
-type ExInclusiveRangeClassLike interface {
-	// Constructor Methods
-	ExInclusiveRange(
-		bar1 string,
-		primitive1 PrimitiveLike,
-		primitive2 PrimitiveLike,
-		bar2 string,
-	) ExInclusiveRangeLike
-}
-
-/*
 ExceptionClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete exception-like class.
@@ -469,21 +454,6 @@ type ExceptionClassLike interface {
 	Exception(
 		expression ExpressionLike,
 	) ExceptionLike
-}
-
-/*
-ExclusiveRangeClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete exclusive-range-like class.
-*/
-type ExclusiveRangeClassLike interface {
-	// Constructor Methods
-	ExclusiveRange(
-		bar1 string,
-		primitive1 PrimitiveLike,
-		primitive2 PrimitiveLike,
-		bar2 string,
-	) ExclusiveRangeLike
 }
 
 /*
@@ -547,36 +517,6 @@ type IfClauseClassLike interface {
 		condition ConditionLike,
 		procedure ProcedureLike,
 	) IfClauseLike
-}
-
-/*
-InExclusiveRangeClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete in-exclusive-range-like class.
-*/
-type InExclusiveRangeClassLike interface {
-	// Constructor Methods
-	InExclusiveRange(
-		bar1 string,
-		primitive1 PrimitiveLike,
-		primitive2 PrimitiveLike,
-		bar2 string,
-	) InExclusiveRangeLike
-}
-
-/*
-InclusiveRangeClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete inclusive-range-like class.
-*/
-type InclusiveRangeClassLike interface {
-	// Constructor Methods
-	InclusiveRange(
-		bar1 string,
-		primitive1 PrimitiveLike,
-		primitive2 PrimitiveLike,
-		bar2 string,
-	) InclusiveRangeLike
 }
 
 /*
@@ -773,6 +713,38 @@ type LogicalClassLike interface {
 	Logical(
 		any_ any,
 	) LogicalLike
+}
+
+/*
+LowerBoundClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete lower-bound-like class.
+*/
+type LowerBoundClassLike interface {
+	// Constructor Methods
+	LowerBound(
+		any_ any,
+	) LowerBoundLike
+}
+
+/*
+LowerExclusionClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete lower-exclusion-like class.
+*/
+type LowerExclusionClassLike interface {
+	// Constructor Methods
+	LowerExclusion() LowerExclusionLike
+}
+
+/*
+LowerInclusionClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete lower-inclusion-like class.
+*/
+type LowerInclusionClassLike interface {
+	// Constructor Methods
+	LowerInclusion() LowerInclusionLike
 }
 
 /*
@@ -1091,7 +1063,10 @@ supported by each concrete range-like class.
 type RangeClassLike interface {
 	// Constructor Methods
 	Range(
-		any_ any,
+		lowerBound LowerBoundLike,
+		primitive1 PrimitiveLike,
+		primitive2 PrimitiveLike,
+		upperBound UpperBoundLike,
 	) RangeLike
 }
 
@@ -1338,6 +1313,38 @@ type ThrowClauseClassLike interface {
 	ThrowClause(
 		exception ExceptionLike,
 	) ThrowClauseLike
+}
+
+/*
+UpperBoundClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete upper-bound-like class.
+*/
+type UpperBoundClassLike interface {
+	// Constructor Methods
+	UpperBound(
+		any_ any,
+	) UpperBoundLike
+}
+
+/*
+UpperExclusionClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete upper-exclusion-like class.
+*/
+type UpperExclusionClassLike interface {
+	// Constructor Methods
+	UpperExclusion() UpperExclusionLike
+}
+
+/*
+UpperInclusionClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete upper-inclusion-like class.
+*/
+type UpperInclusionClassLike interface {
+	// Constructor Methods
+	UpperInclusion() UpperInclusionLike
 }
 
 /*
@@ -1821,22 +1828,6 @@ type EventLike interface {
 }
 
 /*
-ExInclusiveRangeLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete ex-inclusive-range-like class.
-*/
-type ExInclusiveRangeLike interface {
-	// Principal Methods
-	GetClass() ExInclusiveRangeClassLike
-
-	// Attribute Methods
-	GetBar1() string
-	GetPrimitive1() PrimitiveLike
-	GetPrimitive2() PrimitiveLike
-	GetBar2() string
-}
-
-/*
 ExceptionLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete exception-like class.
@@ -1847,22 +1838,6 @@ type ExceptionLike interface {
 
 	// Attribute Methods
 	GetExpression() ExpressionLike
-}
-
-/*
-ExclusiveRangeLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete exclusive-range-like class.
-*/
-type ExclusiveRangeLike interface {
-	// Principal Methods
-	GetClass() ExclusiveRangeClassLike
-
-	// Attribute Methods
-	GetBar1() string
-	GetPrimitive1() PrimitiveLike
-	GetPrimitive2() PrimitiveLike
-	GetBar2() string
 }
 
 /*
@@ -1931,38 +1906,6 @@ type IfClauseLike interface {
 	// Attribute Methods
 	GetCondition() ConditionLike
 	GetProcedure() ProcedureLike
-}
-
-/*
-InExclusiveRangeLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete in-exclusive-range-like class.
-*/
-type InExclusiveRangeLike interface {
-	// Principal Methods
-	GetClass() InExclusiveRangeClassLike
-
-	// Attribute Methods
-	GetBar1() string
-	GetPrimitive1() PrimitiveLike
-	GetPrimitive2() PrimitiveLike
-	GetBar2() string
-}
-
-/*
-InclusiveRangeLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete inclusive-range-like class.
-*/
-type InclusiveRangeLike interface {
-	// Principal Methods
-	GetClass() InclusiveRangeClassLike
-
-	// Attribute Methods
-	GetBar1() string
-	GetPrimitive1() PrimitiveLike
-	GetPrimitive2() PrimitiveLike
-	GetBar2() string
 }
 
 /*
@@ -2173,6 +2116,39 @@ type LogicalLike interface {
 
 	// Attribute Methods
 	GetAny() any
+}
+
+/*
+LowerBoundLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete lower-bound-like class.
+*/
+type LowerBoundLike interface {
+	// Principal Methods
+	GetClass() LowerBoundClassLike
+
+	// Attribute Methods
+	GetAny() any
+}
+
+/*
+LowerExclusionLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete lower-exclusion-like class.
+*/
+type LowerExclusionLike interface {
+	// Principal Methods
+	GetClass() LowerExclusionClassLike
+}
+
+/*
+LowerInclusionLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete lower-inclusion-like class.
+*/
+type LowerInclusionLike interface {
+	// Principal Methods
+	GetClass() LowerInclusionClassLike
 }
 
 /*
@@ -2515,7 +2491,10 @@ type RangeLike interface {
 	GetClass() RangeClassLike
 
 	// Attribute Methods
-	GetAny() any
+	GetLowerBound() LowerBoundLike
+	GetPrimitive1() PrimitiveLike
+	GetPrimitive2() PrimitiveLike
+	GetUpperBound() UpperBoundLike
 }
 
 /*
@@ -2780,6 +2759,39 @@ type ThrowClauseLike interface {
 
 	// Attribute Methods
 	GetException() ExceptionLike
+}
+
+/*
+UpperBoundLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete upper-bound-like class.
+*/
+type UpperBoundLike interface {
+	// Principal Methods
+	GetClass() UpperBoundClassLike
+
+	// Attribute Methods
+	GetAny() any
+}
+
+/*
+UpperExclusionLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete upper-exclusion-like class.
+*/
+type UpperExclusionLike interface {
+	// Principal Methods
+	GetClass() UpperExclusionClassLike
+}
+
+/*
+UpperInclusionLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete upper-inclusion-like class.
+*/
+type UpperInclusionLike interface {
+	// Principal Methods
+	GetClass() UpperInclusionClassLike
 }
 
 /*

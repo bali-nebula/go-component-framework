@@ -599,39 +599,6 @@ func (v *visitor_) visitEvent(
 	v.processor_.PostprocessExpression(expression)
 }
 
-func (v *visitor_) visitExInclusiveRange(
-	exInclusiveRange ast.ExInclusiveRangeLike,
-) {
-	// Visit a single bar token.
-	var bar1 = exInclusiveRange.GetBar1()
-	v.processor_.ProcessBar(bar1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessExInclusiveRangeSlot(1)
-
-	// Visit a single primitive rule.
-	var primitive1 = exInclusiveRange.GetPrimitive1()
-	v.processor_.PreprocessPrimitive(primitive1)
-	v.visitPrimitive(primitive1)
-	v.processor_.PostprocessPrimitive(primitive1)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessExInclusiveRangeSlot(2)
-
-	// Visit a single primitive rule.
-	var primitive2 = exInclusiveRange.GetPrimitive2()
-	v.processor_.PreprocessPrimitive(primitive2)
-	v.visitPrimitive(primitive2)
-	v.processor_.PostprocessPrimitive(primitive2)
-
-	// Visit slot 3 between references.
-	v.processor_.ProcessExInclusiveRangeSlot(3)
-
-	// Visit a single bar token.
-	var bar2 = exInclusiveRange.GetBar2()
-	v.processor_.ProcessBar(bar2)
-}
-
 func (v *visitor_) visitException(
 	exception ast.ExceptionLike,
 ) {
@@ -640,39 +607,6 @@ func (v *visitor_) visitException(
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
-}
-
-func (v *visitor_) visitExclusiveRange(
-	exclusiveRange ast.ExclusiveRangeLike,
-) {
-	// Visit a single bar token.
-	var bar1 = exclusiveRange.GetBar1()
-	v.processor_.ProcessBar(bar1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessExclusiveRangeSlot(1)
-
-	// Visit a single primitive rule.
-	var primitive1 = exclusiveRange.GetPrimitive1()
-	v.processor_.PreprocessPrimitive(primitive1)
-	v.visitPrimitive(primitive1)
-	v.processor_.PostprocessPrimitive(primitive1)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessExclusiveRangeSlot(2)
-
-	// Visit a single primitive rule.
-	var primitive2 = exclusiveRange.GetPrimitive2()
-	v.processor_.PreprocessPrimitive(primitive2)
-	v.visitPrimitive(primitive2)
-	v.processor_.PostprocessPrimitive(primitive2)
-
-	// Visit slot 3 between references.
-	v.processor_.ProcessExclusiveRangeSlot(3)
-
-	// Visit a single bar token.
-	var bar2 = exclusiveRange.GetBar2()
-	v.processor_.ProcessBar(bar2)
 }
 
 func (v *visitor_) visitExpression(
@@ -799,72 +733,6 @@ func (v *visitor_) visitIfClause(
 	v.processor_.PreprocessProcedure(procedure)
 	v.visitProcedure(procedure)
 	v.processor_.PostprocessProcedure(procedure)
-}
-
-func (v *visitor_) visitInExclusiveRange(
-	inExclusiveRange ast.InExclusiveRangeLike,
-) {
-	// Visit a single bar token.
-	var bar1 = inExclusiveRange.GetBar1()
-	v.processor_.ProcessBar(bar1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessInExclusiveRangeSlot(1)
-
-	// Visit a single primitive rule.
-	var primitive1 = inExclusiveRange.GetPrimitive1()
-	v.processor_.PreprocessPrimitive(primitive1)
-	v.visitPrimitive(primitive1)
-	v.processor_.PostprocessPrimitive(primitive1)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessInExclusiveRangeSlot(2)
-
-	// Visit a single primitive rule.
-	var primitive2 = inExclusiveRange.GetPrimitive2()
-	v.processor_.PreprocessPrimitive(primitive2)
-	v.visitPrimitive(primitive2)
-	v.processor_.PostprocessPrimitive(primitive2)
-
-	// Visit slot 3 between references.
-	v.processor_.ProcessInExclusiveRangeSlot(3)
-
-	// Visit a single bar token.
-	var bar2 = inExclusiveRange.GetBar2()
-	v.processor_.ProcessBar(bar2)
-}
-
-func (v *visitor_) visitInclusiveRange(
-	inclusiveRange ast.InclusiveRangeLike,
-) {
-	// Visit a single bar token.
-	var bar1 = inclusiveRange.GetBar1()
-	v.processor_.ProcessBar(bar1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessInclusiveRangeSlot(1)
-
-	// Visit a single primitive rule.
-	var primitive1 = inclusiveRange.GetPrimitive1()
-	v.processor_.PreprocessPrimitive(primitive1)
-	v.visitPrimitive(primitive1)
-	v.processor_.PostprocessPrimitive(primitive1)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessInclusiveRangeSlot(2)
-
-	// Visit a single primitive rule.
-	var primitive2 = inclusiveRange.GetPrimitive2()
-	v.processor_.PreprocessPrimitive(primitive2)
-	v.visitPrimitive(primitive2)
-	v.processor_.PostprocessPrimitive(primitive2)
-
-	// Visit slot 3 between references.
-	v.processor_.ProcessInclusiveRangeSlot(3)
-
-	// Visit a single bar token.
-	var bar2 = inclusiveRange.GetBar2()
-	v.processor_.ProcessBar(bar2)
 }
 
 func (v *visitor_) visitIndex(
@@ -1260,6 +1128,41 @@ func (v *visitor_) visitLogical(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
+}
+
+func (v *visitor_) visitLowerBound(
+	lowerBound ast.LowerBoundLike,
+) {
+	// Visit the possible lowerBound types.
+	switch actual := lowerBound.GetAny().(type) {
+	case ast.LowerInclusionLike:
+		v.processor_.PreprocessLowerInclusion(actual)
+		v.visitLowerInclusion(actual)
+		v.processor_.PostprocessLowerInclusion(actual)
+	case ast.LowerExclusionLike:
+		v.processor_.PreprocessLowerExclusion(actual)
+		v.visitLowerExclusion(actual)
+		v.processor_.PostprocessLowerExclusion(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
+func (v *visitor_) visitLowerExclusion(
+	lowerExclusion ast.LowerExclusionLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitLowerInclusion(
+	lowerInclusion ast.LowerInclusionLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitMagnitude(
@@ -1862,32 +1765,38 @@ func (v *visitor_) visitPublishClause(
 func (v *visitor_) visitRange(
 	range_ ast.RangeLike,
 ) {
-	// Visit the possible range types.
-	switch actual := range_.GetAny().(type) {
-	case ast.InclusiveRangeLike:
-		v.processor_.PreprocessInclusiveRange(actual)
-		v.visitInclusiveRange(actual)
-		v.processor_.PostprocessInclusiveRange(actual)
-	case ast.InExclusiveRangeLike:
-		v.processor_.PreprocessInExclusiveRange(actual)
-		v.visitInExclusiveRange(actual)
-		v.processor_.PostprocessInExclusiveRange(actual)
-	case ast.ExInclusiveRangeLike:
-		v.processor_.PreprocessExInclusiveRange(actual)
-		v.visitExInclusiveRange(actual)
-		v.processor_.PostprocessExInclusiveRange(actual)
-	case ast.ExclusiveRangeLike:
-		v.processor_.PreprocessExclusiveRange(actual)
-		v.visitExclusiveRange(actual)
-		v.processor_.PostprocessExclusiveRange(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
+	// Visit a single lowerBound rule.
+	var lowerBound = range_.GetLowerBound()
+	v.processor_.PreprocessLowerBound(lowerBound)
+	v.visitLowerBound(lowerBound)
+	v.processor_.PostprocessLowerBound(lowerBound)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessRangeSlot(1)
+
+	// Visit a single primitive rule.
+	var primitive1 = range_.GetPrimitive1()
+	v.processor_.PreprocessPrimitive(primitive1)
+	v.visitPrimitive(primitive1)
+	v.processor_.PostprocessPrimitive(primitive1)
+
+	// Visit slot 2 between references.
+	v.processor_.ProcessRangeSlot(2)
+
+	// Visit a single primitive rule.
+	var primitive2 = range_.GetPrimitive2()
+	v.processor_.PreprocessPrimitive(primitive2)
+	v.visitPrimitive(primitive2)
+	v.processor_.PostprocessPrimitive(primitive2)
+
+	// Visit slot 3 between references.
+	v.processor_.ProcessRangeSlot(3)
+
+	// Visit a single upperBound rule.
+	var upperBound = range_.GetUpperBound()
+	v.processor_.PreprocessUpperBound(upperBound)
+	v.visitUpperBound(upperBound)
+	v.processor_.PostprocessUpperBound(upperBound)
 }
 
 func (v *visitor_) visitRecipient(
@@ -2287,6 +2196,41 @@ func (v *visitor_) visitThrowClause(
 	v.processor_.PreprocessException(exception)
 	v.visitException(exception)
 	v.processor_.PostprocessException(exception)
+}
+
+func (v *visitor_) visitUpperBound(
+	upperBound ast.UpperBoundLike,
+) {
+	// Visit the possible upperBound types.
+	switch actual := upperBound.GetAny().(type) {
+	case ast.UpperInclusionLike:
+		v.processor_.PreprocessUpperInclusion(actual)
+		v.visitUpperInclusion(actual)
+		v.processor_.PostprocessUpperInclusion(actual)
+	case ast.UpperExclusionLike:
+		v.processor_.PreprocessUpperExclusion(actual)
+		v.visitUpperExclusion(actual)
+		v.processor_.PostprocessUpperExclusion(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
+func (v *visitor_) visitUpperExclusion(
+	upperExclusion ast.UpperExclusionLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitUpperInclusion(
+	upperInclusion ast.UpperInclusionLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitVariable(

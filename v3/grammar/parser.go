@@ -1652,146 +1652,6 @@ func (v *parser_) parseEvent() (
 	return
 }
 
-func (v *parser_) parseExInclusiveRange() (
-	exInclusiveRange ast.ExInclusiveRangeLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "(" delimiter.
-	_, token, ok = v.parseDelimiter("(")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExInclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExInclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar1 string
-	bar1, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExInclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExInclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive1 ast.PrimitiveLike
-	primitive1, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single ExInclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$ExInclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single ".." delimiter.
-	_, token, ok = v.parseDelimiter("..")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExInclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExInclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive2 ast.PrimitiveLike
-	primitive2, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single ExInclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$ExInclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar2 string
-	bar2, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExInclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExInclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single "]" delimiter.
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExInclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExInclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single ExInclusiveRange rule.
-	ok = true
-	v.remove(tokens)
-	exInclusiveRange = ast.ExInclusiveRangeClass().ExInclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
-	)
-	return
-}
-
 func (v *parser_) parseException() (
 	exception ast.ExceptionLike,
 	token TokenLike,
@@ -1820,146 +1680,6 @@ func (v *parser_) parseException() (
 	ok = true
 	v.remove(tokens)
 	exception = ast.ExceptionClass().Exception(expression)
-	return
-}
-
-func (v *parser_) parseExclusiveRange() (
-	exclusiveRange ast.ExclusiveRangeLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "(" delimiter.
-	_, token, ok = v.parseDelimiter("(")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar1 string
-	bar1, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive1 ast.PrimitiveLike
-	primitive1, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single ExclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$ExclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single ".." delimiter.
-	_, token, ok = v.parseDelimiter("..")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive2 ast.PrimitiveLike
-	primitive2, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single ExclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$ExclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar2 string
-	bar2, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single ")" delimiter.
-	_, token, ok = v.parseDelimiter(")")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single ExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$ExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single ExclusiveRange rule.
-	ok = true
-	v.remove(tokens)
-	exclusiveRange = ast.ExclusiveRangeClass().ExclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
-	)
 	return
 }
 
@@ -2294,286 +2014,6 @@ func (v *parser_) parseIfClause() (
 	ifClause = ast.IfClauseClass().IfClause(
 		condition,
 		procedure,
-	)
-	return
-}
-
-func (v *parser_) parseInExclusiveRange() (
-	inExclusiveRange ast.InExclusiveRangeLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "[" delimiter.
-	_, token, ok = v.parseDelimiter("[")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar1 string
-	bar1, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive1 ast.PrimitiveLike
-	primitive1, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single InExclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$InExclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single ".." delimiter.
-	_, token, ok = v.parseDelimiter("..")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive2 ast.PrimitiveLike
-	primitive2, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single InExclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$InExclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar2 string
-	bar2, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single ")" delimiter.
-	_, token, ok = v.parseDelimiter(")")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InExclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InExclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single InExclusiveRange rule.
-	ok = true
-	v.remove(tokens)
-	inExclusiveRange = ast.InExclusiveRangeClass().InExclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
-	)
-	return
-}
-
-func (v *parser_) parseInclusiveRange() (
-	inclusiveRange ast.InclusiveRangeLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "[" delimiter.
-	_, token, ok = v.parseDelimiter("[")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar1 string
-	bar1, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive1 ast.PrimitiveLike
-	primitive1, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single InclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$InclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single ".." delimiter.
-	_, token, ok = v.parseDelimiter("..")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single Primitive rule.
-	var primitive2 ast.PrimitiveLike
-	primitive2, token, ok = v.parsePrimitive()
-	switch {
-	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
-	case uti.IsDefined(tokens):
-		// This is not a single InclusiveRange rule.
-		v.putBack(tokens)
-		return
-	default:
-		// Found a syntax error.
-		var message = v.formatError("$InclusiveRange", token)
-		panic(message)
-	}
-
-	// Attempt to parse a single bar token.
-	var bar2 string
-	bar2, token, ok = v.parseToken(BarToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single "]" delimiter.
-	_, token, ok = v.parseDelimiter("]")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single InclusiveRange rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$InclusiveRange", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single InclusiveRange rule.
-	ok = true
-	v.remove(tokens)
-	inclusiveRange = ast.InclusiveRangeClass().InclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
 	)
 	return
 }
@@ -3507,6 +2947,95 @@ func (v *parser_) parseLogical() (
 	}
 
 	// This is not a single Logical rule.
+	return
+}
+
+func (v *parser_) parseLowerBound() (
+	lowerBound ast.LowerBoundLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single LowerInclusion LowerBound.
+	var lowerInclusion ast.LowerInclusionLike
+	lowerInclusion, token, ok = v.parseLowerInclusion()
+	if ok {
+		// Found a single LowerInclusion LowerBound.
+		lowerBound = ast.LowerBoundClass().LowerBound(lowerInclusion)
+		return
+	}
+
+	// Attempt to parse a single LowerExclusion LowerBound.
+	var lowerExclusion ast.LowerExclusionLike
+	lowerExclusion, token, ok = v.parseLowerExclusion()
+	if ok {
+		// Found a single LowerExclusion LowerBound.
+		lowerBound = ast.LowerBoundClass().LowerBound(lowerExclusion)
+		return
+	}
+
+	// This is not a single LowerBound rule.
+	return
+}
+
+func (v *parser_) parseLowerExclusion() (
+	lowerExclusion ast.LowerExclusionLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "(|" delimiter.
+	_, token, ok = v.parseDelimiter("(|")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single LowerExclusion rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$LowerExclusion", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single LowerExclusion rule.
+	ok = true
+	v.remove(tokens)
+	lowerExclusion = ast.LowerExclusionClass().LowerExclusion()
+	return
+}
+
+func (v *parser_) parseLowerInclusion() (
+	lowerInclusion ast.LowerInclusionLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "[|" delimiter.
+	_, token, ok = v.parseDelimiter("[|")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single LowerInclusion rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$LowerInclusion", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single LowerInclusion rule.
+	ok = true
+	v.remove(tokens)
+	lowerInclusion = ast.LowerInclusionClass().LowerInclusion()
 	return
 }
 
@@ -5232,43 +4761,102 @@ func (v *parser_) parseRange() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single InclusiveRange Range.
-	var inclusiveRange ast.InclusiveRangeLike
-	inclusiveRange, token, ok = v.parseInclusiveRange()
-	if ok {
-		// Found a single InclusiveRange Range.
-		range_ = ast.RangeClass().Range(inclusiveRange)
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single LowerBound rule.
+	var lowerBound ast.LowerBoundLike
+	lowerBound, token, ok = v.parseLowerBound()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Range rule.
+		v.putBack(tokens)
 		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Range", token)
+		panic(message)
 	}
 
-	// Attempt to parse a single InExclusiveRange Range.
-	var inExclusiveRange ast.InExclusiveRangeLike
-	inExclusiveRange, token, ok = v.parseInExclusiveRange()
-	if ok {
-		// Found a single InExclusiveRange Range.
-		range_ = ast.RangeClass().Range(inExclusiveRange)
+	// Attempt to parse a single Primitive rule.
+	var primitive1 ast.PrimitiveLike
+	primitive1, token, ok = v.parsePrimitive()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Range rule.
+		v.putBack(tokens)
 		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Range", token)
+		panic(message)
 	}
 
-	// Attempt to parse a single ExInclusiveRange Range.
-	var exInclusiveRange ast.ExInclusiveRangeLike
-	exInclusiveRange, token, ok = v.parseExInclusiveRange()
-	if ok {
-		// Found a single ExInclusiveRange Range.
-		range_ = ast.RangeClass().Range(exInclusiveRange)
-		return
+	// Attempt to parse a single ".." delimiter.
+	_, token, ok = v.parseDelimiter("..")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Range rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Range", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single ExclusiveRange Range.
-	var exclusiveRange ast.ExclusiveRangeLike
-	exclusiveRange, token, ok = v.parseExclusiveRange()
-	if ok {
-		// Found a single ExclusiveRange Range.
-		range_ = ast.RangeClass().Range(exclusiveRange)
+	// Attempt to parse a single Primitive rule.
+	var primitive2 ast.PrimitiveLike
+	primitive2, token, ok = v.parsePrimitive()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Range rule.
+		v.putBack(tokens)
 		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Range", token)
+		panic(message)
 	}
 
-	// This is not a single Range rule.
+	// Attempt to parse a single UpperBound rule.
+	var upperBound ast.UpperBoundLike
+	upperBound, token, ok = v.parseUpperBound()
+	switch {
+	case ok:
+		// No additional put backs allowed at this point.
+		tokens = nil
+	case uti.IsDefined(tokens):
+		// This is not a single Range rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Range", token)
+		panic(message)
+	}
+
+	// Found a single Range rule.
+	ok = true
+	v.remove(tokens)
+	range_ = ast.RangeClass().Range(
+		lowerBound,
+		primitive1,
+		primitive2,
+		upperBound,
+	)
 	return
 }
 
@@ -6332,6 +5920,95 @@ func (v *parser_) parseThrowClause() (
 	return
 }
 
+func (v *parser_) parseUpperBound() (
+	upperBound ast.UpperBoundLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single UpperInclusion UpperBound.
+	var upperInclusion ast.UpperInclusionLike
+	upperInclusion, token, ok = v.parseUpperInclusion()
+	if ok {
+		// Found a single UpperInclusion UpperBound.
+		upperBound = ast.UpperBoundClass().UpperBound(upperInclusion)
+		return
+	}
+
+	// Attempt to parse a single UpperExclusion UpperBound.
+	var upperExclusion ast.UpperExclusionLike
+	upperExclusion, token, ok = v.parseUpperExclusion()
+	if ok {
+		// Found a single UpperExclusion UpperBound.
+		upperBound = ast.UpperBoundClass().UpperBound(upperExclusion)
+		return
+	}
+
+	// This is not a single UpperBound rule.
+	return
+}
+
+func (v *parser_) parseUpperExclusion() (
+	upperExclusion ast.UpperExclusionLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "|)" delimiter.
+	_, token, ok = v.parseDelimiter("|)")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single UpperExclusion rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$UpperExclusion", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single UpperExclusion rule.
+	ok = true
+	v.remove(tokens)
+	upperExclusion = ast.UpperExclusionClass().UpperExclusion()
+	return
+}
+
+func (v *parser_) parseUpperInclusion() (
+	upperInclusion ast.UpperInclusionLike,
+	token TokenLike,
+	ok bool,
+) {
+	var tokens = fra.List[TokenLike]()
+
+	// Attempt to parse a single "|]" delimiter.
+	_, token, ok = v.parseDelimiter("|]")
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single UpperInclusion rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$UpperInclusion", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single UpperInclusion rule.
+	ok = true
+	v.remove(tokens)
+	upperInclusion = ast.UpperInclusionClass().UpperInclusion()
+	return
+}
+
 func (v *parser_) parseVariable() (
 	variable ast.VariableLike,
 	token TokenLike,
@@ -6826,18 +6503,20 @@ var parserClassReference_ = &parserClass_{
   - symbol
   - tag
   - version`,
-			"$Range": `
-  - InclusiveRange
-  - InExclusiveRange
-  - ExInclusiveRange
-  - ExclusiveRange`,
-			"$InclusiveRange":   `"[" bar Primitive ".." Primitive bar "]"`,
-			"$InExclusiveRange": `"[" bar Primitive ".." Primitive bar ")"`,
-			"$ExInclusiveRange": `"(" bar Primitive ".." Primitive bar "]"`,
-			"$ExclusiveRange":   `"(" bar Primitive ".." Primitive bar ")"`,
+			"$Range": `LowerBound Primitive ".." Primitive UpperBound`,
+			"$LowerBound": `
+  - LowerInclusion
+  - LowerExclusion`,
+			"$LowerInclusion": `"[|"`,
+			"$LowerExclusion": `"(|"`,
 			"$Primitive": `
   - Element
   - String`,
+			"$UpperBound": `
+  - UpperInclusion
+  - UpperExclusion`,
+			"$UpperInclusion": `"|]"`,
+			"$UpperExclusion": `"|)"`,
 			"$Collection": `
   - MultilineAttributes
   - MultilineValues  ! Must be after the multiline attributes.

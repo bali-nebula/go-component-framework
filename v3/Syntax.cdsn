@@ -69,23 +69,27 @@ $String:
   - tag
   - version
 
-$Range:
-  - InclusiveRange
-  - InExclusiveRange
-  - ExInclusiveRange
-  - ExclusiveRange
+$Range: LowerBound Primitive ".." Primitive UpperBound
 
-$InclusiveRange: "[" bar Primitive ".." Primitive bar "]"
+$LowerBound:
+  - LowerInclusion
+  - LowerExclusion
 
-$InExclusiveRange: "[" bar Primitive ".." Primitive bar ")"
+$LowerInclusion: "[|"
 
-$ExInclusiveRange: "(" bar Primitive ".." Primitive bar "]"
-
-$ExclusiveRange: "(" bar Primitive ".." Primitive bar ")"
+$LowerExclusion: "(|"
 
 $Primitive:
   - Element
   - String
+
+$UpperBound:
+  - UpperInclusion
+  - UpperExclusion
+
+$UpperInclusion: "|]"
+
+$UpperExclusion: "|)"
 
 $Collection:
   - MultilineAttributes

@@ -27,36 +27,21 @@ import (
 
 // Access Function
 
-func ExclusiveRangeClass() ExclusiveRangeClassLike {
-	return exclusiveRangeClass()
+func LowerBoundClass() LowerBoundClassLike {
+	return lowerBoundClass()
 }
 
 // Constructor Methods
 
-func (c *exclusiveRangeClass_) ExclusiveRange(
-	bar1 string,
-	primitive1 PrimitiveLike,
-	primitive2 PrimitiveLike,
-	bar2 string,
-) ExclusiveRangeLike {
-	if uti.IsUndefined(bar1) {
-		panic("The \"bar1\" attribute is required by this class.")
+func (c *lowerBoundClass_) LowerBound(
+	any_ any,
+) LowerBoundLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(primitive1) {
-		panic("The \"primitive1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive2) {
-		panic("The \"primitive2\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(bar2) {
-		panic("The \"bar2\" attribute is required by this class.")
-	}
-	var instance = &exclusiveRange_{
+	var instance = &lowerBound_{
 		// Initialize the instance attributes.
-		bar1_:       bar1,
-		primitive1_: primitive1,
-		primitive2_: primitive2,
-		bar2_:       bar2,
+		any_: any_,
 	}
 	return instance
 }
@@ -65,52 +50,37 @@ func (c *exclusiveRangeClass_) ExclusiveRange(
 
 // Principal Methods
 
-func (v *exclusiveRange_) GetClass() ExclusiveRangeClassLike {
-	return exclusiveRangeClass()
+func (v *lowerBound_) GetClass() LowerBoundClassLike {
+	return lowerBoundClass()
 }
 
 // Attribute Methods
 
-func (v *exclusiveRange_) GetBar1() string {
-	return v.bar1_
-}
-
-func (v *exclusiveRange_) GetPrimitive1() PrimitiveLike {
-	return v.primitive1_
-}
-
-func (v *exclusiveRange_) GetPrimitive2() PrimitiveLike {
-	return v.primitive2_
-}
-
-func (v *exclusiveRange_) GetBar2() string {
-	return v.bar2_
+func (v *lowerBound_) GetAny() any {
+	return v.any_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type exclusiveRange_ struct {
+type lowerBound_ struct {
 	// Declare the instance attributes.
-	bar1_       string
-	primitive1_ PrimitiveLike
-	primitive2_ PrimitiveLike
-	bar2_       string
+	any_ any
 }
 
 // Class Structure
 
-type exclusiveRangeClass_ struct {
+type lowerBoundClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func exclusiveRangeClass() *exclusiveRangeClass_ {
-	return exclusiveRangeClassReference_
+func lowerBoundClass() *lowerBoundClass_ {
+	return lowerBoundClassReference_
 }
 
-var exclusiveRangeClassReference_ = &exclusiveRangeClass_{
+var lowerBoundClassReference_ = &lowerBoundClass_{
 	// Initialize the class constants.
 }

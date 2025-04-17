@@ -72,16 +72,12 @@ type (
 	EmptyLineClassLike             = ast.EmptyLineClassLike
 	EntityClassLike                = ast.EntityClassLike
 	EventClassLike                 = ast.EventClassLike
-	ExInclusiveRangeClassLike      = ast.ExInclusiveRangeClassLike
 	ExceptionClassLike             = ast.ExceptionClassLike
-	ExclusiveRangeClassLike        = ast.ExclusiveRangeClassLike
 	ExpressionClassLike            = ast.ExpressionClassLike
 	FailureClassLike               = ast.FailureClassLike
 	FlowClassLike                  = ast.FlowClassLike
 	FunctionClassLike              = ast.FunctionClassLike
 	IfClauseClassLike              = ast.IfClauseClassLike
-	InExclusiveRangeClassLike      = ast.InExclusiveRangeClassLike
-	InclusiveRangeClassLike        = ast.InclusiveRangeClassLike
 	IndexClassLike                 = ast.IndexClassLike
 	IndicesClassLike               = ast.IndicesClassLike
 	IndirectClassLike              = ast.IndirectClassLike
@@ -98,6 +94,9 @@ type (
 	ItemClassLike                  = ast.ItemClassLike
 	LetClauseClassLike             = ast.LetClauseClassLike
 	LogicalClassLike               = ast.LogicalClassLike
+	LowerBoundClassLike            = ast.LowerBoundClassLike
+	LowerExclusionClassLike        = ast.LowerExclusionClassLike
+	LowerInclusionClassLike        = ast.LowerInclusionClassLike
 	MagnitudeClassLike             = ast.MagnitudeClassLike
 	MainClauseClassLike            = ast.MainClauseClassLike
 	MatchHandlerClassLike          = ast.MatchHandlerClassLike
@@ -144,6 +143,9 @@ type (
 	TemplateClassLike              = ast.TemplateClassLike
 	ThreadingClassLike             = ast.ThreadingClassLike
 	ThrowClauseClassLike           = ast.ThrowClauseClassLike
+	UpperBoundClassLike            = ast.UpperBoundClassLike
+	UpperExclusionClassLike        = ast.UpperExclusionClassLike
+	UpperInclusionClassLike        = ast.UpperInclusionClassLike
 	VariableClassLike              = ast.VariableClassLike
 	WhileClauseClassLike           = ast.WhileClauseClassLike
 	WithClauseClassLike            = ast.WithClauseClassLike
@@ -184,16 +186,12 @@ type (
 	EmptyLineLike             = ast.EmptyLineLike
 	EntityLike                = ast.EntityLike
 	EventLike                 = ast.EventLike
-	ExInclusiveRangeLike      = ast.ExInclusiveRangeLike
 	ExceptionLike             = ast.ExceptionLike
-	ExclusiveRangeLike        = ast.ExclusiveRangeLike
 	ExpressionLike            = ast.ExpressionLike
 	FailureLike               = ast.FailureLike
 	FlowLike                  = ast.FlowLike
 	FunctionLike              = ast.FunctionLike
 	IfClauseLike              = ast.IfClauseLike
-	InExclusiveRangeLike      = ast.InExclusiveRangeLike
-	InclusiveRangeLike        = ast.InclusiveRangeLike
 	IndexLike                 = ast.IndexLike
 	IndicesLike               = ast.IndicesLike
 	IndirectLike              = ast.IndirectLike
@@ -210,6 +208,9 @@ type (
 	ItemLike                  = ast.ItemLike
 	LetClauseLike             = ast.LetClauseLike
 	LogicalLike               = ast.LogicalLike
+	LowerBoundLike            = ast.LowerBoundLike
+	LowerExclusionLike        = ast.LowerExclusionLike
+	LowerInclusionLike        = ast.LowerInclusionLike
 	MagnitudeLike             = ast.MagnitudeLike
 	MainClauseLike            = ast.MainClauseLike
 	MatchHandlerLike          = ast.MatchHandlerLike
@@ -256,6 +257,9 @@ type (
 	TemplateLike              = ast.TemplateLike
 	ThreadingLike             = ast.ThreadingLike
 	ThrowClauseLike           = ast.ThrowClauseLike
+	UpperBoundLike            = ast.UpperBoundLike
+	UpperExclusionLike        = ast.UpperExclusionLike
+	UpperInclusionLike        = ast.UpperInclusionLike
 	VariableLike              = ast.VariableLike
 	WhileClauseLike           = ast.WhileClauseLike
 	WithClauseLike            = ast.WithClauseLike
@@ -679,22 +683,6 @@ func Event(
 	)
 }
 
-// Ast/ExInclusiveRange
-
-func ExInclusiveRange(
-	bar1 string,
-	primitive1 ast.PrimitiveLike,
-	primitive2 ast.PrimitiveLike,
-	bar2 string,
-) ast.ExInclusiveRangeLike {
-	return ast.ExInclusiveRangeClass().ExInclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
-	)
-}
-
 // Ast/Exception
 
 func Exception(
@@ -702,22 +690,6 @@ func Exception(
 ) ast.ExceptionLike {
 	return ast.ExceptionClass().Exception(
 		expression,
-	)
-}
-
-// Ast/ExclusiveRange
-
-func ExclusiveRange(
-	bar1 string,
-	primitive1 ast.PrimitiveLike,
-	primitive2 ast.PrimitiveLike,
-	bar2 string,
-) ast.ExclusiveRangeLike {
-	return ast.ExclusiveRangeClass().ExclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
 	)
 }
 
@@ -774,38 +746,6 @@ func IfClause(
 	return ast.IfClauseClass().IfClause(
 		condition,
 		procedure,
-	)
-}
-
-// Ast/InExclusiveRange
-
-func InExclusiveRange(
-	bar1 string,
-	primitive1 ast.PrimitiveLike,
-	primitive2 ast.PrimitiveLike,
-	bar2 string,
-) ast.InExclusiveRangeLike {
-	return ast.InExclusiveRangeClass().InExclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
-	)
-}
-
-// Ast/InclusiveRange
-
-func InclusiveRange(
-	bar1 string,
-	primitive1 ast.PrimitiveLike,
-	primitive2 ast.PrimitiveLike,
-	bar2 string,
-) ast.InclusiveRangeLike {
-	return ast.InclusiveRangeClass().InclusiveRange(
-		bar1,
-		primitive1,
-		primitive2,
-		bar2,
 	)
 }
 
@@ -975,6 +915,28 @@ func Logical(
 	return ast.LogicalClass().Logical(
 		any_,
 	)
+}
+
+// Ast/LowerBound
+
+func LowerBound(
+	any_ any,
+) ast.LowerBoundLike {
+	return ast.LowerBoundClass().LowerBound(
+		any_,
+	)
+}
+
+// Ast/LowerExclusion
+
+func LowerExclusion() ast.LowerExclusionLike {
+	return ast.LowerExclusionClass().LowerExclusion()
+}
+
+// Ast/LowerInclusion
+
+func LowerInclusion() ast.LowerInclusionLike {
+	return ast.LowerInclusionClass().LowerInclusion()
 }
 
 // Ast/Magnitude
@@ -1246,10 +1208,16 @@ func PublishClause(
 // Ast/Range
 
 func Range(
-	any_ any,
+	lowerBound ast.LowerBoundLike,
+	primitive1 ast.PrimitiveLike,
+	primitive2 ast.PrimitiveLike,
+	upperBound ast.UpperBoundLike,
 ) ast.RangeLike {
 	return ast.RangeClass().Range(
-		any_,
+		lowerBound,
+		primitive1,
+		primitive2,
+		upperBound,
 	)
 }
 
@@ -1461,6 +1429,28 @@ func ThrowClause(
 	return ast.ThrowClauseClass().ThrowClause(
 		exception,
 	)
+}
+
+// Ast/UpperBound
+
+func UpperBound(
+	any_ any,
+) ast.UpperBoundLike {
+	return ast.UpperBoundClass().UpperBound(
+		any_,
+	)
+}
+
+// Ast/UpperExclusion
+
+func UpperExclusion() ast.UpperExclusionLike {
+	return ast.UpperExclusionClass().UpperExclusion()
+}
+
+// Ast/UpperInclusion
+
+func UpperInclusion() ast.UpperInclusionLike {
+	return ast.UpperInclusionClass().UpperInclusion()
 }
 
 // Ast/Variable

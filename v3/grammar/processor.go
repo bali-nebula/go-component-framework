@@ -797,21 +797,6 @@ func (v *processor_) PostprocessEvent(
 ) {
 }
 
-func (v *processor_) PreprocessExInclusiveRange(
-	exInclusiveRange ast.ExInclusiveRangeLike,
-) {
-}
-
-func (v *processor_) ProcessExInclusiveRangeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExInclusiveRange(
-	exInclusiveRange ast.ExInclusiveRangeLike,
-) {
-}
-
 func (v *processor_) PreprocessException(
 	exception ast.ExceptionLike,
 ) {
@@ -824,21 +809,6 @@ func (v *processor_) ProcessExceptionSlot(
 
 func (v *processor_) PostprocessException(
 	exception ast.ExceptionLike,
-) {
-}
-
-func (v *processor_) PreprocessExclusiveRange(
-	exclusiveRange ast.ExclusiveRangeLike,
-) {
-}
-
-func (v *processor_) ProcessExclusiveRangeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessExclusiveRange(
-	exclusiveRange ast.ExclusiveRangeLike,
 ) {
 }
 
@@ -914,36 +884,6 @@ func (v *processor_) ProcessIfClauseSlot(
 
 func (v *processor_) PostprocessIfClause(
 	ifClause ast.IfClauseLike,
-) {
-}
-
-func (v *processor_) PreprocessInExclusiveRange(
-	inExclusiveRange ast.InExclusiveRangeLike,
-) {
-}
-
-func (v *processor_) ProcessInExclusiveRangeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInExclusiveRange(
-	inExclusiveRange ast.InExclusiveRangeLike,
-) {
-}
-
-func (v *processor_) PreprocessInclusiveRange(
-	inclusiveRange ast.InclusiveRangeLike,
-) {
-}
-
-func (v *processor_) ProcessInclusiveRangeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessInclusiveRange(
-	inclusiveRange ast.InclusiveRangeLike,
 ) {
 }
 
@@ -1184,6 +1124,51 @@ func (v *processor_) ProcessLogicalSlot(
 
 func (v *processor_) PostprocessLogical(
 	logical ast.LogicalLike,
+) {
+}
+
+func (v *processor_) PreprocessLowerBound(
+	lowerBound ast.LowerBoundLike,
+) {
+}
+
+func (v *processor_) ProcessLowerBoundSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessLowerBound(
+	lowerBound ast.LowerBoundLike,
+) {
+}
+
+func (v *processor_) PreprocessLowerExclusion(
+	lowerExclusion ast.LowerExclusionLike,
+) {
+}
+
+func (v *processor_) ProcessLowerExclusionSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessLowerExclusion(
+	lowerExclusion ast.LowerExclusionLike,
+) {
+}
+
+func (v *processor_) PreprocessLowerInclusion(
+	lowerInclusion ast.LowerInclusionLike,
+) {
+}
+
+func (v *processor_) ProcessLowerInclusionSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessLowerInclusion(
+	lowerInclusion ast.LowerInclusionLike,
 ) {
 }
 
@@ -1882,6 +1867,51 @@ func (v *processor_) ProcessThrowClauseSlot(
 
 func (v *processor_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
+) {
+}
+
+func (v *processor_) PreprocessUpperBound(
+	upperBound ast.UpperBoundLike,
+) {
+}
+
+func (v *processor_) ProcessUpperBoundSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessUpperBound(
+	upperBound ast.UpperBoundLike,
+) {
+}
+
+func (v *processor_) PreprocessUpperExclusion(
+	upperExclusion ast.UpperExclusionLike,
+) {
+}
+
+func (v *processor_) ProcessUpperExclusionSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessUpperExclusion(
+	upperExclusion ast.UpperExclusionLike,
+) {
+}
+
+func (v *processor_) PreprocessUpperInclusion(
+	upperInclusion ast.UpperInclusionLike,
+) {
+}
+
+func (v *processor_) ProcessUpperInclusionSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessUpperInclusion(
+	upperInclusion ast.UpperInclusionLike,
 ) {
 }
 

@@ -19,44 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func InExclusiveRangeClass() InExclusiveRangeClassLike {
-	return inExclusiveRangeClass()
+func LowerExclusionClass() LowerExclusionClassLike {
+	return lowerExclusionClass()
 }
 
 // Constructor Methods
 
-func (c *inExclusiveRangeClass_) InExclusiveRange(
-	bar1 string,
-	primitive1 PrimitiveLike,
-	primitive2 PrimitiveLike,
-	bar2 string,
-) InExclusiveRangeLike {
-	if uti.IsUndefined(bar1) {
-		panic("The \"bar1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive1) {
-		panic("The \"primitive1\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(primitive2) {
-		panic("The \"primitive2\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(bar2) {
-		panic("The \"bar2\" attribute is required by this class.")
-	}
-	var instance = &inExclusiveRange_{
+func (c *lowerExclusionClass_) LowerExclusion() LowerExclusionLike {
+	var instance = &lowerExclusion_{
 		// Initialize the instance attributes.
-		bar1_:       bar1,
-		primitive1_: primitive1,
-		primitive2_: primitive2,
-		bar2_:       bar2,
 	}
 	return instance
 }
@@ -65,52 +42,32 @@ func (c *inExclusiveRangeClass_) InExclusiveRange(
 
 // Principal Methods
 
-func (v *inExclusiveRange_) GetClass() InExclusiveRangeClassLike {
-	return inExclusiveRangeClass()
+func (v *lowerExclusion_) GetClass() LowerExclusionClassLike {
+	return lowerExclusionClass()
 }
 
 // Attribute Methods
-
-func (v *inExclusiveRange_) GetBar1() string {
-	return v.bar1_
-}
-
-func (v *inExclusiveRange_) GetPrimitive1() PrimitiveLike {
-	return v.primitive1_
-}
-
-func (v *inExclusiveRange_) GetPrimitive2() PrimitiveLike {
-	return v.primitive2_
-}
-
-func (v *inExclusiveRange_) GetBar2() string {
-	return v.bar2_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type inExclusiveRange_ struct {
+type lowerExclusion_ struct {
 	// Declare the instance attributes.
-	bar1_       string
-	primitive1_ PrimitiveLike
-	primitive2_ PrimitiveLike
-	bar2_       string
 }
 
 // Class Structure
 
-type inExclusiveRangeClass_ struct {
+type lowerExclusionClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inExclusiveRangeClass() *inExclusiveRangeClass_ {
-	return inExclusiveRangeClassReference_
+func lowerExclusionClass() *lowerExclusionClass_ {
+	return lowerExclusionClassReference_
 }
 
-var inExclusiveRangeClassReference_ = &inExclusiveRangeClass_{
+var lowerExclusionClassReference_ = &lowerExclusionClass_{
 	// Initialize the class constants.
 }
