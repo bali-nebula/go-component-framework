@@ -1,10 +1,12 @@
+!>
+    NOTICE
+<!
 {
-    ! This is a note.
     if true do {
-    }
-
+    }  ! This is a note.
     while ok do {
         accept messages[index]
+
         !>
             COMMENTED OUT...
             if index > maximum do {
@@ -13,14 +15,16 @@
         <!
         continue loop
     }
+
     !>
-        This is an annotation.
+        This is a comment.
     <!
     with each $index in [|1..5|] do {
         let array[index] += index
     }
+
     !>
-        This is an annotation...
+        This is a comment...
 
         with an empty line.
     <!
@@ -73,7 +77,6 @@
     ]
     reject message
     retrieve $message from bag on $error matching any do {
-        ! Ignore this error.
         return error
     }
 }

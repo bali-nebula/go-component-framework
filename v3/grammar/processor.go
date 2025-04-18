@@ -752,21 +752,6 @@ func (v *processor_) PostprocessElement(
 ) {
 }
 
-func (v *processor_) PreprocessEmptyLine(
-	emptyLine ast.EmptyLineLike,
-) {
-}
-
-func (v *processor_) ProcessEmptyLineSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessEmptyLine(
-	emptyLine ast.EmptyLineLike,
-) {
-}
-
 func (v *processor_) PreprocessEntity(
 	entity ast.EntityLike,
 ) {
@@ -1401,18 +1386,18 @@ func (v *processor_) PostprocessNotarizeClause(
 ) {
 }
 
-func (v *processor_) PreprocessNoteLine(
-	noteLine ast.NoteLineLike,
+func (v *processor_) PreprocessNotice(
+	notice ast.NoticeLike,
 ) {
 }
 
-func (v *processor_) ProcessNoteLineSlot(
+func (v *processor_) ProcessNoticeSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessNoteLine(
-	noteLine ast.NoteLineLike,
+func (v *processor_) PostprocessNotice(
+	notice ast.NoticeLike,
 ) {
 }
 

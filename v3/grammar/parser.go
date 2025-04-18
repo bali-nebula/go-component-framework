@@ -442,24 +442,6 @@ func (v *parser_) parseAnnotatedStatement() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single EmptyLine AnnotatedStatement.
-	var emptyLine ast.EmptyLineLike
-	emptyLine, token, ok = v.parseEmptyLine()
-	if ok {
-		// Found a single EmptyLine AnnotatedStatement.
-		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(emptyLine)
-		return
-	}
-
-	// Attempt to parse a single NoteLine AnnotatedStatement.
-	var noteLine ast.NoteLineLike
-	noteLine, token, ok = v.parseNoteLine()
-	if ok {
-		// Found a single NoteLine AnnotatedStatement.
-		annotatedStatement = ast.AnnotatedStatementClass().AnnotatedStatement(noteLine)
-		return
-	}
-
 	// Attempt to parse a single CommentLine AnnotatedStatement.
 	var commentLine ast.CommentLineLike
 	commentLine, token, ok = v.parseCommentLine()
@@ -1385,11 +1367,12 @@ func (v *parser_) parseDocument() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse an optional comment token.
-	var optionalComment string
-	optionalComment, token, ok = v.parseToken(CommentToken)
-	if ok && uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	// Attempt to parse an optional Notice rule.
+	var optionalNotice ast.NoticeLike
+	optionalNotice, _, ok = v.parseNotice()
+	if ok {
+		// No additional put backs allowed at this point.
+		tokens = nil
 	}
 
 	// Attempt to parse a single Component rule.
@@ -1413,7 +1396,7 @@ func (v *parser_) parseDocument() (
 	ok = true
 	v.remove(tokens)
 	document = ast.DocumentClass().Document(
-		optionalComment,
+		optionalNotice,
 		component,
 	)
 	return
@@ -1546,59 +1529,6 @@ func (v *parser_) parseElement() (
 	}
 
 	// This is not a single Element rule.
-	return
-}
-
-func (v *parser_) parseEmptyLine() (
-	emptyLine ast.EmptyLineLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single newline token.
-	var newline1 string
-	newline1, token, ok = v.parseToken(NewlineToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single EmptyLine rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$EmptyLine", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Attempt to parse a single newline token.
-	var newline2 string
-	newline2, token, ok = v.parseToken(NewlineToken)
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single EmptyLine rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$EmptyLine", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single EmptyLine rule.
-	ok = true
-	v.remove(tokens)
-	emptyLine = ast.EmptyLineClass().EmptyLine(
-		newline1,
-		newline2,
-	)
 	return
 }
 
@@ -4132,24 +4062,24 @@ func (v *parser_) parseNotarizeClause() (
 	return
 }
 
-func (v *parser_) parseNoteLine() (
-	noteLine ast.NoteLineLike,
+func (v *parser_) parseNotice() (
+	notice ast.NoticeLike,
 	token TokenLike,
 	ok bool,
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single note token.
-	var note string
-	note, token, ok = v.parseToken(NoteToken)
+	// Attempt to parse a single comment token.
+	var comment string
+	comment, token, ok = v.parseToken(CommentToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single NoteLine rule.
+			// This is not a single Notice rule.
 			v.putBack(tokens)
 			return
 		} else {
 			// Found a syntax error.
-			var message = v.formatError("$NoteLine", token)
+			var message = v.formatError("$Notice", token)
 			panic(message)
 		}
 	}
@@ -4157,10 +4087,31 @@ func (v *parser_) parseNoteLine() (
 		tokens.AppendValue(token)
 	}
 
-	// Found a single NoteLine rule.
+	// Attempt to parse a single newline token.
+	var newline string
+	newline, token, ok = v.parseToken(NewlineToken)
+	if !ok {
+		if uti.IsDefined(tokens) {
+			// This is not a single Notice rule.
+			v.putBack(tokens)
+			return
+		} else {
+			// Found a syntax error.
+			var message = v.formatError("$Notice", token)
+			panic(message)
+		}
+	}
+	if uti.IsDefined(tokens) {
+		tokens.AppendValue(token)
+	}
+
+	// Found a single Notice rule.
 	ok = true
 	v.remove(tokens)
-	noteLine = ast.NoteLineClass().NoteLine(note)
+	notice = ast.NoticeClass().Notice(
+		comment,
+		newline,
+	)
 	return
 }
 
@@ -6534,7 +6485,8 @@ var parserClassReference_ = &parserClass_{
 	// Initialize the class constants.
 	syntax_: fra.CatalogFromMap[string, string](
 		map[string]string{
-			"$Document":  `comment? Component`,
+			"$Document":  `Notice? Component`,
+			"$Notice":    `comment newline`,
 			"$Component": `Entity Parameters?`,
 			"$Entity": `
   - Element
@@ -6605,12 +6557,8 @@ var parserClassReference_ = &parserClass_{
   - NoStatements`,
 			"$MultilineStatements": `"{" newline AnnotatedStatement* "}"`,
 			"$AnnotatedStatement": `
-  - EmptyLine  ! This must be first.
-  - NoteLine
   - CommentLine
   - StatementLine`,
-			"$EmptyLine":           `newline newline`,
-			"$NoteLine":            `note`,
 			"$CommentLine":         `comment`,
 			"$StatementLine":       `Statement note?`,
 			"$InlineStatements":    `"{" Statement AdditionalStatement* "}"`,

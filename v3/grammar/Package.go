@@ -744,15 +744,6 @@ type Methodical interface {
 	PostprocessElement(
 		element ast.ElementLike,
 	)
-	PreprocessEmptyLine(
-		emptyLine ast.EmptyLineLike,
-	)
-	ProcessEmptyLineSlot(
-		slot uint,
-	)
-	PostprocessEmptyLine(
-		emptyLine ast.EmptyLineLike,
-	)
 	PreprocessEntity(
 		entity ast.EntityLike,
 	)
@@ -1135,14 +1126,14 @@ type Methodical interface {
 	PostprocessNotarizeClause(
 		notarizeClause ast.NotarizeClauseLike,
 	)
-	PreprocessNoteLine(
-		noteLine ast.NoteLineLike,
+	PreprocessNotice(
+		notice ast.NoticeLike,
 	)
-	ProcessNoteLineSlot(
+	ProcessNoticeSlot(
 		slot uint,
 	)
-	PostprocessNoteLine(
-		noteLine ast.NoteLineLike,
+	PostprocessNotice(
+		notice ast.NoticeLike,
 	)
 	PreprocessNumerical(
 		numerical ast.NumericalLike,

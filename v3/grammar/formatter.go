@@ -213,6 +213,7 @@ func (v *formatter_) ProcessNarrative(
 func (v *formatter_) ProcessNote(
 	note string,
 ) {
+	v.appendString("  ")
 	v.appendString(note)
 }
 
@@ -485,6 +486,7 @@ func (v *formatter_) PostprocessCollection(
 func (v *formatter_) PreprocessCommentLine(
 	commentLine ast.CommentLineLike,
 ) {
+	v.appendString("\n")
 	v.appendNewline()
 }
 
@@ -600,12 +602,6 @@ func (v *formatter_) PostprocessElement(
 	element ast.ElementLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessEmptyLine(
-	emptyLine ast.EmptyLineLike,
-) {
-	v.appendNewline()
 }
 
 func (v *formatter_) PreprocessEntity(
@@ -1198,8 +1194,8 @@ func (v *formatter_) ProcessNotarizeClauseSlot(
 	}
 }
 
-func (v *formatter_) PreprocessNoteLine(
-	noteLine ast.NoteLineLike,
+func (v *formatter_) PostprocessNotice(
+	notice ast.NoticeLike,
 ) {
 	v.appendNewline()
 }

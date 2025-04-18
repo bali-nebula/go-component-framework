@@ -22,7 +22,9 @@ For more information on CDSN see the wiki at:
 │                               RULE DEFINITIONS                               │
 └──────────────────────────────────────────────────────────────────────────────┘
 <!
-$Document: comment? Component
+$Document: Notice? Component
+
+$Notice: comment newline
 
 $Component: Entity Parameters?
 
@@ -123,14 +125,8 @@ $Procedure:
 $MultilineStatements: "{" newline AnnotatedStatement* "}"
 
 $AnnotatedStatement:
-  - EmptyLine  ! This must be first.
-  - NoteLine
   - CommentLine
   - StatementLine
-
-$EmptyLine: newline newline
-
-$NoteLine: note
 
 $CommentLine: comment
 

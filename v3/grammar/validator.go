@@ -897,24 +897,6 @@ func (v *validator_) PostprocessElement(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessEmptyLine(
-	emptyLine ast.EmptyLineLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessEmptyLineSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessEmptyLine(
-	emptyLine ast.EmptyLineLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessEntity(
 	entity ast.EntityLike,
 ) {
@@ -1675,20 +1657,20 @@ func (v *validator_) PostprocessNotarizeClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessNoteLine(
-	noteLine ast.NoteLineLike,
+func (v *validator_) PreprocessNotice(
+	notice ast.NoticeLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessNoteLineSlot(
+func (v *validator_) ProcessNoticeSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessNoteLine(
-	noteLine ast.NoteLineLike,
+func (v *validator_) PostprocessNotice(
+	notice ast.NoticeLike,
 ) {
 	// TBD - Add any validation checks.
 }

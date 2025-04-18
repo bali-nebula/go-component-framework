@@ -69,7 +69,6 @@ type (
 	DocumentClassLike              = ast.DocumentClassLike
 	DraftClassLike                 = ast.DraftClassLike
 	ElementClassLike               = ast.ElementClassLike
-	EmptyLineClassLike             = ast.EmptyLineClassLike
 	EntityClassLike                = ast.EntityClassLike
 	EventClassLike                 = ast.EventClassLike
 	ExceptionClassLike             = ast.ExceptionClassLike
@@ -112,7 +111,7 @@ type (
 	NoStatementsClassLike          = ast.NoStatementsClassLike
 	NoValuesClassLike              = ast.NoValuesClassLike
 	NotarizeClauseClassLike        = ast.NotarizeClauseClassLike
-	NoteLineClassLike              = ast.NoteLineClassLike
+	NoticeClassLike                = ast.NoticeClassLike
 	NumericalClassLike             = ast.NumericalClassLike
 	OnClauseClassLike              = ast.OnClauseClassLike
 	OperatorClassLike              = ast.OperatorClassLike
@@ -184,7 +183,6 @@ type (
 	DocumentLike              = ast.DocumentLike
 	DraftLike                 = ast.DraftLike
 	ElementLike               = ast.ElementLike
-	EmptyLineLike             = ast.EmptyLineLike
 	EntityLike                = ast.EntityLike
 	EventLike                 = ast.EventLike
 	ExceptionLike             = ast.ExceptionLike
@@ -227,7 +225,7 @@ type (
 	NoStatementsLike          = ast.NoStatementsLike
 	NoValuesLike              = ast.NoValuesLike
 	NotarizeClauseLike        = ast.NotarizeClauseLike
-	NoteLineLike              = ast.NoteLineLike
+	NoticeLike                = ast.NoticeLike
 	NumericalLike             = ast.NumericalLike
 	OnClauseLike              = ast.OnClauseLike
 	OperatorLike              = ast.OperatorLike
@@ -626,11 +624,11 @@ func DoClause(
 // Ast/Document
 
 func Document(
-	optionalComment string,
+	optionalNotice ast.NoticeLike,
 	component ast.ComponentLike,
 ) ast.DocumentLike {
 	return ast.DocumentClass().Document(
-		optionalComment,
+		optionalNotice,
 		component,
 	)
 }
@@ -652,18 +650,6 @@ func Element(
 ) ast.ElementLike {
 	return ast.ElementClass().Element(
 		any_,
-	)
-}
-
-// Ast/EmptyLine
-
-func EmptyLine(
-	newline1 string,
-	newline2 string,
-) ast.EmptyLineLike {
-	return ast.EmptyLineClass().EmptyLine(
-		newline1,
-		newline2,
 	)
 }
 
@@ -1103,13 +1089,15 @@ func NotarizeClause(
 	)
 }
 
-// Ast/NoteLine
+// Ast/Notice
 
-func NoteLine(
-	note string,
-) ast.NoteLineLike {
-	return ast.NoteLineClass().NoteLine(
-		note,
+func Notice(
+	comment string,
+	newline string,
+) ast.NoticeLike {
+	return ast.NoticeClass().Notice(
+		comment,
+		newline,
 	)
 }
 

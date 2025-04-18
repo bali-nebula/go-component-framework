@@ -158,14 +158,6 @@ func (v *visitor_) visitAnnotatedStatement(
 ) {
 	// Visit the possible annotatedStatement types.
 	switch actual := annotatedStatement.GetAny().(type) {
-	case ast.EmptyLineLike:
-		v.processor_.PreprocessEmptyLine(actual)
-		v.visitEmptyLine(actual)
-		v.processor_.PostprocessEmptyLine(actual)
-	case ast.NoteLineLike:
-		v.processor_.PreprocessNoteLine(actual)
-		v.visitNoteLine(actual)
-		v.processor_.PostprocessNoteLine(actual)
 	case ast.CommentLineLike:
 		v.processor_.PreprocessCommentLine(actual)
 		v.visitCommentLine(actual)
@@ -478,10 +470,12 @@ func (v *visitor_) visitDoClause(
 func (v *visitor_) visitDocument(
 	document ast.DocumentLike,
 ) {
-	// Visit an optional comment token.
-	var optionalComment = document.GetOptionalComment()
-	if uti.IsDefined(optionalComment) {
-		v.processor_.ProcessComment(optionalComment)
+	// Visit an optional notice rule.
+	var optionalNotice = document.GetOptionalNotice()
+	if uti.IsDefined(optionalNotice) {
+		v.processor_.PreprocessNotice(optionalNotice)
+		v.visitNotice(optionalNotice)
+		v.processor_.PostprocessNotice(optionalNotice)
 	}
 
 	// Visit slot 1 between references.
@@ -537,21 +531,6 @@ func (v *visitor_) visitElement(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
-}
-
-func (v *visitor_) visitEmptyLine(
-	emptyLine ast.EmptyLineLike,
-) {
-	// Visit a single newline token.
-	var newline1 = emptyLine.GetNewline1()
-	v.processor_.ProcessNewline(newline1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessEmptyLineSlot(1)
-
-	// Visit a single newline token.
-	var newline2 = emptyLine.GetNewline2()
-	v.processor_.ProcessNewline(newline2)
 }
 
 func (v *visitor_) visitEntity(
@@ -1488,12 +1467,19 @@ func (v *visitor_) visitNotarizeClause(
 	v.processor_.PostprocessCitation(citation)
 }
 
-func (v *visitor_) visitNoteLine(
-	noteLine ast.NoteLineLike,
+func (v *visitor_) visitNotice(
+	notice ast.NoticeLike,
 ) {
-	// Visit a single note token.
-	var note = noteLine.GetNote()
-	v.processor_.ProcessNote(note)
+	// Visit a single comment token.
+	var comment = notice.GetComment()
+	v.processor_.ProcessComment(comment)
+
+	// Visit slot 1 between references.
+	v.processor_.ProcessNoticeSlot(1)
+
+	// Visit a single newline token.
+	var newline = notice.GetNewline()
+	v.processor_.ProcessNewline(newline)
 }
 
 func (v *visitor_) visitNumerical(

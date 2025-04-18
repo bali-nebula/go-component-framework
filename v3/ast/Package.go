@@ -379,7 +379,7 @@ supported by each concrete document-like class.
 type DocumentClassLike interface {
 	// Constructor Methods
 	Document(
-		optionalComment string,
+		optionalNotice NoticeLike,
 		component ComponentLike,
 	) DocumentLike
 }
@@ -406,19 +406,6 @@ type ElementClassLike interface {
 	Element(
 		any_ any,
 	) ElementLike
-}
-
-/*
-EmptyLineClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete empty-line-like class.
-*/
-type EmptyLineClassLike interface {
-	// Constructor Methods
-	EmptyLine(
-		newline1 string,
-		newline2 string,
-	) EmptyLineLike
 }
 
 /*
@@ -934,15 +921,16 @@ type NotarizeClauseClassLike interface {
 }
 
 /*
-NoteLineClassLike is a class interface that declares the
+NoticeClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
-supported by each concrete note-line-like class.
+supported by each concrete notice-like class.
 */
-type NoteLineClassLike interface {
+type NoticeClassLike interface {
 	// Constructor Methods
-	NoteLine(
-		note string,
-	) NoteLineLike
+	Notice(
+		comment string,
+		newline string,
+	) NoticeLike
 }
 
 /*
@@ -1771,7 +1759,7 @@ type DocumentLike interface {
 	GetClass() DocumentClassLike
 
 	// Attribute Methods
-	GetOptionalComment() string
+	GetOptionalNotice() NoticeLike
 	GetComponent() ComponentLike
 }
 
@@ -1799,20 +1787,6 @@ type ElementLike interface {
 
 	// Attribute Methods
 	GetAny() any
-}
-
-/*
-EmptyLineLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete empty-line-like class.
-*/
-type EmptyLineLike interface {
-	// Principal Methods
-	GetClass() EmptyLineClassLike
-
-	// Attribute Methods
-	GetNewline1() string
-	GetNewline2() string
 }
 
 /*
@@ -2363,16 +2337,17 @@ type NotarizeClauseLike interface {
 }
 
 /*
-NoteLineLike is an instance interface that declares the
+NoticeLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete note-line-like class.
+by each instance of a concrete notice-like class.
 */
-type NoteLineLike interface {
+type NoticeLike interface {
 	// Principal Methods
-	GetClass() NoteLineClassLike
+	GetClass() NoticeClassLike
 
 	// Attribute Methods
-	GetNote() string
+	GetComment() string
+	GetNewline() string
 }
 
 /*
