@@ -530,15 +530,19 @@ $year: '0' | ordinal
 
 $years: timespan 'Y'
 
+$dot: "."
+
+$arrow: "<-"
+
 $plus: "+"
 
 $dash: "-"
 
 $star: "*"
 
-$slash: "/"
-
 $double: "//"
+
+$slash: "/"
 
 $caret: "^"
 
@@ -549,8 +553,4 @@ $less: "<"
 $equal: "="
 
 $more: ">"
-
-$dot: "."
-
-$arrow: "<-"
 

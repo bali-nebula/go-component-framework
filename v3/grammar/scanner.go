@@ -215,18 +215,18 @@ loop:
 		case v.foundToken(TagToken):
 		case v.foundToken(VersionToken):
 		case v.foundToken(IdentifierToken):
+		case v.foundToken(DotToken):
+		case v.foundToken(ArrowToken):
 		case v.foundToken(PlusToken):
 		case v.foundToken(DashToken):
 		case v.foundToken(StarToken):
-		case v.foundToken(SlashToken):
 		case v.foundToken(DoubleToken):
+		case v.foundToken(SlashToken):
 		case v.foundToken(CaretToken):
 		case v.foundToken(AmpersandToken):
 		case v.foundToken(LessToken):
 		case v.foundToken(EqualToken):
 		case v.foundToken(MoreToken):
-		case v.foundToken(DotToken):
-		case v.foundToken(ArrowToken):
 		default:
 			v.foundError()
 			break loop
@@ -436,16 +436,16 @@ const (
 	weeks_        = "(?:(?:" + timespan_ + ")W)"
 	year_         = "(?:0|(?:" + ordinal_ + "))"
 	years_        = "(?:(?:" + timespan_ + ")Y)"
+	dot_          = "(?:\\.)"
+	arrow_        = "(?:<-)"
 	plus_         = "(?:\\+)"
 	dash_         = "(?:-)"
 	star_         = "(?:\\*)"
-	slash_        = "(?:/)"
 	double_       = "(?://)"
+	slash_        = "(?:/)"
 	caret_        = "(?:\\^)"
 	ampersand_    = "(?:&)"
 	less_         = "(?:<)"
 	equal_        = "(?:=)"
 	more_         = "(?:>)"
-	dot_          = "(?:\\.)"
-	arrow_        = "(?:<-)"
 )
