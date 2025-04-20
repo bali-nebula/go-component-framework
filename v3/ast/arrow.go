@@ -19,34 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func AssociationClass() AssociationClassLike {
-	return associationClass()
+func ArrowClass() ArrowClassLike {
+	return arrowClass()
 }
 
 // Constructor Methods
 
-func (c *associationClass_) Association(
-	symbol string,
-	component ComponentLike,
-) AssociationLike {
-	if uti.IsUndefined(symbol) {
-		panic("The \"symbol\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
-	}
-	var instance = &association_{
+func (c *arrowClass_) Arrow() ArrowLike {
+	var instance = &arrow_{
 		// Initialize the instance attributes.
-		symbol_:    symbol,
-		component_: component,
 	}
 	return instance
 }
@@ -55,42 +42,32 @@ func (c *associationClass_) Association(
 
 // Principal Methods
 
-func (v *association_) GetClass() AssociationClassLike {
-	return associationClass()
+func (v *arrow_) GetClass() ArrowClassLike {
+	return arrowClass()
 }
 
 // Attribute Methods
-
-func (v *association_) GetSymbol() string {
-	return v.symbol_
-}
-
-func (v *association_) GetComponent() ComponentLike {
-	return v.component_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type association_ struct {
+type arrow_ struct {
 	// Declare the instance attributes.
-	symbol_    string
-	component_ ComponentLike
 }
 
 // Class Structure
 
-type associationClass_ struct {
+type arrowClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func associationClass() *associationClass_ {
-	return associationClassReference_
+func arrowClass() *arrowClass_ {
+	return arrowClassReference_
 }
 
-var associationClassReference_ = &associationClass_{
+var arrowClassReference_ = &arrowClass_{
 	// Initialize the class constants.
 }

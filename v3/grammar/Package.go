@@ -55,30 +55,16 @@ type TokenType uint8
 
 const (
 	ErrorToken TokenType = iota
-	AmpersandToken
 	AngleToken
-	ArrowToken
-	BarToken
 	BinaryToken
 	BooleanToken
 	BytecodeToken
-	CaretToken
 	CitationToken
-	ColonToken
-	ColonEqualToken
 	CommentToken
-	DashToken
-	DashEqualToken
-	DefaultEqualToken
 	DelimiterToken
-	DotToken
-	DoubleToken
 	DurationToken
-	EqualToken
 	IdentifierToken
-	LessToken
 	MomentToken
-	MoreToken
 	NameToken
 	NarrativeToken
 	NewlineToken
@@ -86,17 +72,10 @@ const (
 	NumberToken
 	PatternToken
 	PercentageToken
-	PlusToken
-	PlusEqualToken
 	ProbabilityToken
 	QuoteToken
 	ResourceToken
-	SlashToken
-	SlashEqualToken
-	SnailToken
 	SpaceToken
-	StarToken
-	StarEqualToken
 	SymbolToken
 	TagToken
 	VersionToken
@@ -310,17 +289,8 @@ Methodical declares the set of method signatures that must be supported by
 all methodical processors.
 */
 type Methodical interface {
-	ProcessAmpersand(
-		ampersand string,
-	)
 	ProcessAngle(
 		angle string,
-	)
-	ProcessArrow(
-		arrow string,
-	)
-	ProcessBar(
-		bar string,
 	)
 	ProcessBinary(
 		binary string,
@@ -331,53 +301,20 @@ type Methodical interface {
 	ProcessBytecode(
 		bytecode string,
 	)
-	ProcessCaret(
-		caret string,
-	)
 	ProcessCitation(
 		citation string,
-	)
-	ProcessColon(
-		colon string,
-	)
-	ProcessColonEqual(
-		colonEqual string,
 	)
 	ProcessComment(
 		comment string,
 	)
-	ProcessDash(
-		dash string,
-	)
-	ProcessDashEqual(
-		dashEqual string,
-	)
-	ProcessDefaultEqual(
-		defaultEqual string,
-	)
-	ProcessDot(
-		dot string,
-	)
-	ProcessDouble(
-		double string,
-	)
 	ProcessDuration(
 		duration string,
-	)
-	ProcessEqual(
-		equal string,
 	)
 	ProcessIdentifier(
 		identifier string,
 	)
-	ProcessLess(
-		less string,
-	)
 	ProcessMoment(
 		moment string,
-	)
-	ProcessMore(
-		more string,
 	)
 	ProcessName(
 		name string,
@@ -400,12 +337,6 @@ type Methodical interface {
 	ProcessPercentage(
 		percentage string,
 	)
-	ProcessPlus(
-		plus string,
-	)
-	ProcessPlusEqual(
-		plusEqual string,
-	)
 	ProcessProbability(
 		probability string,
 	)
@@ -415,23 +346,8 @@ type Methodical interface {
 	ProcessResource(
 		resource string,
 	)
-	ProcessSlash(
-		slash string,
-	)
-	ProcessSlashEqual(
-		slashEqual string,
-	)
-	ProcessSnail(
-		snail string,
-	)
 	ProcessSpace(
 		space string,
-	)
-	ProcessStar(
-		star string,
-	)
-	ProcessStarEqual(
-		starEqual string,
 	)
 	ProcessSymbol(
 		symbol string,
@@ -516,6 +432,15 @@ type Methodical interface {
 		index uint,
 		size uint,
 	)
+	PreprocessAmpersand(
+		ampersand ast.AmpersandLike,
+	)
+	ProcessAmpersandSlot(
+		slot uint,
+	)
+	PostprocessAmpersand(
+		ampersand ast.AmpersandLike,
+	)
 	PreprocessAnd(
 		and ast.AndLike,
 	)
@@ -582,6 +507,15 @@ type Methodical interface {
 	PostprocessArguments(
 		arguments ast.ArgumentsLike,
 	)
+	PreprocessArrow(
+		arrow ast.ArrowLike,
+	)
+	ProcessArrowSlot(
+		slot uint,
+	)
+	PostprocessArrow(
+		arrow ast.ArrowLike,
+	)
 	PreprocessAssign(
 		assign ast.AssignLike,
 	)
@@ -627,6 +561,15 @@ type Methodical interface {
 	PostprocessBreakClause(
 		breakClause ast.BreakClauseLike,
 	)
+	PreprocessCaret(
+		caret ast.CaretLike,
+	)
+	ProcessCaretSlot(
+		slot uint,
+	)
+	PostprocessCaret(
+		caret ast.CaretLike,
+	)
 	PreprocessCheckoutClause(
 		checkoutClause ast.CheckoutClauseLike,
 	)
@@ -653,6 +596,15 @@ type Methodical interface {
 	)
 	PostprocessCollection(
 		collection ast.CollectionLike,
+	)
+	PreprocessColonEqual(
+		colonEqual ast.ColonEqualLike,
+	)
+	ProcessColonEqualSlot(
+		slot uint,
+	)
+	PostprocessColonEqual(
+		colonEqual ast.ColonEqualLike,
 	)
 	PreprocessCommentLine(
 		commentLine ast.CommentLineLike,
@@ -699,6 +651,33 @@ type Methodical interface {
 	PostprocessContinueClause(
 		continueClause ast.ContinueClauseLike,
 	)
+	PreprocessDash(
+		dash ast.DashLike,
+	)
+	ProcessDashSlot(
+		slot uint,
+	)
+	PostprocessDash(
+		dash ast.DashLike,
+	)
+	PreprocessDashEqual(
+		dashEqual ast.DashEqualLike,
+	)
+	ProcessDashEqualSlot(
+		slot uint,
+	)
+	PostprocessDashEqual(
+		dashEqual ast.DashEqualLike,
+	)
+	PreprocessDefaultEqual(
+		defaultEqual ast.DefaultEqualLike,
+	)
+	ProcessDefaultEqualSlot(
+		slot uint,
+	)
+	PostprocessDefaultEqual(
+		defaultEqual ast.DefaultEqualLike,
+	)
 	PreprocessDiscardClause(
 		discardClause ast.DiscardClauseLike,
 	)
@@ -726,6 +705,24 @@ type Methodical interface {
 	PostprocessDocument(
 		document ast.DocumentLike,
 	)
+	PreprocessDot(
+		dot ast.DotLike,
+	)
+	ProcessDotSlot(
+		slot uint,
+	)
+	PostprocessDot(
+		dot ast.DotLike,
+	)
+	PreprocessDouble(
+		double ast.DoubleLike,
+	)
+	ProcessDoubleSlot(
+		slot uint,
+	)
+	PostprocessDouble(
+		double ast.DoubleLike,
+	)
 	PreprocessDraft(
 		draft ast.DraftLike,
 	)
@@ -752,6 +749,15 @@ type Methodical interface {
 	)
 	PostprocessEntity(
 		entity ast.EntityLike,
+	)
+	PreprocessEqual(
+		equal ast.EqualLike,
+	)
+	ProcessEqualSlot(
+		slot uint,
+	)
+	PostprocessEqual(
+		equal ast.EqualLike,
 	)
 	PreprocessEvent(
 		event ast.EventLike,
@@ -942,6 +948,15 @@ type Methodical interface {
 	PostprocessItem(
 		item ast.ItemLike,
 	)
+	PreprocessLess(
+		less ast.LessLike,
+	)
+	ProcessLessSlot(
+		slot uint,
+	)
+	PostprocessLess(
+		less ast.LessLike,
+	)
 	PreprocessLetClause(
 		letClause ast.LetClauseLike,
 	)
@@ -1053,6 +1068,15 @@ type Methodical interface {
 	)
 	PostprocessMethod(
 		method ast.MethodLike,
+	)
+	PreprocessMore(
+		more ast.MoreLike,
+	)
+	ProcessMoreSlot(
+		slot uint,
+	)
+	PostprocessMore(
+		more ast.MoreLike,
 	)
 	PreprocessMultilineAttributes(
 		multilineAttributes ast.MultilineAttributesLike,
@@ -1170,6 +1194,24 @@ type Methodical interface {
 	)
 	PostprocessParameters(
 		parameters ast.ParametersLike,
+	)
+	PreprocessPlus(
+		plus ast.PlusLike,
+	)
+	ProcessPlusSlot(
+		slot uint,
+	)
+	PostprocessPlus(
+		plus ast.PlusLike,
+	)
+	PreprocessPlusEqual(
+		plusEqual ast.PlusEqualLike,
+	)
+	ProcessPlusEqualSlot(
+		slot uint,
+	)
+	PostprocessPlusEqual(
+		plusEqual ast.PlusEqualLike,
 	)
 	PreprocessPostClause(
 		postClause ast.PostClauseLike,
@@ -1336,6 +1378,42 @@ type Methodical interface {
 	)
 	PostprocessSequence(
 		sequence ast.SequenceLike,
+	)
+	PreprocessSlash(
+		slash ast.SlashLike,
+	)
+	ProcessSlashSlot(
+		slot uint,
+	)
+	PostprocessSlash(
+		slash ast.SlashLike,
+	)
+	PreprocessSlashEqual(
+		slashEqual ast.SlashEqualLike,
+	)
+	ProcessSlashEqualSlot(
+		slot uint,
+	)
+	PostprocessSlashEqual(
+		slashEqual ast.SlashEqualLike,
+	)
+	PreprocessStar(
+		star ast.StarLike,
+	)
+	ProcessStarSlot(
+		slot uint,
+	)
+	PostprocessStar(
+		star ast.StarLike,
+	)
+	PreprocessStarEqual(
+		starEqual ast.StarEqualLike,
+	)
+	ProcessStarEqualSlot(
+		slot uint,
+	)
+	PostprocessStarEqual(
+		starEqual ast.StarEqualLike,
 	)
 	PreprocessStatement(
 		statement ast.StatementLike,

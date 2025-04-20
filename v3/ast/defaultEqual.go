@@ -19,34 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func AssociationClass() AssociationClassLike {
-	return associationClass()
+func DefaultEqualClass() DefaultEqualClassLike {
+	return defaultEqualClass()
 }
 
 // Constructor Methods
 
-func (c *associationClass_) Association(
-	symbol string,
-	component ComponentLike,
-) AssociationLike {
-	if uti.IsUndefined(symbol) {
-		panic("The \"symbol\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
-	}
-	var instance = &association_{
+func (c *defaultEqualClass_) DefaultEqual() DefaultEqualLike {
+	var instance = &defaultEqual_{
 		// Initialize the instance attributes.
-		symbol_:    symbol,
-		component_: component,
 	}
 	return instance
 }
@@ -55,42 +42,32 @@ func (c *associationClass_) Association(
 
 // Principal Methods
 
-func (v *association_) GetClass() AssociationClassLike {
-	return associationClass()
+func (v *defaultEqual_) GetClass() DefaultEqualClassLike {
+	return defaultEqualClass()
 }
 
 // Attribute Methods
-
-func (v *association_) GetSymbol() string {
-	return v.symbol_
-}
-
-func (v *association_) GetComponent() ComponentLike {
-	return v.component_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type association_ struct {
+type defaultEqual_ struct {
 	// Declare the instance attributes.
-	symbol_    string
-	component_ ComponentLike
 }
 
 // Class Structure
 
-type associationClass_ struct {
+type defaultEqualClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func associationClass() *associationClass_ {
-	return associationClassReference_
+func defaultEqualClass() *defaultEqualClass_ {
+	return defaultEqualClassReference_
 }
 
-var associationClassReference_ = &associationClass_{
+var defaultEqualClassReference_ = &defaultEqualClass_{
 	// Initialize the class constants.
 }

@@ -34,24 +34,14 @@ func MagnitudeClass() MagnitudeClassLike {
 // Constructor Methods
 
 func (c *magnitudeClass_) Magnitude(
-	bar1 string,
 	numerical NumericalLike,
-	bar2 string,
 ) MagnitudeLike {
-	if uti.IsUndefined(bar1) {
-		panic("The \"bar1\" attribute is required by this class.")
-	}
 	if uti.IsUndefined(numerical) {
 		panic("The \"numerical\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(bar2) {
-		panic("The \"bar2\" attribute is required by this class.")
-	}
 	var instance = &magnitude_{
 		// Initialize the instance attributes.
-		bar1_:      bar1,
 		numerical_: numerical,
-		bar2_:      bar2,
 	}
 	return instance
 }
@@ -66,16 +56,8 @@ func (v *magnitude_) GetClass() MagnitudeClassLike {
 
 // Attribute Methods
 
-func (v *magnitude_) GetBar1() string {
-	return v.bar1_
-}
-
 func (v *magnitude_) GetNumerical() NumericalLike {
 	return v.numerical_
-}
-
-func (v *magnitude_) GetBar2() string {
-	return v.bar2_
 }
 
 // PROTECTED INTERFACE
@@ -84,9 +66,7 @@ func (v *magnitude_) GetBar2() string {
 
 type magnitude_ struct {
 	// Declare the instance attributes.
-	bar1_      string
 	numerical_ NumericalLike
-	bar2_      string
 }
 
 // Class Structure

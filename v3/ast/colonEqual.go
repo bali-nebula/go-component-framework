@@ -19,34 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func AssociationClass() AssociationClassLike {
-	return associationClass()
+func ColonEqualClass() ColonEqualClassLike {
+	return colonEqualClass()
 }
 
 // Constructor Methods
 
-func (c *associationClass_) Association(
-	symbol string,
-	component ComponentLike,
-) AssociationLike {
-	if uti.IsUndefined(symbol) {
-		panic("The \"symbol\" attribute is required by this class.")
-	}
-	if uti.IsUndefined(component) {
-		panic("The \"component\" attribute is required by this class.")
-	}
-	var instance = &association_{
+func (c *colonEqualClass_) ColonEqual() ColonEqualLike {
+	var instance = &colonEqual_{
 		// Initialize the instance attributes.
-		symbol_:    symbol,
-		component_: component,
 	}
 	return instance
 }
@@ -55,42 +42,32 @@ func (c *associationClass_) Association(
 
 // Principal Methods
 
-func (v *association_) GetClass() AssociationClassLike {
-	return associationClass()
+func (v *colonEqual_) GetClass() ColonEqualClassLike {
+	return colonEqualClass()
 }
 
 // Attribute Methods
-
-func (v *association_) GetSymbol() string {
-	return v.symbol_
-}
-
-func (v *association_) GetComponent() ComponentLike {
-	return v.component_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type association_ struct {
+type colonEqual_ struct {
 	// Declare the instance attributes.
-	symbol_    string
-	component_ ComponentLike
 }
 
 // Class Structure
 
-type associationClass_ struct {
+type colonEqualClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func associationClass() *associationClass_ {
-	return associationClassReference_
+func colonEqualClass() *colonEqualClass_ {
+	return colonEqualClassReference_
 }
 
-var associationClassReference_ = &associationClass_{
+var colonEqualClassReference_ = &colonEqualClass_{
 	// Initialize the class constants.
 }

@@ -19,9 +19,7 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
@@ -33,15 +31,9 @@ func NoAttributesClass() NoAttributesClassLike {
 
 // Constructor Methods
 
-func (c *noAttributesClass_) NoAttributes(
-	colon string,
-) NoAttributesLike {
-	if uti.IsUndefined(colon) {
-		panic("The \"colon\" attribute is required by this class.")
-	}
+func (c *noAttributesClass_) NoAttributes() NoAttributesLike {
 	var instance = &noAttributes_{
 		// Initialize the instance attributes.
-		colon_: colon,
 	}
 	return instance
 }
@@ -56,17 +48,12 @@ func (v *noAttributes_) GetClass() NoAttributesClassLike {
 
 // Attribute Methods
 
-func (v *noAttributes_) GetColon() string {
-	return v.colon_
-}
-
 // PROTECTED INTERFACE
 
 // Instance Structure
 
 type noAttributes_ struct {
 	// Declare the instance attributes.
-	colon_ string
 }
 
 // Class Structure

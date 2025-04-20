@@ -61,28 +61,10 @@ func (v *validator_) ValidateDocument(
 
 // Methodical Methods
 
-func (v *validator_) ProcessAmpersand(
-	ampersand string,
-) {
-	v.validateToken(ampersand, AmpersandToken)
-}
-
 func (v *validator_) ProcessAngle(
 	angle string,
 ) {
 	v.validateToken(angle, AngleToken)
-}
-
-func (v *validator_) ProcessArrow(
-	arrow string,
-) {
-	v.validateToken(arrow, ArrowToken)
-}
-
-func (v *validator_) ProcessBar(
-	bar string,
-) {
-	v.validateToken(bar, BarToken)
 }
 
 func (v *validator_) ProcessBinary(
@@ -103,28 +85,10 @@ func (v *validator_) ProcessBytecode(
 	v.validateToken(bytecode, BytecodeToken)
 }
 
-func (v *validator_) ProcessCaret(
-	caret string,
-) {
-	v.validateToken(caret, CaretToken)
-}
-
 func (v *validator_) ProcessCitation(
 	citation string,
 ) {
 	v.validateToken(citation, CitationToken)
-}
-
-func (v *validator_) ProcessColon(
-	colon string,
-) {
-	v.validateToken(colon, ColonToken)
-}
-
-func (v *validator_) ProcessColonEqual(
-	colonEqual string,
-) {
-	v.validateToken(colonEqual, ColonEqualToken)
 }
 
 func (v *validator_) ProcessComment(
@@ -133,46 +97,10 @@ func (v *validator_) ProcessComment(
 	v.validateToken(comment, CommentToken)
 }
 
-func (v *validator_) ProcessDash(
-	dash string,
-) {
-	v.validateToken(dash, DashToken)
-}
-
-func (v *validator_) ProcessDashEqual(
-	dashEqual string,
-) {
-	v.validateToken(dashEqual, DashEqualToken)
-}
-
-func (v *validator_) ProcessDefaultEqual(
-	defaultEqual string,
-) {
-	v.validateToken(defaultEqual, DefaultEqualToken)
-}
-
-func (v *validator_) ProcessDot(
-	dot string,
-) {
-	v.validateToken(dot, DotToken)
-}
-
-func (v *validator_) ProcessDouble(
-	double string,
-) {
-	v.validateToken(double, DoubleToken)
-}
-
 func (v *validator_) ProcessDuration(
 	duration string,
 ) {
 	v.validateToken(duration, DurationToken)
-}
-
-func (v *validator_) ProcessEqual(
-	equal string,
-) {
-	v.validateToken(equal, EqualToken)
 }
 
 func (v *validator_) ProcessIdentifier(
@@ -181,22 +109,10 @@ func (v *validator_) ProcessIdentifier(
 	v.validateToken(identifier, IdentifierToken)
 }
 
-func (v *validator_) ProcessLess(
-	less string,
-) {
-	v.validateToken(less, LessToken)
-}
-
 func (v *validator_) ProcessMoment(
 	moment string,
 ) {
 	v.validateToken(moment, MomentToken)
-}
-
-func (v *validator_) ProcessMore(
-	more string,
-) {
-	v.validateToken(more, MoreToken)
 }
 
 func (v *validator_) ProcessName(
@@ -241,18 +157,6 @@ func (v *validator_) ProcessPercentage(
 	v.validateToken(percentage, PercentageToken)
 }
 
-func (v *validator_) ProcessPlus(
-	plus string,
-) {
-	v.validateToken(plus, PlusToken)
-}
-
-func (v *validator_) ProcessPlusEqual(
-	plusEqual string,
-) {
-	v.validateToken(plusEqual, PlusEqualToken)
-}
-
 func (v *validator_) ProcessProbability(
 	probability string,
 ) {
@@ -271,40 +175,10 @@ func (v *validator_) ProcessResource(
 	v.validateToken(resource, ResourceToken)
 }
 
-func (v *validator_) ProcessSlash(
-	slash string,
-) {
-	v.validateToken(slash, SlashToken)
-}
-
-func (v *validator_) ProcessSlashEqual(
-	slashEqual string,
-) {
-	v.validateToken(slashEqual, SlashEqualToken)
-}
-
-func (v *validator_) ProcessSnail(
-	snail string,
-) {
-	v.validateToken(snail, SnailToken)
-}
-
 func (v *validator_) ProcessSpace(
 	space string,
 ) {
 	v.validateToken(space, SpaceToken)
-}
-
-func (v *validator_) ProcessStar(
-	star string,
-) {
-	v.validateToken(star, StarToken)
-}
-
-func (v *validator_) ProcessStarEqual(
-	starEqual string,
-) {
-	v.validateToken(starEqual, StarEqualToken)
 }
 
 func (v *validator_) ProcessSymbol(
@@ -453,6 +327,24 @@ func (v *validator_) PostprocessAdditionalValue(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessAmpersand(
+	ampersand ast.AmpersandLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessAmpersandSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessAmpersand(
+	ampersand ast.AmpersandLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessAnd(
 	and ast.AndLike,
 ) {
@@ -573,6 +465,24 @@ func (v *validator_) PostprocessArguments(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessArrow(
+	arrow ast.ArrowLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessArrowSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessArrow(
+	arrow ast.ArrowLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessAssign(
 	assign ast.AssignLike,
 ) {
@@ -663,6 +573,24 @@ func (v *validator_) PostprocessBreakClause(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessCaret(
+	caret ast.CaretLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessCaretSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessCaret(
+	caret ast.CaretLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessCheckoutClause(
 	checkoutClause ast.CheckoutClauseLike,
 ) {
@@ -713,6 +641,24 @@ func (v *validator_) ProcessCollectionSlot(
 
 func (v *validator_) PostprocessCollection(
 	collection ast.CollectionLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessColonEqual(
+	colonEqual ast.ColonEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessColonEqualSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessColonEqual(
+	colonEqual ast.ColonEqualLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -807,6 +753,60 @@ func (v *validator_) PostprocessContinueClause(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessDash(
+	dash ast.DashLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessDashSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessDash(
+	dash ast.DashLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessDashEqual(
+	dashEqual ast.DashEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessDashEqualSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessDashEqual(
+	dashEqual ast.DashEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessDefaultEqual(
+	defaultEqual ast.DefaultEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessDefaultEqualSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessDefaultEqual(
+	defaultEqual ast.DefaultEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessDiscardClause(
 	discardClause ast.DiscardClauseLike,
 ) {
@@ -861,6 +861,42 @@ func (v *validator_) PostprocessDocument(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessDot(
+	dot ast.DotLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessDotSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessDot(
+	dot ast.DotLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessDouble(
+	double ast.DoubleLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessDoubleSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessDouble(
+	double ast.DoubleLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessDraft(
 	draft ast.DraftLike,
 ) {
@@ -911,6 +947,24 @@ func (v *validator_) ProcessEntitySlot(
 
 func (v *validator_) PostprocessEntity(
 	entity ast.EntityLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessEqual(
+	equal ast.EqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessEqualSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessEqual(
+	equal ast.EqualLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1293,6 +1347,24 @@ func (v *validator_) PostprocessItem(
 	// TBD - Add any validation checks.
 }
 
+func (v *validator_) PreprocessLess(
+	less ast.LessLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessLessSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessLess(
+	less ast.LessLike,
+) {
+	// TBD - Add any validation checks.
+}
+
 func (v *validator_) PreprocessLetClause(
 	letClause ast.LetClauseLike,
 ) {
@@ -1509,6 +1581,24 @@ func (v *validator_) ProcessMethodSlot(
 
 func (v *validator_) PostprocessMethod(
 	method ast.MethodLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessMore(
+	more ast.MoreLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessMoreSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessMore(
+	more ast.MoreLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -1743,6 +1833,42 @@ func (v *validator_) ProcessParametersSlot(
 
 func (v *validator_) PostprocessParameters(
 	parameters ast.ParametersLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessPlus(
+	plus ast.PlusLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessPlusSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessPlus(
+	plus ast.PlusLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessPlusEqual(
+	plusEqual ast.PlusEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessPlusEqualSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessPlusEqual(
+	plusEqual ast.PlusEqualLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2071,6 +2197,78 @@ func (v *validator_) ProcessSequenceSlot(
 
 func (v *validator_) PostprocessSequence(
 	sequence ast.SequenceLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessSlash(
+	slash ast.SlashLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessSlashSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessSlash(
+	slash ast.SlashLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessSlashEqual(
+	slashEqual ast.SlashEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessSlashEqualSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessSlashEqual(
+	slashEqual ast.SlashEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessStar(
+	star ast.StarLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessStarSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessStar(
+	star ast.StarLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessStarEqual(
+	starEqual ast.StarEqualLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessStarEqualSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessStarEqual(
+	starEqual ast.StarEqualLike,
 ) {
 	// TBD - Add any validation checks.
 }

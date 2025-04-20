@@ -45,31 +45,41 @@ type (
 	AdditionalIndexClassLike       = ast.AdditionalIndexClassLike
 	AdditionalStatementClassLike   = ast.AdditionalStatementClassLike
 	AdditionalValueClassLike       = ast.AdditionalValueClassLike
+	AmpersandClassLike             = ast.AmpersandClassLike
 	AndClassLike                   = ast.AndClassLike
 	AnnotatedAssociationClassLike  = ast.AnnotatedAssociationClassLike
 	AnnotatedStatementClassLike    = ast.AnnotatedStatementClassLike
 	AnnotatedValueClassLike        = ast.AnnotatedValueClassLike
 	ArgumentClassLike              = ast.ArgumentClassLike
 	ArgumentsClassLike             = ast.ArgumentsClassLike
+	ArrowClassLike                 = ast.ArrowClassLike
 	AssignClassLike                = ast.AssignClassLike
 	AssociationClassLike           = ast.AssociationClassLike
 	AtLevelClassLike               = ast.AtLevelClassLike
 	BagClassLike                   = ast.BagClassLike
 	BreakClauseClassLike           = ast.BreakClauseClassLike
+	CaretClassLike                 = ast.CaretClassLike
 	CheckoutClauseClassLike        = ast.CheckoutClauseClassLike
 	CitationClassLike              = ast.CitationClassLike
 	CollectionClassLike            = ast.CollectionClassLike
+	ColonEqualClassLike            = ast.ColonEqualClassLike
 	CommentLineClassLike           = ast.CommentLineClassLike
 	ComplementClassLike            = ast.ComplementClassLike
 	ComponentClassLike             = ast.ComponentClassLike
 	ConditionClassLike             = ast.ConditionClassLike
 	ContinueClauseClassLike        = ast.ContinueClauseClassLike
+	DashClassLike                  = ast.DashClassLike
+	DashEqualClassLike             = ast.DashEqualClassLike
+	DefaultEqualClassLike          = ast.DefaultEqualClassLike
 	DiscardClauseClassLike         = ast.DiscardClauseClassLike
 	DoClauseClassLike              = ast.DoClauseClassLike
 	DocumentClassLike              = ast.DocumentClassLike
+	DotClassLike                   = ast.DotClassLike
+	DoubleClassLike                = ast.DoubleClassLike
 	DraftClassLike                 = ast.DraftClassLike
 	ElementClassLike               = ast.ElementClassLike
 	EntityClassLike                = ast.EntityClassLike
+	EqualClassLike                 = ast.EqualClassLike
 	EventClassLike                 = ast.EventClassLike
 	ExceptionClassLike             = ast.ExceptionClassLike
 	ExpressionClassLike            = ast.ExpressionClassLike
@@ -91,6 +101,7 @@ type (
 	IorClassLike                   = ast.IorClassLike
 	IsClassLike                    = ast.IsClassLike
 	ItemClassLike                  = ast.ItemClassLike
+	LessClassLike                  = ast.LessClassLike
 	LetClauseClassLike             = ast.LetClauseClassLike
 	LogicalClassLike               = ast.LogicalClassLike
 	LowerBoundClassLike            = ast.LowerBoundClassLike
@@ -103,6 +114,7 @@ type (
 	MessageClassLike               = ast.MessageClassLike
 	MessagingClassLike             = ast.MessagingClassLike
 	MethodClassLike                = ast.MethodClassLike
+	MoreClassLike                  = ast.MoreClassLike
 	MultilineAttributesClassLike   = ast.MultilineAttributesClassLike
 	MultilineParametersClassLike   = ast.MultilineParametersClassLike
 	MultilineStatementsClassLike   = ast.MultilineStatementsClassLike
@@ -116,6 +128,8 @@ type (
 	OnClauseClassLike              = ast.OnClauseClassLike
 	OperatorClassLike              = ast.OperatorClassLike
 	ParametersClassLike            = ast.ParametersClassLike
+	PlusClassLike                  = ast.PlusClassLike
+	PlusEqualClassLike             = ast.PlusEqualClassLike
 	PostClauseClassLike            = ast.PostClauseClassLike
 	PrecedenceClassLike            = ast.PrecedenceClassLike
 	PredicateClassLike             = ast.PredicateClassLike
@@ -134,6 +148,10 @@ type (
 	SaveClauseClassLike            = ast.SaveClauseClassLike
 	SelectClauseClassLike          = ast.SelectClauseClassLike
 	SequenceClassLike              = ast.SequenceClassLike
+	SlashClassLike                 = ast.SlashClassLike
+	SlashEqualClassLike            = ast.SlashEqualClassLike
+	StarClassLike                  = ast.StarClassLike
+	StarEqualClassLike             = ast.StarEqualClassLike
 	StatementClassLike             = ast.StatementClassLike
 	StatementLineClassLike         = ast.StatementLineClassLike
 	StringClassLike                = ast.StringClassLike
@@ -159,31 +177,41 @@ type (
 	AdditionalIndexLike       = ast.AdditionalIndexLike
 	AdditionalStatementLike   = ast.AdditionalStatementLike
 	AdditionalValueLike       = ast.AdditionalValueLike
+	AmpersandLike             = ast.AmpersandLike
 	AndLike                   = ast.AndLike
 	AnnotatedAssociationLike  = ast.AnnotatedAssociationLike
 	AnnotatedStatementLike    = ast.AnnotatedStatementLike
 	AnnotatedValueLike        = ast.AnnotatedValueLike
 	ArgumentLike              = ast.ArgumentLike
 	ArgumentsLike             = ast.ArgumentsLike
+	ArrowLike                 = ast.ArrowLike
 	AssignLike                = ast.AssignLike
 	AssociationLike           = ast.AssociationLike
 	AtLevelLike               = ast.AtLevelLike
 	BagLike                   = ast.BagLike
 	BreakClauseLike           = ast.BreakClauseLike
+	CaretLike                 = ast.CaretLike
 	CheckoutClauseLike        = ast.CheckoutClauseLike
 	CitationLike              = ast.CitationLike
 	CollectionLike            = ast.CollectionLike
+	ColonEqualLike            = ast.ColonEqualLike
 	CommentLineLike           = ast.CommentLineLike
 	ComplementLike            = ast.ComplementLike
 	ComponentLike             = ast.ComponentLike
 	ConditionLike             = ast.ConditionLike
 	ContinueClauseLike        = ast.ContinueClauseLike
+	DashLike                  = ast.DashLike
+	DashEqualLike             = ast.DashEqualLike
+	DefaultEqualLike          = ast.DefaultEqualLike
 	DiscardClauseLike         = ast.DiscardClauseLike
 	DoClauseLike              = ast.DoClauseLike
 	DocumentLike              = ast.DocumentLike
+	DotLike                   = ast.DotLike
+	DoubleLike                = ast.DoubleLike
 	DraftLike                 = ast.DraftLike
 	ElementLike               = ast.ElementLike
 	EntityLike                = ast.EntityLike
+	EqualLike                 = ast.EqualLike
 	EventLike                 = ast.EventLike
 	ExceptionLike             = ast.ExceptionLike
 	ExpressionLike            = ast.ExpressionLike
@@ -205,6 +233,7 @@ type (
 	IorLike                   = ast.IorLike
 	IsLike                    = ast.IsLike
 	ItemLike                  = ast.ItemLike
+	LessLike                  = ast.LessLike
 	LetClauseLike             = ast.LetClauseLike
 	LogicalLike               = ast.LogicalLike
 	LowerBoundLike            = ast.LowerBoundLike
@@ -217,6 +246,7 @@ type (
 	MessageLike               = ast.MessageLike
 	MessagingLike             = ast.MessagingLike
 	MethodLike                = ast.MethodLike
+	MoreLike                  = ast.MoreLike
 	MultilineAttributesLike   = ast.MultilineAttributesLike
 	MultilineParametersLike   = ast.MultilineParametersLike
 	MultilineStatementsLike   = ast.MultilineStatementsLike
@@ -230,6 +260,8 @@ type (
 	OnClauseLike              = ast.OnClauseLike
 	OperatorLike              = ast.OperatorLike
 	ParametersLike            = ast.ParametersLike
+	PlusLike                  = ast.PlusLike
+	PlusEqualLike             = ast.PlusEqualLike
 	PostClauseLike            = ast.PostClauseLike
 	PrecedenceLike            = ast.PrecedenceLike
 	PredicateLike             = ast.PredicateLike
@@ -248,6 +280,10 @@ type (
 	SaveClauseLike            = ast.SaveClauseLike
 	SelectClauseLike          = ast.SelectClauseLike
 	SequenceLike              = ast.SequenceLike
+	SlashLike                 = ast.SlashLike
+	SlashEqualLike            = ast.SlashEqualLike
+	StarLike                  = ast.StarLike
+	StarEqualLike             = ast.StarEqualLike
 	StatementLike             = ast.StatementLike
 	StatementLineLike         = ast.StatementLineLike
 	StringLike                = ast.StringLike
@@ -273,52 +309,31 @@ type (
 )
 
 const (
-	ErrorToken        = gra.ErrorToken
-	AmpersandToken    = gra.AmpersandToken
-	AngleToken        = gra.AngleToken
-	ArrowToken        = gra.ArrowToken
-	BarToken          = gra.BarToken
-	BinaryToken       = gra.BinaryToken
-	BooleanToken      = gra.BooleanToken
-	BytecodeToken     = gra.BytecodeToken
-	CaretToken        = gra.CaretToken
-	CitationToken     = gra.CitationToken
-	ColonToken        = gra.ColonToken
-	ColonEqualToken   = gra.ColonEqualToken
-	CommentToken      = gra.CommentToken
-	DashToken         = gra.DashToken
-	DashEqualToken    = gra.DashEqualToken
-	DefaultEqualToken = gra.DefaultEqualToken
-	DelimiterToken    = gra.DelimiterToken
-	DotToken          = gra.DotToken
-	DoubleToken       = gra.DoubleToken
-	DurationToken     = gra.DurationToken
-	EqualToken        = gra.EqualToken
-	IdentifierToken   = gra.IdentifierToken
-	LessToken         = gra.LessToken
-	MomentToken       = gra.MomentToken
-	MoreToken         = gra.MoreToken
-	NameToken         = gra.NameToken
-	NarrativeToken    = gra.NarrativeToken
-	NewlineToken      = gra.NewlineToken
-	NoteToken         = gra.NoteToken
-	NumberToken       = gra.NumberToken
-	PatternToken      = gra.PatternToken
-	PercentageToken   = gra.PercentageToken
-	PlusToken         = gra.PlusToken
-	PlusEqualToken    = gra.PlusEqualToken
-	ProbabilityToken  = gra.ProbabilityToken
-	QuoteToken        = gra.QuoteToken
-	ResourceToken     = gra.ResourceToken
-	SlashToken        = gra.SlashToken
-	SlashEqualToken   = gra.SlashEqualToken
-	SnailToken        = gra.SnailToken
-	SpaceToken        = gra.SpaceToken
-	StarToken         = gra.StarToken
-	StarEqualToken    = gra.StarEqualToken
-	SymbolToken       = gra.SymbolToken
-	TagToken          = gra.TagToken
-	VersionToken      = gra.VersionToken
+	ErrorToken       = gra.ErrorToken
+	AngleToken       = gra.AngleToken
+	BinaryToken      = gra.BinaryToken
+	BooleanToken     = gra.BooleanToken
+	BytecodeToken    = gra.BytecodeToken
+	CitationToken    = gra.CitationToken
+	CommentToken     = gra.CommentToken
+	DelimiterToken   = gra.DelimiterToken
+	DurationToken    = gra.DurationToken
+	IdentifierToken  = gra.IdentifierToken
+	MomentToken      = gra.MomentToken
+	NameToken        = gra.NameToken
+	NarrativeToken   = gra.NarrativeToken
+	NewlineToken     = gra.NewlineToken
+	NoteToken        = gra.NoteToken
+	NumberToken      = gra.NumberToken
+	PatternToken     = gra.PatternToken
+	PercentageToken  = gra.PercentageToken
+	ProbabilityToken = gra.ProbabilityToken
+	QuoteToken       = gra.QuoteToken
+	ResourceToken    = gra.ResourceToken
+	SpaceToken       = gra.SpaceToken
+	SymbolToken      = gra.SymbolToken
+	TagToken         = gra.TagToken
+	VersionToken     = gra.VersionToken
 )
 
 type (
@@ -407,6 +422,12 @@ func AdditionalValue(
 	)
 }
 
+// Ast/Ampersand
+
+func Ampersand() ast.AmpersandLike {
+	return ast.AmpersandClass().Ampersand()
+}
+
 // Ast/And
 
 func And() ast.AndLike {
@@ -469,6 +490,12 @@ func Arguments(
 	)
 }
 
+// Ast/Arrow
+
+func Arrow() ast.ArrowLike {
+	return ast.ArrowClass().Arrow()
+}
+
 // Ast/Assign
 
 func Assign(
@@ -483,12 +510,10 @@ func Assign(
 
 func Association(
 	symbol string,
-	colon string,
 	component ast.ComponentLike,
 ) ast.AssociationLike {
 	return ast.AssociationClass().Association(
 		symbol,
-		colon,
 		component,
 	)
 }
@@ -517,6 +542,12 @@ func Bag(
 
 func BreakClause() ast.BreakClauseLike {
 	return ast.BreakClauseClass().BreakClause()
+}
+
+// Ast/Caret
+
+func Caret() ast.CaretLike {
+	return ast.CaretClass().Caret()
 }
 
 // Ast/CheckoutClause
@@ -551,6 +582,12 @@ func Collection(
 	return ast.CollectionClass().Collection(
 		any_,
 	)
+}
+
+// Ast/ColonEqual
+
+func ColonEqual() ast.ColonEqualLike {
+	return ast.ColonEqualClass().ColonEqual()
 }
 
 // Ast/CommentLine
@@ -601,6 +638,24 @@ func ContinueClause() ast.ContinueClauseLike {
 	return ast.ContinueClauseClass().ContinueClause()
 }
 
+// Ast/Dash
+
+func Dash() ast.DashLike {
+	return ast.DashClass().Dash()
+}
+
+// Ast/DashEqual
+
+func DashEqual() ast.DashEqualLike {
+	return ast.DashEqualClass().DashEqual()
+}
+
+// Ast/DefaultEqual
+
+func DefaultEqual() ast.DefaultEqualLike {
+	return ast.DefaultEqualClass().DefaultEqual()
+}
+
 // Ast/DiscardClause
 
 func DiscardClause(
@@ -633,6 +688,18 @@ func Document(
 	)
 }
 
+// Ast/Dot
+
+func Dot() ast.DotLike {
+	return ast.DotClass().Dot()
+}
+
+// Ast/Double
+
+func Double() ast.DoubleLike {
+	return ast.DoubleClass().Double()
+}
+
 // Ast/Draft
 
 func Draft(
@@ -661,6 +728,12 @@ func Entity(
 	return ast.EntityClass().Entity(
 		any_,
 	)
+}
+
+// Ast/Equal
+
+func Equal() ast.EqualLike {
+	return ast.EqualClass().Equal()
 }
 
 // Ast/Event
@@ -883,6 +956,12 @@ func Item(
 	)
 }
 
+// Ast/Less
+
+func Less() ast.LessLike {
+	return ast.LessClass().Less()
+}
+
 // Ast/LetClause
 
 func LetClause(
@@ -932,14 +1011,10 @@ func LowerInclusion() ast.LowerInclusionLike {
 // Ast/Magnitude
 
 func Magnitude(
-	bar1 string,
 	numerical ast.NumericalLike,
-	bar2 string,
 ) ast.MagnitudeLike {
 	return ast.MagnitudeClass().Magnitude(
-		bar1,
 		numerical,
-		bar2,
 	)
 }
 
@@ -1007,6 +1082,12 @@ func Method(
 	)
 }
 
+// Ast/More
+
+func More() ast.MoreLike {
+	return ast.MoreClass().More()
+}
+
 // Ast/MultilineAttributes
 
 func MultilineAttributes(
@@ -1057,12 +1138,8 @@ func MultilineValues(
 
 // Ast/NoAttributes
 
-func NoAttributes(
-	colon string,
-) ast.NoAttributesLike {
-	return ast.NoAttributesClass().NoAttributes(
-		colon,
-	)
+func NoAttributes() ast.NoAttributesLike {
+	return ast.NoAttributesClass().NoAttributes()
 }
 
 // Ast/NoStatements
@@ -1141,6 +1218,18 @@ func Parameters(
 	return ast.ParametersClass().Parameters(
 		any_,
 	)
+}
+
+// Ast/Plus
+
+func Plus() ast.PlusLike {
+	return ast.PlusClass().Plus()
+}
+
+// Ast/PlusEqual
+
+func PlusEqual() ast.PlusEqualLike {
+	return ast.PlusEqualClass().PlusEqual()
 }
 
 // Ast/PostClause
@@ -1236,11 +1325,9 @@ func Recipient(
 // Ast/Referent
 
 func Referent(
-	snail string,
 	indirect ast.IndirectLike,
 ) ast.ReferentLike {
 	return ast.ReferentClass().Referent(
-		snail,
 		indirect,
 	)
 }
@@ -1335,6 +1422,30 @@ func Sequence(
 	return ast.SequenceClass().Sequence(
 		expression,
 	)
+}
+
+// Ast/Slash
+
+func Slash() ast.SlashLike {
+	return ast.SlashClass().Slash()
+}
+
+// Ast/SlashEqual
+
+func SlashEqual() ast.SlashEqualLike {
+	return ast.SlashEqualClass().SlashEqual()
+}
+
+// Ast/Star
+
+func Star() ast.StarLike {
+	return ast.StarClass().Star()
+}
+
+// Ast/StarEqual
+
+func StarEqual() ast.StarEqualLike {
+	return ast.StarEqualClass().StarEqual()
 }
 
 // Ast/Statement

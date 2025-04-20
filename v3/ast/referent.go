@@ -34,18 +34,13 @@ func ReferentClass() ReferentClassLike {
 // Constructor Methods
 
 func (c *referentClass_) Referent(
-	snail string,
 	indirect IndirectLike,
 ) ReferentLike {
-	if uti.IsUndefined(snail) {
-		panic("The \"snail\" attribute is required by this class.")
-	}
 	if uti.IsUndefined(indirect) {
 		panic("The \"indirect\" attribute is required by this class.")
 	}
 	var instance = &referent_{
 		// Initialize the instance attributes.
-		snail_:    snail,
 		indirect_: indirect,
 	}
 	return instance
@@ -61,10 +56,6 @@ func (v *referent_) GetClass() ReferentClassLike {
 
 // Attribute Methods
 
-func (v *referent_) GetSnail() string {
-	return v.snail_
-}
-
 func (v *referent_) GetIndirect() IndirectLike {
 	return v.indirect_
 }
@@ -75,7 +66,6 @@ func (v *referent_) GetIndirect() IndirectLike {
 
 type referent_ struct {
 	// Declare the instance attributes.
-	snail_    string
 	indirect_ IndirectLike
 }
 

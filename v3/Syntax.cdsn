@@ -29,15 +29,15 @@ $Notice: comment newline
 $Component: Entity Parameters?
 
 $Entity:
-  - Element
-  - String
-  - Range
-  - Collection
-  - Procedure
+    Element
+    String
+    Range
+    Collection
+    Procedure
 
 $Parameters:
-  - MultilineParameters
-  - InlineParameters
+    MultilineParameters
+    InlineParameters
 
 $MultilineParameters: "(" newline AnnotatedAssociation+ ")"
 
@@ -47,65 +47,65 @@ $InlineParameters: "(" Association AdditionalAssociation* ")"
 
 $AdditionalAssociation: "," Association
 
-$Association: symbol colon Component
+$Association: symbol ":" Component
 
 $Element:
-  - angle
-  - boolean
-  - citation
-  - duration
-  - moment
-  - number
-  - pattern
-  - percentage
-  - probability
-  - resource
+    angle
+    boolean
+    citation
+    duration
+    moment
+    number
+    pattern
+    percentage
+    probability
+    resource
 
 $String:
-  - binary
-  - bytecode
-  - name
-  - narrative
-  - quote
-  - symbol
-  - tag
-  - version
+    binary
+    bytecode
+    name
+    narrative
+    quote
+    symbol
+    tag
+    version
 
 $Range: LowerBound Primitive ".." Primitive UpperBound
 
 $LowerBound:
-  - LowerInclusion
-  - LowerExclusion
+    LowerInclusion
+    LowerExclusion
 
 $LowerInclusion: "[|"
 
 $LowerExclusion: "(|"
 
 $Primitive:
-  - Element
-  - String
+    Element
+    String
 
 $UpperBound:
-  - UpperInclusion
-  - UpperExclusion
+    UpperInclusion
+    UpperExclusion
 
 $UpperInclusion: "|]"
 
 $UpperExclusion: "|)"
 
 $Collection:
-  - MultilineAttributes
-  - MultilineValues  ! Must be after the multiline attributes.
-  - InlineAttributes
-  - InlineValues  ! Must be after the inline attributes.
-  - NoAttributes
-  - NoValues
+    MultilineAttributes
+    MultilineValues  ! Must be after the multiline attributes.
+    InlineAttributes
+    InlineValues  ! Must be after the inline attributes.
+    NoAttributes
+    NoValues
 
 $MultilineAttributes: "[" newline AnnotatedAssociation+ "]"
 
 $InlineAttributes: "[" Association AdditionalAssociation* "]"
 
-$NoAttributes: "[" colon "]"
+$NoAttributes: "[" ":" "]"
 
 $MultilineValues: "[" newline AnnotatedValue+ "]"
 
@@ -118,15 +118,15 @@ $AdditionalValue: "," Component
 $NoValues: "[" "]"
 
 $Procedure:
-  - MultilineStatements
-  - InlineStatements
-  - NoStatements
+    MultilineStatements
+    InlineStatements
+    NoStatements
 
 $MultilineStatements: "{" newline AnnotatedStatement* "}"
 
 $AnnotatedStatement:
-  - CommentLine
-  - StatementLine
+    CommentLine
+    StatementLine
 
 $CommentLine: comment
 
@@ -141,10 +141,10 @@ $NoStatements: "{" "}"
 $Statement: MainClause OnClause?
 
 $MainClause:
-  - Flow
-  - Induction
-  - Messaging
-  - Repository
+    Flow
+    Induction
+    Messaging
+    Repository
 
 $OnClause: "on" Failure MatchHandler+
 
@@ -155,31 +155,31 @@ $Failure: symbol
 $Template: Expression
 
 $Flow:
-  - IfClause
-  - SelectClause
-  - WhileClause
-  - WithClause
-  - ContinueClause
-  - BreakClause
-  - ReturnClause
-  - ThrowClause
+    IfClause
+    SelectClause
+    WhileClause
+    WithClause
+    ContinueClause
+    BreakClause
+    ReturnClause
+    ThrowClause
 
 $Induction:
-  - DoClause
-  - LetClause
+    DoClause
+    LetClause
 
 $Messaging:
-  - PostClause
-  - RetrieveClause
-  - AcceptClause
-  - RejectClause
-  - PublishClause
+    PostClause
+    RetrieveClause
+    AcceptClause
+    RejectClause
+    PublishClause
 
 $Repository:
-  - CheckoutClause
-  - SaveClause
-  - DiscardClause
-  - NotarizeClause
+    CheckoutClause
+    SaveClause
+    DiscardClause
+    NotarizeClause
 
 $IfClause: "if" Condition "do" Procedure
 
@@ -188,10 +188,10 @@ $Condition: Expression
 $SelectClause: "select" Target MatchHandler+
 
 $Target:
-  - Function
-  - Method
-  - Subcomponent
-  - Variable  ! This must be last since others also begin with an identifier.
+    Function
+    Method
+    Subcomponent
+    Variable  ! This must be last since others also begin with an identifier.
 
 $Function: identifier "(" Arguments? ")"
 
@@ -204,8 +204,20 @@ $Argument: identifier
 $Method: identifier Threading identifier "(" Arguments? ")"
 
 $Threading:
-  - dot
-  - arrow
+    Dot
+    Arrow
+
+$Dot: "."
+
+$Arrow: "<-"
+
+$Subcomponent: identifier "[" Indices "]"
+
+$Indices: Index AdditionalIndex*
+
+$AdditionalIndex: "," Index
+
+$Index: Expression
 
 $Variable: identifier
 
@@ -232,22 +244,34 @@ $Exception: Expression
 $DoClause: "do" Invocation
 
 $Invocation:
-  - Function
-  - Method
+    Function
+    Method
 
 $LetClause: "let" Recipient Assign Expression
 
 $Assign:
-  - colonEqual
-  - defaultEqual
-  - plusEqual
-  - dashEqual
-  - starEqual
-  - slashEqual
+    ColonEqual
+    DefaultEqual
+    PlusEqual
+    DashEqual
+    StarEqual
+    SlashEqual
+
+$ColonEqual: ":="
+
+$DefaultEqual: "?="
+
+$PlusEqual: "+="
+
+$DashEqual: "-="
+
+$StarEqual: "*="
+
+$SlashEqual: "/="
 
 $Recipient:
-  - symbol
-  - Subcomponent
+    Item
+    Subcomponent
 
 $PostClause: "post" Message "to" Bag
 
@@ -282,44 +306,56 @@ $NotarizeClause: "notarize" Draft "as" Citation
 $Expression: Subject Predicate*
 
 $Subject:
-  - Component
-  - Subcomponent
-  - Precedence
-  - Referent
-  - Complement
-  - Inversion
-  - Magnitude
-  - Function
-  - Method
-  - Variable  ! This must be last since others also begin with an identifier.
-
-$Subcomponent: identifier "[" Indices "]"
-
-$Indices: Index AdditionalIndex*
-
-$AdditionalIndex: "," Index
-
-$Index: Expression
+    Component
+    Subcomponent
+    Precedence
+    Referent
+    Complement
+    Inversion
+    Magnitude
+    Function
+    Method
+    Variable  ! This must be last since others also begin with an identifier.
 
 $Predicate: Operator Expression
 
 $Operator:
-  - plus
-  - dash
-  - star
-  - slash
-  - double
-  - caret
-  - less
-  - equal
-  - more
-  - ampersand
-  - Is
-  - Matches
-  - And
-  - San
-  - Ior
-  - Xor
+    Plus
+    Dash
+    Star
+    Slash
+    Double
+    Caret
+    Less
+    Equal
+    More
+    Ampersand
+    Is
+    Matches
+    And
+    San
+    Ior
+    Xor
+
+$Plus: "+"
+
+$Dash: "-"
+
+$Star: "*"
+
+$Slash: "/"
+
+$Double: "//"
+
+$Caret: "^"
+
+$Less: "<"
+
+$Equal: "="
+
+$More: ">"
+
+$Ampersand: "&"
 
 $Is: "is"
 
@@ -335,47 +371,47 @@ $Xor: "xor"
 
 $Precedence: "(" Expression ")"
 
-$Referent: snail Indirect
+$Referent: "@" Indirect
 
 $Indirect:
-  - Component
-  - Subcomponent
-  - Referent
-  - Function
-  - Method
-  - Variable  ! This must be last since others also begin with an identifier.
+    Component
+    Subcomponent
+    Referent
+    Function
+    Method
+    Variable  ! This must be last since others also begin with an identifier.
 
 $Complement: "not" Logical
 
 $Logical:
-  - Component
-  - Subcomponent
-  - Precedence
-  - Referent
-  - Complement
-  - Function
-  - Method
-  - Variable  ! This must be last since others also begin with an identifier.
+    Component
+    Subcomponent
+    Precedence
+    Referent
+    Complement
+    Function
+    Method
+    Variable  ! This must be last since others also begin with an identifier.
 
 $Inversion: Inverse Numerical
 
 $Inverse:
-  - dash
-  - slash
-  - star
+    Dash
+    Slash
+    Star
 
 $Numerical:
-  - Component
-  - Subcomponent
-  - Precedence
-  - Referent
-  - Inversion
-  - Magnitude
-  - Function
-  - Method
-  - Variable  ! This must be last since others also begin with an identifier.
+    Component
+    Subcomponent
+    Precedence
+    Referent
+    Inversion
+    Magnitude
+    Function
+    Method
+    Variable  ! This must be last since others also begin with an identifier.
 
-$Magnitude: bar Numerical bar
+$Magnitude: "|" Numerical "|"
 
 !>
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -386,13 +422,9 @@ $alpha: ['A'..'Z' 'a'..'z']
 
 $alphanumeric: alpha | base10
 
-$ampersand: '&'
-
-$angle: '~' (zero | amplitude | "pi" | "π" | "tau" | "τ")
+$angle: '~' ('0' | amplitude | "pi" | "π" | "tau" | "τ")
 
 $authority: ~['/' CONTROL]+
-
-$bar: '|'
 
 $base10: ['0'..'9']
 
@@ -402,39 +434,25 @@ $base32: base10 | ['A'..'D' 'F'..'H' 'J'..'N' 'P'..'T' 'V'..'Z']
 
 $base64: alphanumeric | ['+' '/']
 
-$binary: "'>" (EOL block+)? space* "<'"
+$binary: "'>" (EOL block+)? ' '* "<'"
 
-$block: space* base64{1..60} EOL
+$block: ' '* base64{1..60} EOL
 
 $boolean: "false" | "true"
 
-$bytecode: "'" (instruction (space instruction)*)* "'"
-
-$caret: '^'
+$bytecode: "'" (instruction (' ' instruction)*)* "'"
 
 $character: escape | ~['"' CONTROL]
 
-$citation: name slash version
+$citation: name '/' version
 
-$colonEqual: ":="
-
-$colon: ":"
-
-$comment: "!>" EOL (ANY | EOL)* EOL space* "<!"  ! Chooses the shortest match.
-
-$dashEqual: "-="
+$comment: "!>" EOL (ANY | EOL)* EOL ' '* "<!"  ! Chooses the shortest match.
 
 $day: (['0'..'2'] ['1'..'9']) | ('3' ['0'..'1'])
 
 $days: timespan 'D'
 
-$defaultEqual: "?="
-
-$double: "//"
-
 $duration: '~' sign? 'P' (weeks | (years? months? days? ('T' hours? minutes? seconds?)?))
-
-$equal: "="
 
 $escape: '\' (unicode | ['a' 'b' 'f' 'n' 'r' 't' 'v' '"' '\'])
 
@@ -442,7 +460,7 @@ $exponent: 'E' sign? ordinal
 
 $float: sign? amplitude
 
-$fraction: dot base10+
+$fraction: '.' base10+
 
 $fragment: ~['>' CONTROL]*
 
@@ -458,9 +476,7 @@ $instruction: base16{4}
 
 $letter: LOWER | UPPER
 
-$amplitude: (zero fraction | ordinal fraction?) exponent?
-
-$matches: "matches"
+$amplitude: ('0' fraction | ordinal fraction?) exponent?
 
 $minute: ['0'..'5'] ['0'..'9']
 
@@ -472,11 +488,9 @@ $month: ('0' ['1'..'9']) | ('1' ['0'..'2'])
 
 $months: timespan 'M'
 
-$more: ">"
+$name: ('/' identifier)+
 
-$name: (slash identifier)+
-
-$narrative: '"' '>' EOL (ANY | EOL)* EOL space* '<' '"'  ! Chooses the shortest match.
+$narrative: '"' '>' EOL (ANY | EOL)* EOL ' '* '<' '"'  ! Chooses the shortest match.
 
 $note: "! " ~[CONTROL]*
 
@@ -490,17 +504,13 @@ $percentage: real '%'
 
 $probability: fraction | "one"
 
-$plusEqual: "+="
-
-$plus: '+'
-
 $polar: amplitude "e^" angle? 'i'
 
 $query: ~['#' '>' CONTROL]*
 
 $quote: '"' character* '"'
 
-$real: zero | float | infinity | undefined
+$real: '0' | float | infinity | undefined
 
 $rectangular: float sign float? 'i'
 
@@ -508,55 +518,33 @@ $regex: '"' character+ '"' '?'
 
 $resource: '<' scheme ':' ("//" authority)? '/' path ('?' query)? ('#' fragment)? '>'
 
-$scheme: alpha (alphanumeric | plus | dash | dot)*
+$scheme: alpha (alphanumeric | '+' | '-' | '.')*
 
 $second: (['0'..'5'] ['0'..'9']) | ('6' ['0'..'1'])
 
 $seconds: timespan 'S'
 
-$sign: plus | dash
-
-$slashEqual: "/="
-
-$slash: '/'
-
-$snail: '@'
-
-$space: ' '
-
-$starEqual: "*="
-
-$star: '*'
+$sign: '+' | '-'
 
 $symbol: '$' identifier
 
 $tag: '#' base32+
 
-$timespan: zero | (ordinal fraction?)
+$timespan: '0' | (ordinal fraction?)
 
 $undefined: "undefined"
 
 $unicode: ('u' base16{4}) | ('U' base16{8})
 
-$version: 'v' ordinal (dot ordinal)*
+$version: 'v' ordinal ('.' ordinal)*
 
 $weeks: timespan 'W'
 
-$year: zero | ordinal
+$year: '0' | ordinal
 
 $years: timespan 'Y'
 
-$zero: '0'
-
-$number: polar | rectangular | imaginary | real ! Must be after percentage.
+$number: polar | rectangular | imaginary | real  ! Must be after percentage.
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
-
-$dot: '.'  ! Must be after probability.
-
-$dash: '-'  ! Must be after number.
-
-$arrow: "<-"  ! Must be after moment.
-
-$less: "<"  ! Must be after other expressions beginning with '<'.
 

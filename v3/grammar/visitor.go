@@ -128,6 +128,12 @@ func (v *visitor_) visitAdditionalValue(
 	v.processor_.PostprocessComponent(component)
 }
 
+func (v *visitor_) visitAmpersand(
+	ampersand ast.AmpersandLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitAnd(
 	and ast.AndLike,
 ) {
@@ -236,25 +242,43 @@ func (v *visitor_) visitArguments(
 	}
 }
 
+func (v *visitor_) visitArrow(
+	arrow ast.ArrowLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitAssign(
 	assign ast.AssignLike,
 ) {
 	// Visit the possible assign types.
 	switch actual := assign.GetAny().(type) {
+	case ast.ColonEqualLike:
+		v.processor_.PreprocessColonEqual(actual)
+		v.visitColonEqual(actual)
+		v.processor_.PostprocessColonEqual(actual)
+	case ast.DefaultEqualLike:
+		v.processor_.PreprocessDefaultEqual(actual)
+		v.visitDefaultEqual(actual)
+		v.processor_.PostprocessDefaultEqual(actual)
+	case ast.PlusEqualLike:
+		v.processor_.PreprocessPlusEqual(actual)
+		v.visitPlusEqual(actual)
+		v.processor_.PostprocessPlusEqual(actual)
+	case ast.DashEqualLike:
+		v.processor_.PreprocessDashEqual(actual)
+		v.visitDashEqual(actual)
+		v.processor_.PostprocessDashEqual(actual)
+	case ast.StarEqualLike:
+		v.processor_.PreprocessStarEqual(actual)
+		v.visitStarEqual(actual)
+		v.processor_.PostprocessStarEqual(actual)
+	case ast.SlashEqualLike:
+		v.processor_.PreprocessSlashEqual(actual)
+		v.visitSlashEqual(actual)
+		v.processor_.PostprocessSlashEqual(actual)
 	case string:
 		switch {
-		case ScannerClass().MatchesType(actual, ColonEqualToken):
-			v.processor_.ProcessColonEqual(actual)
-		case ScannerClass().MatchesType(actual, DefaultEqualToken):
-			v.processor_.ProcessDefaultEqual(actual)
-		case ScannerClass().MatchesType(actual, PlusEqualToken):
-			v.processor_.ProcessPlusEqual(actual)
-		case ScannerClass().MatchesType(actual, DashEqualToken):
-			v.processor_.ProcessDashEqual(actual)
-		case ScannerClass().MatchesType(actual, StarEqualToken):
-			v.processor_.ProcessStarEqual(actual)
-		case ScannerClass().MatchesType(actual, SlashEqualToken):
-			v.processor_.ProcessSlashEqual(actual)
 		default:
 			panic(fmt.Sprintf("Invalid token: %v", actual))
 		}
@@ -272,13 +296,6 @@ func (v *visitor_) visitAssociation(
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessAssociationSlot(1)
-
-	// Visit a single colon token.
-	var colon = association.GetColon()
-	v.processor_.ProcessColon(colon)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessAssociationSlot(2)
 
 	// Visit a single component rule.
 	var component = association.GetComponent()
@@ -309,6 +326,12 @@ func (v *visitor_) visitBag(
 
 func (v *visitor_) visitBreakClause(
 	breakClause ast.BreakClauseLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitCaret(
+	caret ast.CaretLike,
 ) {
 	// This method does not need to process anything.
 }
@@ -392,6 +415,12 @@ func (v *visitor_) visitCollection(
 	}
 }
 
+func (v *visitor_) visitColonEqual(
+	colonEqual ast.ColonEqualLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitCommentLine(
 	commentLine ast.CommentLineLike,
 ) {
@@ -447,6 +476,24 @@ func (v *visitor_) visitContinueClause(
 	// This method does not need to process anything.
 }
 
+func (v *visitor_) visitDash(
+	dash ast.DashLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitDashEqual(
+	dashEqual ast.DashEqualLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitDefaultEqual(
+	defaultEqual ast.DefaultEqualLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitDiscardClause(
 	discardClause ast.DiscardClauseLike,
 ) {
@@ -486,6 +533,18 @@ func (v *visitor_) visitDocument(
 	v.processor_.PreprocessComponent(component)
 	v.visitComponent(component)
 	v.processor_.PostprocessComponent(component)
+}
+
+func (v *visitor_) visitDot(
+	dot ast.DotLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitDouble(
+	double ast.DoubleLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitDraft(
@@ -566,6 +625,12 @@ func (v *visitor_) visitEntity(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
+}
+
+func (v *visitor_) visitEqual(
+	equal ast.EqualLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitEvent(
@@ -956,14 +1021,20 @@ func (v *visitor_) visitInverse(
 ) {
 	// Visit the possible inverse types.
 	switch actual := inverse.GetAny().(type) {
+	case ast.DashLike:
+		v.processor_.PreprocessDash(actual)
+		v.visitDash(actual)
+		v.processor_.PostprocessDash(actual)
+	case ast.SlashLike:
+		v.processor_.PreprocessSlash(actual)
+		v.visitSlash(actual)
+		v.processor_.PostprocessSlash(actual)
+	case ast.StarLike:
+		v.processor_.PreprocessStar(actual)
+		v.visitStar(actual)
+		v.processor_.PostprocessStar(actual)
 	case string:
 		switch {
-		case ScannerClass().MatchesType(actual, DashToken):
-			v.processor_.ProcessDash(actual)
-		case ScannerClass().MatchesType(actual, SlashToken):
-			v.processor_.ProcessSlash(actual)
-		case ScannerClass().MatchesType(actual, StarToken):
-			v.processor_.ProcessStar(actual)
 		default:
 			panic(fmt.Sprintf("Invalid token: %v", actual))
 		}
@@ -1032,6 +1103,12 @@ func (v *visitor_) visitItem(
 	// Visit a single symbol token.
 	var symbol = item.GetSymbol()
 	v.processor_.ProcessSymbol(symbol)
+}
+
+func (v *visitor_) visitLess(
+	less ast.LessLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitLetClause(
@@ -1147,25 +1224,11 @@ func (v *visitor_) visitLowerInclusion(
 func (v *visitor_) visitMagnitude(
 	magnitude ast.MagnitudeLike,
 ) {
-	// Visit a single bar token.
-	var bar1 = magnitude.GetBar1()
-	v.processor_.ProcessBar(bar1)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessMagnitudeSlot(1)
-
 	// Visit a single numerical rule.
 	var numerical = magnitude.GetNumerical()
 	v.processor_.PreprocessNumerical(numerical)
 	v.visitNumerical(numerical)
 	v.processor_.PostprocessNumerical(numerical)
-
-	// Visit slot 2 between references.
-	v.processor_.ProcessMagnitudeSlot(2)
-
-	// Visit a single bar token.
-	var bar2 = magnitude.GetBar2()
-	v.processor_.ProcessBar(bar2)
 }
 
 func (v *visitor_) visitMainClause(
@@ -1304,6 +1367,12 @@ func (v *visitor_) visitMethod(
 	}
 }
 
+func (v *visitor_) visitMore(
+	more ast.MoreLike,
+) {
+	// This method does not need to process anything.
+}
+
 func (v *visitor_) visitMultilineAttributes(
 	multilineAttributes ast.MultilineAttributesLike,
 ) {
@@ -1431,9 +1500,7 @@ func (v *visitor_) visitMultilineValues(
 func (v *visitor_) visitNoAttributes(
 	noAttributes ast.NoAttributesLike,
 ) {
-	// Visit a single colon token.
-	var colon = noAttributes.GetColon()
-	v.processor_.ProcessColon(colon)
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitNoStatements(
@@ -1571,6 +1638,46 @@ func (v *visitor_) visitOperator(
 ) {
 	// Visit the possible operator types.
 	switch actual := operator.GetAny().(type) {
+	case ast.PlusLike:
+		v.processor_.PreprocessPlus(actual)
+		v.visitPlus(actual)
+		v.processor_.PostprocessPlus(actual)
+	case ast.DashLike:
+		v.processor_.PreprocessDash(actual)
+		v.visitDash(actual)
+		v.processor_.PostprocessDash(actual)
+	case ast.StarLike:
+		v.processor_.PreprocessStar(actual)
+		v.visitStar(actual)
+		v.processor_.PostprocessStar(actual)
+	case ast.SlashLike:
+		v.processor_.PreprocessSlash(actual)
+		v.visitSlash(actual)
+		v.processor_.PostprocessSlash(actual)
+	case ast.DoubleLike:
+		v.processor_.PreprocessDouble(actual)
+		v.visitDouble(actual)
+		v.processor_.PostprocessDouble(actual)
+	case ast.CaretLike:
+		v.processor_.PreprocessCaret(actual)
+		v.visitCaret(actual)
+		v.processor_.PostprocessCaret(actual)
+	case ast.LessLike:
+		v.processor_.PreprocessLess(actual)
+		v.visitLess(actual)
+		v.processor_.PostprocessLess(actual)
+	case ast.EqualLike:
+		v.processor_.PreprocessEqual(actual)
+		v.visitEqual(actual)
+		v.processor_.PostprocessEqual(actual)
+	case ast.MoreLike:
+		v.processor_.PreprocessMore(actual)
+		v.visitMore(actual)
+		v.processor_.PostprocessMore(actual)
+	case ast.AmpersandLike:
+		v.processor_.PreprocessAmpersand(actual)
+		v.visitAmpersand(actual)
+		v.processor_.PostprocessAmpersand(actual)
 	case ast.IsLike:
 		v.processor_.PreprocessIs(actual)
 		v.visitIs(actual)
@@ -1597,26 +1704,6 @@ func (v *visitor_) visitOperator(
 		v.processor_.PostprocessXor(actual)
 	case string:
 		switch {
-		case ScannerClass().MatchesType(actual, PlusToken):
-			v.processor_.ProcessPlus(actual)
-		case ScannerClass().MatchesType(actual, DashToken):
-			v.processor_.ProcessDash(actual)
-		case ScannerClass().MatchesType(actual, StarToken):
-			v.processor_.ProcessStar(actual)
-		case ScannerClass().MatchesType(actual, SlashToken):
-			v.processor_.ProcessSlash(actual)
-		case ScannerClass().MatchesType(actual, DoubleToken):
-			v.processor_.ProcessDouble(actual)
-		case ScannerClass().MatchesType(actual, CaretToken):
-			v.processor_.ProcessCaret(actual)
-		case ScannerClass().MatchesType(actual, LessToken):
-			v.processor_.ProcessLess(actual)
-		case ScannerClass().MatchesType(actual, EqualToken):
-			v.processor_.ProcessEqual(actual)
-		case ScannerClass().MatchesType(actual, MoreToken):
-			v.processor_.ProcessMore(actual)
-		case ScannerClass().MatchesType(actual, AmpersandToken):
-			v.processor_.ProcessAmpersand(actual)
 		default:
 			panic(fmt.Sprintf("Invalid token: %v", actual))
 		}
@@ -1646,6 +1733,18 @@ func (v *visitor_) visitParameters(
 	default:
 		panic(fmt.Sprintf("Invalid rule type: %T", actual))
 	}
+}
+
+func (v *visitor_) visitPlus(
+	plus ast.PlusLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitPlusEqual(
+	plusEqual ast.PlusEqualLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitPostClause(
@@ -1798,14 +1897,16 @@ func (v *visitor_) visitRecipient(
 ) {
 	// Visit the possible recipient types.
 	switch actual := recipient.GetAny().(type) {
+	case ast.ItemLike:
+		v.processor_.PreprocessItem(actual)
+		v.visitItem(actual)
+		v.processor_.PostprocessItem(actual)
 	case ast.SubcomponentLike:
 		v.processor_.PreprocessSubcomponent(actual)
 		v.visitSubcomponent(actual)
 		v.processor_.PostprocessSubcomponent(actual)
 	case string:
 		switch {
-		case ScannerClass().MatchesType(actual, SymbolToken):
-			v.processor_.ProcessSymbol(actual)
 		default:
 			panic(fmt.Sprintf("Invalid token: %v", actual))
 		}
@@ -1817,13 +1918,6 @@ func (v *visitor_) visitRecipient(
 func (v *visitor_) visitReferent(
 	referent ast.ReferentLike,
 ) {
-	// Visit a single snail token.
-	var snail = referent.GetSnail()
-	v.processor_.ProcessSnail(snail)
-
-	// Visit slot 1 between references.
-	v.processor_.ProcessReferentSlot(1)
-
 	// Visit a single indirect rule.
 	var indirect = referent.GetIndirect()
 	v.processor_.PreprocessIndirect(indirect)
@@ -1977,6 +2071,30 @@ func (v *visitor_) visitSequence(
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
+}
+
+func (v *visitor_) visitSlash(
+	slash ast.SlashLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitSlashEqual(
+	slashEqual ast.SlashEqualLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitStar(
+	star ast.StarLike,
+) {
+	// This method does not need to process anything.
+}
+
+func (v *visitor_) visitStarEqual(
+	starEqual ast.StarEqualLike,
+) {
+	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitStatement(
@@ -2168,12 +2286,16 @@ func (v *visitor_) visitThreading(
 ) {
 	// Visit the possible threading types.
 	switch actual := threading.GetAny().(type) {
+	case ast.DotLike:
+		v.processor_.PreprocessDot(actual)
+		v.visitDot(actual)
+		v.processor_.PostprocessDot(actual)
+	case ast.ArrowLike:
+		v.processor_.PreprocessArrow(actual)
+		v.visitArrow(actual)
+		v.processor_.PostprocessArrow(actual)
 	case string:
 		switch {
-		case ScannerClass().MatchesType(actual, DotToken):
-			v.processor_.ProcessDot(actual)
-		case ScannerClass().MatchesType(actual, ArrowToken):
-			v.processor_.ProcessArrow(actual)
 		default:
 			panic(fmt.Sprintf("Invalid token: %v", actual))
 		}
