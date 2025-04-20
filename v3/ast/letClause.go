@@ -35,14 +35,14 @@ func LetClauseClass() LetClauseClassLike {
 
 func (c *letClauseClass_) LetClause(
 	recipient RecipientLike,
-	assign AssignLike,
+	assignment AssignmentLike,
 	expression ExpressionLike,
 ) LetClauseLike {
 	if uti.IsUndefined(recipient) {
 		panic("The \"recipient\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(assign) {
-		panic("The \"assign\" attribute is required by this class.")
+	if uti.IsUndefined(assignment) {
+		panic("The \"assignment\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(expression) {
 		panic("The \"expression\" attribute is required by this class.")
@@ -50,7 +50,7 @@ func (c *letClauseClass_) LetClause(
 	var instance = &letClause_{
 		// Initialize the instance attributes.
 		recipient_:  recipient,
-		assign_:     assign,
+		assignment_: assignment,
 		expression_: expression,
 	}
 	return instance
@@ -70,8 +70,8 @@ func (v *letClause_) GetRecipient() RecipientLike {
 	return v.recipient_
 }
 
-func (v *letClause_) GetAssign() AssignLike {
-	return v.assign_
+func (v *letClause_) GetAssignment() AssignmentLike {
+	return v.assignment_
 }
 
 func (v *letClause_) GetExpression() ExpressionLike {
@@ -85,7 +85,7 @@ func (v *letClause_) GetExpression() ExpressionLike {
 type letClause_ struct {
 	// Declare the instance attributes.
 	recipient_  RecipientLike
-	assign_     AssignLike
+	assignment_ AssignmentLike
 	expression_ ExpressionLike
 }
 

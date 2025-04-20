@@ -58,6 +58,18 @@ type AcceptClauseClassLike interface {
 }
 
 /*
+ActionClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete action-like class.
+*/
+type ActionClassLike interface {
+	// Constructor Methods
+	Action(
+		any_ any,
+	) ActionLike
+}
+
+/*
 AdditionalArgumentClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete additional-argument-like class.
@@ -115,16 +127,6 @@ type AdditionalValueClassLike interface {
 	AdditionalValue(
 		component ComponentLike,
 	) AdditionalValueLike
-}
-
-/*
-AmpersandClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete ampersand-like class.
-*/
-type AmpersandClassLike interface {
-	// Constructor Methods
-	Ampersand() AmpersandLike
 }
 
 /*
@@ -211,15 +213,15 @@ type ArrowClassLike interface {
 }
 
 /*
-AssignClassLike is a class interface that declares the
+AssignmentClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
-supported by each concrete assign-like class.
+supported by each concrete assignment-like class.
 */
-type AssignClassLike interface {
+type AssignmentClassLike interface {
 	// Constructor Methods
-	Assign(
+	Assignment(
 		any_ any,
-	) AssignLike
+	) AssignmentLike
 }
 
 /*
@@ -267,16 +269,6 @@ supported by each concrete break-clause-like class.
 type BreakClauseClassLike interface {
 	// Constructor Methods
 	BreakClause() BreakClauseLike
-}
-
-/*
-CaretClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete caret-like class.
-*/
-type CaretClassLike interface {
-	// Constructor Methods
-	Caret() CaretLike
 }
 
 /*
@@ -387,16 +379,6 @@ type ContinueClauseClassLike interface {
 }
 
 /*
-DashClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete dash-like class.
-*/
-type DashClassLike interface {
-	// Constructor Methods
-	Dash() DashLike
-}
-
-/*
 DashEqualClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete dash-equal-like class.
@@ -464,16 +446,6 @@ type DotClassLike interface {
 }
 
 /*
-DoubleClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete double-like class.
-*/
-type DoubleClassLike interface {
-	// Constructor Methods
-	Double() DoubleLike
-}
-
-/*
 DraftClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete draft-like class.
@@ -507,16 +479,6 @@ type EntityClassLike interface {
 	Entity(
 		any_ any,
 	) EntityLike
-}
-
-/*
-EqualClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete equal-like class.
-*/
-type EqualClassLike interface {
-	// Constructor Methods
-	Equal() EqualLike
 }
 
 /*
@@ -777,16 +739,6 @@ type ItemClassLike interface {
 }
 
 /*
-LessClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete less-like class.
-*/
-type LessClassLike interface {
-	// Constructor Methods
-	Less() LessLike
-}
-
-/*
 LetClauseClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete let-clause-like class.
@@ -795,7 +747,7 @@ type LetClauseClassLike interface {
 	// Constructor Methods
 	LetClause(
 		recipient RecipientLike,
-		assign AssignLike,
+		assignment AssignmentLike,
 		expression ExpressionLike,
 	) LetClauseLike
 }
@@ -928,16 +880,6 @@ type MethodClassLike interface {
 		identifier2 string,
 		optionalArguments ArgumentsLike,
 	) MethodLike
-}
-
-/*
-MoreClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete more-like class.
-*/
-type MoreClassLike interface {
-	// Constructor Methods
-	More() MoreLike
 }
 
 /*
@@ -1074,6 +1016,18 @@ type OnClauseClassLike interface {
 }
 
 /*
+OperationClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete operation-like class.
+*/
+type OperationClassLike interface {
+	// Constructor Methods
+	Operation(
+		any_ any,
+	) OperationLike
+}
+
+/*
 OperatorClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete operator-like class.
@@ -1095,16 +1049,6 @@ type ParametersClassLike interface {
 	Parameters(
 		any_ any,
 	) ParametersLike
-}
-
-/*
-PlusClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete plus-like class.
-*/
-type PlusClassLike interface {
-	// Constructor Methods
-	Plus() PlusLike
 }
 
 /*
@@ -1150,7 +1094,7 @@ supported by each concrete predicate-like class.
 type PredicateClassLike interface {
 	// Constructor Methods
 	Predicate(
-		operator OperatorLike,
+		action ActionLike,
 		expression ExpressionLike,
 	) PredicateLike
 }
@@ -1340,16 +1284,6 @@ type SequenceClassLike interface {
 }
 
 /*
-SlashClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete slash-like class.
-*/
-type SlashClassLike interface {
-	// Constructor Methods
-	Slash() SlashLike
-}
-
-/*
 SlashEqualClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete slash-equal-like class.
@@ -1357,16 +1291,6 @@ supported by each concrete slash-equal-like class.
 type SlashEqualClassLike interface {
 	// Constructor Methods
 	SlashEqual() SlashEqualLike
-}
-
-/*
-StarClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete star-like class.
-*/
-type StarClassLike interface {
-	// Constructor Methods
-	Star() StarLike
 }
 
 /*
@@ -1587,6 +1511,19 @@ type AcceptClauseLike interface {
 }
 
 /*
+ActionLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete action-like class.
+*/
+type ActionLike interface {
+	// Principal Methods
+	GetClass() ActionClassLike
+
+	// Attribute Methods
+	GetAny() any
+}
+
+/*
 AdditionalArgumentLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete additional-argument-like class.
@@ -1649,16 +1586,6 @@ type AdditionalValueLike interface {
 
 	// Attribute Methods
 	GetComponent() ComponentLike
-}
-
-/*
-AmpersandLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete ampersand-like class.
-*/
-type AmpersandLike interface {
-	// Principal Methods
-	GetClass() AmpersandClassLike
 }
 
 /*
@@ -1750,13 +1677,13 @@ type ArrowLike interface {
 }
 
 /*
-AssignLike is an instance interface that declares the
+AssignmentLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete assign-like class.
+by each instance of a concrete assignment-like class.
 */
-type AssignLike interface {
+type AssignmentLike interface {
 	// Principal Methods
-	GetClass() AssignClassLike
+	GetClass() AssignmentClassLike
 
 	// Attribute Methods
 	GetAny() any
@@ -1810,16 +1737,6 @@ by each instance of a concrete break-clause-like class.
 type BreakClauseLike interface {
 	// Principal Methods
 	GetClass() BreakClauseClassLike
-}
-
-/*
-CaretLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete caret-like class.
-*/
-type CaretLike interface {
-	// Principal Methods
-	GetClass() CaretClassLike
 }
 
 /*
@@ -1937,16 +1854,6 @@ type ContinueClauseLike interface {
 }
 
 /*
-DashLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete dash-like class.
-*/
-type DashLike interface {
-	// Principal Methods
-	GetClass() DashClassLike
-}
-
-/*
 DashEqualLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete dash-equal-like class.
@@ -2017,16 +1924,6 @@ type DotLike interface {
 }
 
 /*
-DoubleLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete double-like class.
-*/
-type DoubleLike interface {
-	// Principal Methods
-	GetClass() DoubleClassLike
-}
-
-/*
 DraftLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete draft-like class.
@@ -2063,16 +1960,6 @@ type EntityLike interface {
 
 	// Attribute Methods
 	GetAny() any
-}
-
-/*
-EqualLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete equal-like class.
-*/
-type EqualLike interface {
-	// Principal Methods
-	GetClass() EqualClassLike
 }
 
 /*
@@ -2352,16 +2239,6 @@ type ItemLike interface {
 }
 
 /*
-LessLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete less-like class.
-*/
-type LessLike interface {
-	// Principal Methods
-	GetClass() LessClassLike
-}
-
-/*
 LetClauseLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete let-clause-like class.
@@ -2372,7 +2249,7 @@ type LetClauseLike interface {
 
 	// Attribute Methods
 	GetRecipient() RecipientLike
-	GetAssign() AssignLike
+	GetAssignment() AssignmentLike
 	GetExpression() ExpressionLike
 }
 
@@ -2512,16 +2389,6 @@ type MethodLike interface {
 	GetThreading() ThreadingLike
 	GetIdentifier2() string
 	GetOptionalArguments() ArgumentsLike
-}
-
-/*
-MoreLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete more-like class.
-*/
-type MoreLike interface {
-	// Principal Methods
-	GetClass() MoreClassLike
 }
 
 /*
@@ -2666,6 +2533,19 @@ type OnClauseLike interface {
 }
 
 /*
+OperationLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete operation-like class.
+*/
+type OperationLike interface {
+	// Principal Methods
+	GetClass() OperationClassLike
+
+	// Attribute Methods
+	GetAny() any
+}
+
+/*
 OperatorLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete operator-like class.
@@ -2689,16 +2569,6 @@ type ParametersLike interface {
 
 	// Attribute Methods
 	GetAny() any
-}
-
-/*
-PlusLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete plus-like class.
-*/
-type PlusLike interface {
-	// Principal Methods
-	GetClass() PlusClassLike
 }
 
 /*
@@ -2748,7 +2618,7 @@ type PredicateLike interface {
 	GetClass() PredicateClassLike
 
 	// Attribute Methods
-	GetOperator() OperatorLike
+	GetAction() ActionLike
 	GetExpression() ExpressionLike
 }
 
@@ -2951,16 +2821,6 @@ type SequenceLike interface {
 }
 
 /*
-SlashLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete slash-like class.
-*/
-type SlashLike interface {
-	// Principal Methods
-	GetClass() SlashClassLike
-}
-
-/*
 SlashEqualLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete slash-equal-like class.
@@ -2968,16 +2828,6 @@ by each instance of a concrete slash-equal-like class.
 type SlashEqualLike interface {
 	// Principal Methods
 	GetClass() SlashEqualClassLike
-}
-
-/*
-StarLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete star-like class.
-*/
-type StarLike interface {
-	// Principal Methods
-	GetClass() StarClassLike
 }
 
 /*

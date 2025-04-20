@@ -125,6 +125,33 @@ func (v *parser_) parseAcceptClause() (
 	return
 }
 
+func (v *parser_) parseAction() (
+	action ast.ActionLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Operator Action.
+	var operator ast.OperatorLike
+	operator, token, ok = v.parseOperator()
+	if ok {
+		// Found a single Operator Action.
+		action = ast.ActionClass().Action(operator)
+		return
+	}
+
+	// Attempt to parse a single Operation Action.
+	var operation ast.OperationLike
+	operation, token, ok = v.parseOperation()
+	if ok {
+		// Found a single Operation Action.
+		action = ast.ActionClass().Action(operation)
+		return
+	}
+
+	// This is not a single Action rule.
+	return
+}
+
 func (v *parser_) parseAdditionalArgument() (
 	additionalArgument ast.AdditionalArgumentLike,
 	token TokenLike,
@@ -362,37 +389,6 @@ func (v *parser_) parseAdditionalValue() (
 	ok = true
 	v.remove(tokens)
 	additionalValue = ast.AdditionalValueClass().AdditionalValue(component)
-	return
-}
-
-func (v *parser_) parseAmpersand() (
-	ampersand ast.AmpersandLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "&" delimiter.
-	_, token, ok = v.parseDelimiter("&")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Ampersand rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Ampersand", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Ampersand rule.
-	ok = true
-	v.remove(tokens)
-	ampersand = ast.AmpersandClass().Ampersand()
 	return
 }
 
@@ -659,66 +655,66 @@ func (v *parser_) parseArrow() (
 	return
 }
 
-func (v *parser_) parseAssign() (
-	assign ast.AssignLike,
+func (v *parser_) parseAssignment() (
+	assignment ast.AssignmentLike,
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single ColonEqual Assign.
+	// Attempt to parse a single ColonEqual Assignment.
 	var colonEqual ast.ColonEqualLike
 	colonEqual, token, ok = v.parseColonEqual()
 	if ok {
-		// Found a single ColonEqual Assign.
-		assign = ast.AssignClass().Assign(colonEqual)
+		// Found a single ColonEqual Assignment.
+		assignment = ast.AssignmentClass().Assignment(colonEqual)
 		return
 	}
 
-	// Attempt to parse a single DefaultEqual Assign.
+	// Attempt to parse a single DefaultEqual Assignment.
 	var defaultEqual ast.DefaultEqualLike
 	defaultEqual, token, ok = v.parseDefaultEqual()
 	if ok {
-		// Found a single DefaultEqual Assign.
-		assign = ast.AssignClass().Assign(defaultEqual)
+		// Found a single DefaultEqual Assignment.
+		assignment = ast.AssignmentClass().Assignment(defaultEqual)
 		return
 	}
 
-	// Attempt to parse a single PlusEqual Assign.
+	// Attempt to parse a single PlusEqual Assignment.
 	var plusEqual ast.PlusEqualLike
 	plusEqual, token, ok = v.parsePlusEqual()
 	if ok {
-		// Found a single PlusEqual Assign.
-		assign = ast.AssignClass().Assign(plusEqual)
+		// Found a single PlusEqual Assignment.
+		assignment = ast.AssignmentClass().Assignment(plusEqual)
 		return
 	}
 
-	// Attempt to parse a single DashEqual Assign.
+	// Attempt to parse a single DashEqual Assignment.
 	var dashEqual ast.DashEqualLike
 	dashEqual, token, ok = v.parseDashEqual()
 	if ok {
-		// Found a single DashEqual Assign.
-		assign = ast.AssignClass().Assign(dashEqual)
+		// Found a single DashEqual Assignment.
+		assignment = ast.AssignmentClass().Assignment(dashEqual)
 		return
 	}
 
-	// Attempt to parse a single StarEqual Assign.
+	// Attempt to parse a single StarEqual Assignment.
 	var starEqual ast.StarEqualLike
 	starEqual, token, ok = v.parseStarEqual()
 	if ok {
-		// Found a single StarEqual Assign.
-		assign = ast.AssignClass().Assign(starEqual)
+		// Found a single StarEqual Assignment.
+		assignment = ast.AssignmentClass().Assignment(starEqual)
 		return
 	}
 
-	// Attempt to parse a single SlashEqual Assign.
+	// Attempt to parse a single SlashEqual Assignment.
 	var slashEqual ast.SlashEqualLike
 	slashEqual, token, ok = v.parseSlashEqual()
 	if ok {
-		// Found a single SlashEqual Assign.
-		assign = ast.AssignClass().Assign(slashEqual)
+		// Found a single SlashEqual Assignment.
+		assignment = ast.AssignmentClass().Assignment(slashEqual)
 		return
 	}
 
-	// This is not a single Assign rule.
+	// This is not a single Assignment rule.
 	return
 }
 
@@ -932,37 +928,6 @@ func (v *parser_) parseBreakClause() (
 	ok = true
 	v.remove(tokens)
 	breakClause = ast.BreakClauseClass().BreakClause()
-	return
-}
-
-func (v *parser_) parseCaret() (
-	caret ast.CaretLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "^" delimiter.
-	_, token, ok = v.parseDelimiter("^")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Caret rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Caret", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Caret rule.
-	ok = true
-	v.remove(tokens)
-	caret = ast.CaretClass().Caret()
 	return
 }
 
@@ -1386,37 +1351,6 @@ func (v *parser_) parseContinueClause() (
 	return
 }
 
-func (v *parser_) parseDash() (
-	dash ast.DashLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "-" delimiter.
-	_, token, ok = v.parseDelimiter("-")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Dash rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Dash", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Dash rule.
-	ok = true
-	v.remove(tokens)
-	dash = ast.DashClass().Dash()
-	return
-}
-
 func (v *parser_) parseDashEqual() (
 	dashEqual ast.DashEqualLike,
 	token TokenLike,
@@ -1648,37 +1582,6 @@ func (v *parser_) parseDot() (
 	return
 }
 
-func (v *parser_) parseDouble() (
-	double ast.DoubleLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "//" delimiter.
-	_, token, ok = v.parseDelimiter("//")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Double rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Double", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Double rule.
-	ok = true
-	v.remove(tokens)
-	double = ast.DoubleClass().Double()
-	return
-}
-
 func (v *parser_) parseDraft() (
 	draft ast.DraftLike,
 	token TokenLike,
@@ -1860,37 +1763,6 @@ func (v *parser_) parseEntity() (
 	}
 
 	// This is not a single Entity rule.
-	return
-}
-
-func (v *parser_) parseEqual() (
-	equal ast.EqualLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "=" delimiter.
-	_, token, ok = v.parseDelimiter("=")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Equal rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Equal", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Equal rule.
-	ok = true
-	v.remove(tokens)
-	equal = ast.EqualClass().Equal()
 	return
 }
 
@@ -2853,29 +2725,29 @@ func (v *parser_) parseInverse() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Dash Inverse.
-	var dash ast.DashLike
-	dash, token, ok = v.parseDash()
+	// Attempt to parse a single dash Inverse.
+	var dash string
+	dash, token, ok = v.parseToken(DashToken)
 	if ok {
-		// Found a single Dash Inverse.
+		// Found a single dash Inverse.
 		inverse = ast.InverseClass().Inverse(dash)
 		return
 	}
 
-	// Attempt to parse a single Slash Inverse.
-	var slash ast.SlashLike
-	slash, token, ok = v.parseSlash()
+	// Attempt to parse a single slash Inverse.
+	var slash string
+	slash, token, ok = v.parseToken(SlashToken)
 	if ok {
-		// Found a single Slash Inverse.
+		// Found a single slash Inverse.
 		inverse = ast.InverseClass().Inverse(slash)
 		return
 	}
 
-	// Attempt to parse a single Star Inverse.
-	var star ast.StarLike
-	star, token, ok = v.parseStar()
+	// Attempt to parse a single star Inverse.
+	var star string
+	star, token, ok = v.parseToken(StarToken)
 	if ok {
-		// Found a single Star Inverse.
+		// Found a single star Inverse.
 		inverse = ast.InverseClass().Inverse(star)
 		return
 	}
@@ -3056,37 +2928,6 @@ func (v *parser_) parseItem() (
 	return
 }
 
-func (v *parser_) parseLess() (
-	less ast.LessLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "<" delimiter.
-	_, token, ok = v.parseDelimiter("<")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Less rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Less", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Less rule.
-	ok = true
-	v.remove(tokens)
-	less = ast.LessClass().Less()
-	return
-}
-
 func (v *parser_) parseLetClause() (
 	letClause ast.LetClauseLike,
 	token TokenLike,
@@ -3128,9 +2969,9 @@ func (v *parser_) parseLetClause() (
 		panic(message)
 	}
 
-	// Attempt to parse a single Assign rule.
-	var assign ast.AssignLike
-	assign, token, ok = v.parseAssign()
+	// Attempt to parse a single Assignment rule.
+	var assignment ast.AssignmentLike
+	assignment, token, ok = v.parseAssignment()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -3167,7 +3008,7 @@ func (v *parser_) parseLetClause() (
 	v.remove(tokens)
 	letClause = ast.LetClauseClass().LetClause(
 		recipient,
-		assign,
+		assignment,
 		expression,
 	)
 	return
@@ -3765,37 +3606,6 @@ func (v *parser_) parseMethod() (
 		identifier2,
 		optionalArguments,
 	)
-	return
-}
-
-func (v *parser_) parseMore() (
-	more ast.MoreLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single ">" delimiter.
-	_, token, ok = v.parseDelimiter(">")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single More rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$More", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single More rule.
-	ok = true
-	v.remove(tokens)
-	more = ast.MoreClass().More()
 	return
 }
 
@@ -4645,152 +4455,161 @@ matchHandlersLoop:
 	return
 }
 
+func (v *parser_) parseOperation() (
+	operation ast.OperationLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Is Operation.
+	var is ast.IsLike
+	is, token, ok = v.parseIs()
+	if ok {
+		// Found a single Is Operation.
+		operation = ast.OperationClass().Operation(is)
+		return
+	}
+
+	// Attempt to parse a single Matches Operation.
+	var matches ast.MatchesLike
+	matches, token, ok = v.parseMatches()
+	if ok {
+		// Found a single Matches Operation.
+		operation = ast.OperationClass().Operation(matches)
+		return
+	}
+
+	// Attempt to parse a single And Operation.
+	var and ast.AndLike
+	and, token, ok = v.parseAnd()
+	if ok {
+		// Found a single And Operation.
+		operation = ast.OperationClass().Operation(and)
+		return
+	}
+
+	// Attempt to parse a single San Operation.
+	var san ast.SanLike
+	san, token, ok = v.parseSan()
+	if ok {
+		// Found a single San Operation.
+		operation = ast.OperationClass().Operation(san)
+		return
+	}
+
+	// Attempt to parse a single Ior Operation.
+	var ior ast.IorLike
+	ior, token, ok = v.parseIor()
+	if ok {
+		// Found a single Ior Operation.
+		operation = ast.OperationClass().Operation(ior)
+		return
+	}
+
+	// Attempt to parse a single Xor Operation.
+	var xor ast.XorLike
+	xor, token, ok = v.parseXor()
+	if ok {
+		// Found a single Xor Operation.
+		operation = ast.OperationClass().Operation(xor)
+		return
+	}
+
+	// This is not a single Operation rule.
+	return
+}
+
 func (v *parser_) parseOperator() (
 	operator ast.OperatorLike,
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single Plus Operator.
-	var plus ast.PlusLike
-	plus, token, ok = v.parsePlus()
+	// Attempt to parse a single plus Operator.
+	var plus string
+	plus, token, ok = v.parseToken(PlusToken)
 	if ok {
-		// Found a single Plus Operator.
+		// Found a single plus Operator.
 		operator = ast.OperatorClass().Operator(plus)
 		return
 	}
 
-	// Attempt to parse a single Dash Operator.
-	var dash ast.DashLike
-	dash, token, ok = v.parseDash()
+	// Attempt to parse a single dash Operator.
+	var dash string
+	dash, token, ok = v.parseToken(DashToken)
 	if ok {
-		// Found a single Dash Operator.
+		// Found a single dash Operator.
 		operator = ast.OperatorClass().Operator(dash)
 		return
 	}
 
-	// Attempt to parse a single Star Operator.
-	var star ast.StarLike
-	star, token, ok = v.parseStar()
+	// Attempt to parse a single star Operator.
+	var star string
+	star, token, ok = v.parseToken(StarToken)
 	if ok {
-		// Found a single Star Operator.
+		// Found a single star Operator.
 		operator = ast.OperatorClass().Operator(star)
 		return
 	}
 
-	// Attempt to parse a single Slash Operator.
-	var slash ast.SlashLike
-	slash, token, ok = v.parseSlash()
+	// Attempt to parse a single slash Operator.
+	var slash string
+	slash, token, ok = v.parseToken(SlashToken)
 	if ok {
-		// Found a single Slash Operator.
+		// Found a single slash Operator.
 		operator = ast.OperatorClass().Operator(slash)
 		return
 	}
 
-	// Attempt to parse a single Double Operator.
-	var double ast.DoubleLike
-	double, token, ok = v.parseDouble()
+	// Attempt to parse a single double Operator.
+	var double string
+	double, token, ok = v.parseToken(DoubleToken)
 	if ok {
-		// Found a single Double Operator.
+		// Found a single double Operator.
 		operator = ast.OperatorClass().Operator(double)
 		return
 	}
 
-	// Attempt to parse a single Caret Operator.
-	var caret ast.CaretLike
-	caret, token, ok = v.parseCaret()
+	// Attempt to parse a single caret Operator.
+	var caret string
+	caret, token, ok = v.parseToken(CaretToken)
 	if ok {
-		// Found a single Caret Operator.
+		// Found a single caret Operator.
 		operator = ast.OperatorClass().Operator(caret)
 		return
 	}
 
-	// Attempt to parse a single Less Operator.
-	var less ast.LessLike
-	less, token, ok = v.parseLess()
+	// Attempt to parse a single ampersand Operator.
+	var ampersand string
+	ampersand, token, ok = v.parseToken(AmpersandToken)
 	if ok {
-		// Found a single Less Operator.
-		operator = ast.OperatorClass().Operator(less)
-		return
-	}
-
-	// Attempt to parse a single Equal Operator.
-	var equal ast.EqualLike
-	equal, token, ok = v.parseEqual()
-	if ok {
-		// Found a single Equal Operator.
-		operator = ast.OperatorClass().Operator(equal)
-		return
-	}
-
-	// Attempt to parse a single More Operator.
-	var more ast.MoreLike
-	more, token, ok = v.parseMore()
-	if ok {
-		// Found a single More Operator.
-		operator = ast.OperatorClass().Operator(more)
-		return
-	}
-
-	// Attempt to parse a single Ampersand Operator.
-	var ampersand ast.AmpersandLike
-	ampersand, token, ok = v.parseAmpersand()
-	if ok {
-		// Found a single Ampersand Operator.
+		// Found a single ampersand Operator.
 		operator = ast.OperatorClass().Operator(ampersand)
 		return
 	}
 
-	// Attempt to parse a single Is Operator.
-	var is ast.IsLike
-	is, token, ok = v.parseIs()
+	// Attempt to parse a single less Operator.
+	var less string
+	less, token, ok = v.parseToken(LessToken)
 	if ok {
-		// Found a single Is Operator.
-		operator = ast.OperatorClass().Operator(is)
+		// Found a single less Operator.
+		operator = ast.OperatorClass().Operator(less)
 		return
 	}
 
-	// Attempt to parse a single Matches Operator.
-	var matches ast.MatchesLike
-	matches, token, ok = v.parseMatches()
+	// Attempt to parse a single equal Operator.
+	var equal string
+	equal, token, ok = v.parseToken(EqualToken)
 	if ok {
-		// Found a single Matches Operator.
-		operator = ast.OperatorClass().Operator(matches)
+		// Found a single equal Operator.
+		operator = ast.OperatorClass().Operator(equal)
 		return
 	}
 
-	// Attempt to parse a single And Operator.
-	var and ast.AndLike
-	and, token, ok = v.parseAnd()
+	// Attempt to parse a single more Operator.
+	var more string
+	more, token, ok = v.parseToken(MoreToken)
 	if ok {
-		// Found a single And Operator.
-		operator = ast.OperatorClass().Operator(and)
-		return
-	}
-
-	// Attempt to parse a single San Operator.
-	var san ast.SanLike
-	san, token, ok = v.parseSan()
-	if ok {
-		// Found a single San Operator.
-		operator = ast.OperatorClass().Operator(san)
-		return
-	}
-
-	// Attempt to parse a single Ior Operator.
-	var ior ast.IorLike
-	ior, token, ok = v.parseIor()
-	if ok {
-		// Found a single Ior Operator.
-		operator = ast.OperatorClass().Operator(ior)
-		return
-	}
-
-	// Attempt to parse a single Xor Operator.
-	var xor ast.XorLike
-	xor, token, ok = v.parseXor()
-	if ok {
-		// Found a single Xor Operator.
-		operator = ast.OperatorClass().Operator(xor)
+		// Found a single more Operator.
+		operator = ast.OperatorClass().Operator(more)
 		return
 	}
 
@@ -4822,37 +4641,6 @@ func (v *parser_) parseParameters() (
 	}
 
 	// This is not a single Parameters rule.
-	return
-}
-
-func (v *parser_) parsePlus() (
-	plus ast.PlusLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "+" delimiter.
-	_, token, ok = v.parseDelimiter("+")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Plus rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Plus", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Plus rule.
-	ok = true
-	v.remove(tokens)
-	plus = ast.PlusClass().Plus()
 	return
 }
 
@@ -5044,9 +4832,9 @@ func (v *parser_) parsePredicate() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single Operator rule.
-	var operator ast.OperatorLike
-	operator, token, ok = v.parseOperator()
+	// Attempt to parse a single Action rule.
+	var action ast.ActionLike
+	action, token, ok = v.parseAction()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -5082,7 +4870,7 @@ func (v *parser_) parsePredicate() (
 	ok = true
 	v.remove(tokens)
 	predicate = ast.PredicateClass().Predicate(
-		operator,
+		action,
 		expression,
 	)
 	return
@@ -5859,37 +5647,6 @@ func (v *parser_) parseSequence() (
 	return
 }
 
-func (v *parser_) parseSlash() (
-	slash ast.SlashLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "/" delimiter.
-	_, token, ok = v.parseDelimiter("/")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Slash rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Slash", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Slash rule.
-	ok = true
-	v.remove(tokens)
-	slash = ast.SlashClass().Slash()
-	return
-}
-
 func (v *parser_) parseSlashEqual() (
 	slashEqual ast.SlashEqualLike,
 	token TokenLike,
@@ -5918,37 +5675,6 @@ func (v *parser_) parseSlashEqual() (
 	ok = true
 	v.remove(tokens)
 	slashEqual = ast.SlashEqualClass().SlashEqual()
-	return
-}
-
-func (v *parser_) parseStar() (
-	star ast.StarLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "*" delimiter.
-	_, token, ok = v.parseDelimiter("*")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Star rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Star", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Star rule.
-	ok = true
-	v.remove(tokens)
-	star = ast.StarClass().Star()
 	return
 }
 
@@ -7179,8 +6905,8 @@ var parserClassReference_ = &parserClass_{
 			"$Invocation": `
     Function
     Method`,
-			"$LetClause": `"let" Recipient Assign Expression`,
-			"$Assign": `
+			"$LetClause": `"let" Recipient Assignment Expression`,
+			"$Assignment": `
     ColonEqual
     DefaultEqual
     PlusEqual
@@ -7223,34 +6949,28 @@ var parserClassReference_ = &parserClass_{
     Function
     Method
     Variable  ! This must be last since others also begin with an identifier.`,
-			"$Predicate": `Operator Expression`,
+			"$Predicate": `Action Expression`,
+			"$Action": `
+    Operator
+    Operation`,
 			"$Operator": `
-    Plus
-    Dash
-    Star
-    Slash
-    Double
-    Caret
-    Less
-    Equal
-    More
-    Ampersand
+    plus
+    dash
+    star
+    slash
+    double
+    caret
+    ampersand
+    less
+    equal
+    more`,
+			"$Operation": `
     Is
     Matches
     And
     San
     Ior
     Xor`,
-			"$Plus":       `"+"`,
-			"$Dash":       `"-"`,
-			"$Star":       `"*"`,
-			"$Slash":      `"/"`,
-			"$Double":     `"//"`,
-			"$Caret":      `"^"`,
-			"$Less":       `"<"`,
-			"$Equal":      `"="`,
-			"$More":       `">"`,
-			"$Ampersand":  `"&"`,
 			"$Is":         `"is"`,
 			"$Matches":    `"matches"`,
 			"$And":        `"and"`,
@@ -7278,9 +6998,9 @@ var parserClassReference_ = &parserClass_{
     Variable  ! This must be last since others also begin with an identifier.`,
 			"$Inversion": `Inverse Numerical`,
 			"$Inverse": `
-    Dash
-    Slash
-    Star`,
+    dash
+    slash
+    star`,
 			"$Numerical": `
     Component
     Subcomponent

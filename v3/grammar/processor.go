@@ -50,6 +50,11 @@ func (v *processor_) GetClass() ProcessorClassLike {
 
 // Methodical Methods
 
+func (v *processor_) ProcessAmpersand(
+	ampersand string,
+) {
+}
+
 func (v *processor_) ProcessAngle(
 	angle string,
 ) {
@@ -70,6 +75,11 @@ func (v *processor_) ProcessBytecode(
 ) {
 }
 
+func (v *processor_) ProcessCaret(
+	caret string,
+) {
+}
+
 func (v *processor_) ProcessCitation(
 	citation string,
 ) {
@@ -80,8 +90,23 @@ func (v *processor_) ProcessComment(
 ) {
 }
 
+func (v *processor_) ProcessDash(
+	dash string,
+) {
+}
+
+func (v *processor_) ProcessDouble(
+	double string,
+) {
+}
+
 func (v *processor_) ProcessDuration(
 	duration string,
+) {
+}
+
+func (v *processor_) ProcessEqual(
+	equal string,
 ) {
 }
 
@@ -90,8 +115,18 @@ func (v *processor_) ProcessIdentifier(
 ) {
 }
 
+func (v *processor_) ProcessLess(
+	less string,
+) {
+}
+
 func (v *processor_) ProcessMoment(
 	moment string,
+) {
+}
+
+func (v *processor_) ProcessMore(
+	more string,
 ) {
 }
 
@@ -130,6 +165,11 @@ func (v *processor_) ProcessPercentage(
 ) {
 }
 
+func (v *processor_) ProcessPlus(
+	plus string,
+) {
+}
+
 func (v *processor_) ProcessProbability(
 	probability string,
 ) {
@@ -145,8 +185,18 @@ func (v *processor_) ProcessResource(
 ) {
 }
 
+func (v *processor_) ProcessSlash(
+	slash string,
+) {
+}
+
 func (v *processor_) ProcessSpace(
 	space string,
+) {
+}
+
+func (v *processor_) ProcessStar(
+	star string,
 ) {
 }
 
@@ -177,6 +227,21 @@ func (v *processor_) ProcessAcceptClauseSlot(
 
 func (v *processor_) PostprocessAcceptClause(
 	acceptClause ast.AcceptClauseLike,
+) {
+}
+
+func (v *processor_) PreprocessAction(
+	action ast.ActionLike,
+) {
+}
+
+func (v *processor_) ProcessActionSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessAction(
+	action ast.ActionLike,
 ) {
 }
 
@@ -272,21 +337,6 @@ func (v *processor_) PostprocessAdditionalValue(
 	additionalValue ast.AdditionalValueLike,
 	index uint,
 	size uint,
-) {
-}
-
-func (v *processor_) PreprocessAmpersand(
-	ampersand ast.AmpersandLike,
-) {
-}
-
-func (v *processor_) ProcessAmpersandSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessAmpersand(
-	ampersand ast.AmpersandLike,
 ) {
 }
 
@@ -407,18 +457,18 @@ func (v *processor_) PostprocessArrow(
 ) {
 }
 
-func (v *processor_) PreprocessAssign(
-	assign ast.AssignLike,
+func (v *processor_) PreprocessAssignment(
+	assignment ast.AssignmentLike,
 ) {
 }
 
-func (v *processor_) ProcessAssignSlot(
+func (v *processor_) ProcessAssignmentSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessAssign(
-	assign ast.AssignLike,
+func (v *processor_) PostprocessAssignment(
+	assignment ast.AssignmentLike,
 ) {
 }
 
@@ -479,21 +529,6 @@ func (v *processor_) ProcessBreakClauseSlot(
 
 func (v *processor_) PostprocessBreakClause(
 	breakClause ast.BreakClauseLike,
-) {
-}
-
-func (v *processor_) PreprocessCaret(
-	caret ast.CaretLike,
-) {
-}
-
-func (v *processor_) ProcessCaretSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessCaret(
-	caret ast.CaretLike,
 ) {
 }
 
@@ -632,21 +667,6 @@ func (v *processor_) PostprocessContinueClause(
 ) {
 }
 
-func (v *processor_) PreprocessDash(
-	dash ast.DashLike,
-) {
-}
-
-func (v *processor_) ProcessDashSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDash(
-	dash ast.DashLike,
-) {
-}
-
 func (v *processor_) PreprocessDashEqual(
 	dashEqual ast.DashEqualLike,
 ) {
@@ -737,21 +757,6 @@ func (v *processor_) PostprocessDot(
 ) {
 }
 
-func (v *processor_) PreprocessDouble(
-	double ast.DoubleLike,
-) {
-}
-
-func (v *processor_) ProcessDoubleSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDouble(
-	double ast.DoubleLike,
-) {
-}
-
 func (v *processor_) PreprocessDraft(
 	draft ast.DraftLike,
 ) {
@@ -794,21 +799,6 @@ func (v *processor_) ProcessEntitySlot(
 
 func (v *processor_) PostprocessEntity(
 	entity ast.EntityLike,
-) {
-}
-
-func (v *processor_) PreprocessEqual(
-	equal ast.EqualLike,
-) {
-}
-
-func (v *processor_) ProcessEqualSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessEqual(
-	equal ast.EqualLike,
 ) {
 }
 
@@ -1127,21 +1117,6 @@ func (v *processor_) PostprocessItem(
 ) {
 }
 
-func (v *processor_) PreprocessLess(
-	less ast.LessLike,
-) {
-}
-
-func (v *processor_) ProcessLessSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessLess(
-	less ast.LessLike,
-) {
-}
-
 func (v *processor_) PreprocessLetClause(
 	letClause ast.LetClauseLike,
 ) {
@@ -1326,21 +1301,6 @@ func (v *processor_) PostprocessMethod(
 ) {
 }
 
-func (v *processor_) PreprocessMore(
-	more ast.MoreLike,
-) {
-}
-
-func (v *processor_) ProcessMoreSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessMore(
-	more ast.MoreLike,
-) {
-}
-
 func (v *processor_) PreprocessMultilineAttributes(
 	multilineAttributes ast.MultilineAttributesLike,
 ) {
@@ -1506,6 +1466,21 @@ func (v *processor_) PostprocessOnClause(
 ) {
 }
 
+func (v *processor_) PreprocessOperation(
+	operation ast.OperationLike,
+) {
+}
+
+func (v *processor_) ProcessOperationSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessOperation(
+	operation ast.OperationLike,
+) {
+}
+
 func (v *processor_) PreprocessOperator(
 	operator ast.OperatorLike,
 ) {
@@ -1533,21 +1508,6 @@ func (v *processor_) ProcessParametersSlot(
 
 func (v *processor_) PostprocessParameters(
 	parameters ast.ParametersLike,
-) {
-}
-
-func (v *processor_) PreprocessPlus(
-	plus ast.PlusLike,
-) {
-}
-
-func (v *processor_) ProcessPlusSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessPlus(
-	plus ast.PlusLike,
 ) {
 }
 
@@ -1840,21 +1800,6 @@ func (v *processor_) PostprocessSequence(
 ) {
 }
 
-func (v *processor_) PreprocessSlash(
-	slash ast.SlashLike,
-) {
-}
-
-func (v *processor_) ProcessSlashSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessSlash(
-	slash ast.SlashLike,
-) {
-}
-
 func (v *processor_) PreprocessSlashEqual(
 	slashEqual ast.SlashEqualLike,
 ) {
@@ -1867,21 +1812,6 @@ func (v *processor_) ProcessSlashEqualSlot(
 
 func (v *processor_) PostprocessSlashEqual(
 	slashEqual ast.SlashEqualLike,
-) {
-}
-
-func (v *processor_) PreprocessStar(
-	star ast.StarLike,
-) {
-}
-
-func (v *processor_) ProcessStarSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessStar(
-	star ast.StarLike,
 ) {
 }
 

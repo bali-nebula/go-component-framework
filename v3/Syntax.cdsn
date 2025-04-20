@@ -247,9 +247,9 @@ $Invocation:
     Function
     Method
 
-$LetClause: "let" Recipient Assign Expression
+$LetClause: "let" Recipient Assignment Expression
 
-$Assign:
+$Assignment:
     ColonEqual
     DefaultEqual
     PlusEqual
@@ -317,45 +317,31 @@ $Subject:
     Method
     Variable  ! This must be last since others also begin with an identifier.
 
-$Predicate: Operator Expression
+$Predicate: Action Expression
+
+$Action:
+    Operator
+	Operation
 
 $Operator:
-    Plus
-    Dash
-    Star
-    Slash
-    Double
-    Caret
-    Less
-    Equal
-    More
-    Ampersand
+    plus
+    dash
+    star
+    slash
+    double
+    caret
+    ampersand
+    less
+    equal
+    more
+
+$Operation:
     Is
     Matches
     And
     San
     Ior
     Xor
-
-$Plus: "+"
-
-$Dash: "-"
-
-$Star: "*"
-
-$Slash: "/"
-
-$Double: "//"
-
-$Caret: "^"
-
-$Less: "<"
-
-$Equal: "="
-
-$More: ">"
-
-$Ampersand: "&"
 
 $Is: "is"
 
@@ -396,9 +382,9 @@ $Logical:
 $Inversion: Inverse Numerical
 
 $Inverse:
-    Dash
-    Slash
-    Star
+    dash
+    slash
+    star
 
 $Numerical:
     Component
@@ -547,4 +533,24 @@ $years: timespan 'Y'
 $number: polar | rectangular | imaginary | real  ! Must be after percentage.
 
 $identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
+
+$plus: "+"
+
+$dash: "-"
+
+$star: "*"
+
+$slash: "/"
+
+$double: "//"
+
+$caret: "^"
+
+$ampersand: "&"
+
+$less: "<"
+
+$equal: "="
+
+$more: ">"
 

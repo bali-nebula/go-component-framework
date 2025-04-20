@@ -19,21 +19,29 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func MoreClass() MoreClassLike {
-	return moreClass()
+func AssignmentClass() AssignmentClassLike {
+	return assignmentClass()
 }
 
 // Constructor Methods
 
-func (c *moreClass_) More() MoreLike {
-	var instance = &more_{
+func (c *assignmentClass_) Assignment(
+	any_ any,
+) AssignmentLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
+	var instance = &assignment_{
 		// Initialize the instance attributes.
+		any_: any_,
 	}
 	return instance
 }
@@ -42,32 +50,37 @@ func (c *moreClass_) More() MoreLike {
 
 // Principal Methods
 
-func (v *more_) GetClass() MoreClassLike {
-	return moreClass()
+func (v *assignment_) GetClass() AssignmentClassLike {
+	return assignmentClass()
 }
 
 // Attribute Methods
+
+func (v *assignment_) GetAny() any {
+	return v.any_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type more_ struct {
+type assignment_ struct {
 	// Declare the instance attributes.
+	any_ any
 }
 
 // Class Structure
 
-type moreClass_ struct {
+type assignmentClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func moreClass() *moreClass_ {
-	return moreClassReference_
+func assignmentClass() *assignmentClass_ {
+	return assignmentClassReference_
 }
 
-var moreClassReference_ = &moreClass_{
+var assignmentClassReference_ = &assignmentClass_{
 	// Initialize the class constants.
 }

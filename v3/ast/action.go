@@ -27,19 +27,19 @@ import (
 
 // Access Function
 
-func AssignClass() AssignClassLike {
-	return assignClass()
+func ActionClass() ActionClassLike {
+	return actionClass()
 }
 
 // Constructor Methods
 
-func (c *assignClass_) Assign(
+func (c *actionClass_) Action(
 	any_ any,
-) AssignLike {
+) ActionLike {
 	if uti.IsUndefined(any_) {
 		panic("The \"any\" attribute is required by this class.")
 	}
-	var instance = &assign_{
+	var instance = &action_{
 		// Initialize the instance attributes.
 		any_: any_,
 	}
@@ -50,13 +50,13 @@ func (c *assignClass_) Assign(
 
 // Principal Methods
 
-func (v *assign_) GetClass() AssignClassLike {
-	return assignClass()
+func (v *action_) GetClass() ActionClassLike {
+	return actionClass()
 }
 
 // Attribute Methods
 
-func (v *assign_) GetAny() any {
+func (v *action_) GetAny() any {
 	return v.any_
 }
 
@@ -64,23 +64,23 @@ func (v *assign_) GetAny() any {
 
 // Instance Structure
 
-type assign_ struct {
+type action_ struct {
 	// Declare the instance attributes.
 	any_ any
 }
 
 // Class Structure
 
-type assignClass_ struct {
+type actionClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func assignClass() *assignClass_ {
-	return assignClassReference_
+func actionClass() *actionClass_ {
+	return actionClassReference_
 }
 
-var assignClassReference_ = &assignClass_{
+var actionClassReference_ = &actionClass_{
 	// Initialize the class constants.
 }

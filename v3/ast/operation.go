@@ -19,21 +19,29 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func AmpersandClass() AmpersandClassLike {
-	return ampersandClass()
+func OperationClass() OperationClassLike {
+	return operationClass()
 }
 
 // Constructor Methods
 
-func (c *ampersandClass_) Ampersand() AmpersandLike {
-	var instance = &ampersand_{
+func (c *operationClass_) Operation(
+	any_ any,
+) OperationLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
+	var instance = &operation_{
 		// Initialize the instance attributes.
+		any_: any_,
 	}
 	return instance
 }
@@ -42,32 +50,37 @@ func (c *ampersandClass_) Ampersand() AmpersandLike {
 
 // Principal Methods
 
-func (v *ampersand_) GetClass() AmpersandClassLike {
-	return ampersandClass()
+func (v *operation_) GetClass() OperationClassLike {
+	return operationClass()
 }
 
 // Attribute Methods
+
+func (v *operation_) GetAny() any {
+	return v.any_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type ampersand_ struct {
+type operation_ struct {
 	// Declare the instance attributes.
+	any_ any
 }
 
 // Class Structure
 
-type ampersandClass_ struct {
+type operationClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func ampersandClass() *ampersandClass_ {
-	return ampersandClassReference_
+func operationClass() *operationClass_ {
+	return operationClassReference_
 }
 
-var ampersandClassReference_ = &ampersandClass_{
+var operationClassReference_ = &operationClass_{
 	// Initialize the class constants.
 }
