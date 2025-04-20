@@ -993,9 +993,9 @@ func (v *parser_) parseCheckoutClause() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Citation rule.
-	var citation ast.CitationLike
-	citation, token, ok = v.parseCitation()
+	// Attempt to parse a single Cited rule.
+	var cited ast.CitedLike
+	cited, token, ok = v.parseCited()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -1016,13 +1016,13 @@ func (v *parser_) parseCheckoutClause() (
 	checkoutClause = ast.CheckoutClauseClass().CheckoutClause(
 		recipient,
 		optionalAtLevel,
-		citation,
+		cited,
 	)
 	return
 }
 
-func (v *parser_) parseCitation() (
-	citation ast.CitationLike,
+func (v *parser_) parseCited() (
+	cited ast.CitedLike,
 	token TokenLike,
 	ok bool,
 ) {
@@ -1036,19 +1036,19 @@ func (v *parser_) parseCitation() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Citation rule.
+		// This is not a single Cited rule.
 		v.putBack(tokens)
 		return
 	default:
 		// Found a syntax error.
-		var message = v.formatError("$Citation", token)
+		var message = v.formatError("$Cited", token)
 		panic(message)
 	}
 
-	// Found a single Citation rule.
+	// Found a single Cited rule.
 	ok = true
 	v.remove(tokens)
-	citation = ast.CitationClass().Citation(expression)
+	cited = ast.CitedClass().Cited(expression)
 	return
 }
 
@@ -4173,9 +4173,9 @@ func (v *parser_) parseNotarizeClause() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Citation rule.
-	var citation ast.CitationLike
-	citation, token, ok = v.parseCitation()
+	// Attempt to parse a single Cited rule.
+	var cited ast.CitedLike
+	cited, token, ok = v.parseCited()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -4195,7 +4195,7 @@ func (v *parser_) parseNotarizeClause() (
 	v.remove(tokens)
 	notarizeClause = ast.NotarizeClauseClass().NotarizeClause(
 		draft,
-		citation,
+		cited,
 	)
 	return
 }
@@ -5477,9 +5477,9 @@ func (v *parser_) parseSaveClause() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Citation rule.
-	var citation ast.CitationLike
-	citation, token, ok = v.parseCitation()
+	// Attempt to parse a single Cited rule.
+	var cited ast.CitedLike
+	cited, token, ok = v.parseCited()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -5499,7 +5499,7 @@ func (v *parser_) parseSaveClause() (
 	v.remove(tokens)
 	saveClause = ast.SaveClauseClass().SaveClause(
 		draft,
-		citation,
+		cited,
 	)
 	return
 }
@@ -6866,13 +6866,13 @@ var parserClassReference_ = &parserClass_{
 			"$RejectClause":   `"reject" Message`,
 			"$PublishClause":  `"publish" Event`,
 			"$Event":          `Expression`,
-			"$CheckoutClause": `"checkout" Recipient AtLevel? "from" Citation`,
+			"$CheckoutClause": `"checkout" Recipient AtLevel? "from" Cited`,
 			"$AtLevel":        `"at" "level" Expression`,
-			"$Citation":       `Expression`,
-			"$SaveClause":     `"save" Draft "as" Citation`,
+			"$Cited":          `Expression`,
+			"$SaveClause":     `"save" Draft "as" Cited`,
 			"$Draft":          `Expression`,
 			"$DiscardClause":  `"discard" Draft`,
-			"$NotarizeClause": `"notarize" Draft "as" Citation`,
+			"$NotarizeClause": `"notarize" Draft "as" Cited`,
 			"$Expression":     `Subject Predicate*`,
 			"$Subject": `
     Component

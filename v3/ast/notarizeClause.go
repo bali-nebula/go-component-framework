@@ -35,18 +35,18 @@ func NotarizeClauseClass() NotarizeClauseClassLike {
 
 func (c *notarizeClauseClass_) NotarizeClause(
 	draft DraftLike,
-	citation CitationLike,
+	cited CitedLike,
 ) NotarizeClauseLike {
 	if uti.IsUndefined(draft) {
 		panic("The \"draft\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(citation) {
-		panic("The \"citation\" attribute is required by this class.")
+	if uti.IsUndefined(cited) {
+		panic("The \"cited\" attribute is required by this class.")
 	}
 	var instance = &notarizeClause_{
 		// Initialize the instance attributes.
-		draft_:    draft,
-		citation_: citation,
+		draft_: draft,
+		cited_: cited,
 	}
 	return instance
 }
@@ -65,8 +65,8 @@ func (v *notarizeClause_) GetDraft() DraftLike {
 	return v.draft_
 }
 
-func (v *notarizeClause_) GetCitation() CitationLike {
-	return v.citation_
+func (v *notarizeClause_) GetCited() CitedLike {
+	return v.cited_
 }
 
 // PROTECTED INTERFACE
@@ -75,8 +75,8 @@ func (v *notarizeClause_) GetCitation() CitationLike {
 
 type notarizeClause_ struct {
 	// Declare the instance attributes.
-	draft_    DraftLike
-	citation_ CitationLike
+	draft_ DraftLike
+	cited_ CitedLike
 }
 
 // Class Structure

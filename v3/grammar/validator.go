@@ -663,20 +663,20 @@ func (v *validator_) PostprocessCheckoutClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessCitation(
-	citation ast.CitationLike,
+func (v *validator_) PreprocessCited(
+	cited ast.CitedLike,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) ProcessCitationSlot(
+func (v *validator_) ProcessCitedSlot(
 	slot uint,
 ) {
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PostprocessCitation(
-	citation ast.CitationLike,
+func (v *validator_) PostprocessCited(
+	cited ast.CitedLike,
 ) {
 	// TBD - Add any validation checks.
 }

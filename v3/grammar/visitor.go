@@ -383,18 +383,18 @@ func (v *visitor_) visitCheckoutClause(
 	// Visit slot 2 between references.
 	v.processor_.ProcessCheckoutClauseSlot(2)
 
-	// Visit a single citation rule.
-	var citation = checkoutClause.GetCitation()
-	v.processor_.PreprocessCitation(citation)
-	v.visitCitation(citation)
-	v.processor_.PostprocessCitation(citation)
+	// Visit a single cited rule.
+	var cited = checkoutClause.GetCited()
+	v.processor_.PreprocessCited(cited)
+	v.visitCited(cited)
+	v.processor_.PostprocessCited(cited)
 }
 
-func (v *visitor_) visitCitation(
-	citation ast.CitationLike,
+func (v *visitor_) visitCited(
+	cited ast.CitedLike,
 ) {
 	// Visit a single expression rule.
-	var expression = citation.GetExpression()
+	var expression = cited.GetExpression()
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
@@ -1509,11 +1509,11 @@ func (v *visitor_) visitNotarizeClause(
 	// Visit slot 1 between references.
 	v.processor_.ProcessNotarizeClauseSlot(1)
 
-	// Visit a single citation rule.
-	var citation = notarizeClause.GetCitation()
-	v.processor_.PreprocessCitation(citation)
-	v.visitCitation(citation)
-	v.processor_.PostprocessCitation(citation)
+	// Visit a single cited rule.
+	var cited = notarizeClause.GetCited()
+	v.processor_.PreprocessCited(cited)
+	v.visitCited(cited)
+	v.processor_.PostprocessCited(cited)
 }
 
 func (v *visitor_) visitNotice(
@@ -1994,11 +1994,11 @@ func (v *visitor_) visitSaveClause(
 	// Visit slot 1 between references.
 	v.processor_.ProcessSaveClauseSlot(1)
 
-	// Visit a single citation rule.
-	var citation = saveClause.GetCitation()
-	v.processor_.PreprocessCitation(citation)
-	v.visitCitation(citation)
-	v.processor_.PostprocessCitation(citation)
+	// Visit a single cited rule.
+	var cited = saveClause.GetCited()
+	v.processor_.PreprocessCited(cited)
+	v.visitCited(cited)
+	v.processor_.PostprocessCited(cited)
 }
 
 func (v *visitor_) visitSelectClause(

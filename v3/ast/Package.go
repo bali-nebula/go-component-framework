@@ -283,20 +283,20 @@ type CheckoutClauseClassLike interface {
 	CheckoutClause(
 		recipient RecipientLike,
 		optionalAtLevel AtLevelLike,
-		citation CitationLike,
+		cited CitedLike,
 	) CheckoutClauseLike
 }
 
 /*
-CitationClassLike is a class interface that declares the
+CitedClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
-supported by each concrete citation-like class.
+supported by each concrete cited-like class.
 */
-type CitationClassLike interface {
+type CitedClassLike interface {
 	// Constructor Methods
-	Citation(
+	Cited(
 		expression ExpressionLike,
-	) CitationLike
+	) CitedLike
 }
 
 /*
@@ -965,7 +965,7 @@ type NotarizeClauseClassLike interface {
 	// Constructor Methods
 	NotarizeClause(
 		draft DraftLike,
-		citation CitationLike,
+		cited CitedLike,
 	) NotarizeClauseLike
 }
 
@@ -1246,7 +1246,7 @@ type SaveClauseClassLike interface {
 	// Constructor Methods
 	SaveClause(
 		draft DraftLike,
-		citation CitationLike,
+		cited CitedLike,
 	) SaveClauseLike
 }
 
@@ -1734,17 +1734,17 @@ type CheckoutClauseLike interface {
 	// Attribute Methods
 	GetRecipient() RecipientLike
 	GetOptionalAtLevel() AtLevelLike
-	GetCitation() CitationLike
+	GetCited() CitedLike
 }
 
 /*
-CitationLike is an instance interface that declares the
+CitedLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete citation-like class.
+by each instance of a concrete cited-like class.
 */
-type CitationLike interface {
+type CitedLike interface {
 	// Principal Methods
-	GetClass() CitationClassLike
+	GetClass() CitedClassLike
 
 	// Attribute Methods
 	GetExpression() ExpressionLike
@@ -2461,7 +2461,7 @@ type NotarizeClauseLike interface {
 
 	// Attribute Methods
 	GetDraft() DraftLike
-	GetCitation() CitationLike
+	GetCited() CitedLike
 }
 
 /*
@@ -2763,7 +2763,7 @@ type SaveClauseLike interface {
 
 	// Attribute Methods
 	GetDraft() DraftLike
-	GetCitation() CitationLike
+	GetCited() CitedLike
 }
 
 /*

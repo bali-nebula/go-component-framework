@@ -59,7 +59,7 @@ type (
 	BlockingClassLike              = ast.BlockingClassLike
 	BreakClauseClassLike           = ast.BreakClauseClassLike
 	CheckoutClauseClassLike        = ast.CheckoutClauseClassLike
-	CitationClassLike              = ast.CitationClassLike
+	CitedClassLike                 = ast.CitedClassLike
 	CollectionClassLike            = ast.CollectionClassLike
 	ColonEqualClassLike            = ast.ColonEqualClassLike
 	CommentLineClassLike           = ast.CommentLineClassLike
@@ -181,7 +181,7 @@ type (
 	BlockingLike              = ast.BlockingLike
 	BreakClauseLike           = ast.BreakClauseLike
 	CheckoutClauseLike        = ast.CheckoutClauseLike
-	CitationLike              = ast.CitationLike
+	CitedLike                 = ast.CitedLike
 	CollectionLike            = ast.CollectionLike
 	ColonEqualLike            = ast.ColonEqualLike
 	CommentLineLike           = ast.CommentLineLike
@@ -549,21 +549,21 @@ func BreakClause() ast.BreakClauseLike {
 func CheckoutClause(
 	recipient ast.RecipientLike,
 	optionalAtLevel ast.AtLevelLike,
-	citation ast.CitationLike,
+	cited ast.CitedLike,
 ) ast.CheckoutClauseLike {
 	return ast.CheckoutClauseClass().CheckoutClause(
 		recipient,
 		optionalAtLevel,
-		citation,
+		cited,
 	)
 }
 
-// Ast/Citation
+// Ast/Cited
 
-func Citation(
+func Cited(
 	expression ast.ExpressionLike,
-) ast.CitationLike {
-	return ast.CitationClass().Citation(
+) ast.CitedLike {
+	return ast.CitedClass().Cited(
 		expression,
 	)
 }
@@ -1116,11 +1116,11 @@ func NoValues() ast.NoValuesLike {
 
 func NotarizeClause(
 	draft ast.DraftLike,
-	citation ast.CitationLike,
+	cited ast.CitedLike,
 ) ast.NotarizeClauseLike {
 	return ast.NotarizeClauseClass().NotarizeClause(
 		draft,
-		citation,
+		cited,
 	)
 }
 
@@ -1356,11 +1356,11 @@ func San() ast.SanLike {
 
 func SaveClause(
 	draft ast.DraftLike,
-	citation ast.CitationLike,
+	cited ast.CitedLike,
 ) ast.SaveClauseLike {
 	return ast.SaveClauseClass().SaveClause(
 		draft,
-		citation,
+		cited,
 	)
 }
 

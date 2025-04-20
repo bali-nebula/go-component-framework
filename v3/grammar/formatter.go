@@ -78,12 +78,6 @@ func (v *formatter_) ProcessArrow(
 	v.appendString(arrow)
 }
 
-func (v *formatter_) ProcessBar(
-	bar string,
-) {
-	v.appendString(bar)
-}
-
 func (v *formatter_) ProcessBinary(
 	binary string,
 ) {
@@ -114,18 +108,6 @@ func (v *formatter_) ProcessCitation(
 	v.appendString(citation)
 }
 
-func (v *formatter_) ProcessColon(
-	colon string,
-) {
-	v.appendString(colon)
-}
-
-func (v *formatter_) ProcessColonEqual(
-	colonEqual string,
-) {
-	v.appendString(colonEqual)
-}
-
 func (v *formatter_) ProcessComment(
 	comment string,
 ) {
@@ -136,18 +118,6 @@ func (v *formatter_) ProcessDash(
 	dash string,
 ) {
 	v.appendString(dash)
-}
-
-func (v *formatter_) ProcessDashEqual(
-	dashEqual string,
-) {
-	v.appendString(dashEqual)
-}
-
-func (v *formatter_) ProcessDefaultEqual(
-	defaultEqual string,
-) {
-	v.appendString(defaultEqual)
 }
 
 func (v *formatter_) ProcessDot(
@@ -241,12 +211,6 @@ func (v *formatter_) ProcessPlus(
 	v.appendString(plus)
 }
 
-func (v *formatter_) ProcessPlusEqual(
-	plusEqual string,
-) {
-	v.appendString(plusEqual)
-}
-
 func (v *formatter_) ProcessProbability(
 	probability string,
 ) {
@@ -271,34 +235,10 @@ func (v *formatter_) ProcessSlash(
 	v.appendString(slash)
 }
 
-func (v *formatter_) ProcessSlashEqual(
-	slashEqual string,
-) {
-	v.appendString(slashEqual)
-}
-
-func (v *formatter_) ProcessSnail(
-	snail string,
-) {
-	v.appendString(snail)
-}
-
-func (v *formatter_) ProcessSpace(
-	space string,
-) {
-	v.appendString(space)
-}
-
 func (v *formatter_) ProcessStar(
 	star string,
 ) {
 	v.appendString(star)
-}
-
-func (v *formatter_) ProcessStarEqual(
-	starEqual string,
-) {
-	v.appendString(starEqual)
 }
 
 func (v *formatter_) ProcessSymbol(
@@ -387,67 +327,19 @@ func (v *formatter_) PreprocessAnnotatedValue(
 	v.appendNewline()
 }
 
-func (v *formatter_) PreprocessAssociation(
-	association ast.AssociationLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
 func (v *formatter_) ProcessAssociationSlot(
 	slot uint,
 ) {
 	switch slot {
-	case 2:
-		v.appendString(" ")
+	case 1:
+		v.appendString(": ")
 	}
-}
-
-func (v *formatter_) PostprocessAssociation(
-	association ast.AssociationLike,
-) {
-	// TBD - Add formatting of the delimited rule.
 }
 
 func (v *formatter_) PreprocessAtLevel(
 	atLevel ast.AtLevelLike,
 ) {
 	v.appendString(" at level ")
-}
-
-func (v *formatter_) PreprocessBag(
-	bag ast.BagLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessBagSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessBag(
-	bag ast.BagLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessBlocking(
-	threading ast.BlockingLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessBlockingSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessBlocking(
-	threading ast.BlockingLike,
-) {
-	// TBD - Add formatting of the delimited rule.
 }
 
 func (v *formatter_) PreprocessBreakClause(
@@ -469,18 +361,6 @@ func (v *formatter_) ProcessCheckoutClauseSlot(
 	case 2:
 		v.appendString(" from ")
 	}
-}
-
-func (v *formatter_) ProcessCitationSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessCitation(
-	citation ast.CitationLike,
-) {
-	// TBD - Add formatting of the delimited rule.
 }
 
 func (v *formatter_) PreprocessCollection(

@@ -557,18 +557,18 @@ func (v *processor_) PostprocessCheckoutClause(
 ) {
 }
 
-func (v *processor_) PreprocessCitation(
-	citation ast.CitationLike,
+func (v *processor_) PreprocessCited(
+	cited ast.CitedLike,
 ) {
 }
 
-func (v *processor_) ProcessCitationSlot(
+func (v *processor_) ProcessCitedSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessCitation(
-	citation ast.CitationLike,
+func (v *processor_) PostprocessCited(
+	cited ast.CitedLike,
 ) {
 }
 

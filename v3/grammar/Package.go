@@ -618,14 +618,14 @@ type Methodical interface {
 	PostprocessCheckoutClause(
 		checkoutClause ast.CheckoutClauseLike,
 	)
-	PreprocessCitation(
-		citation ast.CitationLike,
+	PreprocessCited(
+		cited ast.CitedLike,
 	)
-	ProcessCitationSlot(
+	ProcessCitedSlot(
 		slot uint,
 	)
-	PostprocessCitation(
-		citation ast.CitationLike,
+	PostprocessCited(
+		cited ast.CitedLike,
 	)
 	PreprocessCollection(
 		collection ast.CollectionLike,
