@@ -209,11 +209,11 @@ loop:
 		case v.foundToken(PercentageToken):
 		case v.foundToken(ProbabilityToken):
 		case v.foundToken(QuoteToken):
+		case v.foundToken(NumberToken):
 		case v.foundToken(ResourceToken):
 		case v.foundToken(SymbolToken):
 		case v.foundToken(TagToken):
 		case v.foundToken(VersionToken):
-		case v.foundToken(NumberToken):
 		case v.foundToken(IdentifierToken):
 		case v.foundToken(PlusToken):
 		case v.foundToken(DashToken):
@@ -225,6 +225,8 @@ loop:
 		case v.foundToken(LessToken):
 		case v.foundToken(EqualToken):
 		case v.foundToken(MoreToken):
+		case v.foundToken(DotToken):
+		case v.foundToken(ArrowToken):
 		default:
 			v.foundError()
 			break loop
@@ -267,6 +269,7 @@ var scannerClassReference_ = &scannerClass_{
 			ErrorToken:       "error",
 			AmpersandToken:   "ampersand",
 			AngleToken:       "angle",
+			ArrowToken:       "arrow",
 			BinaryToken:      "binary",
 			BooleanToken:     "boolean",
 			BytecodeToken:    "bytecode",
@@ -275,6 +278,7 @@ var scannerClassReference_ = &scannerClass_{
 			CommentToken:     "comment",
 			DashToken:        "dash",
 			DelimiterToken:   "delimiter",
+			DotToken:         "dot",
 			DoubleToken:      "double",
 			DurationToken:    "duration",
 			EqualToken:       "equal",
@@ -306,6 +310,7 @@ var scannerClassReference_ = &scannerClass_{
 			// Define pattern matchers for each type of token.
 			AmpersandToken:   reg.MustCompile("^" + ampersand_),
 			AngleToken:       reg.MustCompile("^" + angle_),
+			ArrowToken:       reg.MustCompile("^" + arrow_),
 			BinaryToken:      reg.MustCompile("^" + binary_),
 			BooleanToken:     reg.MustCompile("^" + boolean_),
 			BytecodeToken:    reg.MustCompile("^" + bytecode_),
@@ -314,6 +319,7 @@ var scannerClassReference_ = &scannerClass_{
 			CommentToken:     reg.MustCompile("^" + comment_),
 			DashToken:        reg.MustCompile("^" + dash_),
 			DelimiterToken:   reg.MustCompile("^" + delimiter_),
+			DotToken:         reg.MustCompile("^" + dot_),
 			DoubleToken:      reg.MustCompile("^" + double_),
 			DurationToken:    reg.MustCompile("^" + duration_),
 			EqualToken:       reg.MustCompile("^" + equal_),
@@ -362,7 +368,7 @@ const (
 	upper_   = "\\p{Lu}"
 
 	// Define the regular expression patterns for each token type.
-	delimiter_    = "(?:xor|with|while|to|throw|select|save|san|return|retrieve|reject|publish|post|on|notarize|not|matching|matches|loop|level|let|is|ior|in|if|from|each|do|discard|continue|checkout|break|at|as|and|accept|\\}|\\|\\]|\\|\\)|\\||\\{|\\]|\\[\\||\\[|\\?=|\\.\\.|\\.|\\+=|\\*=|\\)|\\(\\||\\(|@|<-|;|:=|:|/=|-=|,)"
+	delimiter_    = "(?:xor|with|while|to|throw|select|save|san|return|retrieve|reject|publish|post|on|notarize|not|matching|matches|loop|level|let|is|ior|in|if|from|each|do|discard|continue|checkout|break|at|as|and|accept|\\}|\\|\\]|\\|\\)|\\||\\{|\\]|\\[\\||\\[|\\?=|\\.\\.|\\+=|\\*=|\\)|\\(\\||\\(|@|;|:=|:|/=|-=|,)"
 	newline_      = "(?:" + eol_ + ")"
 	space_        = "(?:[ \\t]+)"
 	alpha_        = "(?:[A-Za-z])"
@@ -413,6 +419,7 @@ const (
 	quote_        = "(?:\"(?:" + character_ + ")*\")"
 	real_         = "(?:0|(?:" + float_ + ")|(?:" + infinity_ + ")|(?:" + undefined_ + "))"
 	rectangular_  = "(?:(?:" + float_ + ")(?:" + sign_ + ")(?:" + float_ + ")?i)"
+	number_       = "(?:(?:" + polar_ + ")|(?:" + rectangular_ + ")|(?:" + imaginary_ + ")|(?:" + real_ + "))"
 	regex_        = "(?:\"(?:" + character_ + ")+\"\\?)"
 	resource_     = "(?:<(?:" + scheme_ + "):(//(?:" + authority_ + "))?/(?:" + path_ + ")(\\?(?:" + query_ + "))?(#(?:" + fragment_ + "))?>)"
 	scheme_       = "(?:(?:" + alpha_ + ")((?:" + alphanumeric_ + ")|\\+|-|\\.)*)"
@@ -425,11 +432,10 @@ const (
 	undefined_    = "(?:undefined)"
 	unicode_      = "(?:(u(?:" + base16_ + "){4})|(U(?:" + base16_ + "){8}))"
 	version_      = "(?:v(?:" + ordinal_ + ")(\\.(?:" + ordinal_ + "))*)"
+	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
 	weeks_        = "(?:(?:" + timespan_ + ")W)"
 	year_         = "(?:0|(?:" + ordinal_ + "))"
 	years_        = "(?:(?:" + timespan_ + ")Y)"
-	number_       = "(?:(?:" + polar_ + ")|(?:" + rectangular_ + ")|(?:" + imaginary_ + ")|(?:" + real_ + "))"
-	identifier_   = "(?:(?:" + letter_ + ")((?:" + letter_ + ")|" + digit_ + ")*)"
 	plus_         = "(?:\\+)"
 	dash_         = "(?:-)"
 	star_         = "(?:\\*)"
@@ -440,4 +446,6 @@ const (
 	less_         = "(?:<)"
 	equal_        = "(?:=)"
 	more_         = "(?:>)"
+	dot_          = "(?:\\.)"
+	arrow_        = "(?:<-)"
 )

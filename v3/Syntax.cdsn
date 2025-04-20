@@ -201,15 +201,11 @@ $AdditionalArgument: "," Argument
 
 $Argument: identifier
 
-$Method: identifier Threading identifier "(" Arguments? ")"
+$Method: identifier Blocking identifier "(" Arguments? ")"
 
-$Threading:
-    Dot
-    Arrow
-
-$Dot: "."
-
-$Arrow: "<-"
+$Blocking:
+    dot
+    arrow
 
 $Subcomponent: identifier "[" Indices "]"
 
@@ -500,6 +496,8 @@ $real: '0' | float | infinity | undefined
 
 $rectangular: float sign float? 'i'
 
+$number: polar | rectangular | imaginary | real  ! Must be after other numerics.
+
 $regex: '"' character+ '"' '?'
 
 $resource: '<' scheme ':' ("//" authority)? '/' path ('?' query)? ('#' fragment)? '>'
@@ -524,15 +522,13 @@ $unicode: ('u' base16{4}) | ('U' base16{8})
 
 $version: 'v' ordinal ('.' ordinal)*
 
+$identifier: letter (letter | DIGIT)*  ! Must be after alphanumeric expressions.
+
 $weeks: timespan 'W'
 
 $year: '0' | ordinal
 
 $years: timespan 'Y'
-
-$number: polar | rectangular | imaginary | real  ! Must be after percentage.
-
-$identifier: letter (letter | DIGIT)*  ! Must be after other identifiers.
 
 $plus: "+"
 
@@ -553,4 +549,8 @@ $less: "<"
 $equal: "="
 
 $more: ">"
+
+$dot: "."
+
+$arrow: "<-"
 

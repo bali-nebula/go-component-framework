@@ -203,16 +203,6 @@ type ArgumentsClassLike interface {
 }
 
 /*
-ArrowClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete arrow-like class.
-*/
-type ArrowClassLike interface {
-	// Constructor Methods
-	Arrow() ArrowLike
-}
-
-/*
 AssignmentClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete assignment-like class.
@@ -259,6 +249,18 @@ type BagClassLike interface {
 	Bag(
 		expression ExpressionLike,
 	) BagLike
+}
+
+/*
+BlockingClassLike is a class interface that declares the
+complete set of class constructors, constants and functions that must be
+supported by each concrete blocking-like class.
+*/
+type BlockingClassLike interface {
+	// Constructor Methods
+	Blocking(
+		any_ any,
+	) BlockingLike
 }
 
 /*
@@ -433,16 +435,6 @@ type DocumentClassLike interface {
 		optionalNotice NoticeLike,
 		component ComponentLike,
 	) DocumentLike
-}
-
-/*
-DotClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete dot-like class.
-*/
-type DotClassLike interface {
-	// Constructor Methods
-	Dot() DotLike
 }
 
 /*
@@ -876,7 +868,7 @@ type MethodClassLike interface {
 	// Constructor Methods
 	Method(
 		identifier1 string,
-		threading ThreadingLike,
+		blocking BlockingLike,
 		identifier2 string,
 		optionalArguments ArgumentsLike,
 	) MethodLike
@@ -1391,18 +1383,6 @@ type TemplateClassLike interface {
 }
 
 /*
-ThreadingClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete threading-like class.
-*/
-type ThreadingClassLike interface {
-	// Constructor Methods
-	Threading(
-		any_ any,
-	) ThreadingLike
-}
-
-/*
 ThrowClauseClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete throw-clause-like class.
@@ -1667,16 +1647,6 @@ type ArgumentsLike interface {
 }
 
 /*
-ArrowLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete arrow-like class.
-*/
-type ArrowLike interface {
-	// Principal Methods
-	GetClass() ArrowClassLike
-}
-
-/*
 AssignmentLike is an instance interface that declares the
 complete set of principal, attribute and aspect methods that must be supported
 by each instance of a concrete assignment-like class.
@@ -1727,6 +1697,19 @@ type BagLike interface {
 
 	// Attribute Methods
 	GetExpression() ExpressionLike
+}
+
+/*
+BlockingLike is an instance interface that declares the
+complete set of principal, attribute and aspect methods that must be supported
+by each instance of a concrete blocking-like class.
+*/
+type BlockingLike interface {
+	// Principal Methods
+	GetClass() BlockingClassLike
+
+	// Attribute Methods
+	GetAny() any
 }
 
 /*
@@ -1911,16 +1894,6 @@ type DocumentLike interface {
 	// Attribute Methods
 	GetOptionalNotice() NoticeLike
 	GetComponent() ComponentLike
-}
-
-/*
-DotLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete dot-like class.
-*/
-type DotLike interface {
-	// Principal Methods
-	GetClass() DotClassLike
 }
 
 /*
@@ -2386,7 +2359,7 @@ type MethodLike interface {
 
 	// Attribute Methods
 	GetIdentifier1() string
-	GetThreading() ThreadingLike
+	GetBlocking() BlockingLike
 	GetIdentifier2() string
 	GetOptionalArguments() ArgumentsLike
 }
@@ -2932,19 +2905,6 @@ type TemplateLike interface {
 
 	// Attribute Methods
 	GetExpression() ExpressionLike
-}
-
-/*
-ThreadingLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete threading-like class.
-*/
-type ThreadingLike interface {
-	// Principal Methods
-	GetClass() ThreadingClassLike
-
-	// Attribute Methods
-	GetAny() any
 }
 
 /*

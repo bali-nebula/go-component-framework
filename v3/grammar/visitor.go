@@ -259,12 +259,6 @@ func (v *visitor_) visitArguments(
 	}
 }
 
-func (v *visitor_) visitArrow(
-	arrow ast.ArrowLike,
-) {
-	// This method does not need to process anything.
-}
-
 func (v *visitor_) visitAssignment(
 	assignment ast.AssignmentLike,
 ) {
@@ -339,6 +333,25 @@ func (v *visitor_) visitBag(
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
+}
+
+func (v *visitor_) visitBlocking(
+	blocking ast.BlockingLike,
+) {
+	// Visit the possible blocking types.
+	switch actual := blocking.GetAny().(type) {
+	case string:
+		switch {
+		case ScannerClass().MatchesType(actual, DotToken):
+			v.processor_.ProcessDot(actual)
+		case ScannerClass().MatchesType(actual, ArrowToken):
+			v.processor_.ProcessArrow(actual)
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
 }
 
 func (v *visitor_) visitBreakClause(
@@ -538,12 +551,6 @@ func (v *visitor_) visitDocument(
 	v.processor_.PreprocessComponent(component)
 	v.visitComponent(component)
 	v.processor_.PostprocessComponent(component)
-}
-
-func (v *visitor_) visitDot(
-	dot ast.DotLike,
-) {
-	// This method does not need to process anything.
 }
 
 func (v *visitor_) visitDraft(
@@ -1323,11 +1330,11 @@ func (v *visitor_) visitMethod(
 	// Visit slot 1 between references.
 	v.processor_.ProcessMethodSlot(1)
 
-	// Visit a single threading rule.
-	var threading = method.GetThreading()
-	v.processor_.PreprocessThreading(threading)
-	v.visitThreading(threading)
-	v.processor_.PostprocessThreading(threading)
+	// Visit a single blocking rule.
+	var blocking = method.GetBlocking()
+	v.processor_.PreprocessBlocking(blocking)
+	v.visitBlocking(blocking)
+	v.processor_.PostprocessBlocking(blocking)
 
 	// Visit slot 2 between references.
 	v.processor_.ProcessMethodSlot(2)
@@ -2231,29 +2238,6 @@ func (v *visitor_) visitTemplate(
 	v.processor_.PreprocessExpression(expression)
 	v.visitExpression(expression)
 	v.processor_.PostprocessExpression(expression)
-}
-
-func (v *visitor_) visitThreading(
-	threading ast.ThreadingLike,
-) {
-	// Visit the possible threading types.
-	switch actual := threading.GetAny().(type) {
-	case ast.DotLike:
-		v.processor_.PreprocessDot(actual)
-		v.visitDot(actual)
-		v.processor_.PostprocessDot(actual)
-	case ast.ArrowLike:
-		v.processor_.PreprocessArrow(actual)
-		v.visitArrow(actual)
-		v.processor_.PostprocessArrow(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
 }
 
 func (v *visitor_) visitThrowClause(

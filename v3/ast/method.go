@@ -35,15 +35,15 @@ func MethodClass() MethodClassLike {
 
 func (c *methodClass_) Method(
 	identifier1 string,
-	threading ThreadingLike,
+	blocking BlockingLike,
 	identifier2 string,
 	optionalArguments ArgumentsLike,
 ) MethodLike {
 	if uti.IsUndefined(identifier1) {
 		panic("The \"identifier1\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(threading) {
-		panic("The \"threading\" attribute is required by this class.")
+	if uti.IsUndefined(blocking) {
+		panic("The \"blocking\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(identifier2) {
 		panic("The \"identifier2\" attribute is required by this class.")
@@ -51,7 +51,7 @@ func (c *methodClass_) Method(
 	var instance = &method_{
 		// Initialize the instance attributes.
 		identifier1_:       identifier1,
-		threading_:         threading,
+		blocking_:          blocking,
 		identifier2_:       identifier2,
 		optionalArguments_: optionalArguments,
 	}
@@ -72,8 +72,8 @@ func (v *method_) GetIdentifier1() string {
 	return v.identifier1_
 }
 
-func (v *method_) GetThreading() ThreadingLike {
-	return v.threading_
+func (v *method_) GetBlocking() BlockingLike {
+	return v.blocking_
 }
 
 func (v *method_) GetIdentifier2() string {
@@ -91,7 +91,7 @@ func (v *method_) GetOptionalArguments() ArgumentsLike {
 type method_ struct {
 	// Declare the instance attributes.
 	identifier1_       string
-	threading_         ThreadingLike
+	blocking_          BlockingLike
 	identifier2_       string
 	optionalArguments_ ArgumentsLike
 }

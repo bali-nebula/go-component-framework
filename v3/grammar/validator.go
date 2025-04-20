@@ -73,6 +73,12 @@ func (v *validator_) ProcessAngle(
 	v.validateToken(angle, AngleToken)
 }
 
+func (v *validator_) ProcessArrow(
+	arrow string,
+) {
+	v.validateToken(arrow, ArrowToken)
+}
+
 func (v *validator_) ProcessBinary(
 	binary string,
 ) {
@@ -113,6 +119,12 @@ func (v *validator_) ProcessDash(
 	dash string,
 ) {
 	v.validateToken(dash, DashToken)
+}
+
+func (v *validator_) ProcessDot(
+	dot string,
+) {
+	v.validateToken(dot, DotToken)
 }
 
 func (v *validator_) ProcessDouble(
@@ -525,24 +537,6 @@ func (v *validator_) PostprocessArguments(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessArrow(
-	arrow ast.ArrowLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessArrowSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessArrow(
-	arrow ast.ArrowLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessAssignment(
 	assignment ast.AssignmentLike,
 ) {
@@ -611,6 +605,24 @@ func (v *validator_) ProcessBagSlot(
 
 func (v *validator_) PostprocessBag(
 	bag ast.BagLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PreprocessBlocking(
+	blocking ast.BlockingLike,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) ProcessBlockingSlot(
+	slot uint,
+) {
+	// TBD - Add any validation checks.
+}
+
+func (v *validator_) PostprocessBlocking(
+	blocking ast.BlockingLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -881,24 +893,6 @@ func (v *validator_) ProcessDocumentSlot(
 
 func (v *validator_) PostprocessDocument(
 	document ast.DocumentLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessDot(
-	dot ast.DotLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessDotSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessDot(
-	dot ast.DotLike,
 ) {
 	// TBD - Add any validation checks.
 }
@@ -2311,24 +2305,6 @@ func (v *validator_) ProcessTemplateSlot(
 
 func (v *validator_) PostprocessTemplate(
 	template ast.TemplateLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PreprocessThreading(
-	threading ast.ThreadingLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessThreadingSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessThreading(
-	threading ast.ThreadingLike,
 ) {
 	// TBD - Add any validation checks.
 }

@@ -57,6 +57,7 @@ const (
 	ErrorToken TokenType = iota
 	AmpersandToken
 	AngleToken
+	ArrowToken
 	BinaryToken
 	BooleanToken
 	BytecodeToken
@@ -65,6 +66,7 @@ const (
 	CommentToken
 	DashToken
 	DelimiterToken
+	DotToken
 	DoubleToken
 	DurationToken
 	EqualToken
@@ -305,6 +307,9 @@ type Methodical interface {
 	ProcessAngle(
 		angle string,
 	)
+	ProcessArrow(
+		arrow string,
+	)
 	ProcessBinary(
 		binary string,
 	)
@@ -325,6 +330,9 @@ type Methodical interface {
 	)
 	ProcessDash(
 		dash string,
+	)
+	ProcessDot(
+		dot string,
 	)
 	ProcessDouble(
 		double string,
@@ -547,15 +555,6 @@ type Methodical interface {
 	PostprocessArguments(
 		arguments ast.ArgumentsLike,
 	)
-	PreprocessArrow(
-		arrow ast.ArrowLike,
-	)
-	ProcessArrowSlot(
-		slot uint,
-	)
-	PostprocessArrow(
-		arrow ast.ArrowLike,
-	)
 	PreprocessAssignment(
 		assignment ast.AssignmentLike,
 	)
@@ -591,6 +590,15 @@ type Methodical interface {
 	)
 	PostprocessBag(
 		bag ast.BagLike,
+	)
+	PreprocessBlocking(
+		blocking ast.BlockingLike,
+	)
+	ProcessBlockingSlot(
+		slot uint,
+	)
+	PostprocessBlocking(
+		blocking ast.BlockingLike,
 	)
 	PreprocessBreakClause(
 		breakClause ast.BreakClauseLike,
@@ -726,15 +734,6 @@ type Methodical interface {
 	)
 	PostprocessDocument(
 		document ast.DocumentLike,
-	)
-	PreprocessDot(
-		dot ast.DotLike,
-	)
-	ProcessDotSlot(
-		slot uint,
-	)
-	PostprocessDot(
-		dot ast.DotLike,
 	)
 	PreprocessDraft(
 		draft ast.DraftLike,
@@ -1445,15 +1444,6 @@ type Methodical interface {
 	)
 	PostprocessTemplate(
 		template ast.TemplateLike,
-	)
-	PreprocessThreading(
-		threading ast.ThreadingLike,
-	)
-	ProcessThreadingSlot(
-		slot uint,
-	)
-	PostprocessThreading(
-		threading ast.ThreadingLike,
 	)
 	PreprocessThrowClause(
 		throwClause ast.ThrowClauseLike,

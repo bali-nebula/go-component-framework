@@ -432,6 +432,24 @@ func (v *formatter_) PostprocessBag(
 	// TBD - Add formatting of the delimited rule.
 }
 
+func (v *formatter_) PreprocessBlocking(
+	threading ast.BlockingLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) ProcessBlockingSlot(
+	slot uint,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
+func (v *formatter_) PostprocessBlocking(
+	threading ast.BlockingLike,
+) {
+	// TBD - Add formatting of the delimited rule.
+}
+
 func (v *formatter_) PreprocessBreakClause(
 	breakClause ast.BreakClauseLike,
 ) {
@@ -1586,24 +1604,6 @@ func (v *formatter_) ProcessTemplateSlot(
 
 func (v *formatter_) PostprocessTemplate(
 	template ast.TemplateLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PreprocessThreading(
-	threading ast.ThreadingLike,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) ProcessThreadingSlot(
-	slot uint,
-) {
-	// TBD - Add formatting of the delimited rule.
-}
-
-func (v *formatter_) PostprocessThreading(
-	threading ast.ThreadingLike,
 ) {
 	// TBD - Add formatting of the delimited rule.
 }

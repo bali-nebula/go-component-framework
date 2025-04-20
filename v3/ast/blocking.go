@@ -19,21 +19,29 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func DotClass() DotClassLike {
-	return dotClass()
+func BlockingClass() BlockingClassLike {
+	return blockingClass()
 }
 
 // Constructor Methods
 
-func (c *dotClass_) Dot() DotLike {
-	var instance = &dot_{
+func (c *blockingClass_) Blocking(
+	any_ any,
+) BlockingLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
+	var instance = &blocking_{
 		// Initialize the instance attributes.
+		any_: any_,
 	}
 	return instance
 }
@@ -42,32 +50,37 @@ func (c *dotClass_) Dot() DotLike {
 
 // Principal Methods
 
-func (v *dot_) GetClass() DotClassLike {
-	return dotClass()
+func (v *blocking_) GetClass() BlockingClassLike {
+	return blockingClass()
 }
 
 // Attribute Methods
+
+func (v *blocking_) GetAny() any {
+	return v.any_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type dot_ struct {
+type blocking_ struct {
 	// Declare the instance attributes.
+	any_ any
 }
 
 // Class Structure
 
-type dotClass_ struct {
+type blockingClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func dotClass() *dotClass_ {
-	return dotClassReference_
+func blockingClass() *blockingClass_ {
+	return blockingClassReference_
 }
 
-var dotClassReference_ = &dotClass_{
+var blockingClassReference_ = &blockingClass_{
 	// Initialize the class constants.
 }

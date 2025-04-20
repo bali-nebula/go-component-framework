@@ -60,6 +60,11 @@ func (v *processor_) ProcessAngle(
 ) {
 }
 
+func (v *processor_) ProcessArrow(
+	arrow string,
+) {
+}
+
 func (v *processor_) ProcessBinary(
 	binary string,
 ) {
@@ -92,6 +97,11 @@ func (v *processor_) ProcessComment(
 
 func (v *processor_) ProcessDash(
 	dash string,
+) {
+}
+
+func (v *processor_) ProcessDot(
+	dot string,
 ) {
 }
 
@@ -442,21 +452,6 @@ func (v *processor_) PostprocessArguments(
 ) {
 }
 
-func (v *processor_) PreprocessArrow(
-	arrow ast.ArrowLike,
-) {
-}
-
-func (v *processor_) ProcessArrowSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessArrow(
-	arrow ast.ArrowLike,
-) {
-}
-
 func (v *processor_) PreprocessAssignment(
 	assignment ast.AssignmentLike,
 ) {
@@ -514,6 +509,21 @@ func (v *processor_) ProcessBagSlot(
 
 func (v *processor_) PostprocessBag(
 	bag ast.BagLike,
+) {
+}
+
+func (v *processor_) PreprocessBlocking(
+	blocking ast.BlockingLike,
+) {
+}
+
+func (v *processor_) ProcessBlockingSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessBlocking(
+	blocking ast.BlockingLike,
 ) {
 }
 
@@ -739,21 +749,6 @@ func (v *processor_) ProcessDocumentSlot(
 
 func (v *processor_) PostprocessDocument(
 	document ast.DocumentLike,
-) {
-}
-
-func (v *processor_) PreprocessDot(
-	dot ast.DotLike,
-) {
-}
-
-func (v *processor_) ProcessDotSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessDot(
-	dot ast.DotLike,
 ) {
 }
 
@@ -1932,21 +1927,6 @@ func (v *processor_) ProcessTemplateSlot(
 
 func (v *processor_) PostprocessTemplate(
 	template ast.TemplateLike,
-) {
-}
-
-func (v *processor_) PreprocessThreading(
-	threading ast.ThreadingLike,
-) {
-}
-
-func (v *processor_) ProcessThreadingSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessThreading(
-	threading ast.ThreadingLike,
 ) {
 }
 

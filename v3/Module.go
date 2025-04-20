@@ -52,11 +52,11 @@ type (
 	AnnotatedValueClassLike        = ast.AnnotatedValueClassLike
 	ArgumentClassLike              = ast.ArgumentClassLike
 	ArgumentsClassLike             = ast.ArgumentsClassLike
-	ArrowClassLike                 = ast.ArrowClassLike
 	AssignmentClassLike            = ast.AssignmentClassLike
 	AssociationClassLike           = ast.AssociationClassLike
 	AtLevelClassLike               = ast.AtLevelClassLike
 	BagClassLike                   = ast.BagClassLike
+	BlockingClassLike              = ast.BlockingClassLike
 	BreakClauseClassLike           = ast.BreakClauseClassLike
 	CheckoutClauseClassLike        = ast.CheckoutClauseClassLike
 	CitationClassLike              = ast.CitationClassLike
@@ -72,7 +72,6 @@ type (
 	DiscardClauseClassLike         = ast.DiscardClauseClassLike
 	DoClauseClassLike              = ast.DoClauseClassLike
 	DocumentClassLike              = ast.DocumentClassLike
-	DotClassLike                   = ast.DotClassLike
 	DraftClassLike                 = ast.DraftClassLike
 	ElementClassLike               = ast.ElementClassLike
 	EntityClassLike                = ast.EntityClassLike
@@ -151,7 +150,6 @@ type (
 	SubjectClassLike               = ast.SubjectClassLike
 	TargetClassLike                = ast.TargetClassLike
 	TemplateClassLike              = ast.TemplateClassLike
-	ThreadingClassLike             = ast.ThreadingClassLike
 	ThrowClauseClassLike           = ast.ThrowClauseClassLike
 	UpperBoundClassLike            = ast.UpperBoundClassLike
 	UpperExclusionClassLike        = ast.UpperExclusionClassLike
@@ -176,11 +174,11 @@ type (
 	AnnotatedValueLike        = ast.AnnotatedValueLike
 	ArgumentLike              = ast.ArgumentLike
 	ArgumentsLike             = ast.ArgumentsLike
-	ArrowLike                 = ast.ArrowLike
 	AssignmentLike            = ast.AssignmentLike
 	AssociationLike           = ast.AssociationLike
 	AtLevelLike               = ast.AtLevelLike
 	BagLike                   = ast.BagLike
+	BlockingLike              = ast.BlockingLike
 	BreakClauseLike           = ast.BreakClauseLike
 	CheckoutClauseLike        = ast.CheckoutClauseLike
 	CitationLike              = ast.CitationLike
@@ -196,7 +194,6 @@ type (
 	DiscardClauseLike         = ast.DiscardClauseLike
 	DoClauseLike              = ast.DoClauseLike
 	DocumentLike              = ast.DocumentLike
-	DotLike                   = ast.DotLike
 	DraftLike                 = ast.DraftLike
 	ElementLike               = ast.ElementLike
 	EntityLike                = ast.EntityLike
@@ -275,7 +272,6 @@ type (
 	SubjectLike               = ast.SubjectLike
 	TargetLike                = ast.TargetLike
 	TemplateLike              = ast.TemplateLike
-	ThreadingLike             = ast.ThreadingLike
 	ThrowClauseLike           = ast.ThrowClauseLike
 	UpperBoundLike            = ast.UpperBoundLike
 	UpperExclusionLike        = ast.UpperExclusionLike
@@ -296,6 +292,7 @@ const (
 	ErrorToken       = gra.ErrorToken
 	AmpersandToken   = gra.AmpersandToken
 	AngleToken       = gra.AngleToken
+	ArrowToken       = gra.ArrowToken
 	BinaryToken      = gra.BinaryToken
 	BooleanToken     = gra.BooleanToken
 	BytecodeToken    = gra.BytecodeToken
@@ -304,6 +301,7 @@ const (
 	CommentToken     = gra.CommentToken
 	DashToken        = gra.DashToken
 	DelimiterToken   = gra.DelimiterToken
+	DotToken         = gra.DotToken
 	DoubleToken      = gra.DoubleToken
 	DurationToken    = gra.DurationToken
 	EqualToken       = gra.EqualToken
@@ -488,12 +486,6 @@ func Arguments(
 	)
 }
 
-// Ast/Arrow
-
-func Arrow() ast.ArrowLike {
-	return ast.ArrowClass().Arrow()
-}
-
 // Ast/Assignment
 
 func Assignment(
@@ -533,6 +525,16 @@ func Bag(
 ) ast.BagLike {
 	return ast.BagClass().Bag(
 		expression,
+	)
+}
+
+// Ast/Blocking
+
+func Blocking(
+	any_ any,
+) ast.BlockingLike {
+	return ast.BlockingClass().Blocking(
+		any_,
 	)
 }
 
@@ -672,12 +674,6 @@ func Document(
 		optionalNotice,
 		component,
 	)
-}
-
-// Ast/Dot
-
-func Dot() ast.DotLike {
-	return ast.DotClass().Dot()
 }
 
 // Ast/Draft
@@ -1038,13 +1034,13 @@ func Messaging(
 
 func Method(
 	identifier1 string,
-	threading ast.ThreadingLike,
+	blocking ast.BlockingLike,
 	identifier2 string,
 	optionalArguments ast.ArgumentsLike,
 ) ast.MethodLike {
 	return ast.MethodClass().Method(
 		identifier1,
-		threading,
+		blocking,
 		identifier2,
 		optionalArguments,
 	)
@@ -1475,16 +1471,6 @@ func Template(
 ) ast.TemplateLike {
 	return ast.TemplateClass().Template(
 		expression,
-	)
-}
-
-// Ast/Threading
-
-func Threading(
-	any_ any,
-) ast.ThreadingLike {
-	return ast.ThreadingClass().Threading(
-		any_,
 	)
 }
 

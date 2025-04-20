@@ -624,37 +624,6 @@ additionalArgumentsLoop:
 	return
 }
 
-func (v *parser_) parseArrow() (
-	arrow ast.ArrowLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "<-" delimiter.
-	_, token, ok = v.parseDelimiter("<-")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Arrow rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Arrow", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Arrow rule.
-	ok = true
-	v.remove(tokens)
-	arrow = ast.ArrowClass().Arrow()
-	return
-}
-
 func (v *parser_) parseAssignment() (
 	assignment ast.AssignmentLike,
 	token TokenLike,
@@ -880,6 +849,33 @@ func (v *parser_) parseBag() (
 	ok = true
 	v.remove(tokens)
 	bag = ast.BagClass().Bag(expression)
+	return
+}
+
+func (v *parser_) parseBlocking() (
+	blocking ast.BlockingLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single dot Blocking.
+	var dot string
+	dot, token, ok = v.parseToken(DotToken)
+	if ok {
+		// Found a single dot Blocking.
+		blocking = ast.BlockingClass().Blocking(dot)
+		return
+	}
+
+	// Attempt to parse a single arrow Blocking.
+	var arrow string
+	arrow, token, ok = v.parseToken(ArrowToken)
+	if ok {
+		// Found a single arrow Blocking.
+		blocking = ast.BlockingClass().Blocking(arrow)
+		return
+	}
+
+	// This is not a single Blocking rule.
 	return
 }
 
@@ -1548,37 +1544,6 @@ func (v *parser_) parseDocument() (
 		optionalNotice,
 		component,
 	)
-	return
-}
-
-func (v *parser_) parseDot() (
-	dot ast.DotLike,
-	token TokenLike,
-	ok bool,
-) {
-	var tokens = fra.List[TokenLike]()
-
-	// Attempt to parse a single "." delimiter.
-	_, token, ok = v.parseDelimiter(".")
-	if !ok {
-		if uti.IsDefined(tokens) {
-			// This is not a single Dot rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Dot", token)
-			panic(message)
-		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
-	}
-
-	// Found a single Dot rule.
-	ok = true
-	v.remove(tokens)
-	dot = ast.DotClass().Dot()
 	return
 }
 
@@ -3520,9 +3485,9 @@ func (v *parser_) parseMethod() (
 		tokens.AppendValue(token)
 	}
 
-	// Attempt to parse a single Threading rule.
-	var threading ast.ThreadingLike
-	threading, token, ok = v.parseThreading()
+	// Attempt to parse a single Blocking rule.
+	var blocking ast.BlockingLike
+	blocking, token, ok = v.parseBlocking()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
@@ -3602,7 +3567,7 @@ func (v *parser_) parseMethod() (
 	v.remove(tokens)
 	method = ast.MethodClass().Method(
 		identifier1,
-		threading,
+		blocking,
 		identifier2,
 		optionalArguments,
 	)
@@ -6134,33 +6099,6 @@ func (v *parser_) parseTemplate() (
 	return
 }
 
-func (v *parser_) parseThreading() (
-	threading ast.ThreadingLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single Dot Threading.
-	var dot ast.DotLike
-	dot, token, ok = v.parseDot()
-	if ok {
-		// Found a single Dot Threading.
-		threading = ast.ThreadingClass().Threading(dot)
-		return
-	}
-
-	// Attempt to parse a single Arrow Threading.
-	var arrow ast.ArrowLike
-	arrow, token, ok = v.parseArrow()
-	if ok {
-		// Found a single Arrow Threading.
-		threading = ast.ThreadingClass().Threading(arrow)
-		return
-	}
-
-	// This is not a single Threading rule.
-	return
-}
-
 func (v *parser_) parseThrowClause() (
 	throwClause ast.ThrowClauseLike,
 	token TokenLike,
@@ -6880,12 +6818,10 @@ var parserClassReference_ = &parserClass_{
 			"$Arguments":          `Argument AdditionalArgument*`,
 			"$AdditionalArgument": `"," Argument`,
 			"$Argument":           `identifier`,
-			"$Method":             `identifier Threading identifier "(" Arguments? ")"`,
-			"$Threading": `
-    Dot
-    Arrow`,
-			"$Dot":             `"."`,
-			"$Arrow":           `"<-"`,
+			"$Method":             `identifier Blocking identifier "(" Arguments? ")"`,
+			"$Blocking": `
+    dot
+    arrow`,
 			"$Subcomponent":    `identifier "[" Indices "]"`,
 			"$Indices":         `Index AdditionalIndex*`,
 			"$AdditionalIndex": `"," Index`,
