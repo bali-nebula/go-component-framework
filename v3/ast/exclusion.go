@@ -25,14 +25,14 @@ import ()
 
 // Access Function
 
-func UpperExclusionClass() UpperExclusionClassLike {
-	return upperExclusionClass()
+func ExclusionClass() ExclusionClassLike {
+	return exclusionClass()
 }
 
 // Constructor Methods
 
-func (c *upperExclusionClass_) UpperExclusion() UpperExclusionLike {
-	var instance = &upperExclusion_{
+func (c *exclusionClass_) Exclusion() ExclusionLike {
+	var instance = &exclusion_{
 		// Initialize the instance attributes.
 	}
 	return instance
@@ -42,8 +42,8 @@ func (c *upperExclusionClass_) UpperExclusion() UpperExclusionLike {
 
 // Principal Methods
 
-func (v *upperExclusion_) GetClass() UpperExclusionClassLike {
-	return upperExclusionClass()
+func (v *exclusion_) GetClass() ExclusionClassLike {
+	return exclusionClass()
 }
 
 // Attribute Methods
@@ -52,22 +52,22 @@ func (v *upperExclusion_) GetClass() UpperExclusionClassLike {
 
 // Instance Structure
 
-type upperExclusion_ struct {
+type exclusion_ struct {
 	// Declare the instance attributes.
 }
 
 // Class Structure
 
-type upperExclusionClass_ struct {
+type exclusionClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func upperExclusionClass() *upperExclusionClass_ {
-	return upperExclusionClassReference_
+func exclusionClass() *exclusionClass_ {
+	return exclusionClassReference_
 }
 
-var upperExclusionClassReference_ = &upperExclusionClass_{
+var exclusionClassReference_ = &exclusionClass_{
 	// Initialize the class constants.
 }

@@ -144,10 +144,40 @@ func (v *formatter_) ProcessEqual(
 	v.appendString(equal)
 }
 
+func (v *formatter_) PreprocessExclusion(
+	exclusion ast.ExclusionLike,
+) {
+	v.appendString(")")
+}
+
+func (v *formatter_) ProcessExclusiveRangeSlot(
+	slot uint,
+) {
+	switch slot {
+	case 2:
+		v.appendString("..")
+	}
+}
+
 func (v *formatter_) ProcessIdentifier(
 	identifier string,
 ) {
 	v.appendString(identifier)
+}
+
+func (v *formatter_) PreprocessInclusion(
+	inclusion ast.InclusionLike,
+) {
+	v.appendString("]")
+}
+
+func (v *formatter_) ProcessInclusiveRangeSlot(
+	slot uint,
+) {
+	switch slot {
+	case 2:
+		v.appendString("..")
+	}
 }
 
 func (v *formatter_) ProcessLess(
@@ -523,18 +553,6 @@ func (v *formatter_) ProcessLetClauseSlot(
 	}
 }
 
-func (v *formatter_) PreprocessLowerExclusion(
-	lowerExclusion ast.LowerExclusionLike,
-) {
-	v.appendString("(|")
-}
-
-func (v *formatter_) PreprocessLowerInclusion(
-	lowerInclusion ast.LowerInclusionLike,
-) {
-	v.appendString("[|")
-}
-
 func (v *formatter_) PreprocessMagnitude(
 	magnitude ast.MagnitudeLike,
 ) {
@@ -752,15 +770,6 @@ func (v *formatter_) PreprocessPublishClause(
 	v.appendString("publish ")
 }
 
-func (v *formatter_) ProcessRangeSlot(
-	slot uint,
-) {
-	switch slot {
-	case 2:
-		v.appendString("..")
-	}
-}
-
 func (v *formatter_) PreprocessReferent(
 	referent ast.ReferentLike,
 ) {
@@ -858,18 +867,6 @@ func (v *formatter_) PreprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
 ) {
 	v.appendString("throw ")
-}
-
-func (v *formatter_) PreprocessUpperExclusion(
-	upperExclusion ast.UpperExclusionLike,
-) {
-	v.appendString("|)")
-}
-
-func (v *formatter_) PreprocessUpperInclusion(
-	upperInclusion ast.UpperInclusionLike,
-) {
-	v.appendString("|]")
 }
 
 func (v *formatter_) PreprocessWhileClause(

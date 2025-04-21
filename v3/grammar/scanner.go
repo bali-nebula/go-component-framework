@@ -368,7 +368,7 @@ const (
 	upper_   = "\\p{Lu}"
 
 	// Define the regular expression patterns for each token type.
-	delimiter_    = "(?:xor|with|while|to|throw|select|save|san|return|retrieve|reject|publish|post|on|notarize|not|matching|matches|loop|level|let|is|ior|in|if|from|each|do|discard|continue|checkout|break|at|as|and|accept|\\}|\\|\\]|\\|\\)|\\||\\{|\\]|\\[\\||\\[|\\?=|\\.\\.|\\+=|\\*=|\\)|\\(\\||\\(|@|;|:=|:|/=|-=|,)"
+	delimiter_    = "(?:xor|with|while|to|throw|select|save|san|return|retrieve|reject|publish|post|on|notarize|not|matching|matches|loop|level|let|is|ior|in|if|from|each|do|discard|continue|checkout|break|at|as|and|accept|\\}|\\||\\{|\\]|\\[|\\?=|\\.\\.|\\+=|\\*=|\\)|\\(|@|;|:=|:|/=|-=|,)"
 	newline_      = "(?:" + eol_ + ")"
 	space_        = "(?:[ \\t]+)"
 	alpha_        = "(?:[A-Za-z])"

@@ -25,14 +25,14 @@ import ()
 
 // Access Function
 
-func LowerInclusionClass() LowerInclusionClassLike {
-	return lowerInclusionClass()
+func InclusionClass() InclusionClassLike {
+	return inclusionClass()
 }
 
 // Constructor Methods
 
-func (c *lowerInclusionClass_) LowerInclusion() LowerInclusionLike {
-	var instance = &lowerInclusion_{
+func (c *inclusionClass_) Inclusion() InclusionLike {
+	var instance = &inclusion_{
 		// Initialize the instance attributes.
 	}
 	return instance
@@ -42,8 +42,8 @@ func (c *lowerInclusionClass_) LowerInclusion() LowerInclusionLike {
 
 // Principal Methods
 
-func (v *lowerInclusion_) GetClass() LowerInclusionClassLike {
-	return lowerInclusionClass()
+func (v *inclusion_) GetClass() InclusionClassLike {
+	return inclusionClass()
 }
 
 // Attribute Methods
@@ -52,22 +52,22 @@ func (v *lowerInclusion_) GetClass() LowerInclusionClassLike {
 
 // Instance Structure
 
-type lowerInclusion_ struct {
+type inclusion_ struct {
 	// Declare the instance attributes.
 }
 
 // Class Structure
 
-type lowerInclusionClass_ struct {
+type inclusionClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func lowerInclusionClass() *lowerInclusionClass_ {
-	return lowerInclusionClassReference_
+func inclusionClass() *inclusionClass_ {
+	return inclusionClassReference_
 }
 
-var lowerInclusionClassReference_ = &lowerInclusionClass_{
+var inclusionClassReference_ = &inclusionClass_{
 	// Initialize the class constants.
 }

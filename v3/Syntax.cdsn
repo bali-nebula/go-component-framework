@@ -71,27 +71,41 @@ $String:
     tag
     version
 
-$Range: LowerBound Primitive ".." Primitive UpperBound
+$Range:
+    InclusiveRange
+	ExclusiveRange
 
-$LowerBound:
-    LowerInclusion
-    LowerExclusion
+$InclusiveRange: "[" Primitive ".." Primitive UpperBound
 
-$LowerInclusion: "[|"
-
-$LowerExclusion: "(|"
+$ExclusiveRange: "(" Primitive ".." Primitive UpperBound
 
 $Primitive:
-    Element
-    String
+    angle
+    boolean
+    citation
+    duration
+    moment
+    number
+    pattern
+    percentage
+    probability
+    resource
+    binary
+    bytecode
+    name
+    narrative
+    quote
+    symbol
+    tag
+    version
 
 $UpperBound:
-    UpperInclusion
-    UpperExclusion
+    Inclusion
+    Exclusion
 
-$UpperInclusion: "|]"
+$Inclusion: "]"
 
-$UpperExclusion: "|)"
+$Exclusion: ")"
 
 $Collection:
     MultilineAttributes

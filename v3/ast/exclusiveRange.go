@@ -27,21 +27,31 @@ import (
 
 // Access Function
 
-func LowerBoundClass() LowerBoundClassLike {
-	return lowerBoundClass()
+func ExclusiveRangeClass() ExclusiveRangeClassLike {
+	return exclusiveRangeClass()
 }
 
 // Constructor Methods
 
-func (c *lowerBoundClass_) LowerBound(
-	any_ any,
-) LowerBoundLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
+func (c *exclusiveRangeClass_) ExclusiveRange(
+	primitive1 PrimitiveLike,
+	primitive2 PrimitiveLike,
+	upperBound UpperBoundLike,
+) ExclusiveRangeLike {
+	if uti.IsUndefined(primitive1) {
+		panic("The \"primitive1\" attribute is required by this class.")
 	}
-	var instance = &lowerBound_{
+	if uti.IsUndefined(primitive2) {
+		panic("The \"primitive2\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(upperBound) {
+		panic("The \"upperBound\" attribute is required by this class.")
+	}
+	var instance = &exclusiveRange_{
 		// Initialize the instance attributes.
-		any_: any_,
+		primitive1_: primitive1,
+		primitive2_: primitive2,
+		upperBound_: upperBound,
 	}
 	return instance
 }
@@ -50,37 +60,47 @@ func (c *lowerBoundClass_) LowerBound(
 
 // Principal Methods
 
-func (v *lowerBound_) GetClass() LowerBoundClassLike {
-	return lowerBoundClass()
+func (v *exclusiveRange_) GetClass() ExclusiveRangeClassLike {
+	return exclusiveRangeClass()
 }
 
 // Attribute Methods
 
-func (v *lowerBound_) GetAny() any {
-	return v.any_
+func (v *exclusiveRange_) GetPrimitive1() PrimitiveLike {
+	return v.primitive1_
+}
+
+func (v *exclusiveRange_) GetPrimitive2() PrimitiveLike {
+	return v.primitive2_
+}
+
+func (v *exclusiveRange_) GetUpperBound() UpperBoundLike {
+	return v.upperBound_
 }
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type lowerBound_ struct {
+type exclusiveRange_ struct {
 	// Declare the instance attributes.
-	any_ any
+	primitive1_ PrimitiveLike
+	primitive2_ PrimitiveLike
+	upperBound_ UpperBoundLike
 }
 
 // Class Structure
 
-type lowerBoundClass_ struct {
+type exclusiveRangeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func lowerBoundClass() *lowerBoundClass_ {
-	return lowerBoundClassReference_
+func exclusiveRangeClass() *exclusiveRangeClass_ {
+	return exclusiveRangeClassReference_
 }
 
-var lowerBoundClassReference_ = &lowerBoundClass_{
+var exclusiveRangeClassReference_ = &exclusiveRangeClass_{
 	// Initialize the class constants.
 }

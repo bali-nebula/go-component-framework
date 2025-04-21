@@ -19,21 +19,39 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func LowerExclusionClass() LowerExclusionClassLike {
-	return lowerExclusionClass()
+func InclusiveRangeClass() InclusiveRangeClassLike {
+	return inclusiveRangeClass()
 }
 
 // Constructor Methods
 
-func (c *lowerExclusionClass_) LowerExclusion() LowerExclusionLike {
-	var instance = &lowerExclusion_{
+func (c *inclusiveRangeClass_) InclusiveRange(
+	primitive1 PrimitiveLike,
+	primitive2 PrimitiveLike,
+	upperBound UpperBoundLike,
+) InclusiveRangeLike {
+	if uti.IsUndefined(primitive1) {
+		panic("The \"primitive1\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(primitive2) {
+		panic("The \"primitive2\" attribute is required by this class.")
+	}
+	if uti.IsUndefined(upperBound) {
+		panic("The \"upperBound\" attribute is required by this class.")
+	}
+	var instance = &inclusiveRange_{
 		// Initialize the instance attributes.
+		primitive1_: primitive1,
+		primitive2_: primitive2,
+		upperBound_: upperBound,
 	}
 	return instance
 }
@@ -42,32 +60,47 @@ func (c *lowerExclusionClass_) LowerExclusion() LowerExclusionLike {
 
 // Principal Methods
 
-func (v *lowerExclusion_) GetClass() LowerExclusionClassLike {
-	return lowerExclusionClass()
+func (v *inclusiveRange_) GetClass() InclusiveRangeClassLike {
+	return inclusiveRangeClass()
 }
 
 // Attribute Methods
+
+func (v *inclusiveRange_) GetPrimitive1() PrimitiveLike {
+	return v.primitive1_
+}
+
+func (v *inclusiveRange_) GetPrimitive2() PrimitiveLike {
+	return v.primitive2_
+}
+
+func (v *inclusiveRange_) GetUpperBound() UpperBoundLike {
+	return v.upperBound_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type lowerExclusion_ struct {
+type inclusiveRange_ struct {
 	// Declare the instance attributes.
+	primitive1_ PrimitiveLike
+	primitive2_ PrimitiveLike
+	upperBound_ UpperBoundLike
 }
 
 // Class Structure
 
-type lowerExclusionClass_ struct {
+type inclusiveRangeClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func lowerExclusionClass() *lowerExclusionClass_ {
-	return lowerExclusionClassReference_
+func inclusiveRangeClass() *inclusiveRangeClass_ {
+	return inclusiveRangeClassReference_
 }
 
-var lowerExclusionClassReference_ = &lowerExclusionClass_{
+var inclusiveRangeClassReference_ = &inclusiveRangeClass_{
 	// Initialize the class constants.
 }
