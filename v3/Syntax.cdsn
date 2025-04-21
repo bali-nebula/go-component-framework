@@ -73,7 +73,7 @@ $String:
 
 $Range:
     InclusiveRange
-	ExclusiveRange
+    ExclusiveRange
 
 $InclusiveRange: "[" Primitive ".." Primitive UpperBound
 
@@ -331,7 +331,7 @@ $Predicate: Action Expression
 
 $Action:
     Operator
-	Operation
+    Operation
 
 $Operator:
     plus
