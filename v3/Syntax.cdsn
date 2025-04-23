@@ -31,7 +31,6 @@ $Component: Entity Parameters?
 $Entity:
     Element
     String
-    Range
     Collection
     Procedure
 
@@ -47,7 +46,11 @@ $InlineParameters: "(" Association AdditionalAssociation* ")"
 
 $AdditionalAssociation: "," Association
 
-$Association: symbol ":" Component
+$Association: Primitive ":" Component
+
+$Primitive:
+    Element
+    String
 
 $Element:
     angle
@@ -71,33 +74,19 @@ $String:
     tag
     version
 
-$Range:
-    InclusiveRange
+$Collection:
+    MultilineAttributes
+    MultilineValues
+    InclusiveRange  ! Must be after the multiline rules.
     ExclusiveRange
+    InlineAttributes
+    InlineValues  ! Must be after the ranges and inline attributes.
+    NoAttributes
+    NoValues
 
 $InclusiveRange: "[" Primitive ".." Primitive UpperBound
 
 $ExclusiveRange: "(" Primitive ".." Primitive UpperBound
-
-$Primitive:
-    angle
-    boolean
-    citation
-    duration
-    moment
-    number
-    pattern
-    percentage
-    probability
-    resource
-    binary
-    bytecode
-    name
-    narrative
-    quote
-    symbol
-    tag
-    version
 
 $UpperBound:
     Inclusion
@@ -107,29 +96,21 @@ $Inclusion: "]"
 
 $Exclusion: ")"
 
-$Collection:
-    MultilineAttributes
-    MultilineValues  ! Must be after the multiline attributes.
-    InlineAttributes
-    InlineValues  ! Must be after the inline attributes.
-    NoAttributes
-    NoValues
-
-$MultilineAttributes: "[" newline AnnotatedAssociation+ "]"
+$NoAttributes: "[" ":" "]"
 
 $InlineAttributes: "[" Association AdditionalAssociation* "]"
 
-$NoAttributes: "[" ":" "]"
+$MultilineAttributes: "[" newline AnnotatedAssociation+ "]"
 
-$MultilineValues: "[" newline AnnotatedValue+ "]"
-
-$AnnotatedValue: Component note?
+$NoValues: "[" "]"
 
 $InlineValues: "[" Component AdditionalValue* "]"
 
 $AdditionalValue: "," Component
 
-$NoValues: "[" "]"
+$MultilineValues: "[" newline AnnotatedValue+ "]"
+
+$AnnotatedValue: Component note?
 
 $Procedure:
     MultilineStatements

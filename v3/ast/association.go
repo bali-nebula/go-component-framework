@@ -34,18 +34,18 @@ func AssociationClass() AssociationClassLike {
 // Constructor Methods
 
 func (c *associationClass_) Association(
-	symbol string,
+	primitive PrimitiveLike,
 	component ComponentLike,
 ) AssociationLike {
-	if uti.IsUndefined(symbol) {
-		panic("The \"symbol\" attribute is required by this class.")
+	if uti.IsUndefined(primitive) {
+		panic("The \"primitive\" attribute is required by this class.")
 	}
 	if uti.IsUndefined(component) {
 		panic("The \"component\" attribute is required by this class.")
 	}
 	var instance = &association_{
 		// Initialize the instance attributes.
-		symbol_:    symbol,
+		primitive_: primitive,
 		component_: component,
 	}
 	return instance
@@ -61,8 +61,8 @@ func (v *association_) GetClass() AssociationClassLike {
 
 // Attribute Methods
 
-func (v *association_) GetSymbol() string {
-	return v.symbol_
+func (v *association_) GetPrimitive() PrimitiveLike {
+	return v.primitive_
 }
 
 func (v *association_) GetComponent() ComponentLike {
@@ -75,7 +75,7 @@ func (v *association_) GetComponent() ComponentLike {
 
 type association_ struct {
 	// Declare the instance attributes.
-	symbol_    string
+	primitive_ PrimitiveLike
 	component_ ComponentLike
 }
 

@@ -222,7 +222,7 @@ supported by each concrete association-like class.
 type AssociationClassLike interface {
 	// Constructor Methods
 	Association(
-		symbol string,
+		primitive PrimitiveLike,
 		component ComponentLike,
 	) AssociationLike
 }
@@ -1144,18 +1144,6 @@ type PublishClauseClassLike interface {
 }
 
 /*
-RangeClassLike is a class interface that declares the
-complete set of class constructors, constants and functions that must be
-supported by each concrete range-like class.
-*/
-type RangeClassLike interface {
-	// Constructor Methods
-	Range(
-		any_ any,
-	) RangeLike
-}
-
-/*
 RecipientClassLike is a class interface that declares the
 complete set of class constructors, constants and functions that must be
 supported by each concrete recipient-like class.
@@ -1662,7 +1650,7 @@ type AssociationLike interface {
 	GetClass() AssociationClassLike
 
 	// Attribute Methods
-	GetSymbol() string
+	GetPrimitive() PrimitiveLike
 	GetComponent() ComponentLike
 }
 
@@ -2642,19 +2630,6 @@ type PublishClauseLike interface {
 
 	// Attribute Methods
 	GetEvent() EventLike
-}
-
-/*
-RangeLike is an instance interface that declares the
-complete set of principal, attribute and aspect methods that must be supported
-by each instance of a concrete range-like class.
-*/
-type RangeLike interface {
-	// Principal Methods
-	GetClass() RangeClassLike
-
-	// Attribute Methods
-	GetAny() any
 }
 
 /*

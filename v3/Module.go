@@ -130,7 +130,6 @@ type (
 	PrimitiveClassLike             = ast.PrimitiveClassLike
 	ProcedureClassLike             = ast.ProcedureClassLike
 	PublishClauseClassLike         = ast.PublishClauseClassLike
-	RangeClassLike                 = ast.RangeClassLike
 	RecipientClassLike             = ast.RecipientClassLike
 	ReferentClassLike              = ast.ReferentClassLike
 	RejectClauseClassLike          = ast.RejectClauseClassLike
@@ -251,7 +250,6 @@ type (
 	PrimitiveLike             = ast.PrimitiveLike
 	ProcedureLike             = ast.ProcedureLike
 	PublishClauseLike         = ast.PublishClauseLike
-	RangeLike                 = ast.RangeLike
 	RecipientLike             = ast.RecipientLike
 	ReferentLike              = ast.ReferentLike
 	RejectClauseLike          = ast.RejectClauseLike
@@ -497,11 +495,11 @@ func Assignment(
 // Ast/Association
 
 func Association(
-	symbol string,
+	primitive ast.PrimitiveLike,
 	component ast.ComponentLike,
 ) ast.AssociationLike {
 	return ast.AssociationClass().Association(
-		symbol,
+		primitive,
 		component,
 	)
 }
@@ -1271,16 +1269,6 @@ func PublishClause(
 ) ast.PublishClauseLike {
 	return ast.PublishClauseClass().PublishClause(
 		event,
-	)
-}
-
-// Ast/Range
-
-func Range(
-	any_ any,
-) ast.RangeLike {
-	return ast.RangeClass().Range(
-		any_,
 	)
 }
 

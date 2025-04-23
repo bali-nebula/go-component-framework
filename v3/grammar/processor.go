@@ -1630,21 +1630,6 @@ func (v *processor_) PostprocessPublishClause(
 ) {
 }
 
-func (v *processor_) PreprocessRange(
-	range_ ast.RangeLike,
-) {
-}
-
-func (v *processor_) ProcessRangeSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessRange(
-	range_ ast.RangeLike,
-) {
-}
-
 func (v *processor_) PreprocessRecipient(
 	recipient ast.RecipientLike,
 ) {

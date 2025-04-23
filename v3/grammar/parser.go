@@ -109,7 +109,7 @@ func (v *parser_) parseAcceptClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AcceptClause rule.
+		// This is not a single Message rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -184,7 +184,7 @@ func (v *parser_) parseAdditionalArgument() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AdditionalArgument rule.
+		// This is not a single Argument rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -232,7 +232,7 @@ func (v *parser_) parseAdditionalAssociation() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AdditionalAssociation rule.
+		// This is not a single Association rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -280,7 +280,7 @@ func (v *parser_) parseAdditionalIndex() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AdditionalIndex rule.
+		// This is not a single Index rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -328,7 +328,7 @@ func (v *parser_) parseAdditionalStatement() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AdditionalStatement rule.
+		// This is not a single Statement rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -376,7 +376,7 @@ func (v *parser_) parseAdditionalValue() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AdditionalValue rule.
+		// This is not a single Component rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -438,7 +438,7 @@ func (v *parser_) parseAnnotatedAssociation() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AnnotatedAssociation rule.
+		// This is not a single Association rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -506,7 +506,7 @@ func (v *parser_) parseAnnotatedValue() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AnnotatedValue rule.
+		// This is not a single Component rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -544,7 +544,7 @@ func (v *parser_) parseArgument() (
 	identifier, token, ok = v.parseToken(IdentifierToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Argument rule.
+			// This is not a single identifier token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -579,7 +579,7 @@ func (v *parser_) parseArguments() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Arguments rule.
+		// This is not a single Argument rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -694,22 +694,23 @@ func (v *parser_) parseAssociation() (
 ) {
 	var tokens = fra.List[TokenLike]()
 
-	// Attempt to parse a single symbol token.
-	var symbol string
-	symbol, token, ok = v.parseToken(SymbolToken)
-	if !ok {
+	// Attempt to parse a single Primitive rule.
+	var primitive ast.PrimitiveLike
+	primitive, token, ok = v.parsePrimitive()
+	switch {
+	case ok:
+		// Found a multiexpression token.
 		if uti.IsDefined(tokens) {
-			// This is not a single Association rule.
-			v.putBack(tokens)
-			return
-		} else {
-			// Found a syntax error.
-			var message = v.formatError("$Association", token)
-			panic(message)
+			tokens.AppendValue(token)
 		}
-	}
-	if uti.IsDefined(tokens) {
-		tokens.AppendValue(token)
+	case uti.IsDefined(tokens):
+		// This is not a single Primitive rule.
+		v.putBack(tokens)
+		return
+	default:
+		// Found a syntax error.
+		var message = v.formatError("$Association", token)
+		panic(message)
 	}
 
 	// Attempt to parse a single ":" delimiter.
@@ -737,7 +738,7 @@ func (v *parser_) parseAssociation() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Association rule.
+		// This is not a single Component rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -750,7 +751,7 @@ func (v *parser_) parseAssociation() (
 	ok = true
 	v.remove(tokens)
 	association = ast.AssociationClass().Association(
-		symbol,
+		primitive,
 		component,
 	)
 	return
@@ -805,7 +806,7 @@ func (v *parser_) parseAtLevel() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single AtLevel rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -836,7 +837,7 @@ func (v *parser_) parseBag() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Bag rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -959,7 +960,7 @@ func (v *parser_) parseCheckoutClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single CheckoutClause rule.
+		// This is not a single Recipient rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1001,7 +1002,7 @@ func (v *parser_) parseCheckoutClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single CheckoutClause rule.
+		// This is not a single Cited rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1036,7 +1037,7 @@ func (v *parser_) parseCited() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Cited rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1072,6 +1073,24 @@ func (v *parser_) parseCollection() (
 	if ok {
 		// Found a single MultilineValues Collection.
 		collection = ast.CollectionClass().Collection(multilineValues)
+		return
+	}
+
+	// Attempt to parse a single InclusiveRange Collection.
+	var inclusiveRange ast.InclusiveRangeLike
+	inclusiveRange, token, ok = v.parseInclusiveRange()
+	if ok {
+		// Found a single InclusiveRange Collection.
+		collection = ast.CollectionClass().Collection(inclusiveRange)
+		return
+	}
+
+	// Attempt to parse a single ExclusiveRange Collection.
+	var exclusiveRange ast.ExclusiveRangeLike
+	exclusiveRange, token, ok = v.parseExclusiveRange()
+	if ok {
+		// Found a single ExclusiveRange Collection.
+		collection = ast.CollectionClass().Collection(exclusiveRange)
 		return
 	}
 
@@ -1158,7 +1177,7 @@ func (v *parser_) parseCommentLine() (
 	comment, token, ok = v.parseToken(CommentToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single CommentLine rule.
+			// This is not a single comment token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -1210,7 +1229,7 @@ func (v *parser_) parseComplement() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Complement rule.
+		// This is not a single Logical rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1241,7 +1260,7 @@ func (v *parser_) parseComponent() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Component rule.
+		// This is not a single Entity rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1283,7 +1302,7 @@ func (v *parser_) parseCondition() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Condition rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1441,7 +1460,7 @@ func (v *parser_) parseDiscardClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single DiscardClause rule.
+		// This is not a single Draft rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1489,7 +1508,7 @@ func (v *parser_) parseDoClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single DoClause rule.
+		// This is not a single Invocation rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1528,7 +1547,7 @@ func (v *parser_) parseDocument() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Document rule.
+		// This is not a single Component rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1562,7 +1581,7 @@ func (v *parser_) parseDraft() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Draft rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1700,15 +1719,6 @@ func (v *parser_) parseEntity() (
 		return
 	}
 
-	// Attempt to parse a single Range Entity.
-	var range_ ast.RangeLike
-	range_, token, ok = v.parseRange()
-	if ok {
-		// Found a single Range Entity.
-		entity = ast.EntityClass().Entity(range_)
-		return
-	}
-
 	// Attempt to parse a single Collection Entity.
 	var collection ast.CollectionLike
 	collection, token, ok = v.parseCollection()
@@ -1746,7 +1756,7 @@ func (v *parser_) parseEvent() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Event rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1777,7 +1787,7 @@ func (v *parser_) parseException() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Exception rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1853,10 +1863,12 @@ func (v *parser_) parseExclusiveRange() (
 	primitive1, token, ok = v.parsePrimitive()
 	switch {
 	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a multiexpression token.
+		if uti.IsDefined(tokens) {
+			tokens.AppendValue(token)
+		}
 	case uti.IsDefined(tokens):
-		// This is not a single ExclusiveRange rule.
+		// This is not a single Primitive rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1887,10 +1899,12 @@ func (v *parser_) parseExclusiveRange() (
 	primitive2, token, ok = v.parsePrimitive()
 	switch {
 	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a multiexpression token.
+		if uti.IsDefined(tokens) {
+			tokens.AppendValue(token)
+		}
 	case uti.IsDefined(tokens):
-		// This is not a single ExclusiveRange rule.
+		// This is not a single Primitive rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1907,7 +1921,7 @@ func (v *parser_) parseExclusiveRange() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single ExclusiveRange rule.
+		// This is not a single UpperBound rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1942,7 +1956,7 @@ func (v *parser_) parseExpression() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Expression rule.
+		// This is not a single Subject rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1999,7 +2013,7 @@ func (v *parser_) parseFailure() (
 	symbol, token, ok = v.parseToken(SymbolToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Failure rule.
+			// This is not a single symbol token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -2112,7 +2126,7 @@ func (v *parser_) parseFunction() (
 	identifier, token, ok = v.parseToken(IdentifierToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Function rule.
+			// This is not a single identifier token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -2209,7 +2223,7 @@ func (v *parser_) parseIfClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single IfClause rule.
+		// This is not a single Condition rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2243,7 +2257,7 @@ func (v *parser_) parseIfClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single IfClause rule.
+		// This is not a single Procedure rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2322,10 +2336,12 @@ func (v *parser_) parseInclusiveRange() (
 	primitive1, token, ok = v.parsePrimitive()
 	switch {
 	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a multiexpression token.
+		if uti.IsDefined(tokens) {
+			tokens.AppendValue(token)
+		}
 	case uti.IsDefined(tokens):
-		// This is not a single InclusiveRange rule.
+		// This is not a single Primitive rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2356,10 +2372,12 @@ func (v *parser_) parseInclusiveRange() (
 	primitive2, token, ok = v.parsePrimitive()
 	switch {
 	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a multiexpression token.
+		if uti.IsDefined(tokens) {
+			tokens.AppendValue(token)
+		}
 	case uti.IsDefined(tokens):
-		// This is not a single InclusiveRange rule.
+		// This is not a single Primitive rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2376,7 +2394,7 @@ func (v *parser_) parseInclusiveRange() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single InclusiveRange rule.
+		// This is not a single UpperBound rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2411,7 +2429,7 @@ func (v *parser_) parseIndex() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Index rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2442,7 +2460,7 @@ func (v *parser_) parseIndices() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Indices rule.
+		// This is not a single Index rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2609,7 +2627,7 @@ func (v *parser_) parseInlineAttributes() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single InlineAttributes rule.
+		// This is not a single Association rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2703,7 +2721,7 @@ func (v *parser_) parseInlineParameters() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single InlineParameters rule.
+		// This is not a single Association rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2797,7 +2815,7 @@ func (v *parser_) parseInlineStatements() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single InlineStatements rule.
+		// This is not a single Statement rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2891,7 +2909,7 @@ func (v *parser_) parseInlineValues() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single InlineValues rule.
+		// This is not a single Component rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3001,10 +3019,12 @@ func (v *parser_) parseInversion() (
 	inverse, token, ok = v.parseInverse()
 	switch {
 	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a multiexpression token.
+		if uti.IsDefined(tokens) {
+			tokens.AppendValue(token)
+		}
 	case uti.IsDefined(tokens):
-		// This is not a single Inversion rule.
+		// This is not a single Inverse rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3021,7 +3041,7 @@ func (v *parser_) parseInversion() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Inversion rule.
+		// This is not a single Numerical rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3141,7 +3161,7 @@ func (v *parser_) parseItem() (
 	symbol, token, ok = v.parseToken(SymbolToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Item rule.
+			// This is not a single symbol token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -3193,7 +3213,7 @@ func (v *parser_) parseLetClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single LetClause rule.
+		// This is not a single Recipient rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3210,7 +3230,7 @@ func (v *parser_) parseLetClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single LetClause rule.
+		// This is not a single Assignment rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3227,7 +3247,7 @@ func (v *parser_) parseLetClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single LetClause rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3360,7 +3380,7 @@ func (v *parser_) parseMagnitude() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Magnitude rule.
+		// This is not a single Numerical rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3470,7 +3490,7 @@ func (v *parser_) parseMatchHandler() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single MatchHandler rule.
+		// This is not a single Template rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3504,7 +3524,7 @@ func (v *parser_) parseMatchHandler() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single MatchHandler rule.
+		// This is not a single Procedure rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3569,7 +3589,7 @@ func (v *parser_) parseMessage() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Message rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3651,7 +3671,7 @@ func (v *parser_) parseMethod() (
 	identifier1, token, ok = v.parseToken(IdentifierToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Method rule.
+			// This is not a single identifier token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -3669,10 +3689,12 @@ func (v *parser_) parseMethod() (
 	blocking, token, ok = v.parseBlocking()
 	switch {
 	case ok:
-		// No additional put backs allowed at this point.
-		tokens = nil
+		// Found a multiexpression token.
+		if uti.IsDefined(tokens) {
+			tokens.AppendValue(token)
+		}
 	case uti.IsDefined(tokens):
-		// This is not a single Method rule.
+		// This is not a single Blocking rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -3686,7 +3708,7 @@ func (v *parser_) parseMethod() (
 	identifier2, token, ok = v.parseToken(IdentifierToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Method rule.
+			// This is not a single identifier token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -3782,7 +3804,7 @@ func (v *parser_) parseMultilineAttributes() (
 	newline, token, ok = v.parseToken(NewlineToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single MultilineAttributes rule.
+			// This is not a single newline token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -3877,7 +3899,7 @@ func (v *parser_) parseMultilineParameters() (
 	newline, token, ok = v.parseToken(NewlineToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single MultilineParameters rule.
+			// This is not a single newline token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -3972,7 +3994,7 @@ func (v *parser_) parseMultilineStatements() (
 	newline, token, ok = v.parseToken(NewlineToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single MultilineStatements rule.
+			// This is not a single newline token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -4067,7 +4089,7 @@ func (v *parser_) parseMultilineValues() (
 	newline, token, ok = v.parseToken(NewlineToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single MultilineValues rule.
+			// This is not a single newline token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -4326,7 +4348,7 @@ func (v *parser_) parseNotarizeClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single NotarizeClause rule.
+		// This is not a single Draft rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -4360,7 +4382,7 @@ func (v *parser_) parseNotarizeClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single NotarizeClause rule.
+		// This is not a single Cited rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -4391,7 +4413,7 @@ func (v *parser_) parseNotice() (
 	comment, token, ok = v.parseToken(CommentToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Notice rule.
+			// This is not a single comment token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -4409,7 +4431,7 @@ func (v *parser_) parseNotice() (
 	newline, token, ok = v.parseToken(NewlineToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Notice rule.
+			// This is not a single newline token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -4554,7 +4576,7 @@ func (v *parser_) parseOnClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single OnClause rule.
+		// This is not a single Failure rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -4851,7 +4873,7 @@ func (v *parser_) parsePostClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single PostClause rule.
+		// This is not a single Message rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -4885,7 +4907,7 @@ func (v *parser_) parsePostClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single PostClause rule.
+		// This is not a single Bag rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -4936,7 +4958,7 @@ func (v *parser_) parsePrecedence() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Precedence rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -4984,7 +5006,7 @@ func (v *parser_) parsePredicate() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Predicate rule.
+		// This is not a single Action rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5001,7 +5023,7 @@ func (v *parser_) parsePredicate() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Predicate rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5025,165 +5047,21 @@ func (v *parser_) parsePrimitive() (
 	token TokenLike,
 	ok bool,
 ) {
-	// Attempt to parse a single angle Primitive.
-	var angle string
-	angle, token, ok = v.parseToken(AngleToken)
+	// Attempt to parse a single Element Primitive.
+	var element ast.ElementLike
+	element, token, ok = v.parseElement()
 	if ok {
-		// Found a single angle Primitive.
-		primitive = ast.PrimitiveClass().Primitive(angle)
+		// Found a single Element Primitive.
+		primitive = ast.PrimitiveClass().Primitive(element)
 		return
 	}
 
-	// Attempt to parse a single boolean Primitive.
-	var boolean string
-	boolean, token, ok = v.parseToken(BooleanToken)
+	// Attempt to parse a single String Primitive.
+	var string_ ast.StringLike
+	string_, token, ok = v.parseString()
 	if ok {
-		// Found a single boolean Primitive.
-		primitive = ast.PrimitiveClass().Primitive(boolean)
-		return
-	}
-
-	// Attempt to parse a single citation Primitive.
-	var citation string
-	citation, token, ok = v.parseToken(CitationToken)
-	if ok {
-		// Found a single citation Primitive.
-		primitive = ast.PrimitiveClass().Primitive(citation)
-		return
-	}
-
-	// Attempt to parse a single duration Primitive.
-	var duration string
-	duration, token, ok = v.parseToken(DurationToken)
-	if ok {
-		// Found a single duration Primitive.
-		primitive = ast.PrimitiveClass().Primitive(duration)
-		return
-	}
-
-	// Attempt to parse a single moment Primitive.
-	var moment string
-	moment, token, ok = v.parseToken(MomentToken)
-	if ok {
-		// Found a single moment Primitive.
-		primitive = ast.PrimitiveClass().Primitive(moment)
-		return
-	}
-
-	// Attempt to parse a single number Primitive.
-	var number string
-	number, token, ok = v.parseToken(NumberToken)
-	if ok {
-		// Found a single number Primitive.
-		primitive = ast.PrimitiveClass().Primitive(number)
-		return
-	}
-
-	// Attempt to parse a single pattern Primitive.
-	var pattern string
-	pattern, token, ok = v.parseToken(PatternToken)
-	if ok {
-		// Found a single pattern Primitive.
-		primitive = ast.PrimitiveClass().Primitive(pattern)
-		return
-	}
-
-	// Attempt to parse a single percentage Primitive.
-	var percentage string
-	percentage, token, ok = v.parseToken(PercentageToken)
-	if ok {
-		// Found a single percentage Primitive.
-		primitive = ast.PrimitiveClass().Primitive(percentage)
-		return
-	}
-
-	// Attempt to parse a single probability Primitive.
-	var probability string
-	probability, token, ok = v.parseToken(ProbabilityToken)
-	if ok {
-		// Found a single probability Primitive.
-		primitive = ast.PrimitiveClass().Primitive(probability)
-		return
-	}
-
-	// Attempt to parse a single resource Primitive.
-	var resource string
-	resource, token, ok = v.parseToken(ResourceToken)
-	if ok {
-		// Found a single resource Primitive.
-		primitive = ast.PrimitiveClass().Primitive(resource)
-		return
-	}
-
-	// Attempt to parse a single binary Primitive.
-	var binary string
-	binary, token, ok = v.parseToken(BinaryToken)
-	if ok {
-		// Found a single binary Primitive.
-		primitive = ast.PrimitiveClass().Primitive(binary)
-		return
-	}
-
-	// Attempt to parse a single bytecode Primitive.
-	var bytecode string
-	bytecode, token, ok = v.parseToken(BytecodeToken)
-	if ok {
-		// Found a single bytecode Primitive.
-		primitive = ast.PrimitiveClass().Primitive(bytecode)
-		return
-	}
-
-	// Attempt to parse a single name Primitive.
-	var name string
-	name, token, ok = v.parseToken(NameToken)
-	if ok {
-		// Found a single name Primitive.
-		primitive = ast.PrimitiveClass().Primitive(name)
-		return
-	}
-
-	// Attempt to parse a single narrative Primitive.
-	var narrative string
-	narrative, token, ok = v.parseToken(NarrativeToken)
-	if ok {
-		// Found a single narrative Primitive.
-		primitive = ast.PrimitiveClass().Primitive(narrative)
-		return
-	}
-
-	// Attempt to parse a single quote Primitive.
-	var quote string
-	quote, token, ok = v.parseToken(QuoteToken)
-	if ok {
-		// Found a single quote Primitive.
-		primitive = ast.PrimitiveClass().Primitive(quote)
-		return
-	}
-
-	// Attempt to parse a single symbol Primitive.
-	var symbol string
-	symbol, token, ok = v.parseToken(SymbolToken)
-	if ok {
-		// Found a single symbol Primitive.
-		primitive = ast.PrimitiveClass().Primitive(symbol)
-		return
-	}
-
-	// Attempt to parse a single tag Primitive.
-	var tag string
-	tag, token, ok = v.parseToken(TagToken)
-	if ok {
-		// Found a single tag Primitive.
-		primitive = ast.PrimitiveClass().Primitive(tag)
-		return
-	}
-
-	// Attempt to parse a single version Primitive.
-	var version string
-	version, token, ok = v.parseToken(VersionToken)
-	if ok {
-		// Found a single version Primitive.
-		primitive = ast.PrimitiveClass().Primitive(version)
+		// Found a single String Primitive.
+		primitive = ast.PrimitiveClass().Primitive(string_)
 		return
 	}
 
@@ -5259,7 +5137,7 @@ func (v *parser_) parsePublishClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single PublishClause rule.
+		// This is not a single Event rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5272,33 +5150,6 @@ func (v *parser_) parsePublishClause() (
 	ok = true
 	v.remove(tokens)
 	publishClause = ast.PublishClauseClass().PublishClause(event)
-	return
-}
-
-func (v *parser_) parseRange() (
-	range_ ast.RangeLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single InclusiveRange Range.
-	var inclusiveRange ast.InclusiveRangeLike
-	inclusiveRange, token, ok = v.parseInclusiveRange()
-	if ok {
-		// Found a single InclusiveRange Range.
-		range_ = ast.RangeClass().Range(inclusiveRange)
-		return
-	}
-
-	// Attempt to parse a single ExclusiveRange Range.
-	var exclusiveRange ast.ExclusiveRangeLike
-	exclusiveRange, token, ok = v.parseExclusiveRange()
-	if ok {
-		// Found a single ExclusiveRange Range.
-		range_ = ast.RangeClass().Range(exclusiveRange)
-		return
-	}
-
-	// This is not a single Range rule.
 	return
 }
 
@@ -5361,7 +5212,7 @@ func (v *parser_) parseReferent() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Referent rule.
+		// This is not a single Indirect rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5409,7 +5260,7 @@ func (v *parser_) parseRejectClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single RejectClause rule.
+		// This is not a single Message rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5485,7 +5336,7 @@ func (v *parser_) parseResult() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Result rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5533,7 +5384,7 @@ func (v *parser_) parseRetrieveClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single RetrieveClause rule.
+		// This is not a single Recipient rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5567,7 +5418,7 @@ func (v *parser_) parseRetrieveClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single RetrieveClause rule.
+		// This is not a single Bag rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5618,7 +5469,7 @@ func (v *parser_) parseReturnClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single ReturnClause rule.
+		// This is not a single Result rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5697,7 +5548,7 @@ func (v *parser_) parseSaveClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single SaveClause rule.
+		// This is not a single Draft rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5731,7 +5582,7 @@ func (v *parser_) parseSaveClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single SaveClause rule.
+		// This is not a single Cited rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5782,7 +5633,7 @@ func (v *parser_) parseSelectClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single SelectClause rule.
+		// This is not a single Target rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5842,7 +5693,7 @@ func (v *parser_) parseSequence() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Sequence rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5935,7 +5786,7 @@ func (v *parser_) parseStatement() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Statement rule.
+		// This is not a single MainClause rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -5977,7 +5828,7 @@ func (v *parser_) parseStatementLine() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single StatementLine rule.
+		// This is not a single Statement rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6096,7 +5947,7 @@ func (v *parser_) parseSubcomponent() (
 	identifier, token, ok = v.parseToken(IdentifierToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Subcomponent rule.
+			// This is not a single identifier token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -6134,7 +5985,7 @@ func (v *parser_) parseSubcomponent() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Subcomponent rule.
+		// This is not a single Indices rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6329,7 +6180,7 @@ func (v *parser_) parseTemplate() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single Template rule.
+		// This is not a single Expression rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6377,7 +6228,7 @@ func (v *parser_) parseThrowClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single ThrowClause rule.
+		// This is not a single Exception rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6432,7 +6283,7 @@ func (v *parser_) parseVariable() (
 	identifier, token, ok = v.parseToken(IdentifierToken)
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Variable rule.
+			// This is not a single identifier token.
 			v.putBack(tokens)
 			return
 		} else {
@@ -6484,7 +6335,7 @@ func (v *parser_) parseWhileClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single WhileClause rule.
+		// This is not a single Condition rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6518,7 +6369,7 @@ func (v *parser_) parseWhileClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single WhileClause rule.
+		// This is not a single Procedure rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6586,7 +6437,7 @@ func (v *parser_) parseWithClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single WithClause rule.
+		// This is not a single Item rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6620,7 +6471,7 @@ func (v *parser_) parseWithClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single WithClause rule.
+		// This is not a single Sequence rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6654,7 +6505,7 @@ func (v *parser_) parseWithClause() (
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single WithClause rule.
+		// This is not a single Procedure rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -6884,7 +6735,6 @@ var parserClassReference_ = &parserClass_{
 			"$Entity": `
     Element
     String
-    Range
     Collection
     Procedure`,
 			"$Parameters": `
@@ -6894,7 +6744,10 @@ var parserClassReference_ = &parserClass_{
 			"$AnnotatedAssociation":  `Association note?`,
 			"$InlineParameters":      `"(" Association AdditionalAssociation* ")"`,
 			"$AdditionalAssociation": `"," Association`,
-			"$Association":           `symbol ":" Component`,
+			"$Association":           `Primitive ":" Component`,
+			"$Primitive": `
+    Element
+    String`,
 			"$Element": `
     angle
     boolean
@@ -6915,50 +6768,30 @@ var parserClassReference_ = &parserClass_{
     symbol
     tag
     version`,
-			"$Range": `
-    InclusiveRange
-    ExclusiveRange`,
+			"$Collection": `
+    MultilineAttributes
+    MultilineValues
+    InclusiveRange  ! Must be after the multiline rules.
+    ExclusiveRange
+    InlineAttributes
+    InlineValues  ! Must be after the ranges and inline attributes.
+    NoAttributes
+    NoValues`,
 			"$InclusiveRange": `"[" Primitive ".." Primitive UpperBound`,
 			"$ExclusiveRange": `"(" Primitive ".." Primitive UpperBound`,
-			"$Primitive": `
-    angle
-    boolean
-    citation
-    duration
-    moment
-    number
-    pattern
-    percentage
-    probability
-    resource
-    binary
-    bytecode
-    name
-    narrative
-    quote
-    symbol
-    tag
-    version`,
 			"$UpperBound": `
     Inclusion
     Exclusion`,
-			"$Inclusion": `"]"`,
-			"$Exclusion": `")"`,
-			"$Collection": `
-    MultilineAttributes
-    MultilineValues  ! Must be after the multiline attributes.
-    InlineAttributes
-    InlineValues  ! Must be after the inline attributes.
-    NoAttributes
-    NoValues`,
-			"$MultilineAttributes": `"[" newline AnnotatedAssociation+ "]"`,
-			"$InlineAttributes":    `"[" Association AdditionalAssociation* "]"`,
+			"$Inclusion":           `"]"`,
+			"$Exclusion":           `")"`,
 			"$NoAttributes":        `"[" ":" "]"`,
-			"$MultilineValues":     `"[" newline AnnotatedValue+ "]"`,
-			"$AnnotatedValue":      `Component note?`,
+			"$InlineAttributes":    `"[" Association AdditionalAssociation* "]"`,
+			"$MultilineAttributes": `"[" newline AnnotatedAssociation+ "]"`,
+			"$NoValues":            `"[" "]"`,
 			"$InlineValues":        `"[" Component AdditionalValue* "]"`,
 			"$AdditionalValue":     `"," Component`,
-			"$NoValues":            `"[" "]"`,
+			"$MultilineValues":     `"[" newline AnnotatedValue+ "]"`,
+			"$AnnotatedValue":      `Component note?`,
 			"$Procedure": `
     MultilineStatements
     InlineStatements

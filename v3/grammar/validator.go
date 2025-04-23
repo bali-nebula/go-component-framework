@@ -1949,24 +1949,6 @@ func (v *validator_) PostprocessPublishClause(
 	// TBD - Add any validation checks.
 }
 
-func (v *validator_) PreprocessRange(
-	range_ ast.RangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) ProcessRangeSlot(
-	slot uint,
-) {
-	// TBD - Add any validation checks.
-}
-
-func (v *validator_) PostprocessRange(
-	range_ ast.RangeLike,
-) {
-	// TBD - Add any validation checks.
-}
-
 func (v *validator_) PreprocessRecipient(
 	recipient ast.RecipientLike,
 ) {

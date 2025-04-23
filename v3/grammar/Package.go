@@ -1265,15 +1265,6 @@ type Methodical interface {
 	PostprocessPublishClause(
 		publishClause ast.PublishClauseLike,
 	)
-	PreprocessRange(
-		range_ ast.RangeLike,
-	)
-	ProcessRangeSlot(
-		slot uint,
-	)
-	PostprocessRange(
-		range_ ast.RangeLike,
-	)
 	PreprocessRecipient(
 		recipient ast.RecipientLike,
 	)

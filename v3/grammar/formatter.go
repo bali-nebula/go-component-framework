@@ -150,11 +150,17 @@ func (v *formatter_) PreprocessExclusion(
 	v.appendString(")")
 }
 
+func (v *formatter_) PreprocessExclusiveRange(
+	exclusiveRange ast.ExclusiveRangeLike,
+) {
+	v.appendString("(")
+}
+
 func (v *formatter_) ProcessExclusiveRangeSlot(
 	slot uint,
 ) {
 	switch slot {
-	case 2:
+	case 1:
 		v.appendString("..")
 	}
 }
@@ -171,11 +177,17 @@ func (v *formatter_) PreprocessInclusion(
 	v.appendString("]")
 }
 
+func (v *formatter_) PreprocessInclusiveRange(
+	inclusiveRange ast.InclusiveRangeLike,
+) {
+	v.appendString("[")
+}
+
 func (v *formatter_) ProcessInclusiveRangeSlot(
 	slot uint,
 ) {
 	switch slot {
-	case 2:
+	case 1:
 		v.appendString("..")
 	}
 }

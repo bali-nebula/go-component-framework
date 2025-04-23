@@ -301,9 +301,11 @@ func (v *visitor_) visitAssignment(
 func (v *visitor_) visitAssociation(
 	association ast.AssociationLike,
 ) {
-	// Visit a single symbol token.
-	var symbol = association.GetSymbol()
-	v.processor_.ProcessSymbol(symbol)
+	// Visit a single primitive rule.
+	var primitive = association.GetPrimitive()
+	v.processor_.PreprocessPrimitive(primitive)
+	v.visitPrimitive(primitive)
+	v.processor_.PostprocessPrimitive(primitive)
 
 	// Visit slot 1 between references.
 	v.processor_.ProcessAssociationSlot(1)
@@ -413,6 +415,14 @@ func (v *visitor_) visitCollection(
 		v.processor_.PreprocessMultilineValues(actual)
 		v.visitMultilineValues(actual)
 		v.processor_.PostprocessMultilineValues(actual)
+	case ast.InclusiveRangeLike:
+		v.processor_.PreprocessInclusiveRange(actual)
+		v.visitInclusiveRange(actual)
+		v.processor_.PostprocessInclusiveRange(actual)
+	case ast.ExclusiveRangeLike:
+		v.processor_.PreprocessExclusiveRange(actual)
+		v.visitExclusiveRange(actual)
+		v.processor_.PostprocessExclusiveRange(actual)
 	case ast.InlineAttributesLike:
 		v.processor_.PreprocessInlineAttributes(actual)
 		v.visitInlineAttributes(actual)
@@ -611,10 +621,6 @@ func (v *visitor_) visitEntity(
 		v.processor_.PreprocessString(actual)
 		v.visitString(actual)
 		v.processor_.PostprocessString(actual)
-	case ast.RangeLike:
-		v.processor_.PreprocessRange(actual)
-		v.visitRange(actual)
-		v.processor_.PostprocessRange(actual)
 	case ast.CollectionLike:
 		v.processor_.PreprocessCollection(actual)
 		v.visitCollection(actual)
@@ -1804,44 +1810,16 @@ func (v *visitor_) visitPrimitive(
 ) {
 	// Visit the possible primitive types.
 	switch actual := primitive.GetAny().(type) {
+	case ast.ElementLike:
+		v.processor_.PreprocessElement(actual)
+		v.visitElement(actual)
+		v.processor_.PostprocessElement(actual)
+	case ast.StringLike:
+		v.processor_.PreprocessString(actual)
+		v.visitString(actual)
+		v.processor_.PostprocessString(actual)
 	case string:
 		switch {
-		case ScannerClass().MatchesType(actual, AngleToken):
-			v.processor_.ProcessAngle(actual)
-		case ScannerClass().MatchesType(actual, BooleanToken):
-			v.processor_.ProcessBoolean(actual)
-		case ScannerClass().MatchesType(actual, CitationToken):
-			v.processor_.ProcessCitation(actual)
-		case ScannerClass().MatchesType(actual, DurationToken):
-			v.processor_.ProcessDuration(actual)
-		case ScannerClass().MatchesType(actual, MomentToken):
-			v.processor_.ProcessMoment(actual)
-		case ScannerClass().MatchesType(actual, NumberToken):
-			v.processor_.ProcessNumber(actual)
-		case ScannerClass().MatchesType(actual, PatternToken):
-			v.processor_.ProcessPattern(actual)
-		case ScannerClass().MatchesType(actual, PercentageToken):
-			v.processor_.ProcessPercentage(actual)
-		case ScannerClass().MatchesType(actual, ProbabilityToken):
-			v.processor_.ProcessProbability(actual)
-		case ScannerClass().MatchesType(actual, ResourceToken):
-			v.processor_.ProcessResource(actual)
-		case ScannerClass().MatchesType(actual, BinaryToken):
-			v.processor_.ProcessBinary(actual)
-		case ScannerClass().MatchesType(actual, BytecodeToken):
-			v.processor_.ProcessBytecode(actual)
-		case ScannerClass().MatchesType(actual, NameToken):
-			v.processor_.ProcessName(actual)
-		case ScannerClass().MatchesType(actual, NarrativeToken):
-			v.processor_.ProcessNarrative(actual)
-		case ScannerClass().MatchesType(actual, QuoteToken):
-			v.processor_.ProcessQuote(actual)
-		case ScannerClass().MatchesType(actual, SymbolToken):
-			v.processor_.ProcessSymbol(actual)
-		case ScannerClass().MatchesType(actual, TagToken):
-			v.processor_.ProcessTag(actual)
-		case ScannerClass().MatchesType(actual, VersionToken):
-			v.processor_.ProcessVersion(actual)
 		default:
 			panic(fmt.Sprintf("Invalid token: %v", actual))
 		}
@@ -1885,29 +1863,6 @@ func (v *visitor_) visitPublishClause(
 	v.processor_.PreprocessEvent(event)
 	v.visitEvent(event)
 	v.processor_.PostprocessEvent(event)
-}
-
-func (v *visitor_) visitRange(
-	range_ ast.RangeLike,
-) {
-	// Visit the possible range types.
-	switch actual := range_.GetAny().(type) {
-	case ast.InclusiveRangeLike:
-		v.processor_.PreprocessInclusiveRange(actual)
-		v.visitInclusiveRange(actual)
-		v.processor_.PostprocessInclusiveRange(actual)
-	case ast.ExclusiveRangeLike:
-		v.processor_.PreprocessExclusiveRange(actual)
-		v.visitExclusiveRange(actual)
-		v.processor_.PostprocessExclusiveRange(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
 }
 
 func (v *visitor_) visitRecipient(
