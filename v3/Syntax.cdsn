@@ -421,7 +421,7 @@ $bytecode: "'" (instruction (' ' instruction)*)* "'"
 
 $character: escape | ~['"' CONTROL]
 
-$citation: name '/' version
+$citation: name '@' version
 
 $comment: "!>" EOL (ANY | EOL)* EOL ' '* "<!"  ! Chooses the shortest match.
 

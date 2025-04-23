@@ -3,11 +3,13 @@
     true($granularity: $boolean)  ! This is a note.
     '>
         1234abcd
-    <'  ! This is base 64 encoded.
-    ~P13W
+    <'(
+        $encoding: $base64
+        $mediatype: /image/jpeg
+    )
     [
         1
         2
         3
-    ]($type: /bali/collections/List/v1)
+    ]($type: /bali/collections/List@v1)
 ]

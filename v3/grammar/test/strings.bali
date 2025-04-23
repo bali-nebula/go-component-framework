@@ -1,6 +1,4 @@
 [
-    ''
-    '1a2b 3c4d'
     '> <'
     '>
         1234abcd
@@ -9,21 +7,6 @@
         1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef
         1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef
     <'
-    /bali
-    /bali/abstractions/Sequential/v1
-    ">
-
-    <"
-    ">
-          This is a multiline
-        narrative with " marks
-
-        and a blank line in it.
-    <"
-    ""
-    "And this is a quote"
-    v1
-    v1.2.3
     '>
         NyiXwRMG7OzG8P8y21A6lTFKWU6sFel5vCaYw1kslyq0gLkJTMHu5iNaFRwZ
     <'
@@ -35,11 +18,33 @@
         oE89y7SjSM7BLw7m6DEfYJf5sapuz05pythmmqcqbbU9eDWkEfLbaS5MxYdN
         JocIaQNamhzDhmriK0WEWNdUdzRC992R2ZkTYAQ8vg
     <'
+    ''
+    '1a2b'
+    '1a2b 3c4d'
+    '1a2b 3c4d 5e6f'
     /bali
     /bali/abstractions
-    /bali/abstractions/Sequential/v1.2.3
+    /bali/abstractions/Sequential
+    ">
+
+    <"
+    ">
+          This is a multiline
+        narrative with " marks
+
+        and a blank line in it.
+    <"
+    ""
+    "And this is a quote"
     "To be, or not to be, that is the question?"
     "This quote contains '\"'s."
+    $symbol
+    $A1
+    $foobar
+    #0
+    #A
+    #ABCD
+    #A3GHK57Z
     v1
     v1.2
     v1.2.3

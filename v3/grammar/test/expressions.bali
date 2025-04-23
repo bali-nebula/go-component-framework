@@ -19,5 +19,5 @@
     let $foo := remote<-notify(event)
     let $foo := customer[42, $address, $province]
     let $foo := a & b & c
-    let $foo := a < b ior b = c ior d > e ior e is f ior f matches g
+    let $foo := a < b and b = c san d > e ior e is f xor f matches g
 }

@@ -29,13 +29,13 @@
         with an empty line.
     <!
     if flip() do {
-        checkout $draft from /bali/tests/Procedures/v1.2
+        checkout $draft from /bali/tests/Procedures@v1.2
     }
-    checkout $draft at level 3 from /bali/tests/Procedures/v1.2
-    checkout $draft from /bali/tests/Procedures/v1.2
+    checkout $draft at level 3 from /bali/tests/Procedures@v1.2
+    checkout $draft from /bali/tests/Procedures@v1.2
     save draft as $citation
     discard draft
-    notarize document as /bali/test/Contract/v1
+    notarize document as /bali/test/Contract@v1
     select foo matching any do {
         return foo
     }

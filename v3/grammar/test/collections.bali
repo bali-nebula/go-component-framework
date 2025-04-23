@@ -1,24 +1,24 @@
 [
     [ ]
     [:]
+    [[ ]]
     [[:]]
     [~0..~τ]
     [~P0W..~P3Y)
     [<2000>..<2023>]
-    [1..∞)
-    (∞..0]
-    (∞..∞)
+    [1..+∞)
+    (-∞..0]
+    (-∞..+∞)
     ["a".."z"]
     ["Aa".."Fe"]
     [1..42]
     (0%..75%)
-    (.25..one)
+    (.0..one]
     (.25...75)
-    [/bali/abstractions/Continuous/v1../bali/abstractions/Spectral/v1.2]
+    [/bali/abstractions/Continuous@v1../bali/abstractions/Spectral@v1.2]
     [$bar..$foo]
     [v1.2..v1.6.3)
     [1..∞]
-    [∞..0)
     [~0..~π)
     [~π..~τ)
     [1..100]
@@ -26,8 +26,7 @@
     [.25...75)
     ["a".."f"]
     [~0..~π)
-    (∞..-1.2]
-    (∞..∞)
+    (-∞..-1.2]
     [42]
     ["abc"]
     [
@@ -43,7 +42,7 @@
         1
         2
         3
-    ]($type: /bali/collections/Stack/v1)
+    ]($type: /bali/collections/Stack@v1)
     [
         $alpha: 1
         $beta: 2
@@ -53,18 +52,18 @@
         $a: [$array]
         $b: [$foo: "bar"]
     ]
-    [ ]($type: /bali/collections/Set/v1)
-    [:]($type: /bali/collections/Catalog/v1)
-    [$foobar]($type: /bali/collections/List/v1)
+    [ ]($type: /bali/collections/Set@v1)
+    [:]($type: /bali/collections/Catalog@v1)
+    [$foobar]($type: /bali/collections/List@v1)
     [
         $foo
         $bar
-    ]($type: /bali/collections/List/v1)
-    [$foo: "bar"]($type: /bali/collections/Catalog/v1)
+    ]($type: /bali/collections/List@v1)
+    [$foo: "bar"]($type: /bali/collections/Catalog@v1)
     [
         $foo: "bar"
         $bar: "foo"
-    ]($type: /bali/collections/Catalog/v1)
+    ]($type: /bali/collections/Catalog@v1)
     [$key: "value"]
     [
         $foo: 5

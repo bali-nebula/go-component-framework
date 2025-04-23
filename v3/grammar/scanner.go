@@ -384,7 +384,7 @@ const (
 	boolean_      = "(?:false|true)"
 	bytecode_     = "(?:'((?:" + instruction_ + ")( (?:" + instruction_ + "))*)*')"
 	character_    = "(?:(?:" + escape_ + ")|[^\"" + control_ + "])"
-	citation_     = "(?:(?:" + name_ + ")/(?:" + version_ + "))"
+	citation_     = "(?:(?:" + name_ + ")@(?:" + version_ + "))"
 	comment_      = "(?:!>" + eol_ + "(" + any_ + "|" + eol_ + ")*?" + eol_ + " *<!)"
 	day_          = "(?:([0-2][1-9])|(3[0-1]))"
 	days_         = "(?:(?:" + timespan_ + ")D)"
