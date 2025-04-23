@@ -36,7 +36,7 @@ func ExclusiveRangeClass() ExclusiveRangeClassLike {
 func (c *exclusiveRangeClass_) ExclusiveRange(
 	primitive1 PrimitiveLike,
 	primitive2 PrimitiveLike,
-	upperBound UpperBoundLike,
+	bracket BracketLike,
 ) ExclusiveRangeLike {
 	if uti.IsUndefined(primitive1) {
 		panic("The \"primitive1\" attribute is required by this class.")
@@ -44,14 +44,14 @@ func (c *exclusiveRangeClass_) ExclusiveRange(
 	if uti.IsUndefined(primitive2) {
 		panic("The \"primitive2\" attribute is required by this class.")
 	}
-	if uti.IsUndefined(upperBound) {
-		panic("The \"upperBound\" attribute is required by this class.")
+	if uti.IsUndefined(bracket) {
+		panic("The \"bracket\" attribute is required by this class.")
 	}
 	var instance = &exclusiveRange_{
 		// Initialize the instance attributes.
 		primitive1_: primitive1,
 		primitive2_: primitive2,
-		upperBound_: upperBound,
+		bracket_:    bracket,
 	}
 	return instance
 }
@@ -74,8 +74,8 @@ func (v *exclusiveRange_) GetPrimitive2() PrimitiveLike {
 	return v.primitive2_
 }
 
-func (v *exclusiveRange_) GetUpperBound() UpperBoundLike {
-	return v.upperBound_
+func (v *exclusiveRange_) GetBracket() BracketLike {
+	return v.bracket_
 }
 
 // PROTECTED INTERFACE
@@ -86,7 +86,7 @@ type exclusiveRange_ struct {
 	// Declare the instance attributes.
 	primitive1_ PrimitiveLike
 	primitive2_ PrimitiveLike
-	upperBound_ UpperBoundLike
+	bracket_    BracketLike
 }
 
 // Class Structure

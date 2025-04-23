@@ -527,6 +527,21 @@ func (v *processor_) PostprocessBlocking(
 ) {
 }
 
+func (v *processor_) PreprocessBracket(
+	bracket ast.BracketLike,
+) {
+}
+
+func (v *processor_) ProcessBracketSlot(
+	slot uint,
+) {
+}
+
+func (v *processor_) PostprocessBracket(
+	bracket ast.BracketLike,
+) {
+}
+
 func (v *processor_) PreprocessBreakClause(
 	breakClause ast.BreakClauseLike,
 ) {
@@ -827,18 +842,18 @@ func (v *processor_) PostprocessException(
 ) {
 }
 
-func (v *processor_) PreprocessExclusion(
-	exclusion ast.ExclusionLike,
+func (v *processor_) PreprocessExclusive(
+	exclusive ast.ExclusiveLike,
 ) {
 }
 
-func (v *processor_) ProcessExclusionSlot(
+func (v *processor_) ProcessExclusiveSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessExclusion(
-	exclusion ast.ExclusionLike,
+func (v *processor_) PostprocessExclusive(
+	exclusive ast.ExclusiveLike,
 ) {
 }
 
@@ -932,18 +947,18 @@ func (v *processor_) PostprocessIfClause(
 ) {
 }
 
-func (v *processor_) PreprocessInclusion(
-	inclusion ast.InclusionLike,
+func (v *processor_) PreprocessInclusive(
+	inclusive ast.InclusiveLike,
 ) {
 }
 
-func (v *processor_) ProcessInclusionSlot(
+func (v *processor_) ProcessInclusiveSlot(
 	slot uint,
 ) {
 }
 
-func (v *processor_) PostprocessInclusion(
-	inclusion ast.InclusionLike,
+func (v *processor_) PostprocessInclusive(
+	inclusive ast.InclusiveLike,
 ) {
 }
 
@@ -1942,21 +1957,6 @@ func (v *processor_) ProcessThrowClauseSlot(
 
 func (v *processor_) PostprocessThrowClause(
 	throwClause ast.ThrowClauseLike,
-) {
-}
-
-func (v *processor_) PreprocessUpperBound(
-	upperBound ast.UpperBoundLike,
-) {
-}
-
-func (v *processor_) ProcessUpperBoundSlot(
-	slot uint,
-) {
-}
-
-func (v *processor_) PostprocessUpperBound(
-	upperBound ast.UpperBoundLike,
 ) {
 }
 

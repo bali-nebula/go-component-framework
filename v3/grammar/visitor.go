@@ -356,6 +356,29 @@ func (v *visitor_) visitBlocking(
 	}
 }
 
+func (v *visitor_) visitBracket(
+	bracket ast.BracketLike,
+) {
+	// Visit the possible bracket types.
+	switch actual := bracket.GetAny().(type) {
+	case ast.InclusiveLike:
+		v.processor_.PreprocessInclusive(actual)
+		v.visitInclusive(actual)
+		v.processor_.PostprocessInclusive(actual)
+	case ast.ExclusiveLike:
+		v.processor_.PreprocessExclusive(actual)
+		v.visitExclusive(actual)
+		v.processor_.PostprocessExclusive(actual)
+	case string:
+		switch {
+		default:
+			panic(fmt.Sprintf("Invalid token: %v", actual))
+		}
+	default:
+		panic(fmt.Sprintf("Invalid rule type: %T", actual))
+	}
+}
+
 func (v *visitor_) visitBreakClause(
 	breakClause ast.BreakClauseLike,
 ) {
@@ -659,8 +682,8 @@ func (v *visitor_) visitException(
 	v.processor_.PostprocessExpression(expression)
 }
 
-func (v *visitor_) visitExclusion(
-	exclusion ast.ExclusionLike,
+func (v *visitor_) visitExclusive(
+	exclusive ast.ExclusiveLike,
 ) {
 	// This method does not need to process anything.
 }
@@ -686,11 +709,11 @@ func (v *visitor_) visitExclusiveRange(
 	// Visit slot 2 between references.
 	v.processor_.ProcessExclusiveRangeSlot(2)
 
-	// Visit a single upperBound rule.
-	var upperBound = exclusiveRange.GetUpperBound()
-	v.processor_.PreprocessUpperBound(upperBound)
-	v.visitUpperBound(upperBound)
-	v.processor_.PostprocessUpperBound(upperBound)
+	// Visit a single bracket rule.
+	var bracket = exclusiveRange.GetBracket()
+	v.processor_.PreprocessBracket(bracket)
+	v.visitBracket(bracket)
+	v.processor_.PostprocessBracket(bracket)
 }
 
 func (v *visitor_) visitExpression(
@@ -819,8 +842,8 @@ func (v *visitor_) visitIfClause(
 	v.processor_.PostprocessProcedure(procedure)
 }
 
-func (v *visitor_) visitInclusion(
-	inclusion ast.InclusionLike,
+func (v *visitor_) visitInclusive(
+	inclusive ast.InclusiveLike,
 ) {
 	// This method does not need to process anything.
 }
@@ -846,11 +869,11 @@ func (v *visitor_) visitInclusiveRange(
 	// Visit slot 2 between references.
 	v.processor_.ProcessInclusiveRangeSlot(2)
 
-	// Visit a single upperBound rule.
-	var upperBound = inclusiveRange.GetUpperBound()
-	v.processor_.PreprocessUpperBound(upperBound)
-	v.visitUpperBound(upperBound)
-	v.processor_.PostprocessUpperBound(upperBound)
+	// Visit a single bracket rule.
+	var bracket = inclusiveRange.GetBracket()
+	v.processor_.PreprocessBracket(bracket)
+	v.visitBracket(bracket)
+	v.processor_.PostprocessBracket(bracket)
 }
 
 func (v *visitor_) visitIndex(
@@ -2250,29 +2273,6 @@ func (v *visitor_) visitThrowClause(
 	v.processor_.PreprocessException(exception)
 	v.visitException(exception)
 	v.processor_.PostprocessException(exception)
-}
-
-func (v *visitor_) visitUpperBound(
-	upperBound ast.UpperBoundLike,
-) {
-	// Visit the possible upperBound types.
-	switch actual := upperBound.GetAny().(type) {
-	case ast.InclusionLike:
-		v.processor_.PreprocessInclusion(actual)
-		v.visitInclusion(actual)
-		v.processor_.PostprocessInclusion(actual)
-	case ast.ExclusionLike:
-		v.processor_.PreprocessExclusion(actual)
-		v.visitExclusion(actual)
-		v.processor_.PostprocessExclusion(actual)
-	case string:
-		switch {
-		default:
-			panic(fmt.Sprintf("Invalid token: %v", actual))
-		}
-	default:
-		panic(fmt.Sprintf("Invalid rule type: %T", actual))
-	}
 }
 
 func (v *visitor_) visitVariable(

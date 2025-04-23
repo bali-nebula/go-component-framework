@@ -19,29 +19,21 @@
 
 package ast
 
-import (
-	uti "github.com/craterdog/go-missing-utilities/v2"
-)
+import ()
 
 // CLASS INTERFACE
 
 // Access Function
 
-func UpperBoundClass() UpperBoundClassLike {
-	return upperBoundClass()
+func InclusiveClass() InclusiveClassLike {
+	return inclusiveClass()
 }
 
 // Constructor Methods
 
-func (c *upperBoundClass_) UpperBound(
-	any_ any,
-) UpperBoundLike {
-	if uti.IsUndefined(any_) {
-		panic("The \"any\" attribute is required by this class.")
-	}
-	var instance = &upperBound_{
+func (c *inclusiveClass_) Inclusive() InclusiveLike {
+	var instance = &inclusive_{
 		// Initialize the instance attributes.
-		any_: any_,
 	}
 	return instance
 }
@@ -50,37 +42,32 @@ func (c *upperBoundClass_) UpperBound(
 
 // Principal Methods
 
-func (v *upperBound_) GetClass() UpperBoundClassLike {
-	return upperBoundClass()
+func (v *inclusive_) GetClass() InclusiveClassLike {
+	return inclusiveClass()
 }
 
 // Attribute Methods
-
-func (v *upperBound_) GetAny() any {
-	return v.any_
-}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type upperBound_ struct {
+type inclusive_ struct {
 	// Declare the instance attributes.
-	any_ any
 }
 
 // Class Structure
 
-type upperBoundClass_ struct {
+type inclusiveClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func upperBoundClass() *upperBoundClass_ {
-	return upperBoundClassReference_
+func inclusiveClass() *inclusiveClass_ {
+	return inclusiveClassReference_
 }
 
-var upperBoundClassReference_ = &upperBoundClass_{
+var inclusiveClassReference_ = &inclusiveClass_{
 	// Initialize the class constants.
 }

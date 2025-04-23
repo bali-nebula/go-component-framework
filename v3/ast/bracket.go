@@ -19,21 +19,29 @@
 
 package ast
 
-import ()
+import (
+	uti "github.com/craterdog/go-missing-utilities/v2"
+)
 
 // CLASS INTERFACE
 
 // Access Function
 
-func ExclusionClass() ExclusionClassLike {
-	return exclusionClass()
+func BracketClass() BracketClassLike {
+	return bracketClass()
 }
 
 // Constructor Methods
 
-func (c *exclusionClass_) Exclusion() ExclusionLike {
-	var instance = &exclusion_{
+func (c *bracketClass_) Bracket(
+	any_ any,
+) BracketLike {
+	if uti.IsUndefined(any_) {
+		panic("The \"any\" attribute is required by this class.")
+	}
+	var instance = &bracket_{
 		// Initialize the instance attributes.
+		any_: any_,
 	}
 	return instance
 }
@@ -42,32 +50,37 @@ func (c *exclusionClass_) Exclusion() ExclusionLike {
 
 // Principal Methods
 
-func (v *exclusion_) GetClass() ExclusionClassLike {
-	return exclusionClass()
+func (v *bracket_) GetClass() BracketClassLike {
+	return bracketClass()
 }
 
 // Attribute Methods
+
+func (v *bracket_) GetAny() any {
+	return v.any_
+}
 
 // PROTECTED INTERFACE
 
 // Instance Structure
 
-type exclusion_ struct {
+type bracket_ struct {
 	// Declare the instance attributes.
+	any_ any
 }
 
 // Class Structure
 
-type exclusionClass_ struct {
+type bracketClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func exclusionClass() *exclusionClass_ {
-	return exclusionClassReference_
+func bracketClass() *bracketClass_ {
+	return bracketClassReference_
 }
 
-var exclusionClassReference_ = &exclusionClass_{
+var bracketClassReference_ = &bracketClass_{
 	// Initialize the class constants.
 }

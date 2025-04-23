@@ -84,17 +84,17 @@ $Collection:
     NoAttributes
     NoValues
 
-$InclusiveRange: "[" Primitive ".." Primitive UpperBound
+$InclusiveRange: "[" Primitive ".." Primitive Bracket
 
-$ExclusiveRange: "(" Primitive ".." Primitive UpperBound
+$ExclusiveRange: "(" Primitive ".." Primitive Bracket
 
-$UpperBound:
-    Inclusion
-    Exclusion
+$Bracket:
+    Inclusive
+    Exclusive
 
-$Inclusion: "]"
+$Inclusive: "]"
 
-$Exclusion: ")"
+$Exclusive: ")"
 
 $NoAttributes: "[" ":" "]"
 

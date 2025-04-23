@@ -880,6 +880,33 @@ func (v *parser_) parseBlocking() (
 	return
 }
 
+func (v *parser_) parseBracket() (
+	bracket ast.BracketLike,
+	token TokenLike,
+	ok bool,
+) {
+	// Attempt to parse a single Inclusive Bracket.
+	var inclusive ast.InclusiveLike
+	inclusive, token, ok = v.parseInclusive()
+	if ok {
+		// Found a single Inclusive Bracket.
+		bracket = ast.BracketClass().Bracket(inclusive)
+		return
+	}
+
+	// Attempt to parse a single Exclusive Bracket.
+	var exclusive ast.ExclusiveLike
+	exclusive, token, ok = v.parseExclusive()
+	if ok {
+		// Found a single Exclusive Bracket.
+		bracket = ast.BracketClass().Bracket(exclusive)
+		return
+	}
+
+	// This is not a single Bracket rule.
+	return
+}
+
 func (v *parser_) parseBreakClause() (
 	breakClause ast.BreakClauseLike,
 	token TokenLike,
@@ -1803,8 +1830,8 @@ func (v *parser_) parseException() (
 	return
 }
 
-func (v *parser_) parseExclusion() (
-	exclusion ast.ExclusionLike,
+func (v *parser_) parseExclusive() (
+	exclusive ast.ExclusiveLike,
 	token TokenLike,
 	ok bool,
 ) {
@@ -1814,12 +1841,12 @@ func (v *parser_) parseExclusion() (
 	_, token, ok = v.parseDelimiter(")")
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Exclusion rule.
+			// This is not a single Exclusive rule.
 			v.putBack(tokens)
 			return
 		} else {
 			// Found a syntax error.
-			var message = v.formatError("$Exclusion", token)
+			var message = v.formatError("$Exclusive", token)
 			panic(message)
 		}
 	}
@@ -1827,10 +1854,10 @@ func (v *parser_) parseExclusion() (
 		tokens.AppendValue(token)
 	}
 
-	// Found a single Exclusion rule.
+	// Found a single Exclusive rule.
 	ok = true
 	v.remove(tokens)
-	exclusion = ast.ExclusionClass().Exclusion()
+	exclusive = ast.ExclusiveClass().Exclusive()
 	return
 }
 
@@ -1913,15 +1940,15 @@ func (v *parser_) parseExclusiveRange() (
 		panic(message)
 	}
 
-	// Attempt to parse a single UpperBound rule.
-	var upperBound ast.UpperBoundLike
-	upperBound, token, ok = v.parseUpperBound()
+	// Attempt to parse a single Bracket rule.
+	var bracket ast.BracketLike
+	bracket, token, ok = v.parseBracket()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single UpperBound rule.
+		// This is not a single Bracket rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -1936,7 +1963,7 @@ func (v *parser_) parseExclusiveRange() (
 	exclusiveRange = ast.ExclusiveRangeClass().ExclusiveRange(
 		primitive1,
 		primitive2,
-		upperBound,
+		bracket,
 	)
 	return
 }
@@ -2276,8 +2303,8 @@ func (v *parser_) parseIfClause() (
 	return
 }
 
-func (v *parser_) parseInclusion() (
-	inclusion ast.InclusionLike,
+func (v *parser_) parseInclusive() (
+	inclusive ast.InclusiveLike,
 	token TokenLike,
 	ok bool,
 ) {
@@ -2287,12 +2314,12 @@ func (v *parser_) parseInclusion() (
 	_, token, ok = v.parseDelimiter("]")
 	if !ok {
 		if uti.IsDefined(tokens) {
-			// This is not a single Inclusion rule.
+			// This is not a single Inclusive rule.
 			v.putBack(tokens)
 			return
 		} else {
 			// Found a syntax error.
-			var message = v.formatError("$Inclusion", token)
+			var message = v.formatError("$Inclusive", token)
 			panic(message)
 		}
 	}
@@ -2300,10 +2327,10 @@ func (v *parser_) parseInclusion() (
 		tokens.AppendValue(token)
 	}
 
-	// Found a single Inclusion rule.
+	// Found a single Inclusive rule.
 	ok = true
 	v.remove(tokens)
-	inclusion = ast.InclusionClass().Inclusion()
+	inclusive = ast.InclusiveClass().Inclusive()
 	return
 }
 
@@ -2386,15 +2413,15 @@ func (v *parser_) parseInclusiveRange() (
 		panic(message)
 	}
 
-	// Attempt to parse a single UpperBound rule.
-	var upperBound ast.UpperBoundLike
-	upperBound, token, ok = v.parseUpperBound()
+	// Attempt to parse a single Bracket rule.
+	var bracket ast.BracketLike
+	bracket, token, ok = v.parseBracket()
 	switch {
 	case ok:
 		// No additional put backs allowed at this point.
 		tokens = nil
 	case uti.IsDefined(tokens):
-		// This is not a single UpperBound rule.
+		// This is not a single Bracket rule.
 		v.putBack(tokens)
 		return
 	default:
@@ -2409,7 +2436,7 @@ func (v *parser_) parseInclusiveRange() (
 	inclusiveRange = ast.InclusiveRangeClass().InclusiveRange(
 		primitive1,
 		primitive2,
-		upperBound,
+		bracket,
 	)
 	return
 }
@@ -6244,33 +6271,6 @@ func (v *parser_) parseThrowClause() (
 	return
 }
 
-func (v *parser_) parseUpperBound() (
-	upperBound ast.UpperBoundLike,
-	token TokenLike,
-	ok bool,
-) {
-	// Attempt to parse a single Inclusion UpperBound.
-	var inclusion ast.InclusionLike
-	inclusion, token, ok = v.parseInclusion()
-	if ok {
-		// Found a single Inclusion UpperBound.
-		upperBound = ast.UpperBoundClass().UpperBound(inclusion)
-		return
-	}
-
-	// Attempt to parse a single Exclusion UpperBound.
-	var exclusion ast.ExclusionLike
-	exclusion, token, ok = v.parseExclusion()
-	if ok {
-		// Found a single Exclusion UpperBound.
-		upperBound = ast.UpperBoundClass().UpperBound(exclusion)
-		return
-	}
-
-	// This is not a single UpperBound rule.
-	return
-}
-
 func (v *parser_) parseVariable() (
 	variable ast.VariableLike,
 	token TokenLike,
@@ -6777,13 +6777,13 @@ var parserClassReference_ = &parserClass_{
     InlineValues  ! Must be after the ranges and inline attributes.
     NoAttributes
     NoValues`,
-			"$InclusiveRange": `"[" Primitive ".." Primitive UpperBound`,
-			"$ExclusiveRange": `"(" Primitive ".." Primitive UpperBound`,
-			"$UpperBound": `
-    Inclusion
-    Exclusion`,
-			"$Inclusion":           `"]"`,
-			"$Exclusion":           `")"`,
+			"$InclusiveRange": `"[" Primitive ".." Primitive Bracket`,
+			"$ExclusiveRange": `"(" Primitive ".." Primitive Bracket`,
+			"$Bracket": `
+    Inclusive
+    Exclusive`,
+			"$Inclusive":           `"]"`,
+			"$Exclusive":           `")"`,
 			"$NoAttributes":        `"[" ":" "]"`,
 			"$InlineAttributes":    `"[" Association AdditionalAssociation* "]"`,
 			"$MultilineAttributes": `"[" newline AnnotatedAssociation+ "]"`,

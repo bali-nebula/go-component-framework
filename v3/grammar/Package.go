@@ -600,6 +600,15 @@ type Methodical interface {
 	PostprocessBlocking(
 		blocking ast.BlockingLike,
 	)
+	PreprocessBracket(
+		bracket ast.BracketLike,
+	)
+	ProcessBracketSlot(
+		slot uint,
+	)
+	PostprocessBracket(
+		bracket ast.BracketLike,
+	)
 	PreprocessBreakClause(
 		breakClause ast.BreakClauseLike,
 	)
@@ -780,14 +789,14 @@ type Methodical interface {
 	PostprocessException(
 		exception ast.ExceptionLike,
 	)
-	PreprocessExclusion(
-		exclusion ast.ExclusionLike,
+	PreprocessExclusive(
+		exclusive ast.ExclusiveLike,
 	)
-	ProcessExclusionSlot(
+	ProcessExclusiveSlot(
 		slot uint,
 	)
-	PostprocessExclusion(
-		exclusion ast.ExclusionLike,
+	PostprocessExclusive(
+		exclusive ast.ExclusiveLike,
 	)
 	PreprocessExclusiveRange(
 		exclusiveRange ast.ExclusiveRangeLike,
@@ -843,14 +852,14 @@ type Methodical interface {
 	PostprocessIfClause(
 		ifClause ast.IfClauseLike,
 	)
-	PreprocessInclusion(
-		inclusion ast.InclusionLike,
+	PreprocessInclusive(
+		inclusive ast.InclusiveLike,
 	)
-	ProcessInclusionSlot(
+	ProcessInclusiveSlot(
 		slot uint,
 	)
-	PostprocessInclusion(
-		inclusion ast.InclusionLike,
+	PostprocessInclusive(
+		inclusive ast.InclusiveLike,
 	)
 	PreprocessInclusiveRange(
 		inclusiveRange ast.InclusiveRangeLike,
@@ -1453,15 +1462,6 @@ type Methodical interface {
 	)
 	PostprocessThrowClause(
 		throwClause ast.ThrowClauseLike,
-	)
-	PreprocessUpperBound(
-		upperBound ast.UpperBoundLike,
-	)
-	ProcessUpperBoundSlot(
-		slot uint,
-	)
-	PostprocessUpperBound(
-		upperBound ast.UpperBoundLike,
 	)
 	PreprocessVariable(
 		variable ast.VariableLike,

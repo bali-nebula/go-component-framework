@@ -25,14 +25,14 @@ import ()
 
 // Access Function
 
-func InclusionClass() InclusionClassLike {
-	return inclusionClass()
+func ExclusiveClass() ExclusiveClassLike {
+	return exclusiveClass()
 }
 
 // Constructor Methods
 
-func (c *inclusionClass_) Inclusion() InclusionLike {
-	var instance = &inclusion_{
+func (c *exclusiveClass_) Exclusive() ExclusiveLike {
+	var instance = &exclusive_{
 		// Initialize the instance attributes.
 	}
 	return instance
@@ -42,8 +42,8 @@ func (c *inclusionClass_) Inclusion() InclusionLike {
 
 // Principal Methods
 
-func (v *inclusion_) GetClass() InclusionClassLike {
-	return inclusionClass()
+func (v *exclusive_) GetClass() ExclusiveClassLike {
+	return exclusiveClass()
 }
 
 // Attribute Methods
@@ -52,22 +52,22 @@ func (v *inclusion_) GetClass() InclusionClassLike {
 
 // Instance Structure
 
-type inclusion_ struct {
+type exclusive_ struct {
 	// Declare the instance attributes.
 }
 
 // Class Structure
 
-type inclusionClass_ struct {
+type exclusiveClass_ struct {
 	// Declare the class constants.
 }
 
 // Class Reference
 
-func inclusionClass() *inclusionClass_ {
-	return inclusionClassReference_
+func exclusiveClass() *exclusiveClass_ {
+	return exclusiveClassReference_
 }
 
-var inclusionClassReference_ = &inclusionClass_{
+var exclusiveClassReference_ = &exclusiveClass_{
 	// Initialize the class constants.
 }

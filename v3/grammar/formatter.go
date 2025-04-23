@@ -144,8 +144,8 @@ func (v *formatter_) ProcessEqual(
 	v.appendString(equal)
 }
 
-func (v *formatter_) PreprocessExclusion(
-	exclusion ast.ExclusionLike,
+func (v *formatter_) PreprocessExclusive(
+	exclusive ast.ExclusiveLike,
 ) {
 	v.appendString(")")
 }
@@ -171,8 +171,8 @@ func (v *formatter_) ProcessIdentifier(
 	v.appendString(identifier)
 }
 
-func (v *formatter_) PreprocessInclusion(
-	inclusion ast.InclusionLike,
+func (v *formatter_) PreprocessInclusive(
+	inclusive ast.InclusiveLike,
 ) {
 	v.appendString("]")
 }
