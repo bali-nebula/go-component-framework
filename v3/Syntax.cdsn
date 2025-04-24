@@ -399,7 +399,7 @@ $alpha: ['A'..'Z' 'a'..'z']
 
 $alphanumeric: alpha | base10
 
-$angle: '~' ('0' | amplitude | "pi" | "π" | "tau" | "τ")
+$angle: '~' ('0' | amplitude | "pi" | 'π' | "tau" | 'τ')
 
 $authority: ~['/' CONTROL]+
 
@@ -525,27 +525,27 @@ $year: '0' | ordinal
 
 $years: timespan 'Y'
 
-$dot: "."
+$dot: '.'
 
 $arrow: "<-"
 
-$plus: "+"
+$plus: '+'
 
-$dash: "-"
+$dash: '-'
 
-$star: "*"
+$star: '*'
 
 $double: "//"
 
-$slash: "/"
+$slash: '/'
 
-$caret: "^"
+$caret: '^'
 
-$ampersand: "&"
+$ampersand: '&'
 
-$less: "<"
+$less: '<'
 
-$equal: "="
+$equal: '='
 
-$more: ">"
+$more: '>'
 
