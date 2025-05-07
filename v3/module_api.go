@@ -29,9 +29,9 @@ For detailed documentation on this entire module refer to the wiki:
 package module
 
 import (
-	ast "github.com/bali-nebula/go-component-framework/v3/ast"
-	gra "github.com/bali-nebula/go-component-framework/v3/grammar"
-	col "github.com/craterdog/go-collection-framework/v5/collection"
+	ast "github.com/bali-nebula/go-bali-documents/v3/ast"
+	gra "github.com/bali-nebula/go-bali-documents/v3/grammar"
+	col "github.com/craterdog/go-collection-framework/v7"
 )
 
 // TYPE ALIASES
